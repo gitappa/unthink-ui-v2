@@ -424,16 +424,18 @@ const ChatContainer = ({
 					<Tooltip
 						title='Meet AURA - your AI shopping assistant'
 						placement='bottomLeft'>
-						<Image
-							src={star_ai_icon}
-							className={`cursor-pointer ${isSwiftlyStyledInstance || isDoTheLookInstance
-								? "rounded-full p-1 border-2 bg-white border-indigo-600"
-								: ""
-								}`}							// className={`rounded-full bg-orange-100 cursor-pointer`}
-							onClick={() => onChatClick && onChatClick()}
-							preview={false}
-							width={33}
-						/>
+						<span>
+							<Image
+								src={star_ai_icon}
+								className={`cursor-pointer ${isSwiftlyStyledInstance || isDoTheLookInstance
+									? "rounded-full p-1 border-2 bg-white border-indigo-600"
+									: ""
+									}`}                            // className={`rounded-full bg-orange-100 cursor-pointer`}
+								onClick={() => onChatClick && onChatClick()}
+								preview={false}
+								width={33}
+							/>
+						</span>
 					</Tooltip>
 				</div>
 				{/* ) : null} */}

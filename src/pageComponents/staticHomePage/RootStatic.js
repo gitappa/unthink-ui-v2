@@ -53,7 +53,7 @@ const RootStatic = () => {
 				</div>
 			</section>
 
-			<section className='bg-slat-900 lg:mx-0 2xl:mx-0 p-5 lg:p-14 mt-24 lg:mt-36 relative'>
+			<section className='bg-slate-900 lg:mx-0 2xl:mx-0 p-5 lg:p-14 mt-24 lg:mt-36 relative'>
 				{/* <img
 					alt='try_it_now'
 					src={try_it_now}

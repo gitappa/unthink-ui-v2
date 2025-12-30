@@ -3,10 +3,9 @@ import React from "react";
 import Slider from "react-slick";
 import { Typography, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
-import LeftImage from "../../images/carousel-left.svg?react";
-import RightImage from "../../images/carousel-right.svg?react";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -43,8 +42,8 @@ const ChatSuggestionsWithProducts = ({ wrapperClassName = "" }) => {
 		slidesToScroll: 1,
 		variableWidth: true,
 		arrows: true,
-		nextArrow: <CustomArrow image={<RightImage />} />,
-		prevArrow: <CustomArrow image={<LeftImage />} />,
+		nextArrow: <CustomArrow image={<RightOutlined />} />,
+		prevArrow: <CustomArrow image={<LeftOutlined />} />,
 	};
 
 	const dispatch = useDispatch();

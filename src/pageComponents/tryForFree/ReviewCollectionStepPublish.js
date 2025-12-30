@@ -28,8 +28,7 @@ import {
 } from "../../constants/codes";
 import { auraYfretUserCollBaseUrl } from "../../constants/config";
 
-import Share_icon from "../../images/profilePage/share_icon.svg?react";
-import SendIcon from "../../images/send_icon.svg?react";
+import { ShareAltOutlined, SendOutlined } from "@ant-design/icons";
 import aura_assistant from "../../images/chat/aura_assistant_image.png";
 import star_ai_icon from "../../images/unthink_star_ai_icon.svg";
 
@@ -193,8 +192,8 @@ const ReviewCollectionStepPublish = ({
 
 	const finalCollectionPagePath1 = useMemo(
 		() =>
-			(window?.location.origin || "") +
-			collectionPageSlugPath.replace("{collectionPath}", "") || "",
+			((typeof window !== "undefined" && window.location?.origin) || "") +
+			(collectionPageSlugPath.replace("{collectionPath}", "") || ""),
 		[collectionPageSlugPath, postPageFormData.path]
 	);
 
@@ -817,7 +816,7 @@ const ReviewCollectionStepPublish = ({
 															? "Please save or discard the changes, to see the sharing options"
 															: "Click to see the sharing options"
 													}>
-													<Share_icon
+													<ShareAltOutlined
 														className={`${isPostPageFormTouched
 															? "cursor-not-allowed"
 															: "cursor-pointer"

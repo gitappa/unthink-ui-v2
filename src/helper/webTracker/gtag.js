@@ -6,6 +6,9 @@ const event_collection_product_click = "collection_product_click";
 const event_aura_product_click = "aura_product_click";
 
 export const gTagCollectionPageView = (data) => {
+	if (typeof window === "undefined" || !window.location?.href) {
+		return "";
+	}
 	// let collection_id = data._id && data._id.toString();
 
 	console.log(data);
@@ -22,11 +25,11 @@ export const gTagCollectionPageView = (data) => {
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
 	const platform =
-		navigator.userAgentData?.mobile !== undefined
+		typeof navigator !== "undefined" && navigator.userAgentData?.mobile !== undefined
 			? navigator.userAgentData.mobile
 				? "mobile"
 				: "web"
-			: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+			: typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 				? "mobile"
 				: "web";
 
@@ -62,13 +65,19 @@ export const gTagCollectionPageView = (data) => {
 			og_url,
 		});
 
-	window.history.replaceState({}, "", og_url);
+	window.history?.replaceState?.({}, "", og_url);
 
 	return url.toString();
 };
 
 export const gTagCollectionProductClick = (data) => {
-	const Clickpage = sessionStorage.getItem("clickPage");
+	if (typeof window === "undefined" || !window.location?.href) {
+		return "";
+	}
+	const Clickpage =
+		typeof sessionStorage !== "undefined"
+			? sessionStorage.getItem("clickPage")
+			: null;
 
 	const {
 		mft_code,
@@ -84,11 +93,11 @@ export const gTagCollectionProductClick = (data) => {
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
 	const platform =
-		navigator.userAgentData?.mobile !== undefined
+		typeof navigator !== "undefined" && navigator.userAgentData?.mobile !== undefined
 			? navigator.userAgentData.mobile
 				? "mobile"
 				: "web"
-			: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+			: typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 				? "mobile"
 				: "web";
 
@@ -124,12 +133,15 @@ export const gTagCollectionProductClick = (data) => {
 			og_url,
 		});
 
-	window.history.replaceState({}, "", og_url);
+	window.history?.replaceState?.({}, "", og_url);
 
 	return url.toString();
 };
 
 export const gTagAuraProductClick = (data) => {
+	if (typeof window === "undefined" || !window.location?.href) {
+		return "";
+	}
 	const { mft_code, aura_widget, user_id, user_name, term } = data;
 
 	console.log(data);
@@ -137,11 +149,11 @@ export const gTagAuraProductClick = (data) => {
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
 	const platform =
-		navigator.userAgentData?.mobile !== undefined
+		typeof navigator !== "undefined" && navigator.userAgentData?.mobile !== undefined
 			? navigator.userAgentData.mobile
 				? "mobile"
 				: "web"
-			: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+			: typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 				? "mobile"
 				: "web";
 
@@ -177,12 +189,15 @@ export const gTagAuraProductClick = (data) => {
 			og_url,
 		});
 
-	window.history.replaceState({}, "", og_url);
+	window.history?.replaceState?.({}, "", og_url);
 
 	return url.toString();
 };
 
 export const gTagShopWidgetClick = (data) => {
+	if (typeof window === "undefined" || !window.location?.href) {
+		return "";
+	}
 	const {
 		collection_path,
 		collection_status,
@@ -197,11 +212,11 @@ export const gTagShopWidgetClick = (data) => {
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
 	const platform =
-		navigator.userAgentData?.mobile !== undefined
+		typeof navigator !== "undefined" && navigator.userAgentData?.mobile !== undefined
 			? navigator.userAgentData.mobile
 				? "mobile"
 				: "web"
-			: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+			: typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 				? "mobile"
 				: "web";
 

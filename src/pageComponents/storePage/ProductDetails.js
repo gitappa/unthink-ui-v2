@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Link from 'next/link';
+import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
 
 import { openProductModal } from "../customProductModal/redux/actions";
@@ -48,13 +49,14 @@ import { payment_url } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 
 const ProductDetails = ({ params, ...props }) => {
+	const router = useRouter();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const mfr_code = params.mfr_code;
+	const mfr_code = params?.mfr_code || router?.query?.mfr_code;
 	const { collection, loading } = useSelector((state) => state.cart);
 	// console.log('collectionsuii', collection);
 	const [isloading,setIsLoading] = useState(true)
-console.log('isloading',isloading);
+
 
 	const [sellerDetails, customProductsData, authUser] = useSelector((state) => [
 		state.store.data.sellerDetails || {},
@@ -99,10 +101,15 @@ console.log('isloading',isloading);
 
 
 	useEffect(() => {
+		if (!mfr_code) return;
 		if (!savedProductDetails) {
 			fetchProductDetails(); // fetch product details if not available in redux
 		}
-	}, [mfr_code]);
+	}, [mfr_code, savedProductDetails]);
+
+	if (!mfr_code) {
+		return <PDPPageSkeleton />;
+	}
 
 	const productDetails = useMemo(() => {
 		if (savedProductDetails) {
@@ -111,7 +118,7 @@ console.log('isloading',isloading);
 			return fetchedProductDetails;
 		}
 	}, [savedProductDetails, fetchedProductDetails]);
-	console.log('savedProductDetails', productDetails);
+
 	const cardItem = useMemo(() => {
 		return collection?.product_lists?.find(
 			item => item.mfr_code === productDetails?.mfr_code

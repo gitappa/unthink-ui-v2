@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Skeleton, Button, Spin } from "antd";
 import { StarFilled } from "@ant-design/icons";
 
@@ -44,6 +44,18 @@ const ReviewCollectionPlist = ({
 	selectedTags,
 	productCountToShow
 }) => {
+	const [viewportWidth, setViewportWidth] = useState(0);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		const update = () => setViewportWidth(window.innerWidth || 0);
+		update();
+		window.addEventListener("resize", update);
+		return () => window.removeEventListener("resize", update);
+	}, []);
+
+	const origin = typeof window !== "undefined" ? window.location?.origin : "";
+
 	const [addProductModalOpen, setAddProductModalOpen] = useState({
 		isOpen: false,
 		isEdit: false,
@@ -136,7 +148,6 @@ const ReviewCollectionPlist = ({
 		[currentCollection.sponsor_details]
 	);
 
-
 	const productsData = useMemo(() => {
 		let list = filterAvailableProductList(
 			currentCollection.product_lists || []
@@ -161,13 +172,11 @@ const ReviewCollectionPlist = ({
 		productCountToShow,
 	]);
 
-
 	const showcasedProductsData = useMemo(
 		() =>
 			productsData ? productsData.filter((p) => p.starred) : [],
 		[productsData]
 	);
-
 
 	const autoProductsData = useMemo(() => {
 		return productsData
@@ -328,9 +337,9 @@ const ReviewCollectionPlist = ({
 											// Logic to handle the number of products to show based on screen width
 											const visibleProducts = (() => {
 												if (!isSelectedTag && selectedTags.length === 0 && !isExpanded) {
-													if (window.innerWidth >= 1324) {
+													if (viewportWidth >= 1324) {
 														return products.slice(0, 5); // For desktop (min-width: 1324px)
-													} else if (window.innerWidth >= 768) {
+													} else if (viewportWidth >= 768) {
 														return products.slice(0, 3); // For tablet (min-width: 768px)
 													} else {
 														return products.slice(0, 2); // For mobile (default)

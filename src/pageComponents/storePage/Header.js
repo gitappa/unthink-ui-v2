@@ -241,17 +241,19 @@ const Header = ({
 		}
 	};
 
-	const headerCreateMenu = (
-		<Menu className='bg-transparent lg:bg-white border-none flex lg:block flex-col items-center'>
-			<Menu.Item key='create_collection' className='py-2'>
+	const headerCreateMenu = [
+		{
+			key: 'create_collection',
+			className: 'py-2',
+			label: (
 				<Link
 					className='text-white lg:text-black-200'
 					href={PATH_CREATE_COLLECTION}>
 					COLLECTION
 				</Link>
-			</Menu.Item>
-		</Menu>
-	);
+			),
+		}
+	];
 
 	const isAdminLoggedIn = AdminCheck(
 		currentUser,
@@ -306,177 +308,161 @@ const Header = ({
 	// 	[associate_seller, currentUser.emailId]
 	// );
 
-	const headerProfileMenu = (
-		<Menu className='bg-transparent lg:bg-white border-none flex lg:block flex-col items-center'>
-			<>
-				{!isUserLogin ? (
-					<Menu.Item className='py-2' key='signin'>
+	const getHeaderProfileMenuItems = () => {
+		const items = [];
+		
+		if (!isUserLogin) {
+			items.push({
+				key: 'signin',
+				className: 'py-2',
+				label: (
+					<Link
+						className='text-white lg:text-black-200'
+						href={
+							is_store_instance
+								? ROUTES.SIGN_IN_PAGE
+								: ROUTES.TRY_FOR_FREE_PAGE
+						}>
+						Sign In
+					</Link>
+				),
+			});
+		} else {
+			items.push(
+				{
+					key: 'createcollections',
+					className: 'py-2',
+					label: (
+						<Link
+							className='text-base px-3 text-white lg:text-black-200'
+							href={PATH_CREATE_COLLECTION}>
+							Create {WISHLIST_TITLE}
+						</Link>
+					),
+				},
+				{
+					key: 'myprofile',
+					className: 'py-2',
+					label: MY_PROFILE && (
+						<Link className='text-white lg:text-black-200' href={MY_PROFILE}>
+							My Public Profile
+						</Link>
+					),
+					onClick: () => {
+						MY_PROFILE && navigate(MY_PROFILE);
+						showMenu && setShowMenu(false);
+					},
+				}
+			);
+
+			if (is_store_instance && isSellerLoggedIn) {
+				items.push({
+					key: 'myproducts',
+					className: 'py-2',
+					onClick: () => navigate(ROUTES.MY_PRODUCTS),
+					label: (
+						<span className='text-base px-3 text-white lg:text-black-200'>
+							My Products
+						</span>
+					),
+				});
+			}
+
+			if (isAdminLoggedIn) {
+				items.push({
+					key: 'community',
+					className: 'py-2',
+					onClick: onCategoriesClick,
+					label: (
+						<span className='text-base px-3 text-white lg:text-black-200'>
+							Community
+						</span>
+					),
+				});
+			}
+
+			items.push({
+				key: 'editprofile',
+				className: 'py-2',
+				label: PROFILE && (
+					<Link className='text-white lg:text-black-200' href={PROFILE}>
+						Edit Profile
+					</Link>
+				),
+			});
+
+			if (enablePlist && !currentUser.trial_user) {
+				items.push({
+					key: 'store_settings',
+					className: 'py-2',
+					label: (
 						<Link
 							className='text-white lg:text-black-200'
-							href={
-								is_store_instance
-									? ROUTES.SIGN_IN_PAGE
-									: ROUTES.TRY_FOR_FREE_PAGE
-							}>
-							{/* redirecting to try for free temporarily */}
-							Sign In
+							href={CREATE_STORE}>
+							Store Settings
 						</Link>
-					</Menu.Item>
-				) : (
-					<>
-						<Menu.Item key='createcollections' className='py-2'>
-							<Link
-								className='text-base px-3 text-white lg:text-black-200'
-									href={PATH_CREATE_COLLECTION}>
-								Create {WISHLIST_TITLE}
-							</Link>
-						</Menu.Item>
-						<Menu.Item
-							key='myprofile'
-							className='py-2'
-						onClick={() => {
-								MY_PROFILE && navigate(MY_PROFILE);
-							showMenu && setShowMenu(false);
-						}}>
-						{MY_PROFILE && (
-							<Link className='text-white lg:text-black-200' href={MY_PROFILE}>
-								My Public Profile
-							</Link>
-						)}
-						</Menu.Item>
-						{/* <Menu.Item
-							key='mycollections'
-							className='py-2'
-							onClick={onWishlistClick}>
-							<span className='text-base px-3 text-white lg:text-black-200'>
-								My {WISHLISTS_TITLE}
-							</span>
-						</Menu.Item> */}
-						{is_store_instance && isSellerLoggedIn && (
-							<Menu.Item
-								key='myproducts'
-								className='py-2'
-								onClick={() => navigate(ROUTES.MY_PRODUCTS)}>
-								<span className='text-base px-3 text-white lg:text-black-200'>
-									My Products
-								</span>
-							</Menu.Item>
-						)}
-						{/* for samskara, heroesVillains and swiftlyStyled showing community menu item to open discover section only for admin user */}
-						{isAdminLoggedIn && (
-							// (isSamskaraInstance ||
-							// 	isHeroesVillainsInstance ||
-							// 	isSwiftlyStyledInstance ||
-							// 	isDoTheLookInstance
-							// ) &&
-							<Menu.Item
-								key='community'
-								className='py-2'
-								onClick={onCategoriesClick}>
-								<span className='text-base px-3 text-white lg:text-black-200'>
-									Community
-								</span>
-							</Menu.Item>
-						)}
-						<Menu.Item key='editprofile' className='py-2'>
-							{PROFILE && (
-								<Link className='text-white lg:text-black-200' href={PROFILE}>
-									Edit Profile
-								</Link>
-							)}
-						</Menu.Item>
-						{enablePlist && !currentUser.trial_user && (
-							<Menu.Item key='store_settings' className='py-2'>
-								<Link
-									className='text-white lg:text-black-200'
-										href={CREATE_STORE}>
-									Store Settings
-								</Link>
-							</Menu.Item>
-						)}
-						{viewLeaderboardEnabled && (
-							<Menu.Item
-								key='view_leaderboard'
-								className='py-2'
-								onClick={() => setShowLeaderboard(true)}>
-								<span className='text-base px-3 text-white lg:text-black-200'>
-									View Leaderboard
-								</span>
-							</Menu.Item>
-						)}
-						{/* // REMOVE */}
-						{/* {(currentUser?.attribution || isAdminLoggedIn) && ( */}
-						{isAdminLoggedIn && (
-							<Menu.Item
-								key='stats'
-								className='py-2'
-								onClick={() => setShowAttributions(true)}>
-								<span className='text-base px-3 text-white lg:text-black-200'>
-									Stats
-								</span>
-							</Menu.Item>
-						)}
-						{enable_venly && (
-							<Menu.Item
-								key='wallet'
-								className='py-2'
-								onClick={onMyWalletClick}>
-								<span className='text-base px-3 text-white lg:text-black-200'>
-									My Wallet
-								</span>
-							</Menu.Item>
-						)}
-						<Menu.Item key='signout' className='py-2' onClick={onSignOut}>
-							<span className='text-base px-3 text-white lg:text-black-200'>
-								Sign Out
-							</span>
-						</Menu.Item>
-					</>
-				)}
-			</>
+					),
+				});
+			}
 
-			{isBTInstance && (
-				<div className='lg:hidden text-center'>
-					{/* // REMOVE // */}
-					{/* <Menu.Item key='clubdiscounts' className='py-2'>
-						<a
-							href={btHeaderOptions.clubdiscounts}
-							className='text-base px-3 text-white lg:text-black-200'>
-							Club Discounts
-						</a>
-					</Menu.Item> */}
-					<Menu.Item key='discoverusa' className='py-2'>
-						<a
-							href={btHeaderOptions.discoverusa}
-							className='text-base px-3 text-white lg:text-black-200'>
-							Discover USA
-						</a>
-					</Menu.Item>
-					<Menu.Item key='deals' className='py-2'>
-						<a
-							href={btHeaderOptions.deals}
-							className='text-base px-3 text-white lg:text-black-200'>
-							Real deals
-						</a>
-					</Menu.Item>
-					{/* <Menu.Item key='sweepstakes' className='py-2'>
-						<a
-							href={btHeaderOptions.sweepstakes}
-							className='text-base px-3 text-white lg:text-black-200'>
-							Sweepstakes
-						</a>
-					</Menu.Item> */}
-					<Menu.Item key='shop' className='py-2'>
-						<a
-							href={btHeaderOptions.shop}
-							className='text-base px-3 text-white lg:text-black-200'>
-							Shop
-						</a>
-					</Menu.Item>
-				</div>
-			)}
-		</Menu>
-	);
+			if (viewLeaderboardEnabled) {
+				items.push({
+					key: 'view_leaderboard',
+					className: 'py-2',
+					onClick: () => setShowLeaderboard(true),
+					label: (
+						<span className='text-base px-3 text-white lg:text-black-200'>
+							View Leaderboard
+						</span>
+					),
+				});
+			}
+
+			if (isAdminLoggedIn) {
+				items.push({
+					key: 'stats',
+					className: 'py-2',
+					onClick: () => setShowAttributions(true),
+					label: (
+						<span className='text-base px-3 text-white lg:text-black-200'>
+							Stats
+						</span>
+					),
+				});
+			}
+
+			if (enable_venly) {
+				items.push({
+					key: 'wallet',
+					className: 'py-2',
+					onClick: onMyWalletClick,
+					label: (
+						<span className='text-base px-3 text-white lg:text-black-200'>
+							My Wallet
+						</span>
+					),
+				});
+			}
+
+			items.push({
+				key: 'signout',
+				className: 'py-2',
+				onClick: onSignOut,
+				label: (
+					<span className='text-base px-3 text-white lg:text-black-200'>
+						Sign Out
+					</span>
+				),
+			});
+		}
+
+		return items;
+	};
+
+	const headerProfileMenu = {
+		items: getHeaderProfileMenuItems(),
+		className: 'bg-transparent lg:bg-white border-none flex lg:block flex-col items-center'
+	};
 
 	return (
 		<>
@@ -701,9 +687,9 @@ const Header = ({
 									<Dropdown
 										overlayClassName='fixed'
 										// disabled={isUserFetching}
-										overlay={headerCreateMenu}
+										menu={{ items: headerCreateMenu }}
 										trigger={["click"]}
-										destroyPopupOnHide>
+										destroyOnHidden>
 										<div className='pl-3 xl:pl-6 lg:flex hidden items-center cursor-pointer'>
 											<span className='xl:text-base font-semibold leading-6 uppercase'>
 												CREATE
@@ -774,26 +760,34 @@ const Header = ({
 						<HomeOutlined className='m-auto' />
 					</div> */}
 					<Image
-	src={menuIcon}
-	alt="Menu"
-	className='text-lg text-black flex h-7 w-7 cursor-pointer'
-	onClick={() => setShowMenu(true)}
-	width={28}
-	height={28}
-/>
+						src={menuIcon}
+						alt="Menu"
+						className='text-lg text-black flex h-7 w-7 cursor-pointer'
+						onClick={() => setShowMenu(true)}
+						width={28}
+						height={28}
+					/>
 				</div>
 			)}
 
 			{showMenu && (
-				<div className='fixed top-0 z-40 flex flex-col w-screen h-screen px-5 py-3 items-end max-h-screen overflow-auto min-h-full bg-black-200 text-black-103'>
-					<div>
+				<div className='fixed z-50 top-0 left-0 w-full h-full bg-blue-105 overflow-auto'>
+					<div className='flex justify-end p-4'>
 						<CloseOutlined
 							className='text-white text-xl'
 							onClick={() => setShowMenu(false)}
 						/>
 					</div>
 					<div className='flex justify-center items-center w-full mt-4 mobile-profile-menu'>
-						{headerProfileMenu}
+						{showProfileIcon ? (
+							<UserProfileMenu
+								isUserFetching={isUserFetching}
+								headerProfileMenu={headerProfileMenu}
+								currentUser={currentUser}
+								isSwiftlyStyledInstance={isSwiftlyStyledInstance}
+								isDoTheLookInstance={isDoTheLookInstance}
+							/>
+						) : null}
 					</div>
 				</div>
 			)}
@@ -802,7 +796,8 @@ const Header = ({
 				attribution={currentUser?.attribution}
 				statsModalTitle={
 					(currentUser.first_name || currentUser.last_name) &&
-					`Audience stats for ${currentUser.first_name || ""} ${currentUser.last_name || ""
+					`Audience stats for ${currentUser.first_name || ""} ${
+						currentUser.last_name || ""
 					}:`
 				}
 				showAttributionModal={showAttributions}

@@ -97,7 +97,7 @@ const Header = ({
 								href='/publishers'>
 								For Publishers
 							</Link> */}
-							<div className='relative dropdown'>
+							<div className='relative dropdown group'>
 								<Link
 									className={`text-current p-0 ${getMenuItemActiveClassName([
 										"/publishers/",
@@ -106,49 +106,23 @@ const Header = ({
 									href='/publishers'>
 									Creators ▼
 								</Link>
-								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1'>
+								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1 group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
 									<Link
-										className={`text-base ${getSubMenuItemActiveClassName([
+										className={`text-base block px-4 py-2 hover:bg-slate-800 ${getSubMenuItemActiveClassName([
 											"/publishers/",
 										])}`}
 										href='/publishers'>
 										Publishers
 									</Link>
-									<hr />
+									<hr className='my-1 border-slate-700' />
 									<Link
-										className={`text-base ${getSubMenuItemActiveClassName([
+										className={`text-base block px-4 py-2 hover:bg-slate-800 ${getSubMenuItemActiveClassName([
 											"/influencers/",
 										])}`}
 										href='/influencers'>
 										Influencers
 									</Link>
 								</div>
-								{/* <div className='relative dropdown'>
-								<Link
-									className={`text-current p-0 ${getMenuItemActiveClassName(
-										["/creators/", "/creators/shopping-festival/"]
-									)}`}
-									href='/creators/shopping-festival'>
-									For Creators ▼
-								</Link>
-								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1'>
-									<Link
-										className={`text-base ${getSubMenuItemActiveClassName([
-											"/creators/",
-										])}`}
-										href='/creators'>
-										Creators
-									</Link>
-									<hr />
-									<Link
-										className={`text-base ${getSubMenuItemActiveClassName([
-											"/creators/shopping-festival/",
-										])}`}
-										href='/creators/shopping-festival'>
-										Shopping Festival
-									</Link>
-								</div>
-							</div> */}
 							</div>
 							<Link
 								className={`text-current p-0 ${getMenuItemActiveClassName([
@@ -243,7 +217,7 @@ const Header = ({
 						</button> */}
 					</div>
 					<div
-						className='px-3 block lg:hidden cursor-pointer'
+						className='px-3 lg:hidden cursor-pointer flex items-center h-full'
 						onClick={() => setShowMenu(true)}>
 					<Image src={menu_icon} alt='menu_icon' width={24} height={24} />
 				</div>

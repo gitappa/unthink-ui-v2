@@ -1,7 +1,6 @@
 import React from "react";
-import { EditOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { EditOutlined, ShoppingCartOutlined, SendOutlined } from "@ant-design/icons";
 import { Steps } from "antd";
-import SendIcon from "../../images/send_icon.svg?react";
 import header_aura from "../../images/chat/header_aura_image_transparent.png";
 
 const ReviewCollectionStepsUI = ({
@@ -58,7 +57,7 @@ const ReviewCollectionStepsUI = ({
 		},
 		{
 			title: "Publish",
-			icon: <SendIcon className="steps_icons" />,
+			icon: <SendOutlined className="steps_icons" />,
 			onClick: () => handleChangeView(STEPS.PUBLISH),
 			disabled: disabledSteps.includes(STEPS.PUBLISH),
 			key: STEPS.PUBLISH,
@@ -130,7 +129,7 @@ const ReviewCollectionStepsUI = ({
 						current={
 							currentView === STEPS.HELP
 								? -1
-								: currentView === STEPS.CONTENT
+								: currentView === STEPS.CONTENTUserNotFound
 									? 0
 									: currentView === STEPS.PRODUCTS
 										? 1

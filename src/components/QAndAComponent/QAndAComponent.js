@@ -141,10 +141,12 @@ const QAndAComponent = ({
 			className='z-30 fixed bottom-2 right-2 tablet:bottom-8 tablet:right-8 mb-20 tablet:mb-0'>
 			<Tooltip
 				placement='left'
-				getPopupContainer={() => document.getElementById(popoverId)}
+				getPopupContainer={() =>
+					typeof document !== "undefined" ? document.getElementById(popoverId) : undefined
+				}
 				title={"Ask Aura"}
-				visible={popoverTooltipVisible && !popoverVisible}
-				onVisibleChange={handlePopoverTooltipVisibleChange}>
+				open={popoverTooltipVisible && !popoverVisible}
+				onOpenChange={handlePopoverTooltipVisibleChange}>
 				<div
 					className='flex cursor-pointer bg-indigo-600 rounded-full text-lg tablet:text-4xl text-white'
 					role='button'

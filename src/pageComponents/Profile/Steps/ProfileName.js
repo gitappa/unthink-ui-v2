@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import {
 	Input,
 	Upload,
@@ -179,7 +180,7 @@ const ProfileName = ({
 						<Col xs={24}>
 							<Input
 								name='brandName'
-								className='bg-transparent mt-1'
+								className='bg-transparent mt-1 text-white'
 								placeholder='Enter brand name'
 								value={sellerDetails.brandName}
 								onChange={handleSellerDataChange}
@@ -193,7 +194,7 @@ const ProfileName = ({
 						<Col span={24}>
 							<TextArea
 								name='description'
-								className='bg-transparent'
+								className='bg-transparent text-white'
 								rows={6}
 								placeholder='Enter brand description'
 								value={profileData.description}
@@ -203,7 +204,7 @@ const ProfileName = ({
 						<Col span={24}>
 							<Select
 								name="currency"
-								className="bg-transparent mt-1 w-full"
+								className="bg-transparent mt-1 w-full text-white"
 								placeholder="Select Currency"
 								value={sellerDetails.currency}
 								onChange={(value) => handleSellerDetailsChange("currency", value)}
@@ -388,10 +389,10 @@ const ProfileName = ({
 					<Row gutter={[20, 20]} className='mt-6'>
 						<Col xs={24}>
 							<div className='flex items-center'>
-								<img src={instagramIcon} width='28px' />
+								<Image src={instagramIcon} width={28} height={28} alt='Instagram' />
 								<Input
 									name='instagramUrl'
-									className='bg-transparent ml-3'
+									className='bg-transparent ml-3 text-white'
 									placeholder='Enter Instagram URL'
 									value={sellerDetails.instagramUrl}
 									onChange={handleSellerDataChange}
@@ -405,10 +406,10 @@ const ProfileName = ({
 						</Col>
 						<Col xs={24}>
 							<div className='flex items-center'>
-								<img src={facebookIcon} width='30px' />
+								<Image src={facebookIcon} width={30} height={30} alt='Facebook' />
 								<Input
 									name='facebookUrl'
-									className='bg-transparent ml-3'
+									className='bg-transparent ml-3 text-white'
 									placeholder='Enter facebook URL'
 									value={sellerDetails.facebookUrl}
 									onChange={handleSellerDataChange}

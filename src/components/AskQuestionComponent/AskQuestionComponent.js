@@ -105,7 +105,7 @@ const AskQuestionComponent = ({
 							<input
 								name='page_url'
 								type='hidden'
-								value={window?.location?.href}
+								value={typeof window !== "undefined" ? window.location?.href : ""}
 							/>
 							<input name='page_section' type='hidden' value={id} />
 
@@ -159,17 +159,17 @@ const AskQuestionComponent = ({
 			<Popover
 				placement='topRight'
 				content={popoverContent}
-				visible={popoverVisible}
+				open={popoverVisible}
 				trigger='click'
-				onVisibleChange={handlePopoverVisibleChange}
-				arrowPointAtCenter
+				onOpenChange={handlePopoverVisibleChange}
+				arrow={{ pointAtCenter: true }}
 				overlayClassName='ask-question-popover-overlay'
-				destroyTooltipOnHide={false}>
+				destroyOnHidden={false}>
 				<Tooltip
 					placement='left'
 					title={"Stuck?"}
-					visible={popoverTooltipVisible && !popoverVisible}
-					onVisibleChange={handlePopoverTooltipVisibleChange}>
+					open={popoverTooltipVisible && !popoverVisible}
+					onOpenChange={handlePopoverTooltipVisibleChange}>
 					<div
 						className='flex cursor-pointer bg-indigo-600 rounded-full text-lg tablet:text-4xl text-white p-2 tablet:p-4'
 						role='button'>

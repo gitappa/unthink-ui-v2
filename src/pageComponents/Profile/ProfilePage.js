@@ -486,17 +486,18 @@ const ProfilePage = () => {
 						<div className='w-full mt-4 md:mt-0'>
 							{!isMobile ? (
 								<>
-									<Steps
-										responsive={false}
-										type='navigation'
-										size='small'
-										current={currentStep}
-										onChange={onStepChange}
-										className='site-navigation-steps'>
-										{steps.map((step) => (
-											<Step title={step} />
-										))}
-									</Steps>
+							<Steps
+  responsive={false}
+  type='navigation'
+  size='small'
+  current={currentStep}
+  onChange={onStepChange}
+  className="site-navigation-steps [&_.ant-steps-item-title]:!text-white [&_.ant-steps-item-wait_.ant-steps-item-title]:!text-white/70"
+>
+  {steps.map((step, i) => (
+    <Step key={i} title={step} />
+  ))}
+</Steps>
 								</>
 							) : (
 								<div className='border-white border-b flex justify-center pb-2'>

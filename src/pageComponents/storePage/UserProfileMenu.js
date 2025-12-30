@@ -16,14 +16,21 @@ export const UserProfileMenu = ({
 
 }) => {
 	// URLSearchParamS
+	const dropdownMenuProps =
+		headerProfileMenu && Array.isArray(headerProfileMenu?.items)
+			? { menu: headerProfileMenu }
+			: Array.isArray(headerProfileMenu)
+				? { menu: { items: headerProfileMenu } }
+				: { overlay: headerProfileMenu };
+
 	return (
 		<>
 			<Dropdown
 				overlayClassName='fixed'
 				disabled={isUserFetching}
-				overlay={headerProfileMenu}
+				{...dropdownMenuProps}
 				trigger={["click"]}
-				destroyPopupOnHide>
+				destroyOnHidden>
 				<div className='pl-3 xl:pl-6 lg:flex items-center hidden cursor-pointer'>
 					{isSwiftlyStyledInstance || isDoTheLookInstance ? (
 						<div className="flex gap-2 items-center">

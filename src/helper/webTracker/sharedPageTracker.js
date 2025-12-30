@@ -53,13 +53,14 @@ export default {
 		};
 
 		if (iCode && cCode) {
-			params["og:url"] =
-				window &&
-				window.location.origin +
+			if (typeof window !== "undefined" && window.location) {
+				params["og:url"] =
+					window.location.origin +
 					window.location.pathname +
 					window.location.search +
 					(window.location.search == "" ? "?" : "&") +
 					`yfret_utm_source=${iCode}/${cCode}`; // yfret_utm_source=owner's influencer code"/company_code
+			}
 		}
 
 		// trackerAPI({ // removed tracking API calls for now as some API work to be done

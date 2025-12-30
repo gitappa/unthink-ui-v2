@@ -6,7 +6,8 @@ import React, {
 	useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Link from 'next/link'; import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { Button, Checkbox, Collapse, Select } from "antd";
 
 import { handleRecProductClick } from "../recommendations/redux/actions";
@@ -87,6 +88,9 @@ const SingleCollectionProductList = ({
 	handleSortOptionChange,
 	isRootPage = true,
 }) => {
+	const router = useRouter();
+	const navigate = useCallback((path) => router.push(path), [router]);
+
 	const [isGuestPopUpShow, singleCollection] = useSelector((state) => [
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.auth.user.singleCollections.data,

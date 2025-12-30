@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { Typography, Image } from "antd";
 import { useSelector } from "react-redux";
-
-import LeftImage from "../../images/carousel-left.svg?react";
-import RightImage from "../../images/carousel-right.svg?react";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -58,8 +56,8 @@ const ChatSuggestionsV2 = ({ onSuggestionClick, wrapperClassName = "" }) => {
 		slidesToScroll: 1,
 		variableWidth: true,
 		arrows: true,
-		nextArrow: <CustomArrow image={<RightImage />} />,
-		prevArrow: <CustomArrow image={<LeftImage />} />,
+		nextArrow: <CustomArrow image={<RightOutlined />} />,
+		prevArrow: <CustomArrow image={<LeftOutlined />} />,
 	};
 
 	const handleSuggestionClick = (suggestion) => {

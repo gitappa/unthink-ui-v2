@@ -100,7 +100,7 @@ export const searchTextOnStore = (searchText) => {
 };
 
 export const searchTextOnStoreV2 = (searchText) => {
-	if (searchText && window?.location?.href) {
+	if (typeof window !== "undefined" && searchText && window.location?.href) {
 		let url = new URL(window.location.href);
 		let params = new URLSearchParams(url.search);
 		if (params.has(PARAM_SEARCH_TEXT)) {
@@ -113,7 +113,7 @@ export const searchTextOnStoreV2 = (searchText) => {
 };
 
 export const getNewUrlWithoutSearchText = () => {
-	if (window?.location?.href) {
+	if (typeof window !== "undefined" && window.location?.href) {
 		let url = new URL(window.location.href);
 		let params = new URLSearchParams(url.search);
 		if (params.has(PARAM_SEARCH_TEXT)) {
@@ -128,7 +128,7 @@ export const getNewUrlWithoutSearchText = () => {
 
 // reload page if aura response take time more than 15 seconds
 export const startAuraSearchTimer = (handleTimeout) => {
-	if (window) {
+	if (typeof window !== "undefined") {
 		window.socketTimerId = setTimeout(() => {
 			// code to show error on aura timeout
 			// we can add this on socket Connect_failed later
@@ -148,23 +148,27 @@ export const startAuraSearchTimer = (handleTimeout) => {
 };
 
 export const stopAuraSearchTimer = () => {
-	if (window && window.socketTimerId) {
+	if (typeof window !== "undefined" && window.socketTimerId) {
 		clearTimeout(window.socketTimerId);
 	}
 };
 
 export const setCookie = (c_name, value, exdays) => {
-	var exdate = new Date();
-	exdate.setDate(exdate.getDate() + exdays);
-	var c_value =
-		escape(value) +
-		(exdays === null ? "" : "; expires=" + exdate.toUTCString());
-	c_value += ";SameSite=Strict; path=/";
-	document.cookie = c_name + "=" + c_value;
+	if (typeof document !== "undefined") {
+		var exdate = new Date();
+		exdate.setDate(exdate.getDate() + exdays);
+		var c_value =
+			escape(value) +
+			(exdays === null ? "" : "; expires=" + exdate.toUTCString());
+		c_value += ";SameSite=Strict; path=/";
+		document.cookie = c_name + "=" + c_value;
+	}
 };
 
 export const removeCookie = (c_name) => {
-	document.cookie = `${c_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+	if (typeof document !== "undefined") {
+		document.cookie = `${c_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+	}
 };
 
 export const generateRandomNumber = (count = 13) => {
@@ -390,7 +394,7 @@ export function generateOnContactFormSubmit(
 		// generate a five digit number for the contact_number variable
 		this.contact_number.value = (Math.random() * 100000) | 0;
 		// these IDs from the previous steps
-		window.emailjs &&
+		if (typeof window !== "undefined" && window.emailjs) {
 			window.emailjs.sendForm("service_grrt6ds", "template_1hm264c", this).then(
 				function () {
 					console.log("SUCCESS!");
@@ -421,7 +425,9 @@ export function generateOnContactFormSubmit(
 					} catch (error) { }
 					// END
 
-					document.getElementById(id)?.reset();
+					if (typeof document !== "undefined") {
+						document.getElementById(id)?.reset();
+					}
 
 					showSuccessMessage &&
 						notification.success({
@@ -435,6 +441,7 @@ export function generateOnContactFormSubmit(
 					console.log("FAILED...", error);
 				}
 			);
+		}
 	};
 }
 
@@ -452,12 +459,14 @@ export function generateOnScheduleDemoSubmit(
 		const serviceID = "service_grrt6ds";
 		const templateID = "template_dp738lp";
 
-		window.emailjs &&
+		if (typeof window !== "undefined" && window.emailjs) {
 			window.emailjs.sendForm(serviceID, templateID, this).then(
 				function () {
 					console.log("SUCCESS!");
 
-					document.getElementById(id)?.reset();
+					if (typeof document !== "undefined") {
+						document.getElementById(id)?.reset();
+					}
 
 					showSuccessMessage &&
 						notification.success({
@@ -471,10 +480,14 @@ export function generateOnScheduleDemoSubmit(
 					console.log("FAILED...", error);
 				}
 			);
+		}
 	};
 }
 
 export const getCurrentTheme = () => {
+	if (typeof window === "undefined" || !window.location?.origin) {
+		return "theme-unthink";
+	}
 	switch (window.location.origin) {
 		case "https://shop.budgettravel.com":
 		case "https://unthink-ui-gatsby-unthink-stage-qvde2butpa-uc.a.run.app":
@@ -497,14 +510,20 @@ export const clearStorages = () => {
 
 export const getIsStoreInstance = () =>
 	is_store_instance ||
-	(typeof localStorage !== "undefined" &&
-		localStorage.getItem("UN_IS_STORE") === "true");
+	(typeof window !== "undefined" &&
+		window.localStorage &&
+		window.localStorage.getItem("UN_IS_STORE") === "true");
 
 export const setIdpSignInMethod = (method) =>
-	localStorage.setItem("UN_SIGN_IN_IDP_METHOD", method);
+	typeof window !== "undefined" &&
+	window.localStorage &&
+	window.localStorage.setItem("UN_SIGN_IN_IDP_METHOD", method);
 
 export const getIdpLoginMethod = () =>
-	localStorage?.getItem("UN_SIGN_IN_IDP_METHOD") || "";
+	(typeof window !== "undefined" &&
+		window.localStorage &&
+		window.localStorage.getItem("UN_SIGN_IN_IDP_METHOD")) ||
+	"";
 
 export const getBlogCollectionPagePath = (
 	user_name,
@@ -755,11 +774,13 @@ export function getCollectionDefaultDescription(collectionName) {
 }
 
 export const makeBodyOverflowHidden = () => {
-	if (window?.document) window.document.body.style.overflow = "hidden";
+	if (typeof window !== "undefined" && window.document?.body)
+		window.document.body.style.overflow = "hidden";
 };
 
 export const makeBodyOverflowUnset = () => {
-	if (window?.document) window.document.body.style.overflow = "unset";
+	if (typeof window !== "undefined" && window.document?.body)
+		window.document.body.style.overflow = "unset";
 };
 
 export const filterProductListBySelectedTags = (list, tags, tag_map) => {

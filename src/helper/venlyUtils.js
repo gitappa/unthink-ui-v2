@@ -13,7 +13,7 @@ export const connectVenly = (
 	venlyClientId = venly_client_id,
 	venlyEnv = venly_environment
 ) => {
-	if (window) {
+	if (typeof window !== "undefined") {
 		const parameters = {
 			windowMode: "POPUP",
 		};
@@ -31,6 +31,7 @@ export const venlyGetAccount = (
 	chainSecretType = venlyChainSecretType,
 	requiredWallet = false
 ) =>
+	typeof window !== "undefined" &&
 	window &&
 	window.venlyConnect &&
 	window.venlyConnect.flows
@@ -60,6 +61,7 @@ export const venlyGetAccount = (
 		});
 
 export const isVenlyUserAuthenticated = () =>
+	typeof window !== "undefined" &&
 	window &&
 	window.venlyConnect &&
 	window.venlyConnect.auth &&
@@ -181,6 +183,7 @@ export const saveVenlyUserInfo = async (userInfo = {}, venlyUser = {}) => {
 
 // logout the venly user in the venly widget
 export const logoutVenlyUser = () =>
+	typeof window !== "undefined" &&
 	window &&
 	window.venlyConnect &&
 	window.venlyConnect.logout &&

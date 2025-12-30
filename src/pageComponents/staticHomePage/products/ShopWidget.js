@@ -57,7 +57,7 @@ const ShopWidget = () => {
 				</div>
 			</section>
 
-			<section className='bg-slat-900 lg:mx-12 2xl:mx-72px p-5 lg:p-14 mt-24 relative'>
+			<section className='bg-slate-900 lg:mx-12 2xl:mx-72 p-5 lg:p-14 mt-24 relative'>
 				<img
 					alt='try_it_now'
 					src={try_it_now}

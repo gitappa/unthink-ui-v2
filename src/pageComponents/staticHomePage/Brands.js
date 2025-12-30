@@ -133,7 +133,7 @@ const Brands = () => {
 				</div>
 				<div className='flex flex-col mt-12 gap-7 md:gap-0 w-full max-w-4xl mx-auto'>
 					<div className='flex flex-col-reverse md:flex-row items-center gap-3 md:gap-7 md:-mb-2.5 ml-auto'>
-						<div className='bg-slat-900 rounded-xl p-4'>
+						<div className='bg-slate-900 rounded-xl p-4'>
 							<h1 className='text-xl lg:text-2xl lg:leading-44 text-gray-103 font-normal'>
 								How can i match my new white sofa ?
 							</h1>
@@ -152,7 +152,7 @@ const Brands = () => {
 						</div>
 					</div>
 					<div className='flex flex-col-reverse md:flex-row-reverse items-center gap-3 md:gap-7 md:-mt-2.5 md:-mb-2.5 mr-auto'>
-						<div className='bg-slat-900 rounded-xl p-4'>
+						<div className='bg-slate-900 rounded-xl p-4'>
 							<h1 className='text-xl lg:text-2xl lg:leading-44 text-gray-103 font-normal'>
 								Help with WFH stylish decor for my study
 							</h1>
@@ -170,7 +170,7 @@ const Brands = () => {
 						</div>
 					</div>
 					<div className='flex flex-col-reverse md:flex-row items-center gap-3 md:gap-7 md:-mt-2.5 ml-auto'>
-						<div className='bg-slat-900 rounded-xl p-4'>
+						<div className='bg-slate-900 rounded-xl p-4'>
 							<h1 className='text-xl lg:text-2xl lg:leading-44 text-gray-103 font-normal'>
 								Help me find items matching a look like this
 							</h1>

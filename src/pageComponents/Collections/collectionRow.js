@@ -174,52 +174,62 @@ const DropdownList = (props) => {
 			});
 		};
 
-		return (
-			<Menu>
-				<Menu.Item key='editCollection'>
-					<div
-						onClick={(e) => onEditCollection(e, collectionData)}
-						className='flex items-center'>
+		const items = [
+			{
+				key: 'editCollection',
+				onClick: (e) => onEditCollection(e.domEvent, collectionData),
+				label: (
+					<div className='flex items-center'>
 						<EditOutlined className='mr-2' />
 						<Text>Edit Collection</Text>
 					</div>
-				</Menu.Item>
-				<Menu.Item key='deleteList'>
-					<div
-						onClick={(e) => handleMenuClick(e, id)}
-						className='flex items-center'>
+				),
+			},
+			{
+				key: 'deleteList',
+				onClick: (e) => handleMenuClick(e.domEvent, id),
+				label: (
+					<div className='flex items-center'>
 						<DeleteOutlined className='mr-2' />
 						<Text>Delete List</Text>
 					</div>
-				</Menu.Item>
-				{expertId === ttId && collectionData.status !== COLLECTION_DONE && (
-					<Menu.Item key='markAsDone'>
-						<div
-							onClick={(e) => {
-								e.stopPropagation();
-								handleUpdateCollectionStatus(COLLECTION_DONE, collectionData);
-							}}
-							className='flex items-center'>
-							<CheckOutlined className='mr-2' />
-							<Text>Mark As Done</Text>
-						</div>
-					</Menu.Item>
-				)}
-				{expertId && userId && (
-					<Menu.Item key='viewSharedPage'>
-						<div
-							onClick={(e) => {
-								e.stopPropagation();
-								navigate(`${INFLUENCER_SHARED}${userId}`);
-							}}
-							className='flex items-center'>
-							<ShareAltOutlined className='mr-2' />
-							<Text>View Shared Page</Text>
-						</div>
-					</Menu.Item>
-				)}
-			</Menu>
-		);
+				),
+			},
+		];
+
+		if (expertId === ttId && collectionData.status !== COLLECTION_DONE) {
+			items.push({
+				key: 'markAsDone',
+				onClick: (e) => {
+					e.domEvent.stopPropagation();
+					handleUpdateCollectionStatus(COLLECTION_DONE, collectionData);
+				},
+				label: (
+					<div className='flex items-center'>
+						<CheckOutlined className='mr-2' />
+						<Text>Mark As Done</Text>
+					</div>
+				),
+			});
+		}
+
+		if (expertId && userId) {
+			items.push({
+				key: 'viewSharedPage',
+				onClick: (e) => {
+					e.domEvent.stopPropagation();
+					navigate(`${INFLUENCER_SHARED}${userId}`);
+				},
+				label: (
+					<div className='flex items-center'>
+						<ShareAltOutlined className='mr-2' />
+						<Text>View Shared Page</Text>
+					</div>
+				),
+			});
+		}
+
+		return items;
 	};
 
 	const handleProceed = (id) => {
@@ -255,14 +265,14 @@ const DropdownList = (props) => {
 	return (
 		<Dropdown
 			open={isVisible}
-			destroyPopupOnHide
-			onVisibleChange={(e) => setVisible(e)}
-			overlay={() =>
-				menuOption({
+			destroyOnHidden
+			onOpenChange={(e) => setVisible(e)}
+			menu={{
+				items: menuOption({
 					id: data?.data?.collection_id,
 					collectionData: data?.data,
 				})
-			}
+			}}
 			trigger={["click"]}>
 			<a
 				className='ant-dropdown-link'

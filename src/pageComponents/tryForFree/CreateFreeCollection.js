@@ -1,5 +1,6 @@
 import React, {
 	Suspense,
+	startTransition,
 	useCallback,
 	useContext,
 	useEffect,
@@ -9,6 +10,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link';
+import Image from "next/image";
 import { useNavigate } from "../../helper/useNavigate";
 import {
 	Spin,
@@ -222,7 +224,9 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 			const videoUrl = data?.dataExtractionRequest?.data?.video_url;
 
 			if (videoUrl) {
-				dispatch(setAiExtractionData(data?.dataExtractionRequest));
+				startTransition(() => {
+					dispatch(setAiExtractionData(data?.dataExtractionRequest));
+				});
 			}
 		});
 
@@ -232,7 +236,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		};
 	}, []);
 
-	const token = getParams("token");
+	const [token, setToken] = useState("");
 
 	const {
 		isFetching: createWishlistInProgress,
@@ -244,14 +248,26 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	const [scratchAIPromptOpen, setScratchAIPromptOpen] = useState(false);
 
 	useEffect(() => {
-		if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
-			setCurrentView(STEPS.CONTENT);
-		} else {
-			setCurrentView(STEPS.HELP);
-			localStorage.setItem(
-				LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION,
-				"true"
-			);
+		if (typeof window !== "undefined") {
+			startTransition(() => {
+				setToken(getParams("token") || "");
+			});
+		}
+
+		if (typeof window !== "undefined" && window.localStorage) {
+			if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
+				startTransition(() => {
+					setCurrentView(STEPS.CONTENT);
+				});
+			} else {
+				startTransition(() => {
+					setCurrentView(STEPS.HELP);
+				});
+				localStorage.setItem(
+					LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION,
+					"true"
+				);
+			}
 		}
 
 		return () => setIsVideoDataExtractionStarted(false);
@@ -851,12 +867,12 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 					"Try to avoid giving same keywords or response",
 					"Do not give vague keywords.",
 				].map((item, index) => (
-					<>
+					<React.Fragment key={item}>
 						{index === 0 ? null : <hr />}
 						<ul onClick={() => handleImportTemplateOptionClick(item)}>
 							{item}
 						</ul>
-					</>
+					</React.Fragment>
 				))}
 			</li>
 		</div>
@@ -1081,7 +1097,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																			: "text-black-100 gap-9"
 																	}`}>
 																	<span>{i.title}</span>
-																	<img
+																	<Image
 																		className={`createCollection_image ${
 																			createCollectionOptionsKeys.video_url ===
 																				i.id &&
@@ -1098,6 +1114,8 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																		}`}
 																		src={i.icon}
 																		alt={i.title}
+																		width={28}
+																		height={28}
 																	/>
 																</div>
 															</label>

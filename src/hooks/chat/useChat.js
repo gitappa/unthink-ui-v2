@@ -30,7 +30,10 @@ export const useChat = (chatTypeKey = CHAT_TYPE_CHAT) => {
 	const dispatch = useDispatch();
 
 	const socketException = (data) => {
-		if (sessionStorage.getItem("socketCount") >= 3) {
+		if (typeof window === "undefined" || typeof sessionStorage === "undefined") {
+			return;
+		}
+		if (Number(sessionStorage.getItem("socketCount")) >= 3) {
 			stopAuraSearchTimer();
 			dispatch(setSocketException(data));
 			dispatch(setShowChatLoader(false, chatTypeKey));
