@@ -6,6 +6,8 @@ import {
 	LinkedinFilled,
 } from "@ant-design/icons";
 
+import styles from "./styles.module.css";
+
 import hbar_foundation_logo from "../../images/newStaticPageImages/about/hbar_foundation_logo.svg";
 import vtex_logo from "../../images/newStaticPageImages/about/vtex_logo.svg";
 import usa_office_map from "../../images/newStaticPageImages/about/usa_office_map.png";
@@ -59,7 +61,7 @@ const Person = ({ image, name, designation, linkedn }) => {
 
 const About = () => {
 	return (
-		<div className='font-firaSans'>
+		<div className='font-firaSans static_page_bg'>
 			<section className='py-24 lg:py-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto'>
 				<div className='max-w-340 md:max-w-screen-sm mx-auto text-center flex flex-col items-center'>
 					<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal font-firaSans italic'>
@@ -86,7 +88,7 @@ const About = () => {
 					</div>
 				</div>
 			</section>
-			<section className='teams_container py-10 lg:py-20'>
+			<section className={`${styles.teams_container} py-10 lg:py-20`}>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-6xl mx-auto'>
 					<h1 className='max-w-5xl mx-auto text-3xl lg:text-5xl lg:leading-54 text-gray-103 text-center lg:text-left'>
 						Our Team
@@ -202,7 +204,7 @@ const About = () => {
 					</div>
 				</div>
 			</section>
-			<section className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto mt-11 mb-28 lg:mb-64'>
+			<section className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto mt-11 pb-28 lg:pb-64'>
 				<h1 className='text-3xl lg:text-5xl lg:leading-54 text-gray-103 mb-6 lg:mb-16'>
 					Our offices
 				</h1>

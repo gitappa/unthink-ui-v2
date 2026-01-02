@@ -106,7 +106,7 @@ const Header = ({
 									href='/publishers'>
 									Creators ▼
 								</Link>
-								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1 group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
+								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1 group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-slate-900 border border-slate-700 shadow-lg z-50 min-w-40'>
 									<Link
 										className={`text-base block px-4 py-2 hover:bg-slate-800 ${getSubMenuItemActiveClassName([
 											"/publishers/",
