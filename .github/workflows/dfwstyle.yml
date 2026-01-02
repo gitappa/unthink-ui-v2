@@ -1,0 +1,87 @@
+name: CI dfwstyle
+on:
+  push:
+    branches: 
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Cloud Run Deployment Prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node Modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Install Dependency
+        working-directory: "packages/web-client-gatsby"
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Setup and run build on app
+        working-directory: "packages/web-client-gatsby"
+        run: |
+          npm run build
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+          #GATSBY_BACKEND_URL: "https://webbot-image-sync-qvde2butpa-uc.a.run.app"
+          GATSBY_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
+          GATSBY_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
+          #GA_TRACKING_ID: "G-HHK6NNEJNF"
+          GATSBY_STAGING_ENV: "false"
+          GATSBY_IS_KIOSK_ENABLED: "false"
+          GATSBY_SUPER_ADMIN_USER_NAME: "dfwstyle"
+          # GATSBY_INSTANCE_LOGO: "https://www.budgettravel.com/assets/bt_logo_bg.svg"
+          GATSBY_AURA_HEADER_THEME: "light"
+          GATSBY_SHARED_PROFILE_ON_ROOT: "dfwstyle"
+          GATSBY_CURRENT_STORE_NAME: "dfwstyle"
+          GATSBY_CURRENT_STORE_ID: "14555795"
+          # GATSBY_HOME_PAGE_URL: "https://www.budgettravel.com"
+          GATSBY_ENABLE_VIEW_SIMILAR_PRODUCTS: "false"
+          GATSBY_ENABLE_RECOMMENDATIONS: "false"
+          GATSBY_IS_STORE_INSTANCE: "true"
+          GATSBY_ADMIN_USER_ID: "176481739776942"
+          GATSBY_AURA_YFRET_USER_COLL_BASE_URL: "https://auraprod.unthink.ai"
+          GATSBY_ENABLE_VENLY: "false"
+          GATSBY_WEBBOT_NFT_SERVICE__BASE_URL: ""
+          GATSBY_PDP_PAGE_ENABLED: "false"
+          GATSBY_PAYMENT_URL : "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
+      - name: Setup GCP Service Account
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.DEV_GCP_SA_KEY_NEW }}
+          export_default_credentials: true
+      - name: Authorize
+        working-directory: "packages/web-client-gatsby"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev --quiet
+      
+      - name: Build
+        working-directory: "packages/web-client-gatsby"
+        run: |
+          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dfwstyle-ui .
+      
+      - name: Push
+        working-directory: "packages/web-client-gatsby"
+        run: |
+          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dfwstyle-ui
+      
+      - name: Deploy
+        working-directory: "packages/web-client-gatsby"
+        run: |
+          gcloud run deploy unthink-ui-gatsby-dfwstyle-ui \
+          --region us-central1 \
+          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dfwstyle-ui \
+          --platform managed \
+          --project ${{ secrets.DEV_GCP_PROJECT_ID }}
+      
+      

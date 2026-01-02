@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { useNavigate } from "../../../helper/useNavigate";
 
 import store_product_image from "../../../images/newStaticPageImages/store_product_image.svg";
@@ -32,10 +33,12 @@ const PopupStore = () => {
 						Build Plug-and-play store pages in under 2 minutes with Unthink.AI
 					</p>
 				</div>
-				<img
+				<Image
 					className='pt-7 mx-auto px-8 lg:px-0'
 					src={store_product_image}
 					alt='store_product_image'
+					width={958}
+					height={815}
 				/>
 			</section>
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>

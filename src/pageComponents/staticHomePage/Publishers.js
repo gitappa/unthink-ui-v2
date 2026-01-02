@@ -61,10 +61,12 @@ const Publishers = () => {
 					onClick={() => navigate("/products/pop-up-store")}>
 					Learn More
 				</button>
-				<img
+				<Image
 					className='pt-12'
 					src={store_product_image}
 					alt='store_product_image'
+					width={958}
+					height={815}
 				/>
 			</section>
 			<section className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto mt-28 lg:mt-52 flex flex-col-reverse lg:flex-row items-center justify-between'>
@@ -88,10 +90,12 @@ const Publishers = () => {
 			</section>
 			<section className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto mt-28 lg:mt-52 flex flex-col lg:flex-row items-center justify-between'>
 				<div className='lg:mr-11 xl:mr-0'>
-					<img
+					<Image
 						className='ml-auto'
 						src={searchbar_image}
 						alt='searchbar_image'
+						width={549}
+						height={144}
 					/>
 				</div>
 				<div>

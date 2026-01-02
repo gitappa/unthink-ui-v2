@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Disabled to prevent double rendering and Suspense hydration issues
-  swcMinify: true,
+  // swcMinify: true,
   
-  // Skip ESLint during build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // // Skip ESLint during build
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
   
   // Handle SASS/SCSS
   sassOptions: {

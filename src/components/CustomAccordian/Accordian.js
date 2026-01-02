@@ -6,7 +6,7 @@ import styles from './Accordian.module.scss';
 const Pannel = ({ title, children }) => {
 	const [isOpen, setOpen] = useState(false);
 	return (
-		<div className='accordion_wrapper mb-9'>
+		<div className='accordion_wrapper'>
 			<div
 				className={`flex justify-between items-center cursor-pointer ${
 					isOpen ? "open" : ""
