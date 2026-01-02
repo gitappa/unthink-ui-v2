@@ -8,9 +8,10 @@ import React, {
 import { useSelector } from "react-redux";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { Select, Tooltip } from "antd";
+import Image from "next/image";
 
 import { isEmpty } from "../../helper/utils";
-import FilterIcon from "../../images/filter_outline.svg?react";
+import filterIcon from "../../images/filter_outline.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -405,6 +406,24 @@ const ProductFiltersTags = ({
 				</div>
 
 			</div>
+			{typeof handleFilterOptionsVisibleChange === "function" ? (
+				<div className='flex items-center justify-end mt-2'>
+					<div
+						className='flex items-center cursor-pointer'
+						onClick={() =>
+							handleFilterOptionsVisibleChange(!filterOptionsVisible)
+						}>
+						<Image
+							src={filterIcon}
+							alt='Filters'
+							width={24}
+							height={24}
+							className='mr-1'
+						/>
+						<span className='underline text-sm md:text-base'>Filters</span>
+					</div>
+				</div>
+			) : null}
 			{showCustomFilterInput ? (
 				<div className='w-full lg:flex lg:justify-between'>
 					<div className='mt-2 w-full'>

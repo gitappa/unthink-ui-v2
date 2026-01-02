@@ -1,15 +1,17 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import { setAiExtractionData } from "../../hooks/chat/redux/actions";
 import { CREATE_ACTION, EDIT_ACTION } from "../../constants/codes";
+import dynamic from "next/dynamic";
 
-const AiExtractionDataModal = React.lazy(() =>
-	import("./AiExtractionDataModal")
-);
+const AiExtractionDataModal = dynamic(() => import("./AiExtractionDataModal"), {
+	ssr: false,
+});
 
-const EditCollAiExtractionDataModal = React.lazy(() =>
-	import("./EditCollAiExtractionDataModal")
+const EditCollAiExtractionDataModal = dynamic(
+	() => import("./EditCollAiExtractionDataModal"),
+	{ ssr: false }
 );
 
 export default (props) => {
@@ -52,31 +54,29 @@ export default (props) => {
 	}, [extractionData]);
 
 	return (
-		<Suspense fallback={<></>}>
-			{loadComponent && (
-				<>
-					{extractionData && extractionData.successVideoUrlExtraction && (
-						<>
-							{extractionData.request.user_action === CREATE_ACTION && (
-								<AiExtractionDataModal
-									{...props}
-									extractionData={extractionData}
-									authUser={authUser}
-									collectionProperties={collectionProperties}
-									filter_settings={filter_settings}
-								/>
-							)}
-							{extractionData.request.user_action === EDIT_ACTION && (
-								<EditCollAiExtractionDataModal
-									{...props}
-									extractionData={extractionData}
-									showChatModal={showChatModal}
-								/>
-							)}
-						</>
-					)}
-				</>
-			)}
-		</Suspense>
+		loadComponent && (
+			<>
+				{extractionData && extractionData.successVideoUrlExtraction && (
+					<>
+						{extractionData.request.user_action === CREATE_ACTION && (
+							<AiExtractionDataModal
+								{...props}
+								extractionData={extractionData}
+								authUser={authUser}
+								collectionProperties={collectionProperties}
+								filter_settings={filter_settings}
+							/>
+						)}
+						{extractionData.request.user_action === EDIT_ACTION && (
+							<EditCollAiExtractionDataModal
+								{...props}
+								extractionData={extractionData}
+								showChatModal={showChatModal}
+							/>
+						)}
+					</>
+				)}
+			</>
+		)
 	);
 };

@@ -244,7 +244,7 @@ const CustomBannerModal = ({
 								Redirection page URL
 							</RequiredLabel>
 							<input
-								class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+								className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 								placeholder='Enter redirection page URL'
 								name='url'
 								type='url'

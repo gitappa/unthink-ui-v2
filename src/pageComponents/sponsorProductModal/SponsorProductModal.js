@@ -461,7 +461,7 @@ const SponsorProductModal = ({
 										Product title
 									</RequiredLabel>
 									<input
-										class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+										className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 										placeholder='Enter product title / name'
 										name='name'
 										type='text'
@@ -478,7 +478,7 @@ const SponsorProductModal = ({
 										Seller name/brand
 									</RequiredLabel>
 									<input
-										class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+										className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 										placeholder='Enter seller brand name'
 										name='brand'
 										type='text'
@@ -557,7 +557,7 @@ const SponsorProductModal = ({
 										<div className='text-center font-medium text-lg'>Or</div>
 
 										<input
-											class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+											className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 											placeholder='Enter product image URL'
 											name='image'
 											type='url'
@@ -575,7 +575,7 @@ const SponsorProductModal = ({
 										Product page URL
 									</RequiredLabel>
 									<input
-										class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+										className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 										placeholder='Enter product page redirection URL'
 										name='url'
 										type='url'
@@ -628,7 +628,7 @@ const SponsorProductModal = ({
 										List price
 									</RequiredLabel>
 									<input
-										class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+										className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 										placeholder='Enter product list price'
 										name='listprice'
 										type='number'
@@ -645,7 +645,7 @@ const SponsorProductModal = ({
 										Price
 									</RequiredLabel>
 									<input
-										class='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
+										className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full'
 										placeholder='Enter product final price'
 										name='price'
 										type='number'

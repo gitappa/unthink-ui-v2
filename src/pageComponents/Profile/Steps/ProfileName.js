@@ -282,7 +282,6 @@ const ProfileName = ({
 											src={profileData.cover_image}
 											height='100%'
 											width='100%'
-											effect='blur'
 											className='object-cover rounded-2xl'
 											style={{ aspectRatio: "3.1/1" }}
 										/>
@@ -345,7 +344,7 @@ const ProfileName = ({
 										src={getFinalImageUrl(profileData.profile_image)}
 										height='100%'
 										width='100%'
-										effect='blur'
+										// effect='blur'
 										className='object-cover rounded-xl max-w-s-1 w-120 lg:w-200 h-120 lg:h-200'
 									/>
 								</div>
@@ -392,7 +391,7 @@ const ProfileName = ({
 								<Image src={instagramIcon} width={28} height={28} alt='Instagram' />
 								<Input
 									name='instagramUrl'
-									className='bg-transparent ml-3 text-white'
+									className='bg-transparent ml-3 placeholder:text-gray-100 text-white'
 									placeholder='Enter Instagram URL'
 									value={sellerDetails.instagramUrl}
 									onChange={handleSellerDataChange}
@@ -409,7 +408,7 @@ const ProfileName = ({
 								<Image src={facebookIcon} width={30} height={30} alt='Facebook' />
 								<Input
 									name='facebookUrl'
-									className='bg-transparent ml-3 text-white'
+									className='bg-transparent ml-3 text-white placeholder:text-gray-100'
 									placeholder='Enter facebook URL'
 									value={sellerDetails.facebookUrl}
 									onChange={handleSellerDataChange}

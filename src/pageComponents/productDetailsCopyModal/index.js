@@ -1,10 +1,12 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 
 import { closeProductDetailsCopyModal } from "./redux/actions";
 
-const ProductDetailsCopyModal = React.lazy(() =>
-	import("../../components/ProductDetailsCopyModal")
+const ProductDetailsCopyModal = dynamic(
+	() => import("../../components/ProductDetailsCopyModal"),
+	{ ssr: false }
 );
 
 const ProductDetailsCopyModalComponent = () => {
@@ -29,16 +31,14 @@ const ProductDetailsCopyModalComponent = () => {
 
 	return (
 		<div>
-			<Suspense fallback={null}>
-				{enabledModal && (
-					<ProductDetailsCopyModal
-						isOpen={isModalOpen}
-						productDetails={productDetails}
-						onClose={handleProductDetailsCopyModalClose}
-						userId={authUser.user_id}
-					/>
-				)}
-			</Suspense>
+			{enabledModal && (
+				<ProductDetailsCopyModal
+					isOpen={isModalOpen}
+					productDetails={productDetails}
+					onClose={handleProductDetailsCopyModalClose}
+					userId={authUser.user_id}
+				/>
+			)}
 		</div>
 	);
 };

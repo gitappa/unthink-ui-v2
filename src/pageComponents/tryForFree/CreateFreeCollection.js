@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link';
 import Image from "next/image";
 import { useNavigate } from "../../helper/useNavigate";
+import styles from "./tryForFree.module.scss";
 import {
 	Spin,
 	notification,
@@ -821,13 +822,13 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	]);
 
 	const AuraGuideUI = ({ message }) => (
-		<div className='max-w-s-3 tablet:max-w-lg desktop:max-w-964 mx-auto flex justify-center flex-col items-center'>
+		<div className={`${styles.bubbleScope} max-w-s-3 tablet:max-w-lg desktop:max-w-964 mx-auto flex justify-center flex-col items-center`}>
 			<div className='relative mb-6 w-full'>
 				<div className='bubble bubble-bottom-left ml-auto md:ml-24 w-full-50 md:w-full-100 md:max-w-748'>
 					{message || systemText}
 				</div>
 				<img
-					src={star_ai_icon}
+					src={star_ai_icon?.src || star_ai_icon}
 					className='w-28 md:w-36 cursor-pointer mt-6'
 					// className='w-24 md:w-32 rounded-full bg-orange-100 cursor-pointer mt-6'
 				/>
@@ -1012,7 +1013,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 											</div>
 										) : null} */}
 									</div>
-									<div className='tablet:col-span-3 text-base input_shadow_div'>
+									<div className={`tablet:col-span-3 text-base ${styles.input_shadow_div}`}>
 										{openCreateCollection ? (
 											<form className='w-full h-full flex flex-col'>
 												<label className='mb-3 block'>
@@ -1061,13 +1062,13 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														</label>
 													))} */}
 
-												<div className='grid grid-cols-2 createCollection_card_div'>
+												<div className={`grid grid-cols-2 ${styles.createCollection_card_div}`}>
 													{createCollectionTypes
 														.filter((c) => c.isDisplay)
 														.map((i) => (
 															<label
 																key={i.id}
-																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 hovercard_div ${
+																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 ${styles.hovercard_div} ${
 																	collectionData.createCollectionWay === i.id
 																		? "bg-indigo-103"
 																		: "bg-white"
@@ -1083,10 +1084,11 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	className='hidden'
 																/>
 																<div
-																	className={`w-full h-full flex items-center justify-center text-lg font-semibold hover:text-white ${
+																	className={`w-full h-full flex items-center justify-center text-lg font-semibold ${
 																		createCollectionOptionsKeys.video_url ===
 																			i.id &&
-																		collectionData.createCollectionWay === i.id
+																		collectionData.createCollectionWay ===
+																			i.id
 																			? "text-white font-bold"
 																			: createCollectionOptionsKeys.video_url ===
 																			  i.id
@@ -1098,18 +1100,18 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	}`}>
 																	<span>{i.title}</span>
 																	<Image
-																		className={`createCollection_image ${
+																		className={`${styles.createCollection_image} ${
 																			createCollectionOptionsKeys.video_url ===
 																				i.id &&
 																			collectionData.createCollectionWay ===
 																				i.id
-																				? "createCollection_image_Active2" // Both conditions true
+																				? styles.createCollection_image_Active2
 																				: createCollectionOptionsKeys.video_url ===
 																				  i.id
-																				? "createCollection_image_video" // Only video_url matches
+																				? styles.createCollection_image_video
 																				: collectionData.createCollectionWay ===
 																				  i.id
-																				? "createCollection_image_Active" // Only createCollectionWay matches
+																				? styles.createCollection_image_Active
 																				: ""
 																		}`}
 																		src={i.icon}

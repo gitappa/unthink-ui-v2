@@ -1,5 +1,4 @@
 import React, {
-	Suspense,
 	useCallback,
 	useEffect,
 	useMemo,
@@ -9,6 +8,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link';
+import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
 import {
 	Spin,
@@ -136,7 +136,8 @@ import {
 
 // import waiting_avatar from "../../images/videos/waiting_avatar.gif";
 // import completed_avatar from "../../images/videos/completed_avatar.gif";
-import FilterIcon from "../../images/filter_outline.svg?react";
+import Image from "next/image";
+import filterIcon from "../../images/filter_outline.svg";
 
 import styles from './tryForFree.module.scss';
 import UploadMultiProductsModal from "../uploadMultiProductsModal";
@@ -148,14 +149,37 @@ import { setOverlayCoordinates, setShowChatModal } from "../../hooks/chat/redux/
 import ReviewCollectionContainerWrapper from "./ReviewCollectionContainerWrapper";
 import FilterIconEdit from "../../images/Filter-icon.svg"
 
-const ReviewCollectionStepHelp = React.lazy(() =>
-	import("./ReviewCollectionStepHelp")
+import dynamic from "next/dynamic";
+
+const ReviewCollectionStepHelp = dynamic(() => import("./ReviewCollectionStepHelp"), {
+	ssr: false,
+	loading: () => (
+		<div className='flex justify-center'>
+			<Spin />
+		</div>
+	),
+});
+const ReviewCollectionStepContent = dynamic(
+	() => import("./ReviewCollectionStepContent"),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='flex justify-center'>
+				<Spin />
+			</div>
+		),
+	}
 );
-const ReviewCollectionStepContent = React.lazy(() =>
-	import("./ReviewCollectionStepContent")
-);
-const ReviewCollectionStepPublish = React.lazy(() =>
-	import("./ReviewCollectionStepPublish")
+const ReviewCollectionStepPublish = dynamic(
+	() => import("./ReviewCollectionStepPublish"),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='flex justify-center'>
+				<Spin />
+			</div>
+		),
+	}
 );
 
 const { Option } = Select;
@@ -305,8 +329,15 @@ const ReviewCollection = (props) => {
 	const [customFilter, setCustomFilter] = useState([]);
 	const [showCustomFilterInput, setShowCustomFilterInput] = useState(false);
 
-	const { plistId } = props;
-	const isNewCollection = !!props.location?.state?.isNewCollection;
+	const router = useRouter();
+	const plistId =
+		props?.plistId ??
+		router?.query?.plistId ??
+		router?.query?.plist_id ??
+		router?.query?.id;
+	const isNewCollection =
+		!!props?.location?.state?.isNewCollection ||
+		String(router?.query?.isNewCollection || "").toLowerCase() === "true";
 
 	const {
 		data: authUser,
@@ -347,6 +378,7 @@ const ReviewCollection = (props) => {
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.auraOverlayCoordinates,
 	]);
+console.log('authUserCollections',authUserCollections);
 
 	const { isFetching: updateWishlistInProgress } = updateWishlistReducer;
 	const { isFetching: deleteWishlistInProgress } = deleteWishlistReducer;
@@ -412,30 +444,33 @@ const ReviewCollection = (props) => {
 	);
 	const [currentCollection, setCurrentCollection] = useState({});
  
-
+console.log('currentCollection',currentCollection );
+console.log('singleCollections',singleCollections );
 	useEffect(() => {
 		 
-
+		console.log('singleCollections',singleCollections );
+		console.log('authUserCollections',authUserCollections );
+		console.log('showWishlistModal',showWishlistModal );
+		console.log('plistId',plistId );
+		console.log('currentCollection',currentCollection );	
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
 			setCurrentCollection(singleCollections);
-			 
-
 			return;
 		}
 
 		// Normal flow
-		else if (authUserCollections.length && plistId && !showWishlistModal) { {
+		else if (authUserCollections.length && plistId && !showWishlistModal) {
 			const found = authUserCollections.find((cl) => cl._id === plistId) || {};
 			setCurrentCollection(found);
-		}}
+		}
 	}, [
 		showWishlistModal,
 		singleCollections,
 		authUserCollections,
 		plistId,
-		currentCollection
-	]);
+		 
+	]); 
 
 
 	// 	const currentCollection = useMemo(() => {
@@ -3661,105 +3696,103 @@ const ReviewCollection = (props) => {
 						isSamskaraInstance={isSamskaraInstance}
 					/>
 
-					<Suspense fallback={<LoadingIndicator />}>
-						{currentView === STEPS.HELP && ( // help step
-							<ReviewCollectionContainerWrapper>
-								<ReviewCollectionStepHelp
-									onGetStarted={() => handleChangeView(STEPS.CONTENT)}
-								/>
-							</ReviewCollectionContainerWrapper>
-						)}
-						{currentView === STEPS.CONTENT && ( // first step
-							<ReviewCollectionStepContent
-								onTryAgainClick={
-									isGeneratedByVideo
-										? handleDataExtractionRequest
-										: onTryAgainClick
-								}
-								onFetchTagsWithAI={onFetchTagsWithAI}
-								updatedData={updatedData}
-								handleInputChange={handleInputChange}
-								currentCollection={currentCollection}
-								errors={errors}
-								handleTagsChange={handleTagsChange}
-								handleCategoryTagsChange={handleCategoryTagsChange}
-								handleChangeView={handleChangeView}
-								handlePreviewCollectionPage={handlePreviewCollectionPage}
-								handleUploadedDataChange={handleUploadedDataChange}
-								handleDiscard={handleDiscard}
-								STEPS={STEPS}
-								handleConfirmRefetchProducts={handleConfirmRefetchProducts}
-								isProductsFetchedForNewColl={isProductsFetchedForNewColl}
-								isCategoryTagsEnabled={isCategoryTagsEnabled}
-								isNewCollection={isNewCollection}
-								// handleSettingsInputChange={handleSettingsInputChange}
-								// handleSettingsInputClear={handleFiltersInputClear}
-								// handleSettingsTagsInputChange={handleSettingsTagsInputChange}
-								// handleSettingsStrictSelectChange={
-								// 	handleFiltersOptionalChange
-								// }
-								showSettings={showSettings}
-								availableFilters={availableFilters}
-								displayableFilter={displayableFilter}
-								setUpdatedData={setUpdatedData}
-								checkIsTagsChanged={checkIsTagsChanged}
-								filtersToShow={filtersToShow}
-								filters={filters}
-								setFilters={setFilters}
-								onFiltersChange={onFiltersChange}
-								handleFiltersOptionalChange={handleFiltersOptionalChange}
-								selectedTags={selectedTags}
-								setSelectedTags={setSelectedTags}
-								showEditTagsInput={showEditTagsInput}
-								setShowEditTagsInput={setShowEditTagsInput}
-								editTagsError={editTagsError}
-								setEditTagsError={setEditTagsError}
-								isFiltersAvailable={isFiltersAvailable}
-								customFilterStoreData={customFilterStoreData}
-								customFilter={customFilter}
-								setCustomFilter={setCustomFilter}
-								handleCustomFilterChange={handleCustomFilterChange}
-								updateKeywordTagMap={updateKeywordTagMap}
-								isGeneratedByBlog={isGeneratedByBlog}
-								isGeneratedByImage={isGeneratedByImage}
-								isGeneratedByDesc={isGeneratedByDesc}
-								isGeneratedByVideo={isGeneratedByVideo}
-								showCustomFilterInput={showCustomFilterInput}
-								setShowCustomFilterInput={setShowCustomFilterInput}
-								checkAndShowContainer={checkAndShowContainer}
-								setIsLoading={setIsLoading}
-								isLoading={isLoading}
-								updatedKeywordTagMap={updatedKeywordTagMap}
-								// isSamskaraInstance={isSamskaraInstance}
-								isGeneratedByMyProducts={isGeneratedByMyProducts}
+					{currentView === STEPS.HELP && ( // help step
+						<ReviewCollectionContainerWrapper>
+							<ReviewCollectionStepHelp
+								onGetStarted={() => handleChangeView(STEPS.CONTENT)}
 							/>
-						)}
-						{currentView === STEPS.PUBLISH && ( // third step
-							<ReviewCollectionStepPublish
-								storeData={storeData}
-								publishOverlay={publishOverlay}
-								setUpdatedData={setUpdatedData}
-								handlePreviewCollectionPage={handlePreviewCollectionPage}
-								handleDiscard={handleDiscard}
-								updatedData={updatedData}
-								DefaultCoverImage={DefaultCoverImage}
-								starredProducts={starredProducts}
-								handleUploadedDataChange={handleUploadedDataChange}
-								currentCollection={currentCollection}
-								authUser={authUser}
-								currentView={currentView}
-								// onPublishButtonClick={onPublishButtonClick}
-								STEPS={STEPS}
-								handleSelectPublishingOption={handleSelectPublishingOption}
-								publishingOption={publishingOption}
-								hiddenPublishingOptions={hiddenPublishingOptions}
-								handleChangeView={handleChangeView}
-								collection_properties={collection_properties}
-								authUserCollections={authUserCollections}
-								authUserCollectionsIsFetching={authUserCollectionsIsFetching}
-							/>
-						)}
-					</Suspense>
+						</ReviewCollectionContainerWrapper>
+					)}
+					{currentView === STEPS.CONTENT && ( // first step
+						<ReviewCollectionStepContent
+							onTryAgainClick={
+								isGeneratedByVideo
+									? handleDataExtractionRequest
+									: onTryAgainClick
+							}
+							onFetchTagsWithAI={onFetchTagsWithAI}
+							updatedData={updatedData}
+							handleInputChange={handleInputChange}
+							currentCollection={currentCollection}
+							errors={errors}
+							handleTagsChange={handleTagsChange}
+							handleCategoryTagsChange={handleCategoryTagsChange}
+							handleChangeView={handleChangeView}
+							handlePreviewCollectionPage={handlePreviewCollectionPage}
+							handleUploadedDataChange={handleUploadedDataChange}
+							handleDiscard={handleDiscard}
+							STEPS={STEPS}
+							handleConfirmRefetchProducts={handleConfirmRefetchProducts}
+							isProductsFetchedForNewColl={isProductsFetchedForNewColl}
+							isCategoryTagsEnabled={isCategoryTagsEnabled}
+							isNewCollection={isNewCollection}
+							// handleSettingsInputChange={handleSettingsInputChange}
+							// handleSettingsInputClear={handleFiltersInputClear}
+							// handleSettingsTagsInputChange={handleSettingsTagsInputChange}
+							// handleSettingsStrictSelectChange={
+							// 	handleFiltersOptionalChange
+							// }
+							showSettings={showSettings}
+							availableFilters={availableFilters}
+							displayableFilter={displayableFilter}
+							setUpdatedData={setUpdatedData}
+							checkIsTagsChanged={checkIsTagsChanged}
+							filtersToShow={filtersToShow}
+							filters={filters}
+							setFilters={setFilters}
+							onFiltersChange={onFiltersChange}
+							handleFiltersOptionalChange={handleFiltersOptionalChange}
+							selectedTags={selectedTags}
+							setSelectedTags={setSelectedTags}
+							showEditTagsInput={showEditTagsInput}
+							setShowEditTagsInput={setShowEditTagsInput}
+							editTagsError={editTagsError}
+							setEditTagsError={setEditTagsError}
+							isFiltersAvailable={isFiltersAvailable}
+							customFilterStoreData={customFilterStoreData}
+							customFilter={customFilter}
+							setCustomFilter={setCustomFilter}
+							handleCustomFilterChange={handleCustomFilterChange}
+							updateKeywordTagMap={updateKeywordTagMap}
+							isGeneratedByBlog={isGeneratedByBlog}
+							isGeneratedByImage={isGeneratedByImage}
+							isGeneratedByDesc={isGeneratedByDesc}
+							isGeneratedByVideo={isGeneratedByVideo}
+							showCustomFilterInput={showCustomFilterInput}
+							setShowCustomFilterInput={setShowCustomFilterInput}
+							checkAndShowContainer={checkAndShowContainer}
+							setIsLoading={setIsLoading}
+							isLoading={isLoading}
+							updatedKeywordTagMap={updatedKeywordTagMap}
+							// isSamskaraInstance={isSamskaraInstance}
+							isGeneratedByMyProducts={isGeneratedByMyProducts}
+						/>
+					)}
+					{currentView === STEPS.PUBLISH && ( // third step
+						<ReviewCollectionStepPublish
+							storeData={storeData}
+							publishOverlay={publishOverlay}
+							setUpdatedData={setUpdatedData}
+							handlePreviewCollectionPage={handlePreviewCollectionPage}
+							handleDiscard={handleDiscard}
+							updatedData={updatedData}
+							DefaultCoverImage={DefaultCoverImage}
+							starredProducts={starredProducts}
+							handleUploadedDataChange={handleUploadedDataChange}
+							currentCollection={currentCollection}
+							authUser={authUser}
+							currentView={currentView}
+							// onPublishButtonClick={onPublishButtonClick}
+							STEPS={STEPS}
+							handleSelectPublishingOption={handleSelectPublishingOption}
+							publishingOption={publishingOption}
+							hiddenPublishingOptions={hiddenPublishingOptions}
+							handleChangeView={handleChangeView}
+							collection_properties={collection_properties}
+							authUserCollections={authUserCollections}
+							authUserCollectionsIsFetching={authUserCollectionsIsFetching}
+						/>
+					)}
 
 					{currentView === STEPS.PRODUCTS ? ( // second step
 						<ReviewCollectionContainerWrapper>

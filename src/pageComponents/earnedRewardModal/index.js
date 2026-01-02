@@ -1,7 +1,10 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import dynamic from "next/dynamic";
 
-const EarnedRewardModal = React.lazy(() => import("./EarnedRewardModal"));
+const EarnedRewardModal = dynamic(() => import("./EarnedRewardModal"), {
+	ssr: false,
+});
 
 export default (props) => {
 	const [loadComponent, setLoadComponent] = useState(false);
@@ -15,9 +18,5 @@ export default (props) => {
 		}
 	}, [isModalOpen]);
 
-	return (
-		<Suspense fallback={<></>}>
-			{loadComponent && <EarnedRewardModal {...props} />}
-		</Suspense>
-	);
+	return loadComponent && <EarnedRewardModal {...props} />;
 };

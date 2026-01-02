@@ -1215,7 +1215,7 @@ const FeatureSelection = ({ nextStep, prevStep, storeData }) => {
     };
 
     return (
-        <div className='bg-[#f9f9f9] min-h-screen py-10 px-6 xl:px-44 lg:px-28'>
+        <div className=' min-h-screen py-10 px-6 xl:px-44 lg:px-28'>
             <Row className='mb-6'>
                 <Col span={24} className='flex justify-between'>
                     <Button type='primary' onClick={handleBack}>

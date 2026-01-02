@@ -33,7 +33,7 @@ export default function AuthPage(props) {
 
 
 	return (
-		<div className='min-h-screen static_page_bg'>
+		<div className={`min-h-screen static_page_bg ${styles.authPageRoot}`}>
 			<div className='auth-header-container'>
 				<AuthHeader
 					userTextLink={{

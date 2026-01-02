@@ -1,14 +1,25 @@
-#swiftly-styled-footer {
+ .swiftlyStyledFooter {
     // @font-face {
     //     font-family: 'footerButtonFont';
     //     src: url('/src/fonts/SwiftlyStyled/Poppins/Poppins-Bold.ttf');
-    // }
+    //  }
 
     // @font-face {
     //     font-family: 'footerLinks';
     //     src: url('/src/fonts/SwiftlyStyled/Montserrat/static/Montserrat-Black.ttf');
     // }
 
+
+	.colorStrip {
+		height: 30px;
+		width: 100%;
+		display: flex;
+	}
+
+	.colorSegment {
+		height: 100%;
+		flex: 1 1 0;
+	}
 
     .footer-box {
         color: #ffffff;
@@ -35,7 +46,7 @@
         }
     }
 
-    .black-box {
+    .blackBox {
         background-color: #2c2c2c;
         padding: 20px;
         font-family: 'Montserrat', sans-serif;
@@ -50,7 +61,7 @@
         }
     }
 
-    .footer-links {
+    .footerLinks {
         background-color: #bb0000;
         padding: 20px;
         display: flex;
@@ -58,6 +69,12 @@
         align-items: center;
         color: #ffffff;
         font-family: 'footerLinks';
+
+        @media (max-width: 768px) {
+            padding: 14px 12px;
+            flex-direction: column;
+            gap: 10px;
+        }
 
         a {
             color: #ffffff;
@@ -74,6 +91,10 @@
             line-height: 1.4;
             letter-spacing: 0;
             color: #ffffffc3;
+
+            @media (max-width: 768px) {
+                font-size: 14px;
+            }
         }
 
         a:first-child {

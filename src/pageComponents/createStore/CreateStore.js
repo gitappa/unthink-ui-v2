@@ -336,10 +336,10 @@ const CreateStore = () => {
 
 	return (
 		<div className='h-full min-h-screen static_page_bg'>
-			<div className='profile-header-container'>
+			<div className={styles['profile-header-container']}>
 				<AuthHeader hideProfile showBackToStore={user?.data?.filters} />
 			</div>
-			<div className='profile-container px-8 lg:px-0'>
+			<div className={`${styles['profile-container']} px-8 lg:px-0`}>
 				{!successMessage ? (
 					<>
 						<div className='w-full mt-4 md:mt-0'>
@@ -350,7 +350,7 @@ const CreateStore = () => {
 									size='small'
 									current={currentStep}
 									onChange={onStepChange}
-									className='site-navigation-steps'>
+									className={styles['site-navigation-steps']}>
 									{steps.map((step) => (
 										<Step title={step} />
 									))}
@@ -358,10 +358,10 @@ const CreateStore = () => {
 							) : (
 								<div className='border-white border-b flex justify-center pb-2'>
 									<div className='text-white bg-blue-500 w-6 h-6 rounded-full text-center'>
-										<span>{currentStep + 1}</span>
+										<span className="text-white">{currentStep + 1}</span>
 									</div>
 									<div className='text-white pl-4'>
-										<span>{steps[currentStep]}</span>
+										<span className="text-white">{steps[currentStep]}</span>
 									</div>
 								</div>
 							)}

@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import Router from 'next/router';
+
+const navigate = (path) => Router.push(path);
 import { useDispatch } from "react-redux";
 
 import Modal from "../../components/modal/Modal";

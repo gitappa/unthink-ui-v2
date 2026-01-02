@@ -150,7 +150,7 @@ const AutoCreateCollectionModal = ({
 						onChange={handleInputChange}
 					/>
 					{error?.collection_name && (
-						<p class='text-red-500 my-1 h-3.5 leading-none'>
+						<p className='text-red-500 my-1 h-3.5 leading-none'>
 							{error.collection_name}
 						</p>
 					)}

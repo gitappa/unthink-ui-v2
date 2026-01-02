@@ -1,6 +1,9 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
-const AuraChatSettingModal = React.lazy(() => import("./AuraChatSettingModal"));
+const AuraChatSettingModal = dynamic(() => import("./AuraChatSettingModal"), {
+	ssr: false,
+});
 
 export default (props) => {
 	const [loadComponent, setLoadComponent] = useState(false);
@@ -11,9 +14,5 @@ export default (props) => {
 		}
 	}, [props.isOpen]);
 
-	return (
-		<Suspense fallback={<></>}>
-			{loadComponent && <AuraChatSettingModal {...props} />}
-		</Suspense>
-	);
+	return loadComponent && <AuraChatSettingModal {...props} />;
 };

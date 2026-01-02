@@ -26,7 +26,7 @@ export default function Document() {
           rel="icon"
           href="/images/staticpageimages/unthink_favicon.png"
         />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         
         {/* Apple touch icon */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

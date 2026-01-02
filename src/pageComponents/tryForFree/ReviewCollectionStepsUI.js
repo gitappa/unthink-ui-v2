@@ -2,6 +2,7 @@ import React from "react";
 import { EditOutlined, ShoppingCartOutlined, SendOutlined } from "@ant-design/icons";
 import { Steps } from "antd";
 import header_aura from "../../images/chat/header_aura_image_transparent.png";
+import styles from "./tryForFree.module.scss";
 
 const ReviewCollectionStepsUI = ({
 	currentView,
@@ -120,16 +121,17 @@ const ReviewCollectionStepsUI = ({
 				</div>
 			</div> */}
 			{/* Desktop View */}
-			<div className="hidden md:flex items-center my-10 steps_bar_div">
-				<div
-					className={`w-full text-2xl text-white`}
-				>
-					<Steps
-						className="w-full text-black-100"
+			<div className={`${styles.stepsScope} hidden md:flex items-center my-10`}>
+				<div className="steps_bar_div w-full">
+					<div
+						className={`w-full text-2xl text-white`}
+					>
+						<Steps
+							className="w-full text-black-100"
 						current={
 							currentView === STEPS.HELP
 								? -1
-								: currentView === STEPS.CONTENTUserNotFound
+								: currentView === STEPS.CONTENT
 									? 0
 									: currentView === STEPS.PRODUCTS
 										? 1
@@ -137,21 +139,22 @@ const ReviewCollectionStepsUI = ({
 											? 2
 											: Object.values(STEPS).indexOf(currentView)
 						}
-						progressDot={progressDotRender} // Use custom progressDot function
-						labelPlacement="horizontal"
-						size="small"
-						direction="horizontal" // Horizontal direction for desktop
-					>
-						{steps.map((step) => (
-							<Steps.Step
-								key={step.key}
-								title={step.title} // Title is kept to show the name of each step
-								icon={null} // Icon handled in progressDotRender, so we remove it here
-								onClick={step.onClick}
-								disabled={step.disabled}
-							/>
-						))}
-					</Steps>
+							progressDot={progressDotRender} // Use custom progressDot function
+							labelPlacement="horizontal"
+							size="small"
+							direction="horizontal" // Horizontal direction for desktop
+						>
+							{steps.map((step) => (
+								<Steps.Step
+									key={step.key}
+									title={step.title} // Title is kept to show the name of each step
+									icon={null} // Icon handled in progressDotRender, so we remove it here
+									onClick={step.onClick}
+									disabled={step.disabled}
+								/>
+							))}
+						</Steps>
+					</div>
 				</div>
 			</div>
 		</>

@@ -1,0 +1,125 @@
+#swiftly-styled-main-content {
+  .main-content {
+    text-align: center;
+    overflow: auto;
+    height: fit-content;
+    width: 100%;
+  }
+
+  .headline h1 {
+    font-family: GoodHeadlineProCustom, sans-serif;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 70px;
+    letter-spacing: 30;
+    line-height: 1;
+    text-align: center;
+    color: #2c2c2c;
+  }
+
+  @keyframes flashColors {
+    0% { color: #a5c9a5; }
+    9.09% { color: #efc180; }
+    18.18% { color: #c7a8cb; }
+    27.27% { color: #7a2e39; }
+    36.36% { color: #b5e5f8; }
+    45.45% { color: #746f70; }
+    54.54% { color: #f7b0cc; }
+    63.63% { color: #cdc9c1; }
+    72.72% { color: #c5ac90; }
+    81.81% { color: #242e47; }
+    90.90% { color: #5f5b58; }
+    100% { color: #a5c9a5; }
+  }
+
+  .flash-text {
+    animation: flashColors 8.8s infinite;
+    font-size: 64px;
+    font-weight: bold;
+  }
+
+  .headline h2 {
+    font-family: 'GoodHeadlineH2';
+    text-align: center;
+    color: #2c2c2c;
+    letter-spacing: 0;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 40px;
+    margin-top: 50px;
+  }
+
+  .erasbar-main {
+    margin-top: 100px;
+    width: 100%;
+  }
+
+  .headline .highlight {
+    font-weight: bold;
+  }
+
+  .subheadline {
+    font-family: 'PoppinsCustom';
+    text-align: center;
+    color: #2c2c2c;
+    font-size: 30px;
+    line-height: 1.4;
+    margin-top: 80px;
+  }
+
+  .italic { font-style: italic; }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 60px;
+  }
+
+  .button {
+    font-family: 'ButtonsFont';
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 0;
+    text-align: center;
+    width: 220px;
+    height: 50px;
+  }
+
+  .explore-btn {
+    background-color: #bb0000;
+    color: #ffffff;
+    border: none;
+  }
+
+  .search-btn {
+    background-color: transparent;
+    color: #2c2c2c;
+    border: 2px solid #2c2c2c;
+  }
+
+  .footer {
+    font-family: "Montserrat";
+    text-align: center;
+    color: #2c2c2c;
+    font-size: 18px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 70px;
+  }
+
+  @media (max-width: 768px) {
+    .headline h1 {
+      font-size: 56px;
+      letter-spacing: 3px;
+      margin-top: 0px;
+      line-height: 1.2;
+    }
+    .flash-text { font-size: 64px; }
+    .headline h2 { font-size: 40px; }
+    .erasbar-main { width: 100%; }
+    .footer { font-size: 15px; }
+  }
+}

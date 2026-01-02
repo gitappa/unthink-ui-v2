@@ -344,7 +344,7 @@ const Header = ({
 					key: 'myprofile',
 					className: 'py-2',
 					label: MY_PROFILE && (
-						<Link className='text-white lg:text-black-200' href={MY_PROFILE}>
+						<Link className='text-base px-3 text-white lg:text-black-200' href={MY_PROFILE}>
 							My Public Profile
 						</Link>
 					),
@@ -385,10 +385,14 @@ const Header = ({
 				key: 'editprofile',
 				className: 'py-2',
 				label: PROFILE && (
-					<Link className='text-white lg:text-black-200' href={PROFILE}>
+					<Link className='text-base px-3 text-white lg:text-black-200' href={PROFILE}>
 						Edit Profile
 					</Link>
 				),
+				onClick: () => {
+					PROFILE && navigate(PROFILE);
+					showMenu && setShowMenu(false);
+				},
 			});
 
 			if (enablePlist && !currentUser.trial_user) {
@@ -397,11 +401,15 @@ const Header = ({
 					className: 'py-2',
 					label: (
 						<Link
-							className='text-white lg:text-black-200'
+							className='text-base px-3 text-white lg:text-black-200'
 							href={CREATE_STORE}>
 							Store Settings
 						</Link>
 					),
+					onClick: () => {
+						CREATE_STORE && navigate(CREATE_STORE);
+						showMenu && setShowMenu(false);
+					},
 				});
 			}
 

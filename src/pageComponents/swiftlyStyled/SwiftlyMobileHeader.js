@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import React, { useMemo } from "react";
+import { useRouter } from 'next/router';
 import { useDispatch } from "react-redux";
 
-import { MenuOutlined } from "@ant-design/icons";
 import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
 import userIcon from "../../images/swiftly-styled/User.svg";
 
@@ -13,6 +12,8 @@ import { current_store_name, is_store_instance } from "../../constants/config";
 
 const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 	const dispatch = useDispatch();
+	const router = useRouter();
+	const navigate = (path) => router.push(path);
 	const { themeCodes } = useTheme();
 
 	const isSwiftlyStyledInstance = useMemo(
@@ -24,40 +25,53 @@ const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 	return (
 		<>
 			<div
-				className='banner'
-				style={{ background: themeCodes.header.announcement_bar_bg }}>
-				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
+				className='w-full px-2 py-1 text-center text-[11px] leading-4 tracking-[0.5px]'
+				style={{
+					background: themeCodes.header.announcement_bar_bg,
+					color: themeCodes.header.announcement_bar_text,
+				}}>
+				<span className='block whitespace-normal break-words'>
+					EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
+				</span>
 			</div>
 			<div
-				className='flex items-center justify-between py-2 px-4 text-white'
-				style={{ height: "78.11px", background: themeCodes.header.header_bg }}>
-				<div className='search-icon'>
+				className='flex items-center px-3 text-white'
+				style={{ height: "56px", background: themeCodes.header.header_bg }}>
+				<button
+					type='button'
+					className='w-10 flex items-center justify-start'
+					onClick={() => dispatch(setShowChatModal(true))}
+					aria-label='Search'>
 					<img
 						src={searchIcon}
 						alt='searchIcon'
-						onClick={() => dispatch(setShowChatModal(true))}
+						className='h-6 w-6'
+						style={{ filter: "invert(1)" }}
 					/>
-				</div>
+				</button>
 
-				<div>
+				<div className='flex-1 min-w-0 text-center'>
 					<span
-						className='logo cursor-pointer'
+						className='cursor-pointer text-white font-medium truncate block'
 						onClick={() => navigate(PATH_ROOT)}>
-						{
-							isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"
-						}
+						{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 					</span>
 				</div>
 
-				<div className='flex'>
+				<div className='w-10 flex items-center justify-end'>
 					{showProfileIcon ? (
-						<img
-							src={userIcon}
-							alt='userIcon'
-							className='cursor-pointer pr-1 pl-2 h-6 w-auto'
-							style={{ filter: "invert(1)" }}
+						<button
+							type='button'
+							className='w-10 flex items-center justify-end'
 							onClick={() => setShowMenu(true)}
-						/>
+							aria-label='Open profile menu'>
+							<img
+								src={userIcon}
+								alt='userIcon'
+								className='h-6 w-6'
+								style={{ filter: "invert(1)" }}
+							/>
+						</button>
 					) : null}
 				</div>
 			</div>

@@ -1,4 +1,4 @@
-#swiftly-styled-main-content {
+ :global(#swiftly-styled-main-content) {
   .main-content {
     text-align: center;
     overflow: auto;
@@ -32,7 +32,7 @@
     font-style: italic;
     font-weight: bolder;
     font-size: 70px;
-    letter-spacing: 30;
+    letter-spacing: 30px;
     line-height: 1;
     text-align: center;
     color: #2c2c2c;
@@ -187,6 +187,35 @@
     margin-top: 70px;
   }
 
+  @media (max-width: 1024px) {
+    .headline h1 {
+      font-size: 56px;
+      letter-spacing: 12px;
+    }
+
+    .flash-text {
+      font-size: 52px;
+    }
+
+    .headline h2 {
+      font-size: 32px;
+      margin-top: 28px;
+    }
+
+    .subheadline {
+      font-size: 22px;
+      margin-top: 40px;
+    }
+
+    .buttons {
+      margin-top: 36px;
+    }
+
+    .erasbar-main {
+      margin-top: 60px;
+    }
+  }
+
   @media (max-width: 768px) {
     .headline h1 {
       font-size: 56px;
@@ -220,7 +249,7 @@
       font-style: italic;
       font-weight: bolder;
       font-size: 70px;
-      letter-spacing: 30;
+      letter-spacing: 30px;
       line-height: 1;
       text-align: center;
       color: #2c2c2c;

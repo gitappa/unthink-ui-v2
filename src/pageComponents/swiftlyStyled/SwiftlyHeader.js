@@ -37,20 +37,19 @@ const SwiftlyHeader = ({
 	return (
 		<>
 			<div
-				className='banner hidden lg:flex'
+				className='hidden lg:flex items-center justify-center h-[30px] text-[13px] tracking-[1px] text-center px-3'
 				style={{
 					background: themeCodes.header.announcement_bar_bg,
 					color: themeCodes.header.announcement_bar_text,
 				}}>
 				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
 			</div>
-			<div className='flex' style={{ background: themeCodes.header.header_bg }}>
+			<div className='w-full' style={{ background: themeCodes.header.header_bg }}>
 				<div
 					id='heroesVillains_desktop_header_menu'
-					className='lg:grid gap-7 lg:h-72 lg:px-8 lg:py-2 w-full'>
-					<div className='flex justify-between items-center'>
+					className='w-full flex items-center justify-between lg:px-8 lg:py-2 lg:h-20'>
 						{/* set width only to keep content center aligned */}
-						<div className='min-w-40 hidden lg:flex justify-center text-white cursor-pointer'>
+						<div className='w-40 hidden lg:flex items-center justify-start text-white cursor-pointer'>
 							<div className='logo' onClick={() => navigate(PATH_ROOT)}>
 								{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 							</div>
@@ -74,17 +73,19 @@ const SwiftlyHeader = ({
 							) : null
 						} */}
 
-						<ChatContainer
-							disabledOutSideClick={disabledOutSideClick}
-							config={config}
-							trackCollectionData={trackCollectionData}
-							isBTInstance={isBTInstance}
-						/>
+						<div className='flex-1 flex justify-center'>
+							<ChatContainer
+								disabledOutSideClick={disabledOutSideClick}
+								config={config}
+								trackCollectionData={trackCollectionData}
+								isBTInstance={isBTInstance}
+							/>
+						</div>
 
 						{/* set width only to keep the aura center aligned */}
-						<div className='min-w-40 hidden lg:block'>
-							<div className='collections'>
-								<button
+						<div className=' hidden lg:flex justify-end'>
+							<div className='collections flex items-center'>
+								<button className="text-white"
 									onClick={() =>
 										navigate(getThemeCollectionsPagePath(THEME_ALL))
 									}>
@@ -109,10 +110,7 @@ const SwiftlyHeader = ({
 								/>
 							</div>
 						</div>
-					</div>
 				</div>
-				{/* set width only to keep content center aligned */}
-				<div style={{ width: "75px" }}></div>
 			</div>
 		</>
 	);

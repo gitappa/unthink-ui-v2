@@ -1,8 +1,9 @@
 import React from "react";
-import { Image, Dropdown, Typography, Tooltip } from "antd";
+import { Dropdown, Typography, Tooltip } from "antd";
+import Image from "next/image";
 
-import avatarImg from "../../images/avatar-black.svg";
 import userIcon from "../../images/swiftly-styled/User.svg";
+import avatarImg from "../../images/avatar-black.svg";
 import Link from "next/link";
 
 const { Text } = Typography;
@@ -42,7 +43,7 @@ export const UserProfileMenu = ({
 								// 	{currentUser?.user_name}
 								// </Text>
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
-									<img src={userIcon} alt='userIcon' />
+									<Image src={userIcon} alt='userIcon' width={24} height={24} style={{fill:'white'}}/>
 								</Tooltip>
 							) : (
 								<Text
@@ -52,16 +53,16 @@ export const UserProfileMenu = ({
 								</Text>
 							)}
 							{/* <Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
-								<img src={userIcon} alt='userIcon' />
+								<Image src={userIcon} alt='userIcon' width={24} height={24} />
 							</Tooltip> */}
 						</div>
 					) : (
 						<>
 							{currentUser?.user_name ? (
-								// <img src={userIcon} alt='userIcon' />
+								// <Image src={userIcon} alt='userIcon' width={24} height={24} />
 
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""} placement="top" >
-									<img src={userIcon} alt='userIcon' className="h-6 " />
+									<Image src={userIcon} alt='userIcon' className="h-6" width={24} height={24} />
 								</Tooltip>
 								// <Text
 								// 	title={currentUser?.user_name}

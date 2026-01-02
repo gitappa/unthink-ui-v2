@@ -754,7 +754,7 @@ const CreateWishlist = ({
 							className='text-left placeholder-gray-101 outline-none p-3 rounded-md w-5 mr-2'
 							onChange={handleAutoCollectionCheckboxChange}
 						/>
-						<label for='fetchProducts'>
+						<label htmlFor='fetchProducts'>
 							Check if you want to fetch products automatically
 						</label>
 						<Tooltip

@@ -57,7 +57,8 @@ import ProductFiltersTags from "../productFilters/ProductFiltersTags";
 import { CustomFilter } from "../customFilter/CustomFilter";
 import ReviewCollectionContainerWrapper from "./ReviewCollectionContainerWrapper";
 
-import FilterIcon from "../../images/filter_outline.svg?react";
+import Image from "next/image";
+import filterIcon from "../../images/filter_outline.svg";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import { replaceAndUpdateUserCollectionData } from "../Auth/redux/actions";
 
@@ -1386,7 +1387,13 @@ const ReviewCollectionStepContent = ({
 									onClick={() =>
 										setFilterOptionsVisible(!filterOptionsVisible)
 									}>
-									<FilterIcon className='text-3xl' />
+									<Image
+										src={filterIcon}
+										alt='Filters'
+										width={28}
+										height={28}
+										className='mr-1'
+									/>
 									<p className='underline font-medium cursor-pointer lg:mt-0 whitespace-nowrap ml-1 text-base'>
 										Filters
 									</p>

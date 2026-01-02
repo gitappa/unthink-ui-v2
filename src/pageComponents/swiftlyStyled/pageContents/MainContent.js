@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import { useRouter } from 'next/router';
 import { useDispatch } from "react-redux";
 
 import styles from './mainContent.module.scss';
@@ -21,6 +21,8 @@ export const MainContent = () => {
 
 
 	const dispatch = useDispatch();
+  const router = useRouter();
+  const navigate = (path) => router.push(path);
 	return (
 		<section id='swiftly-styled-main-content'>
 			<div className='main-content'>

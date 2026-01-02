@@ -1,6 +1,6 @@
 import { takeLatest, call, put, select } from "redux-saga/effects";
 import { notification } from "antd";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import Router from "next/router";
 
 import { createWishlistSuccess, createWishlistFailure } from "./actions";
 import {
@@ -29,7 +29,7 @@ import {
 import appTracker from "../../../../helper/webTracker/appTracker";
 import { closeWishlistModal } from "../../../wishlist/redux/actions";
 import { current_store_name } from "../../../../constants/config";
-
+ 
 function* createWishlistSaga(action) {
 	try {
 		const {
@@ -163,6 +163,8 @@ function* createWishlistSaga(action) {
 					collectionPageAPIs.getImageToDescriptionAPICall,
 					getImageToDescriptionPayload
 				);
+				console.log('attrResponse',attrResponse);
+				
 
 				// collection name for image collection getting from imageToDesc API response (backend)
 				// user doesn't need to add manually
@@ -305,11 +307,7 @@ function* createWishlistSaga(action) {
 
 			// redirect to edit collection page after successfully create new collection
 			if (action.payload?.redirectToEditCollectionPage) {
-				navigate(`/collection/${resData.data._id}/review`, {
-					state: {
-						isNewCollection: true,
-					},
-				});
+				Router.push(`/collection/${resData.data._id}/review`);
 			}
 			// open collection share modal and publish created collection
 
@@ -345,9 +343,10 @@ function* createWishlistSaga(action) {
 
 		throw res;
 	} catch (err) {
-		yield put(createWishlistFailure(err.data));
+		const errData = err?.response?.data || err?.data;
+		yield put(createWishlistFailure(errData));
 		notification["error"]({
-			message: err?.data?.status_desc || "Unable to create",
+			message: errData?.status_desc || err?.message || "Unable to create",
 		});
 	}
 }

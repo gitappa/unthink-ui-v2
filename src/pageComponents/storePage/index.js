@@ -1,5 +1,4 @@
 import React, {
-	Suspense,
 	useEffect,
 	useMemo,
 	useState,
@@ -10,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate";
 import { Spin } from "antd";
 import { ArrowLeftOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
+import dynamic from "next/dynamic";
 
 import Header from "./Header";
 // import ProfileCollection from "../Influencer/ProfileCollection";
@@ -97,19 +97,61 @@ import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
 
-const PeopleList = React.lazy(() => import("../people/PeopleList.js"));
-const Categories = React.lazy(() => import("../categories/Categories.js"));
-const EarnRewards = React.lazy(() => import("../rewards/EarnRewards.js"));
-const ReviewCollection = React.lazy(() =>
-	import("../tryForFree/ReviewCollection")
+const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
+	ssr: false,
+	loading: () => (
+		<div className='flex justify-center'>
+			<Spin />
+		</div>
+	),
+});
+const Categories = dynamic(() => import("../categories/Categories.js"), {
+	ssr: false,
+	loading: () => (
+		<div className='flex justify-center'>
+			<Spin />
+		</div>
+	),
+});
+const EarnRewards = dynamic(() => import("../rewards/EarnRewards.js"), {
+	ssr: false,
+	loading: () => (
+		<div className='flex justify-center'>
+			<Spin />
+		</div>
+	),
+});
+const ReviewCollection = dynamic(() => import("../tryForFree/ReviewCollection"), {
+	ssr: false,
+	loading: () => (
+		<div className='flex justify-center'>
+			<Spin />
+		</div>
+	),
+});
+
+const CreateFreeCollection = dynamic(
+	() => import("../tryForFree/CreateFreeCollection"),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='flex justify-center'>
+				<Spin />
+			</div>
+		),
+	}
 );
 
-const CreateFreeCollection = React.lazy(() =>
-	import("../tryForFree/CreateFreeCollection")
-);
-
-const CustomProducts = React.lazy(() =>
-	import("../customProducts/CustomProducts.js")
+const CustomProducts = dynamic(
+	() => import("../customProducts/CustomProducts.js"),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='flex justify-center'>
+				<Spin />
+			</div>
+		),
+	}
 );
 
 const LoadingIndicator = () => {
@@ -1025,16 +1067,14 @@ const StorePageWrapper = (props) => {
 			) : null}
 
 			{/* collection review/edit page new flow and custom products page for seller*/}
-			<Suspense fallback={<LoadingIndicator />}>
-				{showIndividualPageContent ? (
-					<>
-						{isCollectionReviewPage && <ReviewCollection {...props} />}
-						{isCreateFreeCollectionPage && <CreateFreeCollection {...props} />}
-						{isCustomProductsPage && <CustomProducts isCustomProductsPage={isCustomProductsPage} selectedSortOptionProduct={selectedSortOptionProduct} handleSortOptionChangeProduct={handleSortOptionChangeProduct}  {...props} />}
-						{isProductDetailPage && <ProductDetails {...props} />}
-					</>
-				) : null}
-			</Suspense>
+			{showIndividualPageContent ? (
+				<>
+					{isCollectionReviewPage && <ReviewCollection {...props} />}
+					{isCreateFreeCollectionPage && <CreateFreeCollection {...props} />}
+					{isCustomProductsPage && <CustomProducts isCustomProductsPage={isCustomProductsPage} selectedSortOptionProduct={selectedSortOptionProduct} handleSortOptionChangeProduct={handleSortOptionChangeProduct}  {...props} />}
+					{isProductDetailPage && <ProductDetails {...props} />}
+				</>
+			) : null}
               { isCartPage && <DeliveryDetails/> }
               { isFailedPage && <FailureUrl/> }
               { isSuccessPage && <SuccessUrl/> }
@@ -1048,11 +1088,9 @@ const StorePageWrapper = (props) => {
 					<style>{` body { background: ${themeCodes.page_container_bg}; } `}</style>
 					{/* // END //  */}
 
-					<Suspense fallback={<LoadingIndicator />}>
-						{showCategoriesMenu && <Categories />}
-						{showPeople && <PeopleList />}
-						{showEarnRewards && <EarnRewards />}
-					</Suspense>
+					{showCategoriesMenu && <Categories />}
+					{showPeople && <PeopleList />}
+					{showEarnRewards && <EarnRewards />}
 
 					{isSwiftlyStyledInstance && isRootPage && showPageContent ? (
 						<SwiftlyStyledIndex
@@ -1070,9 +1108,7 @@ const StorePageWrapper = (props) => {
 						showPageContent && (
 							<>
 								{/* categories list with show all option */}
-								<Suspense fallback={<LoadingIndicator />}>
-									{showCategoriesOnStorePage && <Categories hideBack />}
-								</Suspense>
+								{showCategoriesOnStorePage && <Categories hideBack />}
 
 								{/* profile details view [influencer details] [profile image, description]   */}
 								{showProfileView && (

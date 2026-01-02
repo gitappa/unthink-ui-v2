@@ -41,7 +41,7 @@ import "swiper/css/free-mode";
 import Addmore from "../../images/addmore2.svg";
 import SwiperCore, { FreeMode } from "swiper";
 import axios from "axios";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import { useRouter } from "next/router";
 
 // Initialize Swiper modules
 SwiperCore.use([FreeMode]);
@@ -125,6 +125,7 @@ const CustomProductModal = ({
 	);
 
 	const dispatch = useDispatch();
+	const router = useRouter();
 
 	useEffect(() => {
 		if (isModalOpen) {
@@ -330,7 +331,7 @@ const CustomProductModal = ({
  			if (storeData?.pdp_settings?.is_buy_popup || !pdp_page_enabled ) {
 				onModalClose();
 		 
-				navigate(`/product/${product.mfr_code}`)	
+				router.push(`/product/${product.mfr_code}`)	
 			} else {	 
 				setIsView(false);
 				onModalClose();

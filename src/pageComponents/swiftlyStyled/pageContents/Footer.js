@@ -12,7 +12,18 @@ export const Footer = () => {
 	);
 
 	return (
-		<footer id='swiftly-styled-footer'>
+		<footer id='swiftly-styled-footer' className={styles.swiftlyStyledFooter}>
+			<div className={styles.colorStrip}>
+				<div className={styles.colorSegment} style={{ backgroundColor: "#cfe6c9" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#f2c37c" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#cdb5d7" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#7a1f2b" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#b2d2da" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#6b6b6b" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#f6b6cc" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#d8c3a4" }} />
+				<div className={styles.colorSegment} style={{ backgroundColor: "#2f3a57" }} />
+			</div>
 			{/* <div className='footer-box'>
 				<div>
 					<p>
@@ -34,7 +45,7 @@ export const Footer = () => {
 					</p>
 				</div>
 			</div> */}
-			<div className='black-box'>
+			<div className={styles.blackBox}>
 				<p>
 					This website features links to products from our affiliate partners
 					<br />
@@ -46,9 +57,9 @@ export const Footer = () => {
 					to purchase our tickets for the Eras Tour.
 				</p>
 			</div>
-			<div className='footer-links'>
+			<div className={styles.footerLinks}>
 				<div className='font-bold'>PRIVACY</div>
-				<div className='copyright'>
+				<div className={styles.copyright}>
 					<span>
 						©2024 {isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}. All Rights Reserved.
 						<br />

@@ -1,8 +1,10 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
+import dynamic from "next/dynamic";
 
-const AutoCreateCollectionModal = React.lazy(() =>
-	import("./AutoCreateCollectionModal")
+const AutoCreateCollectionModal = dynamic(
+	() => import("./AutoCreateCollectionModal"),
+	{ ssr: false }
 );
 
 const AutoCreateCollectionModalComponent = () => {
@@ -12,13 +14,11 @@ const AutoCreateCollectionModalComponent = () => {
 	]);
 
 	return (
-		<Suspense fallback={<></>}>
-			<AutoCreateCollectionModal
-				isOpen={isOpen}
-				collectionData={data}
-				isShareCollectionEnable={data.isShareCollectionEnable}
-			/>
-		</Suspense>
+		<AutoCreateCollectionModal
+			isOpen={isOpen}
+			collectionData={data}
+			isShareCollectionEnable={data.isShareCollectionEnable}
+		/>
 	);
 };
 

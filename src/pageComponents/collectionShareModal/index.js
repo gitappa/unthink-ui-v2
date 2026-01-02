@@ -1,10 +1,12 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 
 import { closeCollectionShareModal } from "./redux/actions";
 
-const CollectionShareModal = React.lazy(() =>
-	import("../../components/CollectionShareModal")
+const CollectionShareModal = dynamic(
+	() => import("../../components/CollectionShareModal"),
+	{ ssr: false }
 );
 
 const CollectionShareModalComponent = () => {
@@ -35,17 +37,15 @@ const CollectionShareModalComponent = () => {
 
 	return (
 		<div>
-			<Suspense fallback={null}>
-				{enabledModal && (
-					<CollectionShareModal
-						isOpen={isModalOpen}
-						collectionDetails={collectionDetails}
-						collectionOwner={collectionOwner}
-						isAutoCreateCollection={isAutoCreateCollection}
-						onClose={handleCollectionShareModalClose}
-					/>
-				)}
-			</Suspense>
+			{enabledModal && (
+				<CollectionShareModal
+					isOpen={isModalOpen}
+					collectionDetails={collectionDetails}
+					collectionOwner={collectionOwner}
+					isAutoCreateCollection={isAutoCreateCollection}
+					onClose={handleCollectionShareModalClose}
+				/>
+			)}
 		</div>
 	);
 };

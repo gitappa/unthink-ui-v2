@@ -5,6 +5,7 @@ import React, {
 	useRef,
 	useState,
 } from "react";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { Select, Spin, Input, Checkbox, Button, Modal } from "antd";
 import {
@@ -49,7 +50,7 @@ import {
 	SIGN_IN_EXPIRE_DAYS,
 	WISHLIST_TITLE,
 } from "../../constants/codes";
-import FilterIcon from "../../images/filter_outline.svg?react";
+import filterIcon from "../../images/filter_outline.svg";
 import Cookies from "js-cookie";
 import { authAPIs } from "../../helper/serverAPIs";
 import {
@@ -743,7 +744,13 @@ const AuraResponseProducts = ({
 										onClick={() =>
 											setFilterOptionsVisible(!filterOptionsVisible)
 										}>
-										<FilterIcon className='text-3xl' />
+										<Image
+											src={filterIcon}
+											alt='Filters'
+											width={28}
+											height={28}
+											className='mr-1'
+										/>
 										<p className='underline font-medium cursor-pointer text-black-102 whitespace-nowrap text-base'>
 											Filters
 										</p>

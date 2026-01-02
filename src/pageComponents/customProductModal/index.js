@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { closeProductModal } from "./redux/actions";
@@ -36,22 +36,18 @@ const CustomProductModalComponent = () => {
 	}, [isOpen]);
 
 	return (
-		<Suspense fallback={<></>}>
-			{loadComponent && (
-				<>
-					<CustomProductModal
-						isModalOpen={isOpen}
-						data={{ data, isView: !allowEdit, collectionId }}
-						onModalClose={onModalClose}
-						sellerDetails={sellerDetails}
-						allowEdit={allowEdit}
-						storeTemplates={storeTemplates}
-						catalog_attributes={catalog_attributes}
-						filter_settings={filter_settings}
-					/>
-				</>
-			)}
-		</Suspense>
+		loadComponent && (
+			<CustomProductModal
+				isModalOpen={isOpen}
+				data={{ data, isView: !allowEdit, collectionId }}
+				onModalClose={onModalClose}
+				sellerDetails={sellerDetails}
+				allowEdit={allowEdit}
+				storeTemplates={storeTemplates}
+				catalog_attributes={catalog_attributes}
+				filter_settings={filter_settings}
+			/>
+		)
 	);
 };
 

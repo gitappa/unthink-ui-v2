@@ -49,7 +49,8 @@ import {
 } from "../../constants/codes";
 
 import View_similar_icon from "../../images/view_similar_icon.svg?react";
-import OpenInNewTabIcon from "../../images/open_in_new_tab.svg?react";
+import openInNewTabIcon from "../../images/open_in_new_tab.svg";
+import Image from "next/image";
 
 import styles from './product.module.scss';
 import Link from 'next/link';
@@ -470,7 +471,7 @@ const ProductCard = ({
 										} font-semibold text-white top-1/2 product_buy_now flex items-center`}>
 									{isProductUrlAvailable ? buyNowTitle : null}
 									{isProductUrlAvailable ? (
-										<OpenInNewTabIcon className='text-white ml-2.5 text-xs w-5 h-5' />
+										<Image src={openInNewTabIcon} alt="open" width={20} height={20} className="text-white ml-2.5 w-5 h-5" />
 									) : null}
 								</h1>
 							) : null}

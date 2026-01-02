@@ -26,6 +26,19 @@
 	background-image: url('../../images/staticpageimages/auth_help_me_section_bg.svg');
 }
 
+.authPageRoot {
+	:global(.contact_us_container){
+		background-image: url('../../images/newStaticPageImages/contactUs_bg.svg');
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	:global(.contact_us_inner_container){
+		background: linear-gradient(253.09deg, rgba(217, 217, 217, 0.25) -7.53%, rgba(217, 217, 217, 0) 97.04%);
+		backdrop-filter: blur(20px);
+	}
+}
+
 //fix height for error message
 .auth-container .ant-form-item-with-help .ant-form-item-explain{
 	height: 24px;

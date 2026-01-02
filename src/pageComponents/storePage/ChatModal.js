@@ -847,7 +847,7 @@ const ChatModal = ({
 															onChange={handleFollowUpSearch}
 														/>
 														<label
-															for='followUpQuery'
+															htmlFor='followUpQuery'
 															className={`${showChatLoader
 																? "cursor-not-allowed text-gray-106"
 																: "cursor-pointer text-black-100"
@@ -859,7 +859,7 @@ const ChatModal = ({
 												{isShowFollowUpSearch &&
 													isShowTryAgain &&
 													isSidExpired ? (
-													<div class='border-l-1.5 h-5'></div>
+													<div className='border-l-1.5 h-5'></div>
 												) : null}
 												{isShowTryAgain ? (
 													<button

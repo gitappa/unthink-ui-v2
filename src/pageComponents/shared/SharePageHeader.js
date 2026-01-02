@@ -1,13 +1,15 @@
 import React from "react";
 import { Image } from "antd";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import { useRouter } from 'next/router';
 
 import Logo from "../../images/staticpageimages/logo.png";
 
 const SharePageHeader = () => {
+	const router = useRouter();
+	const navigate = (path) => router.push(path);
 	return (
 		<div className='container m-auto pt-4 md:px-0 px-4 flex'>
-			<div class='grid md:grid-cols-3 grid-cols-1 w-full items-end'>
+			<div className='grid md:grid-cols-3 grid-cols-1 w-full items-end'>
 				<div className='md:block hidden'></div>
 				<div className='self-center'>
 					<div

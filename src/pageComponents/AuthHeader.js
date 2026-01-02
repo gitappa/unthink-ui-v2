@@ -16,7 +16,7 @@ export default function AuthHeader({
 }) {
 	const navigate = useNavigate();
 	return (
-		<Row className='bg-blue-105 bg-opacity-80 items-center h-full mb-3'>
+		<Row className='bg-blue-105 bg-opacity-80 items-center h-full mb-3 pt-3'>
 			<Col md={8} span={24} className='mt-3 md:mt-0'>
 				{showBackToStore && (
 					<HomeOutlined
@@ -31,10 +31,10 @@ export default function AuthHeader({
 				)}
 				<Link href='/' className='flex'>
 					<Image
-						src={Logo}
+						src={Logo?.src || Logo}
 						preview={false}
 						height={22}
-						className='cursor-pointer'
+						className='cursor-pointer pl-2'
 					/>
 				</Link>
 			</Col>
@@ -58,7 +58,7 @@ export default function AuthHeader({
 							)}
 						</>
 					)}
-					<Image src={HeaderUser} preview={false} height={33} />
+					<Image src={HeaderUser?.src || HeaderUser} preview={false} height={33} />
 				</Col>
 			)}
 		</Row>
