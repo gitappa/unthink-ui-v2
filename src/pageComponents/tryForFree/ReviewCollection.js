@@ -444,15 +444,15 @@ console.log('authUserCollections',authUserCollections);
 	);
 	const [currentCollection, setCurrentCollection] = useState({});
  
-console.log('currentCollection',currentCollection );
-console.log('singleCollections',singleCollections );
+// console.log('currentCollection',currentCollection );
+// console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		 
-		console.log('singleCollections',singleCollections );
-		console.log('authUserCollections',authUserCollections );
-		console.log('showWishlistModal',showWishlistModal );
-		console.log('plistId',plistId );
-		console.log('currentCollection',currentCollection );	
+		// console.log('singleCollections',singleCollections );
+		// console.log('authUserCollections',authUserCollections );
+		// console.log('showWishlistModal',showWishlistModal );
+		// console.log('plistId',plistId );
+		// console.log('currentCollection',currentCollection );	
+
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
 			setCurrentCollection(singleCollections);
@@ -469,8 +469,44 @@ console.log('singleCollections',singleCollections );
 		singleCollections,
 		authUserCollections,
 		plistId,
-		 
+		 currentCollection
 	]); 
+
+
+// 	useEffect(() => {
+//   let nextCollection = null;
+
+//   // Modal flow (priority)
+//   if (
+//     showWishlistModal &&
+//     singleCollections &&
+//     Object.keys(singleCollections).length > 0
+//   ) {
+//     nextCollection = singleCollections;
+//   }
+//   // Normal flow
+//   else if (
+//     !showWishlistModal &&
+//     plistId &&
+//     authUserCollections?.length
+//   ) {
+//     nextCollection =
+//       authUserCollections.find(cl => cl._id === plistId) || null;
+//   }
+
+//   // Update state ONLY if changed
+//   if (nextCollection?._id !== currentCollection?._id) {
+//     setCurrentCollection(nextCollection);
+//   }
+
+// }, [
+//   showWishlistModal,
+//   singleCollections,
+//   authUserCollections,
+//   plistId,
+//   currentCollection
+// ]);
+
 
 
 	// 	const currentCollection = useMemo(() => {

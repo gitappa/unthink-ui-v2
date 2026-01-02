@@ -481,6 +481,10 @@ const fetchCreatorCollectionAPICall = () => {
 const fetchSortProductsAPICall = (params = {}) => {
 	const url = `${auraYfretUserCollBaseUrl}${fetchCustomProductsUrl}`;
 
+	if (params?.filters && typeof params.filters === "object") {
+		params.filters = JSON.stringify(params.filters);
+	}
+
 	params.store = current_store_name;
 
 	return apiInstance({
@@ -1303,7 +1307,7 @@ const fetchCustomProductsAPICall = (filters = {}) => {
 		store: is_store_instance ? current_store_name : undefined,
 		// ipp: CUSTOM_PRODUCTS_FETCH_IPP,
 		// skip: 0,
-		filters,
+		filters: filters && typeof filters === "object" ? JSON.stringify(filters) : filters,
 	};
 	return apiInstance({
 		url,
@@ -1372,10 +1376,16 @@ const getMPCollectionsAPICall = (store_type) => {
 
 	console.log('store_type', store_type);
 
+	const normalizedStoreType = Array.isArray(store_type)
+		? store_type
+		: store_type
+			? [store_type]
+			: [];
+
 
 	const data = {
-		store_type,
-		store: current_store_name,
+		store_type: normalizedStoreType,
+		store: current_store_name || undefined,
 
 	};
 

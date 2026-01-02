@@ -44,6 +44,7 @@ export const UserProfileMenu = ({
 								// </Text>
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
 									<Image src={userIcon} alt='userIcon' width={24} height={24} style={{fill:'white'}}/>
+									{/* <BiSolidUserCircle /> */}
 								</Tooltip>
 							) : (
 								<Text

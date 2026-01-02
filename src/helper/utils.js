@@ -35,7 +35,7 @@ import {
 	setTTid,
 } from "./getTrackerInfo";
 import { authAPIs, collectionQRCodeGeneratorURL } from "./serverAPIs";
-
+ 
 // Simple navigate function for utility usage
 const navigate = (path) => {
 	if (typeof window !== 'undefined') {
@@ -203,55 +203,87 @@ export const getCategoryData = (categories) => {
 	return newCategoryData;
 };
 
-export const getFinalImageUrl = (imgUrl, dimensionWidth, dimensionHeight) => {
-	// console.log("imgUrl", imgUrl);
+export const getFinalImageUrl = (
+  imgUrl,
+  dimensionWidth,
+  dimensionHeight
+) => {
+	console.log(imgUrl);
 	
-	try {
-		let url = imgUrl;
-		if (url) {
-			if (
-				!url.includes("unthink_main_2023") &&
-				(url.includes("unthink_webflow") || url.includes("unthink_main"))
-			) {
-				const URLData = new URL(imgUrl);
-				if (url.includes("unthink_webflow")) {
-					url =
-						URLData.origin +
-						URLData.pathname.replace("unthink_webflow", "unthink_main_2023") +
-						".webp";
-				} else if (url.includes("unthink_main")) {
-					url =
-						URLData.origin +
-						URLData.pathname.replace("unthink_main", "unthink_main_2023") +
-						".webp";
-				}
-			}
+  if (!imgUrl) return imgUrl;
 
-			if (
-				url.includes("unthink_main_2023") &&
-				url.includes(".webp") &&
-				dimensionWidth &&
-				dimensionHeight
-			) {
-				url = url.replace(
-					".webp",
-					`_${dimensionWidth}_${dimensionHeight}.webp`
-				);
-			}
+  // ✅ DO NOT TOUCH Next.js static images
+  if (imgUrl.startsWith("/_next/static/")) {
+    return imgUrl;
+  }
 
-			if (url.startsWith("https://s3-us-west-1.amazonaws.com/cem.3816.img")) {
-				url = url.replace(
-					"https://s3-us-west-1.amazonaws.com/cem.3816.img",
-					"https://cdn.unthink.ai/img"
-				);
-			}
-		}
+  try {
+    let url = imgUrl;
 
-		return url;
-	} catch (error) {
-		return imgUrl;
-	}
+    // Only parse ABSOLUTE urls
+    const URLData = url.startsWith("http")
+      ? new URL(url)
+      : null;
+
+    // Webflow → main CDN
+    if (
+      url.includes("unthink_webflow") &&
+      !url.includes("unthink_main_2023")
+    ) {
+      url =
+        URLData.origin +
+        URLData.pathname.replace(
+          "unthink_webflow",
+          "unthink_main_2023"
+        ) +
+        ".webp";
+    }
+
+    // Old main → new main CDN
+    if (
+      url.includes("unthink_main") &&
+      !url.includes("unthink_main_2023")
+    ) {
+      url =
+        URLData.origin +
+        URLData.pathname.replace(
+          "unthink_main",
+          "unthink_main_2023"
+        ) +
+        ".webp";
+    }
+
+    // Resize logic (CDN only)
+    if (
+      url.includes("unthink_main_2023") &&
+      url.endsWith(".webp") &&
+      dimensionWidth &&
+      dimensionHeight
+    ) {
+      url = url.replace(
+        ".webp",
+        `_${dimensionWidth}_${dimensionHeight}.webp`
+      );
+    }
+
+    // S3 → CDN
+    if (
+      url.startsWith(
+        "https://s3-us-west-1.amazonaws.com/cem.3816.img"
+      )
+    ) {
+      url = url.replace(
+        "https://s3-us-west-1.amazonaws.com/cem.3816.img",
+        "https://cdn.unthink.ai/img"
+      );
+    }
+
+    return url;
+  } catch {
+    return imgUrl;
+  }
 };
+
 
 // REMOVE
 // ADDED optimized code below

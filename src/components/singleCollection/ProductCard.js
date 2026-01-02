@@ -443,9 +443,9 @@ const ProductCard = ({
 			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
 				? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
 				: ""
-				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
+				} ${size === "small" ? "" : "w-40 sm:w-180 lg:w-80"} h-full`}>
 			<div
-				className={`overflow-hidden relative cursor-pointer product_card_container shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
+				className={`overflow-hidden relative cursor-pointer product_card_container mt-3 shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}
 				onClick={handleProductClick}>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
@@ -710,7 +710,7 @@ const ProductCard = ({
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
 										<button
-											className="flex-1 text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors product_buy_button disabled:opacity-50 disabled:cursor-not-allowed"
+											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors product_buy_button disabled:opacity-50 disabled:cursor-not-allowed"
 											onClick={checkoutPayment}
 											style={{ background: '#7c75ec' }}
 											disabled={!product?.price && !product?.listprice}

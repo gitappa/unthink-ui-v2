@@ -40,7 +40,7 @@ const BlogCollectionProducts = ({
 
 	return (
 		<div>
-			<div className='max-w-max mx-auto grid grid-cols-2 gap-4'>
+			<div className='max-w-max mx-auto grid grid-cols-2 gap-1 '>
 				{!showLoader &&
 					productList?.map((product) => (
 						<ProductCard

@@ -25,6 +25,7 @@ function CarousalContainer({
 	description,
 	collection_image_list,
 }) {
+
 	const dispatch = useDispatch();
 	const [previewVisible, setPreviewVisible] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
@@ -142,10 +143,10 @@ useEffect(() => {
 				</>
 			)}
 			<div className='overflow-hidden'>
-				<div className='un_bt_gallery'>
+				<div className={styles.un_bt_gallery}>
 					{!hideTitle && (
-						<div className='un_bt_carousel_title_container'>
-							<h1 className='un_bt_carousel_main_title collection_title'>
+						<div className={styles.un_bt_carousel_title_container}>
+							<h1 className={`${styles.un_bt_carousel_main_title} collection_title`}>
 								Featured Collections
 							</h1>
 							{/* <h1 className='un_bt_carousel_sub_title'>
@@ -156,18 +157,19 @@ useEffect(() => {
 						</div>
 					)}
 
-					<div className='un_bt_gallery_container select-none'>
+					<div className={`${styles.un_bt_gallery_container} select-none`}>
 						{items?.map((item, i) => {
 							const displayItems = [...totalItems].splice(0, 5);
+							const positionIndex = displayItems.includes(i + 1)
+								? displayItems.indexOf(i + 1) + 1
+								: null;
 
 							return (
 								<div
 									key={i}
-									className={`un_bt_gallery_item ${
-										displayItems.includes(i + 1)
-											? `un_bt_gallery_item_${displayItems.indexOf(i + 1) + 1}`
-											: ""
-									} `}
+									className={`${styles.un_bt_gallery_item} ${
+										positionIndex ? styles[`un_bt_gallery_item_${positionIndex}`] : ""
+									}`}
 									onMouseEnter={() => handleMouseEnter(i)}
 									onMouseLeave={handleMouseLeave}
 									onClick={() => handleItemClick && handleItemClick(item)}>
@@ -177,7 +179,7 @@ useEffect(() => {
 											<Image
 												src={getFinalImageUrl(item)}
 												alt={item?.title || 'carousel-image'}
-												className='un_bt_cover_image w-full'
+												className={`${styles.un_bt_cover_image} w-full`}
 												draggable={false}
 												fill
 												style={{ objectFit: 'cover' }}
@@ -215,11 +217,11 @@ useEffect(() => {
 												/>
 											</>
 										) : (
-											<div className='relative w-full h-full'>
+											<div className={styles.relative}>
 												<Image
-													src={getFinalImageUrl(item?.cover_image)}
+													src={getFinalImageUrl(item?.cover_image?.src || item?.cover_image)}
 													alt={item?.title || 'carousel-cover'}
-													className='un_bt_cover_image w-full'
+													className={`${styles.un_bt_cover_image} ${styles.w_full}`}
 													draggable={false}
 													fill
 													style={{ objectFit: 'cover' }}
@@ -253,8 +255,8 @@ useEffect(() => {
 									<div className='un_bt_title_gradiant'></div>
 
 									{/* Card Title */}
-									<div className='un_bt_card_title'>
-										<h1 className='text-white' title={item?.title}>
+									<div className={styles.un_bt_card_title}>
+										<h1 className={styles.text_white} title={item?.title}>
 											<span>{item?.title}</span>
 										</h1>
 									</div>
@@ -262,9 +264,9 @@ useEffect(() => {
 							);
 						})}
 						<div
-							className='un_bt_gallery_controls un_bt_gallery_controls_previous'
+							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
 							onClick={handlePrevArrowClick}>
-							<div className='un_bt_gallery_controls_inner_container'>
+							<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image 
 									src={carousel_arrow_icon} 
 									alt='previous arrow'
@@ -274,9 +276,9 @@ useEffect(() => {
 							</div>
 						</div>
 						<div
-							className='un_bt_gallery_controls un_bt_gallery_controls_next'
+							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
 							onClick={handleNextArrowClick}>
-							<div className='un_bt_gallery_controls_inner_container'>
+							<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image 
 									src={carousel_arrow_icon} 
 									alt='next arrow'

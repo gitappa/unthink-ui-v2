@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Input } from "antd";
 import Link from "next/link";
 import { generateOnContactFormSubmit } from "../../helper/utils";
+import styles from "./staticPageComponents.module.scss";
 
 const ContactUs = ({
 	title,
@@ -51,8 +52,10 @@ const ContactUs = ({
 	}, []);
 
 	return (
-		<div className='contact_us_container max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md'>
-			<div className='contact_us_inner_container pt-8 lg:pt-16 pb-14 lg:pb-28 rounded-md'>
+		<div
+			className={`${styles.contact_us_container} max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md`}>
+			<div
+				className={`${styles.contact_us_inner_container} pt-8 lg:pt-16 pb-14 lg:pb-28 rounded-md`}>
 				<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
 					{title}
 				</h1>

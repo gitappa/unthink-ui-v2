@@ -500,9 +500,9 @@ console.log('collectionValue',collectionValue);
 	useEffect(() => {
 		const fetchCollections = async () => {
 			try {
-				const res = await customProductsAPIs.getMPCollectionsAPICall(
-					store_type[0]
-				);
+				const typeToUse = storeStyle || store_type?.[0];
+				if (!typeToUse) return;
+				const res = await customProductsAPIs.getMPCollectionsAPICall(typeToUse);
 				if (res.data?.status_code === 200) {
 					const unique = [...new Set(res.data.data)];
 					setGetMPCollections(unique);
@@ -510,14 +510,18 @@ console.log('collectionValue',collectionValue);
 					if (unique.length > 0) setCollectionValue(unique[0]);
 				}
 			} catch (err) {
-				console.error("Error fetching collections:", err);
+				console.error("Error fetching collections:", {
+					message: err?.message,
+					status: err?.response?.status,
+					data: err?.response?.data,
+				});
 			}
 		};
 
 		if (isModalOpen) {
 			fetchCollections();
 		}
-	}, [isModalOpen]);
+	}, [isModalOpen, storeStyle, store_type]);
 
 	const handleSaveCall = async () => {
 		const payload = {
