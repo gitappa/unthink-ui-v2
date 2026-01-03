@@ -6,6 +6,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove border from Ant Design select components */
+.ant-select {
+    border: none !important;
+}
+
+.ant-select-selector {
+    border: none !important;
+}
+
+:where(.css-dev-only-do-not-override-mncuj7).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    border: none !important;
+}
+
 .static_page_bg {
     background: linear-gradient(180deg, #222F44 0%, #0E131B 100%);
 }

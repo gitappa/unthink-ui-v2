@@ -135,7 +135,9 @@
         opacity: 1;
     }
 }
-
+.ant-select-selector .ant-select-customize-input{
+    border: none !important;
+ }
 .wishlist-tags {
     .ant-select:not(.ant-select-customize-input) .ant-select-selector {
         background-color: transparent !important;
