@@ -2,7 +2,7 @@ name: CI dothelook
 on:
   push:
     branches: 
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
@@ -54,7 +54,6 @@ jobs:
           GATSBY_WEBBOT_NFT_SERVICE__BASE_URL: ""
           GATSBY_PDP_PAGE_ENABLED: "false"
           GATSBY_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
-
       - name: Setup GCP Service Account
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -69,20 +68,18 @@ jobs:
       - name: Build
         working-directory: "packages/web-client-gatsby"
         run: |
-          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui .
+          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-V2 .
       
       - name: Push
         working-directory: "packages/web-client-gatsby"
         run: |
-          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui
+          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-V2
       
       - name: Deploy
         working-directory: "packages/web-client-gatsby"
         run: |
-          gcloud run deploy unthink-ui-gatsby-dothelook-ui \
+          gcloud run deploy unthink-ui-gatsby-dothelook-V2 \
           --region us-central1 \
-          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui \
+          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-V2 \
           --platform managed \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
-      
-      

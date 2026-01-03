@@ -113,7 +113,7 @@ const ContactUsField = ({
 			<form id={formId} ref={contactUsForm}>
 				<div className='flex items-center'>
 					<Input
-						className='text-left h-12 rounded-md lg:rounded-l-md border-0 hover:border-opacity-0'
+						className='text-left h-12 rounded-md lg:rounded-l-md border-0 hover:border-opacity-0 placeholder-gray-400'
 						placeholder='Enter your email address'
 						name='email'
 						type='text'
