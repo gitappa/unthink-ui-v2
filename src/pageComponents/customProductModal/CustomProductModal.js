@@ -819,7 +819,7 @@ e.preventDefault()
 												</button>
 											) : (
 												<button
-													className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
+													className="box-border border whitespace-nowrap  flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
 												>
 													Add to Cart
 												</button>

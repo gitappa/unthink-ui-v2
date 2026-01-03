@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Typography } from "antd";
+import {  notification, Typography, Upload } from "antd";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
 	HeartOutlined,
@@ -12,9 +12,11 @@ import {
 	CopyTwoTone,
 	CopyrightCircleFilled,
 	CopyFilled,
+	UploadOutlined,
+	LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
-
+const vtf_image = '/images/ai_camera_watermark.png';
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
 	setRemoveFromFavorites,
@@ -64,6 +66,8 @@ import {
 import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
+import Modal from "../modal/Modal";
+import { profileAPIs } from "../../helper/serverAPIs";
 
 const { Text } = Typography;
 
@@ -113,6 +117,13 @@ const ProductCard = ({
 	const navigate = useNavigate();
 	console.log('hideAddToWishlist', enableSelect);
 	// console.log('qzssddsdsds',product);
+	const [buttonClick, setButtonClick] = useState(false);
+	const [showLoader, setShowLoader] = useState(false);
+	const [descriptionget, setDescriptionget] = useState('')
+	const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+	const [uploadedImages, setUploadedImages] = useState([]);
+	const [loading, setLoading] = useState(false);
+	console.log('buttonClick', buttonClick);
 
 	const dispatch = useDispatch();
 	const { themeCodes } = useTheme();
@@ -125,10 +136,10 @@ const ProductCard = ({
 			state.appState.wishlist.showWishlistModal,
 			state.store.data.store_id,
 			state.auth.user.data,
-
 		]);
 	// console.log('authUser', authUser);
 	const [storeData] = useSelector((state) => [state.store.data]);
+	const vto_enable = storeData?.is_tryon_enabled
 
 	// console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
 	// const favoriteColl =
@@ -437,7 +448,114 @@ const ProductCard = ({
 		},
 		[onStarClick]
 	);
+	const handleUploadImage = async ({ file }) => {
+		try {
+			setShowLoader(true);
 
+			const response = await profileAPIs.uploadImage({ file });
+			const data = response?.data;
+
+			if (data?.status_code === 400 || data?.status === "failure") {
+				notification.error({
+					message: "Image Upload Failed",
+					description:
+						data?.status_desc || "Something went wrong. Please try again.",
+				});
+				return;
+			}
+			const url = data?.data?.[0]?.url;
+			setUploadedImages(prev => prev.concat(url))
+			if (url) {
+				// setUploadedImages((prev) => [...prev, url]);
+				// additional_images.push(url)
+				notification.success({
+					message: "Image Uploaded Successfully",
+				});
+			}
+		} catch (error) {
+			console.error("Upload failed:", error);
+			notification.error({
+				message: "Image Upload Failed",
+				description:
+					error?.response?.data?.message || "Unexpected error occurred",
+			});
+		} finally {
+			setShowLoader(false);
+		}
+	};
+
+	const uploadImageDraggerProps = {
+		accept: "image/*",
+		multiple: true,
+		showUploadList: false,
+		customRequest: ({ file, onSuccess }) => {
+			handleUploadImage({ file });
+			setTimeout(() => onSuccess("ok"), 0);
+		},
+	};
+
+
+	const handleVTOclick = async (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		const url = window.location.origin
+		// setButtonClick(true);
+
+		const payload = {
+			image_urls: [product.image, uploadedImages[0]],
+			store: storeData.store_name,
+			image_tryon_prompt: descriptionget || '',
+		}
+		try {
+			setLoading(true);
+			const res = await axios.post(`https://auraprod.unthink.ai/cs/image_tryon/`, payload)
+			setVtoResultImageUrl(res.data.data.image_url);
+			setLoading(false);
+		} catch (error) {
+			console.log(error);
+			notification.error({
+				message: "Virtual Try-On Failed",
+				description: error?.response?.data?.message || "Failed to process image. Please try again.",
+			});
+			setLoading(false);
+		}
+	}
+
+	const handleVTODownload = async () => {
+		if (vtoResultImageUrl) {
+			try {
+				const response = await fetch(vtoResultImageUrl);
+				const blob = await response.blob();
+				const url = window.URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = url;
+				link.download = `vto-result-${Date.now()}.jpg`;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				window.URL.revokeObjectURL(url);
+				notification.success({
+					message: "Download Successful",
+					description: "Your virtual try-on image has been downloaded.",
+				});
+				handleVTOCancel();
+			} catch (error) {
+				console.error('Download failed:', error);
+				notification.error({
+					message: "Download Failed",
+					description: "Failed to download the image. Please try again.",
+				});
+			}
+		}
+	};
+
+
+	const handleVTOCancel = () => {
+		setButtonClick(false);
+		setVtoResultImageUrl(null);
+		setUploadedImages([]);
+		setDescriptionget('');
+	};
 	return (
 		<div
 			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
@@ -493,7 +611,7 @@ const ProductCard = ({
 											</button>
 										) : (
 											<button
-												className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
+												className="box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
 											>
 												Add to Cart
 											</button>
@@ -542,7 +660,7 @@ const ProductCard = ({
 									{/* <Link to='/cart'> */}
 									{storeData?.pdp_settings?.is_add_to_cart_button &&
 										<p
-											className='box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container ml-2'
+											className='box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container ml-2'
 											style={{ zIndex: 10000 }}
 											onClick={(e) => handleAddToCart(e)}>
 											Add to Cart
@@ -641,7 +759,7 @@ const ProductCard = ({
 
 
 				{/* product footer */}
-				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white mt-auto ${size === "small" ? "gap-2" : "gap-3"}`}>
+				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white   ${size === "small" ? "gap-2" : "gap-3"}`}>
 					{/* Product Name */}
 					<div className='flex flex-col gap-1 min-h-[44px]'>
 						<Text
@@ -705,7 +823,7 @@ const ProductCard = ({
 
 					{/* Action Buttons */}
 					{!enableSelect && (
-						<div className='flex gap-2 items-center justify-between'>
+						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
 							{(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
@@ -719,7 +837,7 @@ const ProductCard = ({
 										</button>
 									) : (
 										<button
-											className="flex-1  text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 											onClick={handleAddToCart}
 											style={{ background: '#7c75ec' }}
 											disabled={!product?.price && !product?.listprice}
@@ -730,7 +848,10 @@ const ProductCard = ({
 								</>
 							)}
 
-							<div>
+							{<img className='h-9 flex items-center justify-center   z-30 absolute top-2  left-1'
+								onClick={(e) => { setButtonClick(true); e.stopPropagation();   }} src={vtf_image} />}
+
+							<div> 
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
 										className={`border rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${onStarClick ? "cursor-pointer" : "cursor-default"
@@ -779,7 +900,100 @@ const ProductCard = ({
 
 			</div>
 
+			{buttonClick ?
 
+				<Modal isOpen={buttonClick}
+					headerText={'Virtual Try-On'}
+					onClose={() => handleVTOCancel()}
+					size='md'>
+
+					{vtoResultImageUrl ? (
+						<div className='flex flex-col items-center justify-center'>
+							<img src={vtoResultImageUrl} alt="VTO Result" className="max-h-96 rounded-xl mb-5" />
+							<div className="flex gap-3 justify-end w-full">
+								<button
+									onClick={handleVTOCancel}
+									className='rounded-xl text-indigo-600 font-bold text-xs md:text-sm py-2 px-4.5 border border-indigo-600 transition-colors hover:bg-indigo-50'>
+									Cancel
+								</button>
+								<button
+									onClick={handleVTODownload}
+									className='rounded-xl text-white font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600 transition-colors hover:bg-indigo-700'>
+									Download
+								</button>
+							</div>
+						</div>
+					) : (
+						<>
+							{loading ?
+								<div className='flex flex-col items-center justify-center py-12 gap-4'>
+									<LoadingOutlined className='text-5xl text-indigo-600 animate-spin' />
+									<div className='flex flex-col items-center gap-2'>
+										<p className='text-lg font-semibold text-gray-800'>AI is generating your image</p>
+										<p className='text-sm text-gray-500'>Please wait while we process your request...</p>
+									</div>
+								</div> :
+								<form onSubmit={handleVTOclick}>
+									<div className='flex flex-col items-center justify-center relative' >
+										{showLoader ? <LoadingOutlined className='text-2xl text-gray-600 mb-2' /> :
+											<>
+												{uploadedImages.length < 1 && (
+													// <Dragger
+													// 	className='bg-transparent h-20 w-20 border border-dashed border-gray-400 rounded-xl hover:border-brown-100 transition-all'
+													// 	{...uploadImageDraggerProps}
+													// 	name='upload_image'>
+													// 	<p className='text-gray-600'>+</p>
+													// </Dragger>
+
+													<div className='flex flex-col items-center justify-center'>
+														<h4 className="text-xl font-semibold text-start mb-3">Upload Image </h4>
+														<Upload.Dragger
+															className='bg-transparent h-56 w-56'
+															{...uploadImageDraggerProps}
+															name='upload_image'
+															showUploadList={false}>
+															<p className='ant-upload-drag-icon'>
+																<UploadOutlined />
+															</p>
+															<p className='w-4/6 mx-auto'>
+																Click or drag file(s) to this area
+															</p>
+														</Upload.Dragger>
+													</div>
+												)}
+											</>
+										}
+										{uploadedImages.length > 0 &&
+											<div className="relative ">
+												<img src={uploadedImages[0]} alt="Uploaded" className="mt-2 max-h-40" />
+												<CloseCircleOutlined className='text-white text-xl absolute right-0 top-2' onClick={() => setUploadedImages([])} />
+											</div>
+										}
+									</div>
+									<h4 className="mt-5 "> Add a prompt for AI (optional) </h4>
+									<textarea
+										className='text-left placeholder-gray-101 mt-2 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										placeholder='Enter description...'
+										name='description'
+										type='text'
+										onChange={(e) => setDescriptionget(e.target.value)}
+										value={descriptionget}
+										// value={product.description}
+										// onChange={(e) => handleProductInputChange(e, product.mfr_code)}
+										rows={5}
+									/>
+
+									<div className="flex justify-end">
+										<button></button>
+										<button type="submit" className={`rounded-xl mt-5 text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 flex justify-end  ${loading ? 'bg-indigo-400' : 'bg-indigo-600'}    mb-2`}>Submit</button>
+									</div>
+								</form>
+							}
+						</>
+					)}
+				</Modal>
+				: null
+			}
 
 			{/* // REMOVE // remove chin section integration and flag // not required */}
 			{showChinSection && (

@@ -3,6 +3,7 @@ import { Dropdown, Typography, Tooltip } from "antd";
 import Image from "next/image";
 
 import userIcon from "../../images/swiftly-styled/User.svg";
+import userProfileIcon from "../../images/swiftly-styled/userprofile.png";
 import avatarImg from "../../images/avatar-black.svg";
 import Link from "next/link";
 
@@ -43,7 +44,7 @@ export const UserProfileMenu = ({
 								// 	{currentUser?.user_name}
 								// </Text>
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
-									<Image src={userIcon} alt='userIcon' width={24} height={24} style={{fill:'white'}}/>
+									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{fill:'white'}}/>
 									{/* <BiSolidUserCircle /> */}
 								</Tooltip>
 							) : (

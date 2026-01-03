@@ -1070,7 +1070,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																key={i.id}
 																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 ${styles.hovercard_div} ${
 																	collectionData.createCollectionWay === i.id
-																		? "bg-indigo-103"
+																		? "bg-indigo-103 text-white"
 																		: "bg-white"
 																}`}>
 																<input

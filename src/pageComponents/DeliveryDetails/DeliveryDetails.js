@@ -6,7 +6,7 @@ import { removeFromWishlist } from "../wishlistActions/removeFromWishlist/redux/
 // import inputIcon from "../../images/icons/input-icon.svg";
 import Link from 'next/link';
 import { useNavigate } from "../../helper/useNavigate";
-// import Cartempty_icon from "../../images/icons/Cartempty_icon.svg";
+import cart_icon from "../../images/cart.svg";
 import { getTTid } from "../../helper/getTrackerInfo";
 import Cookies from "js-cookie";
 import { getUserInfo, GuestPopUpShow } from "../Auth/redux/actions";
@@ -337,7 +337,7 @@ const DeliveryDetails = () => {
 						{products.length === 0 ? (
 							<div className='text-center py-20 text-gray-500 text-2xl font-medium '>
 								<div className='flex gap-1 items-center  justify-center'>
-									<img src='' className='h-8 w-8' />
+									<img src={cart_icon} className='h-16 w-16' />
 									Your cart is empty
 								</div>
 							</div>

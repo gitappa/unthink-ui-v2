@@ -428,8 +428,11 @@
 .hovercard_div:hover {
     background: #7c74ec !important;
     transition: background 0.3s ease !important;
+    color: white !important;
 }
-
+.hovercard_div:hover span {
+    color: white !important;
+}
 .input_shadow_div input{
     box-shadow: 0px 3.25px 7.56px 0px #0000001A;
 }

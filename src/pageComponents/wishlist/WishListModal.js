@@ -473,8 +473,6 @@ const WishListModal = ({
 									/>
 								</div>
 							</div>
-
-
 							{/* create wishlist section */}
 							{enabledProductToAddInWishlist && collections.length ? (
 								<h3 className='text-xl-1 font-medium px-4 pt-3'>
@@ -497,10 +495,10 @@ const WishListModal = ({
 								<>
 									<div className="w-full flex justify-between p-3 mt-4">
 										<button onClick={() => handleCollectionClick("Feature")}
-											className={`p-2 text-lg font-semibold rounded-l-10 w-full-50 ${activeCollection === "Feature" ? "bg-blue-103 text-white" : "bg-transparent border-2 border-solid border-blue-103 text-blue-103"
+											className={`p-2 text-lg font-semibold rounded-l-10 w-full-50 whitespace-nowrap ${activeCollection === "Feature" ? "bg-blue-103 text-white" : "bg-transparent border-2 border-solid border-blue-103 text-blue-103"
 												}`}>Featured Collections</button>
 										<button onClick={() => handleCollectionClick("Creator")}
-											className={`p-2 text-lg font-semibold rounded-r-10 w-full-50 ${activeCollection === "Creator" ? "bg-blue-103 text-white" : "bg-transparent border-2 border-solid border-blue-103 text-blue-103"
+											className={`p-2 text-lg font-semibold rounded-r-10 w-full-50  ${activeCollection === "Creator" ? "bg-blue-103 text-white" : "bg-transparent border-2 border-solid border-blue-103 text-blue-103"
 												}`}>Creator Collections</button>
 									</div>
 								</>

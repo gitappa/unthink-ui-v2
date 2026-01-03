@@ -55,7 +55,7 @@ const ProductDetails = ({ params, ...props }) => {
 	const mfr_code = params?.mfr_code || router?.query?.mfr_code;
 	const { collection, loading } = useSelector((state) => state.cart);
 	// console.log('collectionsuii', collection);
-	const [isloading,setIsLoading] = useState(true)
+	const [isloading, setIsLoading] = useState(true)
 
 
 	const [sellerDetails, customProductsData, authUser] = useSelector((state) => [
@@ -92,7 +92,7 @@ const ProductDetails = ({ params, ...props }) => {
 			setFetchedProductDetails({});
 		}
 	};
- 	
+
 
 	const savedProductDetails = useMemo(
 		() => customProductsData?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
@@ -157,7 +157,7 @@ const ProductDetails = ({ params, ...props }) => {
 			console.log('cart updated');
 		}
 	}, []);
- 
+
 	const brandsDetails = useMemo(
 		() => sellerDetails[productDetails?.brand],
 		[sellerDetails, productDetails?.brand]
@@ -487,27 +487,7 @@ const ProductDetails = ({ params, ...props }) => {
 								) : null}
 
 
-								<div className=" ">
-									{
-										storeData?.pdp_settings?.is_buy_button ? (
-											<button
-												className="  mt-4 text-white py-2 px-9 font-normal text-lg rounded-10 shadow-lg" style={{ background: '#7c75ec' }}
-												onClick={checkoutPayment}
-											>
-												Buy
-											</button>
-										) : (
-											/* BUTTON 2 – Add to Cart / Buy Now */
-											<button
-												className="bg-primary   text-white py-1 px-9 font-normal text-lg rounded"
-											// onClick={checkoutPayment}
-											>
-												{storeData?.pdp_settings?.is_add_to_cart_button
-													? 'Add to cart'
-													: ''}
-											</button>
-										)}
-								</div>
+
 							</div>
 
 							{brandsDetails?.paymentMethod ? (
@@ -540,14 +520,14 @@ const ProductDetails = ({ params, ...props }) => {
 									<div className='text-white h-14 max-w-340 w-full '>
 
 
-										{/* // 	cardItem?.qty > 0 ?
-									// 	<Link to='/cart'>
-									// 	<button className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
-									// 	Go to Cart
-									// 	</button>
-									// 	</Link>
-									// : */}
-										<button onClick={handleAddToCart} className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
+								 		{/* // 	cardItem?.qty > 0 ?
+								     	// 	<Link to='/cart'>
+								    	// 	<button className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
+									 // 	Go to Cart
+									 // 	</button>
+									 // 	</Link>
+									 // : */}
+										{/* <button onClick={handleAddToCart} className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
 											{
 												storeData?.pdp_settings?.is_add_to_cart_button &&
 													storeData?.pdp_settings?.is_buy_button
@@ -556,7 +536,30 @@ const ProductDetails = ({ params, ...props }) => {
 														? 'Add to cart'
 														: 'Buy Now'
 											}
-										</button>
+										</button> */}
+										<div className=" ">
+											{
+												storeData?.pdp_settings?.is_buy_button ? (
+													<button
+														className="  mt-4 text-white py-2 px-9 font-normal text-lg rounded-10 shadow-lg" style={{ background: '#7c75ec' }}
+														onClick={checkoutPayment}
+													>
+														Buy
+													</button>
+												) : (
+													/* BUTTON 2 – Add to Cart / Buy Now */
+													<button
+														// className="bg-primary   text-white py-1 px-9 font-normal text-lg rounded"
+														className='text-white h-14 max-w-340 whitespace-nowrap w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}
+														onClick={handleAddToCart}
+
+													>
+														{storeData?.pdp_settings?.is_add_to_cart_button
+															? 'Add to cart'
+															: ''}
+													</button>
+												)}
+										</div>
 									</div>
 								</div>
 							)
