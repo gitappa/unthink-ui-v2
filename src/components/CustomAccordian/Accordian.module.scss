@@ -1,7 +1,6 @@
   .accordion_item {
     overflow: hidden;
     transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
-    height: auto;
     max-height: 9999px;
   }
   
@@ -12,6 +11,9 @@
 
   .accordion_content{
     transition: opacity .3s linear .18s;
+  }
+  
+  .accordion_item:not(.collapsed) .accordion_content {
     padding: 0.5rem 0;
   }
   

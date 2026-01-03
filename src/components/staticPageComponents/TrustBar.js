@@ -8,7 +8,7 @@ import styles from './staticPageComponents.module.scss';
 
 const TrustBar = ({ text }) => {
 	return (
-		<div className='relative max-w-4xl mx-auto trusbar_container'>
+		<div className={'relative max-w-4xl mx-auto ' + styles.trusbar_container}>
 			<div className='flex flex-wrap items-center justify-center py-7 px-3.5 bg-lightgray-106 bg-opacity-20 backdrop-filter backdrop-blur-4xl rounded-md relative text-center z-10'>
 				<span className='text-base lg:text-xl text-lightgray-101 italic'>
 					{text}

@@ -6,6 +6,7 @@ import ContactUsField from "../../components/staticPageComponents/ContactUsField
 import Trustbar from "../../components/staticPageComponents/TrustBar";
 import ContactUs from "../../components/staticPageComponents/ContactUs";
 import Accordion from "../../components/CustomAccordian/Accordian";
+import styles from "./styles.module.css";
 // import VideoModal from "../../components/staticPageComponents/VideoModal";
 
 import creator_AI_image from "../../images/newStaticPageImages/creator_AI_image.svg";
@@ -25,7 +26,7 @@ const Creators = () => {
 
 	return (
 		<div className='font-firaSans'>
-			<section className='creators_first_container py-24 lg:py-32'>
+			<section className={styles.creators_first_container + ' py-24 lg:py-32'}>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl mx-auto publisher_title_container text-center flex flex-col items-center'>
 					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal font-firaSans z-10'>
 						Get paid for being you.

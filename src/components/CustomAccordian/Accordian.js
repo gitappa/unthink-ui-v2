@@ -6,7 +6,7 @@ import styles from './Accordian.module.scss';
 const Pannel = ({ title, children }) => {
 	const [isOpen, setOpen] = useState(false);
 	return (
-		<div className='accordion_wrapper'>
+		<div className={`accordion_wrapper ${styles.accordion_wrapper} mb-9`}>
 			<div
 				className={`flex justify-between items-center cursor-pointer ${
 					isOpen ? "open" : ""
@@ -15,12 +15,12 @@ const Pannel = ({ title, children }) => {
 				<h1 className='text-lightgray-101 text-base font-normal'>{title}</h1>
 				<img
 					src={downArrow_icon}
-					className={`${isOpen && "rotate_accordion_icon"} accordion_icon`}
+					className={`${isOpen && styles.rotate_accordion_icon} ${styles.accordion_icon}`}
 				/>
 			</div>
-			<div className={`accordion_item ${!isOpen ? "collapsed" : ""}`}>
+			<div className={`${styles.accordion_item} ${!isOpen ? styles.collapsed : ""}`}>
 				<div
-					className={`accordion_content text-lightgray-104 text-base transition-opacity ease-linear ${
+					className={`${styles.accordion_content} text-lightgray-104 text-base transition-opacity ease-linear ${
 						isOpen ? "opacity-100" : "opacity-0"
 					}`}>
 					{children}
