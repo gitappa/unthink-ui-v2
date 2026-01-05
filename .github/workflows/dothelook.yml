@@ -68,7 +68,7 @@ jobs:
       - name: Build
         working-directory: "packages/RootFolder"
         run: |
-          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 -f packages/RootFolder/Dockerfile packages/RootFolder
+          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 -f Dockerfile .
       
       - name: Push
         working-directory: "packages/RootFolder"
