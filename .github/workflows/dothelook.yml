@@ -2,7 +2,7 @@ name: CI dothelook
 on:
   push:
     branches: 
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@master
       - name: Use Node.js 12.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache Node Modules
@@ -23,11 +23,11 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
-        working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-gatsby"
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --legacy-peer-deps
+        run: npm install
       - name: Setup and run build on app
-        working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-gatsby"
         run: |
           npm run build
         env:
@@ -35,7 +35,7 @@ jobs:
           #NEXT_BACKEND_URL: "https://webbot-image-sync-qvde2butpa-uc.a.run.app"
           NEXT_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
           NEXT_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
-          # GA_TRACKING_ID: "G-HHK6NNEJNF "
+          # GA_TRACKING_ID: "G-HHK6NNEJNF"
           NEXT_STAGING_ENV: "false"
           NEXT_IS_KIOSK_ENABLED: "false"
           NEXT_SUPER_ADMIN_USER_NAME: "dothelook"
@@ -54,6 +54,7 @@ jobs:
           NEXT_WEBBOT_NFT_SERVICE__BASE_URL: ""
           NEXT_PDP_PAGE_ENABLED: "false"
           NEXT_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
+
       - name: Setup GCP Service Account
         uses: google-github-actions/setup-gcloud@v1
         with:
@@ -61,26 +62,25 @@ jobs:
           service_account_key: ${{ secrets.DEV_GCP_SA_KEY_NEW }}
           export_default_credentials: true
       - name: Authorize
-        #working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-next"
         run: |
           gcloud auth configure-docker us-docker.pkg.dev --quiet
       
       - name: Build
-        working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-next"
         run: |
-          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 -f Dockerfile .
+          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui-v2 .
       
       - name: Push
-        working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-next"
         run: |
-          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2
+          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui-v2
       
       - name: Deploy
-        working-directory: "packages/RootFolder"
+        working-directory: "packages/web-client-next"
         run: |
-          gcloud run deploy unthink-ui-next-dothelook-v2 \
+          gcloud run deploy unthink-ui-gatsby-dothelook-ui-v2 \
           --region us-central1 \
-          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 \
+          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-ui-v2 \
           --platform managed \
-          --port 3000 \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
