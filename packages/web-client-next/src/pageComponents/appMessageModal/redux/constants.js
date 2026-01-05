@@ -1,2 +1,0 @@
-export const SHOW_APP_MESSAGE = "SHOW_APP_MESSAGE";
-export const CLOSE_APP_MESSAGE = "CLOSE_APP_MESSAGE";
