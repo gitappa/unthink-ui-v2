@@ -1,0 +1,26 @@
+@import '../../style/variable.module';
+
+.unthink-shared-collection-list {
+    &__data {
+        max-width: 200px;
+        min-width: 160px;
+
+        &-row {
+            cursor: pointer;
+            margin: 10px 10px 10px 0px;
+
+            &.active {
+                border-left: 4px solid;
+                padding-left: 10px;
+            }
+
+            &.in-active {
+                padding-left: 14px;
+            }
+        }
+    }
+
+    &__content {
+        width: 100%;
+    }
+}

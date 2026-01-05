@@ -1,0 +1,105 @@
+#eras-collections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    padding: 10px;
+    margin: auto;
+    width: 60%;
+    height: fit-content;
+
+    .item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        aspect-ratio: 1/1;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s ease box-shadow 0.3s ease;
+        border: 5px solid white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .item img {
+        width: 80%;
+        height: 80%;
+        opacity: 40%;
+        object-fit: contain;
+        transition: opacity 0.3s ease, filter 0.3s ease;
+        filter: grayscale(80%) brightness(0.6);
+    }
+
+    .item .hover-svg {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.1s ease;
+        background-color: inherit;
+    }
+
+    .item:hover .hover-svg {
+        opacity: 1;
+        display: block;
+        width: 100%;
+        height: 100%;
+        filter: brightness(1)
+    }
+
+
+    .item:hover img {
+        opacity: 0;
+    }
+
+    .guitar { 
+        background-color: #a5c9a5;
+    }
+
+    .fearless {
+        background-color: #efc180;
+    }
+
+    .fireworks {
+        background-color: #c7a8cb;
+    }
+
+    .heartGlasses {
+        background-color: #7a2e39;
+    }
+
+    .moon {
+        background-color: #242e47;
+        aspect-ratio: 3 / 4.5;
+    }
+
+    .seagulls {
+        background-color: #b5e5f8;
+    }
+
+    .snake {
+        background-color: #746f70;
+    }
+
+    .typewriter {
+        background-color: #5f5b58;
+        aspect-ratio: 3/4.5;
+    }
+
+    .hearts {
+        background-color: #f7b0cc;
+    }
+
+    .cardigan {
+        background-color: #cdc9c1;
+    }
+
+    .willow {
+        background-color: #c5ac90;
+    }
+}
+
+@media (max-width: 768px) {
+    #eras-collections-grid {
+        width: 100%;
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/collection/:id", "destination": "/collection.html" }
+  ]
+}

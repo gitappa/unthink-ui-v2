@@ -1,0 +1,27 @@
+@import '../variable.module.scss.module';
+
+.unthink-personal-shopper {
+    padding: 0px 10px;
+
+    .ant-image {
+        max-width: 486px;
+        height: auto;
+
+        @media screen and (max-width:500px) {
+            max-width: 90vw;
+        }
+    }
+
+    video {
+        max-width: 600px;
+        width: 90vw;
+        margin: 10px auto;
+    }
+
+    &__btn {
+        margin: 10px auto 40px;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+    }
+}

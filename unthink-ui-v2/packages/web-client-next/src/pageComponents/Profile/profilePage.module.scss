@@ -1,0 +1,118 @@
+.profile-header-container {
+	height: 75px;
+}
+
+.profile-container {
+	height: calc(100% - 75px);
+    .ant-select-multiple .ant-select-selection-item-remove {
+        line-height: 17px;
+    }
+    .ant-steps-item-icon span{
+        line-height: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.ant-steps-item-title {
+    color: white !important;
+}
+
+.ant-steps-navigation .ant-steps-item::after{
+    border: 1px solid rgb(228 231 230 / 79%);
+    border-bottom: none;
+    border-left: none;
+}
+
+.site-navigation-steps {
+  box-shadow: 0px -1px 0 0 #fff inset;
+}
+
+.card-shadow{
+    box-shadow: 0px 0px 5px 0px #fff;
+}
+
+.profile-detail-container textarea ,.profile-detail-container input ,.profile-detail-container label {
+	@apply text-white;
+}
+
+.profile-detail-container .ant-select-selector ,.profile-detail-container .ant-select-arrow{
+    @apply text-white;
+    background-color: transparent !important;
+}
+
+.additional-brands-wrapper .ant-select-multiple .ant-select-selector {
+	min-height: 80px;
+    height: 100%;
+    align-items: flex-start;
+}
+
+.additional-brands-wrapper .ant-select-multiple .ant-select-selection-placeholder {
+	@apply top-4; 
+}
+
+.profile-brand-wrapper {
+    padding-top: 100%;
+}
+
+.ant_dragger_upload {
+    background-color: transparent !important;
+    height: auto !important;
+    margin-bottom: 10px;
+}
+
+
+.ant_dragger_upload .ant-upload-drag {
+    height: auto !important;
+    margin-top: 10px;
+}
+
+.ant-input::placeholder {
+    color: #d3d3d3 !important;
+}
+
+
+.mutliSelect-antd .ant-select-selection-overflow{
+    display: flex;
+    gap: 15px;
+    padding: 5px;
+}
+
+.custom-options-container .ant-select-item {
+  padding: 0 !important;
+}
+
+.custom-options-container .ant-select-item-option {
+  padding: 0 !important;
+}
+
+.delete-btn:hover {
+  background: transparent !important;
+}
+
+.custom-options-container .ant-select-item-option:hover {
+  background-color: #f5f5f5;
+  cursor: default;
+}
+
+.custom-options-container > div {
+  cursor: pointer;
+}
+
+.custom-options-container > div:hover {
+  background-color: #f5f5f5;
+}
+
+.image-container .remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-container:hover .remove-btn {
+  opacity: 1;
+}

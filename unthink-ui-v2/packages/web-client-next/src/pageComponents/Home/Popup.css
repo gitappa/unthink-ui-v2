@@ -1,0 +1,14 @@
+.slick-dots li button:before {
+    font-size: 11.77px!important;
+    margin-right: 2;
+}
+.ant-modal{
+    width: 830px!important;
+}
+.ant-modal-content {
+    border-radius: 31px;
+}
+/* .modal-box {
+    width: 860 !important;
+    height: 665 !important;
+} */

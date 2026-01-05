@@ -1,0 +1,145 @@
+@import '../../style//variable.scss.module';
+
+.unthink-products {
+    display: flex;
+    flex-direction: column;
+    background-color: $gray;
+    margin-bottom: 10px;
+    align-items: center;
+
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px;
+        justify-content: center;
+
+        &-product {
+            width: 50%;
+            max-width: 250px;
+            padding: 20px 10px;
+
+            &.vertical {
+                min-width: 300px;
+
+                .unthink-products__container-product-image {
+                    height: 200px
+                }
+            }
+
+            a {
+                padding: 0px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            &-image {
+                height: 250px;
+                overflow: hidden;
+
+                &-container {
+                    position: relative;
+                    height: 100%;
+
+                    .product-options {
+                        box-shadow: 0px 0px 3px 0px #00000024;
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        z-index: 10;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 4px;
+                        background-color: #ffffff50;
+
+                        padding: 5px 10px;
+
+                        .ant-image {
+                            width: 20px;
+
+                            img {
+                                height: 20px
+                            }
+                        }
+
+                        .anticon-heart {
+                            width: 20px;
+                            height: 20px;
+
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+                    }
+
+                    &:hover .backdrop {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+
+                    .backdrop {
+                        z-index: 9;
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        visibility: hidden;
+                        opacity: 0;
+                        transition: visibility 0s, opacity 0.3s linear;
+
+                        &-btn-container {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            .ant-btn-primary {
+                                max-width: 90%;
+                                white-space: normal;
+                                height: auto;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            &-footer {
+                padding: 10px;
+
+                .strike {
+                    text-decoration: line-through;
+                    margin-right: 10px;
+                }
+
+                .percentage {
+                    font-size: 14px;
+                    padding-left: 5px;
+                    color: $yellow;
+                }
+
+                &--text {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+
+                    &-container {
+                        max-width: 100%;
+                        width: calc(100% - 50px);
+
+                        &.full-view {
+                            width: 100%;
+                        }
+                    }
+
+
+                }
+
+            }
+        }
+    }
+}

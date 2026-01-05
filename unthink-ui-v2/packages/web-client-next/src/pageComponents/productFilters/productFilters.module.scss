@@ -1,0 +1,29 @@
+.product-filters-select-input {
+    .ant-select-selector {
+        border-radius: 12px !important;
+    }
+
+    .ant-select-selection-item {
+        background-color: #e2e8f0 !important;
+        border-color: #e2e8f0 !important;
+        border-radius: 12px !important;
+    }
+
+    .ant-select-selection-item-remove {
+        display: flex !important;
+
+        .anticon-close {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            color: black;
+        }
+    }
+}
+
+.product-filters-select-single-input{
+    .ant-select-selector {
+        border-radius: 12px !important;
+    }
+}
