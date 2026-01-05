@@ -1,0 +1,117 @@
+ .swiftlyStyledFooter {
+    // @font-face {
+    //     font-family: 'footerButtonFont';
+    //     src: url('/src/fonts/SwiftlyStyled/Poppins/Poppins-Bold.ttf');
+    //  }
+
+    // @font-face {
+    //     font-family: 'footerLinks';
+    //     src: url('/src/fonts/SwiftlyStyled/Montserrat/static/Montserrat-Black.ttf');
+    // }
+
+
+	.colorStrip {
+		height: 30px;
+		width: 100%;
+		display: flex;
+	}
+
+	.colorSegment {
+		height: 100%;
+		flex: 1 1 0;
+	}
+
+    .footer-box {
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 50px;
+        font-family: 'Montserrat', sans-serif;
+        width: 100%;
+        background-color: #5f5b58;
+        font-size: 18px;
+        line-height: 1.5;
+        letter-spacing: 0;
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        em {
+            font-style: italic;
+        }
+    }
+
+    .blackBox {
+        background-color: #2c2c2c;
+        padding: 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 20px;
+        line-height: 1.5;
+        letter-spacing: 0;
+        color: #ffffffdb;
+        text-align: center;
+
+        p {
+            margin-bottom: 10px;
+        }
+    }
+
+    .footerLinks {
+        background-color: #bb0000;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #ffffff;
+        font-family: 'footerLinks';
+
+        @media (max-width: 768px) {
+            padding: 14px 12px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 0;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.4;
+            letter-spacing: 0;
+            color: #ffffffc3;
+
+            @media (max-width: 768px) {
+                font-size: 14px;
+            }
+        }
+
+        a:first-child {
+            margin-right: auto;
+            font-family: 'footerButtonFont';
+            font-weight: bold;
+            font-size: 15px;
+            margin-left: 30px;
+        }
+
+        a:last-child {
+            margin-left: auto;
+            font-family: 'footerButtonFont';
+            font-weight: bold;
+            font-size: 15px;
+            margin-right: 25px;
+        }
+    }
+
+}

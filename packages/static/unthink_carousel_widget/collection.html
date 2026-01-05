@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collection Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        .collection-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="collection-container">
+        <h1 id="collection-name">Loading...</h1>
+        <img id="collection-image" src="" alt="Cover image" style="display:none;" />
+        <pre id="collection-description"></pre>
+    </div>
+
+    <script>
+
+        const pathParts = window.location.pathname.split("/");
+        const collectionId = pathParts[pathParts.length - 1];
+
+        console.log("Collection ID from path:", collectionId);
+
+        async function fetchCollection() {
+            const store = "fashiondemo"; // you can also make this dynamic if needed
+            const apiUrl = `https://aurastage.unthink.ai/user/collections/fetch_collections/?collection_id=${collectionId}&store=${store}`;
+
+            try {
+                const res = await fetch(apiUrl);
+                const json = await res.json();
+                const collection = json?.data[0];
+
+                console.log("collection", collection);
+
+
+                if (!collection) {
+                    document.getElementById("collection-name").textContent = "Collection not found.";
+                    return;
+                }
+
+                document.getElementById("collection-name").textContent = collection.collection_name || "Unnamed Collection";
+                document.getElementById("collection-description").textContent = collection.description || "No description available.";
+
+                if (collection.cover_image) {
+                    const img = document.getElementById("collection-image");
+                    img.src = collection.cover_image;
+                    img.style.display = "block";
+                }
+
+            } catch (error) {
+                console.error("Error fetching collection:", error);
+                document.getElementById("collection-name").textContent = "Something went wrong.";
+            }
+        }
+
+        fetchCollection();
+    </script>
+</body>
+
+</html>
