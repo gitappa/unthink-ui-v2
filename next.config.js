@@ -69,8 +69,8 @@ const nextConfig = {
   // Use regular SSR instead of static export
   trailingSlash: true,
 
-  // Enable static export for nginx deployment
-  output: 'export',
+  // Enable standalone output for Docker builds
+  output: 'standalone',
 };
 
 module.exports = nextConfig;

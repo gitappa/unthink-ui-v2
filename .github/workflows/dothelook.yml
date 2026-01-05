@@ -76,4 +76,5 @@ jobs:
           --region us-central1 \
           --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-v2 \
           --platform managed \
+          --port 3000 \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
