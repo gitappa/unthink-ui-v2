@@ -87,3 +87,4 @@ jobs:
           --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
           --platform managed \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
+          
