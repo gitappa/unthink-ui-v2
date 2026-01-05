@@ -64,17 +64,17 @@ jobs:
       
       - name: Build
         run: |
-          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-v2 .
+          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 .
       
       - name: Push
         run: |
-          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-v2
+          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2
       
       - name: Deploy
         run: |
-          gcloud run deploy unthink-ui-gatsby-dothelook-v2 \
+          gcloud run deploy unthink-ui-next-dothelook-v2 \
           --region us-central1 \
-          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-gatsby-dothelook-v2 \
+          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-next-dothelook-v2 \
           --platform managed \
           --port 3000 \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
