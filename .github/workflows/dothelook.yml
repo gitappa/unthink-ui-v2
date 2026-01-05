@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Use Node.js 12.x
         uses: actions/setup-node@v3
         with:
@@ -25,7 +25,7 @@ jobs:
       - name: Install Dependency
         working-directory: "packages/RootFolder"
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Setup and run build on app
         working-directory: "packages/RootFolder"
         run: |
