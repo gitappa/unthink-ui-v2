@@ -67,17 +67,17 @@ jobs:
           gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
       
       - name: Build
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
           docker build --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 -f packages/web-client-next/Dockerfile .
       
       - name: Push
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
           docker push us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2
       
       - name: Deploy
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
           gcloud run deploy unthink-ui-gatsby-dothelook-ui-v2 \
           --region us-central1 \
