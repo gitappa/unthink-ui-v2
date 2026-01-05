@@ -1,22 +1,9 @@
-# Use Node.js to build the Next.js app first
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --legacy-peer-deps
-COPY . .
-RUN npm run build
-
-# Production server environment
-FROM node:18-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
+FROM nginx:alpine
+WORKDIR /packages/web-client-next
 ENV PORT=3000
 ENV HOST=0.0.0.0
-
-# Copy the standalone server and static files
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
+COPY /packages/web-client-next/nginx/default.conf /etc/nginx/conf.d/configfile.template
+RUN sh -c "envsubst '\$PORT'  < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf"
+COPY /packages/web-client-next/public /usr/share/nginx/html
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
