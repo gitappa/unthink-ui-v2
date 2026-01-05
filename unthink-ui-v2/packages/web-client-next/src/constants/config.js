@@ -13,7 +13,7 @@ export const access_key =
 export const auraYfretUserCollBaseUrl =
 	process.env.NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL;
 export const webbotNFTServiceBaseUrl =
-	process.env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL;
+	process.env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL;  
 // export const realtimeAIBaseUrl =
 // 	process.env.NEXT_PUBLIC_REALTIME_AI_BASE_URL ||
 // "https://realtimeapplication-dlwl6keu2q-uc.a.run.app";
