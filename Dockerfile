@@ -45,12 +45,28 @@
 # server environment
 FROM node:18 AS builder
 WORKDIR /
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy source code
+COPY . .
+
+# Build the Next.js app
+RUN npm run build
+
+# Export static files
+RUN npm run export
+
 FROM nginx:alpine
 
 ENV PORT=8080
 ENV HOST=0.0.0.0
 COPY /nginx/default.conf /etc/nginx/conf.d/configfile.template
 RUN sh -c "envsubst '\$PORT'  < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf"
-COPY /public /usr/share/nginx/html
+COPY /out /usr/share/nginx/html
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

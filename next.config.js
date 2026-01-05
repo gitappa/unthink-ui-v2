@@ -18,18 +18,8 @@ const nextConfig = {
     GA_TRACKING_ID: process.env.NEXT_PUBLIC_GA_TRACKING_ID || '',
   },
   
-  // Image optimization
+  // Image optimization - disabled for static export
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
-    ],
     unoptimized: true,
   },
   
@@ -78,6 +68,9 @@ const nextConfig = {
 
   // Use regular SSR instead of static export
   trailingSlash: true,
+
+  // Enable static export for nginx deployment
+  output: 'export',
 };
 
 module.exports = nextConfig;
