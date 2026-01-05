@@ -1,0 +1,36 @@
+.q-and-a-popover-overlay {
+	.ant-popover-content {
+		@apply mx-2 tablet:mx-0;
+	}
+
+	.ant-popover-inner-content {
+		max-width: 408px;
+		width: 408px;
+		height: 600px;
+	}
+
+	.ant-popover-inner,
+	.ant-popover-inner-content {
+		@apply rounded tablet:rounded-2xl;
+		@apply bg-slat-103;
+	}
+
+	.ant-popover-arrow-content {
+		@apply bg-slat-103;
+	}
+
+	.ant-popover-inner {
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+	}
+	
+	.response-content-container {
+		max-height: 458px;
+		overflow: auto;
+		
+		-ms-overflow-style: none;  /* IE and Edge */
+		scrollbar-width: none;  /* Firefox */
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}	
+}

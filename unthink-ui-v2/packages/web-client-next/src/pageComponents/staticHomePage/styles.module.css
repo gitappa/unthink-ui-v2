@@ -1,0 +1,129 @@
+.font-inter{
+    font-family: "Inter, sans-serif"
+}
+
+/* -----------------------BRANDS STYLING------------------------- */
+.brands {
+    background-color: #f8f6f4;
+    /* height: 100vh; */
+    width: auto;
+    height: auto;
+    padding: 96px 0px;
+    /* width: 100%; */
+}
+
+
+.block-brands {
+    
+    margin: 0px 0px 10px;
+  
+}
+
+.publisher_first_container{
+    position: relative; 
+}
+
+.publisher_first_container::before{
+    height: 100%;
+    width: 100%;
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-image: url(../../images/newStaticPageImages/publisher_bg.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.publisher_title_container{
+    background-image: url(../../images/newStaticPageImages/comman_static_page_bg.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.brands_title_container{
+    background-image: url(../../images/newStaticPageImages/comman_static_page_bg.svg);
+    background-repeat: no-repeat;
+    background-position-x: center;
+}
+
+.footer_inner_container p{
+    margin-bottom: 20px;
+}
+
+.creators_first_container{
+    position: relative; 
+}
+
+.creators_first_container::before{
+    height: 100%;
+    width: 100%;
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 1;
+    background-image: url(/images/newStaticPageImages/creators_bg.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    mix-blend-mode: multiply;
+}
+
+.teams_container{
+    background-image: url(../../images/newStaticPageImages/about/teams_bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* for gradian on static brands page */
+.text_gradient_underline{
+    position: relative;
+}
+
+.text_gradient_underline::after{
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    background: linear-gradient(90deg, #F2C94C 0%, #4F46E5 100%);
+    border-radius: 2px;
+}
+
+.tooltip_box::after{
+    content: '';
+    position: absolute;
+    background-image: url(../../images/newStaticPageImages/brands/tooltip_box_arrow_1.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    bottom: -34px;
+    width: 3.5rem;
+    height: 2.25rem;
+    left: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+    .tooltip_box::after {
+        width: 5rem;
+        height: 2.25rem;
+        left: 6rem;
+    }
+}
+
+.flip_ellips_arrow{
+    transform: scaleX(-1);
+}
+
+.footer_glass_bg{
+    background: linear-gradient(253.09deg, rgba(217, 217, 217, 0.08) -7.53%, rgba(217, 217, 217, 0) 97.04%);
+    backdrop-filter: blur(50px);
+}
