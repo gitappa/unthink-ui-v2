@@ -82,7 +82,7 @@ jobs:
       - name: Deploy
         #working-directory: "packages/web-client-next"
         run: |
-          gcloud run deploy unthink-ui-gatsby-dothelook-ui-v2 \
+          gcloud run deploy unthink-ui-next-dothelook-ui-v2 \
           --region us-central1 \
           --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
           --platform managed \
