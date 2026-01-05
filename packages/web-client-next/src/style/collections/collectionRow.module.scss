@@ -1,0 +1,57 @@
+@import '../variable.module.scss.module';
+
+.unthink-collection-row {
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 21px;
+        cursor: pointer;
+
+        &-text {
+            display: flex;
+
+            .circle {
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                background-color: $yellow;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    &__share {
+        position: relative;
+        display: flex;
+        padding-right: 10px;
+
+        &-div {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &__content {
+        padding: 0px 21px 0px 45px;
+
+        &>div {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 3px 0px;
+
+            .circle {
+                width: 15px;
+                height: 15px;
+                margin-right: 5px;
+                background-color: $red;
+                border-radius: 50%;
+            }
+
+            .circle-done {
+                background-color: $green;
+            }
+        }
+    }
+}

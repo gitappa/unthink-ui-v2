@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove border from Ant Design select components */
+.ant-select {
+    border: none !important;
+}
+
+.ant-select-selector {
+    border: none !important;
+}
+
+:where(.css-dev-only-do-not-override-mncuj7).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    border: none !important;
+}
+
+.static_page_bg {
+    background: linear-gradient(180deg, #222F44 0%, #0E131B 100%);
+}
+
+.profile-brand-wrapper {
+    padding-top: 100%;
+}
+
+.card-shadow {
+    box-shadow: 0px 0px 5px 0px #fff;
+}
+.ant-steps-item-title {
+  color: #ffffff !important;
+}
+
+.site-navigation-steps.ant-steps-navigation {
+  width: 100%;
+}
+
+.site-navigation-steps.ant-steps-navigation .ant-steps-item {
+  flex: 1 1 0;
+  margin-inline-end: 0 !important;
+  padding-inline: 0 !important;
+}
+
+.site-navigation-steps.ant-steps-navigation .ant-steps-item::after {
+  display: none !important;
+}
+
+.site-navigation-steps.ant-steps-navigation .ant-steps-item-container {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  padding-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.site-navigation-steps.ant-steps-navigation .ant-steps-item-title {
+  text-align: center;
+  width: 100%;
+}
+
+.site-navigation-steps.ant-steps-navigation .ant-steps-item.ant-steps-item-active .ant-steps-item-container {
+  border-bottom: 2px solid #1677ff;
+}

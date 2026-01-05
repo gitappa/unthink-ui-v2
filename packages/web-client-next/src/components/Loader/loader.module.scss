@@ -1,0 +1,217 @@
+.speaking-loader-wrapper {
+  .slw {
+    display: inline-block;
+    position: relative;
+    width: 22.5px;
+    height: 26px;
+  }
+  .slw div {
+    display: inline-block;
+    position: absolute;
+    left: 2.5px;
+    width: 2.5px;
+    background: linear-gradient(180deg, #F7C954 0%, #E15C42 100%);
+    @apply rounded-b-full rounded-t-full;
+    animation: slw 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .slw div:nth-child(1) {
+    left: 0px;
+    animation-delay: -0.40s;
+  }
+  .slw div:nth-child(2) {
+    left: 5px;
+    animation-delay: -0.20s;
+  }
+  .slw div:nth-child(3) {
+    left: 10px;
+    animation-delay: -0.0s;
+  }
+  .slw div:nth-child(4) {
+    left: 15px;
+    animation-delay: 0.20s;
+  }
+  .slw div:nth-child(5) {
+    left: 20px;
+    animation-delay: 0.40s;
+  }
+  @keyframes slw {
+    0% {
+      top: 0px;
+      height: 26px;
+    }
+    50%, 100% {
+      top: 8px;
+      height: 10px;
+    }
+  }
+}
+
+.search-loader-1-wrapper {
+  .sl1w {
+    display: inline-block;
+    position: relative;
+    width: 25px;
+    height: 22px;
+  }
+  .sl1w div {
+    display: inline-block;
+    position: absolute;
+    left: 3.5px;
+    width: 6px;
+    background: linear-gradient(180deg, #F7C954 0%, #E15C42 100%);
+    @apply rounded-b-full rounded-t-full;
+    animation: sl1w 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .sl1w div:nth-child(1) {
+    left: 0px;
+    animation-delay: -0.40s;
+  }
+  .sl1w div:nth-child(2) {
+    left: 9.5px;
+    animation-delay: -0.20s;
+  }
+  .sl1w div:nth-child(3) {
+    left: 19px;
+    animation-delay: -0.0s;
+  }
+  @keyframes sl1w {
+    0% {
+      top: 0px;
+      height: 6px;
+    }
+    50%, 100% {
+      top: 8px;
+      height: 6px;
+    }
+  }
+}
+
+.aura-speaking-loader-wrapper {
+  .aslw {
+    position: absolute;
+    // height: 57px; // should be removed later
+    // width: 130px;
+    // margin-top: -4px;
+    // background: chartreuse;
+
+    height: 93px;
+    width: 166px;
+    margin-top: -22px;
+    margin-left: -18px;
+    background: linear-gradient(180deg, #F7C954 0%, #E15C42 100%);
+    opacity: 0.2;
+
+    animation-name: aslw;
+    animation-duration: 1s; 
+    animation-timing-function: ease-out; 
+    animation-delay: 0s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-fill-mode: none;
+    animation-play-state: running; 
+  }
+  
+  @keyframes aslw {
+    0% {
+      height: 57px;
+      width: 130px;
+      margin-top: -4px;
+      margin-left: 0;
+    }
+    // 100% { // should be removed later
+      // height: 93px;
+      // width: 166px;
+      // margin-top: -22px;
+      // margin-left: -18px;
+    // }
+  }
+}
+
+.speaking-loader-v2-wrapper {
+  .slw {
+    display: inline-block;
+    position: relative;
+    width: 22.5px;
+    height: 26px;
+  }
+  .slw div {
+    display: inline-block;
+    position: absolute;
+    left: 2.5px;
+    width: 2.5px;
+    background: linear-gradient(180deg, #D48AE6 0%, #B09ED3 49.22%, #4D44BF 89.36%);
+    @apply rounded-b-full rounded-t-full;
+    animation: slw 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .slw div:nth-child(1) {
+    left: 0px;
+    animation-delay: -0.40s;
+  }
+  .slw div:nth-child(2) {
+    left: 5px;
+    animation-delay: -0.20s;
+  }
+  .slw div:nth-child(3) {
+    left: 10px;
+    animation-delay: -0.0s;
+  }
+  .slw div:nth-child(4) {
+    left: 15px;
+    animation-delay: 0.20s;
+  }
+  .slw div:nth-child(5) {
+    left: 20px;
+    animation-delay: 0.40s;
+  }
+  @keyframes slw {
+    0% {
+      top: 0px;
+      height: 26px;
+    }
+    50%, 100% {
+      top: 8px;
+      height: 10px;
+    }
+  }
+}
+
+
+.search-loader-v2-wrapper {
+  .sl1w {
+    display: inline-block;
+    position: relative;
+    width: 25px;
+    height: 22px;
+  }
+  .sl1w div {
+    display: inline-block;
+    position: absolute;
+    left: 3.5px;
+    width: 6px;
+    background: linear-gradient(180deg, #D48AE6 0%, #B09ED3 49.22%, #4D44BF 89.36%);
+    @apply rounded-b-full rounded-t-full;
+    animation: sl1w 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .sl1w div:nth-child(1) {
+    left: 0px;
+    animation-delay: -0.40s;
+  }
+  .sl1w div:nth-child(2) {
+    left: 9.5px;
+    animation-delay: -0.20s;
+  }
+  .sl1w div:nth-child(3) {
+    left: 19px;
+    animation-delay: -0.0s;
+  }
+  @keyframes sl1w {
+    0% {
+      top: 0px;
+      height: 6px;
+    }
+    50%, 100% {
+      top: 8px;
+      height: 6px;
+    }
+  }
+}

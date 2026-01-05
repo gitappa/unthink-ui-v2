@@ -1,0 +1,95 @@
+@import '../../style/variable.module';
+
+.unthink-add-to-collection {
+    max-width: 400px;
+
+    &-modal {
+        display: flex;
+        flex-direction: column;
+
+
+        &__product {
+            display: flex;
+
+            img {
+                max-height: 100px;
+            }
+
+            &-name {
+                display: block;
+            }
+
+            &-price {
+                display: block;
+                font-weight: 600;
+            }
+
+            border-bottom: 1px solid $lightGray;
+        }
+
+        &__content {
+            max-height: 250px;
+            overflow: auto;
+            margin-top: 20px;
+        }
+
+        &__row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 20px 5px 10px;
+
+            .anticon-plus-circle {
+                color: $red;
+                font-weight: 800;
+                font-size: 20px;
+                padding-left: 10px;
+
+            }
+
+            .anticon-check-circle {
+                color: green;
+                font-weight: 800;
+                font-size: 20px;
+                padding-left: 10px;
+
+            }
+
+            .anticon-plus {
+                cursor: pointer;
+            }
+        }
+
+        &__footer {
+            &-create {
+                display: flex;
+                align-items: center;
+
+                padding: 10px 0px;
+
+                .ant-typography {
+                    cursor: pointer;
+                    color: $red;
+                }
+
+                .anticon {
+                    padding-right: 5px;
+                    cursor: pointer;
+                    color: $red;
+                }
+            }
+
+            &-btn {
+                padding: 20px 0px 10px;
+                display: flex;
+                justify-content: flex-end;
+
+                .ant-btn-primary {
+                    background-color: $red;
+                    border: 1px solid $red;
+                    min-width: 100px;
+                }
+            }
+        }
+    }
+}
