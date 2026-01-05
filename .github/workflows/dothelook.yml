@@ -23,11 +23,11 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
-        working-directory: "packages/web-client-gatsby"
+        working-directory: "packages/web-client-next"
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
       - name: Setup and run build on app
-        working-directory: "packages/web-client-gatsby"
+        working-directory: "packages/web-client-next"
         run: |
           npm run build
         env:
