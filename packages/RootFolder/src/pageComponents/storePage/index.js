@@ -6,19 +6,19 @@ import React, {
 	useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "../../helper/useNavigate";
+import { useNavigate } from "../../helper/useNavigate.js";
 import { Spin } from "antd";
 import { ArrowLeftOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 
-import Header from "./Header";
+import Header from "./Header.js";
 // import ProfileCollection from "../Influencer/ProfileCollection";
 // import ChatProducts from "./ChatProducts";
-import useWindowSize from "../../helper/useWindowSize";
+import useWindowSize from "../../helper/useWindowSize.js";
 import useTheme from "../../hooks/chat/useTheme.js";
-import Recommendations from "../recommendations/Recommendations";
-import WishListModal from "../wishlist/WishListModal";
-import SimilarProducts from "../similarProducts/SimilarProducts";
+import Recommendations from "../recommendations/Recommendations.js";
+import WishListModal from "../wishlist/WishListModal.js";
+import SimilarProducts from "../similarProducts/SimilarProducts.js";
 import {
 	CHAT_TYPE_CHAT,
 	FETCH_COLLECTIONS_PRODUCT_LIMIT,
@@ -35,7 +35,7 @@ import {
 	STORE_USER_NAME_FASHIONDEMO,
 
 	// STORE_USER_NAME_TAKEWALKS,
-} from "../../constants/codes";
+} from "../../constants/codes.js";
 import { THEME_ALL } from "../../constants/themeCodes.js";
 import {
 	clearInfluencerCollections,
@@ -43,8 +43,8 @@ import {
 	getInfluencerCollections,
 	getInfluencerCollectionsSuccess,
 	getInfluencerInfo,
-} from "../Influencer/redux/actions";
-import { getCreatorCollection, getSingleUserCollection, getUserCollection, getUserCollections, getUserInfo } from "../Auth/redux/actions";
+} from "../Influencer/redux/actions.js";
+import { getCreatorCollection, getSingleUserCollection, getUserCollection, getUserCollections, getUserInfo } from "../Auth/redux/actions.js";
 // import CollectionPageContent from "../collectionPage/CollectionPageContent";
 import {
 	shared_profile_on_root,
@@ -55,16 +55,16 @@ import {
 	super_admin,
 	current_store_name,
 	current_store_id,
-} from "../../constants/config";
-import AllBlogPages from "../collectionPage/AllBlogPages";
-import PageDetailsComponent from "./PageDetails";
+} from "../../constants/config.js";
+import AllBlogPages from "../collectionPage/AllBlogPages.js";
+import PageDetailsComponent from "./PageDetails.js";
 import ProductDetails from "./ProductDetails.js";
-import QAndAComponent from "../../components/QAndAComponent/QAndAComponent";
-import CollectionCarouselContainer from "../Influencer/CollectionCarouselContainer";
-import { fetchCategories, openMenuItem } from "../categories/redux/actions";
-import SingleCollectionProductList from "../collectionPage/SingleCollectionProductList";
-import CreatorsListView from "../creatorsListView/CreatorsListView";
-import MaintenancePage from "../MaintenancePage";
+import QAndAComponent from "../../components/QAndAComponent/QAndAComponent.js";
+import CollectionCarouselContainer from "../Influencer/CollectionCarouselContainer.js";
+import { fetchCategories, openMenuItem } from "../categories/redux/actions.js";
+import SingleCollectionProductList from "../collectionPage/SingleCollectionProductList.js";
+import CreatorsListView from "../creatorsListView/CreatorsListView.jsx";
+import MaintenancePage from "../MaintenancePage.jsx";
 import Breadcrumbs from "./Breadcrumbs.js";
 import {
 	checkIsFavoriteCollection,
@@ -78,15 +78,15 @@ import {
 	getIsStorePage,
 	AdminCheck,
 	setCookie,
-} from "../../helper/utils";
-import { gTagCollectionPageView } from "../../helper/webTracker/gtag";
+} from "../../helper/utils.js";
+import { gTagCollectionPageView } from "../../helper/webTracker/gtag.js";
 
 import {
 	getTTid,
 	isEnableAICookie,
 	isEnableAICookieFalse,
 	setTTid,
-} from "../../helper/getTrackerInfo";
+} from "../../helper/getTrackerInfo.js";
 
 import styles from './storePage.module.scss';
 import SwiftlyStyledIndex from "../swiftlyStyled/index.js";
@@ -121,7 +121,7 @@ const EarnRewards = dynamic(() => import("../rewards/EarnRewards.js"), {
 		</div>
 	),
 });
-const ReviewCollection = dynamic(() => import("../tryForFree/ReviewCollection"), {
+const ReviewCollection = dynamic(() => import("../tryForFree/ReviewCollection.js"), {
 	ssr: false,
 	loading: () => (
 		<div className='flex justify-center'>
@@ -131,7 +131,7 @@ const ReviewCollection = dynamic(() => import("../tryForFree/ReviewCollection"),
 });
 
 const CreateFreeCollection = dynamic(
-	() => import("../tryForFree/CreateFreeCollection"),
+	() => import("../tryForFree/CreateFreeCollection.js"),
 	{
 		ssr: false,
 		loading: () => (
