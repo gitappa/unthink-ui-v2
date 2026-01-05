@@ -33,7 +33,7 @@ jobs:
           #NEXT_BACKEND_URL: "https://webbot-image-sync-qvde2butpa-uc.a.run.app"
           NEXT_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
           NEXT_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
-          # GA_TRACKING_ID: "G-HHK6NNEJNF"
+          # GA_TRACKING_ID: "G-HHK6NNEJNF "
           NEXT_STAGING_ENV: "false"
           NEXT_IS_KIOSK_ENABLED: "false"
           NEXT_SUPER_ADMIN_USER_NAME: "dothelook"
