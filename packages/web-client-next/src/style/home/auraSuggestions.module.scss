@@ -1,0 +1,15 @@
+@import '../variable.module.scss.module';
+
+.unthink-aura-suggestions {
+    margin: 10px 40px;
+    background-color: $yellow;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+    max-width: 100%;
+    overflow: hidden;
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+}

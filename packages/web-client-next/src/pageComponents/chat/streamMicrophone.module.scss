@@ -1,0 +1,26 @@
+.unthink-microphone {
+    cursor: pointer;
+    position: relative;
+
+    &__img {
+        height: 64px;
+        width: 64px;
+
+        &.streaming {
+            width: 70px;
+            height: 70px;
+        }
+    }
+
+    &__icon {
+        .ant-image-img {
+            height: 50px;
+        }
+
+        &.streaming {
+            left: 15px;
+            top: unset;
+            bottom: -20px;
+        }
+    }
+}

@@ -1,0 +1,104 @@
+@import '../../style/variable.module';
+
+$auraSectionWidth: 130px;
+$chatInputMainWrapperLeftMargin: 40px;
+$chatAuraTextWrapperWidth: 80%;
+
+.swiper-slide {
+    width: max-content;
+}
+
+.unthink-chat-v2 {
+    .aura-section-wrapper {
+        min-width: $auraSectionWidth;
+    }
+    .chat-input-main-wrapper {
+        background-color: rgb(233 235 237);
+        margin-left: -$chatInputMainWrapperLeftMargin;
+        padding-left: $chatInputMainWrapperLeftMargin;
+        max-width: calc(100% - ($auraSectionWidth - $chatInputMainWrapperLeftMargin));
+
+        .ant-select-selector {
+            height: 100%;
+            border: none;
+        }
+    }
+    .chat-aura-text-wrapper {
+        width: $chatAuraTextWrapperWidth;
+    }
+    .chat-action-icons-wrapper {
+        width: calc(100% - $chatAuraTextWrapperWidth + $chatInputMainWrapperLeftMargin);
+    }
+}
+
+.unthink-chat {
+    width: 100%;
+    display: flex;
+    padding: 0px 0px 20px;
+
+    &__text {
+        max-width: calc(100% - 90px);
+
+        &-result {
+            display: flex;
+            padding: 10px 0px;
+        }
+
+        &-input {
+            max-width: 50vw;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+
+            &-container {
+                width: 100%;
+                padding-left: 10px;
+
+                .ant-btn-loading {
+                    .ant-btn-loading-icon {
+                        .anticon-loading {
+                            color: $red;
+                            font-weight: 800;
+                            font-size: 16px
+                        }
+                    }
+                }
+            }
+        }
+
+        &-suggestions {
+            max-width: 80vw;
+            width: 100%;
+        }
+    }
+
+    &__icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90px;
+
+        .ant-image-img {
+            height: 40px;
+        }
+
+        &-chat {
+            padding: 0px 10px;
+            cursor: pointer;
+
+            .ant-image-img {
+                height: 70px;
+            }
+        }
+
+        &-speaker {
+            position: relative;
+
+            &-wave {
+                position: absolute;
+                right: -9px;
+                top: 0px
+            }
+        }
+    }
+}

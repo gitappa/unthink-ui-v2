@@ -1,0 +1,22 @@
+#featured-collections {
+    text-align: center;
+    color: #2c2c2c;
+    height: fit-content;
+
+    .headline {
+        font-family: 'Good Headline Pro', sans-serif;
+        font-style: italic;
+        font-weight: 1000;
+        letter-spacing: 0;
+        font-size: 48px;
+        margin: 20px 0;
+    }
+
+    .sub-headline {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        letter-spacing: 0;
+        font-size: 25px;
+        margin: 10px 0;
+    }
+}
