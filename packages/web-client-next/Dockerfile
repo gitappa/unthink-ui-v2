@@ -11,12 +11,17 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 # Do not hardcode PORT: Cloud Run sets the `PORT` env var at runtime.
-# Copy the entire .next directory structure for standalone mode
+
+# Copy the standalone Next.js server
 COPY --from=builder /app/.next/standalone ./
+
+# Copy static assets and CSS (Next.js compiled CSS is in .next/static)
 COPY --from=builder /app/.next/static ./.next/static
+
+# Copy public directory (static files like images)
 COPY --from=builder /app/public ./public
 
-# Also copy package.json for any runtime dependencies
+# Copy package.json for reference
 COPY --from=builder /app/package*.json ./
 
 EXPOSE 3000

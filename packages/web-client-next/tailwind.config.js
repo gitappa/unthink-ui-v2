@@ -1,25 +1,26 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-	purge: {
-		content: ["./src/**/*.{js,jsx,ts,tsx}"],
-		safelist: [
-			"h-full-176px",
-			"h-full-208px",
-			"lg:h-700",
-			"overflow-auto",
-			"lg:h-340",
-			"bg-blue-104",
-			"grid-cols-3",
-			"tablet:grid-cols-3",
-			"grid-cols-4",
-			"tablet:grid-cols-4",
-			"grid-cols-5",
-			"tablet:grid-cols-5",
-			"grid-cols-6",
-			"tablet:grid-cols-6",
-		],
-	},
+	content: [
+		"./pages/**/*.{js,jsx,ts,tsx}",
+		"./src/**/*.{js,jsx,ts,tsx}",
+	],
+	safelist: [
+		"h-full-176px",
+		"h-full-208px",
+		"lg:h-700",
+		"overflow-auto",
+		"lg:h-340",
+		"bg-blue-104",
+		"grid-cols-3",
+		"tablet:grid-cols-3",
+		"grid-cols-4",
+		"tablet:grid-cols-4",
+		"grid-cols-5",
+		"tablet:grid-cols-5",
+		"grid-cols-6",
+		"tablet:grid-cols-6",
+	],
 	darkMode: "class", // or 'media' or 'class'
 	theme: {
 		extend: {
