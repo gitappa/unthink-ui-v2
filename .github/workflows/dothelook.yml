@@ -72,7 +72,27 @@ jobs:
       - name: Build
         #working-directory: "packages/web-client-next"
         run: |
-          docker build --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 -f packages/web-client-next/Dockerfile .
+          docker build \
+          --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
+          --build-arg NEXT_PUBLIC_BACKEND_URL=https://webbot-image-sync-314035436999.us-central1.run.app \
+          --build-arg NEXT_PUBLIC_ACCESS_KEY=e191921352124a06a09bb811a86a5c3a \
+          --build-arg NEXT_PUBLIC_STAGING_ENV=false \
+          --build-arg NEXT_PUBLIC_IS_KIOSK_ENABLED=false \
+          --build-arg NEXT_PUBLIC_SUPER_ADMIN_USER_NAME=dothelook \
+          --build-arg NEXT_PUBLIC_AURA_HEADER_THEME=light \
+          --build-arg NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT=dothelook \
+          --build-arg NEXT_PUBLIC_CURRENT_STORE_NAME=dothelook \
+          --build-arg NEXT_PUBLIC_CURRENT_STORE_ID=23063956 \
+          --build-arg NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS=false \
+          --build-arg NEXT_PUBLIC_ENABLE_RECOMMENDATIONS=false \
+          --build-arg NEXT_PUBLIC_IS_STORE_INSTANCE=true \
+          --build-arg NEXT_PUBLIC_ADMIN_USER_ID=173081113277330 \
+          --build-arg NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL=https://auraprod.unthink.ai \
+          --build-arg NEXT_PUBLIC_ENABLE_VENLY=false \
+          --build-arg NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL= \
+          --build-arg NEXT_PUBLIC_PDP_PAGE_ENABLED=false \
+          --build-arg NEXT_PUBLIC_PAYMENT_URL=https://unthink-dropp-payment-prod-314035436999.us-central1.run.app \
+          -f packages/web-client-next/Dockerfile .
       
       - name: Push
         #working-directory: "packages/web-client-next"
@@ -86,6 +106,5 @@ jobs:
           --region us-central1 \
           --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
           --platform managed \
-          --set-env-vars=NEXT_PUBLIC_BACKEND_URL=https://webbot-image-sync-314035436999.us-central1.run.app,NEXT_PUBLIC_ACCESS_KEY=e191921352124a06a09bb811a86a5c3a,NEXT_PUBLIC_STAGING_ENV=false,NEXT_PUBLIC_IS_KIOSK_ENABLED=false,NEXT_PUBLIC_SUPER_ADMIN_USER_NAME=dothelook,NEXT_PUBLIC_AURA_HEADER_THEME=light,NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT=dothelook,NEXT_PUBLIC_CURRENT_STORE_NAME=dothelook,NEXT_PUBLIC_CURRENT_STORE_ID=23063956,NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS=false,NEXT_PUBLIC_ENABLE_RECOMMENDATIONS=false,NEXT_PUBLIC_IS_STORE_INSTANCE=true,NEXT_PUBLIC_ADMIN_USER_ID=173081113277330,NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL=https://auraprod.unthink.ai,NEXT_PUBLIC_ENABLE_VENLY=false,NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL=,NEXT_PUBLIC_PDP_PAGE_ENABLED=false,NEXT_PUBLIC_PAYMENT_URL=https://unthink-dropp-payment-prod-314035436999.us-central1.run.app \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
           
