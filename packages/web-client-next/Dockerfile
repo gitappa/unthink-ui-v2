@@ -1,9 +1,9 @@
 # Use Node.js to build the Next.js app first
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY packages/web-client-next/package*.json ./
 RUN npm ci --legacy-peer-deps
-COPY . .
+COPY packages/web-client-next/ .
 RUN npm run build
 
 #### Production server environment
