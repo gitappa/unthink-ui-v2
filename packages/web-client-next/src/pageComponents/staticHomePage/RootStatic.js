@@ -43,7 +43,8 @@ const RootStatic = () => {
 			<section className='lg:mt-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto px-5 md:px-0'>
 				<div className='w-full publisher_title_container text-center flex flex-col items-center'>
 					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal'>
-						Revolutionizing Consumer <br /> Experiences With AI
+						Revolutionizing Consumer
+						{/* <br /> Experiences With AI */}
 					</h1>
 					<p className='text-lightgray-104 text-xl lg:text-3xl-1 lg:leading-44 mx-auto'>
 						Welcome to the future of retail and e-commerce, <br /> where
