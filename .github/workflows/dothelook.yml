@@ -2,7 +2,7 @@ name: CI dothelook
 on:
   push:
     branches: 
-      - feature/test
+      - deploy-testing
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@feature/test
+        uses: actions/checkout@deploy-testing
       - name: Use Node.js 12.x
         uses: actions/setup-node@v3
         with:
