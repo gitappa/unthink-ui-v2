@@ -2,7 +2,7 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci 
 COPY . .
 RUN npm run build
 
@@ -10,13 +10,11 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=8080
-ENV HOST=0.0.0.0
- 
-# Copy the standalone server and static files
+# Do not hardcode PORT: Cloud Run sets the `PORT` env var at runtime.
+# Copy the standalone server and static files (requires `next.config.js` with `output: 'standalone'`)
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-EXPOSE 8080
+EXPOSE 3000
 CMD ["node", "server.js"]
