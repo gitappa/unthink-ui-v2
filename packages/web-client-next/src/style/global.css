@@ -64,3 +64,10 @@
 .site-navigation-steps.ant-steps-navigation .ant-steps-item.ant-steps-item-active .ant-steps-item-container {
   border-bottom: 2px solid #1677ff;
 }
+
+.Product_Cards_Div {
+    height: 60vh;
+    overflow-y: scroll !important;
+    position: relative; 
+    padding-right: 15px;
+}

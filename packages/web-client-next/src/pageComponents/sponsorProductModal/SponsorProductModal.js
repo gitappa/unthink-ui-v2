@@ -349,12 +349,19 @@ const SponsorProductModal = ({
 										</div>
 										{/* {productData?.brand ? (
 											<div className='mt-2 text-indigo-600 hover:underline'>
-												<Link
-													className='p-0'
-													href={generateRoute(undefined, productData?.brand)}
-													target='_blank'>
-													More from this seller
-												</Link>
+												{(() => {
+													const route = generateRoute(undefined, productData?.brand);
+													return route ? (
+														<Link
+															className='p-0'
+															href={route}
+															target='_blank'>
+															More from this seller
+														</Link>
+													) : (
+														<span className='p-0'>More from this seller</span>
+													);
+												})()}
 											</div>
 										) : null} */}
 									</div>

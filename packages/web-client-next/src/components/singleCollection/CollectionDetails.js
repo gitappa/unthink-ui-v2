@@ -559,19 +559,20 @@ const CollectionDetails = ({
 											<Tooltip
 												title={`All collections by ${user_name}`}
 												placement='bottomLeft'>
-												<Link
-													to={
-														user_name === super_admin
-															? PATH_ROOT
-															: generateRoute(
-																collectionOwner.user_id,
-																user_name
-															)
-													}
-													className='flex items-center pl-0'>
-													{profile_image && (
-														<img
-															src={getFinalImageUrl(profile_image)}
+												{(() => {
+													const route = user_name === super_admin
+														? PATH_ROOT
+														: generateRoute(
+															collectionOwner.user_id,
+															user_name
+														);
+													return route ? (
+														<Link
+															href={route}
+															className='flex items-center pl-0'>
+															{profile_image && (
+																<img
+																	src={getFinalImageUrl(profile_image)}
 															className='md:h-14 md:w-14 h-10 w-10 rounded-10 aspect-square object-cover mr-2'
 														/>
 													)}
@@ -580,6 +581,20 @@ const CollectionDetails = ({
 														@{user_name}
 													</span>
 												</Link>
+											) : (
+												<div className='flex items-center pl-0'>
+													{profile_image && (
+														<img
+															src={getFinalImageUrl(profile_image)}
+															className='md:h-14 md:w-14 h-10 w-10 rounded-10 aspect-square object-cover mr-2'
+														/>
+													)}
+													<span className='text-base lg:text-xl-1 text-violet-100 font-semibold lg:font-bold  '>
+														@{user_name}
+													</span>
+												</div>
+											);
+												})()}
 											</Tooltip>
 
 											<div className='flex items-center gap-3'>
@@ -689,8 +704,8 @@ const CollectionDetails = ({
 
 						{qrCodeGeneratorURL && collection.status === PUBLISHED ? (
 							<img
-								className='qrcode_image object-cover'
-								// className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
+								className='qrcode_image object-cover w-20 lg:w-25 h-20 lg:h-25'
+								 
 								src={qrCodeGeneratorURL}
 							/>
 						) : null}
@@ -700,6 +715,7 @@ const CollectionDetails = ({
 						<div className='flex items-center justify-between my-2 sm:my-5'>
 							<span className='text-base lg:text-xl font-semibold leading-none whitespace-nowrap text-newcolor-100'>
 								Inspired by
+								{(collection?.display_url || collection.video_url) ? (
 								<a
 									className='p-0 pl-1 underline text-violet-100 text-base lg:text-xl font-semibold'
 									target='_blank'
@@ -707,6 +723,7 @@ const CollectionDetails = ({
 									href={collection?.display_url || collection.video_url}>
 									video
 								</a>
+							) : null}
 							</span>
 						</div>
 					)}
@@ -867,7 +884,7 @@ const CollectionDetails = ({
 			{collection?.sponsor_details?.banner?.image &&
 				collection?.sponsor_details?.banner?.url ? (
 				<Link
-					to={collection.sponsor_details.banner.url}
+					href={collection.sponsor_details.banner.url}
 					className='flex px-0 mt-4'
 					target='_blank'>
 					<img

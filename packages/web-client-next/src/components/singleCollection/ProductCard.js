@@ -561,7 +561,7 @@ const ProductCard = ({
 			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
 				? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
 				: ""
-				} ${size === "small" ? "" : "w-40 sm:w-180 lg:w-80"} h-full`}>
+				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
 			<div
 				className={`overflow-hidden relative cursor-pointer product_card_container mt-3 shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}

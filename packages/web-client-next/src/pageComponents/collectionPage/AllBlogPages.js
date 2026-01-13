@@ -84,7 +84,7 @@ const AllBlogPages = ({
 	};
 
 	const loadMoreRef = useRef(null);
-	const prevCollectionsLength = useRef(pageUserCollections.length);
+	const prevCollectionsLength = useRef(pageUserCollections?.length);
 	const [autoLoadCount, setAutoLoadCount] = useState(0);
 
 	useEffect(() => {
@@ -126,20 +126,20 @@ const AllBlogPages = ({
 	}, [dataEmpty]);
 
 	useEffect(() => {
-		if (pageUserCollections.length === 0) {
+		if (pageUserCollections?.length === 0) {
 			setIsLoading(false);
-			console.log("Collections loaded successfully");
+			console.log("Collections loaded successfully" );
 		}
 	}, [pageUserCollections]);
 
 
 	useEffect(() => {
-		if (pageUserCollections.length !== prevCollectionsLength.current && !showWishlistModal) {
+		if (pageUserCollections?.length !== prevCollectionsLength.current && !showWishlistModal) {
 			dispatch(getInfluencerCollectionsSuccess(pageUserCollections, influencerUserCollectionsCount));
 			dispatch(getUserCollectionsSuccess(pageUserCollections, authUserCollectionsCount));
-			prevCollectionsLength.current = pageUserCollections.length; // Update previous length
+			prevCollectionsLength.current = pageUserCollections?.length; // Update previous length
 		}
-	}, [pageUserCollections.length, dispatch]);
+	}, [pageUserCollections?.length, dispatch]);
 
 	return (
 		<>

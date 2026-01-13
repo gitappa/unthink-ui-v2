@@ -12,6 +12,7 @@ import { Button, Checkbox, Collapse, Select } from "antd";
 
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import {
+	getSingleUserCollection,
 	getUserCollection,
 	getUserInfo,
 	GuestPopUpShow,
@@ -89,6 +90,10 @@ const SingleCollectionProductList = ({
 	isRootPage = true,
 }) => {
 	const router = useRouter();
+	const [statedata, setStatedata] = useState(null)
+	console.log("statedata", blogCollectionPage);
+
+	const dispatch = useDispatch();
 	const navigate = useCallback((path) => router.push(path), [router]);
 
 	const [isGuestPopUpShow, singleCollection] = useSelector((state) => [
@@ -96,10 +101,19 @@ const SingleCollectionProductList = ({
 		state.auth.user.singleCollections.data,
 	]);
 	console.log("isSingleCollectionSharedPage", isSingleCollectionSharedPage);
+	console.log("singleCollectionaaaaaa", singleCollection);
+	useEffect(() => {
+		if (singleCollection) {
+			setStatedata(singleCollection);
+		}
+	}, []);
+	const collectionId = singleCollection?._id ?? null;
+
+
+	// Dispatch getSingleUserCollection when collectionId is available
 
 
 	const [selectedTags, setSelectedTags] = useState([]);
-	const collectionId = singleCollection?._id ?? null;
 	const initializedFor = useRef(null);
 
 	const tagsShowMoreEnabled = useMemo(
@@ -177,14 +191,13 @@ const SingleCollectionProductList = ({
 	useEffect(() => {
 		if (autoProductsData.length === 0) {
 			setActiveTab("faq")
-		}else{
+		} else {
 			setActiveTab("products")
 		}
 	}, [autoProductsData])
 
 
 
-	const dispatch = useDispatch();
 
 	// checking selected tag's products is all selected or not
 	const isTagProductsAllSelected = useMemo(() => {
@@ -817,7 +830,7 @@ const SingleCollectionProductList = ({
 								{showTagsSelection && tagsToShow?.length && autoProductsData.length ? (
 									<div className={`pb-1 md:pb-4 colloction_details_tag`}>
 										<div className='flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div'>
-											<div className='flex items-center gap-3 overflow-x-scroll colloectionDetailScroll'>
+											<div className='flex items-center gap-3 colloectionDetailScroll'>
 												<Swiper
 													slidesPerView='auto'
 													spaceBetween={10}
@@ -831,9 +844,9 @@ const SingleCollectionProductList = ({
 															<SwiperSlide key={tag} style={{ width: "auto" }}>
 																<div
 																	className={`flex items-center h-30 lg:h-36 justify-center rounded-2xl border-2 border-newcolor-300 my-1 md:my-3 w-max flex-shrink-0 ${selectedTags.includes(tag) ||
-																			(selectedTags.length === 0 && tag === "All")
-																			? "bg-newcolor-200"
-																			: "bg-white"
+																		(selectedTags.length === 0 && tag === "All")
+																		? "bg-newcolor-200"
+																		: "bg-white"
 																		} ${isDisabled
 																			? "opacity-50 cursor-not-allowed"
 																			: ""
@@ -841,10 +854,10 @@ const SingleCollectionProductList = ({
 																>
 																	<h3
 																		className={`m-0 px-3 font-normal text-xs sm:text-xs md:text-sm lg:text-base break-word-only ${selectedTags.includes(tag) ||
-																				(selectedTags.length === 0 &&
-																					tag === "All")
-																				? "text-newcolor-100"
-																				: "text-newcolor-100"
+																			(selectedTags.length === 0 &&
+																				tag === "All")
+																			? "text-newcolor-100"
+																			: "text-newcolor-100"
 																			} ${allowSelectTags && !isDisabled
 																				? "cursor-pointer"
 																				: ""
@@ -969,8 +982,8 @@ const SingleCollectionProductList = ({
 																: null
 														}
 														className={`${selectedProducts.length
-																? "text-violet-100 cursor-pointer"
-																: "text-gray-104 cursor-not-allowed"
+															? "text-violet-100 cursor-pointer"
+															: "text-gray-104 cursor-not-allowed"
 															} mb-0 ml-2 underline`}
 														title='Click to add selected products in collection'
 														role='button'>
@@ -1040,22 +1053,40 @@ const SingleCollectionProductList = ({
 														className='w-14 md:w-32 h-14 md:h-32 aspect-square object-cover rounded-full my-auto'
 													/>
 												) : (
-													<Link
-														href={generateRoute(
+													(() => {
+														const route = generateRoute(
 															blogCollectionPage.user_id,
 															user_name || blogCollectionPage.user_name
-														)}
-														className='px-0 flex items-center w-14 md:w-32 h-14 md:h-32 aspect-square object-cover my-auto'>
-														<img
-															src={
-																getFinalImageUrl(profile_image) ||
-																getFinalImageUrl(
-																	blogCollectionPage.profile_image
-																)
-															}
-															className='w-full rounded-full'
-														/>
-													</Link>
+														);
+														return route ? (
+															<Link
+																href={route}
+																className='px-0 flex items-center w-14 md:w-32 h-14 md:h-32 aspect-square object-cover my-auto'>
+																<img
+																	src={
+																		getFinalImageUrl(profile_image) ||
+																		getFinalImageUrl(
+																			blogCollectionPage.profile_image
+																		)
+																	}
+																	className='w-full rounded-full'
+																/>
+															</Link>
+														) : (
+															<div
+																className='px-0 flex items-center w-14 md:w-32 h-14 md:h-32 aspect-square object-cover my-auto'>
+																<img
+																	src={
+																		getFinalImageUrl(profile_image) ||
+																		getFinalImageUrl(
+																			blogCollectionPage.profile_image
+																		)
+																	}
+																	className='w-full rounded-full'
+																/>
+															</div>
+														);
+													})()
 												)}
 											</>
 										)}
@@ -1224,3 +1255,4 @@ const SingleCollectionProductList = ({
 };
 
 export default React.memo(SingleCollectionProductList);
+

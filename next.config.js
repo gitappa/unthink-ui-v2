@@ -57,7 +57,7 @@ const nextConfig = {
       ],
     });
 
-    // Add file loader for SVGs without ?react query
+    // Add file loader for SVGs without ?react query1
     config.module.rules.push({
       test: /\.svg$/i,
       type: 'asset/resource',

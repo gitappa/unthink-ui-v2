@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate.js";
+import { useRouter } from "next/router";
 import { Spin } from "antd";
 import { ArrowLeftOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
@@ -192,6 +193,7 @@ const filterCollToShowPublic = ({
 
 const StorePageWrapper = (props) => {
 	const navigate = useNavigate();
+	const router = useRouter();
 	const [
 		chatProductsData,
 		showChatModal,
@@ -245,6 +247,9 @@ const StorePageWrapper = (props) => {
 	const [selectedSortOption, setSelectedSortOption] = useState();
 	const [selectedSortOptionProduct, setSelectedSortOptionProduct] = useState();
 
+	console.log("authUserCollections",authUserCollections);
+	
+
 	const dispatch = useDispatch();
 	const { theme, setTheme, themeCodes, resetTheme } = useTheme();
 
@@ -278,6 +283,7 @@ const StorePageWrapper = (props) => {
 		isFailedPage,
 		isSuccessPage,
 	} = props;
+	console.log(collection_id);
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -294,12 +300,13 @@ const StorePageWrapper = (props) => {
 
 	const isSignInRequired = useMemo(() => isStorePage, [isStorePage]); // redirecting user to sign in page if user is not logged in
 
-	const { collection_name: collection_path, params: page_params } = props;
+	const { collection_name: collection_path = router.query.collection_name, params: page_params } = props;
 
 	const isSingleCollectionSharedPage = useMemo(
 		() => !!(collection_id || collection_path),
 		[collection_id, collection_path]
 	);
+	console.log(collection_path);
 
 	const isStoreHomePage = useMemo(
 		() => is_store_instance && isRootPage && !!shared_profile_on_root,
@@ -332,7 +339,7 @@ const StorePageWrapper = (props) => {
 		[user_id, user_name, authUser.user_id, authUser.user_name, isMyProfilePage, singleCollections.user_id]
 	);
 
-	
+
 
 
 	const pageUser = useMemo(() => {
@@ -356,6 +363,8 @@ const StorePageWrapper = (props) => {
 		influencerUser.user_id,
 		influencerUser.user_name,
 	]);
+
+	
 
 	const { data: pageUserCollections, params } = useMemo(() => {
 		if (
@@ -420,11 +429,15 @@ const StorePageWrapper = (props) => {
 		influencerUserCollections.length,
 	]);
 
+	console.log("pageUserCollections",pageUserCollections);
+
+
 	const [currentPage, setCurrentPage] = useState(0)
 	const [ipp, setIpp] = useState(10)
-	const [allCollectionData, setAllCollectionData] = useState(pageUserCollections);
+	const [allCollectionData, setAllCollectionData] = useState(pageUserCollections); // working 
 	const [isLoading, setIsLoading] = useState(false);
 
+	console.log('allCollectionData', allCollectionData);
 
 	const currentSingleCollection = useMemo(
 		() =>
@@ -435,6 +448,8 @@ const StorePageWrapper = (props) => {
 			) || {},
 		[pageUserCollections, collection_id, collection_path, allCollectionData]
 	);
+	console.log('currentSingleCollection', currentSingleCollection);
+
 
 	const [sharePageUrl, setSharePageUrl] = useState('');
 
@@ -489,8 +504,13 @@ const StorePageWrapper = (props) => {
 		influencerUserIsFetching,
 		influencerUserError,
 	]);
+	console.log(isSingleCollectionSharedPage);
+	console.log(authUser.user_id);
+	console.log(authUserCollections.length);
+	console.log(collection_id);
+	console.log("collection_path",collection_path);
+	
 
-	// get single collection data
 	const fetchCollection = useCallback(
 		(selectedOption) => {
 			if (isSingleCollectionSharedPage && !showWishlistModal) {
@@ -499,6 +519,8 @@ const StorePageWrapper = (props) => {
 					authUserCollections.length &&
 					currentSingleCollection._id
 				) {
+					console.log('hello worldss');
+					
 					dispatch(
 						getSingleUserCollection({
 							_id: currentSingleCollection._id,
@@ -506,8 +528,12 @@ const StorePageWrapper = (props) => {
 							product_sort_order:
 								selectedOption?.product_sort_order || undefined,
 						})
+						 
 					);
 				} else {
+					
+					console.log("collection_path",collection_path);
+					
 					dispatch(
 						getInfluencerCollection({
 							collection_id,
@@ -525,9 +551,10 @@ const StorePageWrapper = (props) => {
 			authUser.user_id,
 			authUserCollections.length,
 			currentSingleCollection._id,
-			showWishlistModal
-		]);
-
+			showWishlistModal,
+			collection_path
+		]
+	);
 	// const isFirstRender = useRef(true);
 
 	// useEffect(() => {
@@ -633,7 +660,11 @@ const StorePageWrapper = (props) => {
 		if (!currentSingleCollection.detailed) {
 			fetchCollection();
 		}
-	}, [currentSingleCollection.detailed, currentSingleCollection._id]);
+	}, [currentSingleCollection.detailed, currentSingleCollection._id,collection_path ]);
+
+
+
+	 
 
 	useEffect(() => {
 		if (isRootPage) {
@@ -715,7 +746,7 @@ const StorePageWrapper = (props) => {
 			setSelectedSortOption(selectedOption);
 			fetchCollection(selectedOption);
 		},
-		[selectedSortOption, fetchCollection]
+		[selectedSortOption, fetchCollection ]
 	);
 
 
@@ -1075,10 +1106,10 @@ const StorePageWrapper = (props) => {
 					{isProductDetailPage && <ProductDetails {...props} />}
 				</>
 			) : null}
-              { isCartPage && <DeliveryDetails/> }
-              { isFailedPage && <FailureUrl/> }
-              { isSuccessPage && <SuccessUrl/> }
-			                                              
+			{isCartPage && <DeliveryDetails />}
+			{isFailedPage && <FailureUrl />}
+			{isSuccessPage && <SuccessUrl />}
+
 			{!showIndividualPageContent && (
 				<div
 					className={`pt-6 lg:pt-12 grid gap-2 md:gap-6 lg:gap-12 ${isRootPage && (isSwiftlyStyledInstance || isDothelookInstance) ? "pb-0" : "pb-24"}`}>
@@ -1168,7 +1199,7 @@ const StorePageWrapper = (props) => {
 											<AllBlogPages
 												onShowMoreClick={onShowMoreClick}
 												enableClickTracking={!isMyProfilePage}
-												pageUserCollections={allCollectionData}
+												pageUserCollections={allCollectionData} //data from state
 												dataEmpty={pageUserCollections}
 												authUserCollections={authUserCollections}
 												influencerUserCollections={influencerUserCollections}

@@ -138,7 +138,7 @@ const CollectionEditTags = ({
 								</Swiper>
 								{isOverflowing && (
 									<div
-										className="absolute right-0 addmore_image_edit"
+										className="absolute right-0 addmore_image_edit top-0"
 										style={{ cursor: "pointer", zIndex: 10 }}
 										onClick={() => {
 											if (swiperRef.current) {
