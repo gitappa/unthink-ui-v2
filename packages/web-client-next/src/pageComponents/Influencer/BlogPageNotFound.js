@@ -1,11 +1,15 @@
 import React from "react";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import { useRouter } from 'next/router';
 import { Result, Button } from "antd";
 
 import { PATH_ROOT, PATH_STORE } from "../../constants/codes";
 import { is_store_instance } from "../../constants/config";
 
 const BlogPageNotFound = () => {
+	const router = useRouter();
+
+	const navigate = (path) => router.push(path);
+
 	return (
 		<div>
 			<Result

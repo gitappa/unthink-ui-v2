@@ -900,7 +900,7 @@ const ReviewCollectionStepPublish = ({
 								)}
 							</div>
 							<div className='mt-5'>
-								{currentCollection.product_lists?.length ? (
+								{currentCollection.product_lists?.length && currentCollection._id ? (
 									<a
 										className='bg-indigo-103 rounded text-white py-2 font-normal text-base px-5'
 										role='button'
