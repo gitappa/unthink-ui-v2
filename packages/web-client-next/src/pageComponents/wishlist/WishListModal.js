@@ -412,6 +412,7 @@ const WishListModal = ({
 	return (
 		<Drawer
 			placement='right'
+			width={448}
 			open={showWishlistModal}
 			closable={false}
 			onClose={closeModal}
@@ -420,7 +421,7 @@ const WishListModal = ({
 			classNames={{ wrapper: "wishlistModal" }}
 			zIndex={WISHLIST_MODAL_Z_INDEX}>
 			<div className='w-full h-auto'>
-				<div ref={wishlistBodyRef} className='max-w-md ml-auto h-full py-6'>
+				<div ref={wishlistBodyRef} className='w-full max-w-md ml-auto h-full py-6'>
 					{showCreateOrEditWishlist && (
 						<CreateWishlist
 							allWishlist={allCollectionsList}
