@@ -218,6 +218,7 @@ const AuraResponseProductsWithTags = ({
 					<div
 						id={`tag-${suggestion}`} // Unique ID for scrolling
 						key={suggestion}
+						
 						className={`top-tag-wrapper rounded-full shadow w-max min-w-16 flex justify-center items-center gap-2 ${suggestion === selectedTag
 							? "bg-indigo-600"
 							: checkIsTagEnabled(suggestion)

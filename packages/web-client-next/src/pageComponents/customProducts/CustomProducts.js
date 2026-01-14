@@ -126,7 +126,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 			authUser?.filters?.[current_store_name]?.strict;
 
 		if (Array.isArray(brand)) {
-			return brand[0] || "";
+			return brand || "";
 		}
 		return brand || "";
 	}, [authUser, current_store_name]);

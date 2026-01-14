@@ -1,0 +1,1 @@
+export const Loader_PDP = 'Loader_PDP'

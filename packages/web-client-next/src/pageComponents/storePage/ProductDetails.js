@@ -16,7 +16,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
-
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { openProductModal } from "../customProductModal/redux/actions";
 import {
 	getPercentage,
@@ -47,6 +47,7 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import axios from "axios";
 import { payment_url } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
+import { PDPloader } from "./redux/action";
 
 const ProductDetails = ({ params, ...props }) => {
 	const router = useRouter();
@@ -58,11 +59,14 @@ const ProductDetails = ({ params, ...props }) => {
 	const [isloading, setIsLoading] = useState(true)
 
 
-	const [sellerDetails, customProductsData, authUser] = useSelector((state) => [
+	const [sellerDetails, customProductsData, authUser, pdploader] = useSelector((state) => [
 		state.store.data.sellerDetails || {},
 		state.auth.customProducts.data.data || [],
 		state.auth.user.data,
+		state.PDP_LoaderReducer.pdpLoader
 	]);
+	console.log('pdploader', pdploader);
+
 	const [store_id] =
 		useSelector((state) => [
 
@@ -87,9 +91,12 @@ const ProductDetails = ({ params, ...props }) => {
 			if (products && products.status === 200 && products.data) {
 				setFetchedProductDetails(products.data.data[0]);
 			}
-			setIsLoading(false)
+
 		} catch {
 			setFetchedProductDetails({});
+		}
+		finally {
+			dispatch(PDPloader(false));
 		}
 	};
 
@@ -107,9 +114,7 @@ const ProductDetails = ({ params, ...props }) => {
 		}
 	}, [mfr_code, savedProductDetails]);
 
-	if (!mfr_code) {
-		return <PDPPageSkeleton />;
-	}
+
 
 	const productDetails = useMemo(() => {
 		if (savedProductDetails) {
@@ -252,6 +257,9 @@ const ProductDetails = ({ params, ...props }) => {
 		"shape",
 		"style",
 		"room",
+		"size",
+		"sleeve",
+		"fit",
 	];
 
 	// scroll for tags
@@ -312,23 +320,19 @@ const ProductDetails = ({ params, ...props }) => {
 
 		e.stopPropagation()
 		const payload = {
-			amount: productDetails?.listprice || productDetails?.price || 0, // MANDATORY
+			amount: product?.price || product?.listprice || 0, // MANDATORY
 			currency: "USD", // MANDATORY
-			thumbnail: productDetails.image,
-			user_id: authUserId,
+			thumbnail: product.image,
+			user_id: authUserId || getTTid(),
 			store_id: store_id,
-			service_id: `Product_${productDetails.mfr_code}`,
-			emailId: authUser.emailId,
+			service_id: `Product_${product.mfr_code}`,
+			emailId: authUser.emailId || null,
 			successUrl: `${location}/successpayment`,
 			failureUrl: `${location}/failedpayment`,
 			additional_details: {
-				// collection_id: collection_id,
-				mfr_code: productDetails.mfr_code,
-				// order_id: "",
+				mfr_code: product.mfr_code,
 			},
-			title: productDetails.name,
-			// type: "bank transfer",
-			// successMessage: "download image now",
+			title: product.name,
 		};
 
 		try {
@@ -354,7 +358,8 @@ const ProductDetails = ({ params, ...props }) => {
 		}
 	};
 
-	if (isloading) {
+	if (pdploader === true) {
+
 		return <PDPPageSkeleton />
 	}
 
@@ -517,17 +522,17 @@ const ProductDetails = ({ params, ...props }) => {
 										<button className='  text-xl cursor-pointer'  >{cardItem?.qty || 0}</button>
 										<button className='  text-xl cursor-pointer' onClick={() => { updateCartQuantity(cardItem?.qty + 1 || 1) }}>+</button>
 									</div>
-									<div className='text-white h-14 max-w-340 w-full '>
+									{/* <div className='text-white h-14 max-w-340 w-full '> */}
 
 
-								 		{/* // 	cardItem?.qty > 0 ?
+									{/* // 	cardItem?.qty > 0 ?
 								     	// 	<Link to='/cart'>
 								    	// 	<button className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
 									 // 	Go to Cart
 									 // 	</button>
 									 // 	</Link>
 									 // : */}
-										{/* <button onClick={handleAddToCart} className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
+									{/* <button onClick={handleAddToCart} className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
 											{
 												storeData?.pdp_settings?.is_add_to_cart_button &&
 													storeData?.pdp_settings?.is_buy_button
@@ -537,34 +542,61 @@ const ProductDetails = ({ params, ...props }) => {
 														: 'Buy Now'
 											}
 										</button> */}
-										<div className=" ">
-											{
-												storeData?.pdp_settings?.is_buy_button ? (
-													<button
-														className="  mt-4 text-white py-2 px-9 font-normal text-lg rounded-10 shadow-lg" style={{ background: '#7c75ec' }}
-														onClick={checkoutPayment}
-													>
-														Buy
-													</button>
-												) : (
-													/* BUTTON 2 – Add to Cart / Buy Now */
-													<button
-														// className="bg-primary   text-white py-1 px-9 font-normal text-lg rounded"
-														className='text-white h-14 max-w-340 whitespace-nowrap w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}
-														onClick={handleAddToCart}
 
-													>
-														{storeData?.pdp_settings?.is_add_to_cart_button
-															? 'Add to cart'
-															: ''}
-													</button>
-												)}
-										</div>
-									</div>
+									{/* </div> */}
 								</div>
 							)
 
 							}
+
+							{storeData?.pdp_settings?.is_add_to_cart_button && (
+								<div className='flex gap-5  mt-16 mb-6 items-center '>
+									<div className='border px-3 h-12 items-center flex gap-10 p-4 '>
+										<button
+											className='  text-xl cursor-pointer'
+											onClick={() => {
+												updateCartQuantity(cardItem?.qty - 1);
+											}}>
+											-
+										</button>
+										<button className='  text-xl cursor-pointer'>
+											{cardItem?.qty || 0}
+										</button>
+										<button
+											className='  text-xl cursor-pointer'
+											onClick={() => {
+												updateCartQuantity(cardItem?.qty + 1 || 1);
+											}}>
+											+
+										</button>
+									</div>
+									<div className='text-white h-14 max-w-340 w-full '>
+										<button
+											onClick={handleAddToCart}
+											className='text-white h-14 max-w-340 w-full rounded-15'
+											style={{
+												backgroundColor: "rgb(119, 0, 0)",
+												boxShadow:
+													"rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px",
+											}}>
+											Add to Cart
+										</button>
+									</div>
+								</div>
+							)}
+							{storeData?.pdp_settings?.is_buy_button
+								&& (
+									<button
+										className='w-fit  mt-4 inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2 px-9 font-normal text-lg rounded-10 shadow-lg '
+										disabled={
+											!productDetails?.price && !productDetails?.listprice
+										}
+										style={{ background: "#7c75ec", cursor :!productDetails?.price && !productDetails?.listprice? 'not-allowed' :'' }}
+										onClick={checkoutPayment}>
+										Buy
+									</button>
+								)}
+
 
 							{productDetails?.description && (
 								<div>
@@ -593,6 +625,8 @@ const ProductDetails = ({ params, ...props }) => {
 									<Swiper
 										slidesPerView='auto'
 										spaceBetween={10}
+										preventClicks={false}
+										preventClicksPropagation={false}
 										freeMode={true}
 										onSwiper={(swiper) => (swiperRef.current = swiper)}
 										className='pb-1 pr-10 mr-5'>
@@ -603,23 +637,37 @@ const ProductDetails = ({ params, ...props }) => {
 														className='rounded-22 flex items-center whitespace-nowrap shadow h-30 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none text-slate-600 bg-white py-0.5'
 														title={field}>
 														<span className='font-semibold'>{field} : </span>{" "}
-														{productDetails?.[field].join(", ")}
+														{Array.isArray(productDetails?.[field])
+															? productDetails?.[field]?.join(", ")
+															: productDetails?.[field]}
 													</div>
 												</SwiperSlide>
 											) : null
 										)}
 									</Swiper>
 									{isOverflowing && (
-										<div
-											className='absolute right-0 addmore_image_edit top-0'
-											style={{ cursor: "pointer", zIndex: 10 }}
-											onClick={() => {
-												if (swiperRef.current) {
-													swiperRef.current.slideNext();
-												}
-											}}>
-											<img src={Addmore} alt='Scroll Right' />
-										</div>
+										<>
+											<div
+												className='absolute right-0  lg:h-10 h-8 lg:w-10 top-0 lg:-top-1 hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center'
+												style={{ cursor: "pointer", zIndex: 10 }}
+												onClick={() => {
+													if (swiperRef.current) {
+														swiperRef.current.slideNext();
+													}
+												}}>
+												<MdOutlineKeyboardArrowLeft className='transform rotate-180 text-xl ' />
+											</div>
+											<div
+												className='absolute  lg:h-10 h-8 top-0 lg:-top-1 lg:w-10 bg-gray-50  w-8 rounded-full flex hover:shadow-xl lg:-left-6 -left-5 justify-center items-center'
+												style={{ cursor: "pointer", zIndex: 10 }}
+												onClick={() => {
+													if (swiperRef.current) {
+														swiperRef.current.slidePrev();
+													}
+												}}>
+												<MdOutlineKeyboardArrowLeft className='text-xl ' />
+											</div>
+										</>
 									)}
 								</div>
 							</div>
@@ -742,3 +790,4 @@ const ProductDetails = ({ params, ...props }) => {
 };
 
 export default ProductDetails;
+

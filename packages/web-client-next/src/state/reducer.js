@@ -20,6 +20,7 @@ import GuestPopUpReducer from "../pageComponents/Auth/redux/GuestReducer";
 import creatorCollectionReducer from "../pageComponents/Auth/redux/CreatorReducer";
 import attributePoolReducer from "../pageComponents/createStore/redux/reducer";
 import { cartReducer } from "../pageComponents/DeliveryDetails/redux/reducer";
+import PDP_LoaderReducer from "../pageComponents/storePage/redux/PDPLoaderReducer";
 
 const rootReducer = combineReducers({
 	chat: chatReducer,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
 	autoCreateCollectionModal: autoCreateCollectionModalReducer, // handle modal to create and share collection
 	wishlistActions: wishlistActionsReducer, // handle wishlist (collection) actions only like, API call
 	cart:cartReducer,
+	PDP_LoaderReducer:PDP_LoaderReducer,
 });
 
 export default rootReducer;
