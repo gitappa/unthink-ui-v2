@@ -765,7 +765,7 @@ const ProductCard = ({
 												}`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`flex  justify-center items-center  rounded-full text-gray-101 bg-gray-100  ${size === "small"
+												className={`flex mb-0 justify-center items-center  rounded-full text-gray-101 bg-gray-100  ${size === "small"
 														? "lg:text-base h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}>

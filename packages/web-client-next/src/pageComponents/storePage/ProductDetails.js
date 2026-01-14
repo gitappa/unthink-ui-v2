@@ -298,7 +298,7 @@ const ProductDetails = ({ params, ...props }) => {
 				{
 					mfr_code: productDetails.mfr_code,
 					tagged_by: productDetails.tagged_by || [],
-					qty: 1,
+					qty:cardItem?.qty+1 || 1 ,
 				},
 			],
 			product_lists: [],
@@ -515,39 +515,7 @@ const ProductDetails = ({ params, ...props }) => {
 									</div>
 								</div>
 							) : null}
-							{storeData?.pdp_settings?.is_add_to_cart_button && (
-								<div className='flex gap-5  mt-16 mb-6 items-center '>
-									<div className='border px-3 h-12 items-center flex gap-10 p-4 '>
-										<button className='  text-xl cursor-pointer' onClick={() => { updateCartQuantity(cardItem?.qty - 1) }}>-</button>
-										<button className='  text-xl cursor-pointer'  >{cardItem?.qty || 0}</button>
-										<button className='  text-xl cursor-pointer' onClick={() => { updateCartQuantity(cardItem?.qty + 1 || 1) }}>+</button>
-									</div>
-									{/* <div className='text-white h-14 max-w-340 w-full '> */}
-
-
-									{/* // 	cardItem?.qty > 0 ?
-								     	// 	<Link to='/cart'>
-								    	// 	<button className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
-									 // 	Go to Cart
-									 // 	</button>
-									 // 	</Link>
-									 // : */}
-									{/* <button onClick={handleAddToCart} className='text-white h-14 max-w-340 w-full rounded-15' style={{ backgroundColor: 'rgb(119, 0, 0)', boxShadow: 'rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px' }}>
-											{
-												storeData?.pdp_settings?.is_add_to_cart_button &&
-													storeData?.pdp_settings?.is_buy_button
-													? 'Buy Now'
-													: storeData?.pdp_settings?.is_add_to_cart_button
-														? 'Add to cart'
-														: 'Buy Now'
-											}
-										</button> */}
-
-									{/* </div> */}
-								</div>
-							)
-
-							}
+						 
 
 							{storeData?.pdp_settings?.is_add_to_cart_button && (
 								<div className='flex gap-5  mt-16 mb-6 items-center '>
@@ -573,11 +541,9 @@ const ProductDetails = ({ params, ...props }) => {
 									<div className='text-white h-14 max-w-340 w-full '>
 										<button
 											onClick={handleAddToCart}
-											className='text-white h-14 max-w-340 w-full rounded-15'
+											className='text-white h-14   w-full rounded-15'
 											style={{
-												backgroundColor: "rgb(119, 0, 0)",
-												boxShadow:
-													"rgba(0, 0, 0, 0.5) 8px -8px 12px inset, rgba(0, 0, 0, 0.3) 9px 9px 15px",
+												backgroundColor: "#7c75ec",												 
 											}}>
 											Add to Cart
 										</button>

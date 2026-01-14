@@ -218,7 +218,7 @@ const ChatContainer = ({
 					chatMessage !== selectedSearchOption.image_search_input
 						? message
 						: undefined,
-					chatImageUrl,
+					chatImageUrl && isFollowUpQuery ? '': chatImageUrl,
 					metadata,
 					userMetadata,
 					imageGenerate,

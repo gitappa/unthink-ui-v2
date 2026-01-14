@@ -521,9 +521,8 @@ const DeliveryDetails = () => {
 							<div className='p-0'>
 								<button
 									onClick={handleContinueClick}
-									style={{
-										boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
-										background: "#770000",
+									style={{										 
+										background: "#7c75ec",
 									}}
 									className='text-white mt-5 w-full rounded-xl lg:h-13 h-11'>
 									Continue
