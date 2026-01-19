@@ -1074,17 +1074,20 @@ const StorePageWrapper = (props) => {
 				!(isSwiftlyStyledInstance && isRootPage) &&
 				!(isDothelookInstance && isRootPage) &&// not showing breadcrumb on swiftly styled home page
 				(isRootPage ||
+					isCreateFreeCollectionPage||
 					isCollectionReviewPage ||
 					isCollectionPage ||
 					isInfluencerPage ||
 					isMyProfilePage ||
 					isCustomProductsPage ||
 					isStorePage ||
+					
 					page_params?.collection_theme) ? (
 				<Breadcrumbs
 					isRootPage={isRootPage}
 					isCollectionPage={isCollectionPage}
 					isCollectionReviewPage={isCollectionReviewPage}
+					isCreateFreeCollectionPage={isCreateFreeCollectionPage}
 					isMyProfilePage={isMyProfilePage}
 					isCustomProductsPage={isCustomProductsPage}
 					is_store_instance={is_store_instance}
@@ -1093,16 +1096,15 @@ const StorePageWrapper = (props) => {
 					collectionsBy={collectionsBy}
 					theme={page_params?.collection_theme} // Retrieve the theme from params to display coll_theme in the breadcrumbs.
 					userName={props.user_name} // Retrieve the user name from params to display influencer name in the breadcrumbs.
-					user_id={pageUser.user_id}
-					
+					user_id={pageUser.user_id}					
 				/>
 			) : null}
 
 			{/* collection review/edit page new flow and custom products page for seller*/}
 			{showIndividualPageContent ? (
 				<>
-					{isCollectionReviewPage && <ReviewCollection {...props} />}
-					{isCreateFreeCollectionPage && <CreateFreeCollection {...props} />}
+					{isCollectionReviewPage && <ReviewCollection {...props}   />}
+					{isCreateFreeCollectionPage && <CreateFreeCollection {...props}    isCreateFreeCollectionPage={isCreateFreeCollectionPage}/>}
 					{isCustomProductsPage && <CustomProducts isCustomProductsPage={isCustomProductsPage} selectedSortOptionProduct={selectedSortOptionProduct} handleSortOptionChangeProduct={handleSortOptionChangeProduct}  {...props} />}
 					{isProductDetailPage && <ProductDetails {...props} />}
 				</>

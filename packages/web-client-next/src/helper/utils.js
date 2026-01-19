@@ -939,8 +939,10 @@ export const getLocalChatMetadata = () =>
 
 // Capitalizes the first character of a string
 // use capitalFirstLetter function or also can use capital-first-letter class from index.scss
-export const capitalFirstLetter = (collection_name = "") =>
-	collection_name?.charAt(0)?.toUpperCase() + collection_name?.slice(1);
+export const capitalFirstLetter = (collection_name = "") => {
+	const str = String(collection_name || "");
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 // purify object, remove data from obj which have empty string,array,obj
 // for price min and max both value have to available
