@@ -71,3 +71,7 @@
     position: relative; 
     padding-right: 15px;
 }
+
+p{
+  margin-bottom: 0;
+}

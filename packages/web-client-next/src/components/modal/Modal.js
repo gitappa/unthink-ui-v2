@@ -16,6 +16,8 @@ const Modal = ({
 	maskClosable = true,
 	size = "md",
 	headerText,
+	subText,
+	subTextClassName ='lg:text-base text-sm mt-2',
 	contentWrapperSpacingClassName = "px-8 py-4",
 	zIndexClassName = "z-40",
 	headerTextSpacingClassName = "py-6 px-4",
@@ -82,10 +84,13 @@ const Modal = ({
 					<div className='pb-5'>
 						{showHeader ? (
 							<div
-								className={`modal-header flex justify-between bg-white rounded-t-xl ${headerTextSpacingClassName}`}>
+								className={`modal-header flex justify-between bg-white rounded-t-xl ${headerTextSpacingClassName} ${subText ?'items-start': ''}` }>
 								<div>
 									{headerText && (
 										<h2 className={`${headerTextClassName}`}>{headerText}</h2>
+									)}
+									{subText && (
+										<p className={`${subTextClassName}`}>{subText}</p>
 									)}
 								</div>
 								<div className='flex'>

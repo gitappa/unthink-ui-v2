@@ -106,7 +106,7 @@ const CustomProductModal = ({
 	const [productData, setProductData] = useState({
 		...defaultProductData,
 	});
-	const [authUserId,store_id] =
+	const [authUserId, store_id] =
 		useSelector((state) => [
 			state.auth.user.data.user_id,
 			state.store.data.store_id,
@@ -307,7 +307,6 @@ const CustomProductModal = ({
 					productData.additionalAttributes.availability === "in stock" ? 1 : 0;
 			}
 
-			console.log("payload", payload);
 
 			dispatch(updateCustomProducts([payload], authUser.user_id));
 			//  else {
@@ -328,11 +327,11 @@ const CustomProductModal = ({
 			// 			dispatch(replaceAndUpdateUserCollectionData(res.data.data, true));
 			// 	}
 			// }
- 			if (storeData?.pdp_settings?.is_buy_popup || !pdp_page_enabled ) {
+			if (storeData?.pdp_settings?.is_buy_popup || pdp_page_enabled) {
 				onModalClose();
-		 
-				router.push(`/product/${product.mfr_code}`)	
-			} else {	 
+
+				router.push(`/product/${product.mfr_code}`)
+			} else {
 				setIsView(false);
 				onModalClose();
 			}
@@ -700,30 +699,23 @@ const CustomProductModal = ({
 	// 	}
 	// }, [isModalOpen])
 	const checkoutPayment = async (e) => {
-e.stopPropagation()
-e.preventDefault()
-		const location = typeof window !== "undefined" ? window.location.origin : "";
-
-
 		e.stopPropagation()
+		e.preventDefault()
+		const location = typeof window !== "undefined" ? window.location.origin : "";
 		const payload = {
-			amount: product?.listprice || product?.price || 0, // MANDATORY
+			amount: product?.price || product?.listprice || 0, // MANDATORY
 			currency: "USD", // MANDATORY
 			thumbnail: product.image,
-			user_id: authUserId,
+			user_id: authUserId || getTTid(),
 			store_id: store_id,
 			service_id: `Product_${product.mfr_code}`,
-			emailId: authUser.emailId,
+			emailId: authUser.emailId || null,
 			successUrl: `${location}/successpayment`,
 			failureUrl: `${location}/failedpayment`,
 			additional_details: {
-				// collection_id: collection_id,
 				mfr_code: product.mfr_code,
-				// order_id: "",
 			},
 			title: product.name,
-			// type: "bank transfer",
-			// successMessage: "download image now",
 		};
 
 		try {
@@ -807,26 +799,28 @@ e.preventDefault()
 											</div>
 										)}
 										<div>
-									{(storeData?.pdp_settings?.is_buy_button ||
-									storeData?.pdp_settings?.is_add_to_cart_button) && (
-										<>
-											{storeData?.pdp_settings?.is_buy_button ? (
-												<button
-													className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
-													onClick={checkoutPayment}
-												>
-													Buy Now
-												</button>
-											) : (
-												<button
-													className="box-border border whitespace-nowrap  flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
-												>
-													Add to Cart
-												</button>
-											)}
-										</>
-									)}
-								</div>
+											{(storeData?.pdp_settings?.is_buy_button ||
+												storeData?.pdp_settings?.is_add_to_cart_button) && (
+													<>
+														{storeData?.pdp_settings?.is_buy_button ? (
+															<button
+																className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
+																onClick={checkoutPayment}
+															>
+																Buy Now
+															</button>
+														) : (
+															<button
+																className="box-border border whitespace-nowrap  text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
+																style={{ background: '#7c75ec' }}
+																// onClick={handleAddToCart}
+															>
+																Add to Cart
+															</button>
+														)}
+													</>
+												)}
+										</div>
 										<div>
 											<div className='flex items-center'>
 												<span className='font-semibold text-xl'>
@@ -1023,7 +1017,7 @@ e.preventDefault()
 											</Swiper>
 											{isOverflowing2 && (
 												<div
-													className='absolute right-0 addmore_image_edit'
+													className='absolute right-0 addmore_image_edit top-0'
 													style={{ cursor: "pointer", zIndex: 10 }}
 													onClick={() => {
 														if (swiperRef2.current) {
@@ -1062,7 +1056,7 @@ e.preventDefault()
 											</Swiper>
 											{isOverflowing && (
 												<div
-													className='absolute right-0 addmore_image_edit'
+													className='absolute right-0 addmore_image_edit top-0'
 													style={{ cursor: "pointer", zIndex: 10 }}
 													onClick={() => {
 														if (swiperRef.current) {
@@ -1383,7 +1377,7 @@ e.preventDefault()
 												: "bg-indigo-600"
 												}`}
 											disabled={isSubmitDisabled}>
-											Save & View
+											Save
 										</button>
 									</div>
 								</div>

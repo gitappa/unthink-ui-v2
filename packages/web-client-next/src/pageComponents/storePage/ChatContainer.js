@@ -56,7 +56,8 @@ const ChatContainer = ({
 		widgetHeaderRequest,
 		selectedSearchOption,
 		searchOptions,
-		admin_list
+		admin_list,
+		storeData
 	] = useSelector((state) => [
 		state.auth.user,
 		state.chatV2.userDataSent,
@@ -68,9 +69,9 @@ const ChatContainer = ({
 		state.chatV2.widgetHeaderRequest,
 		state.chatV2.activeSearchOption || {},
 		state.store.data.searchOptions || [],
-		state.store.data.admin_list
+		state.store.data.admin_list,
+		state.store.data,
 	]);
-
 	const dispatch = useDispatch();
 	const inputRef = useRef(null);
 
@@ -217,7 +218,7 @@ const ChatContainer = ({
 					chatMessage !== selectedSearchOption.image_search_input
 						? message
 						: undefined,
-					chatImageUrl,
+					chatImageUrl && isFollowUpQuery ? '': chatImageUrl,
 					metadata,
 					userMetadata,
 					imageGenerate,
@@ -418,6 +419,7 @@ const ChatContainer = ({
 
 	return (
 		<>
+			{ storeData?.is_searchOptions_enabled ?
 			<div className='hidden lg:flex justify-center items-center gap-2 lg:gap-3 xl:w-1/2 mx-1'>
 				{/* {!isBTNormalUserLoggedIn ? ( */}
 				<div className='flex justify-center items-center'>
@@ -454,7 +456,9 @@ const ChatContainer = ({
 					setShowSubmitImageTooltip={setShowSubmitImageTooltip}
 					isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
 				/>
-			</div>
+			</div> :
+			<div className='hidden lg:flex justify-center items-center gap-2 lg:gap-3 xl:w-1/2 mx-1'></div>
+}
 
 			<div
 				className={`transform transition duration-300 ${showChatModal
@@ -497,3 +501,4 @@ const ChatContainer = ({
 };
 
 export default ChatContainer;
+

@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {  notification, Typography, Upload } from "antd";
+import { notification, Typography, Upload } from "antd";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
 	HeartOutlined,
@@ -16,7 +16,8 @@ import {
 	LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
-const vtf_image = '/images/ai_camera_watermark.png';
+import { FiEdit } from "react-icons/fi";
+const vtf_image = '/images/CamAI_2.svg';
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
 	setRemoveFromFavorites,
@@ -24,8 +25,10 @@ import {
 	setProductsToAddInWishlist,
 	closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
+import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
+	adminUserId,
 	current_store_id,
 	current_store_name,
 	enable_view_similar_products,
@@ -38,6 +41,7 @@ import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redu
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
 	addSidInProductUrl,
+	AdminCheck,
 	getCurrentTheme,
 	getFinalImageUrl,
 	getPercentage,
@@ -67,7 +71,8 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
 import Modal from "../modal/Modal";
-import { profileAPIs } from "../../helper/serverAPIs";
+import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
+import { PDPloader } from "../../pageComponents/storePage/redux/action";
 
 const { Text } = Typography;
 
@@ -123,12 +128,11 @@ const ProductCard = ({
 	const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
 	const [uploadedImages, setUploadedImages] = useState([]);
 	const [loading, setLoading] = useState(false);
-	console.log('buttonClick', buttonClick);
-
+	const [clickedMfrCode, setClickedMfrCode] = useState(null);
 	const dispatch = useDispatch();
 	const { themeCodes } = useTheme();
 
-	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser] =
+	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData] =
 		useSelector((state) => [
 			state.auth.user.data.user_id,
 			state.auth.user.data.user_name,
@@ -136,10 +140,19 @@ const ProductCard = ({
 			state.appState.wishlist.showWishlistModal,
 			state.store.data.store_id,
 			state.auth.user.data,
+			state.auth.customProducts.data.data || [],
 		]);
 	// console.log('authUser', authUser);
 	const [storeData] = useSelector((state) => [state.store.data]);
-	const vto_enable = storeData?.is_tryon_enabled
+	const { admin_list: admin_list } = storeData;
+	// pdp_settings
+	const isAdminLoggedIn = AdminCheck(
+		authUser,
+		current_store_name,
+		adminUserId,
+		admin_list
+	);
+const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 	// console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
 	// const favoriteColl =
@@ -332,23 +345,19 @@ const ProductCard = ({
 		const location = window.location.origin
 
 		const payload = {
-			amount: product?.listprice || product?.price || 0, // MANDATORY
+			amount: product?.price || product?.listprice || 0, // MANDATORY
 			currency: "USD", // MANDATORY
 			thumbnail: product.image,
-			user_id: authUserId,
+			user_id: authUserId || getTTid(),
 			store_id: store_id,
 			service_id: `Product_${product.mfr_code}`,
-			emailId: authUser.emailId,
+			emailId: authUser.emailId || null,
 			successUrl: `${location}/successpayment`,
 			failureUrl: `${location}/failedpayment`,
 			additional_details: {
-				// collection_id: collection_id,
 				mfr_code: product.mfr_code,
-				// order_id: "",
 			},
 			title: product.name,
-			// type: "bank transfer",
-			// successMessage: "download image now",
 		};
 
 		try {
@@ -374,7 +383,6 @@ const ProductCard = ({
 
 
 
-
 	const handleAddToCart = (e) => {
 		e.stopPropagation();
 
@@ -393,7 +401,7 @@ const ProductCard = ({
 			type: "system",
 			user_id: authUserId,
 			// collection_id: mycartcollectionid,
-			// path: mycartcollectionpath,
+			path: mycartcollectionpath,
 		};
 		dispatch(addToCart(payload));
 	};
@@ -556,6 +564,37 @@ const ProductCard = ({
 		setUploadedImages([]);
 		setDescriptionget('');
 	};
+	const fetchProductDetails = async () => {
+		dispatch(PDPloader(true));
+		try {
+			const products = await customProductsAPIs.fetchProductDetailsAPICall(
+				clickedMfrCode
+			);
+			if (products && products.status === 200 && products.data) {
+				let data = products.data.data[0];
+
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		finally {
+			dispatch(PDPloader(false));
+		}
+	};
+	const savedProduct = (p) => {
+		return customProductsData.find((item) => item.mfr_code === p);
+	};
+
+	useEffect(() => {
+		if (!clickedMfrCode) return;
+
+		const result = savedProduct(clickedMfrCode);
+		if (result || clickedMfrCode) {
+			navigate(`/product/${clickedMfrCode}`);
+			dispatch(PDPloader(true))
+			fetchProductDetails();
+		}
+	}, [clickedMfrCode]);
 	return (
 		<div
 			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
@@ -565,7 +604,11 @@ const ProductCard = ({
 			<div
 				className={`overflow-hidden relative cursor-pointer product_card_container mt-3 shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}
-				onClick={handleProductClick}>
+				// onClick={handleProductClick}
+				onClick={() => {
+					setClickedMfrCode(product?.mfr_code);
+				}}
+			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
 					className={`product_image_footer_container flex-shrink-0`}>
@@ -712,23 +755,31 @@ const ProductCard = ({
 							)}
 							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
 								showRemoveIcon && (
-									<div className={`flex items-center flex-col justify-center gap-${size === "small" ? "2" : "4"}`}>
+									<div
+										className={`flex  absolute right-1 top-1 items-center flex-col justify-center   gap-${size === "small" ? "2" : "3"
+											}`}>
 										<div
 											className={`box-border flex items-center self-baseline product_remove_icon ${size === "small"
-												? "pl-1 pt-1"
-												: "pl-1 pt-1 lg:pl-0 lg:pt-0"
+													? "pl-1 pt-1"
+													: "pl-1 pt-1 lg:pl-0 lg:pt-0"
 												}`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`flex  justify-center items-center rounded-full text-gray-101 bg-gray-100  ${size === "small" ? "lg:text-base h-5 w-5" : "lg:text-2xl h-6 w-6"
-													}`}
-											>&times;</p>
+												className={`flex mb-0 justify-center items-center  rounded-full text-gray-101 bg-gray-100  ${size === "small"
+														? "lg:text-base h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}>
+												<RxCross2 />
+											</p>
 										</div>
 										{enableCopyFeature && (
 											<div
-												className={`flex text-gray-101 bg-gray-100 rounded-full  ${size === "small" ? "lg:text-base h-4 w-4" : "lg:text-2xl h-6 w-6"
-													}`} onClick={handleCopyClick}>
-												<LuCopy className='text-base flex h-5 w-5' />
+												className={`flex items-center justify-center text-gray-101 bg-gray-100 rounded-full -mt-1  ${size === "small"
+														? "lg:text-base  h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}
+												onClick={handleCopyClick}>
+												<LuCopy className='  ' />
 											</div>
 										)}
 									</div>
@@ -789,6 +840,65 @@ const ProductCard = ({
 						)}
 					</div>
 
+
+					{(storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0) ||
+						(storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0) ||
+						(storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0) ? (
+						<div>
+							{storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0 && (
+								<span
+									className='mx-1  lg:inline-block block px-1   rounded-md '
+									style={{
+										background: "#eeeeee",
+										width: "fit-content",
+										fontSize: 10,
+									}}>
+									size:
+									{Array.isArray(product?.size)
+										? product.size
+											.map((f) => f.replace(/,+$/, "").trim())
+											.join(", ")
+										: product?.size?.replace(/,+$/, "").trim()}
+								</span>
+							)}
+							{storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0 && (
+								<span
+									className='mx-1 px-1 mt-1 lg:mt-0  lg:inline-block block  rounded-md'
+									style={{
+										background: "#eeeeee",
+										width: "fit-content",
+										fontSize: 10,
+									}}>
+									sleeve :{" "}
+									{Array.isArray(product?.sleeve)
+										? product.sleeve
+											.map((f) => f.replace(/,+$/, "").trim())
+											.join(", ")
+										: product?.sleeve?.replace(/,+$/, "").trim()}
+								</span>
+							)}
+							{storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0 && (
+								<span
+									className='mx-1 px-1  mt-1 lg:mt-0  lg:inline-block block  rounded-md'
+									style={{
+										background: "#eeeeee",
+										width: "fit-content",
+										fontSize: 10,
+									}}>
+									fit:{" "}
+									{Array.isArray(product?.fit)
+										? product.fit
+											.map((f) => f.replace(/,+$/, "").trim())
+											.join(", ")
+										: product?.fit?.replace(/,+$/, "").trim()}
+								</span>
+							)}
+						</div>)
+						: (<div className="h-6">  </div>)
+					}
+
+
+
 					{/* Price Section */}
 					<div className='flex items-center gap-2 min-h-[32px]'>
 						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
@@ -848,10 +958,41 @@ const ProductCard = ({
 								</>
 							)}
 
-							{<img className='h-9 flex items-center justify-center   z-30 absolute top-2  left-1'
-								onClick={(e) => { setButtonClick(true); e.stopPropagation();   }} src={vtf_image} />}
+							{!isCustomProductsPage && storeData.is_tryon_enabled && 
+							<img
+								className={` flex items-center justify-center   z-30 absolute ${size === "small" ? "h-6 w-6" : "h-7 w-7"
+									} ${enableCopyFeature && showRemoveIcon
+										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
+										: "top-9 right-1 "
+									}`}
+								onClick={(e) => {
+									setButtonClick(true);
+									e.stopPropagation();
+								}}
+								src={vtf_image}
+							/>
+							}
 
-							<div> 
+							{isAdminLoggedIn && isCustomProductsPage && (
+								<div
+									className={`absolute z-30 h-6 w-6  flex items-center  justify-center  rounded-full ${showRemoveIcon
+											? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
+											: "top-2 right-2"
+										}`}
+									onClick={(e) => e.stopPropagation()}
+									style={{ backgroundColor: "#f8f6f4" }}>
+									<FiEdit
+										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
+										onClick={(e) => {
+											handleProductClick();
+											e.stopPropagation();
+										}}
+										className='h-4 w-4 z-30 rounded'
+									/>
+								</div>
+							)}
+
+							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
 										className={`border rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${onStarClick ? "cursor-pointer" : "cursor-default"
@@ -874,9 +1015,13 @@ const ProductCard = ({
 								<div className='flex gap-1'>
 									{!hideAddToWishlist && (
 										<button
-											className='border rounded-lg p-2 flex items-center justify-center transition z-10'
-											onClick={addToWishlistClick}>
-											<HeartOutlined className='text-lg flex add_to_wishlist_icon text-gray-600' />
+											className={`absolute   h-6 w-6   rounded-full flex items-center justify-center transition z-30 ${isCustomProductsPage
+													? "right-1 top-20 mt-5"
+													: "top-2 mt-0 right-1"
+												} `}
+											onClick={addToWishlistClick}
+											style={{ background: "#f8f6f4" }}>
+											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
 										</button>
 									)}
 
@@ -904,9 +1049,9 @@ const ProductCard = ({
 
 				<Modal isOpen={buttonClick}
 					headerText={'Virtual Try-On'}
+					subText='Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on.'
 					onClose={() => handleVTOCancel()}
 					size='md'>
-
 					{vtoResultImageUrl ? (
 						<div className='flex flex-col items-center justify-center'>
 							<img src={vtoResultImageUrl} alt="VTO Result" className="max-h-96 rounded-xl mb-5" />
@@ -946,7 +1091,7 @@ const ProductCard = ({
 													// </Dragger>
 
 													<div className='flex flex-col items-center justify-center'>
-														<h4 className="text-xl font-semibold text-start mb-3">Upload Image </h4>
+														<h4 className="text-xl font-semibold text-start mb-3">Upload Your Image </h4>
 														<Upload.Dragger
 															className='bg-transparent h-56 w-56'
 															{...uploadImageDraggerProps}

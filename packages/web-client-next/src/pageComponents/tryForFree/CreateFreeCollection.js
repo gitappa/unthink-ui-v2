@@ -762,7 +762,6 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				(item) => item.id === collectionData.createCollectionWay
 			);
 
-			console.log("selectedType", createCollectionTypes);
 
 			if (selectedType?.is_faq_enabled) {
 				payload.faq_enabled = showFaqCount;

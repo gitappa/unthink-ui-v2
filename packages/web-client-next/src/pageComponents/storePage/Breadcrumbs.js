@@ -21,7 +21,7 @@ const Breadcrumbs = ({
 	is_store_instance,
 	currentCollectionName,
 	currentCollectionId,
-	collectionsBy,
+collectionsBy,
 	theme,
 	userName,
 	user_id,
