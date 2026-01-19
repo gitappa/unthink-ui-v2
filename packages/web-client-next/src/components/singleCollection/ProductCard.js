@@ -152,6 +152,7 @@ const ProductCard = ({
 		adminUserId,
 		admin_list
 	);
+const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 	// console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
 	// const favoriteColl =
@@ -382,7 +383,6 @@ const ProductCard = ({
 
 
 
-
 	const handleAddToCart = (e) => {
 		e.stopPropagation();
 
@@ -401,7 +401,7 @@ const ProductCard = ({
 			type: "system",
 			user_id: authUserId,
 			// collection_id: mycartcollectionid,
-			// path: mycartcollectionpath,
+			path: mycartcollectionpath,
 		};
 		dispatch(addToCart(payload));
 	};

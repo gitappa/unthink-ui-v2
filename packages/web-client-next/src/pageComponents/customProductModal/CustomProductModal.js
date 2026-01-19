@@ -813,6 +813,7 @@ const CustomProductModal = ({
 															<button
 																className="box-border border whitespace-nowrap  text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
 																style={{ background: '#7c75ec' }}
+																// onClick={handleAddToCart}
 															>
 																Add to Cart
 															</button>
