@@ -191,10 +191,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		state.store.data.createCollectionTypes || [],
 	]);
 
-	console.log("createCollectionTypes", createCollectionTypes);
 
-	console.log("extractionData",extractionData);
-	
 
 	const defaultCollectionData = {
 		name: "",

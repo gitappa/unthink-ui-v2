@@ -25,6 +25,7 @@ collectionsBy,
 	theme,
 	userName,
 	user_id,
+	isCreateFreeCollectionPage
 }) => {
 	const navigate = useNavigate();
 	const subDomain = typeof window !== 'undefined' ? getSubDomain(window.location.hostname) : null;
@@ -69,6 +70,12 @@ collectionsBy,
 			breadCrumbItems.push({ label: currentCollectionName });
 		}
 
+		if(isCreateFreeCollectionPage){
+			breadCrumbItems.push({ label: currentCollectionName ,
+				url:isCreateFreeCollectionPage ? '/' : undefined
+			});
+		}
+
 		return breadCrumbItems;
 	}, [
 		isInspirationDisable,
@@ -95,7 +102,7 @@ collectionsBy,
 					} lg:max-w-3xl-2 2xl:max-w-6xl-2 lg:px-0 mx-auto`}>
 				<div className='flex items-center gap-3 text-base lg:text-lg'>
 					{/* Back Button for Collection Review Page */}
-					{isCollectionReviewPage && (
+					{( isCollectionReviewPage  || isCreateFreeCollectionPage ) && (
 						<>
 							<ArrowLeftOutlined
 								className="cursor-pointer text-lg lg:text-xl-1 mb-1.25 text-gray-600"
