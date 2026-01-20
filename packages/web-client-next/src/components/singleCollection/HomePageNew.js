@@ -197,22 +197,22 @@ const HomePageNew = () => {
       </div>
 
       <div className="flex justify-between items-center mt-25 gap-4">
-        <div className="grid grid-cols-2 text-white gap-3  border-gray-101    w-full" >
+        <div className="grid grid-cols-2 text-white gap-5  border-gray-101    w-full" >
           <div className="bg-blue-100 flex flex-col rounded-lg border-2 border-blue-300 h-32 justify-center items-center">
             <Image src={menimage3} alt="" className="h-16 w-16 mb-1" />
             <p>MEN</p>
           </div>
           <div className="bg-pink-200 flex flex-col  rounded-lg border-2 border-pink-400  h-32  justify-center items-center">
             <Image src={menimage2} alt="" className="h-16 w-16 mb-1" />
-            <p>Women</p>
+            <p>WOMEN</p>
           </div>
           <div className="border-blue-300 flex flex-col rounded-lg border-2  h-32 bg-blue-100 justify-center items-center">
             <Image src={menimage} alt="" className="h-16 w-16 mb-1" />
-            <p>Accessories</p>
+            <p>ACCESSORIES</p>
           </div>
           <div className="bg-pink-200 flex flex-col  rounded-lg border-2 border-pink-400 h-32  justify-center items-center ">
             <Image src={im} alt="" className="h-16 w-16 mb-1" />
-            <p>Sale</p>
+            <p>SALE</p>
           </div>
         </div>
         <div className=" flex w-full justify-center" style={{ height: '-webkit-fill-available' }}>
