@@ -97,6 +97,7 @@ import Cookies from "js-cookie";
 import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
+import HomePageNew from "../../components/singleCollection/HomePageNew.js";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -248,6 +249,7 @@ const StorePageWrapper = (props) => {
 	const [selectedSortOptionProduct, setSelectedSortOptionProduct] = useState();
 
 	console.log("authUserCollections",authUserCollections);
+	console.log("singleCollections",singleCollections);
 	
 
 	const dispatch = useDispatch();
@@ -282,6 +284,7 @@ const StorePageWrapper = (props) => {
 		serverData,
 		isFailedPage,
 		isSuccessPage,
+		isHomepage,
 	} = props;
 	console.log(collection_id);
 
@@ -379,7 +382,7 @@ const StorePageWrapper = (props) => {
 			(isPageOwner && isSingleCollectionSharedPage)
 		) {
 			if (
-				(isRootPage || isSharedPage || isMyProfilePage) &&
+				(isRootPage || isSharedPage || isMyProfilePage || isHomepage) &&
 				!isSingleCollectionSharedPage
 			) {
 				return {
@@ -427,6 +430,7 @@ const StorePageWrapper = (props) => {
 		authUserCollections.length,
 		influencerUserCollections,
 		influencerUserCollections.length,
+		isHomepage
 	]);
 
 	console.log("pageUserCollections",pageUserCollections);
@@ -625,7 +629,7 @@ const StorePageWrapper = (props) => {
 	useEffect(() => {
 
 		if (
-			(!isRootPage && isThemePage)
+			(!isRootPage && (isThemePage || isHomepage))
 		) {
 
 
@@ -653,7 +657,8 @@ const StorePageWrapper = (props) => {
 	}, [
 		currentPage,
 		isThemePage,
-		isRootPage
+		isRootPage,
+		isHomepage
 	]);
 
 	useEffect(() => {
@@ -788,7 +793,7 @@ const StorePageWrapper = (props) => {
 		}
 	}, [showWishlistModal]);
 
-	console.log(authUser);
+	console.log('authUser',authUser);
 
 
 	useEffect(() => {
@@ -1112,6 +1117,7 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
+			{isHomepage && <HomePageNew/>}
 
 			{!showIndividualPageContent && (
 				<div

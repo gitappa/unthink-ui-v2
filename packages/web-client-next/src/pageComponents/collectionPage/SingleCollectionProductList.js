@@ -89,6 +89,9 @@ const SingleCollectionProductList = ({
 	handleSortOptionChange,
 	isRootPage = true,
 }) => {
+
+	console.log(blogCollectionPage.video_url);
+	
 	const router = useRouter();
 	const [statedata, setStatedata] = useState(null)
 	console.log("statedata", blogCollectionPage);
@@ -654,7 +657,7 @@ const SingleCollectionProductList = ({
 									: "relative h-80 w-full sm:h-370 sm:w-370 lg:h-700 lg:w-656 col-span-2 sm:col-span-2 sm:row-span-2 flex-grow overflow-hidden"
 							}
 							onMouseEnter={handleMouseEnter}
-							onMouseLeave={handleMouseLeave}>
+							onMouseLeave={handleMouseLeave} >
 							{/* Show video if hovered, otherwise show the image */}
 							{blogCollectionPage?.video_url &&
 								(isHovered || (isMobile && isVisible)) &&
