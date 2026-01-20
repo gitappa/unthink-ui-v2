@@ -197,72 +197,72 @@ const HomePageNew = () => {
       </div>
 
       <div className="flex justify-between items-center mt-25 gap-4">
-        <div className="grid grid-cols-2 text-white gap-3  border-gray-101  pr-2  w-504">
-          <div className="bg-blue-100 flex flex-col rounded-lg border-2 border-blue-300 h-32 w-32 justify-center items-center">
+        <div className="grid grid-cols-2 text-white gap-3  border-gray-101    w-full" >
+          <div className="bg-blue-100 flex flex-col rounded-lg border-2 border-blue-300 h-32 justify-center items-center">
             <Image src={menimage3} alt="" className="h-16 w-16 mb-1" />
             <p>MEN</p>
           </div>
-          <div className="bg-blue-100 flex flex-col  rounded-lg border-2 border-blue-300 h-32 w-32  justify-center items-center">
+          <div className="bg-pink-200 flex flex-col  rounded-lg border-2 border-pink-400  h-32  justify-center items-center">
             <Image src={menimage2} alt="" className="h-16 w-16 mb-1" />
             <p>Women</p>
           </div>
-          <div className="bg-pink-200 flex flex-col rounded-lg border-2 border-pink-400 h-32 w-32  justify-center items-center">
+          <div className="border-blue-300 flex flex-col rounded-lg border-2  h-32 bg-blue-100 justify-center items-center">
             <Image src={menimage} alt="" className="h-16 w-16 mb-1" />
             <p>Accessories</p>
           </div>
-          <div className="bg-pink-200 flex flex-col  rounded-lg border-2 border-pink-400 h-32 w-32  justify-center items-center ">
+          <div className="bg-pink-200 flex flex-col  rounded-lg border-2 border-pink-400 h-32  justify-center items-center ">
             <Image src={im} alt="" className="h-16 w-16 mb-1" />
             <p>Sale</p>
           </div>
         </div>
-        <div className=" flex" style={{ height: '-webkit-fill-available' }}>
+        <div className=" flex w-full justify-center" style={{ height: '-webkit-fill-available' }}>
           <div className="w-[2px] bg-gray-101"></div>
         </div>
 
         <div className="w-full text-white">
           <div className="grid grid-cols-2 gap-x-2 gap-y-3 ">
-            <div className="p-3 rounded-full border-2 border-violet-100 bg-violet-100">
+            <div className="p-3 rounded-full border-2 border-violet-500 bg-violet-100">
               #SummerVideo
             </div>
             <div className="p-3 rounded-full border-2 border-white  bg-gradient-to-r from-purple-300 via-orange-400 to-red-300 ">
               #Cyber punk
             </div>
-            <div className="p-3 rounded-full  border-2 border-yellow-102   bg-yellow-102">
+            <div className="p-3 rounded-full  border-2 border-yellow-400   bg-yellow-102">
               #EgoFriendly
             </div>
-            <div className="p-3 rounded-full  border-2 border-green-400   bg-green-400">
+            <div className="p-3 rounded-full  border-2 border-green-600   bg-green-400">
               #EgoFriendly
             </div>
-            <div className="p-3 rounded-full  border-2 border-slate-500 bg-slate-500">
+            <div className="p-3 rounded-full  border-2 border-slate-700 bg-slate-500">
               #SummerCors
             </div>
-            <div className="p-3 rounded-full border-2 border-teal-500  bg-teal-500">
+            <div className="p-3 rounded-full border-2 border-teal-700  bg-teal-500">
               #BrandStan
             </div>
           </div>
         </div>
       </div>
 
-      <div className="  mt-20">
+      <div className="mt-20">
         <h2 className="text-4xl font-semibold ">DISCOVER HIDDEN TREASURES</h2>
         <div className="flex mt-6  h-700  gap-7 w-full">
-          <div className="flex gap-4 w-full h-700 ">
-            <div className="  w-full">
+          <div className="flex gap-4 w-full   " style={{height:700}}> 
+            <div className="  w-4/5">
               <Image
                 src={men}
                 className=" w-full rounded-xl mb-3 "
                 style={{ height: "55%" }}
               />
               <Image
-                src={women}
+                src={menimage}
                 className="  w-full rounded-xl "
                 style={{ height: "40%" }}
               />
             </div>
 
-            <div className="  w-full">
+            <div className=" w-4/5">
               <Image
-                src={women}
+                src={menimage}
                 className=" w-full rounded-xl   "
                 style={{ height: "40%" }}
               />
@@ -275,7 +275,7 @@ const HomePageNew = () => {
           </div>
 
           <div className="w-full text-white">
-            <div className=" flex  gap-4 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-5 ">
+            <div className=" flex  gap-4 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
               <div className="w-full ">
                 <p>
                   Lorem ipsum dolor sit amet c Archit s mollitia quas cumque
@@ -285,7 +285,7 @@ const HomePageNew = () => {
                 <Image
                   src={qrcode}
                   alt="qrcode"
-                  className="rounded-xl mt-3 w-25 h-25 "
+                  className="rounded-xl mt-3 mb-2 w-25 h-25 bg-white"
                   width={100}
                   height={100}
                 />
@@ -300,11 +300,11 @@ const HomePageNew = () => {
                 />
               </div>
             </div>
-            <div className="bg-gradient-to-r relative mt-4  flex gap-5 from-purple-102 rounded-xl p-3 to-purple-101  border-purple-102 border-3 ">
+            <div className="bg-gradient-to-r p-6 relative mt-4 items-center  flex gap-5 from-purple-102 rounded-xl  to-purple-101  border-purple-102 border-3 ">
               <Image
                 src={robo}
                 alt="ai stylist "
-                className="  mt-3 w-25 h-25 "
+                className=" rounded-full mt-3 w-25 h-25 "
               />
               <h3 className="text-3xl font-semibold">ASK AI STYLIST </h3>
               <Image
@@ -314,8 +314,15 @@ const HomePageNew = () => {
                 alt="ai stylist "
                 className="  mt-3 w-7 h-7 absolute right-3 top-2 "
               />
+                <Image
+                src={ai}
+                width={50}
+                height={50}
+                alt="ai stylist "
+                className="  mt-3 w-9 h-9 absolute right-1 -bottom-2  z-20"
+              />
             </div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>
