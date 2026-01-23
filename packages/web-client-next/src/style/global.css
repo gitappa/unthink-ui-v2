@@ -89,3 +89,7 @@ p{
   background-color: #9ca3af; /* gray-400 */
   border-radius: 10px;
 }
+.mySwipers{
+  height: 220px;
+  padding: 0 30px !important;
+}
