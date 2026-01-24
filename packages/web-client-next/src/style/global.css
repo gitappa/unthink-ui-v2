@@ -75,3 +75,11 @@
 p{
   margin-bottom: 0;
 }
+.hover-fancy {
+transition: transform 0.25s ease;
+}
+
+
+.hover-fancy:hover {
+transform: translateY(-3px) scale(1.05);
+}

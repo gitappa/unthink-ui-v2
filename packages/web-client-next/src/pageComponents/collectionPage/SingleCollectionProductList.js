@@ -96,12 +96,16 @@ const SingleCollectionProductList = ({
 	const dispatch = useDispatch();
 	const navigate = useCallback((path) => router.push(path), [router]);
 
-	const [isGuestPopUpShow, singleCollection] = useSelector((state) => [
+	const [isGuestPopUpShow, singleCollection,influencerCollections ] = useSelector((state) => [
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.auth.user.singleCollections.data,
+		state.auth.user.data,
 	]);
 	console.log("isSingleCollectionSharedPage", isSingleCollectionSharedPage);
 	console.log("singleCollectionaaaaaa", singleCollection);
+	
+
+
 	useEffect(() => {
 		if (singleCollection) {
 			setStatedata(singleCollection);
@@ -640,8 +644,13 @@ const SingleCollectionProductList = ({
 		[filteredFirstValue.custom_filter]
 	);
 
-	const RenderProductsList = ({ list, showAuraTileFlag }) =>
-		blogCollectionPage?.collection_name ? (
+	const publish = singleCollection.status === 'published';
+	const userId = influencerCollections.user_id === singleCollection.user_id;
+
+	const RenderProductsList = ({ list, showAuraTileFlag, isSingleCollectionSharedPage }) => {
+		if (blogCollectionPage?.collection_name && !isSingleCollectionSharedPage) {
+			return (
+
 			<div className='grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-4 lg:pt-0 lg:mt-0 mt-5'>
 				{showCoverImage &&
 					(blogCollectionPage?.cover_image ||
@@ -762,12 +771,137 @@ const SingleCollectionProductList = ({
 					</div>
 				)}
 			</div>
-		) : (
-			<div className='w-full text-center text-lg font-medium'>
-				{/* No products found */}
-			</div>
 		);
+		}
+		else if (blogCollectionPage?.collection_name && (userId || publish) && isSingleCollectionSharedPage) {
+			return (
+<div className='grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-4 lg:pt-0 lg:mt-0 mt-5'>
+				{showCoverImage &&
+					(blogCollectionPage?.cover_image ||
+						blogCollectionPage?.video_url) && (
+						<div
+							ref={videoContainerRef}
+							className={
+								isSocialMediaVideo(blogCollectionPage.video_url)
+									? "hidden"
+									: "relative h-80 w-full sm:h-370 sm:w-370 lg:h-700 lg:w-656 col-span-2 sm:col-span-2 sm:row-span-2 flex-grow overflow-hidden"
+							}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}>
+							{/* Show video if hovered, otherwise show the image */}
+							{blogCollectionPage?.video_url &&
+								(isHovered || (isMobile && isVisible)) &&
+								!isSocialMediaVideo(blogCollectionPage.video_url) ? (
+								<>
+									<ReactPlayer
+										className={
+											isSocialMediaVideo(blogCollectionPage.video_url)
+												? ""
+												: `absolute top-0 left-0 w-full h-full Video_player`
+										}
+										url={blogCollectionPage.video_url}
+										playing={(isMobile && isVisible) || isHovered} // Autoplay on mobile or when hovered on desktop
+										muted={true}
+										loop={true}
+										width='100%'
+										height='100%'
+										playsinline
+										controls={false}
+									/>
+									{/* Transparent overlay to block interaction with the video */}
+									<div
+										className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+											}`}
+										onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
+									/>
+								</>
+							) : blogCollectionPage?.cover_image ? (
+								<img
+									onClick={() => showCollectionDetails && onSeeAllClick()}
+									className={`h-full object-cover rounded-xl w-full ${showCollectionDetails ? "cursor-pointer" : ""
+										}`}
+									src={getFinalImageUrl(blogCollectionPage.cover_image)}
+									alt='Cover'
+								/>
+							) : (
+								/* Video without playing if no image and not from social media */
+								blogCollectionPage?.video_url &&
+								!isSocialMediaVideo(blogCollectionPage.video_url) && (
+									<>
+										<ReactPlayer
+											className={`absolute top-0 left-0 w-full h-full Video_player`}
+											url={blogCollectionPage.video_url}
+											playing={false}
+											muted={true}
+											loop={true}
+											width='100%'
+											height='100%'
+											playsinline
+											controls={false}
+										/>
+										{/* Transparent overlay to block interaction with the video */}
+										<div
+											className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+												}`}
+											onClick={() => showCollectionDetails && onSeeAllClick()}
+										/>
+									</>
+								)
+							)}
+						</div>
+					)}
 
+				{list.length > 0 && list?.map((product) => (
+					// console.log("productsssss", list),
+
+					<div key={product.mfr_code}>
+						<ProductCard
+							product={product}
+							onProductClick={() => onProductClick(product)}
+							enableClickTracking={enableClickTracking}
+							productClickParam={{
+								iCode: authUser.influencer_code,
+								campCode: blogCollectionPage.campaign_code,
+								collectionId: blogCollectionPage._id,
+								collectionName: blogCollectionPage.collection_name,
+								collectionICode: pageUser.influencer_code,
+							}}
+							showStar={false}
+							enableHoverShowcase={false}
+							onStarClick={() =>
+								handleShowcaseCollectionProducts(
+									[product.mfr_code],
+									!product.starred
+								)
+							}
+							hideAddToWishlist={
+								!!product.sponsored || (is_store_instance && !isUserLogin)
+							}
+							hideViewSimilar={!!product.sponsored}
+							enableSelect={enableSelectProduct}
+							isSelected={selectedProducts.includes(product.mfr_code)}
+							setSelectValue={() => onSelectProductClick(product.mfr_code)}
+							collection_id={blogCollectionPage._id}
+							collection_name={blogCollectionPage.collection_name}
+							collection_path={blogCollectionPage.path}
+							collection_status={blogCollectionPage.status}
+							blogCollectionPage={blogCollectionPage}
+						/>
+					</div>
+				))}
+				{showAuraTileFlag && list.length > 0 && (
+					<div>
+						<AskAuraCard />
+					</div>
+				)}
+			</div>
+			);
+		}
+		return null;
+	};
+
+	console.log(publish);
+	
 	useEffect(() => {
 		if (singleCollection) return;
 		if (singleCollection) return;
@@ -799,7 +933,7 @@ const SingleCollectionProductList = ({
 	return (
 
 		<div className='max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto w-full'>
-			{singleCollection?.faqs?.length > 0 && autoProductsData.length > 0 && isSingleCollectionSharedPage && (
+			{singleCollection?.faqs?.length > 0 && autoProductsData.length > 0 && isSingleCollectionSharedPage &&    (userId || (publish && isSingleCollectionSharedPage))(
 				<div className='flex items-center gap-4 mb-4 lg:mx-0 mx-2'>
 					{/* PRODUCTS TAB */}
 					<p
@@ -826,8 +960,9 @@ const SingleCollectionProductList = ({
 				<>
 					<div className='colloction_details_cards_div'>
 						<div className='lg:container lg:mx-auto'>
+							{isSingleCollectionSharedPage &&    (userId || (publish && isSingleCollectionSharedPage)) &&
 							<div className='lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto px-3 lg:px-0'>
-								{showTagsSelection && tagsToShow?.length && autoProductsData.length ? (
+								{showTagsSelection && tagsToShow?.length && autoProductsData.length  ? (
 									<div className={`pb-1 md:pb-4 colloction_details_tag`}>
 										<div className='flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div'>
 											<div className='flex items-center gap-3 colloectionDetailScroll'>
@@ -1036,6 +1171,7 @@ const SingleCollectionProductList = ({
 									</div>
 								) : null}
 							</div>
+							 }
 						</div>
 						<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto single-collection-class'>
 							{showCollectionDetails && (
@@ -1181,6 +1317,7 @@ const SingleCollectionProductList = ({
 													showAuraTileFlag={
 														autoProductsData.length ? false : showAuraTile
 													}
+													isSingleCollectionSharedPage={isSingleCollectionSharedPage}
 												/>
 											</div>
 										</div>
@@ -1195,6 +1332,7 @@ const SingleCollectionProductList = ({
 												<RenderProductsList
 													list={autoProductsData}
 													showAuraTileFlag={showAuraTile}
+													isSingleCollectionSharedPage={isSingleCollectionSharedPage}
 												/>
 											</div>
 										</div>
@@ -1205,6 +1343,7 @@ const SingleCollectionProductList = ({
 									<RenderProductsList
 										list={productsData}
 										showAuraTileFlag={showAuraTile}
+										isSingleCollectionSharedPage={isSingleCollectionSharedPage}
 									/>
 								</div>
 							)}
@@ -1255,4 +1394,3 @@ const SingleCollectionProductList = ({
 };
 
 export default React.memo(SingleCollectionProductList);
-

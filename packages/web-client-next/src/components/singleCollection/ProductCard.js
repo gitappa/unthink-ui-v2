@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -17,7 +17,9 @@ import {
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
 import { FiEdit } from "react-icons/fi";
+import { BsThreeDots } from "react-icons/bs";
 const vtf_image = '/images/CamAI_2.svg';
+import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
 	setRemoveFromFavorites,
@@ -131,6 +133,20 @@ const ProductCard = ({
 	const [clickedMfrCode, setClickedMfrCode] = useState(null);
 	const dispatch = useDispatch();
 	const { themeCodes } = useTheme();
+	const [menuIcon,setMenuIcon] = useState(false)
+	const menuRef =useRef(null)
+
+	useEffect(()=>{
+		const handleClick =((event)=>{
+			if(menuRef.current && !menuRef.current.contains(event.target)){
+				setMenuIcon(false)
+			}
+		})
+		document.addEventListener('mousedown',handleClick)
+		return ()=>{
+			document.removeEventListener('mousedown',handleClick)
+		}
+	},[])
 
 	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData] =
 		useSelector((state) => [
@@ -589,12 +605,20 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 		if (!clickedMfrCode) return;
 
 		const result = savedProduct(clickedMfrCode);
-		if (result || clickedMfrCode) {
-			navigate(`/product/${clickedMfrCode}`);
-			dispatch(PDPloader(true))
-			fetchProductDetails();
-		}
-	}, [clickedMfrCode]);
+	if ( clickedMfrCode ) {
+			console.log('fdfdfdfq',product.url);
+			
+			if(product.url === "dummy_url"){
+
+				navigate(`/product/${clickedMfrCode}`);
+				fetchProductDetails();
+			}
+			else{
+				window.open(product.url , '_blank')
+			}
+			// fetchProductDetails();
+
+	}}, [clickedMfrCode]);
 	return (
 		<div
 			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
@@ -602,7 +626,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 				: ""
 				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
 			<div
-				className={`overflow-hidden relative cursor-pointer product_card_container mt-3 shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
+				className={`overflow-hidden relative cursor-pointer product_card_container mt-3   ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}
 				// onClick={handleProductClick}
 				onClick={() => {
@@ -611,7 +635,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
-					className={`product_image_footer_container flex-shrink-0`}>
+					className={`product_image_footer_container flex-shrink-0 shadow m-1`}>
 					<div>
 						<img
 							src={getFinalImageUrl(product.image)}
@@ -753,37 +777,127 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</span>
 								</div>
 							)}
+
+							  <BsThreeDots  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className="hover-fancy hover:shadow  mt-3 text-2xl absolute top-2 right-2 bg-gray-100 rounded-full p-1" />
+							  {menuIcon && 
+							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className=" bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 ">
+
 							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
 								showRemoveIcon && (
 									<div
-										className={`flex  absolute right-1 top-1 items-center flex-col justify-center   gap-${size === "small" ? "2" : "3"
+										className={`    gap-${size === "small" ? "2" : "3"
 											}`}>
 										<div
-											className={`box-border flex items-center self-baseline product_remove_icon ${size === "small"
-													? "pl-1 pt-1"
-													: "pl-1 pt-1 lg:pl-0 lg:pt-0"
-												}`}
+											className={`flex gap-2 self-baseline product_remove_icon`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`flex mb-0 justify-center items-center  rounded-full text-gray-101 bg-gray-100  ${size === "small"
+												className={`rounded-full flex justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
 														? "lg:text-base h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}>
-												<RxCross2 />
+												<RxCross2 />												
 											</p>
-										</div>
-										{enableCopyFeature && (
+											<p className="text-gray-101">Remove</p>
+										</div>									
+									</div>
+								)}
+									{enableCopyFeature && (
+											<div className="flex gap-2" onClick={handleCopyClick} >
+
 											<div
-												className={`flex items-center justify-center text-gray-101 bg-gray-100 rounded-full -mt-1  ${size === "small"
+												className={ ` text-gray-101 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
 														? "lg:text-base  h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}
-												onClick={handleCopyClick}>
+												>
 												<LuCopy className='  ' />
+												
+											</div>
+											<p className="text-gray-101">Copy</p>
 											</div>
 										)}
-									</div>
-								)}
+								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) &&
+								<div className='flex gap-1'>
+									{!hideAddToWishlist && (
+										<div className="flex gap-2" onClick={addToWishlistClick} >
+
+										<button
+											className={`    h-6 w-6   rounded-full flex items-center justify-center transition z-30 `}
+												//  ${isCustomProductsPage
+												// 	? "right-1 top-20 mt-5"
+												// 	: "top-2 mt-0 right-1"}
+												
+											
+											style={{ background: "#f8f6f4" }}>
+											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
+										</button>
+										<p className="text-gray-101">Like</p>
+										</div>
+									)}
+
+									{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+										<button
+											onClick={handleStarClick}
+											role={onStarClick ? "button" : "img"}
+											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											{product.starred ? (
+
+												<StarFilled className='text-lg text-yellow-500' />
+											) : (
+												<StarOutlined className='text-lg text-gray-600' />
+											)}
+											 <p className="pl-2 text-gray-101">Star</p>
+										</button>
+									)}
+
+										
+								</div>
+							}
+							{isAdminLoggedIn && isCustomProductsPage && (
+								<div className="flex gap-2" 	onClick={(e) => {
+											handleProductClick();
+											e.stopPropagation();
+										}}>
+
+								<p
+									className={`  z-30 h-6 w-6  flex items-center  justify-center  rounded-full `}
+										// ${showRemoveIcon
+										// 	? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
+										// 	: "top-2 right-2"
+										// }
+									onClick={(e) => e.stopPropagation()}
+									style={{ backgroundColor: "#f8f6f4" }}>
+									<FiEdit
+										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
+									
+										className='h-4 w-4 z-30 rounded'
+									/>
+								</p>
+								<p className=" text-gray-101">Edit</p>
+								</div>
+
+							)}
+
+							{!isCustomProductsPage && storeData.is_tryon_enabled && 
+										<div className="flex gap-2 items-center "  onClick={(e) => {
+									setButtonClick(true);
+									e.stopPropagation();
+								}}>
+							<img
+								className={` flex items-center justify-center   z-30  ${size === "small" ? "h-6 w-6" : "h-7 w-7"
+									} ${enableCopyFeature && showRemoveIcon
+										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
+										: "top-9 right-1 "
+									}`}								
+								src={vtf_image}
+							/>
+							<p className=" text-gray-101">Try On</p>
+										</div>
+							}
+
+
+							  </div>}
+
 						</>
 					)}
 					<div
@@ -958,39 +1072,9 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 								</>
 							)}
 
-							{!isCustomProductsPage && storeData.is_tryon_enabled && 
-							<img
-								className={` flex items-center justify-center   z-30 absolute ${size === "small" ? "h-6 w-6" : "h-7 w-7"
-									} ${enableCopyFeature && showRemoveIcon
-										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
-										: "top-9 right-1 "
-									}`}
-								onClick={(e) => {
-									setButtonClick(true);
-									e.stopPropagation();
-								}}
-								src={vtf_image}
-							/>
-							}
+						
 
-							{isAdminLoggedIn && isCustomProductsPage && (
-								<div
-									className={`absolute z-30 h-6 w-6  flex items-center  justify-center  rounded-full ${showRemoveIcon
-											? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
-											: "top-2 right-2"
-										}`}
-									onClick={(e) => e.stopPropagation()}
-									style={{ backgroundColor: "#f8f6f4" }}>
-									<FiEdit
-										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
-										onClick={(e) => {
-											handleProductClick();
-											e.stopPropagation();
-										}}
-										className='h-4 w-4 z-30 rounded'
-									/>
-								</div>
-							)}
+							
 
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
@@ -1011,34 +1095,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</button>
 								) : null}
 							</div>
-							{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) &&
-								<div className='flex gap-1'>
-									{!hideAddToWishlist && (
-										<button
-											className={`absolute   h-6 w-6   rounded-full flex items-center justify-center transition z-30 ${isCustomProductsPage
-													? "right-1 top-20 mt-5"
-													: "top-2 mt-0 right-1"
-												} `}
-											onClick={addToWishlistClick}
-											style={{ background: "#f8f6f4" }}>
-											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
-										</button>
-									)}
-
-									{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
-										<button
-											onClick={handleStarClick}
-											role={onStarClick ? "button" : "img"}
-											className={`border rounded-lg p-2 flex items-center justify-center z-20 transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
-											{product.starred ? (
-												<StarFilled className='text-lg text-yellow-500' />
-											) : (
-												<StarOutlined className='text-lg text-gray-600' />
-											)}
-										</button>
-									)}
-								</div>
-							}
+							
 						</div>
 					)}
 				</div>

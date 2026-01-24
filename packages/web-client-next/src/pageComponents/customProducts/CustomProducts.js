@@ -579,7 +579,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 							) : (
 								<Tooltip title='Click and select multiple products to add to collection or delete'>
 									<p
-										className='text-blue-103 cursor-pointer leading-44'
+										className='text-blue-103 cursor-pointer leading-44 underline'
 										role='link'
 										onClick={() => setEnableSelectProduct(true)}>
 										Select multiple products
