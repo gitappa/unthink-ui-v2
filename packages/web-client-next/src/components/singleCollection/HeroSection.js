@@ -6,7 +6,14 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import Image from "next/image";
 
-const HeroSection = ({im}) => {
+const HeroSection = ({im,collectionData}) => {
+console.log('ssdsds',collectionData );
+
+
+
+
+
+
     const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   let videoUrl = typeof videoUrlRaw === "string" ? videoUrlRaw : "";
      const [isClient, setIsClient] = useState(false);
@@ -79,7 +86,7 @@ const HeroSection = ({im}) => {
           {isClient ? (
             videoUrlRaw ? (
               <ReactPlayer
-                url={videoUrl}
+                url={collectionData?.video_url}
                 playing={isHovered} // Only play when hovered
                 muted={true}
                 loop={true}
@@ -129,66 +136,12 @@ const HeroSection = ({im}) => {
                   },
                 }}
               >
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image src={im} className="h-52 w-48 rounded-xl" />
-                </SwiperSlide>
+                {collectionData.product_lists?.map((collection ,id)=>(
+                 <SwiperSlide key={id}>
+                  <Image src={collection.image } width={23} height={33} className="h-52 w-48 rounded-xl" />
+                </SwiperSlide> 
+                ))}
+
               </Swiper>
               {/* <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />

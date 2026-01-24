@@ -1117,7 +1117,7 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
-			{isHomepage && <HomePageNew/>}
+			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection}/>}
 
 			{!showIndividualPageContent && (
 				<div
