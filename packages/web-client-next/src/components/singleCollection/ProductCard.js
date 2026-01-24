@@ -135,6 +135,7 @@ const ProductCard = ({
 	const { themeCodes } = useTheme();
 	const [menuIcon,setMenuIcon] = useState(false)
 	const menuRef =useRef(null)
+console.log(menuIcon);
 
 	useEffect(()=>{
 		const handleClick =((event)=>{
@@ -780,7 +781,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 							  <BsThreeDots  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className="hover-fancy hover:shadow  mt-3 text-2xl absolute top-2 right-2 bg-gray-100 rounded-full p-1" />
 							  {menuIcon && 
-							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className=" bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 ">
+							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className="menu-animate bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 ">
 
 							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
 								showRemoveIcon && (
@@ -897,7 +898,6 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 
 							  </div>}
-
 						</>
 					)}
 					<div
