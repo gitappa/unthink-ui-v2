@@ -92,6 +92,7 @@ const CollectionDetails = ({
 		state.auth.user.singleCollections.data,
 		state.store.data.admin_list,
 	]);
+console.log('sssssss',collection.video_url);
 
 	// State for overlay positioning
 	const [containerDimensions, setContainerDimensions] = useState({

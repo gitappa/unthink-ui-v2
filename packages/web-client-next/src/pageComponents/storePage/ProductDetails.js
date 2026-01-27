@@ -543,7 +543,7 @@ const ProductDetails = ({ params, ...props }) => {
 											onClick={handleAddToCart}
 											className='text-white h-14   w-full rounded-15'
 											style={{
-												backgroundColor: "#7c75ec",												 
+												backgroundColor: "#7c75c",												 
 											}}>
 											Add to Cart
 										</button>
