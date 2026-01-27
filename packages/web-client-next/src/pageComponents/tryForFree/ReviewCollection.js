@@ -4468,11 +4468,11 @@ console.log('authUserCollections',authUserCollections);
 																{enableSelectProduct ? (
 																	<>
 																		<div
-																			className='flex bg-violet-100 items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
-																			style={{ width: "200px" }}
+																			className='flex   items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
+																			style={{ width:"200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection w-full text-white placeholder-white"
+																				className="custom-select-editcollection   w-full text-white placeholder-white"
 																				placeholder="Next Action"
 																				onChange={handleSelectChange}
 																				value={actionType}
@@ -4510,11 +4510,11 @@ console.log('authUserCollections',authUserCollections);
 																) :
 																	(
 																		<div
-																			className='flex bg-violet-100 items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
+																			className='flex focus:bg-white  items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
 																			style={{ width: "200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection w-full text-white placeholder-white"
+																				className="custom-select-editcollection   w-full text-white placeholder-white"
 																				placeholder="Next Action"
 																				onClick={() => setEnableSelectProduct(true)}
 																				onChange={handleSelectChange}

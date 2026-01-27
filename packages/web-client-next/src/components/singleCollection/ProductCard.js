@@ -122,7 +122,7 @@ const ProductCard = ({
 	blogCollectionPage,
 }) => {
 	const navigate = useNavigate();
-	console.log('hideAddToWishlist', enableSelect);
+	console.log('hideAddToWishlist', widgetType);
 	// console.log('qzssddsdsds',product);
 	const [buttonClick, setButtonClick] = useState(false);
 	const [showLoader, setShowLoader] = useState(false);
@@ -149,7 +149,7 @@ console.log(menuIcon);
 		}
 	},[])
 
-	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData] =
+	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData, ] =
 		useSelector((state) => [
 			state.auth.user.data.user_id,
 			state.auth.user.data.user_name,
@@ -158,7 +158,10 @@ console.log(menuIcon);
 			state.store.data.store_id,
 			state.auth.user.data,
 			state.auth.customProducts.data.data || [],
+			// state.wishlist.showWishlistModal
 		]);
+		// console.log(showWishlistModal);
+		
 	// console.log('authUser', authUser);
 	const [storeData] = useSelector((state) => [state.store.data]);
 	const { admin_list: admin_list } = storeData;
@@ -622,7 +625,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 	}}, [clickedMfrCode]);
 	return (
 		<div
-			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+			className={`box-content overflow-y-hidden ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
 				? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
 				: ""
 				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
@@ -789,7 +792,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										className={`    gap-${size === "small" ? "2" : "3"
 											}`}>
 										<div
-											className={`flex gap-2 self-baseline product_remove_icon`}
+											className={`flex gap-2 items-center self-baseline product_remove_icon`}
 											onClick={removeFromWishlistClick}>
 											<p
 												className={`rounded-full flex justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
@@ -803,10 +806,10 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</div>
 								)}
 									{enableCopyFeature && (
-											<div className="flex gap-2" onClick={handleCopyClick} >
+											<div className="flex gap-2 items-center" onClick={handleCopyClick} >
 
 											<div
-												className={ ` text-gray-101 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
+												className={ ` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
 														? "lg:text-base  h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}
@@ -814,13 +817,13 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 												<LuCopy className='  ' />
 												
 											</div>
-											<p className="text-gray-101">Copy</p>
+											<p className="text-gray-101 m-0">Copy</p>
 											</div>
 										)}
-								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) &&
+								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
 								<div className='flex gap-1'>
 									{!hideAddToWishlist && (
-										<div className="flex gap-2" onClick={addToWishlistClick} >
+										<div className="flex gap-2 items-center" onClick={addToWishlistClick} >
 
 										<button
 											className={`    h-6 w-6   rounded-full flex items-center justify-center transition z-30 `}
@@ -832,30 +835,13 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											style={{ background: "#f8f6f4" }}>
 											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
 										</button>
-										<p className="text-gray-101">Like</p>
+										<p className="text-gray-101 m-0">Like</p>
 										</div>
-									)}
-
-									{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
-										<button
-											onClick={handleStarClick}
-											role={onStarClick ? "button" : "img"}
-											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
-											{product.starred ? (
-
-												<StarFilled className='text-lg text-yellow-500' />
-											) : (
-												<StarOutlined className='text-lg text-gray-600' />
-											)}
-											 <p className="pl-2 text-gray-101">Star</p>
-										</button>
-									)}
-
-										
+									)}										
 								</div>
 							}
 							{isAdminLoggedIn && isCustomProductsPage && (
-								<div className="flex gap-2" 	onClick={(e) => {
+								<div className="flex gap-2 items-center" 	onClick={(e) => {
 											handleProductClick();
 											e.stopPropagation();
 										}}>
@@ -874,7 +860,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										className='h-4 w-4 z-30 rounded'
 									/>
 								</p>
-								<p className=" text-gray-101">Edit</p>
+								<p className=" text-gray-101 m-0">Edit</p>
 								</div>
 
 							)}
@@ -892,7 +878,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									}`}								
 								src={vtf_image}
 							/>
-							<p className=" text-gray-101">Try On</p>
+							<p className=" text-gray-101 m-0">Try On</p>
 										</div>
 							}
 
@@ -924,9 +910,9 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 
 				{/* product footer */}
-				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white   ${size === "small" ? "gap-2" : "gap-3"}`}>
+				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white h-full   ${size === "small" ? "gap-2" : "gap-3"}`}>
 					{/* Product Name */}
-					<div className='flex flex-col gap-1 min-h-[44px]'>
+					<div className='flex flex-col gap-1 '>
 						<Text
 							ellipsis={{ tooltip: product.name }}
 							className='m-0 text-sm font-semibold text-gray-900 overflow-hidden overflow-ellipsis whitespace-nowrap product_name'>
@@ -937,7 +923,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 						{product?.brand ? (
 							<p className='m-0 text-xs text-gray-600'>From <span className='font-medium'>{product.brand}</span></p>
 						) : (
-							<p className='m-0 text-xs text-gray-600'>&nbsp;</p>
+ 							null
 						)}
 
 						{/* SOLD Badge */}
@@ -1008,13 +994,14 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 								</span>
 							)}
 						</div>)
-						: (<div className="h-6">  </div>)
+						:null
 					}
 
 
 
 					{/* Price Section */}
-					<div className='flex items-center gap-2 min-h-[32px]'>
+					{}
+					<div className={`flex items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
 						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
 							{product?.price || product?.listprice ? (
 								<span
@@ -1023,7 +1010,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									}}
 								/>
 							) : (
-								<span>&nbsp;</span>
+								null
 							)}
 						</span>
 
@@ -1071,11 +1058,6 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									)}
 								</>
 							)}
-
-						
-
-							
-
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
@@ -1094,8 +1076,21 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</span>
 									</button>
 								) : null}
+																	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+										<button
+											onClick={handleStarClick}
+											role={onStarClick ? "button" : "img"}
+											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											{product.starred ? (
+
+												<StarFilled className='text-lg text-yellow-500' />
+											) : (
+												<StarOutlined className='text-lg text-gray-600' />
+											)}
+											 
+										</button>
+									)}
 							</div>
-							
 						</div>
 					)}
 				</div>

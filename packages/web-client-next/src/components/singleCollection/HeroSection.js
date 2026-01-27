@@ -7,7 +7,7 @@ import "swiper/css/scrollbar";
 import Image from "next/image";
 
 const HeroSection = ({im,collectionData}) => {
-console.log('ssdsds',collectionData );
+// console.log('ssdsds',collectionData );
 
 
 
@@ -138,10 +138,9 @@ console.log('ssdsds',collectionData );
               >
                 {collectionData.product_lists?.map((collection ,id)=>(
                  <SwiperSlide key={id}>
-                  <Image src={collection.image } width={23} height={33} className="h-52 w-48 rounded-xl" />
+                  <Image src={collection.image } width={23} height={33} className="h-52 shadow-md w-48 rounded-xl" />
                 </SwiperSlide> 
                 ))}
-
               </Swiper>
               {/* <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />

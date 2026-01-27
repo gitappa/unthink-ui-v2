@@ -33,8 +33,6 @@ const HomePageNew = ({ blogCollectionPage }) => {
     (state) => state.auth.user.collections.data,
   );
  
-console.log('sdsssdasdsd',collectiosn);
-
   const collection = {
     "_id": "201336425631929205468411427766860715730",
     "user_id": "173081113277330",
@@ -1185,6 +1183,7 @@ console.log('sdsssdasdsd',collectiosn);
       <DealsAndTrends />
 
       <SplitDiscoverySection />
+      {/* <DiscoverHiddenTreasures /> */}
 
 
     </div>

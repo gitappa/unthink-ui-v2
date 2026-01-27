@@ -8,7 +8,7 @@ import im from "./images/pppp.webp";
 const DealsAndTrends = () => {
   return (
   <div className="flex justify-between items-center mt-25 gap-4">
-          <div className="grid grid-cols-2 text-white gap-5  border-gray-101    w-full">
+          {/* <div className="grid grid-cols-2 text-white gap-5  border-gray-101    w-full">
             <div className="bg-blue-100 flex flex-col rounded-lg border-2 border-blue-300 h-32 justify-center items-center">
               <Image src={menimage3} alt="" className="h-16 w-16 mb-1" />
               <p>MEN</p>
@@ -25,7 +25,18 @@ const DealsAndTrends = () => {
               <Image src={im} alt="" className="h-16 w-16 mb-1" />
               <p>SALE</p>
             </div>
+          </div> */}
+          <div className='w-full text-center '>
+            <div className='bg-pink-200 rounded-15 p-4 w-full'>
+              <h3 className='text-4xl font-semibold text-amber-800 '>FLAT 15% OFF</h3>
+              <p className='text-lg '>On orders above  <strong>=1999</strong></p>
+            </div>
+            <div className='bg-pink-200 mt-3 rounded-15 p-4 w-full'>
+              <h3 className='text-4xl font-semibold text-amber-800 '>FLAT 15% OFF</h3>
+              <p className='text-lg '>On orders above  <strong>=1999</strong></p>
+            </div>
           </div>
+          
           <div
             className=" flex w-full justify-center"
             style={{ height: "-webkit-fill-available" }}
