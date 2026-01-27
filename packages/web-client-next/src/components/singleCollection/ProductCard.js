@@ -16,7 +16,7 @@ import {
 	LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 const vtf_image = '/images/CamAI_2.svg';
 import { FaMinus } from "react-icons/fa6";
@@ -639,7 +639,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
-					className={`product_image_footer_container flex-shrink-0 shadow m-1`}>
+					className={`product_image_footer_container flex-shrink-0 shadow-md m-1`}>
 					<div>
 						<img
 							src={getFinalImageUrl(product.image)}
@@ -795,13 +795,13 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											className={`flex gap-2 items-center self-baseline product_remove_icon`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`rounded-full flex justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
+												className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
 														? "lg:text-base h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}>
 												<RxCross2 />												
 											</p>
-											<p className="text-gray-101">Remove</p>
+											<p className="text-gray-101 mb-0">Remove</p>
 										</div>									
 									</div>
 								)}
@@ -845,9 +845,8 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											handleProductClick();
 											e.stopPropagation();
 										}}>
-
 								<p
-									className={`  z-30 h-6 w-6  flex items-center  justify-center  rounded-full `}
+									className={`  z-30 h-6 w-6 mb-0  flex items-center  justify-center  rounded-full `}
 										// ${showRemoveIcon
 										// 	? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
 										// 	: "top-2 right-2"
@@ -1001,7 +1000,9 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 					{/* Price Section */}
 					{}
-					<div className={`flex items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+					<div className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+						<div className="flex gap-2 items-center " >
+
 						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
 							{product?.price || product?.listprice ? (
 								<span
@@ -1019,7 +1020,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 							discountPer > 0 && (
 								<>
 									<span className='text-sm line-through text-gray-400 product_listprice'>
-										<span
+										<span className="text-black" style={{color:'black'}}
 											dangerouslySetInnerHTML={{
 												__html: `${currencySymbol}${product.listprice}`,
 											}}
@@ -1030,11 +1031,10 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</span>
 								</>
 							)}
-					</div>
+						</div>
 
-					{/* Action Buttons */}
-					{!enableSelect && (
-						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
+
+
 							{(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
@@ -1048,16 +1048,22 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</button>
 									) : (
 										<button
-											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className="  text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 											onClick={handleAddToCart}
-											style={{ background: '#7c75ec' }}
+										 
 											disabled={!product?.price && !product?.listprice}
 										>
-											Add to cart
+											 <FiShoppingCart className='text-black-100  cursor-pointer   h-6 w-6 ' />
 										</button>
 									)}
 								</>
 							)}
+					</div>
+
+					{/* Action Buttons */}
+					{!enableSelect && (
+						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
+							
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
