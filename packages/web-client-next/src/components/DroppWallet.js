@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDroppWallet } from '../libs/dropp-wallet-plugin.es.js';
 // import '../libs/index.css'
+import { AiFillCloseCircle } from "react-icons/ai";
+
 const DroppWallet = ({ setisDropDown }) => {
     const [email, setEmail] = useState('');
 
@@ -48,8 +50,12 @@ const DroppWallet = ({ setisDropDown }) => {
     }, [popRef])
 
     return (
-        <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} className='text-black' ref={popRef}>
+        <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} className='text-black  ' ref={popRef}>
             <div className="glass-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"  >
+                < div onClick={() => setisDropDown(false)} className='absolute top-2 right-2 cursor-pointer text-xl  hover:text-gray-500 p-2 rounded-full   ' >
+                    X
+                </div>
+
                 <div style={{ textAlign: 'center', marginBottom: '32px' }} className='text-black'>
                     <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: 'black' }} className='text-black'>
                         Dropp Wallet Plugin Demo
@@ -107,7 +113,8 @@ const DroppWallet = ({ setisDropDown }) => {
                                     borderRadius: '12px',
                                     fontSize: '14px',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    color: 'black'
                                 }}
                                 onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
                                 onMouseOut={(e) => e.target.style.background = 'transparent'}
@@ -117,7 +124,7 @@ const DroppWallet = ({ setisDropDown }) => {
                         </div>
 
                         <div style={{ textAlign: 'center' }}>
-                            <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)' }}>
+                            <span style={{ fontSize: '14px', color: 'rgba(136, 132, 132, 0.6)' }}>
                                 <strong>Status:</strong> {statusMessage || 'Idle'}
                             </span>
                         </div>
