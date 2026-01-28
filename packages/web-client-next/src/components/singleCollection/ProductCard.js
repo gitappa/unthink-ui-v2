@@ -835,7 +835,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											style={{ background: "#f8f6f4" }}>
 											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
 										</button>
-										<p className="text-gray-101 m-0">Favorites</p>
+										<p className="text-gray-101 m-0">Wishlist</p>
 										</div>
 									)}										
 								</div>
@@ -1003,7 +1003,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 					<div className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
 						<div className="flex gap-2 items-center " >
 
-						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
+						<span className={` text-gray-900 product_price ${size === "small" ? "lg:text-sm  " : "lg:text-xl text-lg"}`}>
 							{product?.price || product?.listprice ? (
 								<span
 									dangerouslySetInnerHTML={{
@@ -1048,11 +1048,11 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</button>
 									) : (
 										<button
-											className={` text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
+											className={` text-white font-semibold   rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
 											onClick={handleAddToCart}
 											disabled={!product?.price && !product?.listprice}
 										>
-											 <FiShoppingCart className={`text-black-100  cursor-pointer  ${showWishlistModal || size === 'small' ? 'h-5 w-5' :'h-6 w-6' }    `} />
+											 <FiShoppingCart className={`text-black-100  cursor-pointer  ${showWishlistModal || size === 'small' ? 'h-5 w-5' :'lg:h-6 lg:w-6 h-5 w-5' }    `} />
 										</button>
 									)}
 								</>

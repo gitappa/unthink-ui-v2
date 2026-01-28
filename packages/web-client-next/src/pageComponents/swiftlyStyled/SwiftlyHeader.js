@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { HeartOutlined } from "@ant-design/icons";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
-import walletIcon from "../../components/singleCollection/images/wallet.svg";
+import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
 import Image from "next/image";
 
 const SwiftlyHeader = ({
@@ -39,6 +39,7 @@ const SwiftlyHeader = ({
 	console.log('applied', currentUser.emailId ? 'hello' : null);
 
 	const [storeData] = useSelector((state) => [state.store.data]);
+	// console.log('zinsd',storeData.is_droppWallet_connect_enabled);
 	return (
 		<>
 			<div
@@ -91,9 +92,13 @@ const SwiftlyHeader = ({
 					{/* set width only to keep the aura center aligned */}
 					<div className=' hidden lg:flex justify-end'>
 						<div className='collections flex items-center'>
-							{/* <button className="text-white mr-6 rounded" onClick={() => setisDropDown(true)} >
+							{
+								storeData?.is_droppWallet_connect_enabled &&
+							<button className="text-white mr-6 rounded" onClick={() => setisDropDown(true)} >
 								<Image src={walletIcon} alt="wallet" height={30} width={30} className="rounded-xl" />
-							</button> */}
+							</button>
+							}
+
 							<button className="text-white"
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))

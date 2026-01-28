@@ -318,6 +318,7 @@ module.exports = {
 				"5.5": "24px",
 				"6.5": "26px",
 				"418px": "418px",
+				"18":"72px"
 			},
 			boxShadow: {
 				"3xl":
