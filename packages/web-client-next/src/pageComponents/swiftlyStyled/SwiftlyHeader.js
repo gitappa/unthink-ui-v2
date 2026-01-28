@@ -91,9 +91,9 @@ const SwiftlyHeader = ({
 					{/* set width only to keep the aura center aligned */}
 					<div className=' hidden lg:flex justify-end'>
 						<div className='collections flex items-center'>
-							<button className="text-white mr-6 rounded" onClick={() => setisDropDown(true)} >
+							{/* <button className="text-white mr-6 rounded" onClick={() => setisDropDown(true)} >
 								<Image src={walletIcon} alt="wallet" height={30} width={30} className="rounded-xl" />
-							</button>
+							</button> */}
 							<button className="text-white"
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))

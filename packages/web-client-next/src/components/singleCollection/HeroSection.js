@@ -14,18 +14,19 @@ const HeroSection = ({im,collectionData}) => {
 
 
 
-    const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
+    const videoUrlRaw =  "https://www.youtube.com/watch?v=hrAOIj01B6E";
   let videoUrl = typeof videoUrlRaw === "string" ? videoUrlRaw : "";
+  const thumbnailImage = collectionData?.thumbnail_image || collectionData?.image;
      const [isClient, setIsClient] = useState(false);
     //   const videoContainerRef = useRef(null);
 
-       const [isHovered, setIsHovered] = useState(false);
+       const [isPlaying, setIsPlaying] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   
   const videoContainerRef = useRef(null);
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  const handlePlayClick = () => setIsPlaying(true);
+  const handlePauseClick = () => setIsPlaying(false);
 
     // Extract actual video URL from tracking URL
     if (videoUrl.includes("dpholvw.net/click") && videoUrl.includes("url=")) {
@@ -76,25 +77,26 @@ const HeroSection = ({im,collectionData}) => {
       }, [isClient]);
     
   return (
-    <div className="  relative mt-7">
+    <div className=" relative mt-7">
         <div
-          className=" relative"
+          className=" relative cursor-pointer"
           style={{ minHeight: "68vh", height: "700px" }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onClick={handlePlayClick}
         >
           {isClient ? (
             videoUrlRaw ? (
               <ReactPlayer
-                url={collectionData?.video_url}
-                playing={isHovered} // Only play when hovered
+                url={videoUrlRaw}
+                playing={isPlaying}
+                onPlay={handlePlayClick}
+                onPause={handlePauseClick}
                 muted={true}
                 loop={true}
                 width="100%"
                 height="100%"
                 playsinline
-                controls={false}
-                light={true} // Don't load until play
+                controls={true}
+                light={thumbnailImage || true}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-200">
