@@ -98,6 +98,7 @@ import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
 import HomePageNew from "../../components/singleCollection/HomePageNew.js";
+import DroppWallet from "../../components/DroppWallet.js";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -248,9 +249,9 @@ const StorePageWrapper = (props) => {
 	const [selectedSortOption, setSelectedSortOption] = useState();
 	const [selectedSortOptionProduct, setSelectedSortOptionProduct] = useState();
 
-	console.log("authUserCollections",authUserCollections);
-	console.log("singleCollections",singleCollections);
-	
+	console.log("authUserCollections", authUserCollections);
+	console.log("singleCollections", singleCollections);
+
 
 	const dispatch = useDispatch();
 	const { theme, setTheme, themeCodes, resetTheme } = useTheme();
@@ -287,7 +288,7 @@ const StorePageWrapper = (props) => {
 		isHomepage,
 	} = props;
 	console.log(collection_id);
-
+	const [isDropDown, setisDropDown] = useState(false)
 	const {
 		my_products_enable: isMyProductsEnable,
 		seller_list: storeSellerList,
@@ -367,7 +368,7 @@ const StorePageWrapper = (props) => {
 		influencerUser.user_name,
 	]);
 
-	
+
 
 	const { data: pageUserCollections, params } = useMemo(() => {
 		if (
@@ -433,7 +434,7 @@ const StorePageWrapper = (props) => {
 		isHomepage
 	]);
 
-	console.log("pageUserCollections",pageUserCollections);
+	console.log("pageUserCollections", pageUserCollections);
 
 
 	const [currentPage, setCurrentPage] = useState(0)
@@ -512,8 +513,8 @@ const StorePageWrapper = (props) => {
 	console.log(authUser.user_id);
 	console.log(authUserCollections.length);
 	console.log(collection_id);
-	console.log("collection_path",collection_path);
-	
+	console.log("collection_path", collection_path);
+
 
 	const fetchCollection = useCallback(
 		(selectedOption) => {
@@ -524,7 +525,7 @@ const StorePageWrapper = (props) => {
 					currentSingleCollection._id
 				) {
 					console.log('hello worldss');
-					
+
 					dispatch(
 						getSingleUserCollection({
 							_id: currentSingleCollection._id,
@@ -532,12 +533,12 @@ const StorePageWrapper = (props) => {
 							product_sort_order:
 								selectedOption?.product_sort_order || undefined,
 						})
-						 
+
 					);
 				} else {
-					
-					console.log("collection_path",collection_path);
-					
+
+					console.log("collection_path", collection_path);
+
 					dispatch(
 						getInfluencerCollection({
 							collection_id,
@@ -665,11 +666,11 @@ const StorePageWrapper = (props) => {
 		if (!currentSingleCollection.detailed) {
 			fetchCollection();
 		}
-	}, [currentSingleCollection.detailed, currentSingleCollection._id,collection_path ]);
+	}, [currentSingleCollection.detailed, currentSingleCollection._id, collection_path]);
 
 
 
-	 
+
 
 	useEffect(() => {
 		if (isRootPage) {
@@ -751,7 +752,7 @@ const StorePageWrapper = (props) => {
 			setSelectedSortOption(selectedOption);
 			fetchCollection(selectedOption);
 		},
-		[selectedSortOption, fetchCollection ]
+		[selectedSortOption, fetchCollection]
 	);
 
 
@@ -793,7 +794,7 @@ const StorePageWrapper = (props) => {
 		}
 	}, [showWishlistModal]);
 
-	console.log('authUser',authUser);
+	console.log('authUser', authUser);
 
 
 	useEffect(() => {
@@ -1073,20 +1074,21 @@ const StorePageWrapper = (props) => {
 				config={config}
 				trackCollectionData={trackCollectionData}
 				pageUser={pageUser}
+				setisDropDown={setisDropDown}
 			/>
 
 			{showPageContent &&
 				!(isSwiftlyStyledInstance && isRootPage) &&
 				!(isDothelookInstance && isRootPage) &&// not showing breadcrumb on swiftly styled home page
 				(isRootPage ||
-					isCreateFreeCollectionPage||
+					isCreateFreeCollectionPage ||
 					isCollectionReviewPage ||
 					isCollectionPage ||
 					isInfluencerPage ||
 					isMyProfilePage ||
 					isCustomProductsPage ||
 					isStorePage ||
-					
+
 					page_params?.collection_theme) ? (
 				<Breadcrumbs
 					isRootPage={isRootPage}
@@ -1101,15 +1103,15 @@ const StorePageWrapper = (props) => {
 					collectionsBy={collectionsBy}
 					theme={page_params?.collection_theme} // Retrieve the theme from params to display coll_theme in the breadcrumbs.
 					userName={props.user_name} // Retrieve the user name from params to display influencer name in the breadcrumbs.
-					user_id={pageUser.user_id}					
+					user_id={pageUser.user_id}
 				/>
 			) : null}
 
 			{/* collection review/edit page new flow and custom products page for seller*/}
 			{showIndividualPageContent ? (
 				<>
-					{isCollectionReviewPage && <ReviewCollection {...props}   />}
-					{isCreateFreeCollectionPage && <CreateFreeCollection {...props}    isCreateFreeCollectionPage={isCreateFreeCollectionPage}/>}
+					{isCollectionReviewPage && <ReviewCollection {...props} />}
+					{isCreateFreeCollectionPage && <CreateFreeCollection {...props} isCreateFreeCollectionPage={isCreateFreeCollectionPage} />}
 					{isCustomProductsPage && <CustomProducts isCustomProductsPage={isCustomProductsPage} selectedSortOptionProduct={selectedSortOptionProduct} handleSortOptionChangeProduct={handleSortOptionChangeProduct}  {...props} />}
 					{isProductDetailPage && <ProductDetails {...props} />}
 				</>
@@ -1117,7 +1119,9 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
-			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection}/>}
+			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />}
+
+			{isDropDown && <DroppWallet setisDropDown={setisDropDown} />}
 
 			{!showIndividualPageContent && (
 				<div

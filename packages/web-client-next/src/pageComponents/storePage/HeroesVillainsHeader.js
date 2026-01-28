@@ -287,7 +287,7 @@ const HeroesVillainsHeader = ({
 	const getSubMenuOptions = (children) => {
 		return (
 			<ul className='z-10 top-3 py-4.5 shadow bg-white'>
-				{children && children.map((subMenu) => 
+				{children && children.map((subMenu) =>
 					subMenu && subMenu.href ? (
 						<li key={subMenu.label}>
 							<a
