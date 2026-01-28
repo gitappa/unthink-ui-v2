@@ -2,27 +2,27 @@
 const nextConfig = {
   reactStrictMode: false, // Disabled to prevent double rendering and Suspense hydration issues
   // swcMinify: true,
-  
+
   // // Skip ESLint during build
   // eslint: {
   //   ignoreDuringBuilds: true,
   // },
-  
+
   // Handle SASS/SCSS
   sassOptions: {
     includePaths: ['./src'],
   },
-  
+
   // Environment variables - note: prefix with NEXT_PUBLIC_ to expose to browser
   env: {
     GA_TRACKING_ID: process.env.NEXT_PUBLIC_GA_TRACKING_ID || '',
   },
-  
+
   // Image optimization - disabled for static export
   images: {
     unoptimized: true,
   },
-  
+
   // Webpack config for SVG handling with SVGR
   webpack: (config, { isServer }) => {
     // Remove default SVG handling
@@ -71,6 +71,12 @@ const nextConfig = {
 
   // Enable standalone output for Docker builds
   output: 'standalone',
+
+  transpilePackages: [
+    '@hashgraph/hedera-wallet-connect',
+    '@hashgraph/sdk',
+    '@hashgraph/proto'
+  ],
 };
 
 module.exports = nextConfig;

@@ -26,6 +26,7 @@ const SwiftlyHeader = ({
 	isSwiftlyStyledInstance,
 	isDoTheLookInstance,
 	isRootPage,
+	setisDropDown
 }) => {
 	const navigate = useNavigate();
 	const { themeCodes } = useTheme();
@@ -48,13 +49,13 @@ const SwiftlyHeader = ({
 				<div
 					id='heroesVillains_desktop_header_menu'
 					className='w-full flex items-center justify-between lg:px-8 lg:py-2 lg:h-20'>
-						{/* set width only to keep content center aligned */}
-						<div className='w-40 hidden lg:flex items-center justify-start text-white cursor-pointer'>
-							<div className='logo' onClick={() => navigate(PATH_ROOT)}>
-								{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
-							</div>
+					{/* set width only to keep content center aligned */}
+					<div className='w-40 hidden lg:flex items-center justify-start text-white cursor-pointer'>
+						<div className='logo' onClick={() => navigate(PATH_ROOT)}>
+							{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 						</div>
-						{/* {
+					</div>
+					{/* {
 							isSwiftlyStyledInstance ? (
 								<ChatContainer
 									disabledOutSideClick={disabledOutSideClick}
@@ -73,43 +74,44 @@ const SwiftlyHeader = ({
 							) : null
 						} */}
 
-						<div className='flex-1 flex justify-center'>
-							<ChatContainer
-								disabledOutSideClick={disabledOutSideClick}
-								config={config}
-								trackCollectionData={trackCollectionData}
-								isBTInstance={isBTInstance}
+					<div className='flex-1 flex justify-center'>
+						<ChatContainer
+							disabledOutSideClick={disabledOutSideClick}
+							config={config}
+							trackCollectionData={trackCollectionData}
+							isBTInstance={isBTInstance}
+						/>
+					</div>
+
+					{/* set width only to keep the aura center aligned */}
+					<div className=' hidden lg:flex justify-end'>
+						<div className='collections flex items-center'>
+							<button className="text-white mr-6" onClick={() => setisDropDown(true)} >click meee</button>
+							<button className="text-white"
+								onClick={() =>
+									navigate(getThemeCollectionsPagePath(THEME_ALL))
+								}>
+								COLLECTIONS
+							</button>
+
+							<FaRegHeart
+								onClick={onWishlistClick}
+								className='text-white cursor-pointer h-6 w-6 ml-6'
+							/>
+							{storeData?.pdp_settings?.is_add_to_cart_button &&
+								<Link href='/cart' className="p-0  ">
+									<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6 ' />
+								</Link>
+							}
+							<UserProfileMenu
+								isUserFetching={isUserFetching}
+								headerProfileMenu={headerProfileMenu}
+								currentUser={currentUser}
+								isSwiftlyStyledInstance={isSwiftlyStyledInstance}
+								isDoTheLookInstance={isDoTheLookInstance}
 							/>
 						</div>
-
-						{/* set width only to keep the aura center aligned */}
-						<div className=' hidden lg:flex justify-end'>
-							<div className='collections flex items-center'>
-								<button className="text-white"
-									onClick={() =>
-										navigate(getThemeCollectionsPagePath(THEME_ALL))
-									}>
-									COLLECTIONS
-								</button>
-
-								<FaRegHeart
-									onClick={onWishlistClick}
-									className='text-white cursor-pointer h-6 w-6 ml-6'
-								/>
-								{storeData?.pdp_settings?.is_add_to_cart_button &&
-								<Link href='/cart' className="p-0  ">
-										<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6 ' />
-									</Link>
-								}
-								<UserProfileMenu
-									isUserFetching={isUserFetching}
-									headerProfileMenu={headerProfileMenu}
-									currentUser={currentUser}
-									isSwiftlyStyledInstance={isSwiftlyStyledInstance}
-									isDoTheLookInstance={isDoTheLookInstance}
-								/>
-							</div>
-						</div>
+					</div>
 				</div>
 			</div>
 		</>

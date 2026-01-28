@@ -117,6 +117,7 @@ const Header = ({
 	trackCollectionData,
 	pageUser,
 	isRootPage,
+	setisDropDown
 }) => {
 	const navigate = useNavigate();
 	const [
@@ -310,7 +311,7 @@ const Header = ({
 
 	const getHeaderProfileMenuItems = () => {
 		const items = [];
-		
+
 		if (!isUserLogin) {
 			items.push({
 				key: 'signin',
@@ -630,6 +631,7 @@ const Header = ({
 								currentUser={currentUser}
 								isSwiftlyStyledInstance={isSwiftlyStyledInstance}
 								isDoTheLookInstance={isDoTheLookInstance}
+								setisDropDown={setisDropDown}
 							/>
 						)}
 					</>
@@ -804,8 +806,7 @@ const Header = ({
 				attribution={currentUser?.attribution}
 				statsModalTitle={
 					(currentUser.first_name || currentUser.last_name) &&
-					`Audience stats for ${currentUser.first_name || ""} ${
-						currentUser.last_name || ""
+					`Audience stats for ${currentUser.first_name || ""} ${currentUser.last_name || ""
 					}:`
 				}
 				showAttributionModal={showAttributions}

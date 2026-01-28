@@ -1,15 +1,16 @@
 import React, { useLayoutEffect, useState } from 'react';
 import Head from 'next/head';
 import { Helmet } from 'react-helmet';
- 
- // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
- import 'antd/dist/reset.css';
+
+// Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
+import 'antd/dist/reset.css';
 
 // Import Tailwind CSS first (must be before SCSS that uses @layer)
 import '../src/style/global.css';
 // Then import SCSS utilities that extend Tailwind
 import '../src/style/index.module.scss';
 import '../src/pageComponents/swiftlyStyled/pageContents/mainContent.scss';
+import '../src/libs/index.css';
 
 // Import context and state wrappers
 import ReduxWrapper from '../src/state/reduxWrapper';
