@@ -160,7 +160,7 @@ console.log(menuIcon);
 			state.auth.customProducts.data.data || [],
 			// state.wishlist.showWishlistModal
 		]);
-		// console.log(showWishlistModal);
+		console.log(showWishlistModal);
 		
 	// console.log('authUser', authUser);
 	const [storeData] = useSelector((state) => [state.store.data]);
@@ -419,7 +419,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 			product_lists: [],
 			collection_name: "my cart",
 			type: "system",
-			user_id: authUserId,
+			user_id: authUserId || getTTid(),
 			// collection_id: mycartcollectionid,
 			path: mycartcollectionpath,
 		};
@@ -630,7 +630,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 				: ""
 				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
 			<div
-				className={`overflow-hidden relative cursor-pointer product_card_container mt-3   ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
+				className={`overflow-hidden relative cursor-pointer product_card_container    ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}
 				// onClick={handleProductClick}
 				onClick={() => {
@@ -1048,12 +1048,11 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</button>
 									) : (
 										<button
-											className="  text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className={` text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
 											onClick={handleAddToCart}
-										 
 											disabled={!product?.price && !product?.listprice}
 										>
-											 <FiShoppingCart className='text-black-100  cursor-pointer   h-6 w-6 ' />
+											 <FiShoppingCart className={`text-black-100  cursor-pointer  ${showWishlistModal || size === 'small' ? 'h-5 w-5' :'h-6 w-6' }    `} />
 										</button>
 									)}
 								</>
@@ -1067,7 +1066,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
-										className={`border rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${onStarClick ? "cursor-pointer" : "cursor-default"
+										className={` absolute top-3 left-2  rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${onStarClick ? "cursor-pointer" : "cursor-default"
 											}`}
 										tabindex='-1'
 										role={onStarClick ? "button" : "img"}
@@ -1086,7 +1085,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										<button
 											onClick={handleStarClick}
 											role={onStarClick ? "button" : "img"}
-											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											className={`border rounded-lg absolute top-3 left-2 flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
 											{product.starred ? (
 
 												<StarFilled className='text-lg text-yellow-500' />

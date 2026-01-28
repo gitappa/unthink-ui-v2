@@ -304,7 +304,7 @@ const ProductDetails = ({ params, ...props }) => {
 			product_lists: [],
 			collection_name: "my cart",
 			type: "system",
-			user_id: authUserId,
+			user_id: authUserId || getTTid(),
 			// collection_id: mycartcollectionid,
 			// path: mycartcollectionpath,
 		};
