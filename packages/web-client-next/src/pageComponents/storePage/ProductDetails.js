@@ -541,7 +541,7 @@ const ProductDetails = ({ params, ...props }) => {
 									<div className='text-white h-14 max-w-340 w-full '>
 										<button
 											onClick={handleAddToCart}
-											className='text-white h-14   w-full rounded-15'
+											className='text-white h-14  bg-violet-100 w-full rounded-15'
 											style={{
 												backgroundColor: "#7c75c",												 
 											}}>

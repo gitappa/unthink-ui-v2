@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -16,8 +16,10 @@ import {
 	LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiShoppingCart } from "react-icons/fi";
+import { BsThreeDots } from "react-icons/bs";
 const vtf_image = '/images/CamAI_2.svg';
+import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
 	setRemoveFromFavorites,
@@ -73,7 +75,7 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
-
+import buyicon from './images/buy1.svg'
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -120,7 +122,7 @@ const ProductCard = ({
 	blogCollectionPage,
 }) => {
 	const navigate = useNavigate();
-	console.log('hideAddToWishlist', enableSelect);
+	console.log('hideAddToWishlist', widgetType);
 	// console.log('qzssddsdsds',product);
 	const [buttonClick, setButtonClick] = useState(false);
 	const [showLoader, setShowLoader] = useState(false);
@@ -131,8 +133,23 @@ const ProductCard = ({
 	const [clickedMfrCode, setClickedMfrCode] = useState(null);
 	const dispatch = useDispatch();
 	const { themeCodes } = useTheme();
+	const [menuIcon,setMenuIcon] = useState(false)
+	const menuRef =useRef(null)
+console.log(menuIcon);
 
-	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData] =
+	useEffect(()=>{
+		const handleClick =((event)=>{
+			if(menuRef.current && !menuRef.current.contains(event.target)){
+				setMenuIcon(false)
+			}
+		})
+		document.addEventListener('mousedown',handleClick)
+		return ()=>{
+			document.removeEventListener('mousedown',handleClick)
+		}
+	},[])
+
+	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData, ] =
 		useSelector((state) => [
 			state.auth.user.data.user_id,
 			state.auth.user.data.user_name,
@@ -141,7 +158,10 @@ const ProductCard = ({
 			state.store.data.store_id,
 			state.auth.user.data,
 			state.auth.customProducts.data.data || [],
+			// state.wishlist.showWishlistModal
 		]);
+		// console.log(showWishlistModal);
+		
 	// console.log('authUser', authUser);
 	const [storeData] = useSelector((state) => [state.store.data]);
 	const { admin_list: admin_list } = storeData;
@@ -589,20 +609,28 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 		if (!clickedMfrCode) return;
 
 		const result = savedProduct(clickedMfrCode);
-		if (result || clickedMfrCode) {
-			navigate(`/product/${clickedMfrCode}`);
-			dispatch(PDPloader(true))
-			fetchProductDetails();
-		}
-	}, [clickedMfrCode]);
+	if ( clickedMfrCode ) {
+			console.log('fdfdfdfq',product.url);
+			
+			if(product.url === "dummy_url"){
+
+				navigate(`/product/${clickedMfrCode}`);
+				fetchProductDetails();
+			}
+			else{
+				window.open(product.url , '_blank')
+			}
+			// fetchProductDetails();
+
+	}}, [clickedMfrCode]);
 	return (
 		<div
-			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+			className={`box-content overflow-y-hidden ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
 				? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
 				: ""
 				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
 			<div
-				className={`overflow-hidden relative cursor-pointer product_card_container mt-3 shadow-3xl ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
+				className={`overflow-hidden relative cursor-pointer product_card_container mt-3   ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
 					} flex flex-col h-full`}
 				// onClick={handleProductClick}
 				onClick={() => {
@@ -611,7 +639,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
-					className={`product_image_footer_container flex-shrink-0`}>
+					className={`product_image_footer_container flex-shrink-0 shadow-md m-1`}>
 					<div>
 						<img
 							src={getFinalImageUrl(product.image)}
@@ -753,37 +781,108 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</span>
 								</div>
 							)}
+
+							  <BsThreeDots  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className="hover-fancy hover:shadow  mt-3 text-2xl absolute top-2 right-2 bg-gray-100 rounded-full p-1" />
+							  {menuIcon && 
+							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className="menu-animate bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 ">
+
 							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
 								showRemoveIcon && (
 									<div
-										className={`flex  absolute right-1 top-1 items-center flex-col justify-center   gap-${size === "small" ? "2" : "3"
+										className={`    gap-${size === "small" ? "2" : "3"
 											}`}>
 										<div
-											className={`box-border flex items-center self-baseline product_remove_icon ${size === "small"
-													? "pl-1 pt-1"
-													: "pl-1 pt-1 lg:pl-0 lg:pt-0"
-												}`}
+											className={`flex gap-2 items-center self-baseline product_remove_icon`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`flex mb-0 justify-center items-center  rounded-full text-gray-101 bg-gray-100  ${size === "small"
+												className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
 														? "lg:text-base h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}>
-												<RxCross2 />
+												<RxCross2 />												
 											</p>
-										</div>
-										{enableCopyFeature && (
+											<p className="text-gray-101 mb-0">Remove</p>
+										</div>									
+									</div>
+								)}
+									{enableCopyFeature && (
+											<div className="flex gap-2 items-center" onClick={handleCopyClick} >
+
 											<div
-												className={`flex items-center justify-center text-gray-101 bg-gray-100 rounded-full -mt-1  ${size === "small"
+												className={ ` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
 														? "lg:text-base  h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}
-												onClick={handleCopyClick}>
+												>
 												<LuCopy className='  ' />
+												
+											</div>
+											<p className="text-gray-101 m-0">Copy</p>
 											</div>
 										)}
-									</div>
-								)}
+								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
+								<div className='flex gap-1'>
+									{!hideAddToWishlist && (
+										<div className="flex gap-2 items-center" onClick={addToWishlistClick} >
+
+										<button
+											className={`    h-6 w-6   rounded-full flex items-center justify-center transition z-30 `}
+												//  ${isCustomProductsPage
+												// 	? "right-1 top-20 mt-5"
+												// 	: "top-2 mt-0 right-1"}
+												
+											
+											style={{ background: "#f8f6f4" }}>
+											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
+										</button>
+										<p className="text-gray-101 m-0">Favorites</p>
+										</div>
+									)}										
+								</div>
+							}
+							{isAdminLoggedIn && isCustomProductsPage && (
+								<div className="flex gap-2 items-center" 	onClick={(e) => {
+											handleProductClick();
+											e.stopPropagation();
+										}}>
+								<p
+									className={`  z-30 h-6 w-6 mb-0  flex items-center  justify-center  rounded-full `}
+										// ${showRemoveIcon
+										// 	? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
+										// 	: "top-2 right-2"
+										// }
+									onClick={(e) => e.stopPropagation()}
+									style={{ backgroundColor: "#f8f6f4" }}>
+									<FiEdit
+										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
+									
+										className='h-4 w-4 z-30 rounded'
+									/>
+								</p>
+								<p className=" text-gray-101 m-0">Edit</p>
+								</div>
+
+							)}
+
+							{!isCustomProductsPage && storeData.is_tryon_enabled && 
+										<div className="flex gap-2 items-center "  onClick={(e) => {
+									setButtonClick(true);
+									e.stopPropagation();
+								}}>
+							<img
+								className={` flex items-center justify-center   z-30  ${size === "small" ? "h-6 w-6" : "h-7 w-7"
+									} ${enableCopyFeature && showRemoveIcon
+										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
+										: "top-9 right-1 "
+									}`}								
+								src={vtf_image}
+							/>
+							<p className=" text-gray-101 m-0">Try On</p>
+										</div>
+							}
+
+
+							  </div>}
 						</>
 					)}
 					<div
@@ -810,9 +909,9 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 
 				{/* product footer */}
-				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white   ${size === "small" ? "gap-2" : "gap-3"}`}>
+				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white h-full   ${size === "small" ? "gap-2" : "gap-3"}`}>
 					{/* Product Name */}
-					<div className='flex flex-col gap-1 min-h-[44px]'>
+					<div className='flex flex-col gap-1 '>
 						<Text
 							ellipsis={{ tooltip: product.name }}
 							className='m-0 text-sm font-semibold text-gray-900 overflow-hidden overflow-ellipsis whitespace-nowrap product_name'>
@@ -823,7 +922,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 						{product?.brand ? (
 							<p className='m-0 text-xs text-gray-600'>From <span className='font-medium'>{product.brand}</span></p>
 						) : (
-							<p className='m-0 text-xs text-gray-600'>&nbsp;</p>
+ 							null
 						)}
 
 						{/* SOLD Badge */}
@@ -894,13 +993,16 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 								</span>
 							)}
 						</div>)
-						: (<div className="h-6">  </div>)
+						:null
 					}
 
 
 
 					{/* Price Section */}
-					<div className='flex items-center gap-2 min-h-[32px]'>
+					{}
+					<div className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+						<div className="flex gap-2 items-center " >
+
 						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
 							{product?.price || product?.listprice ? (
 								<span
@@ -909,7 +1011,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									}}
 								/>
 							) : (
-								<span>&nbsp;</span>
+								null
 							)}
 						</span>
 
@@ -918,7 +1020,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 							discountPer > 0 && (
 								<>
 									<span className='text-sm line-through text-gray-400 product_listprice'>
-										<span
+										<span className="text-black" style={{color:'black'}}
 											dangerouslySetInnerHTML={{
 												__html: `${currencySymbol}${product.listprice}`,
 											}}
@@ -929,11 +1031,10 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									</span>
 								</>
 							)}
-					</div>
+						</div>
 
-					{/* Action Buttons */}
-					{!enableSelect && (
-						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
+
+
 							{(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
@@ -943,55 +1044,26 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											style={{ background: '#7c75ec' }}
 											disabled={!product?.price && !product?.listprice}
 										>
-											Buy now
+										<Image src={buyicon} height={30} width={30}/>	
 										</button>
 									) : (
 										<button
-											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className="  text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 											onClick={handleAddToCart}
-											style={{ background: '#7c75ec' }}
+										 
 											disabled={!product?.price && !product?.listprice}
 										>
-											Add to cart
+											 <FiShoppingCart className='text-black-100  cursor-pointer   h-6 w-6 ' />
 										</button>
 									)}
 								</>
 							)}
+					</div>
 
-							{!isCustomProductsPage && storeData.is_tryon_enabled && 
-							<img
-								className={` flex items-center justify-center   z-30 absolute ${size === "small" ? "h-6 w-6" : "h-7 w-7"
-									} ${enableCopyFeature && showRemoveIcon
-										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
-										: "top-9 right-1 "
-									}`}
-								onClick={(e) => {
-									setButtonClick(true);
-									e.stopPropagation();
-								}}
-								src={vtf_image}
-							/>
-							}
-
-							{isAdminLoggedIn && isCustomProductsPage && (
-								<div
-									className={`absolute z-30 h-6 w-6  flex items-center  justify-center  rounded-full ${showRemoveIcon
-											? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
-											: "top-2 right-2"
-										}`}
-									onClick={(e) => e.stopPropagation()}
-									style={{ backgroundColor: "#f8f6f4" }}>
-									<FiEdit
-										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
-										onClick={(e) => {
-											handleProductClick();
-											e.stopPropagation();
-										}}
-										className='h-4 w-4 z-30 rounded'
-									/>
-								</div>
-							)}
-
+					{/* Action Buttons */}
+					{!enableSelect && (
+						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
+							
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
@@ -1010,35 +1082,21 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</span>
 									</button>
 								) : null}
-							</div>
-							{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) &&
-								<div className='flex gap-1'>
-									{!hideAddToWishlist && (
-										<button
-											className={`absolute   h-6 w-6   rounded-full flex items-center justify-center transition z-30 ${isCustomProductsPage
-													? "right-1 top-20 mt-5"
-													: "top-2 mt-0 right-1"
-												} `}
-											onClick={addToWishlistClick}
-											style={{ background: "#f8f6f4" }}>
-											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
-										</button>
-									)}
-
-									{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+																	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
 										<button
 											onClick={handleStarClick}
 											role={onStarClick ? "button" : "img"}
-											className={`border rounded-lg p-2 flex items-center justify-center z-20 transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
 											{product.starred ? (
+
 												<StarFilled className='text-lg text-yellow-500' />
 											) : (
 												<StarOutlined className='text-lg text-gray-600' />
 											)}
+											 
 										</button>
 									)}
-								</div>
-							}
+							</div>
 						</div>
 					)}
 				</div>

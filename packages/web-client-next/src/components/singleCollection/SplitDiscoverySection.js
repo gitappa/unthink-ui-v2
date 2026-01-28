@@ -1,16 +1,16 @@
 import React from 'react'
 import Image from "next/image";
 import img1 from "./images/img1.jpg";
-import men from "./images/men.jpg";
+import menimage from "./images/suv.jpg";
  
 
 import qrcode from "./images/qrcode.svg";
 import legs from "./images/shoes.jpg";
-import robo from "./images/robo.jpg";
+import robo from "./images/Robo2.svg";
 
-import menimage from "./images/menimage.jpg";
+import men from "./images/image.png";
 
-import ai from "./images/aiimg.png";
+import ai from "./images/sparkle.svg";
 
 const SplitDiscoverySection = () => {
   return (
@@ -22,10 +22,10 @@ const SplitDiscoverySection = () => {
               <Image
                 src={men}
                 className=" w-full rounded-xl mb-3 "
-                style={{ height: "55%" }}
+                style={{ height: "50%" }}
               />
               <Image
-                src={menimage}
+                src={menimage} width={100} height={100}
                 className="  w-full rounded-xl "
                 style={{ height: "40%" }}
               />
@@ -33,37 +33,39 @@ const SplitDiscoverySection = () => {
 
             <div className=" w-4/5">
               <Image
-                src={menimage}
+                src={menimage} width={100} height={100}
                 className=" w-full rounded-xl   "
                 style={{ height: "40%" }}
               />
               <Image
                 src={img1}
                 className=" w-full rounded-xl mt-3"
-                style={{ height: "55%" }}
+                style={{ height: "50%" }}
               />
             </div>
           </div>
 
-          <div className="w-full text-white">
-            <div className=" flex  gap-4 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
-              <div className="w-full ">
+          <div className="w-full  text-white">
+            <div style={{minHeight:455}} className=" flex  gap-3 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
+              <div className="w-full flex justify-between flex-col">
                 <p>
-                  Lorem ipsum dolor sit amet c Archit s mollitia quas cumque
-                  quam aut. Cumque ea sint est vel accusantium. Sapiente fuga
-                  cupiditate saepe placeat mollitia.
+                 Uncover rare finds, exclusive styles, and pieces you won’t see everywhere. Your next favorite is waiting—just beneath the surface.
+                 Step into a world of carefully curated gems. Discover hidden treasures crafted to stand out, tell stories 
                 </p>
+                <div>
+
                 <Image
                   src={qrcode}
                   alt="qrcode"
-                  className="rounded-xl mt-3 mb-2 w-25 h-25 bg-white"
+                  className="rounded-xl mt-4 mb-2 w-25 h-25 bg-white"
                   width={100}
                   height={100}
-                />
+                  />
                 <p>Scan to Join</p>
+                  </div>
               </div>
               <div className="w-full">
-                <h3 className="text-3xl font-semibold">CHALLENGE & EARN</h3>
+                <h3 className="text-3xl font-semibold text-center ">CHALLENGE  & EARN</h3>
                 <Image
                   src={legs}
                   alt="show"
@@ -71,27 +73,27 @@ const SplitDiscoverySection = () => {
                 />
               </div>
             </div>
-            <div className="bg-gradient-to-r p-6 relative mt-4 items-center  flex gap-5 from-purple-102 rounded-xl  to-purple-101  border-purple-102 border-3 ">
+            <div className="bg-gradient-to-r p-6 relative mt-5 items-center  flex gap-5 from-purple-102 rounded-xl  to-purple-101  border-purple-102 border-3 ">
               <Image
-                src={robo}
+                src={robo}  width={100} height={100}
                 alt="ai stylist "
-                className=" rounded-full mt-3 w-25 h-25 "
+                className="  mt-3 w-25 h-25 "
               />
               <h3 className="text-3xl font-semibold">ASK AI STYLIST </h3>
               <Image
                 src={ai}
-                width={30}
-                height={30}
+                width={40}
+                height={40}
                 alt="ai stylist "
                 className="  mt-3 w-7 h-7 absolute right-3 top-2 "
               />
-              <Image
+              {/* <Image
                 src={ai}
                 width={50}
                 height={50}
                 alt="ai stylist "
                 className="  mt-3 w-9 h-9 absolute right-1 -bottom-2  z-20"
-              />
+              /> */}
             </div>
           </div>
         </div>

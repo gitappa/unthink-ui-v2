@@ -10,7 +10,7 @@ import '../src/style/global.css';
 // Then import SCSS utilities that extend Tailwind
 import '../src/style/index.module.scss';
 import '../src/pageComponents/swiftlyStyled/pageContents/mainContent.scss';
-import '../src/libs/index.css';
+// import '../src/libs/index.css';
 
 // Import context and state wrappers
 import ReduxWrapper from '../src/state/reduxWrapper';

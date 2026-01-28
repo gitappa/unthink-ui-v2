@@ -673,7 +673,7 @@ const ReviewCollectionStepPublish = ({
 																width: "100%",
 																objectFit: "cover"
 															}}
-															effect="blur"
+															// effect="blur"
 															className="rounded-2xl"
 															onLoad={() => {
 																if (imageContainerRef.current) {

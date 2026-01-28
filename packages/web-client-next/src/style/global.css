@@ -75,6 +75,14 @@
 p{
   margin-bottom: 0;
 }
+.hover-fancy {
+transition: transform 0.25s ease;
+}
+
+
+.hover-fancy:hover {
+transform: translateY(-3px) scale(1.05);
+}
 
 ::-webkit-scrollbar {
   width: 2px;
@@ -93,3 +101,23 @@ p{
   height: 220px;
   padding: 0 30px !important;
 }
+
+/* Menu Animation */
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.menu-animate {
+  animation: menuSlideIn 0.3s ease-out;
+  transform-origin: top right;
+}
+/* img{
+  max-width: fit-content;
+} */

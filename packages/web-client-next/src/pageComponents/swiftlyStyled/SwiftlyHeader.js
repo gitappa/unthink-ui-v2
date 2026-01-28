@@ -34,6 +34,8 @@ const SwiftlyHeader = ({
 	const onWishlistClick = () => {
 		dispatch(openWishlistModal());
 	};
+	console.log('applied', currentUser.emailId ? 'hello' : null);
+
 	const [storeData] = useSelector((state) => [state.store.data]);
 	return (
 		<>
@@ -46,6 +48,7 @@ const SwiftlyHeader = ({
 				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
 			</div>
 			<div className='w-full' style={{ background: themeCodes.header.header_bg }}>
+
 				<div
 					id='heroesVillains_desktop_header_menu'
 					className='w-full flex items-center justify-between lg:px-8 lg:py-2 lg:h-20'>
@@ -94,15 +97,17 @@ const SwiftlyHeader = ({
 								COLLECTIONS
 							</button>
 
-							<FaRegHeart
-								onClick={onWishlistClick}
-								className='text-white cursor-pointer h-6 w-6 ml-6'
-							/>
-							{storeData?.pdp_settings?.is_add_to_cart_button &&
-								<Link href='/cart' className="p-0  ">
-									<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6 ' />
+							{currentUser?.emailId ? (
+								<FaRegHeart
+									onClick={onWishlistClick}
+									className='text-white cursor-pointer h-6 w-6 ml-6'
+								/>
+							) : null}
+							{storeData?.pdp_settings?.is_add_to_cart_button && (
+								<Link href='/cart' className="p-0">
+									<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6' />
 								</Link>
-							}
+							)}
 							<UserProfileMenu
 								isUserFetching={isUserFetching}
 								headerProfileMenu={headerProfileMenu}
