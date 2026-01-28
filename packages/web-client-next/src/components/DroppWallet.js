@@ -48,10 +48,10 @@ const DroppWallet = ({ setisDropDown }) => {
     }, [popRef])
 
     return (
-        <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} ref={popRef}>
-            <div className="glass-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"  >
-                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                    <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px' }}>
+        <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} className='text-black' ref={popRef}>
+            <div className="glass-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"  >
+                <div style={{ textAlign: 'center', marginBottom: '32px' }} className='text-black'>
+                    <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: 'black' }} className='text-black'>
                         Dropp Wallet Plugin Demo
                     </h2>
                 </div>

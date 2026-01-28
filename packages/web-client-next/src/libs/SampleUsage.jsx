@@ -40,7 +40,7 @@ const SampleUsage = () => {
             <div className="glass-card">
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                     <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px' }}>
-                        Dropp Wallet Plugin Demo
+                        Dropp Wallet Plugin Demod
                     </h2>
                 </div>
 
