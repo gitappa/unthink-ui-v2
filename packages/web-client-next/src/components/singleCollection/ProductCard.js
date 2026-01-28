@@ -75,7 +75,7 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
-
+import buyicon from './images/buy1.svg'
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -835,7 +835,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											style={{ background: "#f8f6f4" }}>
 											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
 										</button>
-										<p className="text-gray-101 m-0">Like</p>
+										<p className="text-gray-101 m-0">Favorites</p>
 										</div>
 									)}										
 								</div>
@@ -1044,7 +1044,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											style={{ background: '#7c75ec' }}
 											disabled={!product?.price && !product?.listprice}
 										>
-											Buy now
+										<Image src={buyicon} height={30} width={30}/>	
 										</button>
 									) : (
 										<button

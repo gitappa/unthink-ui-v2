@@ -33,6 +33,8 @@ const SwiftlyHeader = ({
 	const onWishlistClick = () => {
 		dispatch(openWishlistModal());
 	};
+	console.log('applied',currentUser.emailId ? 'hello'  : null );
+	
 	const [storeData] = useSelector((state) => [state.store.data]);
 	return (
 		<>
@@ -91,11 +93,13 @@ const SwiftlyHeader = ({
 									}>
 									COLLECTIONS
 								</button>
-
+									{currentUser?.emailId ? 
 								<FaRegHeart
-									onClick={onWishlistClick}
-									className='text-white cursor-pointer h-6 w-6 ml-6'
+								onClick={onWishlistClick}
+								className='text-white cursor-pointer h-6 w-6 ml-6'
 								/>
+							: null
+							}
 								{storeData?.pdp_settings?.is_add_to_cart_button &&
 								<Link href='/cart' className="p-0  ">
 										<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6 ' />

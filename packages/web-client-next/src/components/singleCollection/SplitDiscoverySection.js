@@ -8,7 +8,7 @@ import qrcode from "./images/qrcode.svg";
 import legs from "./images/shoes.jpg";
 import robo from "./images/Robo2.svg";
 
-import men from "./images/menStylejpg.jpg";
+import men from "./images/image.png";
 
 import ai from "./images/sparkle.svg";
 
@@ -45,25 +45,27 @@ const SplitDiscoverySection = () => {
             </div>
           </div>
 
-          <div className="w-full text-white">
-            <div className=" flex  gap-4 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
-              <div className="w-full ">
+          <div className="w-full  text-white">
+            <div style={{minHeight:455}} className=" flex  gap-3 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
+              <div className="w-full flex justify-between flex-col">
                 <p>
-                  Lorem ipsum dolor sit amet c Archit s mollitia quas cumque
-                  quam aut. Cumque ea sint est vel accusantium. Sapiente fuga
-                  cupiditate saepe placeat mollitia.
+                 Uncover rare finds, exclusive styles, and pieces you won’t see everywhere. Your next favorite is waiting—just beneath the surface.
+                 Step into a world of carefully curated gems. Discover hidden treasures crafted to stand out, tell stories 
                 </p>
+                <div>
+
                 <Image
                   src={qrcode}
                   alt="qrcode"
-                  className="rounded-xl mt-3 mb-2 w-25 h-25 bg-white"
+                  className="rounded-xl mt-4 mb-2 w-25 h-25 bg-white"
                   width={100}
                   height={100}
-                />
+                  />
                 <p>Scan to Join</p>
+                  </div>
               </div>
               <div className="w-full">
-                <h3 className="text-3xl font-semibold">CHALLENGE & EARN</h3>
+                <h3 className="text-3xl font-semibold text-center ">CHALLENGE  & EARN</h3>
                 <Image
                   src={legs}
                   alt="show"
@@ -71,7 +73,7 @@ const SplitDiscoverySection = () => {
                 />
               </div>
             </div>
-            <div className="bg-gradient-to-r p-6 relative mt-4 items-center  flex gap-5 from-purple-102 rounded-xl  to-purple-101  border-purple-102 border-3 ">
+            <div className="bg-gradient-to-r p-6 relative mt-5 items-center  flex gap-5 from-purple-102 rounded-xl  to-purple-101  border-purple-102 border-3 ">
               <Image
                 src={robo}  width={100} height={100}
                 alt="ai stylist "
