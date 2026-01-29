@@ -2,8 +2,6 @@ import React from 'react'
 import Image from "next/image";
 import img1 from "./images/newmen.png";
 import menimage from "./images/suv.jpg";
-
-
 import qrcode from "./images/qrcode.svg";
 import legs from "./images/shoes.jpg";
 import robo from "./images/Robo2.svg";
@@ -46,30 +44,29 @@ const SplitDiscoverySection = () => {
         </div>
 
         <div className="w-full  text-white">
-          <div style={{ minHeight: 455 }} className=" flex  gap-3 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-6 ">
+          <div style={{ minHeight: 455 }} className=" flex  gap-3 relative   border-secondary border-3 rounded-xl bg-gradient-to-r from-gray-101 to-secondary p-5 2xl:p-6 ">
             <div className="w-full flex justify-between flex-col">
-              <p>
+              <p className='text-center'>
                 Uncover rare finds, exclusive styles, and pieces you won’t see everywhere. Your next favorite is waiting—just beneath the surface.
-                Step into a world of carefully curated gems. Discover hidden treasures crafted to stand out, tell stories
+                Step into a world of carefully curated gems. Discover hidden treasures crafted to stand out.
               </p>
-              <div>
-
+              <div className='m-auto text-center '>
                 <Image
                   src={qrcode}
                   alt="qrcode"
-                  className="rounded-xl mt-4 mb-2 w-25 h-25 bg-white"
+                  className="rounded-xl mt-4 mb-2 w-25 2xl:w-40 2xl:h-40 h-25 bg-white"
                   width={100}
                   height={100}
                 />
-                <p>Scan to Join</p>
+                <p className='text-lg'>Scan to Join</p>
               </div>
             </div>
             <div className="w-full">
-              <h3 className="text-3xl font-semibold text-center ">CHALLENGE  & EARN</h3>
+              <h3 className="xl:text-3xl 2xl:text-4xl font-semibold text-center ">CHALLENGE  & EARN</h3>
               <Image
                 src={legs}
                 alt="show"
-                className="rounded-xl mt-3 w-40 h-40 absolute bottom-0 right-0"
+                className="rounded-xl mt-3 w-40 h-40 xl:h-48 2xl:h-56 2xl:w-56 xl:w-48 absolute bottom-0 right-0"
               />
             </div>
           </div>

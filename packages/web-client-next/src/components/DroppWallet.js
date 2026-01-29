@@ -3,7 +3,7 @@ import { useDroppWallet } from '../libs/dropp-wallet-plugin.es.js';
 // import '../libs/index.css'
 import { AiFillCloseCircle } from "react-icons/ai";
 
-const DroppWallet = ({ setisDropDown }) => {
+const DroppWallet = ({ setisDropDown ,isDropDown}) => {
     const [email, setEmail] = useState('');
 
     const {
@@ -41,13 +41,17 @@ const DroppWallet = ({ setisDropDown }) => {
         const handleClickOutside = (event) => {
             if (popRef.current && !popRef.current.contains(event.target)) {
                 setisDropDown(false);
+                 document.body.style.overflow='auto'
             }
         };
+        if(isDropDown){
+            document.body.style.overflow='hidden'
+        }
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [popRef])
+    }, [popRef,isDropDown])
 
     return (
         <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} className='text-black  ' ref={popRef}>

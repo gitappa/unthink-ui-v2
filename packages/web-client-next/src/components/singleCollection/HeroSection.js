@@ -133,14 +133,14 @@ const HeroSection = ({im,collectionData}) => {
                   1024: {
                     slidesPerView: 5, // lg
                   },
-                  1280: {
+                  1380: {
                     slidesPerView: 6, // xl
                   },
                 }}
               >
                 {collectionData.product_lists?.map((collection ,id)=>(
                  <SwiperSlide key={id}>
-                  <Image src={collection.image } width={23} height={33} className="h-52 shadow-md w-48 rounded-xl" />
+                  <Image src={collection.image } width={23} height={33} className="h-48 shadow-md w-48 rounded-xl" />
                 </SwiperSlide> 
                 ))}
               </Swiper>

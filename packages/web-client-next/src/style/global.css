@@ -73,8 +73,9 @@
 }
 
 p{
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
+
 .hover-fancy {
 transition: transform 0.25s ease;
 }
@@ -137,3 +138,31 @@ text-overflow: ellipsis;
 overflow: hidden;
 text-overflow: ellipsis;
  }
+
+ .summer-vibes {
+  background: linear-gradient(90deg, #4D84C2, #B557A5, #E6864E);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+
+
+  /* Gradient border */
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+
+.summer-vibes::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4D84C2, #B557A5, #E6864E);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}

@@ -1075,6 +1075,7 @@ const StorePageWrapper = (props) => {
 				trackCollectionData={trackCollectionData}
 				pageUser={pageUser}
 				setisDropDown={setisDropDown}
+				isDropDown={isDropDown}
 			/>
 
 			{showPageContent &&
@@ -1121,7 +1122,7 @@ const StorePageWrapper = (props) => {
 			{isSuccessPage && <SuccessUrl />}
 			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />}
 
-			{isDropDown && <DroppWallet setisDropDown={setisDropDown} />}
+			{isDropDown && <DroppWallet setisDropDown={setisDropDown}  isDropDown={isDropDown}/>}
 
 			{!showIndividualPageContent && (
 				<div
