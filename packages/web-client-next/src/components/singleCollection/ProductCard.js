@@ -1003,7 +1003,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 					<div className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
 						<div className="flex gap-2 items-center " >
 
-						<span className={` text-gray-900 product_price ${size === "small" ? "lg:text-sm  " : "lg:text-xl text-lg"}`}>
+						<span className={` text-gray-900 font-bold product_price ${size === "small" ? "lg:text-sm  " : "lg:text-xl text-lg"}`}>
 							{product?.price || product?.listprice ? (
 								<span
 									dangerouslySetInnerHTML={{
@@ -1019,8 +1019,8 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 							product?.listprice > product?.price &&
 							discountPer > 0 && (
 								<>
-									<span className='text-sm line-through text-gray-400 product_listprice'>
-										<span className="text-black" style={{color:'black'}}
+									<span className='text-sm line-through text-gray-101 product_listprice'>
+										<span className="text-black" style={{color:'gray'}}
 											dangerouslySetInnerHTML={{
 												__html: `${currencySymbol}${product.listprice}`,
 											}}
