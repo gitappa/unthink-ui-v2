@@ -1243,6 +1243,7 @@ const StorePageWrapper = (props) => {
 								{isSingleCollectionSharedPage && currentSingleCollection && (
 									// <CollectionPageContent collection_name={collection_name} />
 									<SingleCollectionProductList
+									sharePageUrl={sharePageUrl}
 										key={currentSingleCollection.path}
 										isRootPage={isRootPage}
 										isMyProfilePage={isMyProfilePage}

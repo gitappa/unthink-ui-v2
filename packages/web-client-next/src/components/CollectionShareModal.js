@@ -102,7 +102,7 @@ const CollectionShareModal = ({
 	};
 
 
-	console.log(collectionDetails, "collectionDetails");
+	console.log( "collectionDetails",collectionDetails);
 
 
 

@@ -18,6 +18,9 @@ import {
   GuestPopUpShow,
 } from "../Auth/redux/actions";
 import ProductCard from "../../components/singleCollection/ProductCard";
+import share_icon from "../../images/profilePage/share_icon.svg";
+// import share_icon from "../../components/singleCollection/images/";
+
 import {
   checkIsFavoriteCollection,
   collectionQRCodeGenerator,
@@ -60,6 +63,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
+import ShareOptions from "../shared/shareOptions";
 
 // Initialize Swiper modules
 SwiperCore.use([FreeMode]);
@@ -87,6 +91,7 @@ const SingleCollectionProductList = ({
   profile_image,
   selectedSortOption,
   handleSortOptionChange,
+  sharePageUrl,
   isRootPage = true,
 }) => {
   console.log(blogCollectionPage.video_url);
@@ -104,6 +109,9 @@ const SingleCollectionProductList = ({
       state.auth.user.singleCollections.data,
       state.auth.user.data,
     ]);
+                      const [showShareCollection, setShowShareCollection] = useState(false);
+
+
   console.log("isSingleCollectionSharedPage", isSingleCollectionSharedPage);
   console.log("singleCollectionaaaaaa", singleCollection);
 
@@ -1327,12 +1335,10 @@ const SingleCollectionProductList = ({
                         <p
                           ref={textRef}
                           className={`text-sm lg:text-lg text-justify  leading-normal
-   																			 ${expanded ? "" : "ellipsis_2 pr-18"}`}
+   											  ${expanded ? "" : "ellipsis_2 pr-18"}`}
                         >
                           {blogCollectionPage.description}
                         </p>
-                        {/* <> */}
-
                         {!expanded && isCut && (
                           <span
                             onClick={() => setExpanded(true)}
@@ -1356,13 +1362,47 @@ const SingleCollectionProductList = ({
                     </div>
 
                     {/* for desktop screen : QR code */}
-                    {qrCodeGeneratorURL &&
+                    
+
+                      <div className='relative flex justify-between w-6 lg:w-7'>
+                                              {showShareCollection && (
+                                                <ShareOptions
+                                                  url={sharePageUrl}
+                                                  onClose={setShowShareCollection}
+                                                  collection={blogCollectionPage}
+                                                  isOpen={showShareCollection}
+                                                  qrCodeGeneratorURL={qrCodeGeneratorURL}
+                                                  collectionPagePath={collectionPagePath}
+                                                />
+                                              )}
+                                              {/* {sharePageUrl && ( */}
+                                                <img
+                                                  className={`flex w-auto  ${showShareCollection ? "pointer-events-none" : ""
+                                                    } ${blogCollectionPage.status === PUBLISHED
+                                                      ? "cursor-pointer"
+                                                      : "cursor-not-allowed opacity-50"
+                                                    }`}
+                                                  src={share_icon}
+                                                  title={
+                                                    blogCollectionPage.status !== PUBLISHED
+                                                      ? "Please publish collection to share"
+                                                      : ""
+                                                  }
+                                                  onClick={() =>
+                                                    blogCollectionPage.status === PUBLISHED &&
+                                                    setShowShareCollection(!showShareCollection)
+                                                  }
+                                                />
+                                              {/* )} */}
+                                            </div>
+
+                    {/* {qrCodeGeneratorURL &&
                     blogCollectionPage.status === PUBLISHED ? (
                       <img
                         className="w-25 h-25 object-cover hidden md:block mt-3.5"
                         src={qrCodeGeneratorURL}
                       />
-                    ) : null}
+                    ) : null} */}
 
                     {/* <div className='w-full self-center'>
 							<div className='flex justify-between'>

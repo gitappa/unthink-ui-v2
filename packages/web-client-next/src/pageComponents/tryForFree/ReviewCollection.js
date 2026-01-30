@@ -447,16 +447,16 @@ console.log('authUserCollections',authUserCollections);
 // console.log('currentCollection',currentCollection );
 // console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		// console.log('singleCollections',singleCollections );
-		// console.log('authUserCollections',authUserCollections );
-		// console.log('showWishlistModal',showWishlistModal );
-		// console.log('plistId',plistId );
-		// console.log('currentCollection',currentCollection );	
+		console.log('singleCollections',singleCollections );
+		console.log('authUserCollections',authUserCollections );
+		console.log('showWishlistModal',showWishlistModal );
+		console.log('plistId',plistId );
+		console.log('currentCollection',currentCollection );	
 
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
-			setCurrentCollection(singleCollections);
-			return;
+			return setCurrentCollection(singleCollections);
+	
 		}
 
 		// Normal flow
