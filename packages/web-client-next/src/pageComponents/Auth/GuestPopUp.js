@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { CloseOutlined } from "@ant-design/icons";
 import { GuestPopUpShow } from './redux/actions';
 import { useDispatch } from 'react-redux';
+import styles from '../auraResponseProductsWithTags/chatSuggestionsWithProducts.module.scss'
 
 
 function GuestPopUp({
@@ -21,8 +22,8 @@ function GuestPopUp({
     }
 
     return (
-        <form onSubmit={handleGuestSubmit} className="popup-overlay">
-            <div className="popup-content">
+        <form onSubmit={handleGuestSubmit} className={styles['popup-overlay'] }>
+            <div className={styles['popup-content'] }>
                 <div className="flex justify-between items-center gap-5 mb-5">
                     <h2 className="text-xl font-medium">
                         Please provide your email to ensure your collections are saved and accessible whenever you return.

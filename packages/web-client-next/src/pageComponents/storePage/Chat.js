@@ -490,7 +490,7 @@ const Chat = ({
 							onFinish={
 								!auraCameraSpinLoader ? handleSubmitChatInput : undefined
 							}
-							className={`self-center w-full transition-opacity opacity-100 z-10 show_search_input pr-2 md:pr-3 ${!isBTNormalUserLoggedIn ? "pl-4 md:pl-6.5" : "pl-4"
+							className={`self-center focus:outline-none w-full transition-opacity opacity-100 z-10 show_search_input pr-2 md:pr-3 ${!isBTNormalUserLoggedIn ? "pl-4 md:pl-6.5" : "pl-4"
 								}`}
 						// className={`self-center w-full transition-opacity ${
 						// 	showInput
@@ -513,7 +513,7 @@ const Chat = ({
 								name='chat_message'
 								value={localChatMessage}
 								onChange={handleInputChange}
-								className={`rounded-full bg-transparent border-none text-black-200 dark:text-white ${aura_header_theme === "dark"
+								className={`rounded-full focus:outline-none bg-transparent border-none text-black-200 dark:text-white ${aura_header_theme === "dark"
 									? "input-dark-theme"
 									: "input-light-theme"
 									} `}
