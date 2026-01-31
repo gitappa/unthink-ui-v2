@@ -64,6 +64,8 @@ const CollectionDetails = ({
 	isPageOwner,
 	isCollectionPage = true,
 }) => {
+	console.log(sharePageUrl);
+	
 	const navigate = useNavigate();
 	const [showShareCollection, setShowShareCollection] = useState(false);
 	const [bannerModalOpen, setBannerModalOpen] = useState(false);
@@ -616,8 +618,11 @@ console.log('sssssss',collection.video_url);
 													{showShareCollection && (
 														<ShareOptions
 															url={sharePageUrl}
-															setShow={setShowShareCollection}
+															onClose={setShowShareCollection}
 															collection={collection}
+															isOpen={showShareCollection}
+															qrCodeGeneratorURL={qrCodeGeneratorURL}
+															collectionPagePath={collectionPagePath}
 														/>
 													)}
 													{sharePageUrl && (
@@ -703,13 +708,13 @@ console.log('sssssss',collection.video_url);
 							)}
 						</div> */}
 
-						{qrCodeGeneratorURL && collection.status === PUBLISHED ? (
+						{/* {qrCodeGeneratorURL && collection.status === PUBLISHED ? (
 							<img
 								className='qrcode_image object-cover w-20 lg:w-25 h-20 lg:h-25'
 								 
 								src={qrCodeGeneratorURL}
 							/>
-						) : null}
+						) : null} */}
 					</div>
 
 					{collection.video_url && (
@@ -765,20 +770,20 @@ console.log('sssssss',collection.video_url);
 
 					<p
 						ref={descriptionRef}
-						className={`text-newcolor-100 text-base lg:text-xl 2xl:text-2xl pt-2 whitespace-pre-line mb-0 ${isShowMoreActive ? "" : "collection_description_ellipsis"
+						className={`text-newcolor-100 text-base lg:text-xl 2xl:text-2xl pt-2 whitespace-pre-line mb-0 ${isShowMoreActive ? "" : "ellipsis_3"
 							}`}>
 						{collection.description}
 					</p>
 					{showMoreEnabled &&
 						(isShowMoreActive ? (
 							<span
-								className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer'
+								className='text-sm lg:text-base text-violet-100  cursor-pointer'
 								onClick={() => dispatch(toggleShowMore(false))}>
 								Show less
 							</span>
 						) : (
 							<span
-								className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer'
+								className='text-sm lg:text-base text-violet-100   cursor-pointer'
 								onClick={() => dispatch(toggleShowMore(true))}>
 								Show more...
 							</span>

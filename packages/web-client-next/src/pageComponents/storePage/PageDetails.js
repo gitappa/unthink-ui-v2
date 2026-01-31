@@ -31,6 +31,7 @@ const PageDetailsComponent = ({
   isSamskaraInstance,
   isHeroesVillainsInstance,
   collectionsBy,
+  isCollectionPage
 }) => {
   const [storeData, isGuestUser, singleCollections, influencerCollections] =
     useSelector((state) => [
@@ -173,6 +174,7 @@ const publish = singleCollections.status === 'published'
                 updateWishlistInProgress={updateWishlistInProgress}
                 enableBannerClickTracking
                 isPageOwner={isPageOwner}
+                isCollectionPage={isCollectionPage}
               />
             ) : (
               !isHideProfileComponent && (

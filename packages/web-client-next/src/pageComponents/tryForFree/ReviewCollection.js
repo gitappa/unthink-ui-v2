@@ -447,16 +447,16 @@ console.log('authUserCollections',authUserCollections);
 // console.log('currentCollection',currentCollection );
 // console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		// console.log('singleCollections',singleCollections );
-		// console.log('authUserCollections',authUserCollections );
-		// console.log('showWishlistModal',showWishlistModal );
-		// console.log('plistId',plistId );
-		// console.log('currentCollection',currentCollection );	
+		console.log('singleCollections',singleCollections );
+		console.log('authUserCollections',authUserCollections );
+		console.log('showWishlistModal',showWishlistModal );
+		console.log('plistId',plistId );
+		console.log('currentCollection',currentCollection );	
 
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
-			setCurrentCollection(singleCollections);
-			return;
+			return setCurrentCollection(singleCollections);
+	
 		}
 
 		// Normal flow
@@ -470,9 +470,16 @@ console.log('authUserCollections',authUserCollections);
 		authUserCollections,
 		plistId,
 		 currentCollection
-	]); 
+	]);
 
-
+	// Fetch collection data directly on page load/refresh when plistId is available
+	useEffect(() => {
+		if (plistId && authUser.user_id && !currentCollection._id) {
+			dispatch(getUserCollection({ _id: plistId }));
+			dispatch(getSingleUserCollection({ _id: plistId }));
+		}
+	}, [plistId, authUser.user_id]);
+  
 // 	useEffect(() => {
 //   let nextCollection = null;
 
@@ -909,9 +916,8 @@ console.log('authUserCollections',authUserCollections);
 				setSelectedSortOption(PRODUCT_SORT_OPTIONS[0]);
 			}
 		}
-
-
 	}, [currentCollection._id]);
+console.log(currentCollection);
 
 	// decide show at a time only filterOptions, hashtagsInput enableSelectProduct or edit tags input
 	const checkAndShowContainer = useCallback(

@@ -1,60 +1,66 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
 import styles from "./ProductCard.module.css";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
-	HeartOutlined,
-	CloseCircleOutlined,
-	CopyOutlined,
-	StarFilled,
-	StarOutlined,
-	EditFilled,
-	CopyTwoTone,
-	CopyrightCircleFilled,
-	CopyFilled,
-	UploadOutlined,
-	LoadingOutlined,
+  HeartOutlined,
+  CloseCircleOutlined,
+  CopyOutlined,
+  StarFilled,
+  StarOutlined,
+  EditFilled,
+  CopyTwoTone,
+  CopyrightCircleFilled,
+  CopyFilled,
+  UploadOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-const vtf_image = '/images/CamAI_2.svg';
+const vtf_image = "/images/CamAI_2.svg";
 import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
-	setRemoveFromFavorites,
-	openWishlistModal,
-	setProductsToAddInWishlist,
-	closeWishlistModal,
+  setRemoveFromFavorites,
+  openWishlistModal,
+  setProductsToAddInWishlist,
+  closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
 import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
-	adminUserId,
-	current_store_id,
-	current_store_name,
-	enable_view_similar_products,
-	payment_url,
-	pdp_page_enabled,
+  adminUserId,
+  current_store_id,
+  current_store_name,
+  enable_view_similar_products,
+  payment_url,
+  pdp_page_enabled,
 } from "../../constants/config";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
 // import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
 import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redux/selector";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
-	addSidInProductUrl,
-	AdminCheck,
-	getCurrentTheme,
-	getFinalImageUrl,
-	getPercentage,
-	// URLAddParam,
+  addSidInProductUrl,
+  AdminCheck,
+  getCurrentTheme,
+  getFinalImageUrl,
+  getPercentage,
+  // URLAddParam,
 } from "../../helper/utils";
 import appTracker from "../../helper/webTracker/appTracker";
 import {
-	defaultFavoriteColl,
-	PRODUCT_DUMMY_URL,
-	WISHLIST_TITLE,
+  defaultFavoriteColl,
+  PRODUCT_DUMMY_URL,
+  WISHLIST_TITLE,
 } from "../../constants/codes";
 
 import View_similar_icon from "../../images/view_similar_icon.svg?react";
@@ -66,8 +72,8 @@ import { useNavigate } from "../../helper/useNavigate";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import useTheme from "../../hooks/chat/useTheme";
 import {
-	gTagAuraProductClick,
-	gTagCollectionProductClick,
+  gTagAuraProductClick,
+  gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
@@ -75,538 +81,543 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
-import buyicon from './images/buy1.svg'
+import buyicon from "./images/buy1.svg";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
-	DEFAULT: "default",
-	ACTION_COVER: "actionCover",
+  DEFAULT: "default",
+  ACTION_COVER: "actionCover",
 };
 
 const ProductCard = ({
-	product,
-	isCustomProductsPage,
-	enableClickTracking = false,
-	selectedSearchOption,
-	collection_id,
-	onProductClick,
-	productClickParam = {},
-	hideViewSimilar = false,
-	hideAddToWishlist = false,
-	enableHoverShowcase = false,
-	hideBuyNow = false,
-	showRemoveIcon = false,
-	enableCopyFeature = true,
-	size = "medium", // small, medium
-	height = "h-340", // need to send tailwind class for height,
-	wishlist,
-	onRemoveIconClick,
-	buyNowTitle = "Buy Now",
-	buyNowSubTitle,
-	enableSelect,
-	isSelected,
-	setSelectValue,
-	showEdit = false,
-	showStar = false,
-	showChinSection = false, // REMOVE
-	widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
-	onEditClick,
-	onStarClick,
-	openProductDetails = true,
-	allowEdit = false,
-	wishlistGeneratedBy,
-	collection_name,
-	collection_path,
-	collection_status,
-	localChatMessage,
-	blogCollectionPage,
+  product,
+  isCustomProductsPage,
+  enableClickTracking = false,
+  selectedSearchOption,
+  collection_id,
+  onProductClick,
+  productClickParam = {},
+  hideViewSimilar = false,
+  hideAddToWishlist = false,
+  enableHoverShowcase = false,
+  hideBuyNow = false,
+  showRemoveIcon = false,
+  enableCopyFeature = true,
+  size = "medium", // small, medium
+  height = "h-340", // need to send tailwind class for height,
+  wishlist,
+  onRemoveIconClick,
+  buyNowTitle = "Buy Now",
+  buyNowSubTitle,
+  enableSelect,
+  isSelected,
+  setSelectValue,
+  showEdit = false,
+  showStar = false,
+  showChinSection = false, // REMOVE
+  widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
+  onEditClick,
+  onStarClick,
+  openProductDetails = true,
+  allowEdit = false,
+  wishlistGeneratedBy,
+  collection_name,
+  collection_path,
+  collection_status,
+  localChatMessage,
+  blogCollectionPage,
 }) => {
-	const navigate = useNavigate();
-	console.log('hideAddToWishlist', widgetType);
-	// console.log('qzssddsdsds',product);
-	const [buttonClick, setButtonClick] = useState(false);
-	const [showLoader, setShowLoader] = useState(false);
-	const [descriptionget, setDescriptionget] = useState('')
-	const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-	const [uploadedImages, setUploadedImages] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [clickedMfrCode, setClickedMfrCode] = useState(null);
-	const dispatch = useDispatch();
-	const { themeCodes } = useTheme();
-	const [menuIcon,setMenuIcon] = useState(false)
-	const menuRef =useRef(null)
-console.log(menuIcon);
+  const navigate = useNavigate();
+  console.log("hideAddToWishlist", widgetType);
+  // console.log('qzssddsdsds',product);
+  const [buttonClick, setButtonClick] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const [descriptionget, setDescriptionget] = useState("");
+  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [clickedMfrCode, setClickedMfrCode] = useState(null);
+  const dispatch = useDispatch();
+  const { themeCodes } = useTheme();
+  const [menuIcon, setMenuIcon] = useState(false);
+  const menuRef = useRef(null);
+  console.log(menuIcon);
 
-	useEffect(()=>{
-		const handleClick =((event)=>{
-			if(menuRef.current && !menuRef.current.contains(event.target)){
-				setMenuIcon(false)
-			}
-		})
-		document.addEventListener('mousedown',handleClick)
-		return ()=>{
-			document.removeEventListener('mousedown',handleClick)
-		}
-	},[])
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuIcon(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
 
-	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData, ] =
-		useSelector((state) => [
-			state.auth.user.data.user_id,
-			state.auth.user.data.user_name,
-			state.chatV2.showChatModal,
-			state.appState.wishlist.showWishlistModal,
-			state.store.data.store_id,
-			state.auth.user.data,
-			state.auth.customProducts.data.data || [],
-			// state.wishlist.showWishlistModal
-		]);
-		console.log(showWishlistModal);
-		
-	// console.log('authUser', authUser);
-	const [storeData] = useSelector((state) => [state.store.data]);
-	const { admin_list: admin_list } = storeData;
-	// pdp_settings
-	const isAdminLoggedIn = AdminCheck(
-		authUser,
-		current_store_name,
-		adminUserId,
-		admin_list
-	);
-const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const [
+    authUserId,
+    authUserName,
+    showChatModal,
+    showWishlistModal,
+    store_id,
+    authUser,
+    customProductsData,
+  ] = useSelector((state) => [
+    state.auth.user.data.user_id,
+    state.auth.user.data.user_name,
+    state.chatV2.showChatModal,
+    state.appState.wishlist.showWishlistModal,
+    state.store.data.store_id,
+    state.auth.user.data,
+    state.auth.customProducts.data.data || [],
+    // state.wishlist.showWishlistModal
+  ]);
+  console.log(showWishlistModal);
 
-	// console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-	// const favoriteColl =
-	// 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
-	const [count, setCount] = useState(1);
-	// console.log("counttttt",count);
+  // console.log('authUser', authUser);
+  const [storeData] = useSelector((state) => [state.store.data]);
+  const { admin_list: admin_list } = storeData;
+  // pdp_settings
+  const isAdminLoggedIn = AdminCheck(
+    authUser,
+    current_store_name,
+    adminUserId,
+    admin_list,
+  );
+  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
-	const enableViewSimilar = useMemo(() => {
-		return enable_view_similar_products === "false" ? false : !hideViewSimilar;
-	}, [enable_view_similar_products, hideViewSimilar]);
+  // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
+  // const favoriteColl =
+  // 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
+  const [count, setCount] = useState(1);
+  // console.log("counttttt",count);
 
-	const isProductUrlAvailable =
-		product.url && product.url !== PRODUCT_DUMMY_URL;
+  const enableViewSimilar = useMemo(() => {
+    return enable_view_similar_products === "false" ? false : !hideViewSimilar;
+  }, [enable_view_similar_products, hideViewSimilar]);
 
-	const currencySymbol = useMemo(
-		() => (product?.currency_symbol ? product.currency_symbol : "&#36;"),
-		[product?.currency_symbol]
-	);
+  const isProductUrlAvailable =
+    product.url && product.url !== PRODUCT_DUMMY_URL;
 
-	const handleOpenProductModal = useCallback(
-		(allowEdit) => {
-			dispatch(
-				openProductModal({
-					payload: product,
-					collectionId: collection_id,
-					allowEdit,
-				})
-			);
-		},
-		[product, collection_id, allowEdit]
-	);
-	console.log(product);
+  const currencySymbol = useMemo(
+    () => (product?.currency_symbol ? product.currency_symbol : "&#36;"),
+    [product?.currency_symbol],
+  );
 
-	const handleProductClick = async () => {
-		if (enableSelect) {
-			setSelectValue && setSelectValue(!isSelected);
-		} else {
-			// tracking event happens from here by prop enableClickTracking
-			if (enableClickTracking) {
-				await sharedPageTracker.onCollectionProductClick({
-					mfrCode: product.mfr_code,
-					redirectionUrl: product.url,
-					product_brand: product.product_brand,
-					brand: product.brand,
-					sponsored: product.sponsored,
-					collectionId: collection_id,
-					...productClickParam,
-				});
-			}
-			// prop function to fetch recommendation on shared page
-			if (onProductClick) onProductClick();
+  const handleOpenProductModal = useCallback(
+    (allowEdit) => {
+      dispatch(
+        openProductModal({
+          payload: product,
+          collectionId: collection_id,
+          allowEdit,
+        }),
+      );
+    },
+    [product, collection_id, allowEdit],
+  );
+  console.log(product);
 
-			if (selectedSearchOption?.title) {
-				// GTAG CONFIGURATION AURA
-				// START
-				console.log(selectedSearchOption);
+  const handleProductClick = async () => {
+    if (enableSelect) {
+      setSelectValue && setSelectValue(!isSelected);
+    } else {
+      // tracking event happens from here by prop enableClickTracking
+      if (enableClickTracking) {
+        await sharedPageTracker.onCollectionProductClick({
+          mfrCode: product.mfr_code,
+          redirectionUrl: product.url,
+          product_brand: product.product_brand,
+          brand: product.brand,
+          sponsored: product.sponsored,
+          collectionId: collection_id,
+          ...productClickParam,
+        });
+      }
+      // prop function to fetch recommendation on shared page
+      if (onProductClick) onProductClick();
 
-				gTagAuraProductClick({
-					mft_code: product?.mfr_code,
-					aura_widget: selectedSearchOption?.id,
-					user_id: getTTid(),
-					user_name: authUserName,
-					term: localChatMessage || "",
-				});
-				// END
-			} else {
-				// GTAG CONFIGURATION
-				// START
+      if (selectedSearchOption?.title) {
+        // GTAG CONFIGURATION AURA
+        // START
+        console.log(selectedSearchOption);
 
-				// console.log(blogCollectionPage);
+        gTagAuraProductClick({
+          mft_code: product?.mfr_code,
+          aura_widget: selectedSearchOption?.id,
+          user_id: getTTid(),
+          user_name: authUserName,
+          term: localChatMessage || "",
+        });
+        // END
+      } else {
+        // GTAG CONFIGURATION
+        // START
 
-				gTagCollectionProductClick({
-					mft_code: product?.mfr_code,
-					collection_path: authUserId
-						? addSidInProductUrl(
-							product.url,
-							authUserId,
-							blogCollectionPage?.collection_id
-						)
-						: product.url,
-					user_id: getTTid(),
-					user_name: authUserName,
-					collection_id: blogCollectionPage?.collection_id || "",
-					collection_name: blogCollectionPage?.collection_name,
-				});
-				// END
-			}
+        // console.log(blogCollectionPage);
 
-			if (isProductUrlAvailable) {
-				// redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
-				const redirectionUrl = authUserId
-					? addSidInProductUrl(
-						product.url,
-						authUserId,
-						blogCollectionPage?.collection_id
-					)
-					: product.url;
-				window.open(redirectionUrl, "_blank");
-			} else if (storeData?.pdp_settings?.is_buy_popup == false && !isCustomProductsPage || pdp_page_enabled) {
-				navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
-				if (showChatModal) {
-					dispatch(setShowChatModal(false));
-				}
-				if (showWishlistModal) {
-					dispatch(closeWishlistModal());
-				}
-			} else {
-				handleOpenProductModal(allowEdit); // old: show update product modal on product click
-			}
-		}
-	};
+        gTagCollectionProductClick({
+          mft_code: product?.mfr_code,
+          collection_path: authUserId
+            ? addSidInProductUrl(
+                product.url,
+                authUserId,
+                blogCollectionPage?.collection_id,
+              )
+            : product.url,
+          user_id: getTTid(),
+          user_name: authUserName,
+          collection_id: blogCollectionPage?.collection_id || "",
+          collection_name: blogCollectionPage?.collection_name,
+        });
+        // END
+      }
 
-	const discountPer =
-		product?.price &&
-		product?.listprice &&
-		+product?.listprice > +product?.price &&
-		getPercentage(product.listprice, product.price);
+      if (isProductUrlAvailable) {
+        // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
+        const redirectionUrl = authUserId
+          ? addSidInProductUrl(
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
+          : product.url;
+        window.open(redirectionUrl, "_blank");
+      } else if (
+        (storeData?.pdp_settings?.is_buy_popup == false &&
+          !isCustomProductsPage) ||
+        pdp_page_enabled
+      ) {
+        navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+        if (showChatModal) {
+          dispatch(setShowChatModal(false));
+        }
+        if (showWishlistModal) {
+          dispatch(closeWishlistModal());
+        }
+      } else {
+        handleOpenProductModal(allowEdit); // old: show update product modal on product click
+      }
+    }
+  };
 
-	const addToWishlistClick = (event) => {
-		event.preventDefault();
-		event.stopPropagation();
+  const discountPer =
+    product?.price &&
+    product?.listprice &&
+    +product?.listprice > +product?.price &&
+    getPercentage(product.listprice, product.price);
 
-		// DISABLED this feature of adding item to favorites on click on add to collection
-		// NEED TO REMOVE THIS FEATURE CODE FROM REDUX/ACTION/SAGA
-		// NEED TO REMOVE remove from favorites handling as well
+  const addToWishlistClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-		// add product in favorites if it is not there
-		// const isProductExistsInFavorites = favoriteColl.product_lists.some(
-		// 	(p) => p.mfr_code === product.mfr_code
-		// );
+    // DISABLED this feature of adding item to favorites on click on add to collection
+    // NEED TO REMOVE THIS FEATURE CODE FROM REDUX/ACTION/SAGA
+    // NEED TO REMOVE remove from favorites handling as well
 
-		// if (!isProductExistsInFavorites) {
-		// 	// adding item to favorites (system collection)
-		// 	// const user = {};
-		// 	// const item = { product_id: product.mfr_code };
-		// 	// if (window?.cemantika?.ecommerce)
-		// 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
+    // add product in favorites if it is not there
+    // const isProductExistsInFavorites = favoriteColl.product_lists.some(
+    // 	(p) => p.mfr_code === product.mfr_code
+    // );
 
-		// 	// not calling it for add to favorites for now
-		// 	// const event = {
-		// 	// 	mfrCode: product.mfr_code,
-		// 	// 	product_brand: product.product_brand,
-		// 	// 	brand: product.brand,
-		// 	// 	collectionId: productClickParam.collectionId,
-		// 	// 	iCode: productClickParam.iCode,
-		// 	// 	campCode: productClickParam.campCode,
-		// 	// 	collectionName: productClickParam.collectionName,
-		// 	// };
-		// 	// appTracker.onAddItemToWishlist(event);
+    // if (!isProductExistsInFavorites) {
+    // 	// adding item to favorites (system collection)
+    // 	// const user = {};
+    // 	// const item = { product_id: product.mfr_code };
+    // 	// if (window?.cemantika?.ecommerce)
+    // 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
 
-		// 	const payload = {
-		// 		_id: favoriteColl._id,
-		// 		user_id: authUserId,
-		// 		collection_name: defaultFavoriteColl.collection_name,
-		// 		type: defaultFavoriteColl.type,
-		// 		products: [
-		// 			{
-		// 				mfr_code: product.mfr_code,
-		// 				tagged_by: product.tagged_by,
-		// 			},
-		// 		],
-		// 		fetchRecommendations: true,
-		// 		fetchUserCollections: true,
-		// 	};
+    // 	// not calling it for add to favorites for now
+    // 	// const event = {
+    // 	// 	mfrCode: product.mfr_code,
+    // 	// 	product_brand: product.product_brand,
+    // 	// 	brand: product.brand,
+    // 	// 	collectionId: productClickParam.collectionId,
+    // 	// 	iCode: productClickParam.iCode,
+    // 	// 	campCode: productClickParam.campCode,
+    // 	// 	collectionName: productClickParam.collectionName,
+    // 	// };
+    // 	// appTracker.onAddItemToWishlist(event);
 
-		// 	dispatch(addToWishlist(payload));
-		// 	dispatch(setRemoveFromFavorites(true));
-		// } else {
-		dispatch(setRemoveFromFavorites(false));
-		// }
+    // 	const payload = {
+    // 		_id: favoriteColl._id,
+    // 		user_id: authUserId,
+    // 		collection_name: defaultFavoriteColl.collection_name,
+    // 		type: defaultFavoriteColl.type,
+    // 		products: [
+    // 			{
+    // 				mfr_code: product.mfr_code,
+    // 				tagged_by: product.tagged_by,
+    // 			},
+    // 		],
+    // 		fetchRecommendations: true,
+    // 		fetchUserCollections: true,
+    // 	};
 
-		let createWishlistData = {};
+    // 	dispatch(addToWishlist(payload));
+    // 	dispatch(setRemoveFromFavorites(true));
+    // } else {
+    dispatch(setRemoveFromFavorites(false));
+    // }
 
-		if (wishlistGeneratedBy) {
-			createWishlistData.generated_by = wishlistGeneratedBy;
-		}
+    let createWishlistData = {};
 
-		dispatch(setProductsToAddInWishlist([product], createWishlistData));
-		dispatch(openWishlistModal());
-	};
+    if (wishlistGeneratedBy) {
+      createWishlistData.generated_by = wishlistGeneratedBy;
+    }
 
+    dispatch(setProductsToAddInWishlist([product], createWishlistData));
+    dispatch(openWishlistModal());
+  };
 
+  const checkoutPayment = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-	const checkoutPayment = async (e) => {
+    const location = window.location.origin;
 
-		e.stopPropagation()
-		e.preventDefault()
+    const payload = {
+      amount: product?.price || product?.listprice || 0, // MANDATORY
+      currency: "USD", // MANDATORY
+      thumbnail: product.image,
+      user_id: authUserId || getTTid(),
+      store_id: store_id,
+      service_id: `Product_${product.mfr_code}`,
+      emailId: authUser.emailId || null,
+      successUrl: `${location}/successpayment`,
+      failureUrl: `${location}/failedpayment`,
+      additional_details: {
+        mfr_code: product.mfr_code,
+      },
+      title: product.name,
+    };
 
+    try {
+      const res = await axios.post(
+        `${payment_url}/api/payments/checkout`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      // console.log("Checkout response:", res.data.redirectUrl);
+      // 🔁 If API returns payment URL
+      if (res?.data?.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      // alert("Payment initiation failed. Please try again.");
+    }
+  };
 
-		const location = window.location.origin
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
 
-		const payload = {
-			amount: product?.price || product?.listprice || 0, // MANDATORY
-			currency: "USD", // MANDATORY
-			thumbnail: product.image,
-			user_id: authUserId || getTTid(),
-			store_id: store_id,
-			service_id: `Product_${product.mfr_code}`,
-			emailId: authUser.emailId || null,
-			successUrl: `${location}/successpayment`,
-			failureUrl: `${location}/failedpayment`,
-			additional_details: {
-				mfr_code: product.mfr_code,
-			},
-			title: product.name,
-		};
+    if (!product?.mfr_code) return;
 
-		try {
-			const res = await axios.post(
-				`${payment_url}/api/payments/checkout`,
-				payload,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			// console.log("Checkout response:", res.data.redirectUrl);
-			// 🔁 If API returns payment URL
-			if (res?.data?.redirectUrl) {
-				window.location.href = res.data.redirectUrl;
-			}
-		} catch (error) {
-			console.error("Checkout error:", error);
-			// alert("Payment initiation failed. Please try again.");
-		}
-	};
+    const payload = {
+      products: [
+        {
+          mfr_code: product.mfr_code,
+          tagged_by: product.tagged_by || [],
+          qty: Number(count),
+        },
+      ],
+      product_lists: [],
+      collection_name: "my cart",
+      type: "system",
+      user_id: authUserId || getTTid(),
+      // collection_id: mycartcollectionid,
+      path: mycartcollectionpath,
+    };
+    dispatch(addToCart(payload));
+  };
 
+  const onSimilarClick = (event) => {
+    event.stopPropagation();
+    dispatch(
+      fetchSimilarProducts({
+        mfr_code: product.mfr_code,
+        name: product.name,
+        errorMessage: "Unable to fetch similar products",
+      }),
+    );
+  };
 
+  const removeFromWishlistClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
 
-	const handleAddToCart = (e) => {
-		e.stopPropagation();
+    if (onRemoveIconClick) {
+      onRemoveIconClick(product.mfr_code);
+    }
+  };
 
-		if (!product?.mfr_code) return;
+  const handleSelectProduct = (e) => {
+    e.stopPropagation();
+    setSelectValue && setSelectValue(!isSelected);
+  };
 
-		const payload = {
-			products: [
-				{
-					mfr_code: product.mfr_code,
-					tagged_by: product.tagged_by || [],
-					qty: Number(count),
-				},
-			],
-			product_lists: [],
-			collection_name: "my cart",
-			type: "system",
-			user_id: authUserId || getTTid(),
-			// collection_id: mycartcollectionid,
-			path: mycartcollectionpath,
-		};
-		dispatch(addToCart(payload));
-	};
+  const handleCopyClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    product && dispatch(openProductDetailsCopyModal(product));
+  };
 
-	const onSimilarClick = (event) => {
-		event.stopPropagation();
-		dispatch(
-			fetchSimilarProducts({
-				mfr_code: product.mfr_code,
-				name: product.name,
-				errorMessage: "Unable to fetch similar products",
-			})
-		);
-	};
+  const handleEditClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (onEditClick) {
+        onEditClick();
+      } else {
+        handleOpenProductModal(true);
+      }
+    },
+    [onEditClick, handleOpenProductModal],
+  );
 
-	const removeFromWishlistClick = (event) => {
-		event.stopPropagation();
-		event.preventDefault();
+  const handleStarClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onStarClick && onStarClick();
+    },
+    [onStarClick],
+  );
+  const handleUploadImage = async ({ file }) => {
+    try {
+      setShowLoader(true);
 
-		if (onRemoveIconClick) {
-			onRemoveIconClick(product.mfr_code);
-		}
-	};
+      const response = await profileAPIs.uploadImage({ file });
+      const data = response?.data;
 
-	const handleSelectProduct = (e) => {
-		e.stopPropagation();
-		setSelectValue && setSelectValue(!isSelected);
-	};
+      if (data?.status_code === 400 || data?.status === "failure") {
+        notification.error({
+          message: "Image Upload Failed",
+          description:
+            data?.status_desc || "Something went wrong. Please try again.",
+        });
+        return;
+      }
+      const url = data?.data?.[0]?.url;
+      setUploadedImages((prev) => prev.concat(url));
+      if (url) {
+        // setUploadedImages((prev) => [...prev, url]);
+        // additional_images.push(url)
+        notification.success({
+          message: "Image Uploaded Successfully",
+        });
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      notification.error({
+        message: "Image Upload Failed",
+        description:
+          error?.response?.data?.message || "Unexpected error occurred",
+      });
+    } finally {
+      setShowLoader(false);
+    }
+  };
 
-	const handleCopyClick = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-		product && dispatch(openProductDetailsCopyModal(product));
-	};
+  const uploadImageDraggerProps = {
+    accept: "image/*",
+    multiple: true,
+    showUploadList: false,
+    customRequest: ({ file, onSuccess }) => {
+      handleUploadImage({ file });
+      setTimeout(() => onSuccess("ok"), 0);
+    },
+  };
 
-	const handleEditClick = useCallback(
-		(e) => {
-			e.stopPropagation();
-			if (onEditClick) {
-				onEditClick();
-			} else {
-				handleOpenProductModal(true);
-			}
-		},
-		[onEditClick, handleOpenProductModal]
-	);
+  const handleVTOclick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const url = window.location.origin;
+    // setButtonClick(true);
 
-	const handleStarClick = useCallback(
-		(e) => {
-			e.stopPropagation();
-			onStarClick && onStarClick();
-		},
-		[onStarClick]
-	);
-	const handleUploadImage = async ({ file }) => {
-		try {
-			setShowLoader(true);
+    const payload = {
+      image_urls: [product.image, uploadedImages[0]],
+      store: storeData.store_name,
+      image_tryon_prompt: descriptionget || "",
+    };
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `https://auraprod.unthink.ai/cs/image_tryon/`,
+        payload,
+      );
+      setVtoResultImageUrl(res.data.data.image_url);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "Virtual Try-On Failed",
+        description:
+          error?.response?.data?.message ||
+          "Failed to process image. Please try again.",
+      });
+      setLoading(false);
+    }
+  };
 
-			const response = await profileAPIs.uploadImage({ file });
-			const data = response?.data;
+  const handleVTODownload = async () => {
+    if (vtoResultImageUrl) {
+      try {
+        const response = await fetch(vtoResultImageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `vto-result-${Date.now()}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        notification.success({
+          message: "Download Successful",
+          description: "Your virtual try-on image has been downloaded.",
+        });
+        handleVTOCancel();
+      } catch (error) {
+        console.error("Download failed:", error);
+        notification.error({
+          message: "Download Failed",
+          description: "Failed to download the image. Please try again.",
+        });
+      }
+    }
+  };
 
-			if (data?.status_code === 400 || data?.status === "failure") {
-				notification.error({
-					message: "Image Upload Failed",
-					description:
-						data?.status_desc || "Something went wrong. Please try again.",
-				});
-				return;
-			}
-			const url = data?.data?.[0]?.url;
-			setUploadedImages(prev => prev.concat(url))
-			if (url) {
-				// setUploadedImages((prev) => [...prev, url]);
-				// additional_images.push(url)
-				notification.success({
-					message: "Image Uploaded Successfully",
-				});
-			}
-		} catch (error) {
-			console.error("Upload failed:", error);
-			notification.error({
-				message: "Image Upload Failed",
-				description:
-					error?.response?.data?.message || "Unexpected error occurred",
-			});
-		} finally {
-			setShowLoader(false);
-		}
-	};
+  const handleVTOCancel = () => {
+    setButtonClick(false);
+    setVtoResultImageUrl(null);
+    setUploadedImages([]);
+    setDescriptionget("");
+  };
+  const fetchProductDetails = async () => {
+    dispatch(PDPloader(true));
+    try {
+      const products =
+        await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode);
+      if (products && products.status === 200 && products.data) {
+        let data = products.data.data[0];
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      dispatch(PDPloader(false));
+    }
+  };
+  const savedProduct = (p) => {
+    return customProductsData.find((item) => item.mfr_code === p);
+  };
 
-	const uploadImageDraggerProps = {
-		accept: "image/*",
-		multiple: true,
-		showUploadList: false,
-		customRequest: ({ file, onSuccess }) => {
-			handleUploadImage({ file });
-			setTimeout(() => onSuccess("ok"), 0);
-		},
-	};
-
-
-	const handleVTOclick = async (e) => {
-		e.stopPropagation();
-		e.preventDefault();
-		const url = window.location.origin
-		// setButtonClick(true);
-
-		const payload = {
-			image_urls: [product.image, uploadedImages[0]],
-			store: storeData.store_name,
-			image_tryon_prompt: descriptionget || '',
-		}
-		try {
-			setLoading(true);
-			const res = await axios.post(`https://auraprod.unthink.ai/cs/image_tryon/`, payload)
-			setVtoResultImageUrl(res.data.data.image_url);
-			setLoading(false);
-		} catch (error) {
-			console.log(error);
-			notification.error({
-				message: "Virtual Try-On Failed",
-				description: error?.response?.data?.message || "Failed to process image. Please try again.",
-			});
-			setLoading(false);
-		}
-	}
-
-	const handleVTODownload = async () => {
-		if (vtoResultImageUrl) {
-			try {
-				const response = await fetch(vtoResultImageUrl);
-				const blob = await response.blob();
-				const url = window.URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.href = url;
-				link.download = `vto-result-${Date.now()}.jpg`;
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-				window.URL.revokeObjectURL(url);
-				notification.success({
-					message: "Download Successful",
-					description: "Your virtual try-on image has been downloaded.",
-				});
-				handleVTOCancel();
-			} catch (error) {
-				console.error('Download failed:', error);
-				notification.error({
-					message: "Download Failed",
-					description: "Failed to download the image. Please try again.",
-				});
-			}
-		}
-	};
-
-
-	const handleVTOCancel = () => {
-		setButtonClick(false);
-		setVtoResultImageUrl(null);
-		setUploadedImages([]);
-		setDescriptionget('');
-	};
-	const fetchProductDetails = async () => {
-		dispatch(PDPloader(true));
-		try {
-			const products = await customProductsAPIs.fetchProductDetailsAPICall(
-				clickedMfrCode
-			);
-			if (products && products.status === 200 && products.data) {
-				let data = products.data.data[0];
-
-			}
-		} catch (e) {
-			console.log(e);
-		}
-		finally {
-			dispatch(PDPloader(false));
-		}
-	};
-	const savedProduct = (p) => {
-		return customProductsData.find((item) => item.mfr_code === p);
-	};
-
-	useEffect(() => {
-		if (!clickedMfrCode) return;
+  useEffect(() => {
+    if (!clickedMfrCode) return;
 
 		const result = savedProduct(clickedMfrCode);
 	if ( clickedMfrCode ) {
@@ -737,19 +748,22 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 					</div>
 				</div>
 
-				{/* product card header */}
-				<div
-					className={`box-border absolute top-0 w-full flex ${enableViewSimilar ||
-						(widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-							showRemoveIcon) ||
-						enableSelect
-						? "flex-row-reverse"
-						: ""
-						} justify-between ${size === "small"
-							? "px-2 lg:px-2.5 h-12"
-							: "px-2 lg:p-2.5 h-12 lg:h-20"
-						} z-20`}>
-					{/* reversed contents for hover css */}
+        {/* product card header */}
+        <div
+          className={`box-border absolute top-0 w-full flex ${
+            enableViewSimilar ||
+            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+              showRemoveIcon) ||
+            enableSelect
+              ? "flex-row-reverse"
+              : ""
+          } justify-between ${
+            size === "small"
+              ? "px-2 lg:px-2.5 h-12"
+              : "px-2 lg:p-2.5 h-12 lg:h-20"
+          } z-20`}
+        >
+          {/* reversed contents for hover css */}
 
 					{enableSelect ? (
 						<div
@@ -881,8 +895,8 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 								{product.name}
 							</Text>
 						</div> */}
-						{/* REMOVE */}
-						{/* <h1 className='m-0 text-xs lg:text-sm overflow-hidden overflow-ellipsis whitespace-nowrap capitalize product_attribute'>
+            {/* REMOVE */}
+            {/* <h1 className='m-0 text-xs lg:text-sm overflow-hidden overflow-ellipsis whitespace-nowrap capitalize product_attribute'>
 							{(product.color?.length &&
 								(typeof product.color === "string"
 									? product.color
@@ -910,78 +924,84 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
  							null
 						)}
 
-						{/* SOLD Badge */}
-						{product?.avlble === 0 && (
-							<div
-								className='p-1 leading-none text-red-500 text-xs product_card_footer_item'
-								style={{
-									backgroundColor: "#fff2f0",
-									border: "1px solid #ffccc7",
-									width: "fit-content",
-								}}>
-								SOLD
-							</div>
-						)}
-					</div>
+            {/* SOLD Badge */}
+            {product?.avlble === 0 && (
+              <div
+                className="p-1 leading-none text-red-500 text-xs product_card_footer_item"
+                style={{
+                  backgroundColor: "#fff2f0",
+                  border: "1px solid #ffccc7",
+                  width: "fit-content",
+                }}
+              >
+                SOLD
+              </div>
+            )}
+          </div>
 
-
-					{(storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0) ||
-						(storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0) ||
-						(storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0) ? (
-						<div>
-							{storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0 && (
-								<span
-									className='mx-1  lg:inline-block block px-1   rounded-md '
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									size:
-									{Array.isArray(product?.size)
-										? product.size
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.size?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-							{storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0 && (
-								<span
-									className='mx-1 px-1 mt-1 lg:mt-0  lg:inline-block block  rounded-md'
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									sleeve :{" "}
-									{Array.isArray(product?.sleeve)
-										? product.sleeve
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.sleeve?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-							{storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0 && (
-								<span
-									className='mx-1 px-1  mt-1 lg:mt-0  lg:inline-block block  rounded-md'
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									fit:{" "}
-									{Array.isArray(product?.fit)
-										? product.fit
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.fit?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-						</div>)
-						:null
-					}
-
-
+          {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
+            product?.size?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+            product?.sleeve?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+            product?.fit?.length > 0) ? (
+            <div>
+              {storeData.pdp_settings?.buy_card_attributes?.[0] &&
+                product?.size?.length > 0 && (
+                  <span
+                    className="mx-1  lg:inline-block block px-1   rounded-md "
+                    style={{
+                      background: "#eeeeee",
+                      width: "fit-content",
+                      fontSize: 10,
+                    }}
+                  >
+                    size:
+                    {Array.isArray(product?.size)
+                      ? product.size
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.size?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+              {storeData.pdp_settings?.buy_card_attributes?.[1] &&
+                product?.sleeve?.length > 0 && (
+                  <span
+                    className="mx-1 px-1 mt-1 lg:mt-0  lg:inline-block block  rounded-md"
+                    style={{
+                      background: "#eeeeee",
+                      width: "fit-content",
+                      fontSize: 10,
+                    }}
+                  >
+                    sleeve :{" "}
+                    {Array.isArray(product?.sleeve)
+                      ? product.sleeve
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.sleeve?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+              {storeData.pdp_settings?.buy_card_attributes?.[2] &&
+                product?.fit?.length > 0 && (
+                  <span
+                    className="mx-1 px-1  mt-1 lg:mt-0  lg:inline-block block  rounded-md"
+                    style={{
+                      background: "#eeeeee",
+                      width: "fit-content",
+                      fontSize: 10,
+                    }}
+                  >
+                    fit:{" "}
+                    {Array.isArray(product?.fit)
+                      ? product.fit
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.fit?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+            </div>
+          ) : null}
 
 					{/* Price Section */}
 					{}

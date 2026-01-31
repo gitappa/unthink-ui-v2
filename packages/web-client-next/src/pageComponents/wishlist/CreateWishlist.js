@@ -771,7 +771,7 @@ const CreateWishlist = ({
 								src={getFinalImageUrl(wishlistData.cover_image)}
 								height='100%'
 								width='100%'
-								effect='blur'
+								// effect='blur'
 								className='object-cover mx-auto rounded-xl max-w-s-1 w-120 lg:w-200 h-120 lg:h-200'
 							/>
 
