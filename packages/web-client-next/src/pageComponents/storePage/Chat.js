@@ -396,13 +396,14 @@ const Chat = ({
 		chatImageUrl || chatMessage ? (
 			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
 				<ArrowRightOutlined
-					className={`${styles.arrow_icon} ${styles.dark_text_black_200}`}
+					className={`${styles.arrow_icon} text-black-200 dark:text-white`}
 					onClick={!auraCameraSpinLoader ? handleSubmitChatInput : undefined}
+					style={{ fontSize: '18px', fontWeight: 'bold' }}
 				/>
 			</div>
 		) : !isBTNormalUserLoggedIn ? (
 			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
-				<Image src={headerSearchIcon} alt="Search" className={`${styles.search_icon_sm} ${styles.dark_text_white} ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
+				<Image src={headerSearchIcon} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
 			</div>
 		) : null;
 
@@ -522,8 +523,9 @@ const Chat = ({
 									aura_header_theme === "dark"
 										? styles.chat_input_dark
 										: ""
-										}`}
+										} text-lg`}
 								allowClear
+								style={{ fontSize: '16px' }}
 							/>
 						</Form>
 						{/* <div

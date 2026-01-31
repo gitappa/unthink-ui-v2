@@ -270,7 +270,7 @@ const AuraResponseProducts = ({
 	}, [displayFilters, availableFilters]);
 
 	const onProductClick = () => {
-		if (enableClickFetchRec) dispatch(handleRecProductClick());
+		if (enableClickFetchRec && !enableSelectProduct) dispatch(handleRecProductClick());
 	};
 
 	const handleSuggestionAdditionalTagClick = (tag, additionalTag) => {
@@ -457,6 +457,7 @@ const AuraResponseProducts = ({
 	}, [currentTag]);
 
 	const onSelectProductClick = (mfr_code) => {
+		setEnableSelectProduct(true);
 		setSelectedProducts((prev) => {
 			if (prev.includes(mfr_code)) {
 				return prev.filter((code) => code !== mfr_code);
@@ -467,6 +468,9 @@ const AuraResponseProducts = ({
 	};
 
 	const onSelectAllChange = () => {
+		// e.stopPropagation()
+		console.log('dfdfdfdfd');
+		
 		const currentProducts = productsCache[currentTag] || [];
 		const currentProductCodes = currentProducts.map((p) => p.mfr_code);
 
@@ -912,7 +916,9 @@ const AuraResponseProducts = ({
 					<>
 						<div
 							id='chat_products_inner_content'
-							className={styles['aura-products-grid']}>
+							className={styles['aura-products-grid']}
+							// onChange={onSelectAllChange}
+							>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard
 									key={product.mfr_code}

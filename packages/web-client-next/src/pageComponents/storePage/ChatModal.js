@@ -968,6 +968,7 @@ const ChatModal = ({
 								{auraHelperMessage &&
 									!isFreshSearch &&
 									!isBTNormalUserLoggedIn ? (
+										<>
 									<div className={styles['chatmodal-helper-message-container']}>
 										<div className={styles['chatmodal-helper-message-icon-container']}>
 											<Image
@@ -981,7 +982,15 @@ const ChatModal = ({
 										<div className={styles['chatmodal-helper-message-text']}>
 											{auraHelperMessage}
 										</div>
+										
 									</div>
+										{showChatLoader && (
+											<div className={styles['chatmodal-loading-bar-container']}>
+												<div className={styles['chatmodal-loading-bar']}></div>
+											</div>
+										)}
+										</>
+
 								) : null}
 							</div>
 						</div>
