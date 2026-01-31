@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
+import { IoBagHandleOutline } from "react-icons/io5";
 import styles from "./ProductCard.module.css";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -1046,10 +1047,11 @@ const ProductCard = ({
 										<button
 											className={`${styles['product-buy-button']}`}
 											onClick={checkoutPayment}
-											style={{ background: '#7c75ec' }}
+                      style={{fontSize:"21px"}}
 											disabled={!product?.price && !product?.listprice}
 										>
-										<Image src={buyicon} height={30} width={30}/>	
+                      <IoBagHandleOutline className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+										{/* <Image src={buyicon} height={30} width={30}/>	 */}                   
 										</button>
 									) : (
 										<button
