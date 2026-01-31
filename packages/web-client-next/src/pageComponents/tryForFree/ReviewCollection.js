@@ -470,9 +470,16 @@ console.log('authUserCollections',authUserCollections);
 		authUserCollections,
 		plistId,
 		 currentCollection
-	]); 
+	]);
 
-
+	// Fetch collection data directly on page load/refresh when plistId is available
+	useEffect(() => {
+		if (plistId && authUser.user_id && !currentCollection._id) {
+			dispatch(getUserCollection({ _id: plistId }));
+			dispatch(getSingleUserCollection({ _id: plistId }));
+		}
+	}, [plistId, authUser.user_id]);
+  
 // 	useEffect(() => {
 //   let nextCollection = null;
 
@@ -909,9 +916,8 @@ console.log('authUserCollections',authUserCollections);
 				setSelectedSortOption(PRODUCT_SORT_OPTIONS[0]);
 			}
 		}
-
-
 	}, [currentCollection._id]);
+console.log(currentCollection);
 
 	// decide show at a time only filterOptions, hashtagsInput enableSelectProduct or edit tags input
 	const checkAndShowContainer = useCallback(
