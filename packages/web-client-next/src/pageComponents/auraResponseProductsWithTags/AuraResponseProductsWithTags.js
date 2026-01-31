@@ -11,9 +11,8 @@ import {
 	setRecommendationSelectedTag,
 	setMoreSearchSelectedTag,
 } from "../../hooks/chat/redux/actions";
-
-import styles from './chatSuggestionsWithProducts.module.scss';
 import { isEmpty } from "../../helper/utils";
+import styles from './AuraResponseProductsWithTags.module.css';
 
 const AuraResponseProductsWithTags = ({
 	enableClickFetchRec,
@@ -173,40 +172,35 @@ const AuraResponseProductsWithTags = ({
 	}
 
 	return (
-		<div className='grid grid-cols-1 gap-4' id='aura-response-products-with-tags-container'>
+		<div className={styles['aura-tags-container']} id='aura-response-products-with-tags-container'>
 			{title ? (
 				<h1
 					id='_data_widget_text'
-					className='text-black-102 text-lg lg:text-xl font-bold'
+					className={styles['aura-tags-title']}
 					dangerouslySetInnerHTML={{
 						__html: title,
 					}}
 				/>
 			) : null}
 
-			<div className='flex flex-wrap gap-3'>
+			<div className={styles['aura-tags-wrapper']}>
 				{!isEmpty(allProductList) && tags.length > 1 ? (
 					<div
 						key='All'
-						className={`top-tag-wrapper rounded-full shadow w-max min-w-16 flex justify-center items-center ${!selectedTag && isAllEnabled
-							? "bg-indigo-600"
+						className={`${styles['aura-tag-item']} ${!selectedTag && isAllEnabled
+							? styles['aura-tag-selected']
 							: isAllEnabled
-								? "bg-lightgray-102"
-								: "bg-white"
-							} ${isAllEnabled ? "cursor-pointer" : "cursor-not-allowed"}`}
+								? styles['aura-tag-enabled']
+								: styles['aura-tag-disabled']
+							}`}
 						onClick={() => isAllEnabled && handleSuggestionClick("")}>
 						<h5
-							className={`m-0 px-2 sm:px-4 py-1 font-normal text-xs md:text-sm ${!selectedTag && isAllEnabled
-								? "text-white"
-								: isAllEnabled
-									? "text-black-103"
-									: "text-black-103"
-								}`}>
+							className={styles['aura-tag-text']}>
 							All
 						</h5>
 						{!isAllEnabled ? (
 							<Skeleton.Button
-								className='tag-loading-skeleton'
+								className={styles['aura-tag-loading-skeleton']}
 								active
 								shape='round'
 								block
@@ -216,23 +210,16 @@ const AuraResponseProductsWithTags = ({
 				) : null}
 				{tags?.map((suggestion, index) => (
 					<div
-						id={`tag-${suggestion}`} // Unique ID for scrolling
-						key={suggestion}
-						
-						className={`top-tag-wrapper rounded-full shadow w-max min-w-16 flex justify-center items-center gap-2 ${suggestion === selectedTag
-							? "bg-indigo-600"
-							: checkIsTagEnabled(suggestion)
-								? "bg-lightgray-102"
-								: "bg-white"
-							} ${!checkIsTagEnabled(suggestion) && "cursor-not-allowed"}`}>
-						<h5
-							className={`font-normal text-xs md:text-sm ml-3.5 py-1 ${suggestion === selectedTag
-								? "text-white"
-								: checkIsTagEnabled(suggestion)
-									? "text-black-103"
-									: "text-black-103"
-								} ${checkIsTagEnabled(suggestion) && "cursor-pointer"} ${tags.length === 1 && "mr-3.5"
-								} `}
+					id={`tag-${suggestion}`}
+					key={suggestion}
+					className={`${styles['aura-tag-item']} ${suggestion === selectedTag
+						? styles['aura-tag-selected']
+						: checkIsTagEnabled(suggestion)
+							? styles['aura-tag-enabled']
+							: styles['aura-tag-disabled']
+						} ${tags.length > 1 ? styles['aura-tag-text-multiple'] : ''}`}>
+					<h5
+						className={`${styles['aura-tag-text']} ${tags.length === 1 ? styles['aura-tag-text-single'] : ''}`}
 							onClick={() =>
 								checkIsTagEnabled(suggestion) &&
 								handleSuggestionClick(suggestion)
@@ -241,12 +228,7 @@ const AuraResponseProductsWithTags = ({
 						</h5>
 						{tags.length > 1 ? (
 							<CloseOutlined
-								className={`flex items-center text-xs mr-3 py-1 ${suggestion === selectedTag
-									? "text-white"
-									: checkIsTagEnabled(suggestion)
-										? "text-black-103"
-										: "text-black-103"
-									} ${checkIsTagEnabled(suggestion) && "cursor-pointer"}`}
+								className={styles['aura-tag-close-icon']}
 								role='button'
 								onClick={() =>
 									checkIsTagEnabled(suggestion) &&
@@ -256,7 +238,7 @@ const AuraResponseProductsWithTags = ({
 						) : null}
 						{!checkIsTagEnabled(suggestion) ? (
 							<Skeleton.Button
-								className='tag-loading-skeleton'
+								className={styles['aura-tag-loading-skeleton']}
 								active
 								shape='round'
 								block

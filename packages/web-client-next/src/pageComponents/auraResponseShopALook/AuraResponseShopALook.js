@@ -7,8 +7,8 @@ import {
 	getCurrentTheme,
 	isEmpty,
 } from "../../helper/utils";
+import styles from "./AuraResponseShopALook.module.css";
 
-import styles from './auraResponseShopALook.module.scss';
 
 const { Text } = Typography;
 
@@ -42,9 +42,9 @@ const AuraResponseShopALook = ({
 	if (isEmpty(shopALookData)) return null;
 
 	return (
-		<div id='chat_shop_a_look_container'>
+		<div id='chat_shop_a_look_container' className={styles.auraResponseShopALookContainer}>
 			{title ? (
-				<div className='flex flex-col'>
+				<div className={styles.auraResponseTitleSection}>
 					{/* {text ? (
 						<h1
 							id='shop_a_look_data_widget_text'
@@ -54,36 +54,36 @@ const AuraResponseShopALook = ({
 					) : null} */}
 					<h1
 						id='current_data_text'
-						className='pb-1 md:pb-5 text-black-102 text-lg lg:text-xl font-bold'>
+						className={styles.auraResponseTitle}>
 						{title}
 					</h1>
 				</div>
 			) : null}
 			<div
 				id='chat_shop_a_look_inner_content'
-				className='grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4'>
+				className={styles.auraResponseGridContainer}>
 				{collection_list.map((collection) => (
 					<div
 						key={collection._id}
-						className={`box-content w-40 sm:w-180 lg:w-80`}>
+						className={styles.auraResponseCollectionCard}>
 						<div
-							className='overflow-hidden relative cursor-pointer collection_card_container shadow-3xl rounded-t-xl rounded-b-xl'
+							className={styles.auraResponseCardContainer}
 							onClick={() => handleCollectionClick(collection)}>
-							<div className='h-full'>
+							<div className={styles.auraResponseCardImageWrapper}>
 								<img
 									src={collection.cover_image}
 									width='100%'
-									className='h-180 lg:h-340 object-cover'
+									className={styles.auraResponseCardImage}
 									loading='lazy'
 								/>
 							</div>
 							{/* collection card header */}
-							<div className='box-border absolute top-0 w-full flex justify-between px-2 lg:p-2.5 h-12 lg:h-20 collection_card_header z-20'>
-								<div className='overflow-hidden'>
-									<div className='flex'>
+							<div className={styles.auraResponseCardHeader}>
+								<div className={styles.auraResponseCardHeaderOverflow}>
+									<div className={styles.auraResponseCardHeaderFlex}>
 										<Text
 											ellipsis={{ tooltip: collection.collection_name }}
-											className='m-0 text-sm lg:text-xl overflow-hidden overflow-ellipsis whitespace-nowrap tracking-tighter-0.2 collection_name'>
+											className={styles.auraResponseCollectionNameText}>
 											{collection.collection_name}
 										</Text>
 									</div>
