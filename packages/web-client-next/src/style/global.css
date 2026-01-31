@@ -166,3 +166,13 @@ text-overflow: ellipsis;
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
+.ant-select-selection-item{
+  font-weight: 700 !important;
+}
+/* .rotate-left{
+    transform: rotate(-20deg) !important;
+} */
+.ant-select-selection-item-content{
+  color: #0E131B;
+  font-weight: normal;
+}

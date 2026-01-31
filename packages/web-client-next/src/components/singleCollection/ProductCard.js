@@ -1137,7 +1137,7 @@ const ProductCard = ({
                     <button
                       className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors product_buy_button disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={checkoutPayment}
-                      style={{ background: "#7c75ec" }}
+                    //   style={{ background: "#7c75ec" }}
                       disabled={!product?.price && !product?.listprice}
                     >
                       <Image src={buyicon} height={30} width={30} />

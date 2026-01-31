@@ -15,6 +15,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
 import Image from "next/image";
+import  styles from './header.module.scss'
 
 const SwiftlyHeader = ({
 	disabledOutSideClick,
@@ -57,7 +58,7 @@ const SwiftlyHeader = ({
 					className='w-full flex items-center justify-between lg:px-8 lg:py-2 lg:h-20'>
 					{/* set width only to keep content center aligned */}
 					<div className='w-40 hidden lg:flex items-center justify-start text-white cursor-pointer'>
-						<div className='logo' onClick={() => navigate(PATH_ROOT)}>
+						<div className={`${styles.logo}`} onClick={() => navigate(PATH_ROOT)}>
 							{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 						</div>
 					</div>
