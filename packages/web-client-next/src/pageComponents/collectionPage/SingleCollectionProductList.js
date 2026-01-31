@@ -94,7 +94,7 @@ const SingleCollectionProductList = ({
   sharePageUrl,
   isRootPage = true,
 }) => {
-  console.log(blogCollectionPage.video_url);
+  console.log(sharePageUrl);
 
   const router = useRouter();
   const [statedata, setStatedata] = useState(null);
@@ -1342,7 +1342,7 @@ const SingleCollectionProductList = ({
                         {!expanded && isCut && (
                           <span
                             onClick={() => setExpanded(true)}
-                            className="absolute bottom-0 pb-0 lg:pb-0.5 right-0 text-blue-600 text-sm font-medium cursor-pointer hover:underline bg-white pl-2"
+                            className="absolute bottom-0 pb-0 lg:pb-0.5 right-0 text-violet-100 text-sm font-medium cursor-pointer hover:underline bg-white pl-2"
                           >
                             Read more
                           </span>
@@ -1351,7 +1351,7 @@ const SingleCollectionProductList = ({
                         {expanded && (
                           <span
                             onClick={() => setExpanded(false)}
-                            className="ml-1 text-blue-600 text-sm  block  font-medium cursor-pointer hover:underline"
+                            className="ml-1 text-violet-100 text-sm  block  font-medium cursor-pointer hover:underline"
                           >
                             Read less
                           </span>
