@@ -6,6 +6,7 @@ import React, {
 	useState,
 	useContext,
 } from "react";
+import style from './tryForFree.module.scss'
 import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link';
 import { useRouter } from "next/router";
@@ -4478,7 +4479,7 @@ console.log(currentCollection);
 																			style={{ width:"200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection   w-full text-white placeholder-white"
+																				className={`${style['custom-select-editcollection']}  w-full text-white placeholder-white `}
 																				placeholder="Next Action"
 																				onChange={handleSelectChange}
 																				value={actionType}
@@ -4520,7 +4521,7 @@ console.log(currentCollection);
 																			style={{ width: "200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection   w-full text-white placeholder-white"
+																				className={`${style['custom-select-editcollection']}   w-full text-white placeholder-white`}
 																				placeholder="Next Action"
 																				onClick={() => setEnableSelectProduct(true)}
 																				onChange={handleSelectChange}
@@ -4567,13 +4568,13 @@ console.log(currentCollection);
 													{productsToShow.length ? (
 														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
 															{/* <div className="colloction_details_tag_div"></div> */}
-															<div className="flex items-center w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl edit_collection_sort_product_list">
+															<div className="flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl edit_collection_sort_product_list">
 																<label className="whitespace-nowrap text-xs md:text-sm font-semibold text-newcolor-100">
 																	Sort by :
 																</label>
 																<Select
 																	name='sortBy'
-																	className='w-full'
+																	className='w-full font-bold '
 																	size='small'
 																	value={selectedSortOption.id}
 																	onChange={handleSortOptionChange}>
