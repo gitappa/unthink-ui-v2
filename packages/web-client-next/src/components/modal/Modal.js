@@ -24,6 +24,8 @@ const Modal = ({
 	headerTextClassName = "text-xl-1.5 font-semibold",
 	closeClassName = "text-xl-1.5",
 }) => {
+	console.log('onClose',onClose);
+	
 	const [showChatModal, showWishlistModal] = useSelector((state) => [
 		state.chatV2.showChatModal,
 		state.appState.wishlist.showWishlistModal,
@@ -75,7 +77,7 @@ const Modal = ({
 		return (
 			<div
 				// unthinkNextGenModalClass class added to handle body overflow scroll bar
-				className={`${unthinkNextGenModalClass} fixed flex justify-center items-center w-full h-screen overflow-auto left-0 top-0 backdrop-filter backdrop-blur-xs bg-gray-102 ${zIndexClassName}`}
+				className={`${unthinkNextGenModalClass} fixed flex justify-center z-50 items-center w-full h-screen overflow-auto left-0 top-0 backdrop-filter backdrop-blur-xs bg-gray-102 ${zIndexClassName}`}
 				onClick={() => maskClosable && onClose && onClose()}>
 				<div
 					className={`max-h-screen w-full mx-auto ${maxWidthClassName} pt-5`}

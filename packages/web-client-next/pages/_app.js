@@ -11,6 +11,8 @@ import '../src/style/global.css';
 import '../src/style/index.module.scss';
 import '../src/pageComponents/swiftlyStyled/pageContents/mainContent.scss';
 import '../src/libs/index.css';
+// Import custom Ant Design modal and carousel styles
+import '../src/pageComponents/Home/Popup.css';
 
 // Import context and state wrappers
 import ReduxWrapper from '../src/state/reduxWrapper';
