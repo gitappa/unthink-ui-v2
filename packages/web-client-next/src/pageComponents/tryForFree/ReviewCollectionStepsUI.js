@@ -75,7 +75,7 @@ const ReviewCollectionStepsUI = ({
 			<div style={{ position: "relative" }}>
 				{/* Image displayed above the dot */}
 				<div
-					className={`steps-icon ${isActive ? "active" : ""} ${isFinished ? "finished" : ""}`}
+					className={`steps-icon ${isActive ? "active" : ""} ${isFinished ? "finished" : ""} ${currentStep.title ==='Publish' ? 'rotate-left' : ''} `}
 					onClick={!currentStep.disabled ? currentStep.onClick : undefined}
 				>
 					{currentStep.icon}
