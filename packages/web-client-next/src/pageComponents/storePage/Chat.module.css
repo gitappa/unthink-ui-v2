@@ -80,6 +80,10 @@
   box-shadow: none !important;
 }
 
+.chat_input :global(.ant-input-clear-icon) {
+  font-size: 18px !important;
+}
+
 .chat_input_dark {
   color: white;
 }
@@ -108,6 +112,7 @@
 .controls_divider {
   border-left: 2px solid #000000;
   height: 1.75rem;
+  
 }
 
 .controls_divider_dark {

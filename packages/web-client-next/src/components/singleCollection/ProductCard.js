@@ -642,7 +642,11 @@ const ProductCard = ({
 				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
 				// onClick={handleProductClick}
 				onClick={() => {
-					setClickedMfrCode(product?.mfr_code);
+					if (enableSelect) {
+						handleProductClick();
+					} else {
+						setClickedMfrCode(product?.mfr_code);
+					}
 				}}
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
@@ -767,7 +771,7 @@ const ProductCard = ({
           {/* reversed contents for hover css */}
 
 					{enableSelect ? (
-						<div
+						<div 
 							className={`${styles['product-remove-icon-container']} ${size === "small" ? styles['product-remove-icon-container-small'] : ''}`}>
 							<input
 								type='checkbox'
@@ -854,13 +858,13 @@ const ProductCard = ({
 											e.stopPropagation();
 										}}>
 								<p
-									className={`${styles['product-cart-button']} ${styles['product-cart-icon']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+									className={`${styles['product-cart-button']} ${styles['product-cart-icon2']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
 									onClick={(e) => e.stopPropagation()}
 									style={{ backgroundColor: "#f8f6f4" }}>
 									<FiEdit
 										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
 									
-										className={styles['product-cart-icon-small']}
+										className={styles['product-cart-icon-smalls']}
 									/>
 								</p>
 								<p className=" text-gray-101 m-0">Edit</p>
@@ -868,7 +872,13 @@ const ProductCard = ({
 
 							)}
 
-							{!isCustomProductsPage && storeData.is_tryon_enabled && 
+					
+
+
+							  </div>}
+						</>
+					)}
+          		{!isCustomProductsPage && storeData.is_tryon_enabled && 
 								<div className={styles['product-menu-item']}  onClick={(e) => {
 									setButtonClick(true);
 									e.stopPropagation();
@@ -877,14 +887,9 @@ const ProductCard = ({
 								className={`${styles['product-cart-icon']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
 								src={vtf_image}
 							/>
-							<p className=" text-gray-101 m-0">Try On</p>
+							{/* <p className=" text-gray-101 m-0">Try On</p> */}
 										</div>
 							}
-
-
-							  </div>}
-						</>
-					)}
 					<div
 						// ${enableViewSimilar && "w-3/4"} // removed class name
 						className={`product-name overflow-hidden product_details_container`}>

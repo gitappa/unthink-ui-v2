@@ -458,6 +458,8 @@ const StorePageWrapper = (props) => {
 
 
 	const [sharePageUrl, setSharePageUrl] = useState('');
+	console.log('sharepageUrls',sharePageUrl);
+	
 
 	// set collection theme from params
 	useEffect(() => {

@@ -909,3 +909,31 @@
     height: 16rem;
   }
 }
+/* Left to Right Loading Animation */
+@keyframes loadingBarAnimation {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.chatmodal-loading-bar-container {
+  width: 100%;
+  height: 5px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.chatmodal-loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4F46E5, #7C3AED, #4F46E5);
+  background-size: 200% 100%;
+  animation: loadingBarAnimation 2.5s ease-in-out infinite;
+  border-radius: 2px;
+}

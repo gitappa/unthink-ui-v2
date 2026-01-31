@@ -56,6 +56,7 @@ const router = useRouter();
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;
+console.log('dfdvf',collectionId);
 
 
 	// const collectionRedirectPath = useMemo(
@@ -88,10 +89,11 @@ const handlePreviewCollectionPage = () => {
 function pdf(){
 	onClose(()=>false)
 }
+		console.log(url);
 
 	useEffect(() => {
 		console.log(url);
-	}, [copied])
+	}, [])
 
 	const baseUrl = `${url}?utm_source=whatsapp&utm_medium=messaging&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=whatsapp&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
 
