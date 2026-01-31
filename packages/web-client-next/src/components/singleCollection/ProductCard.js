@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
+import { IoBagHandleOutline } from "react-icons/io5";
+import styles from "./ProductCard.module.css";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   HeartOutlined,
@@ -66,8 +68,7 @@ import View_similar_icon from "../../images/view_similar_icon.svg?react";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import Image from "next/image";
 
-import styles from "./product.module.scss";
-import Link from "next/link";
+import Link from 'next/link';
 import { useNavigate } from "../../helper/useNavigate";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import useTheme from "../../hooks/chat/useTheme";
@@ -619,157 +620,134 @@ const ProductCard = ({
   useEffect(() => {
     if (!clickedMfrCode) return;
 
-    const result = savedProduct(clickedMfrCode);
-    if (clickedMfrCode) {
-      console.log("fdfdfdfq", product.url);
+		const result = savedProduct(clickedMfrCode);
+	if ( clickedMfrCode ) {
+			console.log('fdfdfdfq',product.url);
+			
+			if(product.url === "dummy_url"){
 
-      if (product.url === "dummy_url") {
-        navigate(`/product/${clickedMfrCode}`);
-        fetchProductDetails();
-      } else {
-        window.open(product.url, "_blank");
-      }
-      // fetchProductDetails();
-    }
-  }, [clickedMfrCode]);
-  return (
-    <div
-      className={`box-content overflow-y-hidden ${getCurrentTheme()} ${
-        widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
-          ? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
-          : ""
-      } ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}
-    >
-      <div
-        className={`overflow-hidden relative cursor-pointer product_card_container    ${
-          showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
-        } flex flex-col h-full`}
-        // onClick={handleProductClick}
-        onClick={() => {
-          setClickedMfrCode(product?.mfr_code);
-        }}
-      >
-        {/* add div wrapper for show buy now on hover (exclude product header) */}
-        <div
-          className={`product_image_footer_container flex-shrink-0 shadow-md m-1`}
-        >
-          <div>
-            <img
-              src={getFinalImageUrl(product.image)}
-              width="100%"
-              className={`h-180 p-2 object-contain ${
-                size === "small" ? "lg:h-180" : "lg:h-60"
-              }`}
-              loading="lazy"
-            />
-          </div>
+				navigate(`/product/${clickedMfrCode}`);
+				fetchProductDetails();
+			}
+			else{
+				window.open(product.url , '_blank')
+			}
+			// fetchProductDetails();
 
-          <div
-            className="absolute flex-col top-0 h-full w-full items-center justify-center z-10 hidden buyNow_addWishlist_container"
-            style={{ background: themeCodes.productCard.hover_bg }}
-          >
-            <>
-              {!enableSelect ? (
-                <h1
-                  className={`m-0 ${
-                    size === "small" ? "text-base" : "text-2xl"
-                  } font-semibold text-white top-1/2 product_buy_now flex items-center`}
-                >
-                  {isProductUrlAvailable ? buyNowTitle : null}
-                  {isProductUrlAvailable ? (
-                    <Image
-                      src={openInNewTabIcon}
-                      alt="open"
-                      width={20}
-                      height={20}
-                      className="text-white ml-2.5 w-5 h-5"
-                    />
-                  ) : null}
-                </h1>
-              ) : null}
-              {product.brand && (
-                <h1
-                  className={`box-border text-white opacity-80 ${
-                    size === "small" ? "text-sm" : "text-base"
-                  } text-center px-0.75`}
-                >
-                  {buyNowSubTitle || `From ${product.brand}`}{" "}
-                </h1>
-              )}
-              {(storeData?.pdp_settings?.is_buy_button ||
-                storeData?.pdp_settings?.is_add_to_cart_button) && (
-                <>
-                  {storeData?.pdp_settings?.is_buy_button ? (
-                    <button
-                      className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
-                      onClick={checkoutPayment}
-                    >
-                      Buy Now
-                    </button>
-                  ) : (
-                    <button className="box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container">
-                      Add to Cart
-                    </button>
-                  )}
-                </>
-              )}
-            </>
-            {!enableSelect ? (
-              <div className="absolute bottom-2">
-                {enableHoverShowcase && (
-                  <div className="box-border flex items-center justify-center px-2 py-1 mb-1">
-                    <button
-                      className={`flex items-center text-black-200 ${
-                        onStarClick ? "cursor-pointer" : "cursor-default"
-                      }`}
-                      role={onStarClick ? "button" : "img"}
-                      onClick={handleStarClick}
-                    >
-                      {product.starred ? (
-                        <StarFilled className="flex text-xl text-secondary" />
-                      ) : (
-                        <StarOutlined className="flex text-xl text-white" />
-                      )}
-                      <span className="box-border text-base font-semibold text-white pl-2">
-                        Showcase
-                      </span>
-                    </button>
-                  </div>
-                )}
-                <div className="flex items-center justify-center">
-                  {!hideAddToWishlist && (
-                    <div
-                      className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
-                      onClick={addToWishlistClick}
-                    >
-                      <HeartOutlined className="text-white text-xl flex add_to_wishlist_icon" />
-                      <span className="box-border text-base font-semibold text-white pl-2 add_to_wishlist_text">
-                        Add to {WISHLIST_TITLE}
-                      </span>
-                    </div>
-                  )}
-                  {enableCopyFeature && (
-                    <CopyOutlined
-                      onClick={handleCopyClick}
-                      className="text-white text-xl flex ml-2"
-                    />
-                  )}
-                  {/* <Link to='/cart'> */}
-                  {storeData?.pdp_settings?.is_add_to_cart_button && (
-                    <p
-                      className="box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container ml-2"
-                      style={{ zIndex: 10000 }}
-                      onClick={(e) => handleAddToCart(e)}
-                    >
-                      Add to Cart
-                    </p>
-                  )}
-                  {/* </Link> */}
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
+	}}, [clickedMfrCode]);
+	return (
+		<div
+			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
+			<div
+				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
+				// onClick={handleProductClick}
+				onClick={() => {
+					setClickedMfrCode(product?.mfr_code);
+				}}
+			>
+				{/* add div wrapper for show buy now on hover (exclude product header) */}
+				<div
+					className={styles['product-image-container']}>
+					<div>
+						<img
+							src={getFinalImageUrl(product.image)}
+							width='100%'
+							className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
+							loading='lazy'
+						/>
+					</div>
+
+					<div
+						className={styles['product-overlay']}
+						style={{ background: themeCodes.productCard.hover_bg }}>
+						<>
+							{!enableSelect ? (
+								<h1
+									className={`m-0 ${size === "small" ? "text-base" : "text-2xl"
+										} font-semibold text-white top-1/2 product_buy_now ${styles['product-buy-now']} ${styles['product-action-buttons-container']}`}>
+									{isProductUrlAvailable ? buyNowTitle : null}
+									{isProductUrlAvailable ? (
+										<Image src={openInNewTabIcon} alt="open" width={20} height={20} className="text-white ml-2.5 w-5 h-5" />
+									) : null}
+								</h1>
+							) : null}
+							{product.brand && (
+								<h1
+									className={`box-border text-white opacity-80 ${size === "small" ? "text-sm" : "text-base"
+										} text-center px-0.75`}>
+									{buyNowSubTitle || `From ${product.brand}`} </h1>
+							)}
+							{(storeData?.pdp_settings?.is_buy_button ||
+								storeData?.pdp_settings?.is_add_to_cart_button) && (
+									<>
+										{storeData?.pdp_settings?.is_buy_button ? (
+											<button
+												className={styles['product-buy-button']}
+												onClick={checkoutPayment}
+											>
+												Buy Now
+											</button>
+										) : (
+											<button
+												className={styles['product-add-cart-button-header']}
+											>
+												Add to Cart
+											</button>
+										)}
+									</>
+								)}
+
+						</>
+						{!enableSelect ? (
+							<div className={styles['product-overlay-actions']}>
+								{enableHoverShowcase && (
+									<div className={styles['product-action-group']}>
+										<button
+											className={styles['product-star-button']}
+											role={onStarClick ? "button" : "img"}
+											onClick={handleStarClick}>
+											{product.starred ? (
+												<StarFilled className={styles['product-star-icon-filled']} />
+											) : (
+												<StarOutlined className={styles['product-star-icon']} />
+											)}
+											<span className={styles['product-action-label']}>
+												Showcase
+											</span>
+										</button>
+									</div>
+								)}
+								<div className={styles['product-button-group']}>
+									{!hideAddToWishlist && (
+										<div
+											className={styles['product-wishlist-button']}
+											onClick={addToWishlistClick}>
+											<HeartOutlined className={styles['product-wishlist-icon']} />
+											<span className={styles['product-wishlist-label']}>
+												Add to {WISHLIST_TITLE}
+											</span>
+										</div>
+									)}
+									{enableCopyFeature && (
+										<CopyOutlined
+											onClick={handleCopyClick}
+											className={styles['product-copy-icon']}
+										/>
+									)}
+									{/* <Link to='/cart'> */}
+									{storeData?.pdp_settings?.is_add_to_cart_button &&
+										<p
+											className={styles['product-add-cart-button']}
+											style={{ zIndex: 10000 }}
+											onClick={(e) => handleAddToCart(e)}>
+											Add to Cart
+										</p>}
+									{/* </Link> */}
+								</div>
+							</div>
+						) : null}
+					</div>
+				</div>
 
         {/* product card header */}
         <div
@@ -788,192 +766,129 @@ const ProductCard = ({
         >
           {/* reversed contents for hover css */}
 
-          {enableSelect ? (
-            <div
-              className={`box-border flex items-center self-baseline product_remove_icon ${
-                size === "small" ? "pl-1 pt-1" : "pl-1 pt-1 lg:pl-0 lg:pt-0"
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onClick={handleSelectProduct}
-                onChange={() => {}} // fix onchange handler warning
-                className={size === "small" ? "lg:h-4 w-4" : "lg:h-6 w-6"}
-              />
-            </div>
-          ) : (
-            <>
-              {enableViewSimilar && (
-                <div
-                  className="mt-0.75 lg:mt-0.5 flex items-center self-baseline view_similar_container view-similar-icon"
-                  onClick={onSimilarClick}
-                >
-                  <View_similar_icon className="w-5 h-5 lg:w-8 lg:h-8 cursor-pointer text-xl lg:text-3xl-1 view_similar_icon" />
-                  <span className="box-border text-xl font-bold pl-2 hidden transition-all view_similar_text">
-                    View Similar
-                  </span>
-                </div>
-              )}
+					{enableSelect ? (
+						<div
+							className={`${styles['product-remove-icon-container']} ${size === "small" ? styles['product-remove-icon-container-small'] : ''}`}>
+							<input
+								type='checkbox'
+								checked={isSelected}
+								onClick={handleSelectProduct}
+								onChange={() => { }} // fix onchange handler warning
+								className={`${styles[size === "small" ? 'product-checkbox-small' : 'product-checkbox-large']}`}
+							/>
+						</div>
+					) : (
+						<>
+							{enableViewSimilar && (
+								<div
+									className={styles['product-view-similar']}
+									onClick={onSimilarClick}>
+									<View_similar_icon className={styles['product-view-similar-icon']} />
+									<span className={styles['product-view-similar-text']}>
+										View Similar
+									</span>
+								</div>
+							)}
 
-              <BsThreeDots
-                onClick={(e) => {
-                  setMenuIcon(true);
-                  e.stopPropagation();
-                }}
-                className="hover-fancy hover:shadow  mt-3 text-2xl absolute top-2 right-2 bg-gray-100 rounded-full p-1"
-              />
-              {menuIcon && (
-                <div
-                  ref={menuRef}
-                  onClick={(e) => e.stopPropagation()}
-                  className="menu-animate bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 "
-                >
-                  {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                    showRemoveIcon &&  (
-                      <div
-                        className={`    gap-${size === "small" ? "2" : "3"}`}
-                      >
-                        <div
-                          className={`flex gap-2 items-center self-baseline product_remove_icon`}
-                          onClick={removeFromWishlistClick}
-                        >
-                          <p
-                            className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${
-                              size === "small"
-                                ? "lg:text-base h-5 w-5 p-1"
-                                : "lg:text-2xl h-6 w-6 p-1"
-                            }`}
-                          >
-                            <RxCross2 />
-                          </p>
-                          <p className="text-gray-101 mb-0">Remove</p>
-                        </div>
-                      </div>
-                    )}
-					 {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                    showRemoveIcon &&  (
-                      <div
-                        className={`    gap-${size === "small" ? "2" : "3"}`}
-                      >
-                        <div
-                          className={`flex gap-2 items-center self-baseline product_remove_icon`}
-                          onClick={removeFromWishlistClick}
-                        >
-                          <p
-                            className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${
-                              size === "small"
-                                ? "lg:text-base h-5 w-5 p-1"
-                                : "lg:text-2xl h-6 w-6 p-1"
-                            }`}
-                          >
-                            <RxCross2 />
-                          </p>
-                          <p className="text-gray-101 mb-0">Remove</p>
-                        </div>
-                      </div>
-                    )}
-                  {enableCopyFeature && (
-                    <div
-                      className="flex gap-2 items-center"
-                      onClick={handleCopyClick}
-                    >
-                      <div
-                        className={` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${
-                          size === "small"
-                            ? "lg:text-base  h-5 w-5 p-1"
-                            : "lg:text-2xl h-6 w-6 p-1"
-                        }`}
-                      >
-                        <LuCopy className="  " />
-                      </div>
-                      <p className="text-gray-101 m-0">Copy</p>
-                    </div>
-                  )}
-                  {(!hideAddToWishlist ||
-                    (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                      showStar)) &&
-                    !showWishlistModal && (
-                      <div className="flex gap-1">
-                        {!hideAddToWishlist && (
-                          <div
-                            className="flex gap-2 items-center"
-                            onClick={addToWishlistClick}
-                          >
-                            <button
-                              className={`    h-6 w-6   rounded-full flex items-center justify-center transition z-30 `}
-                              //  ${isCustomProductsPage
-                              // 	? "right-1 top-20 mt-5"
-                              // 	: "top-2 mt-0 right-1"}
+							  <BsThreeDots  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className={styles['product-menu-icon']} />
+							  {menuIcon && 
+							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className={styles['product-menu-dropdown']}>
 
-                              style={{ background: "#f8f6f4" }}
-                            >
-                              <HeartOutlined className="text-lg z-40 flex add_to_wishlist_icon text-gray-101" />
-                            </button>
-                            <p className="text-gray-101 m-0">Wishlist</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  {isAdminLoggedIn && isCustomProductsPage && (
-                    <div
-                      className="flex gap-2 items-center"
-                      onClick={(e) => {
-                        handleProductClick();
-                        e.stopPropagation();
-                      }}
-                    >
-                      <p
-                        className={`  z-30 h-6 w-6 mb-0  flex items-center  justify-center  rounded-full `}
-                        // ${showRemoveIcon
-                        // 	? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
-                        // 	: "top-2 right-2"
-                        // }
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ backgroundColor: "#f8f6f4" }}
-                      >
-                        <FiEdit
-                          style={{
-                            color: "#9a9b9b",
-                            backgroundColor: "#f8f6f4",
-                          }}
-                          className="h-4 w-4 z-30 rounded"
-                        />
-                      </p>
-                      <p className=" text-gray-101 m-0">Edit</p>
-                    </div>
-                  )}
+							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+								showRemoveIcon && (
+									<div
+										className={`    gap-${size === "small" ? "2" : "3"
+											}`}>
+										<div
+											className={`flex gap-2 items-center self-baseline product_remove_icon`}
+											onClick={removeFromWishlistClick}>
+											<p
+												className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
+														? "lg:text-base h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}>
+												<RxCross2 />												
+											</p>
+											<p className="text-gray-101 mb-0">Remove</p>
+										</div>									
+									</div>
+								)}
+									{enableCopyFeature && (
+											<div className={styles['product-menu-item']} onClick={handleCopyClick} >
 
-                  {!isCustomProductsPage && storeData.is_tryon_enabled && (
-                    <div
-                      className="flex gap-2 items-center "
-                      onClick={(e) => {
-                        setButtonClick(true);
-                        e.stopPropagation();
-                      }}
-                    >
-                      <img
-                        className={` flex items-center justify-center   z-30  ${
-                          size === "small" ? "h-6 w-6" : "h-7 w-7"
-                        } ${
-                          enableCopyFeature && showRemoveIcon
-                            ? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
-                            : "top-9 right-1 "
-                        }`}
-                        src={vtf_image}
-                      />
-                      <p className=" text-gray-101 m-0">Try On</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-          <div
-            // ${enableViewSimilar && "w-3/4"} // removed class name
-            className={`product-name overflow-hidden product_details_container`}
-          >
-            {/* <div className='flex'>
+											<div
+												className={ ` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
+														? "lg:text-base  h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}
+												>
+												<LuCopy className='  ' />
+												
+											</div>
+											<p className="text-gray-101 m-0">Copy</p>
+											</div>
+										)}
+								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
+								<div className={styles['product-menu-item']}>
+									{!hideAddToWishlist && (
+										<div className={styles['product-menu-item']} onClick={addToWishlistClick} >
+
+										<button
+											className={`${styles['product-heart-button']}`}
+												//  ${isCustomProductsPage
+												// 	? "right-1 top-20 mt-5"
+												// 	: "top-2 mt-0 right-1"}
+												
+											
+											style={{ background: "#f8f6f4" }}>
+											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
+										</button>
+										<p className="text-gray-101 m-0">Wishlist</p>
+										</div>
+									)}										
+								</div>
+							}
+							{isAdminLoggedIn && isCustomProductsPage && (
+								<div className="flex gap-2 items-center" 	onClick={(e) => {
+											handleProductClick();
+											e.stopPropagation();
+										}}>
+								<p
+									className={`${styles['product-cart-button']} ${styles['product-cart-icon']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+									onClick={(e) => e.stopPropagation()}
+									style={{ backgroundColor: "#f8f6f4" }}>
+									<FiEdit
+										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
+									
+										className={styles['product-cart-icon-small']}
+									/>
+								</p>
+								<p className=" text-gray-101 m-0">Edit</p>
+								</div>
+
+							)}
+
+							{!isCustomProductsPage && storeData.is_tryon_enabled && 
+								<div className={styles['product-menu-item']}  onClick={(e) => {
+									setButtonClick(true);
+									e.stopPropagation();
+								}}>
+							<img
+								className={`${styles['product-cart-icon']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+								src={vtf_image}
+							/>
+							<p className=" text-gray-101 m-0">Try On</p>
+										</div>
+							}
+
+
+							  </div>}
+						</>
+					)}
+					<div
+						// ${enableViewSimilar && "w-3/4"} // removed class name
+						className={`product-name overflow-hidden product_details_container`}>
+						{/* <div className='flex'>
 							<Text
 								ellipsis={{ tooltip: product.name }}
 								className={`m-0 text-sm ${size === "small" ? "lg:text-sm" : "lg:text-xl"
@@ -989,28 +904,26 @@ const ProductCard = ({
 									: product.color[0])) ||
 								null}
 						</h1> */}
-          </div>
-        </div>
+					</div>
+				</div>
 
-        {/* product footer */}
-        <div
-          className={`box-border w-full flex flex-col px-3 py-3 bg-white h-full   ${size === "small" ? "gap-2" : "gap-3"}`}
-        >
-          {/* Product Name */}
-          <div className="flex flex-col gap-1 ">
-            <Text
-              ellipsis={{ tooltip: product.name }}
-              className="m-0 text-sm font-semibold text-gray-900 overflow-hidden overflow-ellipsis whitespace-nowrap product_name"
-            >
-              {product.name || "\u00A0"}
-            </Text>
 
-            {/* Brand Info */}
-            {product?.brand ? (
-              <p className="m-0 text-xs text-gray-600">
-                From <span className="font-medium">{product.brand}</span>
-              </p>
-            ) : null}
+				{/* product footer */}
+				<div className={`${styles['product-footer-main']} ${size === "small" ? styles['product-footer-main-small'] : styles['product-footer-main-medium']}`}>
+					{/* Product Name */}
+					<div className={styles['product-name-section']}>
+						<Text
+							ellipsis={{ tooltip: product.name }}
+							className={styles['product-name-text']}>
+							{product.name || '\u00A0'}
+						</Text>
+
+						{/* Brand Info */}
+						{product?.brand ? (
+							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product.brand}</span></p>
+						) : (
+ 							null
+						)}
 
             {/* SOLD Badge */}
             {product?.avlble === 0 && (
@@ -1091,308 +1004,266 @@ const ProductCard = ({
             </div>
           ) : null}
 
-          {/* Price Section */}
-          {}
-          <div
-            className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? "min-h-[32px]" : ""}`}
-          >
-            <div className="flex gap-2 items-center ">
-              <span
-                className={` text-gray-900 font-bold product_price ${size === "small" ? "lg:text-sm  " : "lg:text-xl text-lg"}`}
-              >
-                {product?.price || product?.listprice ? (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: `${currencySymbol}${product.price || product.listprice}`,
-                    }}
-                  />
-                ) : null}
-              </span>
+					{/* Price Section */}
+					{}
+					<div className={`flex justify-between items-center gap-2  ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+						<div className={styles['product-price-display']} >
 
-              {product?.price > 0 &&
-                product?.listprice > product?.price &&
-                discountPer > 0 && (
-                  <>
-                    <span className="text-sm line-through text-gray-101 product_listprice">
-                      <span
-                        className="text-black"
-                        style={{ color: "gray" }}
-                        dangerouslySetInnerHTML={{
-                          __html: `${currencySymbol}${product.listprice}`,
-                        }}
-                      />
-                    </span>
-                    <span className="text-xs font-bold text-red-500 product_discount">
-                      {(discountPer && `-${discountPer}%`) || null}
-                    </span>
-                  </>
-                )}
-            </div>
+						<span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
+							{product?.price || product?.listprice ? (
+								<span
+									dangerouslySetInnerHTML={{
+										__html: `${currencySymbol}${product.price || product.listprice}`,
+									}}
+								/>
+							) : (
+								null
+							)}
+						</span>
 
-            {(storeData?.pdp_settings?.is_buy_button ||
-              storeData?.pdp_settings?.is_add_to_cart_button) &&
-              !isCustomProductsPage && (
-                <>
-                  {storeData?.pdp_settings?.is_buy_button ? (
-                    <button
-                      className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors product_buy_button disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={checkoutPayment}
-                    //   style={{ background: "#7c75ec" }}
-                      disabled={!product?.price && !product?.listprice}
-                    >
-                      <Image src={buyicon} height={30} width={30} />
-                    </button>
-                  ) : (
-                    <button
-                      className={` text-white font-semibold   rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${!product?.price && !product?.listprice ? "hidden" : "block"}`}
-                      onClick={handleAddToCart}
-                      disabled={!product?.price && !product?.listprice}
-                    >
-                      <FiShoppingCart
-                        className={`text-black-100  cursor-pointer  ${showWishlistModal || size === "small" ? "h-5 w-5" : "lg:h-6 lg:w-6 h-5 w-5"}    `}
-                      />
-                    </button>
-                  )}
-                </>
-              )}
-          </div>
+						{product?.price > 0 &&
+							product?.listprice > product?.price &&
+							discountPer > 0 && (
+								<>
+									<span className={styles['product-listprice-text']}>
+										<span className={styles['product-listprice-value']}
+											dangerouslySetInnerHTML={{
+												__html: `${currencySymbol}${product.listprice}`,
+											}}
+										/>
+									</span>
+									<span className={styles['product-discount-badge-text']}>
+										{(discountPer && `-${discountPer}%`) || null}
+									</span>
+								</>
+							)}
+						</div>
 
-          {/* Action Buttons */}
-          {!enableSelect && (
-            <div className="flex gap-1 lg:gap-2 items-center justify-between">
-              <div>
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                showStar ? (
-                  <button
-                    className={` absolute top-3 left-2  rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${
-                      onStarClick ? "cursor-pointer" : "cursor-default"
-                    }`}
-                    tabindex="-1"
-                    role={onStarClick ? "button" : "img"}
-                    onClick={handleStarClick}
-                  >
-                    {product.starred ? (
-                      <StarFilled className="flex text-secondary" />
-                    ) : (
-                      <StarOutlined className="flex text-black-200" />
-                    )}
-                    <span className="box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text">
-                      Showcase
-                    </span>
-                  </button>
-                ) : null}
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                  showStar && (
-                    <button
-                      onClick={handleStarClick}
-                      role={onStarClick ? "button" : "img"}
-                      className={`border rounded-lg absolute top-3 left-2 flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}
-                    >
-                      {product.starred ? (
-                        <StarFilled className="text-lg text-yellow-500" />
-                      ) : (
-                        <StarOutlined className="text-lg text-gray-600" />
-                      )}
-                    </button>
-                  )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {buttonClick ? (
-        <Modal
-          isOpen={buttonClick}
-          headerText={"Virtual Try-On"}
-          subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
-          onClose={() => handleVTOCancel()}
-          size="md"
-        >
-          {vtoResultImageUrl ? (
-            <div className="flex flex-col items-center justify-center">
-              <img
-                src={vtoResultImageUrl}
-                alt="VTO Result"
-                className="max-h-96 rounded-xl mb-5"
-              />
-              <div className="flex gap-3 justify-end w-full">
-                <button
-                  onClick={handleVTOCancel}
-                  className="rounded-xl text-indigo-600 font-bold text-xs md:text-sm py-2 px-4.5 border border-indigo-600 transition-colors hover:bg-indigo-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVTODownload}
-                  className="rounded-xl text-white font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600 transition-colors hover:bg-indigo-700"
-                >
-                  Download
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4">
-                  <LoadingOutlined className="text-5xl text-indigo-600 animate-spin" />
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="text-lg font-semibold text-gray-800">
-                      AI is generating your image
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Please wait while we process your request...
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleVTOclick}>
-                  <div className="flex flex-col items-center justify-center relative">
-                    {showLoader ? (
-                      <LoadingOutlined className="text-2xl text-gray-600 mb-2" />
-                    ) : (
-                      <>
-                        {uploadedImages.length < 1 && (
-                          // <Dragger
-                          // 	className='bg-transparent h-20 w-20 border border-dashed border-gray-400 rounded-xl hover:border-brown-100 transition-all'
-                          // 	{...uploadImageDraggerProps}
-                          // 	name='upload_image'>
-                          // 	<p className='text-gray-600'>+</p>
-                          // </Dragger>
 
-                          <div className="flex flex-col items-center justify-center">
-                            <h4 className="text-xl font-semibold text-start mb-3">
-                              Upload Your Image{" "}
-                            </h4>
-                            <Upload.Dragger
-                              className="bg-transparent h-56 w-56"
-                              {...uploadImageDraggerProps}
-                              name="upload_image"
-                              showUploadList={false}
-                            >
-                              <p className="ant-upload-drag-icon">
-                                <UploadOutlined />
-                              </p>
-                              <p className="w-4/6 mx-auto">
-                                Click or drag file(s) to this area
-                              </p>
-                            </Upload.Dragger>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    {uploadedImages.length > 0 && (
-                      <div className="relative ">
-                        <img
-                          src={uploadedImages[0]}
-                          alt="Uploaded"
-                          className="mt-2 max-h-40"
-                        />
-                        <CloseCircleOutlined
-                          className="text-white text-xl absolute right-0 top-2"
-                          onClick={() => setUploadedImages([])}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="mt-5 "> Add a prompt for AI (optional) </h4>
-                  <textarea
-                    className="text-left placeholder-gray-101 mt-2 outline-none rounded-xl w-full px-3 py-2 resize-none"
-                    placeholder="Enter description..."
-                    name="description"
-                    type="text"
-                    onChange={(e) => setDescriptionget(e.target.value)}
-                    value={descriptionget}
-                    // value={product.description}
-                    // onChange={(e) => handleProductInputChange(e, product.mfr_code)}
-                    rows={5}
-                  />
+							{(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
+								<>
+									{storeData?.pdp_settings?.is_buy_button ? (
+										<button
+											className={`${styles['product-buy-button']}`}
+											onClick={checkoutPayment}
+                      style={{fontSize:"21px"}}
+											disabled={!product?.price && !product?.listprice}
+										>
+                      <IoBagHandleOutline className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+										{/* <Image src={buyicon} height={30} width={30}/>	 */}                   
+										</button>
+									) : (
+										<button
+											className={`${styles['product-cart-button']} ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
+											onClick={handleAddToCart}
+											disabled={!product?.price && !product?.listprice}
+										>
+											 <FiShoppingCart className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+										</button>
+									)}
+								</>
+							)}
+					</div>
 
-                  <div className="flex justify-end">
-                    <button></button>
-                    <button
-                      type="submit"
-                      className={`rounded-xl mt-5 text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 flex justify-end  ${loading ? "bg-indigo-400" : "bg-indigo-600"}    mb-2`}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
-              )}
-            </>
-          )}
-        </Modal>
-      ) : null}
+					{/* Action Buttons */}
+					{!enableSelect && (
+						<div className={styles['product-showcase-button-main']}>
+							
+							<div>
+								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
+									<button
+										className={`${styles['product-star-action-button']}`}
+										tabindex='-1'
+										role={onStarClick ? "button" : "img"}
+										onClick={handleStarClick}>
+										{product.starred ? (
+											<StarFilled className='flex text-secondary' />
+										) : (
+											<StarOutlined className='flex text-black-200' />
+										)}
+										<span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+											Showcase
+										</span>
+									</button>
+								) : null}
+																	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+										<button
+											onClick={handleStarClick}
+											role={onStarClick ? "button" : "img"}
+											className={`${styles['product-star-default-button']} ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											{product.starred ? (
 
-      {/* // REMOVE // remove chin section integration and flag // not required */}
-      {showChinSection && (
-        <div className="box-border bg-white rounded-b-xl flex gap-2 p-1 justify-end">
-          <StarOutlined
-            height="fit-content"
-            onClick={handleStarClick}
-            role={onStarClick ? "button" : "img"}
-            className={`flex my-auto z-20 ${
-              size === "small" ? "lg:text-sm" : "lg:text-xl"
-            } ${product.starred ? "text-secondary" : "text-black-200"} ${
-              onStarClick ? "cursor-pointer" : "cursor-default"
-            }`}
-          />
-          {enableCopyFeature && (
-            <div
-              className="flex items-center self-baseline text-black-200 my-auto cursor-pointer"
-              onClick={handleCopyClick}
-            >
-              <CopyOutlined className="text-base flex" />
-            </div>
-          )}
-          <div
-            className="flex items-center self-baseline product_remove_icon   text-black-200 my-auto"
-            onClick={removeFromWishlistClick}
-          >
-            <CloseCircleOutlined className="text-base flex  " />
-          </div>
-        </div>
-      )}
-      {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-        (showEdit || showStar || showRemoveIcon) && (
-          <div
-            className={`flex gap-2  justify-between items-center product-card-action-container ${
-              size === "small" ? "lg:text-base" : "lg:text-xl"
-            }`}
-          >
-            <div>
-              {showRemoveIcon ? (
-                <button
-                  className="flex text-black-200 product-remove-btn absolute top-4 right-2 z-50"
-                  tabindex="-1"
-                  onClick={(e) => removeFromWishlistClick(e)}
-                >
-                  <CloseCircleOutlined className="flex z-50" />
-                  <span className="box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text">
-                    Remove
-                  </span>
-                </button>
-              ) : null}
-            </div>
-            <div>
-              {showEdit ? (
-                <button
-                  className="flex text-black-200 product-showcase-btn cursor-pointer  "
-                  tabindex="-1"
-                  role="button"
-                  onClick={handleEditClick}
-                >
-                  <EditFilled className="flex text-black-200" />
-                  <span className="box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text">
-                    Edit
-                  </span>
-                </button>
-              ) : null}
-            </div>
-          </div>
-        )}
-    </div>
-  );
+												<StarFilled className='text-lg text-yellow-500' />
+											) : (
+												<StarOutlined className='text-lg text-gray-600' />
+											)}
+											 
+										</button>
+									)}
+							</div>
+						</div>
+					)}
+				</div>
+
+			</div>
+
+			{buttonClick ?
+
+				<Modal isOpen={buttonClick}
+					headerText={'Virtual Try-On'}
+					subText='Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on.'
+					onClose={() => handleVTOCancel()}
+					size='md'>
+					{vtoResultImageUrl ? (
+						<div className='flex flex-col items-center justify-center'>
+							<img src={vtoResultImageUrl} alt="VTO Result" className={styles['product-vto-result-image']} />
+						<div className={styles['product-vto-buttons-group']}>
+								<button
+									onClick={handleVTOCancel}
+									className={styles['product-vto-cancel-button']}>
+									Cancel
+								</button>
+								<button
+									onClick={handleVTODownload}
+									className={styles['product-vto-submit-button']}>
+									Download
+								</button>
+							</div>
+						</div>
+					) : (
+						<>
+							{loading ?
+								<div className={styles['product-vto-loading-container']}>
+									<LoadingOutlined className='text-5xl text-indigo-600 animate-spin' />
+									<div className={styles['product-vto-loading-text']}>
+										<p className={styles['product-vto-loading-title']}>AI is generating your image</p>
+										<p className={styles['product-vto-loading-subtitle']}>Please wait while we process your request...</p>
+									</div>
+								</div> :
+								<form onSubmit={handleVTOclick}>
+									<div className='flex flex-col items-center justify-center relative' >
+										{showLoader ? <LoadingOutlined className='text-2xl text-gray-600 mb-2' /> :
+											<>
+												{uploadedImages.length < 1 && (
+													// <Dragger
+													// 	className='bg-transparent h-20 w-20 border border-dashed border-gray-400 rounded-xl hover:border-brown-100 transition-all'
+													// 	{...uploadImageDraggerProps}
+													// 	name='upload_image'>
+													// 	<p className='text-gray-600'>+</p>
+													// </Dragger>
+
+													<div className={styles['product-vto-upload-container']}>
+														<h4 className="text-xl font-semibold text-start mb-3">Upload Your Image </h4>
+														<Upload.Dragger
+															className='bg-transparent h-56 w-56'
+															{...uploadImageDraggerProps}
+															name='upload_image'
+															showUploadList={false}>
+															<p className='ant-upload-drag-icon'>
+																<UploadOutlined />
+															</p>
+															<p className='w-4/6 mx-auto'>
+																Click or drag file(s) to this area
+															</p>
+														</Upload.Dragger>
+													</div>
+												)}
+											</>
+										}
+										{uploadedImages.length > 0 &&
+											<div className="relative ">
+												<img src={uploadedImages[0]} alt="Uploaded" className="mt-2 max-h-40" />
+												<CloseCircleOutlined className='text-white text-xl absolute right-0 top-2' onClick={() => setUploadedImages([])} />
+											</div>
+										}
+									</div>
+									<h4 className={styles['product-vto-prompt-label']}> Add a prompt for AI (optional) </h4>
+									<textarea
+										className='text-left placeholder-gray-101 mt-2 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										placeholder='Enter description...'
+										name='description'
+										type='text'
+										onChange={(e) => setDescriptionget(e.target.value)}
+										value={descriptionget}
+										// value={product.description}
+										// onChange={(e) => handleProductInputChange(e, product.mfr_code)}
+										rows={5}
+									/>
+
+									<div className={styles['product-vto-submit-container']}>
+										<button></button>
+										<button type="submit" className={`${styles['product-vto-submit-form-button']} ${loading ? styles['product-vto-submit-form-button-loading'] : styles['product-vto-submit-form-button-active']}`}>Submit</button>
+									</div>
+								</form>
+							}
+						</>
+					)}
+				</Modal>
+				: null
+			}
+
+			{/* // REMOVE // remove chin section integration and flag // not required */}
+			{showChinSection && (
+				<div className={styles['product-chin-section']}>
+					<StarOutlined
+						height='fit-content'
+						onClick={handleStarClick}
+						role={onStarClick ? "button" : "img"}
+						className={`flex my-auto z-20 ${size === "small" ? "lg:text-sm" : "lg:text-xl"
+							} ${product.starred ? "text-secondary" : "text-black-200"} ${onStarClick ? "cursor-pointer" : "cursor-default"
+							}`}
+					/>
+					{enableCopyFeature && (
+						<div
+							className='flex items-center self-baseline text-black-200 my-auto cursor-pointer'
+							onClick={handleCopyClick}>
+							<CopyOutlined className='text-base flex' />
+						</div>
+					)}
+					<div
+						className='flex items-center self-baseline product_remove_icon   text-black-200 my-auto'
+						onClick={removeFromWishlistClick}>
+						<CloseCircleOutlined className='text-base flex  ' />
+					</div>
+				</div>
+			)}
+			{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+				(showEdit || showStar || showRemoveIcon) && (
+					<div
+						className={`flex gap-2  justify-between items-center product-card-action-container ${size === "small" ? "lg:text-base" : "lg:text-xl"
+							}`}>
+						<div>
+							{showRemoveIcon ? (
+								<button
+									className='flex text-black-200 product-remove-btn absolute top-4 right-2 z-50'
+									tabindex='-1'
+									onClick={(e) => removeFromWishlistClick(e)}>
+									<CloseCircleOutlined className='flex z-50' />
+									<span className='box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text'>
+										Remove
+									</span>
+								</button>
+							) : null}
+						</div>
+						<div>
+							{showEdit ? (
+								<button
+									className='flex text-black-200 product-showcase-btn cursor-pointer  '
+									tabindex='-1'
+									role='button'
+									onClick={handleEditClick}>
+									<EditFilled className='flex text-black-200' />
+									<span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+										Edit
+									</span>
+								</button>
+							) : null}
+						</div>
+					</div>
+				)}
+		</div>
+	);
 };
 
 export default ProductCard;

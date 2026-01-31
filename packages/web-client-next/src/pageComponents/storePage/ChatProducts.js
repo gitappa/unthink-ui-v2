@@ -17,7 +17,7 @@ import {
 	WISHLIST_TITLE,
 } from "../../constants/codes";
 import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALook";
-import styles from './chatSuggestionsWithProducts.module.scss';
+import styles from './ChatProducts.module.css';
 
 const ChatProducts = ({
 	enableClickFetchRec,
@@ -161,10 +161,10 @@ const ChatProducts = ({
 	return (
 		<div
 			id='chat_products_inner_container'
-			className='sm:container px-3 sm:mx-auto pb-5 bg-white'>
+			className={styles['chat-products-container']}>
 			<div
 				id='chat_products_content'
-				className='py-3 lg:py-4 max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto flex flex-col gap-2 md:gap-5'>
+				className={styles['chat-products-content']}>
 				{/* <div
 					id='chat_product_back_icon'
 					className='mb-6 max-w-max flex items-center cursor-pointer z-10'
@@ -177,11 +177,11 @@ const ChatProducts = ({
 				</div> */}
 
 				{products.widgetHeader ? (
-					<div className='flex flex-col'>
+					<div className={styles['chat-products-header']}>
 						{products.text ? (
 							<h1
 								id='current_data_text'
-								className='pb-1 md:pb-5 text-black-102 text-lg lg:text-xl font-bold'>
+								className={styles['chat-products-title']}>
 								{products.text}
 							</h1>
 						) : null}
@@ -189,13 +189,13 @@ const ChatProducts = ({
 							{products.image_url ? (
 								<img
 									src={products.image_url}
-									className='w-96 max-w-full rounded-2xl h-content float-left mr-3'
+									className={styles['chat-products-image']}
 								/>
 							) : null}
 							<p>
 								<span
 									id='current_data_widgetHeader'
-									className='pb-1 md:pb-5 text-black-102 text-base lg:text-lg whitespace-pre-line'
+									className={styles['chat-products-description']}
 									dangerouslySetInnerHTML={{
 										__html: products.widgetHeader,
 									}}
@@ -204,7 +204,7 @@ const ChatProducts = ({
 									<a
 										href={products.page_url}
 										target='_blank'
-										className='bg-primary text-white py-1 px-4 rounded-lg whitespace-nowrap cursor-pointer'>
+											className={styles['chat-products-link']}>
 										View Article
 									</a>
 								) : null}
@@ -221,7 +221,7 @@ const ChatProducts = ({
 							/>
 						) : null} */}
 
-						<div className='flex gap-5 flex-col md:flex-row my-2'>
+						<div className={styles['chat-products-content-wrapper']}>
 							{/* {widgetImage ? (
 								<img
 									id='current_data_widgetHeader_image_url'
@@ -233,7 +233,7 @@ const ChatProducts = ({
 							{widgetHeader ? (
 								<div id='current_data_widgetHeader'>
 									<span
-										className='text-black-102 text-base lg:text-lg whitespace-pre-line'
+										className={styles['chat-products-widget-header']}
 										dangerouslySetInnerHTML={{
 											__html: widgetHeader,
 										}}
@@ -247,14 +247,14 @@ const ChatProducts = ({
 				{!isEmpty(shopALookData) &&
 					isTagAvailable &&
 					!isBTNormalUserLoggedIn ? (
-					<div className='flex flex-row gap-3 text-left text-slate-103 text-sm md:text-base font-bold'>
+					<div className={styles['chat-products-nav-container']}>
 						<div
-							className='cursor-pointer text-indigo-600 border-b-2 border-indigo-600 px-2.5'
+							className={`${styles['chat-products-nav-item']} ${styles['chat-products-nav-item-active']}`}
 							onClick={scrollToProductsContainer}>
 							Products
 						</div>
 						<div
-							className='cursor-pointer'
+							className={styles['chat-products-nav-item']}
 							onClick={scrollToCollectionsContainer}>
 							Collections
 						</div>
@@ -299,12 +299,11 @@ const ChatProducts = ({
 				{chatProductsDataToShow.length ? (
 					<div>
 						{isUserLogin ? (
-							<div className='flex ml-auto text-xs md:text-base mb-2'>
+							<div className={styles['chat-products-selection-controls']}>
 								{enableSelectProduct ? (
-									<div className='flex items-center leading-44'>
-										<div className='flex border border-gray-106 rounded py-2 pl-2'>
+									<div className={styles['chat-products-selected-items']}>
+										<div className={styles['chat-products-checkbox-group']}>
 											<Checkbox
-												className='text-xs md:text-base'
 												indeterminate={
 													selectedProducts.length > 0 &&
 													selectedProducts.length <
@@ -324,10 +323,10 @@ const ChatProducts = ({
 													? onAddSelectedProductsToCollection
 													: undefined
 											}
-											className={`${selectedProducts.length
-												? "text-blue-103 cursor-pointer"
-												: "text-gray-104 cursor-not-allowed"
-												} mb-0 ml-2 underline`}
+											className={`${styles['chat-products-action-text']} ${selectedProducts.length
+												? styles['chat-products-action-button']
+												: styles['chat-products-action-button-disabled']
+											}`}
 											title='Click to add selected products in collection'
 											role='button'>
 											Add to {WISHLIST_TITLE}
@@ -335,14 +334,14 @@ const ChatProducts = ({
 
 										<p
 											onClick={() => handleResetSelectProduct()}
-											className='text-blue-103 mb-0 ml-2 underline cursor-pointer'
+												className={`${styles['chat-products-action-text']} ${styles['chat-products-action-button']}`}
 											role='button'>
 											Cancel
 										</p>
 									</div>
 								) : (
 									<p
-										className='text-blue-103 leading-44 cursor-pointer'
+										className={styles['chat-products-select-prompt']}
 										role='link'
 										onClick={() => setEnableSelectProduct(true)}
 										title='Click and select multiple products to add to collection'>
@@ -354,7 +353,7 @@ const ChatProducts = ({
 
 						<div
 							id='chat_products_inner_content'
-							className='grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4'>
+							className={styles['chat-products-grid']}>
 							{chatProductsDataToShow.map((product) => (
 								<React.Fragment key={product.mfr_code}>
 									<ProductCard

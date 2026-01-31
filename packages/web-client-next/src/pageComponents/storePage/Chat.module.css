@@ -1,0 +1,776 @@
+/* Container Classes */
+.header_chat_container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .header_chat_container {
+    gap: 0.75rem;
+  }
+}
+
+.chat_search_input_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: white;
+  padding: 0.5rem;
+  width: 100%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  position: relative;
+  height: 3.5rem;
+}
+
+.chat_search_input_container_dark {
+  background-color: #475569;
+}
+
+.chat_search_input_container_with_border {
+  border: 1px solid #d9d9d9;
+}
+
+/* Input Styles */
+.input_wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  height: 2.75rem;
+  align-self: center;
+}
+
+@media (min-width: 1024px) {
+  .input_wrapper {
+    height: 3.375rem;
+  }
+}
+
+.input_form {
+  align-self: center;
+  width: 100%;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+  z-index: 10;
+  padding-right: 0.5rem;
+  padding-left: 1rem;
+}
+
+@media (min-width: 768px) {
+  .input_form {
+    padding-right: 0.75rem;
+    padding-left: 1rem;
+  }
+}
+
+.input_form_with_buttons {
+  padding-left: 1rem;
+}
+
+.chat_input {
+  border-radius: 9999px;
+  background-color: transparent;
+  border: none !important;
+  color: #000000;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+  box-shadow: none !important;
+}
+
+.chat_input_dark {
+  color: white;
+}
+
+.chatmodal-products-loader {
+  position: absolute;
+  width: 100%;
+}
+
+/* Button/Icon Controls */
+.input_controls_container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 1rem;
+  padding-left: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .input_controls_container {
+    gap: 0.75rem;
+    padding-right: 1.625rem;
+  }
+}
+
+.controls_divider {
+  border-left: 2px solid #000000;
+  height: 1.75rem;
+}
+
+.controls_divider_dark {
+  border-left-color: white;
+}
+
+.control_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Search Type Buttons */
+.button_container {
+  height: 2.5rem;
+  padding: 0.1875rem;
+}
+
+@media (min-width: 1024px) {
+  .button_container {
+    height: 3.375rem;
+    padding: 0.3125rem;
+  }
+}
+
+.button_group {
+  height: 100%;
+  display: flex;
+  border: 1px solid #6d28d9;
+  border-radius: 9999px;
+  gap: 0.25rem;
+  padding: 0.125rem;
+}
+
+.button_group_dark {
+  background-color: #f1f5f9;
+  border-color: #f1f5f9;
+}
+
+/* Aura Button */
+.aura_button {
+  border-radius: 9999px;
+  cursor: pointer;
+  height: 1.75rem;
+  width: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 1024px) {
+  .aura_button {
+    height: 2.375rem;
+    width: 2.375rem;
+  }
+}
+
+.aura_button_inactive {
+  border: 1px solid #9a9b9b;
+  padding: 0.0625rem;
+}
+
+.aura_button_active {
+  padding: 0.125rem;
+}
+
+.aura_icon {
+  border-radius: 9999px;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .aura_icon {
+    height: 2.125rem;
+    width: 2.125rem;
+  }
+}
+
+/* Search Button */
+.search_button {
+  border-radius: 9999px;
+  cursor: pointer;
+  height: 1.75rem;
+  width: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 1024px) {
+  .search_button {
+    height: 2.375rem;
+    width: 2.375rem;
+  }
+}
+
+.search_button_inactive {
+  border: 1px solid #9a9b9b;
+}
+
+.search_button_active {
+  background-color: #e05c43;
+}
+
+.search_icon {
+  height: 0.875rem;
+  width: 0.875rem;
+  margin: auto;
+}
+
+@media (min-width: 1024px) {
+  .search_icon {
+    height: 1.125rem;
+    width: 1.125rem;
+  }
+}
+
+.search_icon_inactive {
+  color: #6d28d9;
+}
+
+.search_icon_active {
+  color: white;
+}
+
+/* Mic Icon Section */
+.mic_icon_container {
+  display: flex;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+@media (min-width: 768px) {
+  .mic_icon_container {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.mic_icon {
+  display: flex;
+  font-size: 1.125rem;
+  cursor: pointer;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .mic_icon {
+    font-size: 1.25rem;
+  }
+}
+
+/* Camera Icon Section */
+.camera_container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 9999px;
+}
+
+.camera_container_with_image {
+  background-color: #4f46e5;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.camera_container_with_image_dark {
+  background-color: #f1f5f9;
+}
+
+.camera_icon {
+  display: flex;
+  font-size: 1.125rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .camera_icon {
+    font-size: 1.25rem;
+  }
+}
+
+.camera_icon_inactive {
+  color: #000000;
+}
+
+.camera_icon_inactive_dark {
+  color: white;
+}
+
+.camera_icon_active {
+  color: white;
+}
+
+.camera_icon_active_dark {
+  color: #000000;
+}
+
+.camera_loader {
+  position: absolute;
+  right: 0;
+}
+
+/* Search/Arrow Icon */
+.arrow_icon_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (min-width: 768px) {
+  .arrow_icon_container {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+.arrow_icon {
+  display: flex;
+  font-size: 1.125rem;
+  cursor: pointer;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .arrow_icon {
+    font-size: 1.25rem;
+  }
+}
+
+.search_icon_sm {
+  display: flex;
+  font-size: 1.125rem;
+  cursor: pointer;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .search_icon_sm {
+    font-size: 1.25rem;
+  }
+}
+
+/* Tooltip Styles */
+.submit_image_tooltip {
+  background-color: rgba(0, 0, 0, 0.8);
+  display: block;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
+}
+
+.aura_tooltip {
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .aura_tooltip {
+    display: block;
+  }
+}
+
+.tooltip_close_icon {
+  border-radius: 9999px;
+  float: right;
+  cursor: pointer;
+}
+
+.tooltip_text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: white;
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  .tooltip_text {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Volume Control */
+.volume_control_container {
+  cursor: pointer;
+  display: flex;
+  visibility: hidden;
+}
+
+.volume_icon {
+  color: #000000;
+}
+
+.volume_icon_dark {
+  color: white;
+}
+
+.volume_icon_dark_modal {
+  color: white;
+}
+
+.volume_icon_dark_no_modal {
+  color: #000000;
+}
+
+/* Utility Classes */
+.flex {
+  display: flex;
+}
+
+.flex_col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items_center {
+  align-items: center;
+}
+
+.justify_center {
+  justify-content: center;
+}
+
+.justify_between {
+  justify-content: space-between;
+}
+
+.rounded_full {
+  border-radius: 9999px;
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}
+
+.w_full {
+  width: 100%;
+}
+
+.h_full {
+  height: 100%;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.gap_1 {
+  gap: 0.25rem;
+}
+
+.gap_2 {
+  gap: 0.5rem;
+}
+
+.p_0 {
+  padding: 0;
+}
+
+.p_1 {
+  padding: 0.25rem;
+}
+
+.p_2 {
+  padding: 0.5rem;
+}
+
+.opacity_80 {
+  opacity: 0.8;
+}
+
+.text_white {
+  color: white;
+}
+
+.text_black {
+  color: #000000;
+}
+
+.text_sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .text_sm {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+.text_base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text_lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.leading_5 {
+  line-height: 1.25rem;
+}
+
+.float_right {
+  float: right;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hidden_lg {
+    display: block;
+  }
+}
+
+/* Responsive Utilities */
+@media (min-width: 768px) {
+  .md_pl_6_5 {
+    padding-left: 1.625rem;
+  }
+
+  .md_pr_3 {
+    padding-right: 0.75rem;
+  }
+
+  .md_pr_6_5 {
+    padding-right: 1.625rem;
+  }
+
+  .md_gap_3 {
+    gap: 0.75rem;
+  }
+
+  .md_text_xl {
+    font-size: 1.25rem;
+  }
+
+  .md_h_8 {
+    height: 2rem;
+  }
+
+  .md_w_4_5 {
+    width: 1.125rem;
+  }
+
+  .md_w_5 {
+    width: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg_gap_3 {
+    gap: 0.75rem;
+  }
+
+  .lg_h_11 {
+    height: 2.75rem;
+  }
+
+  .lg_h_13_5 {
+    height: 3.375rem;
+  }
+
+  .lg_h_9_5 {
+    height: 2.375rem;
+  }
+
+  .lg_w_11 {
+    width: 2.75rem;
+  }
+
+  .lg_w_9_5 {
+    width: 2.375rem;
+  }
+
+  .lg_h_8_5 {
+    height: 2.125rem;
+  }
+
+  .lg_w_8_5 {
+    width: 2.125rem;
+  }
+
+  .lg_min_w_11 {
+    min-width: 2.75rem;
+  }
+
+  .lg_max_w_11 {
+    max-width: 2.75rem;
+  }
+
+  .lg_p_1_25 {
+    padding: 0.3125rem;
+  }
+
+  .lg_pl_6_5 {
+    padding-left: 1.625rem;
+  }
+
+  .lg_pr_6_5 {
+    padding-right: 1.625rem;
+  }
+
+  .lg_text_xl {
+    font-size: 1.25rem;
+  }
+
+  .lg_block {
+    display: block;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .dark_bg_slat_101 {
+    background-color: #475569;
+  }
+
+  .dark_text_white {
+    color: white;
+  }
+
+  .dark_text_black_200 {
+    color: #000000;
+  }
+
+  .dark_border_white {
+    border-color: white;
+  }
+
+  .dark_bg_lightgray_101 {
+    background-color: #f1f5f9;
+  }
+
+  .dark_border_lightgray_101 {
+    border-color: #f1f5f9;
+  }
+}
+
+/* Animation Loader Styles */
+.loader_icon {
+  color: rgb(29, 78, 216);
+}
+
+/* Additional Spacing */
+.p_t_2 {
+  padding-top: 0.5rem;
+}
+
+.p_b_2 {
+  padding-bottom: 0.5rem;
+}
+
+.min_w_7_5 {
+  min-width: 1.875rem;
+}
+
+.max_w_7_5 {
+  max-width: 1.875rem;
+}
+
+.h_8_5 {
+  height: 2.125rem;
+}
+
+.w_8_5 {
+  width: 2.125rem;
+}
+
+.h_7 {
+  height: 1.75rem;
+}
+
+.w_7 {
+  width: 1.75rem;
+}
+
+.h_4 {
+  height: 1rem;
+}
+
+.w_4 {
+  width: 1rem;
+}
+
+.h_11 {
+  height: 2.75rem;
+}
+
+.w_11 {
+  width: 2.75rem;
+}
+
+.h_13_5 {
+  height: 3.375rem;
+}
+
+.w_13_5 {
+  width: 3.375rem;
+}
+
+.h_9 {
+  height: 2.25rem;
+}
+
+.w_9 {
+  width: 2.25rem;
+}
+
+.p_0_75 {
+  padding: 0.1875rem;
+}
+
+.p_1_25 {
+  padding: 0.3125rem;
+}
+
+.pl_4 {
+  padding-left: 1rem;
+}
+
+.pr_4 {
+  padding-right: 1rem;
+}
+
+.m_0 {
+  margin: 0;
+}
+
+.border_solid {
+  border-style: solid;
+}
+
+.border_2px {
+  border-width: 2px;
+}
+
+.border_1px {
+  border-width: 1px;
+}
+
+.shadow_sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.transition_opacity {
+  transition: opacity 0.3s ease;
+}
