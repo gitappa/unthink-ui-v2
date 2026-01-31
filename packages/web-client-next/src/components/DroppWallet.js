@@ -41,21 +41,26 @@ const DroppWallet = ({ setisDropDown ,isDropDown}) => {
         const handleClickOutside = (event) => {
             if (popRef.current && !popRef.current.contains(event.target)) {
                 setisDropDown(false);
-                 document.body.style.overflow='auto'
             }
         };
+        
         if(isDropDown){
             document.body.style.overflow='hidden'
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.body.style.overflow='auto'
+            document.removeEventListener('mousedown', handleClickOutside);
         }
-        document.addEventListener('mousedown', handleClickOutside);
+        
         return () => {
+            document.body.style.overflow='auto'
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [popRef,isDropDown])
+    }, [isDropDown])
 
     return (
-        <div style={{ padding: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} className='text-black  ' ref={popRef}>
-            <div className="glass-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"  >
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 50 }} className='text-black' ref={popRef}>
+            <div className="glass-card"  >
                 < div onClick={() => setisDropDown(false)} className='absolute top-2 right-2 cursor-pointer text-xl  hover:text-gray-500 p-2 rounded-full   ' >
                     X
                 </div>
