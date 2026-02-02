@@ -397,6 +397,18 @@
   color: white;
   margin: 0;
 }
+.ant-image-preview-img{
+  width: 16px !important;
+  height: 14px !important;
+}
+.volume_icon{
+   width: 16px !important;
+   inset: unset !important;
+  height: 14px !important;
+}
+:where(.css-dev-only-do-not-override-mncuj7).ant-image .ant-image-mask {
+  inset: unset !important;
+}
 
 @media (min-width: 1024px) {
   .tooltip_text {
@@ -409,7 +421,7 @@
 .volume_control_container {
   cursor: pointer;
   display: flex;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 .volume_icon {

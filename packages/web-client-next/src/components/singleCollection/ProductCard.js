@@ -26,7 +26,8 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-const vtf_image = "/images/CamAI_2.svg";
+// const vtf_image = "/images/vtoIcon.svg";
+import vtf_image from './images/vtoIcon.svg'
 import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
@@ -544,6 +545,7 @@ const ProductCard = ({
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
       image_tryon_prompt: descriptionget || "",
+      type:"tryon",
     };
     try {
       setLoading(true);
@@ -636,7 +638,7 @@ const ProductCard = ({
 
 	}}, [clickedMfrCode]);
 	return (
-		<div
+		<div style={{backgroundColor:showWishlistModal ? '#f1f5f9' : ''}}
 			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
 			<div
 				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
@@ -955,7 +957,7 @@ const ProductCard = ({
               {storeData.pdp_settings?.buy_card_attributes?.[0] &&
                 product?.size?.length > 0 && (
                   <span
-                    className="mx-1  lg:inline-block block px-1   rounded-md "
+                    className="me-1  lg:inline-block block p-1 px-2  rounded-lg "
                     style={{
                       background: "#eeeeee",
                       width: "fit-content",
@@ -1092,7 +1094,23 @@ const ProductCard = ({
 										</span>
 									</button>
 								) : null}
-																	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+                	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar ? (
+									<button
+										className={`${styles['product-star-action-button']}`}
+										tabindex='-1'
+										role={onStarClick ? "button" : "img"}
+										onClick={handleStarClick}>
+										{product.starred ? (
+											<StarFilled className='flex text-secondary' />
+										) : (
+											<StarOutlined className='flex text-black-200' />
+										)}
+										<span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+											Showcase
+										</span>
+									</button>
+								) : null}
+																	{/* {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
 										<button
 											onClick={handleStarClick}
 											role={onStarClick ? "button" : "img"}
@@ -1103,9 +1121,9 @@ const ProductCard = ({
 											) : (
 												<StarOutlined className='text-lg text-gray-600' />
 											)}
-											 
+							
 										</button>
-									)}
+									)} */}
 							</div>
 						</div>
 					)}

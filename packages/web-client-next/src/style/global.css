@@ -17,6 +17,7 @@
 
 :where(.css-dev-only-do-not-override-mncuj7).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
     border: none !important;
+   
 }
 
 .static_page_bg {
@@ -122,7 +123,30 @@ transform: translateY(-3px) scale(1.05);
 /* img{
   max-width: fit-content;
 } */
-
+ :where(.css-dev-only-do-not-override-mncuj7).ant-image .ant-image-mask {
+  inset: unset !important;
+}
+.ant-select-selector{
+  box-shadow: none !important;
+}
+.collection_page_sort_product_list .ant-select-arrow {
+    align-items: center !important;
+    background: #d4ccfc80 !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 15px 12px !important;
+    position: absolute !important;
+    right: 5px !important;
+    text-align: center !important;
+    top: 15% !important;
+}
+.ant-select-selection-item{
+  padding-right: 50px !important;
+  color: #0E131B !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+}
 
 .ellipsis_2 {
  display: -webkit-box;
@@ -166,13 +190,46 @@ text-overflow: ellipsis;
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
-.ant-select-selection-item{
-  font-weight: 700 !important;
-}
 /* .rotate-left{
     transform: rotate(-20deg) !important;
 } */
 .ant-select-selection-item-content{
   color: #0E131B;
   font-weight: normal;
+}
+ 
+
+
+
+.tryForFree_custom-select-editcollection__u24Q7
+.ant-select-selector {
+  background-color: #7c74ec  !important;
+  /* color: whitesmoke; */
+}
+.tryForFree_custom-select-editcollection__u24Q7 
+.ant-select-selection-item{
+  color: white !important;
+}
+.tryForFree_custom-select-editcollection__u24Q7 
+.ant-select-arrow{
+      background: #d4ccfc !important;
+    border-radius: 8px !important;
+    padding: 12px 8px !important;
+    position: absolute !important;
+    right: 0 !important;
+    top: 31% !important;
+}
+.tryForFree_edit_collection_sort_product_list__lAKgX 
+.ant-select-arrow{
+    background: #d4ccfc !important;
+    border-radius: 8px !important;
+    padding: 12px 8px !important;
+    position: absolute !important;
+    /* right: 0 !important; */
+    top: 29% !important;
+    color: #0E131B;
+}
+.tryForFree_edit_collection_sort_product_list__lAKgX 
+.ant-select-selector{
+ background-color: transparent !important;
 }
