@@ -5,7 +5,8 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { Input, Form, Image, Tooltip, Upload } from "antd";
+import { Input, Form,  Tooltip, Upload } from "antd";
+import Image from "next/image";
 import {
 	CameraOutlined,
 	ArrowRightOutlined,
@@ -295,7 +296,7 @@ const Chat = ({
 					// dispatch(setChatSearchType(typeKey));
 					dispatch(setActiveSearchOption(productSearchData));
 				}}>
-				<Image src={headerSearchIcon} alt="Search" className={`${styles.search_icon} ${
+				<Image  src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon} ${
 					activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search
 						? styles.search_icon_active
 						: styles.search_icon_inactive
@@ -403,7 +404,7 @@ const Chat = ({
 			</div>
 		) : !isBTNormalUserLoggedIn ? (
 			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
-				<Image src={headerSearchIcon} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
+				<Image src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
 			</div>
 		) : null;
 
@@ -653,7 +654,10 @@ const Chat = ({
 							width={16}
 							height={14}
 						/>
-						) : (
+						
+						) :
+						
+						 (
 							<Image
 							src={iconVolume}
 							alt="Volume"
@@ -662,7 +666,8 @@ const Chat = ({
 							width={16}
 							height={14}
 						/>
-						)}
+						)
+						}
 					</div>
 				) : null}
 			</div>

@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDroppWallet } from '../libs/dropp-wallet-plugin.es.js';
 // import '../libs/index.css'
 import { AiFillCloseCircle } from "react-icons/ai";
+import { RxCross2 } from "react-icons/rx";
+
 
 const DroppWallet = ({ setisDropDown ,isDropDown}) => {
     const [email, setEmail] = useState('');
@@ -46,6 +48,7 @@ const DroppWallet = ({ setisDropDown ,isDropDown}) => {
         
         if(isDropDown){
             document.body.style.overflow='hidden'
+            // document.body.style.backdropFilter='blur(3px)'
             document.addEventListener('mousedown', handleClickOutside);
         } else {
             document.body.style.overflow='auto'
@@ -59,10 +62,10 @@ const DroppWallet = ({ setisDropDown ,isDropDown}) => {
     }, [isDropDown])
 
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 50 }} className='text-black' ref={popRef}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 50,backdropFilter:isDropDown ? 'blur(5px)' : '' }} className='text-black' ref={popRef}>
             <div className="glass-card"  >
-                < div onClick={() => setisDropDown(false)} className='absolute top-2 right-2 cursor-pointer text-xl  hover:text-gray-500 p-2 rounded-full   ' >
-                    X
+                < div onClick={() => setisDropDown(false)} className='absolute top-3 right-3 cursor-pointer text-xl  hover:text-gray-500 p-2 rounded-full   ' >
+                    <RxCross2 />
                 </div>
 
                 <div style={{ textAlign: 'center', marginBottom: '32px' }} className='text-black'>

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button, Checkbox, Collapse, Select } from "antd";
-
+import styles from '../../components/singleCollection/collectionDetails.module.scss'
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import {
   getSingleUserCollection,
@@ -64,6 +64,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import ShareOptions from "../shared/shareOptions";
+import Image from "next/image";
 
 // Initialize Swiper modules
 SwiperCore.use([FreeMode]);
@@ -969,7 +970,7 @@ const SingleCollectionProductList = ({
       {singleCollection?.faqs?.length > 0 &&
         autoProductsData.length > 0 &&
         isSingleCollectionSharedPage &&
-        (userId || (publish && isSingleCollectionSharedPage))(
+        (userId || (publish && isSingleCollectionSharedPage)) &&(
           <div className="flex items-center gap-4 mb-4 lg:mx-0 mx-2">
             {/* PRODUCTS TAB */}
             <p
@@ -994,7 +995,7 @@ const SingleCollectionProductList = ({
             >
               FAQS{" "}
             </p>
-          </div>,
+          </div>
         )}
       {((activeTab === "products" || !isSingleCollectionSharedPage) &&
         blogCollectionPage.collection_name && (
@@ -1009,7 +1010,7 @@ const SingleCollectionProductList = ({
                       autoProductsData.length ? (
                         <div className={`pb-1 md:pb-4 colloction_details_tag`}>
                           <div className="flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div">
-                            <div className="flex items-center gap-3 colloectionDetailScroll">
+                            <div className={`flex items-center gap-3 ${styles.colloectionDetailScroll}`}>
                               <Swiper
                                 slidesPerView="auto"
                                 spaceBetween={10}
@@ -1068,7 +1069,7 @@ const SingleCollectionProductList = ({
                             </div>
                             {isOverflowing && (
                               <div
-                                className="absolute right-0 addmore_image"
+                                className={`absolute right-0 ${styles.addmore_image}`}
                                 style={{ cursor: "pointer", zIndex: 10 }}
                                 onClick={() => {
                                   if (swiperRef.current) {
@@ -1076,7 +1077,7 @@ const SingleCollectionProductList = ({
                                   }
                                 }}
                               >
-                                <img src={Addmore} alt="Scroll Right" />
+                                <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
                               </div>
                             )}
                           </div>
@@ -1089,7 +1090,7 @@ const SingleCollectionProductList = ({
                         Object.keys(filteredFirstValue).length > 0 && (
                           <div className="pb-1 md:pb-5 colloction_details_tag">
                             <div className="flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div">
-                              <div className="flex items-center gap-3 overflow-x-scroll colloectionDetailScroll">
+                              <div className={`flex items-center gap-3 overflow-x-scroll ${styles.colloectionDetailScroll}`}>
                                 <Swiper
                                   slidesPerView="auto"
                                   spaceBetween={10}
@@ -1140,7 +1141,7 @@ const SingleCollectionProductList = ({
 
                               {isOverflowing2 && (
                                 <div
-                                  className="absolute right-0 addmore_image"
+                                  className={`absolute right-0 ${addmore_image}`}
                                   style={{ cursor: "pointer", zIndex: 10 }}
                                   onClick={() => {
                                     if (swiperRef2.current) {
@@ -1148,7 +1149,7 @@ const SingleCollectionProductList = ({
                                     }
                                   }}
                                 >
-                                  <img src={Addmore} alt="Scroll Right" />
+                                <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
                                 </div>
                               )}
                             </div>

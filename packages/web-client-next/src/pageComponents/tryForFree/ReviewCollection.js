@@ -4475,7 +4475,7 @@ console.log(currentCollection);
 																{enableSelectProduct ? (
 																	<>
 																		<div
-																			className='flex   items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
+																			className={`flex bg-violet-100  items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
 																			style={{ width:"200px" }}
 																		>
 																			<Select
@@ -4517,7 +4517,7 @@ console.log(currentCollection);
 																) :
 																	(
 																		<div
-																			className='flex focus:bg-white  items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
+																			className={`flex focus:bg-white bg-violet-100   items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
 																			style={{ width: "200px" }}
 																		>
 																			<Select
@@ -4568,13 +4568,13 @@ console.log(currentCollection);
 													{productsToShow.length ? (
 														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
 															{/* <div className="colloction_details_tag_div"></div> */}
-															<div className="flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl edit_collection_sort_product_list">
+															<div className={`flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl ${styles.edit_collection_sort_product_list} `}>
 																<label className="whitespace-nowrap text-xs md:text-sm font-semibold text-newcolor-100">
 																	Sort by :
 																</label>
 																<Select
 																	name='sortBy'
-																	className='w-full font-bold '
+																	className='w-full font-bold ant_icon'
 																	size='small'
 																	value={selectedSortOption.id}
 																	onChange={handleSortOptionChange}>
