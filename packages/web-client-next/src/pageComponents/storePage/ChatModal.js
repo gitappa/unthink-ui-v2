@@ -984,16 +984,17 @@ const ChatModal = ({
 										</div>
 										
 									</div>
-										{showChatLoader && (
-											<div className={styles['chatmodal-loading-bar-container']}>
-												<div className={styles['chatmodal-loading-bar']}></div>
-											</div>
-										)}
+										
 										</>
 
 								) : null}
 							</div>
 						</div>
+						{showChatLoader && (
+											<div className={styles['chatmodal-loading-bar-container']}>
+												<div className={styles['chatmodal-loading-bar']}></div>
+											</div>
+										)}
 					</div>
 				</>
 			) : null}

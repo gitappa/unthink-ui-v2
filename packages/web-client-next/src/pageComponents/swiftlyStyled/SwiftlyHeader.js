@@ -81,24 +81,22 @@ const SwiftlyHeader = ({
 							) : null
 						} */}
 
-					<div className='flex-1 flex justify-center'>
+					{/* <div className='flex-1 flex justify-center'> */}
 						<ChatContainer
 							disabledOutSideClick={disabledOutSideClick}
 							config={config}
 							trackCollectionData={trackCollectionData}
 							isBTInstance={isBTInstance}
 						/>
-					</div>
+					{/* </div> */}
 
 					{/* set width only to keep the aura center aligned */}
 					<div className=' hidden lg:flex justify-end'>
-						<div className='collections flex items-center'>
+						<div className={` ${styles.collections} flex items-center`}>
 							{
 								storeData?.is_droppWallet_connect_enabled &&
-							<button className="text-white mr-6 rounded" onClick={() => setisDropDown(true)} >
-								<Image src={walletIcon} alt="wallet" height={30} width={30} className="rounded-xl" />
-							</button>
-							}
+ 								<Image src={walletIcon} onClick={() => setisDropDown(true)}  alt="wallet" height={24} width={24} className="rounded-xl text-white mr-6  " />
+ 							}
 
 							<button className="text-white"
 								onClick={() =>
