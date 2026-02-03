@@ -99,7 +99,7 @@ const SingleCollectionProductList = ({
 
   const router = useRouter();
   const [statedata, setStatedata] = useState(null);
-  console.log("statedata", blogCollectionPage);
+  console.log("statedatssa", blogCollectionPage);
 
   const dispatch = useDispatch();
   const navigate = useCallback((path) => router.push(path), [router]);
@@ -457,7 +457,9 @@ const SingleCollectionProductList = ({
   );
 
   const onSeeAllClick = useCallback(() => {
-    navigate(collectionPagePath);
+    if (collectionPagePath) {
+      navigate(collectionPagePath);
+    }
   }, [navigate, collectionPagePath]);
 
   const onClearSelectedTagsClick = useCallback(() => {

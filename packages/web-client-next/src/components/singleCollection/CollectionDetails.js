@@ -94,7 +94,7 @@ const CollectionDetails = ({
     state.auth.user.singleCollections.data,
     state.store.data.admin_list,
   ]);
-  console.log("sssssss", collection.video_url);
+  console.log("sssssss", collection);
 
   // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
@@ -624,7 +624,7 @@ const CollectionDetails = ({
                               collectionPagePath={collectionPagePath}
                             />
                           )}
-                          {sharePageUrl && (
+                          {sharePageUrl &&  collection.status === PUBLISHED && (
                             <img
                               className={`flex w-auto mt-0.5 mb-auto ${
                                 showShareCollection ? "pointer-events-none" : ""
