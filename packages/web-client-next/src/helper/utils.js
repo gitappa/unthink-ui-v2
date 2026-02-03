@@ -566,6 +566,12 @@ export const getBlogCollectionPagePath = (
 	hosted_stores = [],
 	collection_theme
 ) => {
+	console.log(user_name);
+	console.log(collectionId);
+	console.log(collectionPath);
+	console.log(user_id);
+	console.log(collection_theme);
+	
 	const isStoreInstance = getIsStoreInstance();
 
 	if (
