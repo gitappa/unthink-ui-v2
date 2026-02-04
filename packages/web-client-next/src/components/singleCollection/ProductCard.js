@@ -657,7 +657,8 @@ const ProductCard = ({
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
-					className={styles['product-image-container']}>
+          		className={`${size === "small" ? styles['product-image-container-small'] : styles['product-image-container']}`}
+          >
 					<div style={{width:'100%'}}>
 						<img
 							src={getFinalImageUrl(product.image)}
@@ -666,17 +667,16 @@ const ProductCard = ({
 							loading='lazy'
 						/>
             		{!isCustomProductsPage && storeData.is_tryon_enabled &&  widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-								<div className={styles['product-vto-item']}  onClick={(e) => {
+								<div  className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`}   onClick={(e) => {
 									setButtonClick(true);
 									e.stopPropagation();
 								}}>
 							<Image height={20}  width={20}
-								className={`${styles['product-vto-icon']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+								className={`${styles['product-vto-icon']}`}
 								src={camera}
 							/>
               <p>Try On</p>
-             
- 										</div>
+ 							</div>
 							}
 					</div>
 
@@ -705,7 +705,7 @@ const ProductCard = ({
 									<>
 										{storeData?.pdp_settings?.is_buy_button ? (
 											<button
-												className={styles['product-buy-button']}
+                        className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
 												onClick={checkoutPayment}
 											>
 												Buy Now
@@ -976,6 +976,8 @@ const ProductCard = ({
 						</h1> */}
 					</div>
 				</div>
+
+        
 {(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
 								<div className={styles['product-menu-item']}>
 									{!hideAddToWishlist && (
@@ -1037,7 +1039,10 @@ const ProductCard = ({
             product?.sleeve?.length > 0) ||
           (storeData.pdp_settings?.buy_card_attributes?.[2] &&
             product?.fit?.length > 0) ? (
-            <div className={`${styles.tagscontainer}`}>
+            <div 
+            className={`${styles.tagscontainer}`}
+            >
+
               {storeData.pdp_settings?.buy_card_attributes?.[0] &&
                 product?.size?.length > 0 && (
                   <span
@@ -1076,7 +1081,7 @@ const ProductCard = ({
               {storeData.pdp_settings?.buy_card_attributes?.[2] &&
                 product?.fit?.length > 0 && (
                   <span
-                    className="mx-1 px-1  mt-1 lg:mt-0  lg:inline-block block  rounded-md"
+                     className={`${styles.smalltags}`}
                     style={{
                       background: "#eeeeee",
                       width: "fit-content",
@@ -1137,17 +1142,17 @@ const ProductCard = ({
 									{storeData?.pdp_settings?.is_buy_button ? (
 										<button
                     style={{background:!product?.price && !product?.listprice ? '#F2F1FD' : '#9690F0',color:!product?.price && !product?.listprice ?'#616161' : ''   }}
-											className={`${styles['product-buy-button']}`}
+											 className={`${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
 											onClick={checkoutPayment}
 											disabled={!product?.price && !product?.listprice}
 										>
-                      <Image src={shopping} height={20} width={20} className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+                      <Image src={shopping} height={20} width={20} className={`cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
 										{/* <Image src={buyicon} height={30} width={30}/>	 */}  
                     Buy Now                 
 										</button>
 									) : (
 										<button
-											className={`${styles['product-buy-button']} ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
+											className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']} ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
 											onClick={handleAddToCart}
 											disabled={!product?.price && !product?.listprice}
 										>
