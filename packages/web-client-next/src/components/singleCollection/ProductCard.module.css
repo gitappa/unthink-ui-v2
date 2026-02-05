@@ -59,7 +59,7 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 19;
+  z-index:49;
 }
 .product-heart-button {
   background-color: #ffffff;
