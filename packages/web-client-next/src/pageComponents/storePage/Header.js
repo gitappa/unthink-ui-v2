@@ -583,7 +583,7 @@ const Header = ({
 
 			{/* ----mobile ui end ---- */}
 
-			<div className='z-40 sticky w-full top-0 lg:shadow-md text-black-103'>
+			<div className='z-50 sticky w-full top-0 lg:shadow-md text-black-103'>
 				{/* budgettravel header */}
 				{isBTInstance && <BudgetTravelHeader />}
 
