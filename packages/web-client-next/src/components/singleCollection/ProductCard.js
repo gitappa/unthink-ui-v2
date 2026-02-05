@@ -828,13 +828,13 @@ const ProductCard = ({
         {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
 								showRemoveIcon && (
 									<div
-										className={`    gap-${size === "small" ? "2" : "3"
+										className={`   gap-${size === "small" ? "2" : "3"
 											}`}>
 										<div
-											className={`flex absolute top-3 right-2 gap-2 items-center self-baseline product_remove_icon`}
+											className={`flex absolute top-3 right-2 z-50 gap-2 items-center self-baseline product_remove_icon`}
 											onClick={removeFromWishlistClick}>
 											<p
-												className={`rounded-full flex mb-0 justify-center items-center font-semibold text-black-101 bg-gray-100  ${size === "small"
+												className={`rounded-full z-50 flex mb-0 justify-center items-center font-semibold text-black-101 bg-white  ${size === "small"
 														? "lg:text-base h-5 w-5 p-1"
 														: "lg:text-2xl h-6 w-6 p-1"
 													}`}>
@@ -844,7 +844,6 @@ const ProductCard = ({
 										</div>									
 									</div>
 								)}
-
         {/* product card header */}
         <div
           className={`box-border absolute top-0 w-full flex ${
@@ -989,7 +988,7 @@ const ProductCard = ({
 												// 	? "right-1 top-20 mt-5"
 												// 	: "top-2 mt-0 right-1"}												
 											 >
-											<Image className='text-lg z-40 flex add_to_wishlist_icon  ' src={heart} height={20} width={20}  />
+											<Image className={`text-lg z-40 flex ${styles.add_to_wishlist_icon}`}src={heart} height={20} width={20}  />
 										</button>
 										{/* <p className="text-gray-101 m-0">Wishlist</p> */}
 										</div>
@@ -1146,7 +1145,9 @@ const ProductCard = ({
 											onClick={checkoutPayment}
 											disabled={!product?.price && !product?.listprice}
 										>
-                      <Image src={shopping} height={20} width={20} className={`cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+                      <Image 
+                     style={{filter:!product?.price && !product?.listprice ? 'brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)' : '' }}
+                      src={shopping} height={20} width={20} className={`cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
 										{/* <Image src={buyicon} height={30} width={30}/>	 */}  
                     Buy Now                 
 										</button>
