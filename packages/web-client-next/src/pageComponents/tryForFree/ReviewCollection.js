@@ -4569,7 +4569,7 @@ console.log(currentCollection);
 														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
 															{/* <div className="colloction_details_tag_div"></div> */}
 															<div className={`flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl ${styles.edit_collection_sort_product_list} `}>
-																<label className="whitespace-nowrap text-xs md:text-sm font-semibold text-newcolor-100">
+																<label className="whitespace-nowrap mt-1 text-xs md:text-sm font-semibold text-newcolor-100">
 																	Sort by :
 																</label>
 																<Select
