@@ -1005,11 +1005,11 @@ const ProductCard = ({
 					{/* Product Name */}
 					<div className={styles['product-name-section']}>
             	{/* Brand Info */}
-						{product?.brand ? (
-							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product.brand}</span></p>
-						) : (
+						{/* {product?.brand ? ( */}
+							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product?.brand ||'\u00A0' }</span></p>
+						{/* ) : (
  							null
-						)}
+						)} */}
 
 						<Text
 							ellipsis={{ tooltip: product.name }}
@@ -1097,11 +1097,13 @@ const ProductCard = ({
                   </span>
                 )}
             </div>
-          ) : null}
+          ) : 
+          <div  className={`${styles.tagscontainer}`}> &nbsp;</div>
+          }
 
 					{/* Price Section */}
-					{}
-					<div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+					{/* {(product?.price || product?.listprice)  ?  */}
+					<div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : 'min-h-[32px]'}`}>
 						<div className={styles['product-price-display']} >
 
 						<span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
@@ -1137,7 +1139,7 @@ const ProductCard = ({
 
 
 							
-					</div>
+					</div> 
           {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
