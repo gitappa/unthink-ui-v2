@@ -95,7 +95,7 @@ const SwiftlyHeader = ({
 						<div className={` ${styles.collections} flex items-center`}>
 							{
 								storeData?.is_droppWallet_connect_enabled &&
- 								<Image src={walletIcon} onClick={() => setisDropDown(true)}  alt="wallet" height={24} width={24} className="rounded-xl text-white mr-6  " />
+ 								<Image src={walletIcon} onClick={() => setisDropDown(true)}  alt="wallet" height={24} width={24} className="rounded-xl text-white mr-1  " />
  							}
 
 							<button className="text-white"

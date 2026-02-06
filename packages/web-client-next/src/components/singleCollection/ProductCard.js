@@ -643,13 +643,15 @@ const ProductCard = ({
 	}}, [clickedMfrCode]);
 	return (
 		<div style={{backgroundColor:showWishlistModal ? 'white' : ''}}
-			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
+			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''}
+       ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
 			<div
 				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
 				// onClick={handleProductClick}
 				onClick={() => {
 					if (enableSelect) {
 						handleProductClick();
+            
 					} else {
 						setClickedMfrCode(product?.mfr_code);
 					}
