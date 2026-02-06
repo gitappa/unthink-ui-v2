@@ -666,7 +666,7 @@ const ProductCard = ({
 							className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
 							loading='lazy'
 						/>
-            		{!isCustomProductsPage && storeData.is_tryon_enabled &&  widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+            		{!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
 								<div  className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`}   onClick={(e) => {
 									setButtonClick(true);
 									e.stopPropagation();
@@ -825,7 +825,7 @@ const ProductCard = ({
 						</div>
 					)}
 				</div>
-        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
 								showRemoveIcon && (
 									<div
 										className={`   gap-${size === "small" ? "2" : "3"
@@ -1297,10 +1297,13 @@ const ProductCard = ({
 						<div>
 							{showRemoveIcon ? (
 								<button
-									className='flex text-black-200 product-remove-btn absolute top-4 right-2 z-50'
-									tabindex='-1'
+									className='flex text-black-200 p-1 bg-white rounded-full product-remove-btn absolute top-4 right-2 z-50'
+									// tabindex='-1'
 									onClick={(e) => removeFromWishlistClick(e)}>
-									<CloseCircleOutlined className='flex z-50' />
+									<RxCross2												className={`rounded-full z-50 flex mb-0 justify-center items-center font-bold text-black-102   ${size === "small"
+														? "lg:text-base h-5 w-5 "
+														: "lg:text-2xl h-6 w-6"
+													}`}/>
 									<span className='box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text'>
 										Remove
 									</span>
