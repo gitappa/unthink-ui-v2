@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Typography,   Input, Button, message } from "antd";
 import { useDispatch } from "react-redux";
-import Router, { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import Router, { useRouter } from 'next/router';
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Image from "next/image";
 import facebookImg from "../../images/facebook.png";
@@ -33,7 +33,7 @@ const { Text } = Typography;
 const ShareOptions = (props) => {
 	const ref = useRef();
 	const [copied, setCopied] = useState(false);
-
+	const router = useRouter();
 	const dispatch = useDispatch();
 
 	const handleClickOutside = () => {
@@ -52,11 +52,10 @@ const ShareOptions = (props) => {
 	useOnClickOutside(ref, handleClickOutside);
 
 	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose } = props;
-const router = useRouter();
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;
-console.log('dfdvf',collectionId);
+ 
 
 
 	// const collectionRedirectPath = useMemo(
@@ -82,18 +81,11 @@ console.log('dfdvf',collectionId);
 	// 		]  
 	// 	);
 	 
-const handlePreviewCollectionPage = () => {
-	onClose();
-	router.push(collectionPagePath);
-}
+ 
 function pdf(){
 	onClose(()=>false)
 }
-		console.log(url);
-
-	useEffect(() => {
-		console.log(url);
-	}, [])
+	 
 
 	const baseUrl = `${url}?utm_source=whatsapp&utm_medium=messaging&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=whatsapp&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
 
@@ -116,7 +108,7 @@ console.log('aaadsDsds');
 			>
 				<div>
 					<h1 className='text-2xl font-bold capital-first-letter'>
-						{collection.collection_name}
+						{collectionName}
 					</h1>
 				</div>
 				{/* {isAutoCreateCollection ? (
@@ -188,7 +180,7 @@ console.log('aaadsDsds');
 								</a>
 							</div>
 
-							{qrCodeGeneratorURL &&   collection.status === PUBLISHED  ? (
+							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || props.true)  ? (
 								<div className='flex items-center justify-center mt-4 md:mt-0'>
 									<img
 										className='w-full max-w-208 object-cover'
