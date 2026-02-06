@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import { useRouter } from 'next/router';
 import { EditOutlined } from "@ant-design/icons";
 import { Image, Typography } from "antd";
 
@@ -33,6 +33,8 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
+	const router = useRouter();
+	const navigate = (path) => router.push(path);
 	const [showShareProfile, setShowShareProfile] = useState(false);
 
 	const isShowBanner = useMemo(
@@ -132,10 +134,17 @@ const ProfileComponent = ({
 								)}
 								<div className='relative flex justify-between'>
 									{showShareProfile && (
+										<>
 										<ShareOptions
-											url={sharePageUrl}
+											url={qrCodeGeneratorURL}
 											setShow={setShowShareProfile}
-										/>
+											isOpen={showShareProfile}
+											onClose={() => setShowShareProfile(false)}
+											qrCodeGeneratorURL={qrCodeGeneratorURL}
+											true
+											/>
+										 
+											</>
 									)}
 									{/* // added div for responsive in mobile ui */}
 									{sharePageUrl && (
@@ -149,10 +158,10 @@ const ProfileComponent = ({
 										</div>
 									)}
 								</div>
-								<img
+								{/* <img
 									className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
 									src={qrCodeGeneratorURL}
-								/>
+								/> */}
 							</div>
 							{/* <div className='pl-4 lg:hidden flex'>
 								<Image src={header_darktheme} preview={false} width={33} />

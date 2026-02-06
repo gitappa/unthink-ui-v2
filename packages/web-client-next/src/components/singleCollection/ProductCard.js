@@ -643,13 +643,15 @@ const ProductCard = ({
 	}}, [clickedMfrCode]);
 	return (
 		<div style={{backgroundColor:showWishlistModal ? 'white' : ''}}
-			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
+			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''}
+       ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
 			<div
 				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
 				// onClick={handleProductClick}
 				onClick={() => {
 					if (enableSelect) {
 						handleProductClick();
+            
 					} else {
 						setClickedMfrCode(product?.mfr_code);
 					}
@@ -666,7 +668,7 @@ const ProductCard = ({
 							className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
 							loading='lazy'
 						/>
-            		{!isCustomProductsPage && storeData.is_tryon_enabled &&  widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+            		{!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
 								<div  className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`}   onClick={(e) => {
 									setButtonClick(true);
 									e.stopPropagation();
@@ -825,7 +827,7 @@ const ProductCard = ({
 						</div>
 					)}
 				</div>
-        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
 								showRemoveIcon && (
 									<div
 										className={`   gap-${size === "small" ? "2" : "3"
@@ -977,7 +979,7 @@ const ProductCard = ({
 				</div>
 
         
-{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
+{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal && !enableSelect &&
 								<div className={styles['product-menu-item']}>
 									{!hideAddToWishlist && (
 										<div className={styles['product-menu-wishlist']} onClick={addToWishlistClick} >
@@ -1003,11 +1005,11 @@ const ProductCard = ({
 					{/* Product Name */}
 					<div className={styles['product-name-section']}>
             	{/* Brand Info */}
-						{product?.brand ? (
-							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product.brand}</span></p>
-						) : (
+						{/* {product?.brand ? ( */}
+							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product?.brand ||'\u00A0' }</span></p>
+						{/* ) : (
  							null
-						)}
+						)} */}
 
 						<Text
 							ellipsis={{ tooltip: product.name }}
@@ -1095,11 +1097,13 @@ const ProductCard = ({
                   </span>
                 )}
             </div>
-          ) : null}
+          ) : 
+          <div  className={`${styles.tagscontainer}`}> &nbsp;</div>
+          }
 
 					{/* Price Section */}
-					{}
-					<div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : ''}`}>
+					{/* {(product?.price || product?.listprice)  ?  */}
+					<div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : 'min-h-[32px]'}`}>
 						<div className={styles['product-price-display']} >
 
 						<span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
@@ -1135,7 +1139,7 @@ const ProductCard = ({
 
 
 							
-					</div>
+					</div> 
           {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
 								<>
 									{storeData?.pdp_settings?.is_buy_button ? (
@@ -1297,10 +1301,13 @@ const ProductCard = ({
 						<div>
 							{showRemoveIcon ? (
 								<button
-									className='flex text-black-200 product-remove-btn absolute top-4 right-2 z-50'
-									tabindex='-1'
+									className='flex text-black-200 p-1 bg-white rounded-full product-remove-btn absolute top-4 right-2 z-50'
+									// tabindex='-1'
 									onClick={(e) => removeFromWishlistClick(e)}>
-									<CloseCircleOutlined className='flex z-50' />
+									<RxCross2												className={`rounded-full z-50 flex mb-0 justify-center items-center font-bold text-black-102   ${size === "small"
+														? "lg:text-base h-5 w-5 "
+														: "lg:text-2xl h-6 w-6"
+													}`}/>
 									<span className='box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text'>
 										Remove
 									</span>

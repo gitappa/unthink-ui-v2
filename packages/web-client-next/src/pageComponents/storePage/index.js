@@ -593,6 +593,7 @@ const StorePageWrapper = (props) => {
 		// 	isFirstRender.current = false;
 		// 	return;
 		// }
+console.log('dfdcdgd',isSharedPage );
 
 		if (
 			(isSharedPage) &&
