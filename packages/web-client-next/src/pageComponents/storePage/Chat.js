@@ -640,7 +640,7 @@ const Chat = ({
 						</div>
 					)}
 				</div>
-				{showSpeaker ? (
+				{/* {showSpeaker ? (
 					<div
 						id={`chat_volume_control_container_${chatTypeKey}`}
 						onClick={handleSpeakerClick}
@@ -669,7 +669,7 @@ const Chat = ({
 						)
 						}
 					</div>
-				) : null}
+				) : null} */}
 			</div>
 			{/* for testing */}
 			{/* <div className='flex justify-end text-xs pr-4 h-2'>

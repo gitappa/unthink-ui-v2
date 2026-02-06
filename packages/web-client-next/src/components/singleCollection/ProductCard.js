@@ -977,7 +977,7 @@ const ProductCard = ({
 				</div>
 
         
-{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal &&
+{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal && !enableSelect &&
 								<div className={styles['product-menu-item']}>
 									{!hideAddToWishlist && (
 										<div className={styles['product-menu-wishlist']} onClick={addToWishlistClick} >
