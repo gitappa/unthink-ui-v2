@@ -158,7 +158,9 @@ const SingleCollectionProductList = ({
   );
 
   const [expanded, setExpanded] = useState(false);
-
+useEffect(()=>{
+setExpanded(false)
+},[])
   const textRef = useRef(null);
   const [isCut, setIsCut] = useState(false);
   // console.log('popopop',el.scrollHeight);

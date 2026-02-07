@@ -141,7 +141,7 @@ transform: translateY(-3px) scale(1.05);
     text-align: center !important;
     top: 15% !important;
 }
-.ant-select-selection-item{
+.collection_page_sort_product_list .ant-select-selection-item{
   padding-right: 50px !important;
   color: #0E131B !important;
   font-weight: 600 !important;
