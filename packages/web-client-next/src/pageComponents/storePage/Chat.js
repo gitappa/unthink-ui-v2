@@ -619,7 +619,7 @@ const Chat = ({
 						</div>
 					)}
 					{/* will need to change placement */}
-					{showException && exception?.message && (
+					{/* {showException && exception?.message &&   (
 						<div
 							className={`${styles.aura_tooltip} ${styles.opacity_80}`}
 							onClick={(e) => e.stopPropagation()}>
@@ -638,7 +638,7 @@ const Chat = ({
 								{exception?.message}
 							</h2>
 						</div>
-					)}
+					)} */}
 				</div>
 				{/* {showSpeaker ? (
 					<div
