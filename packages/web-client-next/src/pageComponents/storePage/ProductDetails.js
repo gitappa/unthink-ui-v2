@@ -285,7 +285,7 @@ const ProductDetails = ({ params, ...props }) => {
 				window.removeEventListener("resize", checkOverflow);
 			};
 		}
-	}, [productDetails]);
+	}, [productDetails,pdploader]);
 
 	// console.log('productDetails',productDetails);
 
@@ -408,6 +408,11 @@ const ProductDetails = ({ params, ...props }) => {
 										<ShareOptions
 											url={sharePageUrl}
 											setShow={setShowShareProductDetails}
+											onClose={()=>setShowShareProductDetails(false)}
+                                                //   collection={blogCollectionPage}
+                                                  isOpen={showShareProductDetails}
+                                                  qrCodeGeneratorURL={qrCodeGeneratorURL}
+												  true
 										/>
 									)}
 									{sharePageUrl && (
@@ -423,12 +428,12 @@ const ProductDetails = ({ params, ...props }) => {
 										</div>
 									)}
 								</div>
-								{qrCodeGeneratorURL ? (
+								{/* {qrCodeGeneratorURL ? (
 									<img
 										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
 										src={qrCodeGeneratorURL}
 									/>
-								) : null}
+								) : null} */}
 							</div>
 
 							{brandsDetails?.brandName && brandsDetails.brandDescription ? (

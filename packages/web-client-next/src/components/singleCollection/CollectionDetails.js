@@ -95,7 +95,9 @@ const CollectionDetails = ({
     state.store.data.admin_list,
   ]);
   console.log("sssssss", collection);
-
+useEffect(()=>{
+ setShowMoreEnabled(false)
+},[])
   // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
     width: 0,
@@ -215,6 +217,7 @@ const CollectionDetails = ({
   // enable how more feature flag if description is taking more lines
   useEffect(() => {
     if (descriptionRef.current) {
+      
       // possible by adding ellipsis CSS
       if (
         descriptionRef.current.offsetHeight <
