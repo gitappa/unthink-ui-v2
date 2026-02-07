@@ -375,13 +375,13 @@
   color: white;
 }
 
-.aura_tooltip {
+/* .aura_tooltip {
   background-color: rgba(0, 0, 0, 0.8);
   display: none;
   padding: 1rem;
   border-radius: 0.5rem;
   color: white;
-}
+} */
 
 @media (min-width: 1024px) {
   .aura_tooltip {
