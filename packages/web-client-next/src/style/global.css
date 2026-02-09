@@ -209,6 +209,7 @@ text-overflow: ellipsis;
 .tryForFree_custom-select-editcollection__u24Q7 
 .ant-select-selection-item{
   color: white !important;
+
 }
 .tryForFree_custom-select-editcollection__u24Q7 
 .ant-select-arrow{
@@ -233,3 +234,7 @@ text-overflow: ellipsis;
 .ant-select-selector{
  background-color: transparent !important;
 }
+ .tryForFree_edit_collection_sort_product_list__lAKgX 
+ .ant-select-selection-item{
+  padding-right: 50px !important;
+ }

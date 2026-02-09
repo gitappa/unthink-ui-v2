@@ -1297,19 +1297,28 @@ console.log(currentCollection);
 
 		return () => { };
 	}, [currentView]);
+// console.log('isProductsFetchedForNewColl',isProductsFetchedForNewColl === false);
+// console.log('updateWishlistInProgress',!updateWishlistInProgress);
+// console.log('authUserCollectionsIsFetching',!authUserCollectionsIsFetching);
+// console.log(currentView === STEPS.PRODUCTS);
+// console.log(currentCollection._id);
+
 
 	useEffect(() => {
+		// console.log('EFFECT RUNNING - Checking conditions...');
 		if (
 			currentView === STEPS.PRODUCTS &&
-			isProductsFetchedForNewColl === false &&
+			isProductsFetchedForNewColl === false || isProductsFetchedForNewColl === null && 
 			!updateWishlistInProgress &&
-			!authUserCollectionsIsFetching
+			!authUserCollectionsIsFetching &&
+			currentCollection._id
 		) {
 			// call refetch products on products page view if the collection is new collection
 			handleConfirmRefetchProducts();
 			setIsProductsFetchedForNewColl(true);
-		}
-	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching]);
+		} 
+		
+	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching, isProductsFetchedForNewColl, currentCollection._id]);
 
 	let fetchingTimer;
 
@@ -4569,7 +4578,7 @@ console.log(currentCollection);
 														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
 															{/* <div className="colloction_details_tag_div"></div> */}
 															<div className={`flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl ${styles.edit_collection_sort_product_list} `}>
-																<label className="whitespace-nowrap mt-1 text-xs md:text-sm font-semibold text-newcolor-100">
+																<label className="whitespace-nowrap mt-0.5 text-xs md:text-sm font-semibold text-newcolor-100">
 																	Sort by :
 																</label>
 																<Select
