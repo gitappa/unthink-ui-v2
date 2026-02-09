@@ -20,7 +20,7 @@ const PeopleCard = ({
 		communityProperties;
 	return (
 		<div
-			className='flex flex-col cursor-pointer bg-slate-100 rounded-xl p-8 shadow-m'
+			className='flex flex-col cursor-pointer bg-slate-100 rounded-xl p-8 shadow-m relative'
 			onClick={() => handleCategoryClick(categoryData)}>
 			<div className='w-full'>
 				<img
