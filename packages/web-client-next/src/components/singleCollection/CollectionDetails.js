@@ -94,11 +94,10 @@ const CollectionDetails = ({
     state.auth.user.singleCollections.data,
     state.store.data.admin_list,
   ]);
-  console.log("sssssss", collection);
-useEffect(()=>{
- setShowMoreEnabled(false)
-},[])
-  // State for overlay positioning
+  console.log("sssssss", isShowMoreActive);
+  console.log("ssxcsss", showMoreEnabled) 
+
+ // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
     width: 0,
     height: 0,
@@ -224,9 +223,11 @@ useEffect(()=>{
         descriptionRef.current.scrollHeight
       ) {
         setShowMoreEnabled(true);
+      } else {
+        setShowMoreEnabled(false);
       }
     }
-  }, [descriptionRef.current]);
+  }, [collection.description]);
 
   useEffect(() => {
     if (
