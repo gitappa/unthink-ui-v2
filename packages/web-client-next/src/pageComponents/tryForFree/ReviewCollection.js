@@ -1308,7 +1308,7 @@ console.log(currentCollection);
 		// console.log('EFFECT RUNNING - Checking conditions...');
 		if (
 			currentView === STEPS.PRODUCTS &&
-			isProductsFetchedForNewColl === false || isProductsFetchedForNewColl === null && 
+			isProductsFetchedForNewColl === null &&   
 			!updateWishlistInProgress &&
 			!authUserCollectionsIsFetching &&
 			currentCollection._id
@@ -1316,7 +1316,7 @@ console.log(currentCollection);
 			// call refetch products on products page view if the collection is new collection
 			handleConfirmRefetchProducts();
 			setIsProductsFetchedForNewColl(true);
-		} 
+		}
 		
 	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching, isProductsFetchedForNewColl, currentCollection._id]);
 
