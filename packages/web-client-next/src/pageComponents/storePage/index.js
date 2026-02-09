@@ -250,8 +250,8 @@ const StorePageWrapper = (props) => {
 	const [selectedSortOption, setSelectedSortOption] = useState();
 	const [selectedSortOptionProduct, setSelectedSortOptionProduct] = useState();
 
-	console.log("authUserCollections", authUserCollections);
-	console.log("singleCollections", singleCollections);
+	// console.log("authUserCollections", authUser);
+	// console.log("singleCollections", singleCollections);
 
 
 	const dispatch = useDispatch();
@@ -512,11 +512,12 @@ const StorePageWrapper = (props) => {
 		influencerUserIsFetching,
 		influencerUserError,
 	]);
-	console.log(isSingleCollectionSharedPage);
-	console.log(authUser.user_id);
-	console.log(authUserCollections.length);
-	console.log(collection_id);
-	console.log("collection_path", collection_path);
+	
+	// console.log(isSingleCollectionSharedPage);
+	// console.log(authUser.user_id);
+	// console.log(authUserCollections.length);
+	// console.log(collection_id);
+	// console.log("collection_path", collection_path);
 
 
 	const fetchCollection = useCallback(
@@ -632,20 +633,16 @@ console.log('dfdcdgd',isSharedPage );
 
 
 	useEffect(() => {
-
 		if (
-			(!isRootPage && (isThemePage || isHomepage))
+			(!isRootPage && (isThemePage || isHomepage || isCollectionReviewPage)  ) 
 		) {
-
-
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
-
 			dispatch(
 				getInfluencerCollections({
 					user_id:
-						!page_params?.collection_theme && influencerUser.user_id
-							? influencerUser.user_id
+					 influencerUser.user_id && !page_params?.collection_theme  && !authUser
+							? influencerUser.user_id 
 							: undefined,
 					isStoreHomePage,
 					collection_theme:
@@ -663,7 +660,8 @@ console.log('dfdcdgd',isSharedPage );
 		currentPage,
 		isThemePage,
 		isRootPage,
-		isHomepage
+		isHomepage,
+	isCollectionReviewPage,
 	]);
 
 	useEffect(() => {
