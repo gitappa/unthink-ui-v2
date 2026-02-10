@@ -1,4 +1,4 @@
-name: CI dothelook
+name: CI dfwstyle
 on:
   push:
     branches: 
@@ -13,17 +13,18 @@ jobs:
       NODE_OPTIONS: "--max_old_space_size=4096"
       NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
       NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
+    #   GA_TRACKING_ID: "G-9EC2DPDL44"
       NEXT_PUBLIC_STAGING_ENV: "false"
       NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
-      NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "dothelook"
+      NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "dfwstyle"
       NEXT_PUBLIC_AURA_HEADER_THEME: "light"
-      NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "dothelook"
-      NEXT_PUBLIC_CURRENT_STORE_NAME: "dothelook"
-      NEXT_PUBLIC_CURRENT_STORE_ID: "23063956"
+      NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "dfwstyle"
+      NEXT_PUBLIC_CURRENT_STORE_NAME: "dfwstyle"
+      NEXT_PUBLIC_CURRENT_STORE_ID: "14555795"
       NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS: "false"
       NEXT_PUBLIC_ENABLE_RECOMMENDATIONS: "false"
       NEXT_PUBLIC_IS_STORE_INSTANCE: "true"
-      NEXT_PUBLIC_ADMIN_USER_ID: "173081113277330"
+      NEXT_PUBLIC_ADMIN_USER_ID: "176481739776942"
       NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL: "https://auraprod.unthink.ai"
       NEXT_PUBLIC_ENABLE_VENLY: "false"
       NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL: ""
@@ -67,7 +68,7 @@ jobs:
       - name: Build
         run: |
           docker build \
-          --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
+          --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dfwstyle-ui-v2 \
           --build-arg NEXT_PUBLIC_BACKEND_URL=${{ env.NEXT_PUBLIC_BACKEND_URL }} \
           --build-arg NEXT_PUBLIC_ACCESS_KEY=${{ env.NEXT_PUBLIC_ACCESS_KEY }} \
           --build-arg NEXT_PUBLIC_STAGING_ENV=${{ env.NEXT_PUBLIC_STAGING_ENV }} \
@@ -91,14 +92,14 @@ jobs:
       - name: Push
         #working-directory: "packages/web-client-next"
         run: |
-          docker push us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2
+          docker push us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dfwstyle-ui-v2
       
       - name: Deploy
         #working-directory: "packages/web-client-next"
         run: |
-          gcloud run deploy unthink-ui-next-dothelook-ui-v2 \
+          gcloud run deploy unthink-ui-next-dfwstyle-ui-v2 \
           --region us-central1 \
-          --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dothelook-ui-v2 \
+          --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-dfwstyle-ui-v2 \
           --platform managed \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
           
