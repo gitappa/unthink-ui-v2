@@ -546,13 +546,14 @@ const ReviewCollectionStepContent = ({
 
 	const onUpdatedWishlist = useCallback(
 		async ({
+			newTags,
 			collection_name = updatedData.collection_name,
 			image_url = updatedData.image_url,
 			blog_url = updatedData.blog_url,
 			video_url = updatedData.video_url,
 			description = updatedData.description,
 			description_old = updatedData.description_old,
-			tags = updatedData.blog_filter,
+			tags = newTags || updatedData.blog_filter,
 			keyword_tag_map,
 			fetchUserCollection = true,
 			// update Tag
@@ -567,6 +568,8 @@ const ReviewCollectionStepContent = ({
 			useUpdateTag
 
 		}) => {
+			console.log('keyword_tag_map', keyword_tag_map);
+
 			const editPayload = {
 				_id: currentCollection._id,
 				collection_name,
@@ -708,12 +711,11 @@ const ReviewCollectionStepContent = ({
 
 	const handleDeleteTagClick = (e, tagToRemove) => {
 		e.stopPropagation();
-
 		if (!tagToRemove) return;
-
 		const removedTag = typeof tagToRemove === "string" ? tagToRemove : tagToRemove[0]; // fix here
 
 		const newTags = updatedData.blog_filter?.filter((t) => t !== removedTag) || [];
+		console.log('newTags', newTags);
 
 		// Check for keyword edits of remaining tags
 		const updatedKeywordTagMap = updatedData.keyword_tag_map || {};
@@ -724,10 +726,12 @@ const ReviewCollectionStepContent = ({
 			const current = currentKeywordTagMap?.[tag] || {};
 			return JSON.stringify(updated) !== JSON.stringify(current);
 		});
+		console.log('modifiedTags', modifiedTags);
 
 		const filteredKeywordTagMap = Object.fromEntries(
 			Object.entries(updatedKeywordTagMap).filter(([key]) => key !== removedTag)
 		);
+		console.log('filteredKeywordTagMap', filteredKeywordTagMap);
 
 		const updatePayload = {
 			latest: newTags,
@@ -736,9 +740,9 @@ const ReviewCollectionStepContent = ({
 			keyword_tag_map: filteredKeywordTagMap,
 			filters: filteredKeywordTagMap,
 			refetchFlag: true,
-			useUpdateTag: true
+			useUpdateTag: true,
+			newTags
 		};
-
 		onUpdatedWishlist(updatePayload);
 	};
 
