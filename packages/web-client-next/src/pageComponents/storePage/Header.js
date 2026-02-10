@@ -513,7 +513,7 @@ const Header = ({
 						<div></div>
 					)}
 
-					{pageUser.user_name !== "RaniZaver" ? (
+					{pageUser.user_name !== "RaniZaver" && storeData?.is_searchOptions_enabled ? (
 						<MobileChat onChatClick={onChatClick} />
 					) : null}
 
