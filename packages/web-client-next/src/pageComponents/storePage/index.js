@@ -269,9 +269,11 @@ const StorePageWrapper = (props) => {
 
 	// const isRootPage = getIsRootPage(); // REMOVE
 
+
+
 	const {
-		user_id,
-		collection_id,
+		user_id = router.query.user_id,
+		collection_id = router.query.collection_id,
 		isCollectionReviewPage = false,
 		isCreateFreeCollectionPage = false,
 		isMyProfilePage = false,
@@ -322,12 +324,14 @@ const StorePageWrapper = (props) => {
 	const user_name = useMemo(
 		() =>
 			props.user_name ||
+			router.query.user_name ||
 			(is_store_instance &&
 				(isThemePage || isRootPage || (isSingleCollectionSharedPage && !user_id)) // to take the influencer from the store env
 				? shared_profile_on_root
 				: ""),
 		[
 			props.user_name,
+			router.query.user_name,
 			isRootPage,
 			isSingleCollectionSharedPage,
 			user_id,
@@ -458,8 +462,8 @@ const StorePageWrapper = (props) => {
 
 
 	const [sharePageUrl, setSharePageUrl] = useState('');
-	console.log('sharepageUrls',sharePageUrl);
-	
+	console.log('sharepageUrls', sharePageUrl);
+
 
 	// set collection theme from params
 	useEffect(() => {
@@ -512,7 +516,7 @@ const StorePageWrapper = (props) => {
 		influencerUserIsFetching,
 		influencerUserError,
 	]);
-	
+
 	// console.log(isSingleCollectionSharedPage);
 	// console.log(authUser.user_id);
 	// console.log(authUserCollections.length);
@@ -594,7 +598,7 @@ const StorePageWrapper = (props) => {
 		// 	isFirstRender.current = false;
 		// 	return;
 		// }
-console.log('dfdcdgd',isSharedPage );
+		console.log('dfdcdgd', isSharedPage);
 
 		if (
 			(isSharedPage) &&
@@ -634,15 +638,15 @@ console.log('dfdcdgd',isSharedPage );
 
 	useEffect(() => {
 		if (
-			(!isRootPage && (isThemePage || isHomepage || isCollectionReviewPage)  ) 
+			(!isRootPage && (isThemePage || isHomepage || isCollectionReviewPage))
 		) {
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
 			dispatch(
 				getInfluencerCollections({
 					user_id:
-					 influencerUser.user_id && !page_params?.collection_theme  && !authUser
-							? influencerUser.user_id 
+						influencerUser.user_id && !page_params?.collection_theme && !authUser
+							? influencerUser.user_id
 							: undefined,
 					isStoreHomePage,
 					collection_theme:
@@ -661,7 +665,7 @@ console.log('dfdcdgd',isSharedPage );
 		isThemePage,
 		isRootPage,
 		isHomepage,
-	isCollectionReviewPage,
+		isCollectionReviewPage,
 	]);
 
 	useEffect(() => {
@@ -1124,7 +1128,7 @@ console.log('dfdcdgd',isSharedPage );
 			{isSuccessPage && <SuccessUrl />}
 			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />}
 
-			{isDropDown && <DroppWallet setisDropDown={setisDropDown}  isDropDown={isDropDown}/>}
+			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 
 			{!showIndividualPageContent && (
 				<div
@@ -1245,7 +1249,7 @@ console.log('dfdcdgd',isSharedPage );
 								{isSingleCollectionSharedPage && currentSingleCollection && (
 									// <CollectionPageContent collection_name={collection_name} />
 									<SingleCollectionProductList
-									sharePageUrl={sharePageUrl}
+										sharePageUrl={sharePageUrl}
 										key={currentSingleCollection.path}
 										isRootPage={isRootPage}
 										isMyProfilePage={isMyProfilePage}
