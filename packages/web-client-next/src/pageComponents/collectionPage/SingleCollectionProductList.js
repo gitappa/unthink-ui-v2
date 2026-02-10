@@ -110,7 +110,7 @@ const SingleCollectionProductList = ({
       state.auth.user.singleCollections.data,
       state.auth.user.data,
     ]);
-                      const [showShareCollection, setShowShareCollection] = useState(false);
+  const [showShareCollection, setShowShareCollection] = useState(false);
 
 
   console.log("isSingleCollectionSharedPage", isSingleCollectionSharedPage);
@@ -158,29 +158,17 @@ const SingleCollectionProductList = ({
   );
 
   const [expanded, setExpanded] = useState(false);
-useEffect(()=>{
-setExpanded(false)
-},[])
-  const textRef = useRef(null);
-  const [isCut, setIsCut] = useState(false);
-  // console.log('popopop',el.scrollHeight);
-  // console.log('dfdfdfd',el.clientHeight);
+  const [showMoreEnabled, setShowMoreEnabled] = useState(false);
 
-  useEffect(() => {
-    const el = textRef.current;
-    if (el) {
-      // full text vs visible text compare
-      setIsCut(el.scrollHeight > el.clientHeight);
-    }
-  }, [blogCollectionPage.description]);
+  const textRef = useRef(null);
   const productsData = useMemo(() => {
     const baseList = isSingleCollectionSharedPage
       ? singleCollection?.product_lists ||
-        blogCollectionPage?.product_lists ||
-        []
+      blogCollectionPage?.product_lists ||
+      []
       : blogCollectionPage?.product_lists ||
-        singleCollection?.product_lists ||
-        [];
+      singleCollection?.product_lists ||
+      [];
 
     let list = filterAvailableProductList(baseList);
 
@@ -200,6 +188,31 @@ setExpanded(false)
     selectedTags,
     sponsorProductList,
   ]);
+  useEffect(() => {
+    const checkTextOverflow = () => {
+      if (!expanded) {
+        const el = textRef.current;
+        if (el) {
+          setShowMoreEnabled(el.scrollHeight > el.clientHeight);
+        }
+      }
+    };
+
+    const timeoutId = setTimeout(checkTextOverflow, 100);
+    window.addEventListener("resize", checkTextOverflow);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", checkTextOverflow);
+    };
+  }, [blogCollectionPage?.description, expanded, productsData]);
+  // console.log('popopop',el.scrollHeight);
+  // console.log('dfdfdfd',el.clientHeight);
+
+
+
+
+
+
 
   const showcasedProductsData = useMemo(
     () =>
@@ -693,8 +706,8 @@ setExpanded(false)
               >
                 {/* Show video if hovered, otherwise show the image */}
                 {blogCollectionPage?.video_url &&
-                (isHovered || (isMobile && isVisible)) &&
-                !isSocialMediaVideo(blogCollectionPage.video_url) ? (
+                  (isHovered || (isMobile && isVisible)) &&
+                  !isSocialMediaVideo(blogCollectionPage.video_url) ? (
                   <>
                     <ReactPlayer
                       className={
@@ -713,18 +726,16 @@ setExpanded(false)
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`absolute top-0 left-0 w-full h-full z-10 ${
-                        showCollectionDetails ? "cursor-pointer" : ""
-                      }`}
+                      className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                        }`}
                       onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
                     />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
                   <img
                     onClick={() => showCollectionDetails && onSeeAllClick()}
-                    className={`h-full object-cover rounded-xl w-full ${
-                      showCollectionDetails ? "cursor-pointer" : ""
-                    }`}
+                    className={`h-full object-cover rounded-xl w-full ${showCollectionDetails ? "cursor-pointer" : ""
+                      }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
                   />
@@ -746,9 +757,8 @@ setExpanded(false)
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`absolute top-0 left-0 w-full h-full z-10 ${
-                          showCollectionDetails ? "cursor-pointer" : ""
-                        }`}
+                        className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                          }`}
                         onClick={() => showCollectionDetails && onSeeAllClick()}
                       />
                     </>
@@ -825,8 +835,8 @@ setExpanded(false)
               >
                 {/* Show video if hovered, otherwise show the image */}
                 {blogCollectionPage?.video_url &&
-                (isHovered || (isMobile && isVisible)) &&
-                !isSocialMediaVideo(blogCollectionPage.video_url) ? (
+                  (isHovered || (isMobile && isVisible)) &&
+                  !isSocialMediaVideo(blogCollectionPage.video_url) ? (
                   <>
                     <ReactPlayer
                       className={
@@ -845,18 +855,16 @@ setExpanded(false)
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`absolute top-0 left-0 w-full h-full z-10 ${
-                        showCollectionDetails ? "cursor-pointer" : ""
-                      }`}
+                      className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                        }`}
                       onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
                     />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
                   <img
                     onClick={() => showCollectionDetails && onSeeAllClick()}
-                    className={`h-full object-cover rounded-xl w-full ${
-                      showCollectionDetails ? "cursor-pointer" : ""
-                    }`}
+                    className={`h-full object-cover rounded-xl w-full ${showCollectionDetails ? "cursor-pointer" : ""
+                      }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
                   />
@@ -878,9 +886,8 @@ setExpanded(false)
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`absolute top-0 left-0 w-full h-full z-10 ${
-                          showCollectionDetails ? "cursor-pointer" : ""
-                        }`}
+                        className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                          }`}
                         onClick={() => showCollectionDetails && onSeeAllClick()}
                       />
                     </>
@@ -974,7 +981,7 @@ setExpanded(false)
       {singleCollection?.faqs?.length > 0 &&
         autoProductsData.length > 0 &&
         isSingleCollectionSharedPage &&
-        (userId || (publish && isSingleCollectionSharedPage)) &&(
+        (userId || (publish && isSingleCollectionSharedPage)) && (
           <div className="flex items-center gap-4 mb-4 lg:mx-0 mx-2">
             {/* PRODUCTS TAB */}
             <p
@@ -989,11 +996,10 @@ setExpanded(false)
 
             <p
               className={`cursor-pointer  px-2 lg:px-4 flex items-center h-7 lg:h-10 rounded-10	 text-sm lg:text-base
-      ${
-        activeTab === "faq"
-          ? "border border-purple-500 bg-purple-100 text-purple-700 font-semibold"
-          : "text-gray-700"
-      }
+      ${activeTab === "faq"
+                  ? "border border-purple-500 bg-purple-100 text-purple-700 font-semibold"
+                  : "text-gray-700"
+                }
     `}
               onClick={() => setActiveTab("faq")}
             >
@@ -1010,8 +1016,8 @@ setExpanded(false)
                   (userId || (publish && isSingleCollectionSharedPage)) && (
                     <div className="lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto px-3 lg:px-0">
                       {showTagsSelection &&
-                      tagsToShow?.length &&
-                      autoProductsData.length ? (
+                        tagsToShow?.length &&
+                        autoProductsData.length ? (
                         <div className={`pb-1 md:pb-4 colloction_details_tag`}>
                           <div className="flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div">
                             <div className={`flex items-center gap-3 ${styles.colloectionDetailScroll}`}>
@@ -1033,30 +1039,26 @@ setExpanded(false)
                                       style={{ width: "auto" }}
                                     >
                                       <div
-                                        className={`flex items-center h-30 lg:h-36 justify-center rounded-2xl border-2 border-newcolor-300 my-1 md:my-3 w-max flex-shrink-0 ${
-                                          selectedTags.includes(tag) ||
+                                        className={`flex items-center h-30 lg:h-36 justify-center rounded-2xl border-2 border-newcolor-300 my-1 md:my-3 w-max flex-shrink-0 ${selectedTags.includes(tag) ||
                                           (selectedTags.length === 0 &&
                                             tag === "All")
-                                            ? "bg-newcolor-200"
-                                            : "bg-white"
-                                        } ${
-                                          isDisabled
+                                          ? "bg-newcolor-200"
+                                          : "bg-white"
+                                          } ${isDisabled
                                             ? "opacity-50 cursor-not-allowed"
                                             : ""
-                                        }`} // Disable styling
+                                          }`} // Disable styling
                                       >
                                         <h3
-                                          className={`m-0 px-3 font-normal text-xs sm:text-xs md:text-sm lg:text-base break-word-only ${
-                                            selectedTags.includes(tag) ||
+                                          className={`m-0 px-3 font-normal text-xs sm:text-xs md:text-sm lg:text-base break-word-only ${selectedTags.includes(tag) ||
                                             (selectedTags.length === 0 &&
                                               tag === "All")
-                                              ? "text-newcolor-100"
-                                              : "text-newcolor-100"
-                                          } ${
-                                            allowSelectTags && !isDisabled
+                                            ? "text-newcolor-100"
+                                            : "text-newcolor-100"
+                                            } ${allowSelectTags && !isDisabled
                                               ? "cursor-pointer"
                                               : ""
-                                          }`} // Prevent click
+                                            }`} // Prevent click
                                           onClick={
                                             allowSelectTags && !isDisabled
                                               ? () => handleTagClick(tag)
@@ -1153,7 +1155,7 @@ setExpanded(false)
                                     }
                                   }}
                                 >
-                                <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
+                                  <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
                                 </div>
                               )}
                             </div>
@@ -1162,9 +1164,8 @@ setExpanded(false)
 
                       {isSingleCollectionSharedPage && productsData.length ? (
                         <div
-                          className={`flex md:flex-row justify-between lg:items-center mb-5 lg:mb-10 mt-9 lg:mt-0 ${
-                            enableSelectProduct ? "flex-col" : "flex-row"
-                          }`}
+                          className={`flex md:flex-row justify-between lg:items-center mb-5 lg:mb-10 mt-9 lg:mt-0 ${enableSelectProduct ? "flex-col" : "flex-row"
+                            }`}
                         >
                           {/* {isUserLogin ? ( */}
                           <div className="flex text-xs md:text-base lg:text-lg">
@@ -1187,14 +1188,13 @@ setExpanded(false)
                                   onClick={
                                     selectedProducts.length
                                       ? () =>
-                                          onAddSelectedProductsToCollection()
+                                        onAddSelectedProductsToCollection()
                                       : null
                                   }
-                                  className={`${
-                                    selectedProducts.length
-                                      ? "text-violet-100 cursor-pointer"
-                                      : "text-gray-104 cursor-not-allowed"
-                                  } mb-0 ml-2 underline`}
+                                  className={`${selectedProducts.length
+                                    ? "text-violet-100 cursor-pointer"
+                                    : "text-gray-104 cursor-not-allowed"
+                                    } mb-0 ml-2 underline`}
                                   title="Click to add selected products in collection"
                                   role="button"
                                 >
@@ -1322,7 +1322,7 @@ setExpanded(false)
                         </h1>
                         {/* for mobile screen : QR code */}
                         {qrCodeGeneratorURL &&
-                        blogCollectionPage.status === PUBLISHED ? (
+                          blogCollectionPage.status === PUBLISHED ? (
                           <img
                             className="w-20 h-20 object-cover md:hidden"
                             src={qrCodeGeneratorURL}
@@ -1336,70 +1336,87 @@ setExpanded(false)
 									View all
 								</Button> */}
                       </div>
-                      <div className="relative">
-                        <p
-                          ref={textRef}
-                          className={`text-sm lg:text-lg text-justify  leading-normal
-   											  ${expanded ? "" : "ellipsis_2 pr-18"}`}
-                        >
-                          {blogCollectionPage.description}
-                        </p>
-                        {!expanded && isCut && (
-                          <span
-                            onClick={() => setExpanded(true)}
-                            className="absolute bottom-0 pb-0 lg:pb-0.5 right-0 text-violet-100 text-sm font-medium cursor-pointer hover:underline bg-white pl-2"
-                          >
-                            Read more
-                          </span>
-                        )}
+                      <div className='relative'>
+                        {blogCollectionPage.description ? (
+                          <>
+                            <>
+                              {/* <p className={`text-sm lg:text-lg text-justify whitespace-pre-line leading-normal  ${isExpanded ? '': 'ellipsis_2'} `}>
+													{blogCollectionPage.description}
+												</p>
+												<button onClick={()=>setExpanded(!isExpanded)}>{isExpanded ? 'Readmore' : 'Readless'}</button> */}
+                              <div className='relative'>
+                                <p
+                                  ref={textRef}
+                                  className={`text-sm lg:text-lg text-justify leading-normal whitespace-pre-line 
+    ${expanded
+                                      ? ""
+                                      : productsData?.length === 0
+                                        ? "ellipsis_3   leading-normal"
+                                        : "ellipsis_2 "
+                                    }
+  `}
+                                >
+                                  {blogCollectionPage?.description}
+                                </p>
+                                {/* <> */}
+                                {!expanded && showMoreEnabled && (
+                                  <span
+                                    onClick={() => setExpanded(true)}
+                                    className=' pb-0 lg:pb-0.5   text-blue-600 text-sm font-medium cursor-pointer hover:underline bg-white '>
+                                    Read more
+                                  </span>
+                                )}
 
-                        {expanded && (
-                          <span
-                            onClick={() => setExpanded(false)}
-                            className="ml-1 text-violet-100 text-sm  block  font-medium cursor-pointer hover:underline"
-                          >
-                            Read less
-                          </span>
-                        )}
+                                {expanded && showMoreEnabled && (
+                                  <span
+                                    onClick={() => setExpanded(false)}
+                                    className=' text-blue-600 text-sm  block  font-medium cursor-pointer hover:underline'>
+                                    Read less
+                                  </span>
+                                )}
 
-                        {/* </> */}
+
+                              </div>
+                            </>
+                          </>
+                        ) : null}
                       </div>
                     </div>
 
                     {/* for desktop screen : QR code */}
-                    
 
-                      <div className='relative flex justify-between w-6 lg:w-7'>
-                                              {showShareCollection && (
-                                                <ShareOptions
-                                                  url={sharePageUrl}
-                                                  onClose={setShowShareCollection}
-                                                  collection={blogCollectionPage}
-                                                  isOpen={showShareCollection}
-                                                  qrCodeGeneratorURL={qrCodeGeneratorURL}
-                                                  collectionPagePath={collectionPagePath}
-                                                />
-                                              )}
-                                              {/* {sharePageUrl && ( */}
-                                                <img
-                                                  className={`flex w-auto  ${showShareCollection ? "pointer-events-none" : ""
-                                                    } ${blogCollectionPage.status === PUBLISHED
-                                                      ? "cursor-pointer"
-                                                      : "cursor-not-allowed opacity-50"
-                                                    }`}
-                                                  src={share_icon}
-                                                  title={
-                                                    blogCollectionPage.status !== PUBLISHED
-                                                      ? "Please publish collection to share"
-                                                      : ""
-                                                  }
-                                                  onClick={() =>
-                                                    blogCollectionPage.status === PUBLISHED &&
-                                                    setShowShareCollection(!showShareCollection)
-                                                  }
-                                                />
-                                              {/* )} */}
-                                            </div>
+
+                    <div className='relative flex justify-between w-6 lg:w-7'>
+                      {showShareCollection && (
+                        <ShareOptions
+                          url={sharePageUrl}
+                          onClose={setShowShareCollection}
+                          collection={blogCollectionPage}
+                          isOpen={showShareCollection}
+                          qrCodeGeneratorURL={qrCodeGeneratorURL}
+                          collectionPagePath={collectionPagePath}
+                        />
+                      )}
+                      {/* {sharePageUrl && ( */}
+                      <img
+                        className={`flex w-auto  ${showShareCollection ? "pointer-events-none" : ""
+                          } ${blogCollectionPage.status === PUBLISHED
+                            ? "cursor-pointer"
+                            : "cursor-not-allowed opacity-50"
+                          }`}
+                        src={share_icon}
+                        title={
+                          blogCollectionPage.status !== PUBLISHED
+                            ? "Please publish collection to share"
+                            : ""
+                        }
+                        onClick={() =>
+                          blogCollectionPage.status === PUBLISHED &&
+                          setShowShareCollection(!showShareCollection)
+                        }
+                      />
+                      {/* )} */}
+                    </div>
 
                     {/* {qrCodeGeneratorURL &&
                     blogCollectionPage.status === PUBLISHED ? (
@@ -1441,7 +1458,7 @@ setExpanded(false)
                 )}
 
                 {isSingleCollectionSharedPage &&
-                !!showcasedProductsData.length ? (
+                  !!showcasedProductsData.length ? (
                   <div>
                     {!!showcasedProductsData.length ? (
                       <div>

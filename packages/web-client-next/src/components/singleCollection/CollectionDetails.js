@@ -95,9 +95,9 @@ const CollectionDetails = ({
     state.store.data.admin_list,
   ]);
   console.log("sssssss", isShowMoreActive);
-  console.log("ssxcsss", showMoreEnabled) 
+  console.log("ssxcsss", showMoreEnabled)
 
- // State for overlay positioning
+  // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
     width: 0,
     height: 0,
@@ -215,19 +215,22 @@ const CollectionDetails = ({
 
   // enable how more feature flag if description is taking more lines
   useEffect(() => {
-    if (descriptionRef.current) {
-      
-      // possible by adding ellipsis CSS
-      if (
-        descriptionRef.current.offsetHeight <
-        descriptionRef.current.scrollHeight
-      ) {
-        setShowMoreEnabled(true);
-      } else {
-        setShowMoreEnabled(false);
+    const checkDescriptionOverflow = () => {
+      if (!isShowMoreActive) {
+        const el = descriptionRef.current;
+        if (el) {
+          setShowMoreEnabled(el.scrollHeight > el.clientHeight);
+        }
       }
-    }
-  }, [collection.description]);
+    };
+
+    const timeoutId = setTimeout(checkDescriptionOverflow, 100);
+    window.addEventListener("resize", checkDescriptionOverflow);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", checkDescriptionOverflow);
+    };
+  }, [collection?.description, isShowMoreActive]);
 
   useEffect(() => {
     if (
@@ -444,21 +447,20 @@ const CollectionDetails = ({
       <div className="block sm:flex items-start gap-10 lg:gap-12 2xl:gap-16 px-3 lg:px-0">
         <div
           ref={videoContainerRef}
-          className={`relative sm:max-w-s-5 lg:w-full pb-3 sm:pb-0 CollectionDetails_Img collection_details_pointer ${
-            current_store_name
-              ? current_store_name === "samskara"
-                ? "collection_details_sticky_samskara"
-                : current_store_name === "santhay"
-                  ? "collection_details_sticky_santhay"
-                  : current_store_name === "heroesvillains"
-                    ? "collection_details_sticky_heroesvillains"
-                    : current_store_name === "swiftlystyled"
+          className={`relative sm:max-w-s-5 lg:w-full pb-3 sm:pb-0 CollectionDetails_Img collection_details_pointer ${current_store_name
+            ? current_store_name === "samskara"
+              ? "collection_details_sticky_samskara"
+              : current_store_name === "santhay"
+                ? "collection_details_sticky_santhay"
+                : current_store_name === "heroesvillains"
+                  ? "collection_details_sticky_heroesvillains"
+                  : current_store_name === "swiftlystyled"
+                    ? "collection_details_sticky_swiftlystyled"
+                    : current_store_name === "dothelook"
                       ? "collection_details_sticky_swiftlystyled"
-                      : current_store_name === "dothelook"
-                        ? "collection_details_sticky_swiftlystyled"
-                        : "collection_details_sticky_santhay"
-              : ""
-          }`}
+                      : "collection_details_sticky_santhay"
+            : ""
+            }`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -476,8 +478,8 @@ const CollectionDetails = ({
               {/* Display cover image if present, otherwise show default avatar */}
               <div ref={imageContainerRef} className="relative">
                 {collection.video_url &&
-                !collection.cover_image &&
-                !isSocialMediaVideo(collection.video_url) ? (
+                  !collection.cover_image &&
+                  !isSocialMediaVideo(collection.video_url) ? (
                   <ReactPlayer
                     url={collection.video_url}
                     playing={false} // Play the video when hovered or on mobile
@@ -568,9 +570,9 @@ const CollectionDetails = ({
                             user_name === super_admin
                               ? PATH_ROOT
                               : generateRoute(
-                                  collectionOwner.user_id,
-                                  user_name,
-                                );
+                                collectionOwner.user_id,
+                                user_name,
+                              );
                           return route ? (
                             <Link
                               href={route}
@@ -628,15 +630,13 @@ const CollectionDetails = ({
                               collectionPagePath={collectionPagePath}
                             />
                           )}
-                          {sharePageUrl &&  collection.status === PUBLISHED && (
+                          {sharePageUrl && collection.status === PUBLISHED && (
                             <img
-                              className={`flex w-auto mt-0.5 mb-auto ${
-                                showShareCollection ? "pointer-events-none" : ""
-                              } 
-																${
-                                  collection.status === PUBLISHED
-                                    ? "cursor-pointer"
-                                    : "cursor-not-allowed opacity-50"
+                              className={`flex w-auto mt-0.5 mb-auto ${showShareCollection ? "pointer-events-none" : ""
+                                } 
+																${collection.status === PUBLISHED
+                                  ? "cursor-pointer"
+                                  : "cursor-not-allowed opacity-50"
                                 }`}
                               src={share_icon}
                               title={
@@ -745,13 +745,13 @@ const CollectionDetails = ({
 
           <div className="mt-2">
             {showFeatureOnBTOnNonStore &&
-            collection.hosted_stores?.includes(STORE_USER_NAME_BUDGETTRAVEL) ? (
+              collection.hosted_stores?.includes(STORE_USER_NAME_BUDGETTRAVEL) ? (
               <span className="inline-block px-2 py-1 bg-violet-100 text-white rounded-lg text-xs leading-none">
                 Featured on Budget Travel store
               </span>
             ) : null}
             {showFeatureOnStore &&
-            collection.hosted_stores?.includes(current_store_name) ? (
+              collection.hosted_stores?.includes(current_store_name) ? (
               <span className="inline-block px-2 py-1 bg-violet-100 text-white rounded-lg text-xs leading-none">
                 Featured on {storeDisplayName} store
               </span>
@@ -778,30 +778,28 @@ const CollectionDetails = ({
               </div>
             )}
 
-          <p
-            ref={descriptionRef}
-            className={`text-newcolor-100 text-base lg:text-xl 2xl:text-2xl pt-2 whitespace-pre-line mb-0 ${
-              isShowMoreActive ? "" : "ellipsis_3"
-            }`}
-          >
-            {collection.description}
-          </p>
-          {showMoreEnabled &&
-            (isShowMoreActive ? (
-              <span
-                className="text-sm lg:text-base text-violet-100  cursor-pointer"
-                onClick={() => dispatch(toggleShowMore(false))}
-              >
-                Read less
-              </span>
-            ) : (
-              <span
-                className="text-sm lg:text-base text-violet-100   cursor-pointer"
-                onClick={() => dispatch(toggleShowMore(true))}
-              >
-                Read more
-              </span>
-            ))}
+          <div className='relative'>
+            <p
+              ref={descriptionRef}
+              className={`text-newcolor-100 text-base lg:text-xl 2xl:text-2xl pt-2 whitespace-pre-line mb-0 ${isShowMoreActive ? "" : styles.collection_description_ellipsis
+                }`}>
+              {collection?.description}
+            </p>
+            {showMoreEnabled &&
+              (isShowMoreActive ? (
+                <span
+                  className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer block '
+                  onClick={() => dispatch(toggleShowMore(false))}>
+                  Read less
+                </span>
+              ) : (
+                <span
+                  className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer block  '
+                  onClick={() => dispatch(toggleShowMore(true))}>
+                  Read more...
+                </span>
+              ))}
+          </div>
 
           <div className="flex items-center gap-2 md:gap-5 ml-auto mt-5 all_collection_buttons">
             {isPageOwner ? (
@@ -852,11 +850,10 @@ const CollectionDetails = ({
                 onClick={() =>
                   handleFeatureCollectionOnStore(STORE_USER_NAME_BUDGETTRAVEL)
                 }
-                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${
-                  collection.status !== PUBLISHED
-                    ? "text-newcolor-100 border-violet-100 "
-                    : "text-newcolor-100 border-violet-100"
-                } self-end`}
+                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${collection.status !== PUBLISHED
+                  ? "text-newcolor-100 border-violet-100 "
+                  : "text-newcolor-100 border-violet-100"
+                  } self-end`}
                 disabled={collection.status !== PUBLISHED}
                 title={
                   collection.status !== PUBLISHED
@@ -876,11 +873,10 @@ const CollectionDetails = ({
                 onClick={() =>
                   handleFeatureCollectionOnStore(current_store_name)
                 }
-                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${
-                  collection.status !== PUBLISHED
-                    ? "text-newcolor-100 border-violet-100"
-                    : "text-newcolor-100 border-violet-100"
-                } self-end`}
+                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${collection.status !== PUBLISHED
+                  ? "text-newcolor-100 border-violet-100"
+                  : "text-newcolor-100 border-violet-100"
+                  } self-end`}
                 disabled={collection.status !== PUBLISHED}
                 title={
                   collection.status !== PUBLISHED
@@ -910,7 +906,7 @@ const CollectionDetails = ({
         )}
       </div>
       {collection?.sponsor_details?.banner?.image &&
-      collection?.sponsor_details?.banner?.url ? (
+        collection?.sponsor_details?.banner?.url ? (
         <Link
           href={collection.sponsor_details.banner.url}
           className="flex px-0 mt-4"
