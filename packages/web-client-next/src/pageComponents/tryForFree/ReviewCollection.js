@@ -379,7 +379,7 @@ const ReviewCollection = (props) => {
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.auraOverlayCoordinates,
 	]);
-console.log('authUserCollections',authUserCollections);
+	console.log('authUserCollections', authUserCollections);
 
 	const { isFetching: updateWishlistInProgress } = updateWishlistReducer;
 	const { isFetching: deleteWishlistInProgress } = deleteWishlistReducer;
@@ -444,20 +444,20 @@ console.log('authUserCollections',authUserCollections);
 		[]
 	);
 	const [currentCollection, setCurrentCollection] = useState({});
- 
-// console.log('currentCollection',currentCollection );
-// console.log('singleCollections',singleCollections );
+
+	// console.log('currentCollection',currentCollection );
+	// console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		console.log('singleCollections',singleCollections );
-		console.log('authUserCollections',authUserCollections );
-		console.log('showWishlistModal',showWishlistModal );
-		console.log('plistId',plistId );
-		console.log('currentCollection',currentCollection );	
+		console.log('singleCollections', singleCollections);
+		console.log('authUserCollections', authUserCollections);
+		console.log('showWishlistModal', showWishlistModal);
+		console.log('plistId', plistId);
+		console.log('currentCollection', currentCollection);
 
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
 			return setCurrentCollection(singleCollections);
-	
+
 		}
 
 		// Normal flow
@@ -470,7 +470,7 @@ console.log('authUserCollections',authUserCollections);
 		singleCollections,
 		authUserCollections,
 		plistId,
-		 currentCollection
+		currentCollection
 	]);
 
 	// Fetch collection data directly on page load/refresh when plistId is available
@@ -480,46 +480,46 @@ console.log('authUserCollections',authUserCollections);
 			dispatch(getSingleUserCollection({ _id: plistId }));
 		}
 	}, [plistId, authUser.user_id]);
-  
-// 	useEffect(() => {
-//   let nextCollection = null;
 
-//   // Modal flow (priority)
-//   if (
-//     showWishlistModal &&
-//     singleCollections &&
-//     Object.keys(singleCollections).length > 0
-//   ) {
-//     nextCollection = singleCollections;
-//   }
-//   // Normal flow
-//   else if (
-//     !showWishlistModal &&
-//     plistId &&
-//     authUserCollections?.length
-//   ) {
-//     nextCollection =
-//       authUserCollections.find(cl => cl._id === plistId) || null;
-//   }
+	// 	useEffect(() => {
+	//   let nextCollection = null;
 
-//   // Update state ONLY if changed
-//   if (nextCollection?._id !== currentCollection?._id) {
-//     setCurrentCollection(nextCollection);
-//   }
+	//   // Modal flow (priority)
+	//   if (
+	//     showWishlistModal &&
+	//     singleCollections &&
+	//     Object.keys(singleCollections).length > 0
+	//   ) {
+	//     nextCollection = singleCollections;
+	//   }
+	//   // Normal flow
+	//   else if (
+	//     !showWishlistModal &&
+	//     plistId &&
+	//     authUserCollections?.length
+	//   ) {
+	//     nextCollection =
+	//       authUserCollections.find(cl => cl._id === plistId) || null;
+	//   }
 
-// }, [
-//   showWishlistModal,
-//   singleCollections,
-//   authUserCollections,
-//   plistId,
-//   currentCollection
-// ]);
+	//   // Update state ONLY if changed
+	//   if (nextCollection?._id !== currentCollection?._id) {
+	//     setCurrentCollection(nextCollection);
+	//   }
+
+	// }, [
+	//   showWishlistModal,
+	//   singleCollections,
+	//   authUserCollections,
+	//   plistId,
+	//   currentCollection
+	// ]);
 
 
 
 	// 	const currentCollection = useMemo(() => {
 	// 		if (showWishlistModal) {
- 	// 			return singleCollections || {};
+	// 			return singleCollections || {};
 	// 		}
 
 	// 		console.log(authUserCollections );
@@ -539,7 +539,7 @@ console.log('authUserCollections',authUserCollections);
 
 	// 	useEffect(() => {
 	// 		if (showWishlistModal) {
- 	// 			setStoreCollectionData(currentCollection)
+	// 			setStoreCollectionData(currentCollection)
 	// 		}
 	// 	}, [showWishlistModal,singleCollections])
 
@@ -918,7 +918,7 @@ console.log('authUserCollections',authUserCollections);
 			}
 		}
 	}, [currentCollection._id]);
-console.log(currentCollection);
+	console.log(currentCollection);
 
 	// decide show at a time only filterOptions, hashtagsInput enableSelectProduct or edit tags input
 	const checkAndShowContainer = useCallback(
@@ -1297,18 +1297,18 @@ console.log(currentCollection);
 
 		return () => { };
 	}, [currentView]);
-// console.log('isProductsFetchedForNewColl',isProductsFetchedForNewColl === false);
-// console.log('updateWishlistInProgress',!updateWishlistInProgress);
-// console.log('authUserCollectionsIsFetching',!authUserCollectionsIsFetching);
-// console.log(currentView === STEPS.PRODUCTS);
-// console.log(currentCollection._id);
+	// console.log('isProductsFetchedForNewColl',isProductsFetchedForNewColl === false);
+	// console.log('updateWishlistInProgress',!updateWishlistInProgress);
+	// console.log('authUserCollectionsIsFetching',!authUserCollectionsIsFetching);
+	// console.log(currentView === STEPS.PRODUCTS);
+	// console.log(currentCollection._id);
 
 
 	useEffect(() => {
 		// console.log('EFFECT RUNNING - Checking conditions...');
 		if (
 			currentView === STEPS.PRODUCTS &&
-			isProductsFetchedForNewColl === null &&   
+			isProductsFetchedForNewColl === null &&
 			!updateWishlistInProgress &&
 			!authUserCollectionsIsFetching &&
 			currentCollection._id
@@ -1317,7 +1317,7 @@ console.log(currentCollection);
 			handleConfirmRefetchProducts();
 			setIsProductsFetchedForNewColl(true);
 		}
-		
+
 	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching, isProductsFetchedForNewColl, currentCollection._id]);
 
 	let fetchingTimer;
@@ -4485,7 +4485,7 @@ console.log(currentCollection);
 																	<>
 																		<div
 																			className={`flex bg-violet-100  items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
-																			style={{ width:"200px" }}
+																			style={{ width: "200px" }}
 																		>
 																			<Select
 																				className={`${style['custom-select-editcollection']}  w-full text-white placeholder-white `}
