@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
-import { Typography, Image, Input, Button } from "antd";
+import React, { useMemo, useRef, useState } from "react";
+import { Typography,   Input, Button, message } from "antd";
 import { useDispatch } from "react-redux";
-import { useRouter } from 'next/router'; const navigate = (path) => useRouter().push(path);
+import Router, { useRouter } from 'next/router';
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
+import Image from "next/image";
 import facebookImg from "../../images/facebook.png";
 import whatsappImg from "../../images/whatsapp.png";
 import xIcon from "../../images/x_black_icon.png";
@@ -15,16 +15,25 @@ import {
 } from "./redux/actions";
 
 import styles from './shareOption.module.scss';
-import { MY_PROFILE } from "../../constants/codes";
+import { MY_PROFILE, PUBLISHED } from "../../constants/codes";
 import { useEffect } from "react";
 import { getTTid } from "../../helper/getTrackerInfo";
+import Modal from "../../components/modal/Modal";
+import { FaXTwitter } from "react-icons/fa6";
+
+import {
+	CopyOutlined,
+	WhatsAppOutlined,
+	FacebookOutlined,
+	LinkedinOutlined,
+} from "@ant-design/icons";
 
 const { Text } = Typography;
 
 const ShareOptions = (props) => {
 	const ref = useRef();
 	const [copied, setCopied] = useState(false);
-
+	const router = useRouter();
 	const dispatch = useDispatch();
 
 	const handleClickOutside = () => {
@@ -42,14 +51,41 @@ const ShareOptions = (props) => {
 
 	useOnClickOutside(ref, handleClickOutside);
 
-	const { url, collection } = props;
+	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose } = props;
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;
+ 
 
-	useEffect(() => {
-		console.log(url);
-	}, [copied])
+
+	// const collectionRedirectPath = useMemo(
+	// 		() =>
+	// 			collectionDetails._id &&
+	// 			getBlogCollectionPagePath(
+	// 				collection.user_name,
+	// 				collection.path,
+	// 				collection._id,
+	// 				collection.user_id,
+	// 				collection.status,
+	// 				collectionDetails.hosted_stores,
+	// 				collectionDetails?.collection_theme
+	// 			),
+	// 		[
+	// 			collectionOwner.user_name,
+	// 			collectionDetails.path,
+	// 			collectionDetails._id,
+	// 			collectionOwner.user_id,
+	// 			collectionDetails.status,
+	// 			collectionDetails.hosted_stores,
+	// 			collectionDetails?.collection_theme,
+	// 		]  
+	// 	);
+	 
+ 
+function pdf(){
+	onClose(()=>false)
+}
+	 
 
 	const baseUrl = `${url}?utm_source=whatsapp&utm_medium=messaging&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=whatsapp&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
 
@@ -59,93 +95,112 @@ const ShareOptions = (props) => {
 		facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl.replace(/whatsapp/g, 'facebook'))}`,
 		linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(baseUrl.replace(/whatsapp/g, 'linkedin'))}`
 	};
+console.log('aaadsDsds');
 
 	return (
-		<div
-			className={`unthink-share-url ${props.disableFloating ? "disableFloating" : ""
-				}`}
-			ref={ref}>
-			<Text className='unthink-share-url__header'>Share</Text>
-			{(!props.showHelpMeShop && (
-				<div className='unthink-share-url__icons'>
-					<a href={socialMediaUrls.facebook} target='_blank'>
-						<img src={facebookImg} />
-					</a>
-					<a href={socialMediaUrls.whatsapp} target='_blank'>
-						<img src={whatsappImg} />
-					</a>
-					<a href={socialMediaUrls.twitter} target='_blank'>
-						<img src={xIcon} width={28} height={28} />
-					</a>
-					<a href={socialMediaUrls.linkedin} target='_blank'>
-						<img src={LinkedIn} width={31} height={31} />
-					</a>
+			<Modal
+				headerText='Share'
+				isOpen={props.isOpen}
+				onClose={pdf}
+				maskClosable={false}
+				size='sm'
+			// okButtonProps={{ className: "hidden" }}
+			>
+				<div>
+					<h1 className='text-2xl font-bold capital-first-letter'>
+						{collectionName}
+					</h1>
 				</div>
-			)) ||
-				null}
-			<div className='unthink-share-url__link-option'>
-				{(props.showHelpMeShop && (
-					<>
-						<Button
-							type='primary'
-							className='border-primary bg-primary'
-							onClick={onHelpMeShopClick}>
-							Help me Shop
-						</Button>
-					</>
-				)) || (
-						<>
-							{/* <Text
-							className='unthink-share-url__link-option--copy'
-							copyable={{ text: shareUrl }}>
-							<Text ellipsis={{ tooltip: shareUrl }}>{shareUrl}</Text>
-						</Text> */}
-							{copied ? (
-								<Button
-									type='primary'
-									className='border-primary bg-primary'
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-									}}>
-									Copied
-								</Button>
-							) : (
-								<CopyToClipboard
-									text={props.url}
-									onCopy={() => {
-										setCopied(true);
-										setTimeout(() => {
-											setCopied(false);
-										}, 3000);
-									}}>
-									<Button
-										type='primary'
-										className='border-primary bg-primary'
-										onClick={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-										}}>
-										Copy link
-									</Button>
-								</CopyToClipboard>
-							)}
-						</>
-					)}
-				{props.showMyProfile && (
-					<Button
-						type='primary'
-						className='border-primary bg-primary'
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							navigate(MY_PROFILE);
-						}}>
-						Show My Profile
-					</Button>
-				)}
-			</div>
-		</div>
+				{/* {isAutoCreateCollection ? (
+					<div>
+						<Alert
+							message='The new collection is created and published with the selected products.'
+							type='info'
+							className='mt-2'
+						/>
+					</div>
+				) : null} */}
+				<div className=''>
+					{/* <div className='flex items-center justify-between'>
+						<p>
+							<b className="text-xl">Share your collection with your friends and followers!</b>
+						</p>
+						<button
+							className='rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white bg-indigo-600'
+							onClick={handlePreviewCollectionPage}
+							>
+							View Collection
+						</button>
+					</div> */}
+					{/* {collection.status != PUBLISHED && (
+						<Alert
+							message='Before sharing the collection page, Please make sure that the collection is published.'
+							type='info'
+							className='rounded-md text-base mt-4 md:mt-6'
+						/>
+					)} */}
+
+					<div className='flex flex-col gap-4 md:gap-6'>
+						<div className='grid grid-cols-1 md:grid-cols-2 mt-2 lg:mt-3'>
+							<div className='grid gap-4 grid-cols-3 md:grid-cols-1 mt-2 md:pl-2.5 md:order-last'>
+								<a
+									href={socialMediaUrls.facebook}
+									target='_blank'
+									className='h-11 rounded text-white text-center text-3xl'
+									style={{ backgroundColor: "#4267B2" }}>
+									<FacebookOutlined className='flex justify-center items-center h-full' />
+								</a>
+								<a
+									href={socialMediaUrls.whatsapp}
+									target='_blank'
+									className='h-11 rounded text-white text-center text-3xl'
+									style={{ backgroundColor: "#128C7E" }}>
+									<WhatsAppOutlined className='flex justify-center items-center h-full' />
+								</a>
+								<a
+									href={socialMediaUrls.twitter}
+									target='_blank'
+									className='h-11 rounded text-white text-center text-3xl flex items-center justify-center bg-gray-500'>
+									{/* <Image
+										src={xIcon}
+										width={28}
+										height={28}
+										className='flex justify-center items-center'
+									/> */}
+									<FaXTwitter width={28}
+										height={28} />
+
+								</a>
+								<a
+									href={socialMediaUrls.linkedin}
+									target='_blank'
+									className='h-11 rounded text-white text-center text-3xl'
+									style={{ backgroundColor: "#0072b1" }}>
+									<LinkedinOutlined className='flex justify-center items-center h-full' />
+								</a>
+							</div>
+
+							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || props.true)  ? (
+								<div className='flex items-center justify-center mt-4 md:mt-0'>
+									<img
+										className='w-full max-w-208 object-cover'
+										src={qrCodeGeneratorURL}
+									/>
+								</div>
+							) : null}
+						</div> 
+							{url && 
+						<div className='border p-1 rounded flex break-all text-lg '>
+							{url}{" "}
+							<CopyToClipboard className='text-lg'
+								text={url}
+								onCopy={() => message.success("Copied", 1)}>
+								<CopyOutlined className='text-xl flex ml-auto' />
+							</CopyToClipboard>
+						</div> }
+					</div>
+				</div>
+			</Modal>
 	);
 };
 

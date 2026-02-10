@@ -1,73 +1,85 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
+import { IoBagHandleOutline } from "react-icons/io5";
+import styles from "./ProductCard.module.css";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
-	HeartOutlined,
-	CloseCircleOutlined,
-	CopyOutlined,
-	StarFilled,
-	StarOutlined,
-	EditFilled,
-	CopyTwoTone,
-	CopyrightCircleFilled,
-	CopyFilled,
-	UploadOutlined,
-	LoadingOutlined,
+  HeartOutlined,
+  CloseCircleOutlined,
+  CopyOutlined,
+  StarFilled,
+  StarOutlined,
+  EditFilled,
+  CopyTwoTone,
+  CopyrightCircleFilled,
+  CopyFilled,
+  UploadOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-const vtf_image = '/images/CamAI_2.svg';
+// const vtf_image = "/images/vtoIcon.svg";
+import vtf_image from './images/vtoIcon.svg'
 import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
-	setRemoveFromFavorites,
-	openWishlistModal,
-	setProductsToAddInWishlist,
-	closeWishlistModal,
+  setRemoveFromFavorites,
+  openWishlistModal,
+  setProductsToAddInWishlist,
+  closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
 import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
-	adminUserId,
-	current_store_id,
-	current_store_name,
-	enable_view_similar_products,
-	payment_url,
-	pdp_page_enabled,
+  adminUserId,
+  current_store_id,
+  current_store_name,
+  enable_view_similar_products,
+  payment_url,
+  pdp_page_enabled,
 } from "../../constants/config";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
 // import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
 import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redux/selector";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
-	addSidInProductUrl,
-	AdminCheck,
-	getCurrentTheme,
-	getFinalImageUrl,
-	getPercentage,
-	// URLAddParam,
+  addSidInProductUrl,
+  AdminCheck,
+  getCurrentTheme,
+  getFinalImageUrl,
+  getPercentage,
+  // URLAddParam,
 } from "../../helper/utils";
 import appTracker from "../../helper/webTracker/appTracker";
 import {
-	defaultFavoriteColl,
-	PRODUCT_DUMMY_URL,
-	WISHLIST_TITLE,
+  defaultFavoriteColl,
+  PRODUCT_DUMMY_URL,
+  WISHLIST_TITLE,
 } from "../../constants/codes";
+import camera from './images/Card/camera.svg'
+import heart from './images/Card/heart.svg'
+import more from './images/Card/more.svg'
+import shopping from './images/Card/shopping-bag3.svg'
 
 import View_similar_icon from "../../images/view_similar_icon.svg?react";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import Image from "next/image";
 
-import styles from './product.module.scss';
 import Link from 'next/link';
 import { useNavigate } from "../../helper/useNavigate";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import useTheme from "../../hooks/chat/useTheme";
 import {
-	gTagAuraProductClick,
-	gTagCollectionProductClick,
+  gTagAuraProductClick,
+  gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
@@ -75,535 +87,544 @@ import axios from "axios";
 import Modal from "../modal/Modal";
 import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
-
+import buyicon from "./images/buy1.svg";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
-	DEFAULT: "default",
-	ACTION_COVER: "actionCover",
+  DEFAULT: "default",
+  ACTION_COVER: "actionCover",
 };
 
 const ProductCard = ({
-	product,
-	isCustomProductsPage,
-	enableClickTracking = false,
-	selectedSearchOption,
-	collection_id,
-	onProductClick,
-	productClickParam = {},
-	hideViewSimilar = false,
-	hideAddToWishlist = false,
-	enableHoverShowcase = false,
-	hideBuyNow = false,
-	showRemoveIcon = false,
-	enableCopyFeature = true,
-	size = "medium", // small, medium
-	height = "h-340", // need to send tailwind class for height,
-	wishlist,
-	onRemoveIconClick,
-	buyNowTitle = "Buy Now",
-	buyNowSubTitle,
-	enableSelect,
-	isSelected,
-	setSelectValue,
-	showEdit = false,
-	showStar = false,
-	showChinSection = false, // REMOVE
-	widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
-	onEditClick,
-	onStarClick,
-	openProductDetails = true,
-	allowEdit = false,
-	wishlistGeneratedBy,
-	collection_name,
-	collection_path,
-	collection_status,
-	localChatMessage,
-	blogCollectionPage,
+  product,
+  isCustomProductsPage,
+  enableClickTracking = false,
+  selectedSearchOption,
+  collection_id,
+  onProductClick,
+  productClickParam = {},
+  hideViewSimilar = false,
+  hideAddToWishlist = false,
+  enableHoverShowcase = false,
+  hideBuyNow = false,
+  showRemoveIcon = false,
+  enableCopyFeature = true,
+  size = "medium", // small, medium
+  height = "h-340", // need to send tailwind class for height,
+  wishlist,
+  onRemoveIconClick,
+  buyNowTitle = "Buy Now",
+  buyNowSubTitle,
+  enableSelect,
+  isSelected,
+  setSelectValue,
+  showEdit = false,
+  showStar = false,
+  showChinSection = false, // REMOVE
+  widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
+  onEditClick,
+  onStarClick,
+  openProductDetails = true,
+  allowEdit = false,
+  wishlistGeneratedBy,
+  collection_name,
+  collection_path,
+  collection_status,
+  localChatMessage,
+  blogCollectionPage,
 }) => {
-	const navigate = useNavigate();
-	console.log('hideAddToWishlist', enableSelect);
-	// console.log('qzssddsdsds',product);
-	const [buttonClick, setButtonClick] = useState(false);
-	const [showLoader, setShowLoader] = useState(false);
-	const [descriptionget, setDescriptionget] = useState('')
-	const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-	const [uploadedImages, setUploadedImages] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [clickedMfrCode, setClickedMfrCode] = useState(null);
-	const dispatch = useDispatch();
-	const { themeCodes } = useTheme();
-	const [menuIcon,setMenuIcon] = useState(false)
-	const menuRef =useRef(null)
-console.log(menuIcon);
+  const navigate = useNavigate();
+  console.log("hideAddToWishlist", widgetType);
+  // console.log('qzssddsdsds',product);
+  const [buttonClick, setButtonClick] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const [descriptionget, setDescriptionget] = useState("");
+  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [clickedMfrCode, setClickedMfrCode] = useState(null);
+  const dispatch = useDispatch();
+  const { themeCodes } = useTheme();
+  const [menuIcon, setMenuIcon] = useState(false);
+  const menuRef = useRef(null);
+  console.log(menuIcon);
 
-	useEffect(()=>{
-		const handleClick =((event)=>{
-			if(menuRef.current && !menuRef.current.contains(event.target)){
-				setMenuIcon(false)
-			}
-		})
-		document.addEventListener('mousedown',handleClick)
-		return ()=>{
-			document.removeEventListener('mousedown',handleClick)
-		}
-	},[])
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuIcon(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
 
-	const [authUserId, authUserName, showChatModal, showWishlistModal, store_id, authUser, customProductsData] =
-		useSelector((state) => [
-			state.auth.user.data.user_id,
-			state.auth.user.data.user_name,
-			state.chatV2.showChatModal,
-			state.appState.wishlist.showWishlistModal,
-			state.store.data.store_id,
-			state.auth.user.data,
-			state.auth.customProducts.data.data || [],
-		]);
-	// console.log('authUser', authUser);
-	const [storeData] = useSelector((state) => [state.store.data]);
-	const { admin_list: admin_list } = storeData;
-	// pdp_settings
-	const isAdminLoggedIn = AdminCheck(
-		authUser,
-		current_store_name,
-		adminUserId,
-		admin_list
-	);
-const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const [
+    authUserId,
+    authUserName,
+    showChatModal,
+    showWishlistModal,
+    store_id,
+    authUser,
+    customProductsData,
+  ] = useSelector((state) => [
+    state.auth.user.data.user_id,
+    state.auth.user.data.user_name,
+    state.chatV2.showChatModal,
+    state.appState.wishlist.showWishlistModal,
+    state.store.data.store_id,
+    state.auth.user.data,
+    state.auth.customProducts.data.data || [],
+    // state.wishlist.showWishlistModal
+  ]);
+  console.log(showWishlistModal);
 
-	// console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-	// const favoriteColl =
-	// 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
-	const [count, setCount] = useState(1);
-	// console.log("counttttt",count);
+  // console.log('authUser', authUser);
+  const [storeData] = useSelector((state) => [state.store.data]);
+  const { admin_list: admin_list } = storeData;
+  // pdp_settings
+  const isAdminLoggedIn = AdminCheck(
+    authUser,
+    current_store_name,
+    adminUserId,
+    admin_list,
+  );
+  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
-	const enableViewSimilar = useMemo(() => {
-		return enable_view_similar_products === "false" ? false : !hideViewSimilar;
-	}, [enable_view_similar_products, hideViewSimilar]);
+  // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
+  // const favoriteColl =
+  // 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
+  const [count, setCount] = useState(1);
+  // console.log("counttttt",count);
 
-	const isProductUrlAvailable =
-		product.url && product.url !== PRODUCT_DUMMY_URL;
+  const enableViewSimilar = useMemo(() => {
+    return enable_view_similar_products === "false" ? false : !hideViewSimilar;
+  }, [enable_view_similar_products, hideViewSimilar]);
 
-	const currencySymbol = useMemo(
-		() => (product?.currency_symbol ? product.currency_symbol : "&#36;"),
-		[product?.currency_symbol]
-	);
+  const isProductUrlAvailable =
+    product.url && product.url !== PRODUCT_DUMMY_URL;
 
-	const handleOpenProductModal = useCallback(
-		(allowEdit) => {
-			dispatch(
-				openProductModal({
-					payload: product,
-					collectionId: collection_id,
-					allowEdit,
-				})
-			);
-		},
-		[product, collection_id, allowEdit]
-	);
-	console.log(product);
+  const currencySymbol = useMemo(
+    () => (product?.currency_symbol ? product.currency_symbol : "&#36;"),
+    [product?.currency_symbol],
+  );
 
-	const handleProductClick = async () => {
-		if (enableSelect) {
-			setSelectValue && setSelectValue(!isSelected);
-		} else {
-			// tracking event happens from here by prop enableClickTracking
-			if (enableClickTracking) {
-				await sharedPageTracker.onCollectionProductClick({
-					mfrCode: product.mfr_code,
-					redirectionUrl: product.url,
-					product_brand: product.product_brand,
-					brand: product.brand,
-					sponsored: product.sponsored,
-					collectionId: collection_id,
-					...productClickParam,
-				});
-			}
-			// prop function to fetch recommendation on shared page
-			if (onProductClick) onProductClick();
+  const handleOpenProductModal = useCallback(
+    (allowEdit) => {
+      dispatch(
+        openProductModal({
+          payload: product,
+          collectionId: collection_id,
+          allowEdit,
+        }),
+      );
+    },
+    [product, collection_id, allowEdit],
+  );
+  console.log(product);
 
-			if (selectedSearchOption?.title) {
-				// GTAG CONFIGURATION AURA
-				// START
-				console.log(selectedSearchOption);
+  const handleProductClick = async () => {
+    if (enableSelect) {
+      setSelectValue && setSelectValue(!isSelected);
+    } else {
+      // tracking event happens from here by prop enableClickTracking
+      if (enableClickTracking) {
+        await sharedPageTracker.onCollectionProductClick({
+          mfrCode: product.mfr_code,
+          redirectionUrl: product.url,
+          product_brand: product.product_brand,
+          brand: product.brand,
+          sponsored: product.sponsored,
+          collectionId: collection_id,
+          ...productClickParam,
+        });
+      }
+      // prop function to fetch recommendation on shared page
+      if (onProductClick) onProductClick();
 
-				gTagAuraProductClick({
-					mft_code: product?.mfr_code,
-					aura_widget: selectedSearchOption?.id,
-					user_id: getTTid(),
-					user_name: authUserName,
-					term: localChatMessage || "",
-				});
-				// END
-			} else {
-				// GTAG CONFIGURATION
-				// START
+      if (selectedSearchOption?.title) {
+        // GTAG CONFIGURATION AURA
+        // START
+        console.log(selectedSearchOption);
 
-				// console.log(blogCollectionPage);
+        gTagAuraProductClick({
+          mft_code: product?.mfr_code,
+          aura_widget: selectedSearchOption?.id,
+          user_id: getTTid(),
+          user_name: authUserName,
+          term: localChatMessage || "",
+        });
+        // END
+      } else {
+        // GTAG CONFIGURATION
+        // START
 
-				gTagCollectionProductClick({
-					mft_code: product?.mfr_code,
-					collection_path: authUserId
-						? addSidInProductUrl(
-							product.url,
-							authUserId,
-							blogCollectionPage?.collection_id
-						)
-						: product.url,
-					user_id: getTTid(),
-					user_name: authUserName,
-					collection_id: blogCollectionPage?.collection_id || "",
-					collection_name: blogCollectionPage?.collection_name,
-				});
-				// END
-			}
+        // console.log(blogCollectionPage);
 
-			if (isProductUrlAvailable) {
-				// redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
-				const redirectionUrl = authUserId
-					? addSidInProductUrl(
-						product.url,
-						authUserId,
-						blogCollectionPage?.collection_id
-					)
-					: product.url;
-				window.open(redirectionUrl, "_blank");
-			} else if (storeData?.pdp_settings?.is_buy_popup == false && !isCustomProductsPage || pdp_page_enabled) {
-				navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
-				if (showChatModal) {
-					dispatch(setShowChatModal(false));
-				}
-				if (showWishlistModal) {
-					dispatch(closeWishlistModal());
-				}
-			} else {
-				handleOpenProductModal(allowEdit); // old: show update product modal on product click
-			}
-		}
-	};
+        gTagCollectionProductClick({
+          mft_code: product?.mfr_code,
+          collection_path: authUserId
+            ? addSidInProductUrl(
+                product.url,
+                authUserId,
+                blogCollectionPage?.collection_id,
+              )
+            : product.url,
+          user_id: getTTid(),
+          user_name: authUserName,
+          collection_id: blogCollectionPage?.collection_id || "",
+          collection_name: blogCollectionPage?.collection_name,
+        });
+        // END
+      }
 
-	const discountPer =
-		product?.price &&
-		product?.listprice &&
-		+product?.listprice > +product?.price &&
-		getPercentage(product.listprice, product.price);
+      if (isProductUrlAvailable) {
+        // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
+        const redirectionUrl = authUserId
+          ? addSidInProductUrl(
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
+          : product.url;
+        window.open(redirectionUrl, "_blank");
+      } else if (
+        (storeData?.pdp_settings?.is_buy_popup == false &&
+          !isCustomProductsPage) ||
+        pdp_page_enabled
+      ) {
+        navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+        if (showChatModal) {
+          dispatch(setShowChatModal(false));
+        }
+        if (showWishlistModal) {
+          dispatch(closeWishlistModal());
+        }
+      } else {
+        handleOpenProductModal(allowEdit); // old: show update product modal on product click
+      }
+    }
+  };
 
-	const addToWishlistClick = (event) => {
-		event.preventDefault();
-		event.stopPropagation();
+  const discountPer =
+    product?.price &&
+    product?.listprice &&
+    +product?.listprice > +product?.price &&
+    getPercentage(product.listprice, product.price);
 
-		// DISABLED this feature of adding item to favorites on click on add to collection
-		// NEED TO REMOVE THIS FEATURE CODE FROM REDUX/ACTION/SAGA
-		// NEED TO REMOVE remove from favorites handling as well
+  const addToWishlistClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-		// add product in favorites if it is not there
-		// const isProductExistsInFavorites = favoriteColl.product_lists.some(
-		// 	(p) => p.mfr_code === product.mfr_code
-		// );
+    // DISABLED this feature of adding item to favorites on click on add to collection
+    // NEED TO REMOVE THIS FEATURE CODE FROM REDUX/ACTION/SAGA
+    // NEED TO REMOVE remove from favorites handling as well
 
-		// if (!isProductExistsInFavorites) {
-		// 	// adding item to favorites (system collection)
-		// 	// const user = {};
-		// 	// const item = { product_id: product.mfr_code };
-		// 	// if (window?.cemantika?.ecommerce)
-		// 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
+    // add product in favorites if it is not there
+    // const isProductExistsInFavorites = favoriteColl.product_lists.some(
+    // 	(p) => p.mfr_code === product.mfr_code
+    // );
 
-		// 	// not calling it for add to favorites for now
-		// 	// const event = {
-		// 	// 	mfrCode: product.mfr_code,
-		// 	// 	product_brand: product.product_brand,
-		// 	// 	brand: product.brand,
-		// 	// 	collectionId: productClickParam.collectionId,
-		// 	// 	iCode: productClickParam.iCode,
-		// 	// 	campCode: productClickParam.campCode,
-		// 	// 	collectionName: productClickParam.collectionName,
-		// 	// };
-		// 	// appTracker.onAddItemToWishlist(event);
+    // if (!isProductExistsInFavorites) {
+    // 	// adding item to favorites (system collection)
+    // 	// const user = {};
+    // 	// const item = { product_id: product.mfr_code };
+    // 	// if (window?.cemantika?.ecommerce)
+    // 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
 
-		// 	const payload = {
-		// 		_id: favoriteColl._id,
-		// 		user_id: authUserId,
-		// 		collection_name: defaultFavoriteColl.collection_name,
-		// 		type: defaultFavoriteColl.type,
-		// 		products: [
-		// 			{
-		// 				mfr_code: product.mfr_code,
-		// 				tagged_by: product.tagged_by,
-		// 			},
-		// 		],
-		// 		fetchRecommendations: true,
-		// 		fetchUserCollections: true,
-		// 	};
+    // 	// not calling it for add to favorites for now
+    // 	// const event = {
+    // 	// 	mfrCode: product.mfr_code,
+    // 	// 	product_brand: product.product_brand,
+    // 	// 	brand: product.brand,
+    // 	// 	collectionId: productClickParam.collectionId,
+    // 	// 	iCode: productClickParam.iCode,
+    // 	// 	campCode: productClickParam.campCode,
+    // 	// 	collectionName: productClickParam.collectionName,
+    // 	// };
+    // 	// appTracker.onAddItemToWishlist(event);
 
-		// 	dispatch(addToWishlist(payload));
-		// 	dispatch(setRemoveFromFavorites(true));
-		// } else {
-		dispatch(setRemoveFromFavorites(false));
-		// }
+    // 	const payload = {
+    // 		_id: favoriteColl._id,
+    // 		user_id: authUserId,
+    // 		collection_name: defaultFavoriteColl.collection_name,
+    // 		type: defaultFavoriteColl.type,
+    // 		products: [
+    // 			{
+    // 				mfr_code: product.mfr_code,
+    // 				tagged_by: product.tagged_by,
+    // 			},
+    // 		],
+    // 		fetchRecommendations: true,
+    // 		fetchUserCollections: true,
+    // 	};
 
-		let createWishlistData = {};
+    // 	dispatch(addToWishlist(payload));
+    // 	dispatch(setRemoveFromFavorites(true));
+    // } else {
+    dispatch(setRemoveFromFavorites(false));
+    // }
 
-		if (wishlistGeneratedBy) {
-			createWishlistData.generated_by = wishlistGeneratedBy;
-		}
+    let createWishlistData = {};
 
-		dispatch(setProductsToAddInWishlist([product], createWishlistData));
-		dispatch(openWishlistModal());
-	};
+    if (wishlistGeneratedBy) {
+      createWishlistData.generated_by = wishlistGeneratedBy;
+    }
 
+    dispatch(setProductsToAddInWishlist([product], createWishlistData));
+    dispatch(openWishlistModal());
+  };
 
+  const checkoutPayment = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-	const checkoutPayment = async (e) => {
+    const location = window.location.origin;
 
-		e.stopPropagation()
-		e.preventDefault()
+    const payload = {
+      amount: product?.price || product?.listprice || 0, // MANDATORY
+      currency: "USD", // MANDATORY
+      thumbnail: product.image,
+      user_id: authUserId || getTTid(),
+      store_id: store_id,
+      service_id: `Product_${product.mfr_code}`,
+      emailId: authUser.emailId || null,
+      successUrl: `${location}/successpayment`,
+      failureUrl: `${location}/failedpayment`,
+      additional_details: {
+        mfr_code: product.mfr_code,
+      },
+      title: product.name,
+    };
 
+    try {
+      const res = await axios.post(
+        `${payment_url}/api/payments/checkout`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      // console.log("Checkout response:", res.data.redirectUrl);
+      // 🔁 If API returns payment URL
+      if (res?.data?.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      // alert("Payment initiation failed. Please try again.");
+    }
+  };
 
-		const location = window.location.origin
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
 
-		const payload = {
-			amount: product?.price || product?.listprice || 0, // MANDATORY
-			currency: "USD", // MANDATORY
-			thumbnail: product.image,
-			user_id: authUserId || getTTid(),
-			store_id: store_id,
-			service_id: `Product_${product.mfr_code}`,
-			emailId: authUser.emailId || null,
-			successUrl: `${location}/successpayment`,
-			failureUrl: `${location}/failedpayment`,
-			additional_details: {
-				mfr_code: product.mfr_code,
-			},
-			title: product.name,
-		};
+    if (!product?.mfr_code) return;
 
-		try {
-			const res = await axios.post(
-				`${payment_url}/api/payments/checkout`,
-				payload,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			// console.log("Checkout response:", res.data.redirectUrl);
-			// 🔁 If API returns payment URL
-			if (res?.data?.redirectUrl) {
-				window.location.href = res.data.redirectUrl;
-			}
-		} catch (error) {
-			console.error("Checkout error:", error);
-			// alert("Payment initiation failed. Please try again.");
-		}
-	};
+    const payload = {
+      products: [
+        {
+          mfr_code: product.mfr_code,
+          tagged_by: product.tagged_by || [],
+          qty: Number(count),
+        },
+      ],
+      product_lists: [],
+      collection_name: "my cart",
+      type: "system",
+      user_id: authUserId || getTTid(),
+      // collection_id: mycartcollectionid,
+      path: mycartcollectionpath,
+    };
+    dispatch(addToCart(payload));
+  };
 
+  const onSimilarClick = (event) => {
+    event.stopPropagation();
+    dispatch(
+      fetchSimilarProducts({
+        mfr_code: product.mfr_code,
+        name: product.name,
+        errorMessage: "Unable to fetch similar products",
+      }),
+    );
+  };
 
+  const removeFromWishlistClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
 
-	const handleAddToCart = (e) => {
-		e.stopPropagation();
+    if (onRemoveIconClick) {
+      onRemoveIconClick(product.mfr_code);
+    }
+  };
 
-		if (!product?.mfr_code) return;
+  const handleSelectProduct = (e) => {
+    e.stopPropagation();
+    setSelectValue && setSelectValue(!isSelected);
+  };
 
-		const payload = {
-			products: [
-				{
-					mfr_code: product.mfr_code,
-					tagged_by: product.tagged_by || [],
-					qty: Number(count),
-				},
-			],
-			product_lists: [],
-			collection_name: "my cart",
-			type: "system",
-			user_id: authUserId,
-			// collection_id: mycartcollectionid,
-			path: mycartcollectionpath,
-		};
-		dispatch(addToCart(payload));
-	};
+  const handleCopyClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    product && dispatch(openProductDetailsCopyModal(product));
+  };
 
-	const onSimilarClick = (event) => {
-		event.stopPropagation();
-		dispatch(
-			fetchSimilarProducts({
-				mfr_code: product.mfr_code,
-				name: product.name,
-				errorMessage: "Unable to fetch similar products",
-			})
-		);
-	};
+  const handleEditClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (onEditClick) {
+        onEditClick();
+      } else {
+        handleOpenProductModal(true);
+      }
+    },
+    [onEditClick, handleOpenProductModal],
+  );
 
-	const removeFromWishlistClick = (event) => {
-		event.stopPropagation();
-		event.preventDefault();
+  const handleStarClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onStarClick && onStarClick();
+    },
+    [onStarClick],
+  );
+  const handleUploadImage = async ({ file }) => {
+    try {
+      setShowLoader(true);
 
-		if (onRemoveIconClick) {
-			onRemoveIconClick(product.mfr_code);
-		}
-	};
+      const response = await profileAPIs.uploadImage({ file });
+      const data = response?.data;
 
-	const handleSelectProduct = (e) => {
-		e.stopPropagation();
-		setSelectValue && setSelectValue(!isSelected);
-	};
+      if (data?.status_code === 400 || data?.status === "failure") {
+        notification.error({
+          message: "Image Upload Failed",
+          description:
+            data?.status_desc || "Something went wrong. Please try again.",
+        });
+        return;
+      }
+      const url = data?.data?.[0]?.url;
+      setUploadedImages((prev) => prev.concat(url));
+      if (url) {
+        // setUploadedImages((prev) => [...prev, url]);
+        // additional_images.push(url)
+        notification.success({
+          message: "Image Uploaded Successfully",
+        });
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      notification.error({
+        message: "Image Upload Failed",
+        description:
+          error?.response?.data?.message || "Unexpected error occurred",
+      });
+    } finally {
+      setShowLoader(false);
+    }
+  };
 
-	const handleCopyClick = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-		product && dispatch(openProductDetailsCopyModal(product));
-	};
+  const uploadImageDraggerProps = {
+    accept: "image/*",
+    multiple: true,
+    showUploadList: false,
+    customRequest: ({ file, onSuccess }) => {
+      handleUploadImage({ file });
+      setTimeout(() => onSuccess("ok"), 0);
+    },
+  };
 
-	const handleEditClick = useCallback(
-		(e) => {
-			e.stopPropagation();
-			if (onEditClick) {
-				onEditClick();
-			} else {
-				handleOpenProductModal(true);
-			}
-		},
-		[onEditClick, handleOpenProductModal]
-	);
+  const handleVTOclick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const url = window.location.origin;
+    // setButtonClick(true);
 
-	const handleStarClick = useCallback(
-		(e) => {
-			e.stopPropagation();
-			onStarClick && onStarClick();
-		},
-		[onStarClick]
-	);
-	const handleUploadImage = async ({ file }) => {
-		try {
-			setShowLoader(true);
+    const payload = {
+      image_urls: [product.image, uploadedImages[0]],
+      store: storeData.store_name,
+      image_tryon_prompt: descriptionget || "",
+      type:"tryon",
+    };
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `https://auraprod.unthink.ai/cs/image_tryon/`,
+        payload,
+      );
+      setVtoResultImageUrl(res.data.data.image_url);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "Virtual Try-On Failed",
+        description:
+          error?.response?.data?.message ||
+          "Failed to process image. Please try again.",
+      });
+      setLoading(false);
+    }
+  };
 
-			const response = await profileAPIs.uploadImage({ file });
-			const data = response?.data;
+  const handleVTODownload = async () => {
+    if (vtoResultImageUrl) {
+      try {
+        const response = await fetch(vtoResultImageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `vto-result-${Date.now()}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        notification.success({
+          message: "Download Successful",
+          description: "Your virtual try-on image has been downloaded.",
+        });
+        handleVTOCancel();
+      } catch (error) {
+        console.error("Download failed:", error);
+        notification.error({
+          message: "Download Failed",
+          description: "Failed to download the image. Please try again.",
+        });
+      }
+    }
+  };
 
-			if (data?.status_code === 400 || data?.status === "failure") {
-				notification.error({
-					message: "Image Upload Failed",
-					description:
-						data?.status_desc || "Something went wrong. Please try again.",
-				});
-				return;
-			}
-			const url = data?.data?.[0]?.url;
-			setUploadedImages(prev => prev.concat(url))
-			if (url) {
-				// setUploadedImages((prev) => [...prev, url]);
-				// additional_images.push(url)
-				notification.success({
-					message: "Image Uploaded Successfully",
-				});
-			}
-		} catch (error) {
-			console.error("Upload failed:", error);
-			notification.error({
-				message: "Image Upload Failed",
-				description:
-					error?.response?.data?.message || "Unexpected error occurred",
-			});
-		} finally {
-			setShowLoader(false);
-		}
-	};
+  const handleVTOCancel = () => {
+    setButtonClick(false);
+    setVtoResultImageUrl(null);
+    setUploadedImages([]);
+    setDescriptionget("");
+  };
+  const fetchProductDetails = async () => {
+    dispatch(PDPloader(true));
+    try {
+      const products =
+        await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode);
+      if (products && products.status === 200 && products.data) {
+        let data = products.data.data[0];
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      dispatch(PDPloader(false));
+    }
+  };
+  const savedProduct = (p) => {
+    return customProductsData.find((item) => item.mfr_code === p);
+  };
 
-	const uploadImageDraggerProps = {
-		accept: "image/*",
-		multiple: true,
-		showUploadList: false,
-		customRequest: ({ file, onSuccess }) => {
-			handleUploadImage({ file });
-			setTimeout(() => onSuccess("ok"), 0);
-		},
-	};
-
-
-	const handleVTOclick = async (e) => {
-		e.stopPropagation();
-		e.preventDefault();
-		const url = window.location.origin
-		// setButtonClick(true);
-
-		const payload = {
-			image_urls: [product.image, uploadedImages[0]],
-			store: storeData.store_name,
-			image_tryon_prompt: descriptionget || '',
-		}
-		try {
-			setLoading(true);
-			const res = await axios.post(`https://auraprod.unthink.ai/cs/image_tryon/`, payload)
-			setVtoResultImageUrl(res.data.data.image_url);
-			setLoading(false);
-		} catch (error) {
-			console.log(error);
-			notification.error({
-				message: "Virtual Try-On Failed",
-				description: error?.response?.data?.message || "Failed to process image. Please try again.",
-			});
-			setLoading(false);
-		}
-	}
-
-	const handleVTODownload = async () => {
-		if (vtoResultImageUrl) {
-			try {
-				const response = await fetch(vtoResultImageUrl);
-				const blob = await response.blob();
-				const url = window.URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.href = url;
-				link.download = `vto-result-${Date.now()}.jpg`;
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-				window.URL.revokeObjectURL(url);
-				notification.success({
-					message: "Download Successful",
-					description: "Your virtual try-on image has been downloaded.",
-				});
-				handleVTOCancel();
-			} catch (error) {
-				console.error('Download failed:', error);
-				notification.error({
-					message: "Download Failed",
-					description: "Failed to download the image. Please try again.",
-				});
-			}
-		}
-	};
-
-
-	const handleVTOCancel = () => {
-		setButtonClick(false);
-		setVtoResultImageUrl(null);
-		setUploadedImages([]);
-		setDescriptionget('');
-	};
-	const fetchProductDetails = async () => {
-		dispatch(PDPloader(true));
-		try {
-			const products = await customProductsAPIs.fetchProductDetailsAPICall(
-				clickedMfrCode
-			);
-			if (products && products.status === 200 && products.data) {
-				let data = products.data.data[0];
-
-			}
-		} catch (e) {
-			console.log(e);
-		}
-		finally {
-			dispatch(PDPloader(false));
-		}
-	};
-	const savedProduct = (p) => {
-		return customProductsData.find((item) => item.mfr_code === p);
-	};
-
-	useEffect(() => {
-		if (!clickedMfrCode) return;
+  useEffect(() => {
+    if (!clickedMfrCode) return;
 
 		const result = savedProduct(clickedMfrCode);
 	if ( clickedMfrCode ) {
@@ -621,40 +642,54 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 	}}, [clickedMfrCode]);
 	return (
-		<div
-			className={`box-content ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
-				? "flex flex-col bg-slate-100 rounded-xl   shadow-m"
-				: ""
-				} ${size === "small" ? "w-40 lg:w-180" : "w-40 sm:w-180 lg:w-80"} h-full`}>
+		<div style={{backgroundColor:showWishlistModal ? 'white' : ''}}
+			className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''}
+       ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
 			<div
-				className={`overflow-hidden relative cursor-pointer product_card_container mt-3   ${showChinSection ? "rounded-t-xl" : "rounded-t-xl rounded-b-xl"
-					} flex flex-col h-full`}
+				className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
 				// onClick={handleProductClick}
 				onClick={() => {
-					setClickedMfrCode(product?.mfr_code);
+					if (enableSelect) {
+						handleProductClick();
+            
+					} else {
+						setClickedMfrCode(product?.mfr_code);
+					}
 				}}
 			>
 				{/* add div wrapper for show buy now on hover (exclude product header) */}
 				<div
-					className={`product_image_footer_container flex-shrink-0 shadow m-1`}>
-					<div>
+          		className={`${size === "small" ? styles['product-image-container-small'] : styles['product-image-container']}`}
+          >
+					<div style={{width:'100%'}}>
 						<img
 							src={getFinalImageUrl(product.image)}
 							width='100%'
-							className={`h-180 p-2 object-contain ${size === "small" ? "lg:h-180" : "lg:h-60"
-								}`}
+							className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
 							loading='lazy'
 						/>
+            		{!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+								<div  className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`}   onClick={(e) => {
+									setButtonClick(true);
+									e.stopPropagation();
+								}}>
+							<Image height={20}  width={20}
+								className={`${styles['product-vto-icon']}`}
+								src={camera}
+							/>
+              <p>Try On</p>
+ 							</div>
+							}
 					</div>
 
 					<div
-						className='absolute flex-col top-0 h-full w-full items-center justify-center z-10 hidden buyNow_addWishlist_container'
+						className={styles['product-overlay']}
 						style={{ background: themeCodes.productCard.hover_bg }}>
 						<>
 							{!enableSelect ? (
 								<h1
 									className={`m-0 ${size === "small" ? "text-base" : "text-2xl"
-										} font-semibold text-white top-1/2 product_buy_now flex items-center`}>
+										} font-semibold text-white top-1/2 product_buy_now ${styles['product-buy-now']} ${styles['product-action-buttons-container']}`}>
 									{isProductUrlAvailable ? buyNowTitle : null}
 									{isProductUrlAvailable ? (
 										<Image src={openInNewTabIcon} alt="open" width={20} height={20} className="text-white ml-2.5 w-5 h-5" />
@@ -672,14 +707,14 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									<>
 										{storeData?.pdp_settings?.is_buy_button ? (
 											<button
-												className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
+                        className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
 												onClick={checkoutPayment}
 											>
 												Buy Now
 											</button>
 										) : (
 											<button
-												className="box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
+												className={styles['product-add-cart-button-header']}
 											>
 												Add to Cart
 											</button>
@@ -689,32 +724,31 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 						</>
 						{!enableSelect ? (
-							<div className='absolute bottom-2'>
+							<div className={styles['product-overlay-actions']}>
 								{enableHoverShowcase && (
-									<div className='box-border flex items-center justify-center px-2 py-1 mb-1'>
+									<div className={styles['product-action-group']}>
 										<button
-											className={`flex items-center text-black-200 ${onStarClick ? "cursor-pointer" : "cursor-default"
-												}`}
+											className={styles['product-star-button']}
 											role={onStarClick ? "button" : "img"}
 											onClick={handleStarClick}>
 											{product.starred ? (
-												<StarFilled className='flex text-xl text-secondary' />
+												<StarFilled className={styles['product-star-icon-filled']} />
 											) : (
-												<StarOutlined className='flex text-xl text-white' />
+												<StarOutlined className={styles['product-star-icon']} />
 											)}
-											<span className='box-border text-base font-semibold text-white pl-2'>
+											<span className={styles['product-action-label']}>
 												Showcase
 											</span>
 										</button>
 									</div>
 								)}
-								<div className='flex items-center justify-center'>
+								<div className={styles['product-button-group']}>
 									{!hideAddToWishlist && (
 										<div
-											className='box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container'
+											className={styles['product-wishlist-button']}
 											onClick={addToWishlistClick}>
-											<HeartOutlined className='text-white text-xl flex add_to_wishlist_icon' />
-											<span className='box-border text-base font-semibold text-white pl-2 add_to_wishlist_text'>
+											<HeartOutlined className={styles['product-wishlist-icon']} />
+											<span className={styles['product-wishlist-label']}>
 												Add to {WISHLIST_TITLE}
 											</span>
 										</div>
@@ -722,13 +756,13 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 									{enableCopyFeature && (
 										<CopyOutlined
 											onClick={handleCopyClick}
-											className='text-white text-xl flex ml-2'
+											className={styles['product-copy-icon']}
 										/>
 									)}
 									{/* <Link to='/cart'> */}
 									{storeData?.pdp_settings?.is_add_to_cart_button &&
 										<p
-											className='box-border border whitespace-nowrap flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container ml-2'
+											className={styles['product-add-cart-button']}
 											style={{ zIndex: 10000 }}
 											onClick={(e) => handleAddToCart(e)}>
 											Add to Cart
@@ -738,349 +772,14 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 							</div>
 						) : null}
 					</div>
-				</div>
 
-				{/* product card header */}
-				<div
-					className={`box-border absolute top-0 w-full flex ${enableViewSimilar ||
-						(widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-							showRemoveIcon) ||
-						enableSelect
-						? "flex-row-reverse"
-						: ""
-						} justify-between ${size === "small"
-							? "px-2 lg:px-2.5 h-12"
-							: "px-2 lg:p-2.5 h-12 lg:h-20"
-						} z-20`}>
-					{/* reversed contents for hover css */}
-
-					{enableSelect ? (
-						<div
-							className={`box-border flex items-center self-baseline product_remove_icon ${size === "small" ? "pl-1 pt-1" : "pl-1 pt-1 lg:pl-0 lg:pt-0"
-								}`}>
-							<input
-								type='checkbox'
-								checked={isSelected}
-								onClick={handleSelectProduct}
-								onChange={() => { }} // fix onchange handler warning
-								className={size === "small" ? "lg:h-4 w-4" : "lg:h-6 w-6"}
-							/>
-						</div>
-					) : (
-						<>
-							{enableViewSimilar && (
-								<div
-									className='mt-0.75 lg:mt-0.5 flex items-center self-baseline view_similar_container view-similar-icon'
-									onClick={onSimilarClick}>
-									<View_similar_icon className='w-5 h-5 lg:w-8 lg:h-8 cursor-pointer text-xl lg:text-3xl-1 view_similar_icon' />
-									<span className='box-border text-xl font-bold pl-2 hidden transition-all view_similar_text'>
-										View Similar
-									</span>
-								</div>
-							)}
-
-							  <BsThreeDots  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className="hover-fancy hover:shadow  mt-3 text-2xl absolute top-2 right-2 bg-gray-100 rounded-full p-1" />
-							  {menuIcon && 
-							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className="menu-animate bg-white absolute top-11 right-3 shadow-md rounded-10 p-3 flex flex-col gap-3 h-fit w-36 ">
-
-							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-								showRemoveIcon && (
-									<div
-										className={`    gap-${size === "small" ? "2" : "3"
-											}`}>
-										<div
-											className={`flex gap-2 self-baseline product_remove_icon`}
-											onClick={removeFromWishlistClick}>
-											<p
-												className={`rounded-full flex justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
-														? "lg:text-base h-5 w-5 p-1"
-														: "lg:text-2xl h-6 w-6 p-1"
-													}`}>
-												<RxCross2 />												
-											</p>
-											<p className="text-gray-101">Remove</p>
-										</div>									
-									</div>
-								)}
-									{enableCopyFeature && (
-											<div className="flex gap-2" onClick={handleCopyClick} >
-
-											<div
-												className={ ` text-gray-101 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
-														? "lg:text-base  h-5 w-5 p-1"
-														: "lg:text-2xl h-6 w-6 p-1"
-													}`}
-												>
-												<LuCopy className='  ' />
-												
-											</div>
-											<p className="text-gray-101">Copy</p>
-											</div>
-										)}
-								{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) &&
-								<div className='flex gap-1'>
-									{!hideAddToWishlist && (
-										<div className="flex gap-2" onClick={addToWishlistClick} >
-
-										<button
-											className={`    h-6 w-6   rounded-full flex items-center justify-center transition z-30 `}
-												//  ${isCustomProductsPage
-												// 	? "right-1 top-20 mt-5"
-												// 	: "top-2 mt-0 right-1"}
-												
-											
-											style={{ background: "#f8f6f4" }}>
-											<HeartOutlined className='text-lg z-40 flex add_to_wishlist_icon text-gray-101' />
-										</button>
-										<p className="text-gray-101">Like</p>
-										</div>
-									)}
-
-									{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
-										<button
-											onClick={handleStarClick}
-											role={onStarClick ? "button" : "img"}
-											className={`border rounded-lg  flex items-center justify-center z-20 border-none transition ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
-											{product.starred ? (
-
-												<StarFilled className='text-lg text-yellow-500' />
-											) : (
-												<StarOutlined className='text-lg text-gray-600' />
-											)}
-											 <p className="pl-2 text-gray-101">Star</p>
-										</button>
-									)}
-
-										
-								</div>
-							}
-							{isAdminLoggedIn && isCustomProductsPage && (
-								<div className="flex gap-2" 	onClick={(e) => {
-											handleProductClick();
-											e.stopPropagation();
-										}}>
-
-								<p
-									className={`  z-30 h-6 w-6  flex items-center  justify-center  rounded-full `}
-										// ${showRemoveIcon
-										// 	? "lg:top-20  top-16 lg:-mt-3  mt-2 right-1"
-										// 	: "top-2 right-2"
-										// }
-									onClick={(e) => e.stopPropagation()}
-									style={{ backgroundColor: "#f8f6f4" }}>
-									<FiEdit
-										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
-									
-										className='h-4 w-4 z-30 rounded'
-									/>
-								</p>
-								<p className=" text-gray-101">Edit</p>
-								</div>
-
-							)}
-
-							{!isCustomProductsPage && storeData.is_tryon_enabled && 
-										<div className="flex gap-2 items-center "  onClick={(e) => {
-									setButtonClick(true);
-									e.stopPropagation();
-								}}>
-							<img
-								className={` flex items-center justify-center   z-30  ${size === "small" ? "h-6 w-6" : "h-7 w-7"
-									} ${enableCopyFeature && showRemoveIcon
-										? "lg:top-16 lg:-mt-2  mt-0 top-14  right-1 lg:right-1"
-										: "top-9 right-1 "
-									}`}								
-								src={vtf_image}
-							/>
-							<p className=" text-gray-101">Try On</p>
-										</div>
-							}
-
-
-							  </div>}
-						</>
-					)}
-					<div
-						// ${enableViewSimilar && "w-3/4"} // removed class name
-						className={`product-name overflow-hidden product_details_container`}>
-						{/* <div className='flex'>
-							<Text
-								ellipsis={{ tooltip: product.name }}
-								className={`m-0 text-sm ${size === "small" ? "lg:text-sm" : "lg:text-xl"
-									} overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2`}>
-								{product.name}
-							</Text>
-						</div> */}
-						{/* REMOVE */}
-						{/* <h1 className='m-0 text-xs lg:text-sm overflow-hidden overflow-ellipsis whitespace-nowrap capitalize product_attribute'>
-							{(product.color?.length &&
-								(typeof product.color === "string"
-									? product.color
-									: product.color[0])) ||
-								null}
-						</h1> */}
-					</div>
-				</div>
-
-
-				{/* product footer */}
-				<div className={`box-border w-full flex flex-col px-3 py-3 bg-white   ${size === "small" ? "gap-2" : "gap-3"}`}>
-					{/* Product Name */}
-					<div className='flex flex-col gap-1 min-h-[44px]'>
-						<Text
-							ellipsis={{ tooltip: product.name }}
-							className='m-0 text-sm font-semibold text-gray-900 overflow-hidden overflow-ellipsis whitespace-nowrap product_name'>
-							{product.name || '\u00A0'}
-						</Text>
-
-						{/* Brand Info */}
-						{product?.brand ? (
-							<p className='m-0 text-xs text-gray-600'>From <span className='font-medium'>{product.brand}</span></p>
-						) : (
-							<p className='m-0 text-xs text-gray-600'>&nbsp;</p>
-						)}
-
-						{/* SOLD Badge */}
-						{product?.avlble === 0 && (
-							<div
-								className='p-1 leading-none text-red-500 text-xs product_card_footer_item'
-								style={{
-									backgroundColor: "#fff2f0",
-									border: "1px solid #ffccc7",
-									width: "fit-content",
-								}}>
-								SOLD
-							</div>
-						)}
-					</div>
-
-
-					{(storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0) ||
-						(storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0) ||
-						(storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0) ? (
-						<div>
-							{storeData.pdp_settings?.buy_card_attributes?.[0] && product?.size?.length > 0 && (
-								<span
-									className='mx-1  lg:inline-block block px-1   rounded-md '
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									size:
-									{Array.isArray(product?.size)
-										? product.size
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.size?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-							{storeData.pdp_settings?.buy_card_attributes?.[1] && product?.sleeve?.length > 0 && (
-								<span
-									className='mx-1 px-1 mt-1 lg:mt-0  lg:inline-block block  rounded-md'
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									sleeve :{" "}
-									{Array.isArray(product?.sleeve)
-										? product.sleeve
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.sleeve?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-							{storeData.pdp_settings?.buy_card_attributes?.[2] && product?.fit?.length > 0 && (
-								<span
-									className='mx-1 px-1  mt-1 lg:mt-0  lg:inline-block block  rounded-md'
-									style={{
-										background: "#eeeeee",
-										width: "fit-content",
-										fontSize: 10,
-									}}>
-									fit:{" "}
-									{Array.isArray(product?.fit)
-										? product.fit
-											.map((f) => f.replace(/,+$/, "").trim())
-											.join(", ")
-										: product?.fit?.replace(/,+$/, "").trim()}
-								</span>
-							)}
-						</div>)
-						: (<div className="h-6">  </div>)
-					}
-
-
-
-					{/* Price Section */}
-					<div className='flex items-center gap-2 min-h-[32px]'>
-						<span className={`text-xl text-gray-900 product_price ${size === "small" ? "lg:text-sm" : "lg:text-xl"}`}>
-							{product?.price || product?.listprice ? (
-								<span
-									dangerouslySetInnerHTML={{
-										__html: `${currencySymbol}${product.price || product.listprice}`,
-									}}
-								/>
-							) : (
-								<span>&nbsp;</span>
-							)}
-						</span>
-
-						{product?.price > 0 &&
-							product?.listprice > product?.price &&
-							discountPer > 0 && (
-								<>
-									<span className='text-sm line-through text-gray-400 product_listprice'>
-										<span
-											dangerouslySetInnerHTML={{
-												__html: `${currencySymbol}${product.listprice}`,
-											}}
-										/>
-									</span>
-									<span className='text-xs font-bold text-red-500 product_discount'>
-										{(discountPer && `-${discountPer}%`) || null}
-									</span>
-								</>
-							)}
-					</div>
-
-					{/* Action Buttons */}
+          		{/* Action Buttons */}
 					{!enableSelect && (
-						<div className='flex gap-1 lg:gap-2 items-center justify-between'>
-							{(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
-								<>
-									{storeData?.pdp_settings?.is_buy_button ? (
-										<button
-											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors product_buy_button disabled:opacity-50 disabled:cursor-not-allowed"
-											onClick={checkoutPayment}
-											style={{ background: '#7c75ec' }}
-											disabled={!product?.price && !product?.listprice}
-										>
-											Buy now
-										</button>
-									) : (
-										<button
-											className="flex-1 whitespace-nowrap text-white font-semibold py-2.5 px-2 lg:px-3 rounded-lg flex items-center justify-center text-sm z-10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-											onClick={handleAddToCart}
-											style={{ background: '#7c75ec' }}
-											disabled={!product?.price && !product?.listprice}
-										>
-											Add to cart
-										</button>
-									)}
-								</>
-							)}
-
-						
-
-							
-
+						<div className={styles['product-showcase-button-main']}>
 							<div>
 								{widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
 									<button
-										className={`border rounded-lg p-2 flex items-center justify-center z-20 transition border-gray-300 cursor-pointer ${onStarClick ? "cursor-pointer" : "cursor-default"
-											}`}
+										className={`${styles['product-star-action-button']}`}
 										tabindex='-1'
 										role={onStarClick ? "button" : "img"}
 										onClick={handleStarClick}>
@@ -1094,10 +793,382 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										</span>
 									</button>
 								) : null}
-							</div>
+                	{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar ? (
+									<button
+										className={`${styles['product-star-action-button']}`}
+										tabindex='-1'
+										role={onStarClick ? "button" : "img"}
+										onClick={handleStarClick}>
+										{product.starred ? (
+											<StarFilled className='flex text-secondary' />
+										) : (
+											<StarOutlined className='flex text-black-200' />
+										)}
+										<span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+											Showcase
+										</span>
+									</button>
+								) : null}
+																	{/* {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
+										<button
+											onClick={handleStarClick}
+											role={onStarClick ? "button" : "img"}
+											className={`${styles['product-star-default-button']} ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
+											{product.starred ? (
+
+												<StarFilled className='text-lg text-yellow-500' />
+											) : (
+												<StarOutlined className='text-lg text-gray-600' />
+											)}
 							
+										</button>
+									)} */}
+							</div>
 						</div>
 					)}
+				</div>
+        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
+								showRemoveIcon && (
+									<div
+										className={`   gap-${size === "small" ? "2" : "3"
+											}`}>
+										<div
+											className={`flex absolute top-3 right-2 z-50 gap-2 items-center self-baseline product_remove_icon`}
+											onClick={removeFromWishlistClick}>
+											<p
+												className={`rounded-full z-50 flex mb-0 justify-center items-center font-semibold text-black-101 bg-white  ${size === "small"
+														? "lg:text-base h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}>
+												<RxCross2 />												
+											</p>
+										 
+										</div>									
+									</div>
+								)}
+        {/* product card header */}
+        <div
+          className={`box-border absolute top-0 w-full flex ${
+            enableViewSimilar ||
+            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+              showRemoveIcon) ||
+            enableSelect
+              ? "flex-row-reverse"
+              : ""
+          } justify-between ${
+            size === "small"
+              ? "px-2 lg:px-2.5 h-12"
+              : "px-2 lg:p-2.5 h-12 lg:h-20"
+          } z-20`}
+        >
+          {/* reversed contents for hover css */}
+
+					{enableSelect ? (
+						<div 
+							className={`${styles['product-remove-icon-container']} ${size === "small" ? styles['product-remove-icon-container-small'] : ''}`}>
+							<input
+								type='checkbox'
+								checked={isSelected}
+								onClick={handleSelectProduct}
+								onChange={() => { }} // fix onchange handler warning
+								className={`${styles[size === "small" ? 'product-checkbox-small' : 'product-checkbox-large']}`}
+							/>
+						</div>
+					) : (
+						<>
+							{enableViewSimilar && (
+								<div
+									className={styles['product-view-similar']}
+									onClick={onSimilarClick}>
+									<View_similar_icon className={styles['product-view-similar-icon']} />
+									<span className={styles['product-view-similar-text']}>
+										View Similar
+									</span>
+								</div>
+							)}
+                {
+                   widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+							  <Image src={more} height={20} width={20}  onClick={(e)=>{setMenuIcon(true); e.stopPropagation()}} className={styles[size === "small" ?'product-menu-dropdown-small' :'product-menu-icon']} />
+                }
+
+							  {menuIcon && 
+							  <div ref={menuRef} onClick={(e)=> e.stopPropagation()}  className={styles[size === "small" ?'product-menu-dropdown-mini': 'product-menu-dropdown']}>
+
+							{widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+								showRemoveIcon && (
+									<div
+										className={`    gap-${size === "small" ? "2" : "3"
+											}`}>
+										<div
+											className={`flex gap-2 items-center self-baseline product_remove_icon`}
+											onClick={removeFromWishlistClick}>
+											<p
+												className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
+														? "lg:text-base h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}>
+												<RxCross2 />												
+											</p>
+											<p className="text-gray-101 mb-0">Remove</p>
+										</div>									
+									</div>
+								)}
+									{enableCopyFeature && (
+											<div className={styles['product-menu-item']} onClick={handleCopyClick} >
+
+											<div
+												className={ ` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
+														? "lg:text-base  h-5 w-5 p-1"
+														: "lg:text-2xl h-6 w-6 p-1"
+													}`}
+												>
+												<LuCopy className='  ' />
+												
+											</div>
+											<p className="text-gray-101 m-0">Copy</p>
+											</div>
+										)}
+								
+							{isAdminLoggedIn && isCustomProductsPage && (
+								<div className="flex gap-2 items-center" 	onClick={(e) => {
+											handleProductClick();
+											e.stopPropagation();
+										}}>
+								<p
+									className={`${styles['product-cart-button']} ${styles['product-cart-icon2']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+									onClick={(e) => e.stopPropagation()}
+									style={{ backgroundColor: "#f8f6f4" }}>
+									<FiEdit
+										style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
+									
+										className={styles['product-cart-icon-smalls']}
+									/>
+								</p>
+								<p className=" text-gray-101 m-0">Edit</p>
+								</div>
+
+							)}
+
+					
+
+
+							  </div>}
+						</>
+					)}
+          
+					<div
+						// ${enableViewSimilar && "w-3/4"} // removed class name
+						className={`product-name overflow-hidden product_details_container`}>
+						{/* <div className='flex'>
+							<Text
+								ellipsis={{ tooltip: product.name }}
+								className={`m-0 text-sm ${size === "small" ? "lg:text-sm" : "lg:text-xl"
+									} overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2`}>
+								{product.name}
+							</Text>
+						</div> */}
+            {/* REMOVE */}
+            {/* <h1 className='m-0 text-xs lg:text-sm overflow-hidden overflow-ellipsis whitespace-nowrap capitalize product_attribute'>
+							{(product.color?.length &&
+								(typeof product.color === "string"
+									? product.color
+									: product.color[0])) ||
+								null}
+						</h1> */}
+					</div>
+				</div>
+
+        
+{(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal && !enableSelect &&
+								<div className={styles['product-menu-item']}>
+									{!hideAddToWishlist && (
+										<div className={styles['product-menu-wishlist']} onClick={addToWishlistClick} >
+
+										<button
+											className={`${styles['product-heart-button']}`}
+												//  ${isCustomProductsPage
+												// 	? "right-1 top-20 mt-5"
+												// 	: "top-2 mt-0 right-1"}												
+											 >
+											<Image className={`text-lg z-40 flex ${styles.add_to_wishlist_icon}`}src={heart} height={20} width={20}  />
+										</button>
+										{/* <p className="text-gray-101 m-0">Wishlist</p> */}
+										</div>
+									)}										
+								</div>
+							}
+
+              
+
+				{/* product footer */}
+				<div className={`${styles['product-footer-main']} ${size === "small" ? styles['product-footer-main-small'] : styles['product-footer-main-medium']}`}>
+					{/* Product Name */}
+					<div className={styles['product-name-section']}>
+            	{/* Brand Info */}
+						{/* {product?.brand ? ( */}
+							<p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product?.brand ||'\u00A0' }</span></p>
+						{/* ) : (
+ 							null
+						)} */}
+
+						<Text
+							ellipsis={{ tooltip: product.name }}
+							className={styles['product-name-text']}>
+							{product.name || '\u00A0'}
+						</Text>
+
+					
+
+            {/* SOLD Badge */}
+            {product?.avlble === 0 && (
+              <div
+                className="p-1 leading-none text-red-500 text-xs product_card_footer_item"
+                style={{
+                  backgroundColor: "#fff2f0",
+                  border: "1px solid #ffccc7",
+                  width: "fit-content",
+                }}
+              >
+                SOLD
+              </div>
+            )}
+          </div>
+
+          {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
+            product?.size?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+            product?.sleeve?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+            product?.fit?.length > 0) ? (
+            <div 
+            className={`${styles.tagscontainer}`}
+            >
+
+              {storeData.pdp_settings?.buy_card_attributes?.[0] &&
+                product?.size?.length > 0 && (
+                  <span
+                    className={`${styles.smalltags}`}
+                    style={{
+                      background: "#F5F5F5",
+                      width: "fit-content",
+                   
+                    }}
+                  >
+                    size:
+                    {Array.isArray(product?.size)
+                      ? product.size
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.size?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+              {storeData.pdp_settings?.buy_card_attributes?.[1] &&
+                product?.sleeve?.length > 0 && (
+                  <span
+                      className={`${styles.smalltags}`}
+                    style={{
+                      background: "#F5F5F5",
+                      width: "fit-content",
+                     }}
+                  >
+                    sleeve :{" "}
+                    {Array.isArray(product?.sleeve)
+                      ? product.sleeve
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.sleeve?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+              {storeData.pdp_settings?.buy_card_attributes?.[2] &&
+                product?.fit?.length > 0 && (
+                  <span
+                     className={`${styles.smalltags}`}
+                    style={{
+                      background: "#eeeeee",
+                      width: "fit-content",
+                     }}
+                  >
+                    fit:{" "}
+                    {Array.isArray(product?.fit)
+                      ? product.fit
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
+                      : product?.fit?.replace(/,+$/, "").trim()}
+                  </span>
+                )}
+            </div>
+          ) : 
+          <div  className={`${styles.tagscontainer}`}> &nbsp;</div>
+          }
+
+					{/* Price Section */}
+					{/* {(product?.price || product?.listprice)  ?  */}
+					<div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : 'min-h-[32px]'}`}>
+						<div className={styles['product-price-display']} >
+
+						<span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
+							{product?.price || product?.listprice ? (
+								<span
+									dangerouslySetInnerHTML={{
+										__html: `${currencySymbol}${product.price || product.listprice}`,
+									}}
+								/>
+							) : (
+								null
+							)}
+						</span>
+
+						{product?.price > 0 &&
+							product?.listprice > product?.price &&
+							discountPer > 0 && (
+								<>
+									<span className={styles['product-listprice-text']}>
+										<span className={styles['product-listprice-value']}
+											dangerouslySetInnerHTML={{
+												__html: `${currencySymbol}${product.listprice}`,
+											}}
+										/>
+									</span>
+									<span className={styles['product-discount-badge-text']}>
+										{(discountPer && `-${discountPer}%`) || null}
+									</span>
+								</>
+							)}
+						</div>
+
+
+
+							
+					</div> 
+          {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
+								<>
+									{storeData?.pdp_settings?.is_buy_button ? (
+										<button
+                    style={{background:!product?.price && !product?.listprice ? '#F2F1FD' : '#9690F0',color:!product?.price && !product?.listprice ?'#616161' : ''   }}
+											 className={`${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
+											onClick={checkoutPayment}
+											disabled={!product?.price && !product?.listprice}
+										>
+                      <Image 
+                     style={{filter:!product?.price && !product?.listprice ? 'brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)' : '' }}
+                      src={shopping} height={20} width={20} className={`cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+										{/* <Image src={buyicon} height={30} width={30}/>	 */}  
+                    Buy Now                 
+										</button>
+									) : (
+										<button
+											className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']} ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
+											onClick={handleAddToCart}
+											disabled={!product?.price && !product?.listprice}
+										>
+											 <Image src={shopping} height={20} width={20} className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+                       Add to Cart
+										</button>
+									)}
+								</>
+							)}
+
+			
 				</div>
 
 			</div>
@@ -1111,16 +1182,16 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 					size='md'>
 					{vtoResultImageUrl ? (
 						<div className='flex flex-col items-center justify-center'>
-							<img src={vtoResultImageUrl} alt="VTO Result" className="max-h-96 rounded-xl mb-5" />
-							<div className="flex gap-3 justify-end w-full">
+							<img src={vtoResultImageUrl} alt="VTO Result" className={styles['product-vto-result-image']} />
+						<div className={styles['product-vto-buttons-group']}>
 								<button
 									onClick={handleVTOCancel}
-									className='rounded-xl text-indigo-600 font-bold text-xs md:text-sm py-2 px-4.5 border border-indigo-600 transition-colors hover:bg-indigo-50'>
+									className={styles['product-vto-cancel-button']}>
 									Cancel
 								</button>
 								<button
 									onClick={handleVTODownload}
-									className='rounded-xl text-white font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600 transition-colors hover:bg-indigo-700'>
+									className={styles['product-vto-submit-button']}>
 									Download
 								</button>
 							</div>
@@ -1128,11 +1199,11 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 					) : (
 						<>
 							{loading ?
-								<div className='flex flex-col items-center justify-center py-12 gap-4'>
+								<div className={styles['product-vto-loading-container']}>
 									<LoadingOutlined className='text-5xl text-indigo-600 animate-spin' />
-									<div className='flex flex-col items-center gap-2'>
-										<p className='text-lg font-semibold text-gray-800'>AI is generating your image</p>
-										<p className='text-sm text-gray-500'>Please wait while we process your request...</p>
+									<div className={styles['product-vto-loading-text']}>
+										<p className={styles['product-vto-loading-title']}>AI is generating your image</p>
+										<p className={styles['product-vto-loading-subtitle']}>Please wait while we process your request...</p>
 									</div>
 								</div> :
 								<form onSubmit={handleVTOclick}>
@@ -1147,7 +1218,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 													// 	<p className='text-gray-600'>+</p>
 													// </Dragger>
 
-													<div className='flex flex-col items-center justify-center'>
+													<div className={styles['product-vto-upload-container']}>
 														<h4 className="text-xl font-semibold text-start mb-3">Upload Your Image </h4>
 														<Upload.Dragger
 															className='bg-transparent h-56 w-56'
@@ -1172,7 +1243,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 											</div>
 										}
 									</div>
-									<h4 className="mt-5 "> Add a prompt for AI (optional) </h4>
+									<h4 className={styles['product-vto-prompt-label']}> Add a prompt for AI (optional) </h4>
 									<textarea
 										className='text-left placeholder-gray-101 mt-2 outline-none rounded-xl w-full px-3 py-2 resize-none'
 										placeholder='Enter description...'
@@ -1185,9 +1256,9 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 										rows={5}
 									/>
 
-									<div className="flex justify-end">
+									<div className={styles['product-vto-submit-container']}>
 										<button></button>
-										<button type="submit" className={`rounded-xl mt-5 text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 flex justify-end  ${loading ? 'bg-indigo-400' : 'bg-indigo-600'}    mb-2`}>Submit</button>
+										<button type="submit" className={`${styles['product-vto-submit-form-button']} ${loading ? styles['product-vto-submit-form-button-loading'] : styles['product-vto-submit-form-button-active']}`}>Submit</button>
 									</div>
 								</form>
 							}
@@ -1199,7 +1270,7 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
 			{/* // REMOVE // remove chin section integration and flag // not required */}
 			{showChinSection && (
-				<div className='box-border bg-white rounded-b-xl flex gap-2 p-1 justify-end'>
+				<div className={styles['product-chin-section']}>
 					<StarOutlined
 						height='fit-content'
 						onClick={handleStarClick}
@@ -1230,10 +1301,13 @@ const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 						<div>
 							{showRemoveIcon ? (
 								<button
-									className='flex text-black-200 product-remove-btn absolute top-4 right-2 z-50'
-									tabindex='-1'
+									className='flex text-black-200 p-1 bg-white rounded-full product-remove-btn absolute top-4 right-2 z-50'
+									// tabindex='-1'
 									onClick={(e) => removeFromWishlistClick(e)}>
-									<CloseCircleOutlined className='flex z-50' />
+									<RxCross2												className={`rounded-full z-50 flex mb-0 justify-center items-center font-bold text-black-102   ${size === "small"
+														? "lg:text-base h-5 w-5 "
+														: "lg:text-2xl h-6 w-6"
+													}`}/>
 									<span className='box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text'>
 										Remove
 									</span>

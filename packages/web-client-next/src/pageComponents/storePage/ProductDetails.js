@@ -285,7 +285,7 @@ const ProductDetails = ({ params, ...props }) => {
 				window.removeEventListener("resize", checkOverflow);
 			};
 		}
-	}, [productDetails]);
+	}, [productDetails,pdploader]);
 
 	// console.log('productDetails',productDetails);
 
@@ -304,7 +304,7 @@ const ProductDetails = ({ params, ...props }) => {
 			product_lists: [],
 			collection_name: "my cart",
 			type: "system",
-			user_id: authUserId,
+			user_id: authUserId || getTTid(),
 			// collection_id: mycartcollectionid,
 			// path: mycartcollectionpath,
 		};
@@ -408,6 +408,11 @@ const ProductDetails = ({ params, ...props }) => {
 										<ShareOptions
 											url={sharePageUrl}
 											setShow={setShowShareProductDetails}
+											onClose={()=>setShowShareProductDetails(false)}
+                                                //   collection={blogCollectionPage}
+                                                  isOpen={showShareProductDetails}
+                                                  qrCodeGeneratorURL={qrCodeGeneratorURL}
+												  true
 										/>
 									)}
 									{sharePageUrl && (
@@ -423,12 +428,12 @@ const ProductDetails = ({ params, ...props }) => {
 										</div>
 									)}
 								</div>
-								{qrCodeGeneratorURL ? (
+								{/* {qrCodeGeneratorURL ? (
 									<img
 										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
 										src={qrCodeGeneratorURL}
 									/>
-								) : null}
+								) : null} */}
 							</div>
 
 							{brandsDetails?.brandName && brandsDetails.brandDescription ? (
@@ -541,7 +546,7 @@ const ProductDetails = ({ params, ...props }) => {
 									<div className='text-white h-14 max-w-340 w-full '>
 										<button
 											onClick={handleAddToCart}
-											className='text-white h-14   w-full rounded-15'
+											className='text-white h-14  bg-violet-100 w-full rounded-15'
 											style={{
 												backgroundColor: "#7c75c",												 
 											}}>

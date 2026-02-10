@@ -26,6 +26,7 @@ import star_ai_icon_logo from "../../images/unthink_star_ai_icon.svg";
 import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
 import star_ai_icon from "../../images/unthink_star_ai_icon.svg";
 import Chat from "./Chat";
+import styles from "./ChatModal.module.css";
 import {
 	setActiveSearchOption,
 	setAuraHelperMessage,
@@ -348,8 +349,8 @@ const ChatModal = ({
 	const [currentPage, setCurrentPage] = useState(0);
 	const [regenarateImage, setRegenarateImage] = useState(false);
 
-	console.log("activeSearchOption",activeSearchOption);
-	
+	console.log("activeSearchOption", activeSearchOption);
+
 
 	const handleSubmitChatInput = () => {
 		const metadata = { ...chatInputMetadata };
@@ -502,15 +503,15 @@ const ChatModal = ({
 
 	return (
 		<div
-			className='z-10 w-full bg-white shadow-md h-full flex flex-col'
+			className={styles['chatmodal-modal-container']}
 			ref={modalRef}>
 			{/* hide close icon for AuraChatPage */}
 			{!isAuraChatPage ? (
-				<div className='text-xl lg:text-2xl flex justify-end absolute top-1 md:top-2 right-1 md:right-2'>
+				<div className={styles['chatmodal-close-icon-container']}>
 					<CloseOutlined
 						id='chat_modal_close_icon'
 						onClick={closeChatModal}
-						className='cursor-pointer text-black-100'
+						className={styles['chatmodal-close-icon']}
 					/>
 				</div>
 			) : null}
@@ -518,26 +519,26 @@ const ChatModal = ({
 			{!is_kiosk || isActiveSearchOptionAvailable ? (
 				<>
 					<div
-						className={`py-4 flex flex-col gap-4 bg-white ${!showChatLoader && "border-b-2 border-gray-106"
+						className={`${styles['chatmodal-content-wrapper']} ${!showChatLoader ? styles['chatmodal-content-wrapper-border'] : ''
 							} `}>
-						<div className='flex flex-col items-center'>
-							<div className='max-w-4xl lg:max-w-3xl-2 2xl:max-w-6xl-2 w-full px-10 lg:px-0 flex flex-col gap-4'>
+						<div className={styles['chatmodal-content-inner']}>
+							<div className={styles['chatmodal-content-max-width']}>
 								{!isBTNormalUserLoggedIn ? (
 									<>
 										{!isActiveSearchOptionAvailable ? (
-											<div className='py-4'>
-												<div className='flex flex-row gap-2'>
+											<div className={styles['chatmodal-header-section']}>
+												<div className={styles['chatmodal-header-row']}>
 													<img
 														src={star_ai_icon}
 														width={56}
 														height={56}
-														className='mb-auto'
+														className={styles['chatmodal-header-icon']}
 													/>
 
-													<h1 className='text-5xl md:text-6xl font-medium leading-44 md:leading-64 tracking-tighter-0.2'>
-														<span className='text-indigo-500'>I'm AURA</span>
+													<h1 className={styles['chatmodal-header-title']}>
+														<span className={styles['chatmodal-header-title-primary']}>I'm AURA</span>
 														<br />
-														<span style={{ color: "#c4c7c5" }}>
+														<span className={styles['chatmodal-header-title-secondary']}>
 															How can I inspire you today?
 														</span>
 													</h1>
@@ -545,20 +546,21 @@ const ChatModal = ({
 											</div>
 										) : null}
 										<div
-											className={`grid grid-cols-1 md:grid-cols-${displaySearchOptions.length} tablet:grid-cols-${displaySearchOptions.length} gap-1 md:gap-4`}>
+											className={styles['chatmodal-search-options-grid']}
+											style={{ '--col-count': displaySearchOptions.length }}>
 											{displaySearchOptions.map((searchOptions) => (
 												<div
 													key={searchOptions.id}
-													className={`flex flex-col border md:border-2 shadow-md w-full rounded-xl px-2 md:px-2 md:py-1 text-left font-medium cursor-pointer border-gray-106 ${searchOptions?.id === activeSearchOption?.id
-														? "border-slat-103 bg-slat-103"
-														: "bg-lightgray-101"
+													className={`${styles['chatmodal-search-option-card']} ${searchOptions?.id === activeSearchOption?.id
+														? styles['chatmodal-search-option-card-active']
+														: ""
 														}`}
 													onClick={() => handleSetSearchOption(searchOptions)}>
-													<div className='flex justify-between'>
+													<div className={styles['chatmodal-search-option-header']}>
 														<div
-															className={`truncate text-sm md:text-lg ${searchOptions?.id === activeSearchOption?.id
-																? "text-white"
-																: "text-black-100"
+															className={`${styles['chatmodal-search-option-title']} ${searchOptions?.id === activeSearchOption?.id
+																? styles['chatmodal-search-option-title-active']
+																: ""
 																}`}>
 															{searchOptions.title}
 														</div>
@@ -567,7 +569,7 @@ const ChatModal = ({
 															CHAT_SEARCH_OPTION_ID.product_search &&
 															searchOptions?.id === activeSearchOption?.id ? (
 															<span
-																className='cursor-pointer flex justify-center items-center'
+																className={styles['chatmodal-search-option-setting']}
 																onClick={openSettingModal}
 																role='button'>
 																{/* <SettingFilled
@@ -579,15 +581,15 @@ const ChatModal = ({
 													</div>
 													{/* <Tooltip title={searchOptions.subTitle}> */}
 													<div
-														className={`ellipsis_2 text-xs md:text-base ${searchOptions?.id === activeSearchOption?.id
-															? "text-white block"
-															: "text-gray-106 hidden md:block"
-															} flex justify-between md:block`}>
+														className={`${styles['chatmodal-search-option-subtitle']} ${searchOptions?.id === activeSearchOption?.id
+															? styles['chatmodal-search-option-subtitle-active']
+															: ""
+															} `}>
 														{searchOptions.subTitle}{" "}
 														{searchOptions?.id === activeSearchOption?.id &&
 															activeSearchOption.text_example ? (
 															<span
-																className='cursor-pointer text-white underline whitespace-nowrap mt-auto'
+																className={styles['chatmodal-search-option-example-link']}
 																onClick={handleTryThisClick}>
 																Try an Example
 															</span>
@@ -604,11 +606,11 @@ const ChatModal = ({
 									!isEmpty(selectedSearchOptionExamples) &&
 										!chatMessage &&
 										!chatImageUrl ? (
-										<div className='py-4'>
-											<div className='flex gap-5 overflow-auto -m-3 p-3'>
+										<div className={styles['chatmodal-examples-section']}>
+											<div className={styles['chatmodal-examples-container']}>
 												{selectedSearchOptionExamples?.map((exa) => (
 													<div
-														className='relative flex flex-col w-full min-w-52 h-228 2xl:h-64 shadow-md rounded-xl p-4 gap-4 cursor-pointer bg-lightgray-101'
+														className={styles['chatmodal-example-card']}
 														onClick={(event) => {
 															handleTryThisClick(
 																event,
@@ -616,19 +618,19 @@ const ChatModal = ({
 																exa?.image_url
 															);
 														}}>
-														<div key={exa} className='text-lg'>
+														<div key={exa} className={styles['chatmodal-example-text']}>
 															{exa?.text}
 														</div>
 
-														<div className='overflow-auto h-full'>
+														<div className={styles['chatmodal-example-image-container']}>
 															{exa?.image_url ? (
 																<img
 																	src={exa.image_url}
-																	className='h-full m-auto rounded-xl'
+																	className={styles['chatmodal-example-image']}
 																/>
 															) : null}
 														</div>
-														<div className='absolute bottom-0 right-0 m-4 flex items-center justify-center bg-white rounded-full w-10 h-10 ml-auto'>
+														<div className={styles['chatmodal-example-icon-container']}>
 															<img
 																src={searchIcon}
 																alt='searchIcon'
@@ -644,9 +646,9 @@ const ChatModal = ({
 								) : null}
 
 								{isShowFollowUpQuery ? (
-									<div className='flex items-center justify-center rounded-2xl md:rounded-full p-t-2 p-b-2 w-full pr-5.5 lg:pr-6.5'>
-										<HistoryOutlined className='text-sm lg:text-base text-black-200 flex justify-center items-center' />
-										<div className='text-sm lg:text-base text-black-200 w-full flex items-center pl-2 leading-none'>
+									<div className={styles['chatmodal-followup-query-container']}>
+										<HistoryOutlined className={styles['chatmodal-followup-query-icon']} />
+										<div className={styles['chatmodal-followup-query-text']}>
 											{followUpQuery}
 										</div>
 									</div>
@@ -656,19 +658,19 @@ const ChatModal = ({
 									<div>
 										{activeSearchOption.allow_image_search ? (
 											<div
-												className={`grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8`}
+												className={styles['chatmodal-image-search-grid']}
 												style={{ minHeight: "252px" }}>
 												<div>
 													{showUploadImage ? (
 														<>
 															{isUploadingImage ? (
-																<div className='flex items-center justify-center h-129 md:h-188'>
+																<div className={styles['chatmodal-upload-spinner-container']}>
 																	<Spin
-																		className='w-full mx-auto'
+																		className={styles['chatmodal-upload-spinner']}
 																		indicator={
 																			<LoadingOutlined
 																				style={{ fontSize: 30 }}
-																				className='text-blue-700'
+																				className={styles['chatmodal-upload-spinner-icon']}
 																				spin
 																			/>
 																		}
@@ -676,14 +678,14 @@ const ChatModal = ({
 																	/>
 																</div>
 															) : (
-																<div className='flex justify-center items-center'>
+																<div className={styles['chatmodal-image-preview-container']}>
 																	{chatImageUrl ? (
-																		<div className='flex justify-center items-center mb-6 flex-col rounded-10'>
-																			<div className='relative md:w-404 w-full mb-3'>
+																		<div className={styles['chatmodal-image-preview-wrapper']}>
+																			<div className={styles['chatmodal-image-preview-relative']}>
 																				<img
 																					ref={imgRef}
 																					onLoad={handleImageLoad}
-																					className='md:w-404 w-full rounded-10'
+																					className={styles['chatmodal-image-preview']}
 																					src={chatImageUrl}
 																					alt='Uploaded Image'
 																				/>
@@ -709,7 +711,7 @@ const ChatModal = ({
 																											item.attributes.label
 																										)
 																									}
-																									className='absolute w-5 h-5 border-2 bg-blue-500 border-blue-500 rounded-full cursor-pointer animate-pulse'
+																									className={styles['chatmodal-overlay-point']}
 																									style={{
 																										left: `${adjustedX}px`,
 																										top: `${adjustedY}px`,
@@ -724,7 +726,7 @@ const ChatModal = ({
 																			</div>
 
 																			{/* Change Image Option */}
-																			<div className='text-base block underline cursor-pointer pt-2'>
+																			<div className={styles['chatmodal-change-image-link']}>
 																				<span
 																					onClick={handleChangeImageConfirm}>
 																					Change Image
@@ -732,9 +734,9 @@ const ChatModal = ({
 																			</div>
 																		</div>
 																	) : (
-																		<div className='w-full chat_image_dragger'>
+																		<div className={styles['chatmodal-dragger-wrapper']}>
 																			<Dragger
-																				className='bg-transparent h-129 md:h-188 w-full rounded-2xl'
+																				className={styles['chatmodal-dragger']}
 																				{...uploadImageProps}
 																				name='image_url'
 																				showUploadList={false}>
@@ -753,7 +755,7 @@ const ChatModal = ({
 														</>
 													) : (
 														<input
-															className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full border border-solid border-gray-107 lg:text-lg avoid_autofill_bg'
+															className={styles['chatmodal-image-url-input']}
 															placeholder='Enter Image URL'
 															name='chat_image_url'
 															type='text'
@@ -761,12 +763,12 @@ const ChatModal = ({
 															onChange={handleInputChange}
 														/>
 													)}
-													<div className='text-center font-medium my-2 text-base'>
+													<div className={styles['chatmodal-divider-text']}>
 														Or
 													</div>
-													<div className='flex justify-center items-center text-base'>
+													<div className={styles['chatmodal-toggle-upload-container']}>
 														<div
-															className='underline cursor-pointer'
+															className={styles['chatmodal-toggle-upload-link']}
 															role='button'
 															title={
 																showUploadImage
@@ -778,10 +780,10 @@ const ChatModal = ({
 														</div>
 													</div>
 												</div>
-												<div className='h-content'>
-													<div className='rounded-2xl h-full border border-solid border-gray-107 md:h-188'>
+												<div className={styles['chatmodal-textarea-container']}>
+													<div className={styles['chatmodal-textarea-wrapper']}>
 														<textarea
-															className='text-left placeholder-gray-101 outline-none px-3 pt-3 rounded-2xl w-full min-h-165 h-full resize-none overflow-y-auto lg:text-lg'
+															className={styles['chatmodal-textarea']}
 															placeholder={`Give additional instructions here. ${typeof activeSearchOption?.text_placeholder ===
 																"string"
 																? activeSearchOption?.text_placeholder
@@ -792,12 +794,12 @@ const ChatModal = ({
 															onChange={handleInputChange}
 														/>
 													</div>
-													<div className='flex justify-end pt-4'>
+													<div className={styles['chatmodal-submit-button-container']}>
 														<button
 															type='submit'
-															className={`text-xs md:text-sm text-white py-2.5 px-3.5 h-full md:w-full max-w-102 font-bold p-3 rounded-xl ${!chatImageUrl || showChatLoader
-																? "bg-indigo-400"
-																: "bg-indigo-600"
+															className={`${styles['chatmodal-submit-button']} ${!chatImageUrl || showChatLoader
+																? styles['chatmodal-submit-button-disabled']
+																: styles['chatmodal-submit-button-enabled']
 																}`}
 															onClick={handleSubmitChatInput}
 															disabled={!chatImageUrl || showChatLoader}>
@@ -832,16 +834,16 @@ const ChatModal = ({
 										{isShowFollowUpSearch || isShowTryAgain ? (
 											<div
 												className={`${activeSearchOption.allow_image_search
-													? "mt-4"
-													: "mt-1"
-													} flex h-5 gap-2`}>
+													? styles['chatmodal-followup-controls-mt4']
+													: styles['chatmodal-followup-controls-mt1']
+													} ${styles['chatmodal-followup-controls-container']}`}>
 												{/* CLASS MATCH1 */}
 												{isShowFollowUpSearch && isSidExpired ? (
-													<div className='flex items-center ml-5'>
+													<div className={styles['chatmodal-followup-checkbox-container']}>
 														<input
 															type='checkbox'
 															id='followUpQuery'
-															className='cursor-pointer mr-1 h-3.5 w-3.5'
+															className={styles['chatmodal-followup-checkbox']}
 															checked={isFollowUpQuery}
 															disabled={showChatLoader}
 															onChange={handleFollowUpSearch}
@@ -849,8 +851,8 @@ const ChatModal = ({
 														<label
 															htmlFor='followUpQuery'
 															className={`${showChatLoader
-																? "cursor-not-allowed text-gray-106"
-																: "cursor-pointer text-black-100"
+																? styles['chatmodal-followup-label-disabled']
+																: styles['chatmodal-followup-label']
 																}`}>
 															Follow-Up search
 														</label>
@@ -859,18 +861,18 @@ const ChatModal = ({
 												{isShowFollowUpSearch &&
 													isShowTryAgain &&
 													isSidExpired ? (
-													<div className='border-l-1.5 h-5'></div>
+													<div className={styles['chatmodal-divider-vertical']}></div>
 												) : null}
 												{isShowTryAgain ? (
 													<button
-														className={`flex items-center ${showChatLoader
-															? "cursor-not-allowed text-gray-106"
-															: "cursor-pointer text-black-100"
+														className={`${styles['chatmodal-try-again-button']} ${showChatLoader
+															? styles['chatmodal-try-again-button-disabled']
+															: ""
 															}`}
 														title='Regenerate the products with AI.'
 														onClick={handleTryAgainClick}
 														disabled={showChatLoader}>
-														<ReloadOutlined className='flex mr-0.75 stroke-current stroke-2' />
+														<ReloadOutlined className={styles['chatmodal-reload-icon']} />
 														Try again
 													</button>
 												) : null}
@@ -878,15 +880,15 @@ const ChatModal = ({
 													isShowFollowUpSearch &&
 													regenarateImage ? (
 													<>
-														<div className='border-l-1.5 h-5'></div>
+														<div className={styles['chatmodal-divider-vertical']}></div>
 														<button
-															className={`flex items-center ${showChatLoader
-																? "cursor-not-allowed text-gray-106"
-																: "cursor-pointer text-black-100"
+															className={`${styles['chatmodal-try-again-button']} ${showChatLoader
+																? styles['chatmodal-try-again-button-disabled']
+																: ""
 																}`}
 															title='Regenerate the Image.'
 															onClick={handleRegenrateImage}>
-															<ReloadOutlined className='flex mr-0.75 stroke-current stroke-2' />
+															<ReloadOutlined className={styles['chatmodal-reload-icon']} />
 															Regenerate Image
 														</button>
 													</>
@@ -900,10 +902,10 @@ const ChatModal = ({
 													{!showChatLoader ? (
 														<div
 															style={{ width: "fit-content" }}
-															className='relative  my-3 flex justify-center md:justify-start items-center md:items-start w-full flex-col'>
+															className={styles['chatmodal-server-image-container']}>
 															{/* Image */}
 															<img
-																className='md:w-404 md:h-400 w-full h-300 rounded-10'
+																className={styles['chatmodal-server-image']}
 																src={auraServerImage}
 																alt='Aura Image'
 															/>
@@ -925,7 +927,7 @@ const ChatModal = ({
 																					item.attributes.label
 																				)
 																			}
-																			className='absolute w-5 h-5 border-2 bg-blue-500 border-blue-500 rounded-full cursor-pointer animate-pulse'
+																			className={styles['chatmodal-overlay-point']}
 																			style={{
 																				left: `${adjustedX}px`,
 																				top: `${adjustedY}px`,
@@ -938,7 +940,7 @@ const ChatModal = ({
 															})}
 														</div>
 													) : (
-														<div className='flex justify-center items-center md:w-404 md:h-400 w-full h-300'>
+														<div className={styles['chatmodal-server-image-spinner-container']}>
 															<Spin size='large' />
 														</div>
 													)}
@@ -966,23 +968,33 @@ const ChatModal = ({
 								{auraHelperMessage &&
 									!isFreshSearch &&
 									!isBTNormalUserLoggedIn ? (
-									<div className='flex gap-1 items-center'>
-										<div className='flex justify-center items-center'>
+										<>
+									<div className={styles['chatmodal-helper-message-container']}>
+										<div className={styles['chatmodal-helper-message-icon-container']}>
 											<Image
 												src={star_ai_icon_logo}
-												className='rounded-full'
+												className={styles['chatmodal-helper-message-icon']}
 												preview={false}
 												width={30}
 											/>
 										</div>
-										<CaretRightOutlined className='text-black-200' />
-										<div className='text-sm md:text-base text-black-200 font-medium'>
+										<CaretRightOutlined className={styles['chatmodal-helper-message-caret']} />
+										<div className={styles['chatmodal-helper-message-text']}>
 											{auraHelperMessage}
 										</div>
+										
 									</div>
+										
+										</>
+
 								) : null}
 							</div>
 						</div>
+						{showChatLoader && (
+											<div className={styles['chatmodal-loading-bar-container']}>
+												<div className={styles['chatmodal-loading-bar']}></div>
+											</div>
+										)}
 					</div>
 				</>
 			) : null}
@@ -990,23 +1002,23 @@ const ChatModal = ({
 			<div
 				id='chat_products_container'
 				// className={`w-full h-auto bg-white chat-product-data-container flex-auto flex flex-col`}>
-				className={`w-full h-auto bg-white chat-product-data-container flex-auto flex flex-col ${isGuestPopUpShow ? "overflow-hidden" : ""
+				className={`${styles['chatmodal-products-container']} ${isGuestPopUpShow ? styles['chatmodal-products-container-overflow'] : ""
 					}`}>
 				{showChatLoader && (
-					<div className='w-full absolute'>
-						<div className='aura_products_search_skeleton'></div>
-					</div>
-				)}
+    <div style={{ position: 'absolute', width: '100%' }}>
+        <div className="chat_aura_products_search_skeleton"></div>
+    </div>
+)}
 				{current_store_name === STORE_USER_NAME_SAMSKARA ? (
-					<div className='pt-3 lg:pt-4 w-full max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto flex flex-col gap-2 md:gap-5'>
+					<div className={styles['chatmodal-samskara-container']}>
 						<a
 							href={MAIN_SITE_URL[STORE_USER_NAME_SAMSKARA]}
-							className='text-black-200 mr-auto'>
-							<span className='flex items-center cursor-pointer'>
-								<span className='text-lg leading-none flex mr-2'>
+							className={styles['chatmodal-samskara-link']}>
+							<span className={styles['chatmodal-samskara-link-content']}>
+								<span className={styles['chatmodal-samskara-icon-wrapper']}>
 									<ArrowLeftOutlined />
 								</span>
-								<span className='text-lg font-medium'>
+								<span className={styles['chatmodal-samskara-text']}>
 									Back to Samskara Home
 								</span>
 							</span>
@@ -1037,45 +1049,45 @@ const ChatModal = ({
 						handleSetSearchOption={handleSetSearchOption}
 					/>
 				) : isBTNormalUserLoggedIn ? (
-					<div className='flex h-full max-h-590'>
-						<div className='max-w-4xl lg:max-w-3xl-2 2xl:max-w-6xl-2 w-full px-10 lg:px-0 flex flex-col gap-10 md:gap-20 py-10 m-auto'>
-							<div className='flex flex-row gap-2'>
+					<div className={styles['chatmodal-bt-user-container']}>
+						<div className={styles['chatmodal-bt-user-content']}>
+							<div className={styles['chatmodal-header-row']}>
 								<img
 									src={star_ai_icon}
 									width={56}
 									height={56}
-									className='mb-auto'
+									className={styles['chatmodal-header-icon']}
 								/>
 
-								<h1 className='text-5xl md:text-6xl font-medium leading-44 md:leading-64 tracking-tighter-0.2'>
-									<span className='text-indigo-500'>I'm AURA</span>
+								<h1 className={styles['chatmodal-header-title']}>
+									<span className={styles['chatmodal-header-title-primary']}>I'm AURA</span>
 									<br />
-									<span style={{ color: "#c4c7c5" }}>
+									<span className={styles['chatmodal-header-title-secondary']}>
 										How can I inspire you today?
 									</span>
 								</h1>
 							</div>
 							{!isEmpty(selectedSearchOptionExamples) ? (
-								<div className='flex gap-5 overflow-auto -m-10 p-10'>
+								<div className={styles['chatmodal-bt-user-examples-container']}>
 									{selectedSearchOptionExamples?.map((exa) => (
 										<div
-											className='relative flex flex-col w-full max-w-228 2xl:max-w-xs min-w-52 h-228 2xl:h-64 shadow-md rounded-xl p-4 gap-4 cursor-pointer bg-lightgray-101'
+											className={styles['chatmodal-bt-user-example-card']}
 											onClick={(event) => {
 												handleTryThisClick(event, exa?.text, exa?.image_url);
 											}}>
-											<div key={exa} className='text-lg'>
+											<div key={exa} className={styles['chatmodal-example-text']}>
 												{exa?.text}
 											</div>
 
-											<div className='overflow-auto h-full'>
+											<div className={styles['chatmodal-example-image-container']}>
 												{exa?.image_url ? (
 													<img
 														src={exa.image_url}
-														className='h-full m-auto rounded-xl'
+														className={styles['chatmodal-example-image']}
 													/>
 												) : null}
 											</div>
-											<div className='absolute bottom-0 right-0 m-4 flex items-center justify-center bg-white rounded-full w-10 h-10 ml-auto'>
+											<div className={styles['chatmodal-example-icon-container']}>
 												<img
 													src={searchIcon}
 													alt='searchIcon'
@@ -1100,3 +1112,4 @@ const ChatModal = ({
 };
 
 export default ChatModal;
+

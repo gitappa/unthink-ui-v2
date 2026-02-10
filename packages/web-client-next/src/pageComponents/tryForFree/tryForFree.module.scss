@@ -97,7 +97,7 @@
         border-radius: 12px !important;
         border: none !important;
         box-shadow: none !important;
-        background-color: white !important;
+        // background-color: white !important;
     }
 }
 
@@ -210,7 +210,7 @@
         font-size: 14px !important;
         color: #000000 !important;
         padding-left: 2px !important;
-        padding-right: 35px !important;
+        padding-right: 75px !important;
         font-weight: 600 !important;
 
     }
@@ -240,25 +240,19 @@
 
 
 .custom-select-editcollection {
-    .ant-select-arrow {
-    padding: 12px 8px !important;
-    background: #D4CCFC !important;
-    border-radius: 8px !important;
-    position: absolute !important;
-    right: 0 !important;
-    top: 31% !important;
-}
+
+
 .ant-select-selection-item {
     display: flex;
     align-items: center;
     font-family: "Fira Sans", sans-serif !important;
     font-size: 14px !important;
-    color: #FFFFFF !important;
+    color: red !important;
     padding-left: 2px !important;
     padding-right: 35px !important;
     font-weight: 600 !important;
 
-}
+ }
 }
 
 // checkbox input
@@ -604,9 +598,7 @@
 }
 
 
-
-
-
+ 
 
 @media screen and (max-width:1322px) {
 
@@ -677,6 +669,7 @@
     .edit_collection_sort_product_list .ant-select-item-option-content {
         font-size: 12px !important;
     }
+  
 
     .hashtag_scroll_div {
         flex-direction: column;

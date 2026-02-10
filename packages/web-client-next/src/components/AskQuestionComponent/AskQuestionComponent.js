@@ -111,7 +111,7 @@ const AskQuestionComponent = ({
 
 							<div>
 								<p className='md:leading-none font-normal flex items-center justify-between mb-0 text-white'>
-									<span className='text-2xl tablet:text-4xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+									<span className='text-2xl text-black-100 tablet:text-4xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
 										Stuck?
 									</span>
 									<CloseOutlined
@@ -124,7 +124,7 @@ const AskQuestionComponent = ({
 
 							<div>
 								<div className='tablet:flex tablet:justify-between mt-6 mb-6 text-gray-103'>
-									<p className='mb-0 text-xl'>
+									<p className='mb-0 text-xl text-black-100'>
 										Drop in a question and we will get back to you!
 									</p>
 								</div>

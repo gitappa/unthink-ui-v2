@@ -1,4 +1,4 @@
-import React, {
+﻿import React, {
 	useCallback,
 	useEffect,
 	useMemo,
@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
+import styles from "./AuraResponseProducts.module.css";
 import { Select, Spin, Input, Checkbox, Button, Modal } from "antd";
 import {
 	Loading3QuartersOutlined,
@@ -269,7 +270,7 @@ const AuraResponseProducts = ({
 	}, [displayFilters, availableFilters]);
 
 	const onProductClick = () => {
-		if (enableClickFetchRec) dispatch(handleRecProductClick());
+		if (enableClickFetchRec && !enableSelectProduct) dispatch(handleRecProductClick());
 	};
 
 	const handleSuggestionAdditionalTagClick = (tag, additionalTag) => {
@@ -456,6 +457,7 @@ const AuraResponseProducts = ({
 	}, [currentTag]);
 
 	const onSelectProductClick = (mfr_code) => {
+		setEnableSelectProduct(true);
 		setSelectedProducts((prev) => {
 			if (prev.includes(mfr_code)) {
 				return prev.filter((code) => code !== mfr_code);
@@ -466,6 +468,9 @@ const AuraResponseProducts = ({
 	};
 
 	const onSelectAllChange = () => {
+		// e.stopPropagation()
+		console.log('dfdfdfdfd');
+		
 		const currentProducts = productsCache[currentTag] || [];
 		const currentProductCodes = currentProducts.map((p) => p.mfr_code);
 
@@ -724,7 +729,7 @@ const AuraResponseProducts = ({
 				{!isLoading ? (
 					<>
 						{enableCustomFilter || enableFilters ? (
-							<div className='flex justify-between mb-3 md:mb-4 gap-2'>
+							<div className={styles['aura-products-filter-header']}>
 								{enableCustomFilter ? (
 									<CustomFilter
 										customFilterStringData={filters.custom_filter}
@@ -740,7 +745,7 @@ const AuraResponseProducts = ({
 								) : null}
 								{enableFilters ? (
 									<div
-										className='flex items-center h-content text-black-102 text-base ml-auto'
+										className={styles['aura-products-filter-toggle']}
 										onClick={() =>
 											setFilterOptionsVisible(!filterOptionsVisible)
 										}>
@@ -749,9 +754,9 @@ const AuraResponseProducts = ({
 											alt='Filters'
 											width={28}
 											height={28}
-											className='mr-1'
+											className={styles['aura-products-filter-icon']}
 										/>
-										<p className='underline font-medium cursor-pointer text-black-102 whitespace-nowrap text-base'>
+										<p className={styles['aura-products-filter-text']}>
 											Filters
 										</p>
 									</div>
@@ -760,7 +765,7 @@ const AuraResponseProducts = ({
 						) : null}
 
 						{isFiltersAvailable ? (
-							<div className='mb-1 md:mb-2'>
+							<div className={styles['aura-products-filters-tags-container']}>
 								<ProductFiltersTags
 									productFilters={filters}
 									handleFiltersInputClear={handleFiltersInputClear}
@@ -774,26 +779,26 @@ const AuraResponseProducts = ({
 
 						{enableFilters && filterOptionsVisible ? (
 							<>
-								<div className='flex flex-wrap flex-col justify-between gap-3 sm:gap-4 2xl:gap-6 rounded-xl mb-1 md:mb-2 bg-slat-103 p-3 sm:p-4 2xl:p-6'>
-									<div className='flex justify-between'>
-										<h4 className='text-gray-103 text-xl'>Filter Products</h4>
-										<div className='flex items-center gap-4'>
+								<div className={styles['aura-products-filter-panel']}>
+									<div className={styles['aura-products-filter-panel-header']}>
+										<h4 className={styles['aura-products-filter-panel-title']}>Filter Products</h4>
+										<div className={styles['aura-products-filter-panel-controls']}>
 											{isFiltersAvailable ? (
 												<p
-													className='text-lg text-gray-103 cursor-pointer'
+													className={styles['aura-products-filter-clear-all']}
 													role='button'
 													onClick={handleClearFiltersClick}>
 													Clear All
 												</p>
 											) : null}
 											<button
-												className='bg-indigo-600 rounded text-gray-103 py-1 font-normal text-base px-3'
+												className={styles['aura-products-filter-go-button']}
 												onClick={() => handleFiltersSubmit(filters, false)}
 												role='button'>
 												Go
 											</button>
 											<CloseOutlined
-												className='cursor-pointer text-2xl text-gray-103 flex'
+												className={styles['aura-products-filter-close']}
 												role='button'
 												title='close filters'
 												onClick={() => setFilterOptionsVisible(false)}
@@ -812,12 +817,12 @@ const AuraResponseProducts = ({
 						) : null}
 
 						{chatProductsDataToShow.length ? (
-							<div className='flex justify-between items-center ml-auto text-xs md:text-base mb-2'>
+							<div className={styles['aura-products-selection-controls']}>
 								{enableSelectProduct ? (
-									<div className='flex items-center leading-44 '>
-										<div className='flex border border-gray-106 rounded py-2 pl-2'>
+									<div className={styles['aura-products-selected-items']}>
+										<div className={styles['aura-products-checkbox-group']}>
 											<Checkbox
-												className='text-xs md:text-base'
+												className={styles['aura-products-checkbox-text-xs']}
 												indeterminate={
 													isTagProductSelected && !isTagProductsAllSelected
 												}
@@ -828,14 +833,14 @@ const AuraResponseProducts = ({
 										</div>
 										<p
 											onClick={() => handleResetSelectProduct()}
-											className='text-blue-103 mb-0 ml-2 underline cursor-pointer'
+											className={styles['aura-products-action-link']}
 											role='button'>
 											Cancel
 										</p>
 									</div>
 								) : (
 									<p
-										className='text-blue-103 leading-44 cursor-pointer'
+										className={styles['aura-products-select-prompt']}
 										role='link'
 										onClick={() => setEnableSelectProduct(true)}
 										title='Click and select multiple products to build your own collection'>
@@ -843,11 +848,11 @@ const AuraResponseProducts = ({
 									</p>
 								)}
 								{enableSelectProduct ? (
-									<div className='flex gap-2'>
+									<div className={styles['aura-products-action-buttons-container']}>
 										{is_store_instance && (
-											<div className='flex items-center justify-center'>
+											<div className={styles['aura-products-button-save-container']}>
 												<button
-													className={`rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white bg-indigo-600`}
+												className={styles['aura-products-action-button']}
 													onClick={() =>
 														onSaveOrShareProductsClick({ isSave: true })
 													}
@@ -856,9 +861,9 @@ const AuraResponseProducts = ({
 												</button>
 											</div>
 										)}
-										<div className='flex items-center justify-between'>
+										<div className={styles['aura-products-button-share-container']}>
 											<button
-												className={`rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white bg-indigo-600`}
+												className={styles['aura-products-action-button']}
 												onClick={() =>
 													onSaveOrShareProductsClick({ isShare: true })
 												}
@@ -868,23 +873,23 @@ const AuraResponseProducts = ({
 										</div>
 									</div>
 								) : (
-									<div className='flex gap-2'>
+									<div className={styles['aura-products-action-links']}>
 										{is_store_instance && (
 											<>
 												<p
-													className='text-blue-103 leading-44 cursor-pointer'
+													className={styles['aura-products-action-text-link']}
 													role='link'
 													onClick={handleSaveOrShareClick}
 													title='Click and select multiple products to save to collection'>
 													Save
 												</p>
-												<span className='flex items-center text-lightgray-104'>
+												<span className={styles['aura-products-action-divider']}>
 													|
 												</span>
 											</>
 										)}
 										<p
-											className='text-blue-103 leading-44 cursor-pointer'
+											className={styles['aura-products-action-text-link']}
 											role='link'
 											onClick={handleSaveOrShareClick}
 											title='Click and select multiple products to share'>
@@ -897,11 +902,11 @@ const AuraResponseProducts = ({
 					</>
 				) : null}
 				{isLoading ? (
-					<div className='flex justify-center items-center w-full h-64'>
+					<div className={styles['aura-products-loading-container']}>
 						<Spin
 							indicator={
 								<Loading3QuartersOutlined
-									className='flex text-6xl-1 text-lightgray-104'
+									className={styles['aura-products-loading-icon']}
 									spin
 								/>
 							}
@@ -911,7 +916,9 @@ const AuraResponseProducts = ({
 					<>
 						<div
 							id='chat_products_inner_content'
-							className='grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4'>
+							className={styles['aura-products-grid']}
+							// onChange={onSelectAllChange}
+							>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard
 									key={product.mfr_code}
@@ -945,19 +952,19 @@ const AuraResponseProducts = ({
 
 						{RecomChatProductsDataToShow.length ? (
 							<>
-								<div className='flex justify-between items-center my-8'>
-									<div className='font-bold text-2xl md:text-3xl'>
+								<div className={styles['aura-products-section-header']}>
+									<div className={styles['aura-products-section-title']}>
 										Recommendations
 									</div>
-									<div className='flex gap-2'>
+									<div className={styles['aura-products-carousel-controls']}>
 										<button
 											id='custom-prev'
-											className='text-2xl md:text-3xl py-1 rounded hover:opacity-70'>
+											className={styles['aura-products-carousel-button']}>
 											<FaRegArrowAltCircleLeft />
 										</button>
 										<button
 											id='custom-next'
-											className='text-2xl md:text-3xl py-1 rounded hover:opacity-70'>
+											className={styles['aura-products-carousel-button']}>
 											<FaRegArrowAltCircleRight />
 										</button>
 									</div>
@@ -972,7 +979,7 @@ const AuraResponseProducts = ({
 										nextEl: "#custom-next",
 										prevEl: "#custom-prev",
 									}}
-									className='mySwiper'>
+									className='mySwiper' style={{ padding: 0 }}>
 									{RecomChatProductsDataToShow.map((product) => (
 										<SwiperSlide
 											key={product.mfr_code}
@@ -1016,19 +1023,19 @@ const AuraResponseProducts = ({
 
 						{moreProductsDataToShow.length ? (
 							<>
-								<div className='flex justify-between items-center my-8'>
-									<div className='font-bold text-2xl md:text-3xl'>
+								<div className={styles['aura-products-section-header']}>
+									<div className={styles['aura-products-section-title']}>
 										More Results
-									</div>
-									<div className='flex gap-2'>
+\t\t\t\t</div>
+\t\t\t\t<div className={styles['aura-products-carousel-controls']}>
 										<button
 											id='more-prev'
-											className='text-2xl md:text-3xl py-1 rounded hover:opacity-70'>
+											className={styles['aura-products-carousel-button']}>
 											<FaRegArrowAltCircleLeft />
 										</button>
 										<button
 											id='more-next'
-											className='text-2xl md:text-3xl py-1 rounded hover:opacity-70'>
+											className={styles['aura-products-carousel-button']}>
 											<FaRegArrowAltCircleRight />
 										</button>
 									</div>
@@ -1043,7 +1050,7 @@ const AuraResponseProducts = ({
 										nextEl: "#more-next",
 										prevEl: "#more-prev",
 									}}
-									className='mySwiper'>
+									className='mySwiper' style={{ padding: 0 }}>
 									{moreProductsDataToShow.map((product) => (
 										<SwiperSlide
 											key={product.mfr_code}
@@ -1086,9 +1093,9 @@ const AuraResponseProducts = ({
 						)}
 
 						{chatProductsDataToShow.length >= 15 && !isEmpty(tag) && (
-							<div className='flex justify-center mt-8'>
+							<div className={styles['aura-products-load-more-container']}>
 								<button
-									className='bg-primary text-white py-2 px-4 rounded-lg'
+									className={styles['aura-products-load-more-button']}
 									onClick={() => {
 										setLoadingStates((prev) => ({
 											...prev,
@@ -1126,3 +1133,7 @@ const AuraResponseProducts = ({
 };
 
 export default AuraResponseProducts;
+
+
+
+

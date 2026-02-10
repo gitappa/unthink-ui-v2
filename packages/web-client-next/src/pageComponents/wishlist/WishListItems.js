@@ -64,7 +64,17 @@ const WishListItems = ({
 				key={wishlist._id}
 				className={`flex justify-between items-center py-2 px-3 mt-3 cursor-pointer ${wishlist.status !== PUBLISHED ? "bg-lightgray-107" : contentClassName
 					}`}
-				onClick={() => onWishlistClick(wishlist)}>
+				onClick={(e) => {
+				if(enableSelectProduct && wishlist.collection_name != "Editor’s Picks"){
+					// e.preventDefault()
+					// e.stopPropagation()
+					handleSelectProduct(e)
+				}
+				else{
+					onWishlistClick(wishlist)
+				}}
+			}
+				>
 				{activeCollection === "Feature" && (
 					<>
 						{!hideSorting && !enableSelectProduct ? <DragHandle /> : null}

@@ -1,5 +1,5 @@
 # Use Node.js to build the Next.js app first
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Accept build arguments for environment variables
@@ -48,7 +48,7 @@ COPY packages/web-client-next/ .
 RUN npm run build
 
 #### Production server environment
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 # Do not hardcode PORT: Cloud Run sets the `PORT` env var at runtime.

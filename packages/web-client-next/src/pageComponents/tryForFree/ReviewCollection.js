@@ -6,6 +6,7 @@ import React, {
 	useState,
 	useContext,
 } from "react";
+import style from './tryForFree.module.scss'
 import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link';
 import { useRouter } from "next/router";
@@ -447,16 +448,16 @@ console.log('authUserCollections',authUserCollections);
 // console.log('currentCollection',currentCollection );
 // console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		// console.log('singleCollections',singleCollections );
-		// console.log('authUserCollections',authUserCollections );
-		// console.log('showWishlistModal',showWishlistModal );
-		// console.log('plistId',plistId );
-		// console.log('currentCollection',currentCollection );	
+		console.log('singleCollections',singleCollections );
+		console.log('authUserCollections',authUserCollections );
+		console.log('showWishlistModal',showWishlistModal );
+		console.log('plistId',plistId );
+		console.log('currentCollection',currentCollection );	
 
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
-			setCurrentCollection(singleCollections);
-			return;
+			return setCurrentCollection(singleCollections);
+	
 		}
 
 		// Normal flow
@@ -470,9 +471,16 @@ console.log('authUserCollections',authUserCollections);
 		authUserCollections,
 		plistId,
 		 currentCollection
-	]); 
+	]);
 
-
+	// Fetch collection data directly on page load/refresh when plistId is available
+	useEffect(() => {
+		if (plistId && authUser.user_id && !currentCollection._id) {
+			dispatch(getUserCollection({ _id: plistId }));
+			dispatch(getSingleUserCollection({ _id: plistId }));
+		}
+	}, [plistId, authUser.user_id]);
+  
 // 	useEffect(() => {
 //   let nextCollection = null;
 
@@ -909,9 +917,8 @@ console.log('authUserCollections',authUserCollections);
 				setSelectedSortOption(PRODUCT_SORT_OPTIONS[0]);
 			}
 		}
-
-
 	}, [currentCollection._id]);
+console.log(currentCollection);
 
 	// decide show at a time only filterOptions, hashtagsInput enableSelectProduct or edit tags input
 	const checkAndShowContainer = useCallback(
@@ -1290,19 +1297,28 @@ console.log('authUserCollections',authUserCollections);
 
 		return () => { };
 	}, [currentView]);
+// console.log('isProductsFetchedForNewColl',isProductsFetchedForNewColl === false);
+// console.log('updateWishlistInProgress',!updateWishlistInProgress);
+// console.log('authUserCollectionsIsFetching',!authUserCollectionsIsFetching);
+// console.log(currentView === STEPS.PRODUCTS);
+// console.log(currentCollection._id);
+
 
 	useEffect(() => {
+		// console.log('EFFECT RUNNING - Checking conditions...');
 		if (
 			currentView === STEPS.PRODUCTS &&
-			isProductsFetchedForNewColl === false &&
+			isProductsFetchedForNewColl === null &&   
 			!updateWishlistInProgress &&
-			!authUserCollectionsIsFetching
+			!authUserCollectionsIsFetching &&
+			currentCollection._id
 		) {
 			// call refetch products on products page view if the collection is new collection
 			handleConfirmRefetchProducts();
 			setIsProductsFetchedForNewColl(true);
 		}
-	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching]);
+		
+	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching, isProductsFetchedForNewColl, currentCollection._id]);
 
 	let fetchingTimer;
 
@@ -4468,11 +4484,11 @@ console.log('authUserCollections',authUserCollections);
 																{enableSelectProduct ? (
 																	<>
 																		<div
-																			className='flex bg-violet-100 items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
-																			style={{ width: "200px" }}
+																			className={`flex bg-violet-100  items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
+																			style={{ width:"200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection w-full text-white placeholder-white"
+																				className={`${style['custom-select-editcollection']}  w-full text-white placeholder-white `}
 																				placeholder="Next Action"
 																				onChange={handleSelectChange}
 																				value={actionType}
@@ -4510,11 +4526,11 @@ console.log('authUserCollections',authUserCollections);
 																) :
 																	(
 																		<div
-																			className='flex bg-violet-100 items-center px-2 edit_collection_sort_product_list h-8 md:h-9 rounded-lg'
+																			className={`flex focus:bg-white bg-violet-100   items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
 																			style={{ width: "200px" }}
 																		>
 																			<Select
-																				className="custom-select-editcollection w-full text-white placeholder-white"
+																				className={`${style['custom-select-editcollection']}   w-full text-white placeholder-white`}
 																				placeholder="Next Action"
 																				onClick={() => setEnableSelectProduct(true)}
 																				onChange={handleSelectChange}
@@ -4561,13 +4577,13 @@ console.log('authUserCollections',authUserCollections);
 													{productsToShow.length ? (
 														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
 															{/* <div className="colloction_details_tag_div"></div> */}
-															<div className="flex items-center w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl edit_collection_sort_product_list">
-																<label className="whitespace-nowrap text-xs md:text-sm font-semibold text-newcolor-100">
+															<div className={`flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl ${styles.edit_collection_sort_product_list} `}>
+																<label className="whitespace-nowrap mt-0.5 text-xs md:text-sm font-semibold text-newcolor-100">
 																	Sort by :
 																</label>
 																<Select
 																	name='sortBy'
-																	className='w-full'
+																	className='w-full font-bold ant_icon'
 																	size='small'
 																	value={selectedSortOption.id}
 																	onChange={handleSortOptionChange}>

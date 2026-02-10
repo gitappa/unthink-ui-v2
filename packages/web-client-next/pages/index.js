@@ -9,11 +9,14 @@ import Footer from "../src/pageComponents/staticHomePage/Footer";
 import Header from "../src/pageComponents/staticHomePage/Header";
 import RootStatic from "../src/pageComponents/staticHomePage/RootStatic";
 import { ROUTES } from "../src/constants/codes";
+import { Spin } from "antd";
 
 // Dynamically import StorePage to avoid hydration issues
 const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
 	ssr: false,
-	loading: () => <div>Loading...</div>
+	loading: () => <div className="min-h-screen">
+			<Spin className="flex justify-center items-center mt-5" />
+	</div>
 });
 
 const Index = ({ ...props }) => {

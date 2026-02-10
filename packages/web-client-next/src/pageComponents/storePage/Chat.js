@@ -5,7 +5,8 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { Input, Form, Image, Tooltip, Upload } from "antd";
+import { Input, Form,  Tooltip, Upload } from "antd";
+import Image from "next/image";
 import {
 	CameraOutlined,
 	ArrowRightOutlined,
@@ -46,6 +47,7 @@ import {
 	// COLLECTION_COVER_IMG_SIZES,
 	STORE_USER_NAME_BUDGETTRAVEL,
 } from "../../constants/codes";
+import styles from "./Chat.module.css";
 import {
 	// aura_header_theme,
 	availableChatSearchTypes as _availableChatSearchTypes,
@@ -257,8 +259,9 @@ const Chat = ({
 	const TypeAuraUIRender = () => (
 		<Tooltip title='Ask for an idea' placement='bottomLeft'>
 			<div
-				className={`rounded-full cursor-pointer h-7 lg:h-9.5 w-7 lg:w-9.5 ${activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search ? "p-0.5"
-					: "border border-gray-101 p-0.25"
+				className={`${styles.aura_button} ${
+					activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search ? styles.aura_button_active
+						: styles.aura_button_inactive
 					}`}
 				role='button'
 				onClick={() => {
@@ -269,8 +272,7 @@ const Chat = ({
 				<img
 					id={`header_chat_aura_${chatTypeKey}`}
 					src={star_ai_icon_logo}
-					// className='rounded-full cursor-pointer w-full max-h-8 max-w-8'
-					className='rounded-full h-6 lg:h-8.5 w-6 lg:w-8.5'
+					className={styles.aura_icon}
 				// wrapperClassName='pl-0.5'
 				// onClick={() => {
 				// 	setShowInput(true);
@@ -284,18 +286,20 @@ const Chat = ({
 	const TypeSearchUIRender = () => (
 		<Tooltip title='Ask for a product' placement='bottomLeft'>
 			<div
-				className={`rounded-full cursor-pointer h-7 lg:h-9.5 w-7 lg:w-9.5 flex ${activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search
-					? "bg-orange-100"
-					: "border border-gray-101"
+				className={`${styles.search_button} ${
+					activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search
+						? styles.search_button_active
+						: styles.search_button_inactive
 					}`}
 				role='button'
 				onClick={() => {
 					// dispatch(setChatSearchType(typeKey));
 					dispatch(setActiveSearchOption(productSearchData));
 				}}>
-				<Image src={headerSearchIcon} alt="Search" className={`h-3.5 lg:h-4.5 w-3.5 lg:w-4.5 m-auto ${activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search
-					? "text-white"
-					: "text-purple-102"
+				<Image  src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon} ${
+					activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search
+						? styles.search_icon_active
+						: styles.search_icon_inactive
 					}`} />
 			</div>
 		</Tooltip>
@@ -336,7 +340,7 @@ const Chat = ({
 
 	// microphone, speaking loader icons
 	const micIcon = isStagingEnv ? (
-		<div className='flex w-4.5 md:w-5 h-4.5 md:h-5'>
+		<div className={styles.mic_icon_container}>
 			{streaming ? (
 				<SpeakingLoaderV2 />
 			) : handleMicrophoneClick ? (
@@ -346,7 +350,7 @@ const Chat = ({
 						// setShowInput(true);
 						handleMicrophoneClick();
 					}}
-					className='flex text-lg md:text-xl cursor-pointer dark:text-white'
+					className={`${styles.mic_icon} ${styles.dark_text_white}`}
 				/>
 			) : null}
 		</div>
@@ -358,26 +362,30 @@ const Chat = ({
 			showChatModal &&
 			!isFollowUpQuery ? (
 			<div
-				className={`relative flex justify-center items-center rounded-full ${chatImageUrl && "bg-indigo-600 dark:bg-lightgray-101"
-					} ${(chatImageUrl || auraCameraSpinLoader) && "w-9 h-9"}`}>
+				className={`${styles.relative} ${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.rounded_full} ${
+					chatImageUrl ? styles.camera_container_with_image : ""
+					} ${
+					(chatImageUrl || auraCameraSpinLoader) ? "w-9 h-9" : ""
+					}`}>
 				<Upload
 					{...uploadProps}
 					showUploadList={false}
-					className='cursor-pointer flex'
+					className={`${styles.cursor_pointer} ${styles.flex}`}
 					onClick={() => {
 						onChatClick && onChatClick();
 						dispatch(setChatSearchType(CHAT_SEARCH_TYPES.CAMERA));
 					}}>
 					<CameraOutlined
-						className={`flex text-lg md:text-xl ${chatImageUrl
-							? "text-white dark:text-black-200"
-							: "text-black-200 dark:text-white"
+						className={`${styles.camera_icon} ${
+							chatImageUrl
+								? styles.camera_icon_active
+								: styles.camera_icon_inactive
 							}`}
 					/>
 				</Upload>
 				{/* showing loader when image is uploading */}
 				{auraCameraSpinLoader ? (
-					<div className='absolute right-0'>
+					<div className={styles.absolute}>
 						<AuraCameraSpinLoader />
 					</div>
 				) : null}
@@ -387,15 +395,16 @@ const Chat = ({
 	// submit arrow, search icons
 	const searchIcon =
 		chatImageUrl || chatMessage ? (
-			<div className='flex justify-center items-center w-4 md:w-4.5 h-4 md:h-4.5'>
+			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
 				<ArrowRightOutlined
-					className='flex text-lg md:text-xl dark:text-white'
+					className={`${styles.arrow_icon} text-black-200 dark:text-white`}
 					onClick={!auraCameraSpinLoader ? handleSubmitChatInput : undefined}
+					style={{ fontSize: '18px', fontWeight: 'bold' }}
 				/>
 			</div>
 		) : !isBTNormalUserLoggedIn ? (
-			<div className='flex justify-center items-center w-4 md:w-4.5 h-4 md:h-4.5'>
-				<Image src={headerSearchIcon} alt="Search" className='flex text-lg md:text-xl dark:text-white cursor-pointer' onClick={() => inputRef.current.focus()} />
+			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
+				<Image src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
 			</div>
 		) : null;
 
@@ -410,10 +419,13 @@ const Chat = ({
 		<>
 			<div
 				id={`header_chat_container_${chatTypeKey}`}
-				className='flex items-center header_chat_container_ gap-2 lg:gap-3 w-full'>
+				className={`${styles.header_chat_container} ${styles.gap_2} ${styles.w_full}`}>
 				<div
 					id={`chat_search_input_container_${chatTypeKey}`}
-					className={`flex items-center justify-center rounded-full bg-white dark:bg-slat-101 p-t-2 p-b-2 w-full shadow-sm relative chat_search_input_container_ ${!isBTInstance ? "border border-solid border-gray-107" : ""
+					className={`${styles.chat_search_input_container} ${
+						aura_header_theme === "dark" ? styles.chat_search_input_container_dark : ""
+						} ${
+						!isBTInstance ? styles.chat_search_input_container_with_border : ""
 						}`}
 					onClick={() => {
 						showAuraIntro && dispatch(setShowAuraIntro(false));
@@ -459,8 +471,10 @@ const Chat = ({
 					) : null} */}
 
 					{isBTNormalUserLoggedIn ? (
-						<div className='h-10 lg:h-13.5 p-0.75 lg:p-1.25'>
-							<div className='h-full flex border border-purple-102 rounded-full gap-1 p-0.5 dark:bg-lightgray-101 dark:border-lightgray-101'>
+						<div className={`${styles.button_container}`}>
+							<div className={`${styles.button_group} ${
+								aura_header_theme === "dark" ? styles.button_group_dark : ""
+								}`}>
 								<TypeAuraUIRender />
 								<TypeSearchUIRender />
 								{/* {availableChatSearchTypes.includes(CHAT_SEARCH_TYPES.AURA) ? (
@@ -480,23 +494,16 @@ const Chat = ({
 					) : null}
 
 					<div
-						className='w-full relative flex h-11 lg:h-13.5 self-center'
-					// className={`w-full relative flex h-10 lg:h-13.5 ${
-					// 	showInput ? "self-center" : "self-baseline"
-					// }`}
+						className={styles.input_wrapper}
 					>
 						<Form
 							id={`chat_search_input_content_${chatTypeKey}`}
 							onFinish={
 								!auraCameraSpinLoader ? handleSubmitChatInput : undefined
 							}
-							className={`self-center w-full transition-opacity opacity-100 z-10 show_search_input pr-2 md:pr-3 ${!isBTNormalUserLoggedIn ? "pl-4 md:pl-6.5" : "pl-4"
+							className={`${styles.input_form} ${
+								!isBTNormalUserLoggedIn ? styles.input_form_with_buttons : ""
 								}`}
-						// className={`self-center w-full transition-opacity ${
-						// 	showInput
-						// 		? "opacity-100 z-10 show_search_input"
-						// 		: "opacity-0 z-0 hide_search_input"
-						// }`}
 						>
 							<Input
 								id={`chat_search_input_${chatTypeKey}`}
@@ -513,27 +520,13 @@ const Chat = ({
 								name='chat_message'
 								value={localChatMessage}
 								onChange={handleInputChange}
-								className={`rounded-full bg-transparent border-none text-black-200 dark:text-white ${aura_header_theme === "dark"
-									? "input-dark-theme"
-									: "input-light-theme"
-									} `}
-								// prefix={
-								// 	<>
-								// 		<Header_search_icon className='mr-2 w-6 hidden lg:block text-purple-102 dark:text-white' />
-								// 	</>
-								// }
+								className={`${styles.chat_input} ${
+									aura_header_theme === "dark"
+										? styles.chat_input_dark
+										: ""
+										} text-lg`}
 								allowClear
-
-							// onBlur={() => {
-							// 	if (
-							// 		showChatModal &&
-							// 		chatMessage &&
-							// 		!showChatLoader &&
-							// 		showInput &&
-							// 		serverChatMessage
-							// 	)
-							// 		setShowInput(false);
-							// }}
+								style={{ fontSize: '16px' }}
 							/>
 						</Form>
 						{/* <div
@@ -576,19 +569,19 @@ const Chat = ({
 					</div> */}
 
 					{inputControls?.length ? (
-						<div className='flex items-center gap-2 md:gap-3 pr-4 md:pr-6.5'>
-							<div className='border-l-2 dark:border-white h-7 md:h-8'></div>
+						<div className={`${styles.input_controls_container}`}>
+							<div className={`${styles.controls_divider} ${aura_header_theme === "dark" ? styles.controls_divider_dark : ""}`}></div>
 							{inputControls}
 						</div>
 					) : null}
 
 					{showSubmitImageTooltip ? (
 						<div
-							className='custom_submit_image_tooltip bg-opacity-80 bg-black-200 block'
+							className={`${styles.submit_image_tooltip} ${styles.opacity_80}`}
 							onClick={(e) => e.stopPropagation()}>
-							<div className='rounded-full float-right'>
+							<div className={`${styles.rounded_full} ${styles.float_right}`}>
 								<Image
-									className='cursor-pointer'
+									className={styles.cursor_pointer}
 									src={close_bg_icon}
 									preview={false}
 									onClick={(e) => {
@@ -597,7 +590,7 @@ const Chat = ({
 									}}
 								/>
 							</div>
-							<p className='text-sm lg:text-base leading-5 text-white'>
+							<p className={`${styles.text_sm} ${styles.leading_5} ${styles.text_white}`}>
 								Please enter relevant text related to the selected image and
 								click here or press enter to initiate the search.
 							</p>
@@ -606,11 +599,11 @@ const Chat = ({
 
 					{showAuraIntro && !showChatModal && (
 						<div
-							className='custom_aura_tooltip bg-opacity-80 bg-black-200 hidden lg:block'
+							className={`${styles.aura_tooltip} ${styles.opacity_80}`}
 							onClick={(e) => e.stopPropagation()}>
-							<div className='rounded-full float-right'>
+							<div className={`${styles.rounded_full} ${styles.float_right}`}>
 								<Image
-									className='cursor-pointer'
+									className={styles.cursor_pointer}
 									src={close_bg_icon}
 									preview={false}
 									onClick={(e) => {
@@ -626,13 +619,13 @@ const Chat = ({
 						</div>
 					)}
 					{/* will need to change placement */}
-					{showException && exception?.message && (
+					{/* {showException && exception?.message &&   (
 						<div
-							className='custom_aura_tooltip bg-opacity-80 bg-black-200 hidden lg:block'
+							className={`${styles.aura_tooltip} ${styles.opacity_80}`}
 							onClick={(e) => e.stopPropagation()}>
-							<div className='rounded-full float-right'>
+							<div className={`${styles.rounded_full} ${styles.float_right}`}>
 								<Image
-									className='cursor-pointer'
+									className={styles.cursor_pointer}
 									src={close_bg_icon}
 									preview={false}
 									onClick={(e) => {
@@ -641,40 +634,42 @@ const Chat = ({
 									}}
 								/>
 							</div>
-							<h2 className='text-base font-medium text-white m-0'>
+							<h2 className={`${styles.text_base} ${styles.text_white} ${styles.m_0}`}>
 								{exception?.message}
 							</h2>
 						</div>
-					)}
+					)} */}
 				</div>
-				{showSpeaker ? (
+				{/* {showSpeaker ? (
 					<div
 						id={`chat_volume_control_container_${chatTypeKey}`}
 						onClick={handleSpeakerClick}
-						className='cursor-pointer speaker invisible flex'>
+						className={`${styles.cursor_pointer} ${styles.volume_control_container}`}>
 						{isMute ? (
 							<Image 
-	src={iconVolumeMute} 
-	alt="Volume Mute" 
-	id={`chat_mute_icon_${chatTypeKey}`}
-	className={`text-black-200 dark:${showChatModal ? "text-white" : "text-black-200"
-		}`}
-	width={16}
-	height={14}
-/>
-						) : (
+							src={iconVolumeMute} 
+							alt="Volume Mute" 
+							id={`chat_mute_icon_${chatTypeKey}`}
+							className={`${styles.volume_icon} ${showChatModal ? styles.volume_icon_dark_modal : styles.volume_icon_dark_no_modal}`}
+							width={16}
+							height={14}
+						/>
+						
+						) :
+						
+						 (
 							<Image
-	src={iconVolume}
-	alt="Volume"
-	id={`chat_volume_icon_${chatTypeKey}`}
-	className={`text-black-200 dark:${showChatModal ? "text-white" : "text-black-200"
-		}`}
-	width={16}
-	height={14}
-/>
-						)}
+							src={iconVolume}
+							alt="Volume"
+							id={`chat_volume_icon_${chatTypeKey}`}
+							className={`${styles.volume_icon} ${showChatModal ? styles.volume_icon_dark_modal : styles.volume_icon_dark_no_modal}`}
+							width={16}
+							height={14}
+						/>
+						)
+						}
 					</div>
-				) : null}
+				) : null} */}
 			</div>
 			{/* for testing */}
 			{/* <div className='flex justify-end text-xs pr-4 h-2'>

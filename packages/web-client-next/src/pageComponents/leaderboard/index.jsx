@@ -67,11 +67,11 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 
 	const leaderboardParams = useMemo(
 		() => ({
-			filters: {
+			filters: JSON.stringify({
 				user_type: "signed_user",
 				// featured: isAdminViewEnabled ? undefined : true,
 				// status: "active",
-			},
+			}),
 			// sort: { published_collections: -1 },
 		}),
 		[isAdminViewEnabled]

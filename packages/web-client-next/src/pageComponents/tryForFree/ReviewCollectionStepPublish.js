@@ -29,6 +29,8 @@ import {
 import { auraYfretUserCollBaseUrl } from "../../constants/config";
 
 import { ShareAltOutlined, SendOutlined } from "@ant-design/icons";
+import { MdShare } from "react-icons/md";
+
 import aura_assistant from "../../images/chat/aura_assistant_image.png";
 import star_ai_icon from "../../images/unthink_star_ai_icon.svg";
 
@@ -673,7 +675,7 @@ const ReviewCollectionStepPublish = ({
 																width: "100%",
 																objectFit: "cover"
 															}}
-															effect="blur"
+															// effect="blur"
 															className="rounded-2xl"
 															onLoad={() => {
 																if (imageContainerRef.current) {
@@ -809,18 +811,18 @@ const ReviewCollectionStepPublish = ({
 											Collection Page URL
 										</label>
 										{currentCollection.status === PUBLISHED ? (
-											<div className='relative'>
-												<Tooltip
+											<div className='relative h-7 w-7'>
+												<Tooltip className=" h-7 w-7 "
 													title={
 														isPostPageFormTouched
 															? "Please save or discard the changes, to see the sharing options"
 															: "Click to see the sharing options"
 													}>
-													<ShareAltOutlined
+													<MdShare
 														className={`${isPostPageFormTouched
 															? "cursor-not-allowed"
-															: "cursor-pointer"
-															}`}
+															: "cursor-pointer" 
+															} h-7 w-7 `}
 														role='button'
 														onClick={() =>
 															!isPostPageFormTouched && setShowShareOptions()
