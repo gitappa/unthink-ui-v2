@@ -1,0 +1,240 @@
+/* SingleCollection Component CSS Module */
+
+.container {
+  max-width: 330px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 992px;
+    padding-top: 80px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1328px;
+  }
+}
+
+/* Skeleton Loading */
+.skeletonTitle {
+  width: 50%;
+  height: 40px;
+  margin-bottom: 36px;
+}
+
+.skeletonRow {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .skeletonRow {
+    flex-direction: row;
+  }
+}
+
+.skeletonMainImage {
+  height: 180px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .skeletonMainImage {
+    height: 200px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .skeletonMainImage {
+    height: 700px;
+  }
+}
+
+.skeletonGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-left: 0;
+  padding-top: 12px;
+}
+
+@media (min-width: 1024px) {
+  .skeletonGrid {
+    gap: 16px;
+    padding-left: 20px;
+  }
+}
+
+.skeletonGridItem {
+  height: 180px;
+}
+
+@media (min-width: 1024px) {
+  .skeletonGridItem {
+    max-width: 480px;
+    height: 100%;
+  }
+}
+
+/* Header Section */
+.headerSection {
+  padding-bottom: 4px;
+}
+
+@media (min-width: 768px) {
+  .headerSection {
+    padding-bottom: 20px;
+  }
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.collectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-decoration: underline;
+  cursor: pointer;
+  max-width: max-content;
+}
+
+@media (min-width: 768px) {
+  .collectionTitle {
+    font-size: 28px;
+  }
+}
+
+.viewAllButton {
+  border-radius: 8px;
+}
+
+.description {
+  font-size: 14px;
+  max-width: 600px;
+  margin-top: 12px;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Products Grid */
+.productsRow {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .productsRow {
+    flex-direction: row;
+  }
+}
+
+.productsGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 8px;
+}
+
+@media (min-width: 640px) {
+  .productsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .productsGrid {
+    gap: 16px;
+    padding-top: 0;
+  }
+}
+
+@media (min-width: 1536px) {
+  .productsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.coverImageWrapper {
+  height: 180px;
+  width: 100%;
+  grid-column: span 2 / span 2;
+  flex-grow: 1;
+}
+
+@media (min-width: 768px) {
+  .coverImageWrapper {
+    height: 200px;
+  }
+}
+
+@media (min-width: 640px) {
+  .coverImageWrapper {
+    grid-column: span 3 / span 3;
+  }
+}
+
+@media (min-width: 768px) {
+  .coverImageWrapper {
+    grid-column: span 3 / span 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .coverImageWrapper {
+    height: 700px;
+    width: 656px;
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+  }
+}
+
+.coverImage {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.productCardWrapper {
+  /* Empty wrapper for product cards */
+}
+
+/* No Products */
+.noProducts {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Show More Button */
+.showMoreWrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.showMoreButton {
+  border-radius: 8px;
+  height: 32px;
+}
