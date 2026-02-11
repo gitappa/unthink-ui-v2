@@ -1,28 +1,27 @@
 import React, { useState } from "react";
 
 import downArrow_icon from "../../images/newStaticPageImages/downArrow_icon.svg";
-import styles from './Accordian.module.scss';
+import styles from './Accordian.module.css';
+import scssStyles from './Accordian.module.scss';
 
 const Pannel = ({ title, children }) => {
 	const [isOpen, setOpen] = useState(false);
 	return (
-		<div className={`accordion_wrapper ${styles.accordion_wrapper} mb-9`}>
+		<div className={`accordion_wrapper ${scssStyles.accordion_wrapper} ${styles.accordionWrapper}`}>
 			<div
-				className={`flex justify-between items-center cursor-pointer ${
-					isOpen ? "open" : ""
-				}`}
+				className={`${styles.accordionHeader} ${isOpen ? "open" : ""
+					}`}
 				onClick={() => setOpen(!isOpen)}>
-				<h1 className='text-lightgray-101 text-base font-normal'>{title}</h1>
+				<h1 className={styles.accordionTitle}>{title}</h1>
 				<img
 					src={downArrow_icon}
-					className={`${isOpen && styles.rotate_accordion_icon} ${styles.accordion_icon}`}
+					className={`${isOpen && scssStyles.rotate_accordion_icon} ${scssStyles.accordion_icon}`}
 				/>
 			</div>
-			<div className={`${styles.accordion_item} ${!isOpen ? styles.collapsed : ""}`}>
+			<div className={`${scssStyles.accordion_item} ${!isOpen ? scssStyles.collapsed : ""}`}>
 				<div
-					className={`${styles.accordion_content} text-lightgray-104 text-base transition-opacity ease-linear ${
-						isOpen ? "opacity-100" : "opacity-0"
-					}`}>
+					className={`${scssStyles.accordion_content} ${styles.accordionContentText} ${isOpen ? styles.opacityFull : styles.opacityNone
+						}`}>
 					{children}
 				</div>
 			</div>
@@ -32,11 +31,11 @@ const Pannel = ({ title, children }) => {
 
 const Accordion = () => {
 	return (
-		<div className='max-w-4xl mx-auto font-firaSans'>
-			<h1 className='text-3xl lg:text-5xl lg:leading-54 text-lightgray-101 text-center'>
+		<div className={styles.faqContainer}>
+			<h1 className={styles.faqTitle}>
 				FAQ’s
 			</h1>
-			<div className='mt-10 lg:mt-20'>
+			<div className={styles.faqContent}>
 				<Pannel title='Why do I need a wallet?'>
 					You need a wallet to save your Unthink NFT, which is like a loyalty
 					pass and gives you access to earnings. You will also get new NFT drops
@@ -44,7 +43,7 @@ const Accordion = () => {
 					Think of your wallet as your entry into the Web3 world.
 				</Pannel>
 				<Pannel title='What are the benefits of the NFT?'>
-					<ul className='list-disc pl-10'>
+					<ul className={styles.listDisc}>
 						<li>
 							First of all, the NFT is your access pass for receiving rewards
 							from the ecosystem.
@@ -66,7 +65,7 @@ const Accordion = () => {
 				<Pannel title='How many types of NFTs can I earn?'>
 					Based on the type and level of engagement with the community, here are
 					some of the NFT types:
-					<ul className='list-disc pl-10'>
+					<ul className={styles.listDisc}>
 						<li>Unthink Influencer</li>
 						<li>Unthink Ambassador</li>
 						<li>Unthink founder</li>
@@ -99,7 +98,7 @@ const Accordion = () => {
 				<Pannel title='What are the ways in which I can support the community?'>
 					You can take part in any of these activities that promote the
 					community:
-					<ul className='list-disc pl-10'>
+					<ul className={styles.listDisc}>
 						<li>Write blogs for our publisher partners</li>
 						<li>Refer other creators</li>
 						<li>Share collections of other creators</li>
@@ -121,7 +120,7 @@ const Accordion = () => {
 					out which products to choose, and putting them together.
 					<br />
 					You can get your own collection pages in 3 ways:
-					<ul className='list-disc pl-10'>
+					<ul className={styles.listDisc}>
 						<li>
 							Browse or search for products in our portal and add them to a
 							collection.

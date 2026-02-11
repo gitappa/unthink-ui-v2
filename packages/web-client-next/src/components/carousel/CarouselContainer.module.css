@@ -1,0 +1,182 @@
+/* CarouselContainer CSS Module */
+
+.outerTitleWrapper {
+    max-width: 330px;
+    /* max-w-s-3 */
+    margin-left: auto;
+    /* mx-auto */
+    margin-right: auto;
+}
+
+@media (min-width: 640px) {
+    .outerTitleWrapper {
+        max-width: 560px;
+        /* sm:max-w-lg-1 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .outerTitleWrapper {
+        max-width: 992px;
+        /* lg:max-w-3xl-2 */
+        margin-bottom: 32px;
+        /* lg:mb-8 */
+    }
+}
+
+@media (min-width: 1536px) {
+    .outerTitleWrapper {
+        max-width: 1328px;
+        /* 2xl:max-w-6xl-2 */
+    }
+}
+
+.outerTitle {
+    font-size: 28px;
+    /* text-display-l */
+    line-height: 32px;
+    font-weight: 600;
+    /* font-semibold */
+}
+
+.descriptionBlock {
+    display: block;
+    /* block */
+    width: 100%;
+    /* w-full */
+    margin-top: 8px;
+    /* mt-2 */
+}
+
+@media (min-width: 1024px) {
+    .descriptionBlock {
+        margin-top: 12px;
+        /* lg:mt-3 */
+    }
+}
+
+.descriptionText {
+    font-size: 14px;
+    /* text-sm */
+    line-height: 24px;
+    /* leading-6 */
+    max-width: 830px;
+    /* max-w-3xl-1 */
+    width: 100%;
+    /* w-full */
+    white-space: pre-line;
+    /* whitespace-pre-line */
+}
+
+@media (min-width: 1024px) {
+    .descriptionText {
+        font-size: 18px;
+        /* lg:text-lg */
+    }
+}
+
+.overflowHidden {
+    overflow: hidden;
+    /* overflow-hidden */
+}
+
+.selectNone {
+    user-select: none;
+    /* select-none */
+}
+
+.relativeFullSize {
+    position: relative;
+    /* relative */
+    width: 100%;
+    /* w-full */
+    height: 100%;
+    /* h-full */
+}
+
+.coverImageFull {
+    width: 100%;
+    /* w-full */
+}
+
+.videoPlayer {
+    position: absolute;
+    /* absolute */
+    top: 0;
+    /* top-0 */
+    left: 0;
+    /* left-0 */
+    width: 100%;
+    /* w-full */
+    height: 100%;
+    /* h-full */
+}
+
+.videoOverlay {
+    position: absolute;
+    /* absolute */
+    top: 0;
+    /* top-0 */
+    left: 0;
+    /* left-0 */
+    width: 100%;
+    /* w-full */
+    height: 100%;
+    /* h-full */
+    z-index: 10;
+    /* z-10 */
+}
+
+.cursorPointer {
+    cursor: pointer;
+    /* cursor-pointer */
+}
+
+/* Preview modal */
+.previewOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.previewContainer {
+    overflow: hidden;
+    min-height: 85vh;
+    position: relative;
+}
+
+.previewCloseBtn {
+    color: white;
+    /* text-white */
+    cursor: pointer;
+    font-size: 20px;
+    /* text-xl */
+    font-weight: 600;
+    /* font-semibold */
+    text-align: right;
+    margin-bottom: 12px;
+    /* mb-3 */
+    position: absolute;
+    /* absolute */
+    top: 12px;
+    /* top-3 */
+    right: 20px;
+    /* right-5 */
+    background: none;
+    border: none;
+}
+
+.previewImageWrapper {
+    position: relative;
+    /* relative */
+    width: 100%;
+    /* w-full */
+    height: 100%;
+}

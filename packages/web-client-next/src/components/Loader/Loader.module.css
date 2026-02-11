@@ -1,0 +1,47 @@
+/* Loader CSS Module */
+
+.pageLoaderOverlay {
+    position: fixed;
+    /* fixed */
+    top: 0;
+    /* top-0 */
+    left: 0;
+    /* left-0 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* w-full */
+    min-height: 100vh;
+    /* min-h-screen */
+    height: 100%;
+    /* h-full */
+    backdrop-filter: contrast(0.75);
+    /* backdrop-contrast-75 */
+    z-index: 40;
+    /* z-40 */
+}
+
+.pageLoaderIcon {
+    font-size: 32px;
+    /* text-3xl-1 = 32px from tailwind config */
+}
+
+.auraCameraLoader {
+    border-width: 2px;
+    /* border-2 */
+    border-style: dashed;
+    /* border-dashed */
+    border-color: #4f46e5;
+    /* border-indigo-600 */
+}
+
+.flexItemsCenter {
+    display: flex;
+    align-items: center;
+}
+
+.roundedFull {
+    border-radius: 9999px;
+    /* rounded-full */
+}
