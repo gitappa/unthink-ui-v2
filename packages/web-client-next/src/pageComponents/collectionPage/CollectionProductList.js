@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ProductCard from "../../components/singleCollection/ProductCard";
 import { handleRecProductClick } from "../recommendations/redux/actions";
+import styles from "../../components/singleCollection/collectionDetails.module.scss";
 
 const CollectionProductList = ({ collection, enableClickTracking = false }) => {
 	const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const CollectionProductList = ({ collection, enableClickTracking = false }) => {
 
 	if (isPListFetching && !pListData.length) {
 		return (
-			<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto pt-5 lg:pt-10'>
+			<div className={styles.collectionWrapper} style={{ paddingTop: '20px' }}>
 				<Skeleton.Input active={true} className='w-1/2 h-10 mb-9' />
 				<div className='flex flex-col lg:flex-row'>
 					<div className='h-180 md:h-200 lg:h-700 w-full'>
@@ -56,7 +57,7 @@ const CollectionProductList = ({ collection, enableClickTracking = false }) => {
 	}
 
 	return (
-		<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto pt-5 lg:pt-10'>
+		<div className={styles.collectionWrapper} style={{ paddingTop: '20px' }}>
 			{collection?.blog_filter?.length ? (
 				<div className='pb-1 md:pb-5'>
 					{/* <h1 className='text-xl md:text-xl font-semibold capitalize'>Tags</h1> */}
@@ -72,8 +73,8 @@ const CollectionProductList = ({ collection, enableClickTracking = false }) => {
 				</div>
 			) : null}
 			{pListData?.length ? (
-				<div className='flex flex-col lg:flex-row '>
-					<div className='w-full grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-2 lg:pt-0'>
+				<div className={styles.flexColLgRow}>
+					<div className={styles.productGrid}>
 						{pListData.map((product) => (
 							<div key={product.mfr_code}>
 								<ProductCard
