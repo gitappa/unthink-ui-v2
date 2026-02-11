@@ -1067,7 +1067,7 @@ const SingleCollectionProductList = ({
                             </div>
                             {isOverflowing && (
                               <div
-                                className={`absolute right-0 ${styles.addmore_image}`}
+                                className={`${styles.videoPlayerAbsolute} ${styles.addmore_image}`}
                                 style={{ cursor: "pointer", zIndex: 10 }}
                                 onClick={() => {
                                   if (swiperRef.current) {

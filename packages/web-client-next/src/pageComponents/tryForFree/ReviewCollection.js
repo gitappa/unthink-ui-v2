@@ -48,6 +48,7 @@ import ReviewCollectionPlist from "./ReviewCollectionPlist";
 import ReviewCollectionStepsUI from "./ReviewCollectionStepsUI";
 import { ProductFilters } from "../productFilters/ProductFilters";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
+import filterStyles from "../productFilters/productFilters.module.scss";
 import AskQuestionComponent from "../../components/AskQuestionComponent/AskQuestionComponent";
 import {
 	getSingleUserCollection,
@@ -2626,7 +2627,7 @@ const ReviewCollection = (props) => {
 					<p>
 						A collection created from blog{" "}
 						<a
-							className='p-0 text-primary cursor-pointer underline'
+							className={style.blogLink}
 							href={currentCollection.blog_url}>
 							{currentCollection.blog_url}
 						</a>
@@ -3418,7 +3419,7 @@ const ReviewCollection = (props) => {
 	{
 		/*  {priceRangeMinMax[0] !== priceRangeMinMax[1] ? (
 						<div className=''>
-							<h5 className='text-gray-103 text-base'>Price Range</h5> *?}
+							<h5 className={style.textGray103}>Price Range</h5> *?}
 					{/* creating multiple dynamic price ranges and allow user to select one of them using dropdown */
 	}
 	{
@@ -3440,7 +3441,7 @@ const ReviewCollection = (props) => {
 	}
 	{
 		/* <div className='flex items-center'>
-								<h5 className='text-gray-103 mb-0'>{priceRangeMinMax[0]}</h5>
+								<h5 className={style.textGray103}>{priceRangeMinMax[0]}</h5>
 								<div className='w-full'>
 									<Slider
 										range
@@ -3469,7 +3470,7 @@ const ReviewCollection = (props) => {
 										]}
 									/>
 								</div>
-								<h5 className='text-gray-103 mb-0'>{priceRangeMinMax[1]}</h5>
+								<h5 className={style.textGray103}>{priceRangeMinMax[1]}</h5>
 							</div> */
 	}
 	{
@@ -3479,7 +3480,7 @@ const ReviewCollection = (props) => {
 
 	// {displayableFilter.includes("material") ? (
 	// 	<div>
-	// 		<h5 className='text-gray-103 text-base'>Material</h5>
+	// 		<h5 className={style.textGray103}>Material</h5>
 	// 		<Select
 	// 			mode='tags'
 	// 			allowClear
@@ -3497,7 +3498,7 @@ const ReviewCollection = (props) => {
 	// {displayableFilter.includes("pattern") &&
 	// availableFilters?.pattern?.length ? (
 	// 	<div>
-	// 		<h5 className='text-gray-103 text-base'>Pattern</h5>
+	// 		<h5 className={style.textGray103}>Pattern</h5>
 	// 		<Select
 	// 			mode='multiple'
 	// 			allowClear
@@ -3517,7 +3518,7 @@ const ReviewCollection = (props) => {
 	// {displayableFilter.includes("style") &&
 	// availableFilters?.style?.length ? (
 	// 	<div>
-	// 		<h5 className='text-gray-103 text-base'>Style</h5>
+	// 		<h5 className={style.textGray103}>Style</h5>
 	// 		<Select
 	// 			mode='multiple'
 	// 			allowClear
@@ -3536,12 +3537,12 @@ const ReviewCollection = (props) => {
 
 	{
 		/* {show_filters?.product_brand?.length ? (
-					<div className='mt-4'>
-						<h5 className='text-gray-103 text-base'>Brand</h5>
+					<div className={style.mt4}>
+						<h5 className={style.textGray103}>Brand</h5>
 						<Select
 							allowClear
 							mode='multiple'
-							className='w-full'
+							className={style.wFull}
 							placeholder='Select product brands'
 							onChange={(v) => onFiltersChange("product_brand", v)}
 							value={filters.product_brand}>
@@ -3604,7 +3605,7 @@ const ReviewCollection = (props) => {
 				content: (
 					<h1>
 						Are you sure you want to delete the collection{" "}
-						<span className='font-bold'>
+						<span className={style.fontBold}>
 							{getCollectionNameToShow(currentCollection)}
 						</span>
 						?
@@ -3697,11 +3698,11 @@ const ReviewCollection = (props) => {
 
 	const RefetchButton = () => {
 		return !isFetchProductsInProgress ? (
-			<div className='text-right flex items-center justify-end'>
+			<div className={style.refetchButtonContainer}>
 				<Tooltip title='Get a new set of products again'>
 					<button
 						onClick={() => handleRefetchProductsClick({ tags: selectedTags })}
-						className='flex items-center gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-violet-100 text-white px-3 py-2 whitespace-nowrap'>
+						className={style.refetchButton}>
 						Get Products Again
 					</button>
 				</Tooltip>
@@ -3710,19 +3711,19 @@ const ReviewCollection = (props) => {
 	};
 
 	return (
-		<div className='min-h-screen bg-lightgray-109 tablet:bg-white font-firaSans'>
+		<div className={style.pageContainer}>
 			{/* removed header because, now we are showing the review collection page with aura header with store page component */}
 			{/* <AuthHeader hideProfile /> */}
 
-			<div className='pt-12 pb-32 sm:pb-24 lg:pb-16 flex'>
-				<div className='w-full tablet:max-w-screen-tablet desktop:max-w-screen-desktop tablet:mx-auto'>
+			<div className={style.contentWrapper}>
+				<div className={style.mainColumn}>
 					{/* // HIDDEN for review page all section */}
 					{/* {isNewCollection && currentView === STEPS.CONTENT ? (
-					<div className='relative mb-6 w-full max-w-s-3 md:max-w-lg lg:max-w-964 mx-auto'>
-						<div className='bubble ml-auto md:ml-24 leading-8 bubble-bottom-left w-full-50 md:w-full-100 md:max-w-748'>
+					<div className={style.headerSection}>
+						<div className={`bubble bubble-bottom-left ${style.bubbleContainer}`}>
 							{getAuraMessage()}
 							<Spin
-								className='pl-4'
+								className={style.pl4}
 								spinning={
 									currentCollection.status === IN_PROGRESS ||
 									authUserCollectionsIsFetching
@@ -3734,7 +3735,7 @@ const ReviewCollection = (props) => {
 									? waiting_avatar
 									: completed_avatar
 							}
-							className='w-24 md:w-auto'
+							className={style.w24MdAuto}
 						/>
 					</div>
 				) : null} */}
@@ -3849,12 +3850,12 @@ const ReviewCollection = (props) => {
 					{currentView === STEPS.PRODUCTS ? ( // second step
 						<ReviewCollectionContainerWrapper>
 							<div>
-								<div className='flex flex-col gap-4 md:gap-5'>
+								<div className={style.headerTextContainer}>
 									{/* Title section START */}
-									<div className='flex md:items-center justify-between flex-col-reverse md:flex-row flex-wrap gap-5 md:gap-0'>
+									<div className={style.headerFlex}>
 										<div>
-											<p className='md:leading-none font-normal capitalize flex items-center mb-0 text-slat-104 gap-3'>
-												<span className='text-xl-1 md:text-2xl lg:text-4xl desktop:text-5xl font-semibold'>
+											<p className={style.collectionName}>
+												<span className={style.collectionNameText}>
 													Products
 												</span>
 												{/* <ShoppingCartOutlined className='text-xl-1 md:text-2xl flex my-auto' /> */}
@@ -3866,7 +3867,7 @@ const ReviewCollection = (props) => {
 														<Tooltip title='Add new products of your choice by uploading images or CSV'>
 															<button
 																onClick={() => setAddProductModalOpen(true)}
-																className='text-white font-normal text-5xl h-min my-auto leading-6'>
+																className={style.countText}>
 																+
 															</button>
 														</Tooltip>
@@ -3875,7 +3876,7 @@ const ReviewCollection = (props) => {
 																<DownloadOutlined
 																	onClick={handleSellerDownloadCsv}
 																	role='button'
-																	className='cursor-pointer text-white font-normal text-2xl h-min my-auto leading-none'
+																	className={style.countTextSmall}
 																/>
 															</Tooltip>
 														) : null}
@@ -3883,19 +3884,19 @@ const ReviewCollection = (props) => {
 												) : null} */}
 											</p>
 										</div>
-										<div className='ml-auto flex h-fit-content gap-2'>
+										<div className={style.mlAutoFlexGap2}>
 											<>
 												<button
 													type='button'
 													onClick={handleDiscard}
-													className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold text-indigo-103 border-2 border-indigo-103 ml-auto'>
+													className={style.cancelButton}>
 													Cancel
 												</button>
 
 												{!isNewCollection && (
 													<button
 														onClick={handlePreviewCollectionPage}
-														className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 border-2 border-indigo-103 text-white'
+														className={style.primaryButton}
 													// isNewCollection ? "bg-indigo-400" : "bg-indigo-600"
 													// disabled={isNewCollection}
 													>
@@ -3905,17 +3906,17 @@ const ReviewCollection = (props) => {
 													</button>
 												)}
 
-												<div className='hidden lg:inline-block'>
+												<div className={style.hiddenLgInlineBlock}>
 													<button
 														onClick={() => handleChangeView(STEPS.CONTENT)}
-														className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103'>
+														className={style.navButton}>
 														Previous
 													</button>
 												</div>
-												<div className='hidden lg:inline-block'>
+												<div className={style.hiddenLgInlineBlock}>
 													<button
 														onClick={() => handleChangeView(STEPS.PUBLISH)}
-														className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103'>
+														className={style.navButton}>
 														Next
 													</button>
 												</div>
@@ -4014,7 +4015,7 @@ const ReviewCollection = (props) => {
 																]}
 															/>
 														</div>
-														<h5 className='text-gray-103 mb-0'>
+														<h5 className={style.textGray103Mb0}>
 															{priceRangeMinMax[1]}
 														</h5>
 													</div>
@@ -4022,15 +4023,15 @@ const ReviewCollection = (props) => {
 											) : null}
 										</div>
 									</div>
-									<div className='flex flex-col lg:flex-row mt-5 justify-between'>
-										<div className='flex flex-col lg:flex-row w-full lg:gap-4'>
+									<div className={style.filterRow}>
+										<div className={style.filterCol}>
 											{show_filters?.brand?.length ? (
-												<div className='flex flex-col lg:w-1/3'>
-													<h5 className='text-gray-103'>Filter by Seller</h5>
+												<div className={style.filterInnerCol}>
+													<h5 className={style.textGray103}>Filter by Seller</h5>
 													<Select
 														mode='multiple'
 														allowClear
-														className='w-full rounded-xl'
+														className={style.wFullRoundedXl}
 														placeholder='Select sellers'
 														onChange={(v) => onFiltersChange("brand", v)}
 														value={filters.brand}>
@@ -4043,12 +4044,12 @@ const ReviewCollection = (props) => {
 												</div>
 											) : null}
 											{show_filters?.product_brand?.length ? (
-												<div className='flex flex-col lg:w-1/3 mt-4 lg:mt-0'>
-													<h5 className='text-gray-103'>Filter by Brand</h5>
+												<div className={style.filterInnerColMt}>
+													<h5 className={style.textGray103}>Filter by Brand</h5>
 													<Select
 														allowClear
 														mode='multiple'
-														className='w-full'
+														className={style.wFull}
 														placeholder='Select product brands'
 														onChange={(v) =>
 															onFiltersChange("product_brand", v)
@@ -4064,16 +4065,16 @@ const ReviewCollection = (props) => {
 													</Select>
 												</div>
 											) : null}
-											<div className='flex lg:w-1/3 mt-4 lg:mt-0 items-end'>
-												<div className='flex items-center'>
+											<div className={style.filterInnerColMtItemsEnd}>
+												<div className={style.flexItemsCenter}>
 													<button
-														className='bg-indigo-600 rounded text-white py-1 font-normal text-base px-3 mr-5'
+														className={style.applyButton}>
 														onClick={handleFilterGoClick} // save the go state as well to save it on show plist page
 														role='button'>
 														Go
 													</button>
 													<p
-														className='underline font-medium cursor-pointer mt-4 lg:mt-0 text-gray-103 whitespace-nowrap mr-5'
+														className={style.clearButton}>
 														onClick={handleClearFiltersClick}
 														role='button'>
 														Clear Filters
@@ -4093,7 +4094,7 @@ const ReviewCollection = (props) => {
 										<div>
 										</div>
 										<div
-											className='flex items-center gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-violet-100 text-white px-3 py-2 Add_to_keyword'
+											className={`${style.addKeywordButton} Add_to_keyword`}
 											title={`Click to edit ${TAGS_TITLE}, You can update the ${TAGS_TITLE} and get the products`}
 											onClick={handleEditTagsBtnClick}>
 											{/* <PlusOutlined className='stroke-current stroke-13' /> */}
@@ -4104,7 +4105,7 @@ const ReviewCollection = (props) => {
 									{/* all tags */}
 
 									<div>
-										<div className='text-gray-103 flex justify-between'>
+										<div className={style.grayJustifyBetween}>
 											<div>
 												{/* <p className='m-0 text-base capitalize'>{TAGS_TITLE}</p> */}
 												{isConfirmationRequiredOnTagDelete &&
@@ -4117,7 +4118,7 @@ const ReviewCollection = (props) => {
 																)}? `}
 																// description='Info Description Info Description Info Description Info Description'
 																type='info'
-																className='my-2 rounded-md'
+																className={`${style.my2RoundedMd} tag-select-input`}
 																onClose={() => clearTagEdited({ deleted: [] })}
 																action={
 																	<div>
@@ -4129,7 +4130,7 @@ const ReviewCollection = (props) => {
 																					useUpdateTag: true,
 																				})
 																			}
-																			className='mr-2 bg-indigo-103 rounded text-white px-2'>
+																			className={style.indigoBadge}>
 																			Yes
 																		</button>
 																	</div>
@@ -4149,7 +4150,7 @@ const ReviewCollection = (props) => {
 																)}?`}
 																// description='Info Description Info Description Info Description Info Description'
 																type='info'
-																className='my-2 rounded-md'
+																className={`${style.my2RoundedMd} tag-select-input`}
 																onClose={() =>
 																	clearTagEdited({
 																		additionalTagsDeleted: [],
@@ -4167,7 +4168,7 @@ const ReviewCollection = (props) => {
 																					useUpdateTag: true,
 																				})
 																			}
-																			className='mr-2 bg-indigo-103 rounded text-white px-2'>
+																			className={style.indigoBadge}>
 																			Yes
 																		</button>
 																	</div>
@@ -4362,10 +4363,7 @@ const ReviewCollection = (props) => {
 																{additionalTagsToShow.map((tag) => (
 																	<div
 																		key={tag}
-																		className={`flex items-center rounded-22 shadow px-2 py-0.75 sm:px-4 w-max h-30 ${selectedAdditionalTags.includes(tag)
-																			? "bg-newcolor-200"
-																			: "bg-white"
-																			}`}
+																		className={`${style.additionalTagBadge} ${selectedAdditionalTags.includes(tag) ? style.bgNewColor200 : style.bgWhite}`}
 																		onClick={() =>
 																			handleTagClick({
 																				tag,
@@ -4375,10 +4373,7 @@ const ReviewCollection = (props) => {
 																		role='button'>
 																		<span
 																			level={5}
-																			className={`m-0 font-normal text-xs md:text-sm leading-none text-slat-104 whitespace-nowrap ${enableTagSelection
-																				? "cursor-pointer"
-																				: ""
-																				}`}>
+																			className={`${style.additionalTagText} ${enableTagSelection ? style.cursorPointer : ""}`}>
 																			{tag}
 																		</span>
 																		<button
@@ -4386,7 +4381,7 @@ const ReviewCollection = (props) => {
 																			onClick={(e) =>
 																				handleDeleteAdditionTags(e, [tag])
 																			}>
-																			<CloseCircleOutlined className='flex ml-1' />
+																			<CloseCircleOutlined className={style.flexMl1} />
 																		</button>
 																	</div>
 																))}
@@ -4413,32 +4408,32 @@ const ReviewCollection = (props) => {
 													selectedTag={selectedTags}
 													handleFilterOptionsVisibleChange={handleFilterOptionsVisibleChange}
 													filterOptionsVisible={filterOptionsVisible}
-													clearFiltersThemeClassName='text-black-100'
-													buttonThemeClassName='bg-indigo-103'
+													clearFiltersThemeClassName={filterStyles.clearFiltersBlack}
+													buttonThemeClassName={filterStyles.buttonThemeIndigo}
 												/>
 											</div>
 										</div>
 									) : null}
 
 									{enableFilters && filterOptionsVisible ? (
-										<div className='flex flex-col gap-5 shadow-3xl p-5 rounded-xl bg-slate-200'>
-											<div className='flex items-center gap-4 ml-auto'>
+										<div className={style.filterContainerSlate}>
+											<div className={style.flexItemsCenterGap4MlAuto}>
 												{isFiltersAvailable ? (
 													<p
-														className='text-lg text-black-100 cursor-pointer'
+														className={style.clearAllText}
 														role='button'
 														onClick={handleClearFiltersClick}>
 														Clear All
 													</p>
 												) : null}
 												<button
-													className='bg-indigo-103 rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white'
+													className={style.indigoBadgeSm}
 													onClick={() => handleFilterGoClick(filters)} // save the go state as well to save it on show plist page
 													role='button'>
 													Go
 												</button>
 												<CloseOutlined
-													className='cursor-pointer text-2xl text-black-100 flex'
+													className={style.flexText2xlBlack100}
 													role='button'
 													title='close filters'
 													onClick={() =>
@@ -4475,12 +4470,12 @@ const ReviewCollection = (props) => {
 										(productsToShow.length && !filterOptionsVisible) ||
 										multiProductsSelectionMessage ? (
 										<div>
-											<div className='flex items-center w-full justify-between edit_page_sort_div'>
+											<div className={`${style.sortRowWrapper} edit_page_sort_div`}>
 												<div className={`flex gap-2 items-end justify-between w-full ${enableSelectProduct ? "selectedActive_button_mobile" : ""}`} >
 													{/* edit products */}
 													{showProductSelection ? (
-														<div className='text-base flex flex-row gap-2 flex-wrap'>
-															<div className='flex flex-wrap items-center desktop:leading-44 gap-3 md:gap-0'>
+														<div className={style.flexRowGap2Wrap}>
+															<div className={style.flexWrapItemsCenterGap3}>
 																{enableSelectProduct ? (
 																	<>
 																		<div
@@ -4501,7 +4496,7 @@ const ReviewCollection = (props) => {
 																			</Select>
 																		</div>
 																		<div className={styles.flexItemsCenterGap2}>
-																			<div className='flex py-1 pl-2 whitespace-nowrap'>
+																			<div className={style.flexPy1Pl2Nowrap}>
 																				<Checkbox
 																					className={`${styles.checkboxLabel} editcollection_checkbox`}
 																					indeterminate={
@@ -4628,7 +4623,7 @@ const ReviewCollection = (props) => {
 											{!enableSelectProduct ? (
 												<div className={styles.filterFooterActions}>
 													{/* {isShowAddProductsForAmazon ? (
-														<div className='amazon-button-loader'>
+														<div className={style['amazon-button-loader']}>
 															<Tooltip title='Add Products from Amazon'>
 																<Button
 																	onClick={() =>
@@ -4640,7 +4635,7 @@ const ReviewCollection = (props) => {
 																	}
 																	size='small'
 																	loading={isAddAmazonProductsInProgress}
-																	className='flex items-center outline-none border-none gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-violet-100 text-white px-3 py-2'>
+																	className={style.violetBadgeAlt}>
 																	Add Products from Amazon
 																</Button>
 															</Tooltip>
@@ -4702,11 +4697,11 @@ const ReviewCollection = (props) => {
 										/>
 									</div>
 								) : (
-									<p className='text-xl text-gray-103 my-8 text-center'>
+									<p className={style.textXlGray103My8Center}>
 										Fetching products...
 									</p>
 								)}
-								<div className='mt-2.5 tablet:mt-4'>
+								<div className={style.mt25TabletMt4}>
 									<RefetchButton />
 								</div>
 							</div>
@@ -4719,7 +4714,7 @@ const ReviewCollection = (props) => {
 					{/* show backdrop loader */}
 					{
 						showBackdropLoader && (
-							<div className='fixed top-0 left-0 flex justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-102 z-20'>
+							<div className={style.fixedOverlayGray102}>
 								<Spin
 									// indicator={<LoadingOutlined className='text-3xl-1' spin />}
 									indicator={
@@ -4756,16 +4751,16 @@ const ReviewCollection = (props) => {
 					{/* show backdrop loader when regenerate content and keywords for video_based collection */}
 					{
 						isVideoDataExtractionStarted ? (
-							<div className='fixed top-0 left-0 flex flex-col justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-112 z-20'>
+							<div className={style.fixedOverlayGray112}>
 								<Spin
 									indicator={
 										<Loading3QuartersOutlined
-											className='flex text-6xl-1 text-indigo-100'
+											className={style.flexText6xlIndigo100}
 											spin
 										/>
 									}
 								/>
-								<p className='text-lg text-indigo-100 mt-4 text-center max-w-640'>
+								<p className={style.textLgIndigo100Mt4Center}>
 									<b>Preparing the content from the video.</b>
 									<br />
 									<b>
@@ -4775,14 +4770,14 @@ const ReviewCollection = (props) => {
 										<span
 											onClick={() => dispatch(setShowChatModal(true))}
 											role='button'
-											className='underline cursor-pointer'>
+											className={style.underlineCursorPointer}>
 											search for products
 										</span>{" "}
 										or{" "}
 										<span
 											onClick={() => navigate(pathToStore)}
 											role='button'
-											className='underline cursor-pointer'>
+											className={style.underlineCursorPointer}>
 											visit the store
 										</span>
 									</b>

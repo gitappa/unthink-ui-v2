@@ -743,7 +743,7 @@ const ChatModal = ({
 																				<p className='ant-upload-drag-icon'>
 																					<UploadOutlined />
 																				</p>
-																				<p className='w-4/6 mx-auto'>
+																				<p className={styles['chatmodal-dragger-text']}>
 																					Click or drag file to this area to
 																					upload Image
 																				</p>
