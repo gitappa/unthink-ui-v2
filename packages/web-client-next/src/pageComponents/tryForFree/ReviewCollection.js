@@ -3690,7 +3690,7 @@ const ReviewCollection = (props) => {
 
 	useEffect(() => {
 		if (currentView !== STEPS.PUBLISH) {
-			dispatch(setOverlayCoordinates(""))
+			dispatch(setOverlayCoordinates([]))
 		}
 	}, [STEPS, currentView]);
 

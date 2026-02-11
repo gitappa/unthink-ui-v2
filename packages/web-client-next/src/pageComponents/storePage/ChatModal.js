@@ -691,7 +691,7 @@ const ChatModal = ({
 																				/>
 
 																				{/* Overlay Points */}
-																				{auraOverlayCoordinates.map(
+																				{Array.isArray(auraOverlayCoordinates) && auraOverlayCoordinates.map(
 																					(item, index) => {
 																						const adjustedX =
 																							(item.point[0] / originalWidth) *
@@ -910,7 +910,7 @@ const ChatModal = ({
 																alt='Aura Image'
 															/>
 															{/* Overlay Points */}
-															{auraOverlayCoordinates.map((item, index) => {
+															{Array.isArray(auraOverlayCoordinates) && auraOverlayCoordinates.map((item, index) => {
 																const adjustedX =
 																	(item.point[0] / originalWidth) * newWidth;
 																const adjustedY =
@@ -968,33 +968,33 @@ const ChatModal = ({
 								{auraHelperMessage &&
 									!isFreshSearch &&
 									!isBTNormalUserLoggedIn ? (
-										<>
-									<div className={styles['chatmodal-helper-message-container']}>
-										<div className={styles['chatmodal-helper-message-icon-container']}>
-											<Image
-												src={star_ai_icon_logo}
-												className={styles['chatmodal-helper-message-icon']}
-												preview={false}
-												width={30}
-											/>
+									<>
+										<div className={styles['chatmodal-helper-message-container']}>
+											<div className={styles['chatmodal-helper-message-icon-container']}>
+												<Image
+													src={star_ai_icon_logo}
+													className={styles['chatmodal-helper-message-icon']}
+													preview={false}
+													width={30}
+												/>
+											</div>
+											<CaretRightOutlined className={styles['chatmodal-helper-message-caret']} />
+											<div className={styles['chatmodal-helper-message-text']}>
+												{auraHelperMessage}
+											</div>
+
 										</div>
-										<CaretRightOutlined className={styles['chatmodal-helper-message-caret']} />
-										<div className={styles['chatmodal-helper-message-text']}>
-											{auraHelperMessage}
-										</div>
-										
-									</div>
-										
-										</>
+
+									</>
 
 								) : null}
 							</div>
 						</div>
 						{showChatLoader && (
-											<div className={styles['chatmodal-loading-bar-container']}>
-												<div className={styles['chatmodal-loading-bar']}></div>
-											</div>
-										)}
+							<div className={styles['chatmodal-loading-bar-container']}>
+								<div className={styles['chatmodal-loading-bar']}></div>
+							</div>
+						)}
 					</div>
 				</>
 			) : null}
@@ -1005,10 +1005,10 @@ const ChatModal = ({
 				className={`${styles['chatmodal-products-container']} ${isGuestPopUpShow ? styles['chatmodal-products-container-overflow'] : ""
 					}`}>
 				{showChatLoader && (
-    <div style={{ position: 'absolute', width: '100%' }}>
-        <div className="chat_aura_products_search_skeleton"></div>
-    </div>
-)}
+					<div style={{ position: 'absolute', width: '100%' }}>
+						<div className="chat_aura_products_search_skeleton"></div>
+					</div>
+				)}
 				{current_store_name === STORE_USER_NAME_SAMSKARA ? (
 					<div className={styles['chatmodal-samskara-container']}>
 						<a
