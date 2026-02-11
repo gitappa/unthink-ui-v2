@@ -4,7 +4,7 @@ import { QuestionCircleOutlined, CloseOutlined } from "@ant-design/icons";
 
 import { generateOnContactFormSubmit } from "../../helper/utils";
 
-import styles from './askQuestionComponent.module.scss';
+import styles from './AskQuestionComponent.module.css';
 
 const AskQuestionComponent = ({
 	id,
@@ -43,57 +43,17 @@ const AskQuestionComponent = ({
 		}
 	}, [popoverTooltipVisible]);
 
-	// useEffect(() => {
-	// 	if (popoverVisible) {
-	// 		document
-	// 			.getElementById(id)
-	// 			?.addEventListener(
-	// 				"submit",
-	// 				generateOnContactFormSubmit(id, false, onSuccess)
-	// 			);
-
-	// 		return () => {
-	// 			document
-	// 				.getElementById(id)
-	// 				?.removeEventListener(
-	// 					"submit",
-	// 					generateOnContactFormSubmit(id, false, onSuccess)
-	// 				);
-	// 		};
-	// 	}
-
-	// 	return () => {};
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (isSuccess) {
-	// 		const timer = setTimeout(() => {
-	// 			setIsSuccess(null);
-	// 		}, 5000);
-
-	// 		return () => {
-	// 			clearTimeout(timer);
-	// 		};
-	// 	}
-
-	// 	return () => {};
-	// }, [isSuccess]);
-
-	// if (isSuccess === null) {
-	// 	return null;
-	// }
-
 	const popoverContent = useMemo(
 		() => (
 			<WrapperComponent>
 				<div>
 					{isSuccess ? (
 						<Result
-							className='mx-auto'
+							className={styles.successResultWrapper}
 							status='success'
-							title={<span className='text-white'>Thanks for submitting!</span>}
+							title={<span className={styles.successTitle}>Thanks for submitting!</span>}
 							subTitle={
-								<span className='text-white'>
+								<span className={styles.successSubtitle}>
 									We will get back to you as soon as possible
 								</span>
 							}
@@ -110,21 +70,21 @@ const AskQuestionComponent = ({
 							<input name='page_section' type='hidden' value={id} />
 
 							<div>
-								<p className='md:leading-none font-normal flex items-center justify-between mb-0 text-white'>
-									<span className='text-2xl text-black-100 tablet:text-4xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+								<p className={styles.formHeader}>
+									<span className={`${styles.formTitle} ellipsis_1`}>
 										Stuck?
 									</span>
 									<CloseOutlined
 										id='ask_question_close_icon'
 										onClick={() => handlePopoverVisibleChange(false)}
-										className='flex text-2xl cursor-pointer text-white'
+										className={styles.closeIcon}
 									/>
 								</p>
 							</div>
 
 							<div>
-								<div className='tablet:flex tablet:justify-between mt-6 mb-6 text-gray-103'>
-									<p className='mb-0 text-xl text-black-100'>
+								<div className={styles.formContentWrapper}>
+									<p className={styles.formDescription}>
 										Drop in a question and we will get back to you!
 									</p>
 								</div>
@@ -133,16 +93,16 @@ const AskQuestionComponent = ({
 										rows={10}
 										name='question'
 										placeholder='Type your question or query here..'
-										className='text-left placeholder-gray-101 bg-slate-100 outline-none px-3 pt-3 rounded-xl w-full overflow-hidden'
+										className={styles.formTextarea}
 										required
 									/>
 								</div>
 							</div>
 
-							<div className='mt-6 text-right'>
+							<div className={styles.submitWrapper}>
 								<button
 									type='submit'
-									className='bg-indigo-600 rounded text-white py-2 font-normal text-base px-5 tablet:mt-0 whitespace-nowrap h-min self-end'>
+									className={styles.submitButton}>
 									Submit
 								</button>
 							</div>
@@ -155,7 +115,7 @@ const AskQuestionComponent = ({
 	);
 
 	return (
-		<div className='z-30 fixed bottom-2 right-2 md:bottom-20 lg:bottom-8 md:right-3 lg:right-8 mb-20 tablet:mb-0'>
+		<div className={styles.wrapper}>
 			<Popover
 				placement='topRight'
 				content={popoverContent}
@@ -171,9 +131,9 @@ const AskQuestionComponent = ({
 					open={popoverTooltipVisible && !popoverVisible}
 					onOpenChange={handlePopoverTooltipVisibleChange}>
 					<div
-						className='flex cursor-pointer bg-indigo-600 rounded-full text-lg tablet:text-4xl text-white p-2 tablet:p-4'
+						className={styles.triggerButton}
 						role='button'>
-						<QuestionCircleOutlined className='m-auto' />
+						<QuestionCircleOutlined className={styles.triggerIcon} />
 					</div>
 				</Tooltip>
 			</Popover>
@@ -182,3 +142,4 @@ const AskQuestionComponent = ({
 };
 
 export default React.memo(AskQuestionComponent);
+

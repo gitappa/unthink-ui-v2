@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Input } from "antd";
 import Link from "next/link";
 import { generateOnContactFormSubmit } from "../../helper/utils";
-import styles from "./staticPageComponents.module.scss";
+import styles from "./ContactUs.module.css";
 
 const ContactUs = ({
 	title,
@@ -53,21 +53,20 @@ const ContactUs = ({
 
 	return (
 		<div
-			className={`${styles.contact_us_container} max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md`}>
+			className={styles.container}>
 			<div
-				className={`${styles.contact_us_inner_container} pt-8 lg:pt-16 pb-14 lg:pb-28 rounded-md`}>
-				<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+				className={styles.innerContainer}>
+				<h1 className={styles.title}>
 					{title}
 				</h1>
 				<div
-					className={`max-w-xl-1 mx-auto px-8 ${
-						showLink ? "pt-8 lg:pt-16" : "py-8 lg:py-16"
-					} `}>
+					className={`${styles.formWrapper} ${showLink ? styles.formWrapperLink : styles.formWrapperPaddingY
+						} `}>
 					<form id={id}>
-						<div className='md:h-12 flex flex-col md:flex-row items-center'>
+						<div className={styles.inputGroup}>
 							<Input
 								required
-								className='text-left h-12 rounded-md lg:rounded-l-md'
+								className={styles.emailInput}
 								placeholder='Enter your email'
 								name='email'
 								type='text'
@@ -78,20 +77,20 @@ const ContactUs = ({
 							<input
 								name='page_url'
 								type='hidden'
-							value={pageUrl}
-						/>
-						<input name='page_section' type='hidden' value={id} />
+								value={pageUrl}
+							/>
+							<input name='page_section' type='hidden' value={id} />
 
-						<button
+							<button
 								type='submit'
-								className='w-24 md:w-40 text-xs md:text-sm z-10 mt-4 md:mt-0 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold -ml-2.5 text-white'>
+								className={styles.submitButton}>
 								{submitButtonText}
 							</button>
 						</div>
 					</form>
 					{showLink && (
-						<h5 className='text-center mt-9 mb-0'>
-							<Link href='/signup' className='text-white underline p-0'>
+						<h5 className={styles.linkHeader}>
+							<Link href='/signup' className={styles.link}>
 								Are you a Influence Management Agency?
 							</Link>
 						</h5>

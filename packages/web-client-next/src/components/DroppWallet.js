@@ -3,9 +3,10 @@ import { useDroppWallet } from '../libs/dropp-wallet-plugin.es.js';
 // import '../libs/index.css'
 import { AiFillCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
+import styles from "./DroppWallet.module.css";
 
 
-const DroppWallet = ({ setisDropDown ,isDropDown}) => {
+const DroppWallet = ({ setisDropDown, isDropDown }) => {
     const [email, setEmail] = useState('');
 
     const {
@@ -45,31 +46,31 @@ const DroppWallet = ({ setisDropDown ,isDropDown}) => {
                 setisDropDown(false);
             }
         };
-        
-        if(isDropDown){
-            document.body.style.overflow='hidden'
+
+        if (isDropDown) {
+            document.body.style.overflow = 'hidden'
             // document.body.style.backdropFilter='blur(3px)'
             document.addEventListener('mousedown', handleClickOutside);
         } else {
-            document.body.style.overflow='auto'
+            document.body.style.overflow = 'auto'
             document.removeEventListener('mousedown', handleClickOutside);
         }
-        
+
         return () => {
-            document.body.style.overflow='auto'
+            document.body.style.overflow = 'auto'
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isDropDown])
 
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 50,backdropFilter:isDropDown ? 'blur(5px)' : '' }} className='text-black' ref={popRef}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 50, backdropFilter: isDropDown ? 'blur(5px)' : '' }} className={styles.textBlack} ref={popRef}>
             <div className="glass-card"  >
-                < div onClick={() => setisDropDown(false)} className='absolute top-3 right-3 cursor-pointer text-xl  hover:text-gray-500 p-2 rounded-full   ' >
+                < div onClick={() => setisDropDown(false)} className={styles.closeButton} >
                     <RxCross2 />
                 </div>
 
-                <div style={{ textAlign: 'center', marginBottom: '32px' }} className='text-black'>
-                    <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: 'black' }} className='text-black'>
+                <div style={{ textAlign: 'center', marginBottom: '32px' }} className={styles.textBlack}>
+                    <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: 'black' }} className={styles.textBlack}>
                         Dropp Wallet Plugin Demo
                     </h2>
                 </div>

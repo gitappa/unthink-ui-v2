@@ -31,6 +31,7 @@ import { openAutoCreateCollectionModal } from "../autoCreateCollectionModal/redu
 import { useChat } from "../../hooks/chat/useChat";
 import ProductCard from "../../components/singleCollection/ProductCard";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
+import filterStyles from "../productFilters/productFilters.module.scss";
 import { CustomFilter } from "../customFilter/CustomFilter";
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import { current_store_name, is_store_instance } from "../../constants/config";
@@ -246,7 +247,7 @@ const AuraResponseProducts = ({
 		sendSocketMessage({
 			...filters,
 			custom_filter: customFilterArrayToString || undefined,
-		},1);
+		}, 1);
 	};
 
 	const handleChangeFilters = (newFilters) => {
@@ -470,7 +471,7 @@ const AuraResponseProducts = ({
 	const onSelectAllChange = () => {
 		// e.stopPropagation()
 		console.log('dfdfdfdfd');
-		
+
 		const currentProducts = productsCache[currentTag] || [];
 		const currentProductCodes = currentProducts.map((p) => p.mfr_code);
 
@@ -581,8 +582,8 @@ const AuraResponseProducts = ({
 		newFilters = {},
 		filterOptionsVisible = false
 	) => {
-		 
- 
+
+
 		handleChangeFilters(newFilters);
 		dispatch(setSuggestionsProductsIsLoading(tag, true));
 		setFilterOptionsVisible(filterOptionsVisible);
@@ -771,8 +772,8 @@ const AuraResponseProducts = ({
 									handleFiltersInputClear={handleFiltersInputClear}
 									handleClearFiltersClick={handleClearFiltersClick}
 									displayFilters={filtersToShow}
-									tagThemeClassName='border border-slat-103 text-slat-103 text-base py-0.5 px-2'
-									clearFiltersThemeClassName='text-slat-103'
+									tagThemeClassName={filterStyles.tagPillAura}
+									clearFiltersThemeClassName={filterStyles.clearFiltersAura}
 								/>
 							</div>
 						) : null}
@@ -852,7 +853,7 @@ const AuraResponseProducts = ({
 										{is_store_instance && (
 											<div className={styles['aura-products-button-save-container']}>
 												<button
-												className={styles['aura-products-action-button']}
+													className={styles['aura-products-action-button']}
 													onClick={() =>
 														onSaveOrShareProductsClick({ isSave: true })
 													}
@@ -917,8 +918,8 @@ const AuraResponseProducts = ({
 						<div
 							id='chat_products_inner_content'
 							className={styles['aura-products-grid']}
-							// onChange={onSelectAllChange}
-							>
+						// onChange={onSelectAllChange}
+						>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard
 									key={product.mfr_code}
@@ -1026,8 +1027,8 @@ const AuraResponseProducts = ({
 								<div className={styles['aura-products-section-header']}>
 									<div className={styles['aura-products-section-title']}>
 										More Results
-\t\t\t\t</div>
-\t\t\t\t<div className={styles['aura-products-carousel-controls']}>
+									</div>
+									<div className={styles['aura-products-carousel-controls']}>
 										<button
 											id='more-prev'
 											className={styles['aura-products-carousel-button']}>

@@ -1,0 +1,29 @@
+.closeIconWrapper {
+    border-radius: 9999px;
+    /* rounded-full */
+    float: right;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.headerText {
+    font-size: 28px;
+    /* text-xl-2 = 28px from tailwind config */
+    font-weight: 700;
+    /* font-bold */
+    color: white;
+    /* text-white */
+    margin: 0;
+    /* m-0 */
+}
+
+.messageText {
+    font-size: 20px;
+    /* text-xl */
+    font-weight: 500;
+    /* font-medium */
+    color: white;
+    /* text-white */
+}

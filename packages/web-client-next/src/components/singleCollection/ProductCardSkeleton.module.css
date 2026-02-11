@@ -1,0 +1,32 @@
+/* ProductCardSkeleton Component CSS Module */
+
+.skeletonSmall {
+  border-radius: 12px;
+  width: 160px;
+  height: 180px;
+}
+
+@media (min-width: 1024px) {
+  .skeletonSmall {
+    width: 180px;
+  }
+}
+
+.skeletonMedium {
+  border-radius: 12px;
+  width: 160px;
+  height: 180px;
+}
+
+@media (min-width: 640px) {
+  .skeletonMedium {
+    width: 180px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .skeletonMedium {
+    width: 320px;
+    height: 340px;
+  }
+}

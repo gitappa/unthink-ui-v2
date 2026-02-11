@@ -1,6 +1,7 @@
 import React from "react";
 import { sortableContainer, sortableElement } from "react-sortable-hoc";
 import { arrayMoveImmutable, arrayMoveMutable } from "array-move";
+import styles from "./SortableContainer.module.css";
 
 const SortableContainerWrapper = sortableContainer(({ children }) => {
 	return <ul>{children}</ul>;
@@ -28,7 +29,7 @@ export default function SortableContainer({
 
 		return (
 			<>
-				<li className='z-50 list-none'>
+				<li className={styles.sortableListItem}>
 					<ItemComponent value={value} {...rest} isSelected={isSelected} handleSelectProduct={handleSelectProduct} />
 				</li>
 			</>

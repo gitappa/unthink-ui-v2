@@ -1,0 +1,70 @@
+/* CSS module for EditCollAiExtractionDataModal */
+
+.modalTitle {
+    font-size: 1.25rem;
+    /* text-xl */
+    margin-bottom: 1rem;
+    /* mb-4 */
+    margin-top: 0;
+}
+
+.buttonContainer {
+    display: flex;
+    /* flex */
+    justify-content: flex-end;
+    /* justify-end */
+    gap: 1rem;
+    /* gap-4 */
+}
+
+.closeButton {
+    min-width: 6rem;
+    /* min-w-24 */
+    font-size: 0.75rem;
+    /* text-xs */
+    z-index: 10;
+    border-radius: 0.375rem;
+    /* rounded-md */
+    padding-top: 0.625rem;
+    /* py-2.5 */
+    padding-bottom: 0.625rem;
+    padding-left: 0.875rem;
+    /* px-3.5 */
+    padding-right: 0.875rem;
+    height: 100%;
+    /* h-full */
+    font-weight: 700;
+    /* font-bold */
+    color: #818CF8;
+    /* text-indigo-400 */
+    border: 2px solid #818CF8;
+    /* border-2 border-indigo-400 */
+    background-color: transparent;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .closeButton {
+        font-size: 0.875rem;
+        /* md:text-sm */
+    }
+}
+
+.viewButton {
+    background-color: #4f46e5;
+    /* bg-indigo-600 */
+    padding-top: 0.5rem;
+    /* py-2 */
+    padding-bottom: 0.5rem;
+    padding-left: 2rem;
+    /* px-8 */
+    padding-right: 2rem;
+    color: white;
+    /* text-white */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    font-size: 1.125rem;
+    /* text-lg */
+    border: none;
+    cursor: pointer;
+}

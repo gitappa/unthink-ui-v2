@@ -27,3 +27,264 @@
         border-radius: 12px !important;
     }
 }
+
+/* ============================================================
+   ProductFiltersTags.js — Tailwind to CSS Modules
+   ============================================================ */
+
+/* Outer row: flex items-center gap-2 justify-between */
+.filterTagsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+/* relative w-full md:w-4/6 */
+.swiperContainer {
+  position: relative;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 66.666667%;
+  }
+}
+
+/* Tag pill: rounded-22 flex items-center whitespace-nowrap shadow h-30
+   px-2 sm:px-4 font-normal text-xs md:text-sm leading-none text-slat-104 bg-white py-0.5 */
+.tagPill {
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  height: 30px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: #000000;
+  background-color: white;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+
+  @media (min-width: 640px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}
+
+/* Aura variant: border border-slat-103 text-slat-103 text-base py-0.5 px-2 */
+.tagPillAura {
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  height: 30px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #334155;
+  border: 1px solid #334155;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+
+  @media (min-width: 640px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* CloseOutlined icon: ml-2 cursor-pointer */
+.closeIcon {
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+/* Scroll arrow: absolute right-0 addmore_image_edit */
+.scrollArrow {
+  position: absolute;
+  right: 0;
+}
+
+/* Actions row: flex items-center flex-nowrap md:flex-shrink-0 gap-2 md:w-auto w-full */
+.actionsRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    flex-shrink: 0;
+    width: auto;
+  }
+}
+
+/* Hashtag add button: flex justify-center items-center gap-0.5 text-sm md:text-base lead cursor-pointer */
+.hashtagButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* PlusOutlined: stroke-current md:stroke-13 */
+.plusIcon {
+  stroke: currentColor;
+
+  @media (min-width: 768px) {
+    stroke-width: 52px;
+  }
+}
+
+/* Divider: border-l-2 border-black-100 h-5 */
+.divider {
+  border-left: 2px solid #232524;
+  height: 1.25rem;
+}
+
+/* Clear all text: text-sm md:text-base cursor-pointer */
+.clearAllText {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Filter area row: flex items-center justify-end mt-2 */
+.filterOptionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* Filter button: flex items-center cursor-pointer */
+.filterButton {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Filter icon: mr-1 */
+.filterIconImg {
+  margin-right: 0.25rem;
+}
+
+/* Filter text: underline text-sm md:text-base */
+.filterText {
+  text-decoration: underline;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Custom filter wrapper: w-full lg:flex lg:justify-between */
+.customFilterWrapper {
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+/* Select wrapper: mt-2 w-full */
+.selectWrapper {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+/* Select input: w-full text-base */
+.selectInput {
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* Buttons area: text-right pt-2 lg:pl-2 */
+.buttonsArea {
+  text-align: right;
+  padding-top: 0.5rem;
+
+  @media (min-width: 1024px) {
+    padding-left: 0.5rem;
+  }
+}
+
+/* Buttons grid: grid grid-cols-2 lg:grid-cols-1 gap-2 w-max ml-auto */
+.buttonsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  width: max-content;
+  margin-left: auto;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* Action button: py-0 px-3 text-white rounded-lg h-6 */
+.actionButton {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  color: white;
+  border-radius: 0.5rem;
+  height: 1.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+/* Theme classes used as prop defaults */
+
+/* Default clear filters: text-gray-103 → color: #E2E8F0 */
+.clearFiltersDefault {
+  color: #E2E8F0;
+}
+
+/* Aura variant: text-slat-103 → color: #334155 */
+.clearFiltersAura {
+  color: #334155;
+}
+
+/* Step content variant: text-black-100 → color: #232524 */
+.clearFiltersBlack {
+  color: #232524;
+}
+
+/* Default button theme: bg-indigo-600 → background-color: #4F46E5 */
+.buttonThemeDefault {
+  background-color: #4F46E5;
+}
+
+/* Step content variant: bg-indigo-103 → background-color: #7C74EC */
+.buttonThemeIndigo {
+  background-color: #7C74EC;
+}

@@ -1,0 +1,42 @@
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    /* flex-col */
+    gap: 8px;
+    /* gap-2 */
+}
+
+.rowPadding {
+    padding-top: 12px;
+    /* pt-3 */
+}
+
+.capitalize {
+    text-transform: capitalize;
+    /* capitalize */
+}
+
+.urlBox {
+    border: 1px solid #232524;
+    /* border (default border color from tailwind config) */
+    padding: 4px;
+    /* p-1 */
+    border-radius: 4px;
+    /* rounded */
+    display: flex;
+    word-break: break-all;
+    /* break-all */
+}
+
+.copyIcon {
+    font-size: 20px;
+    /* text-xl */
+    display: flex;
+    margin-left: 8px;
+    /* ml-2 */
+}
+
+.hidden {
+    display: none;
+    /* hidden */
+}

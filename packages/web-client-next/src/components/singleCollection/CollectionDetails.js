@@ -48,6 +48,7 @@ import {
 } from "../../helper/utils";
 
 import styles from "./collectionDetails.module.scss";
+import cssStyles from "./CollectionDetails.module.css";
 import ReactPlayer from "react-player";
 import SingleCollectionProductList from "../../pageComponents/collectionPage/SingleCollectionProductList";
 import { toggleShowMore } from "../../pageComponents/collectionPage/redux/actions";
@@ -428,7 +429,7 @@ const CollectionDetails = ({
           color="blue"
         >
           <div
-            className="absolute w-6 h-6 bg-blue-500 rounded-full cursor-pointer animate-pulse"
+            className={cssStyles.overlayPoint}
             style={{
               left: `${adjustedX}px`,
               top: `${adjustedY}px`,
@@ -444,10 +445,10 @@ const CollectionDetails = ({
 
   return (
     <>
-      <div className="block sm:flex items-start gap-10 lg:gap-12 2xl:gap-16 px-3 lg:px-0">
+      <div className={cssStyles.container}>
         <div
           ref={videoContainerRef}
-          className={`relative sm:max-w-s-5 lg:w-full pb-3 sm:pb-0 CollectionDetails_Img collection_details_pointer ${current_store_name
+          className={`${cssStyles.imageContainer} CollectionDetails_Img collection_details_pointer ${current_store_name
             ? current_store_name === "samskara"
               ? "collection_details_sticky_samskara"
               : current_store_name === "santhay"
@@ -471,12 +472,12 @@ const CollectionDetails = ({
               alt="Default Image"
               width="100%"
               height="100%"
-              className="CollectionDetails_Img object-cover rounded-xl  w-full sm:w-200  lg:w-260    aspect-square"
+              className={`CollectionDetails_Img ${cssStyles.defaultImage}`}
             />
           ) : (
-            <div className="relative">
+            <div className={cssStyles.relative}>
               {/* Display cover image if present, otherwise show default avatar */}
-              <div ref={imageContainerRef} className="relative">
+              <div ref={imageContainerRef} className={cssStyles.relative}>
                 {collection.video_url &&
                   !collection.cover_image &&
                   !isSocialMediaVideo(collection.video_url) ? (
@@ -502,7 +503,7 @@ const CollectionDetails = ({
                       alt="Collection Cover"
                       width="100%"
                       height="100%"
-                      className="CollectionDetails_Img object-contain rounded-xl sm:max-w-s-5 w-full sm:w-200 lg:w-260   aspect-square"
+                      className={`CollectionDetails_Img ${cssStyles.coverImage}`}
                       onLoad={() => {
                         if (imageContainerRef.current) {
                           const { width, height } =
@@ -516,7 +517,7 @@ const CollectionDetails = ({
                     {collection.cover_image_coordinates &&
                       containerDimensions.width > 0 &&
                       containerDimensions.height > 0 && (
-                        <div className="absolute inset-0">
+                        <div className={cssStyles.absoluteInset}>
                           {renderOverlay(
                             collection.cover_image_coordinates,
                             containerDimensions.width,
@@ -541,12 +542,12 @@ const CollectionDetails = ({
                       width="100%"
                       height="100%"
                       playsinline
-                      className="absolute top-0 left-0 rounded-xl w-full h-full object-cover Video_player"
+                      className={`${cssStyles.videoOverlay} Video_player`}
                       style={{ zIndex: 10 }} // Ensure video is on top
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`absolute top-0 left-0 w-full h-full z-10`}
+                      className={cssStyles.videoOverlay}
                     />
                   </>
                 )}
