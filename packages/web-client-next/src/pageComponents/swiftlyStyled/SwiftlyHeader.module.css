@@ -1,0 +1,155 @@
+/* SwiftlyHeader.module.css */
+
+/* Fonts would be loaded globally or in a layout file */
+
+.announcementBar {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+@media (min-width: 1024px) {
+    .announcementBar {
+        display: flex;
+    }
+}
+
+.headerWrapper {
+    width: 100%;
+}
+
+.headerContent {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (min-width: 1024px) {
+    .headerContent {
+        padding: 8px 32px;
+        /* lg:px-8 lg:py-2 -> py-2 is 8px */
+        height: 80px;
+        /* lg:h-20 -> 80px */
+    }
+}
+
+.logoContainer {
+    width: 160px;
+    /* w-40 */
+    display: none;
+    /* hidden */
+    align-items: center;
+    justify-content: flex-start;
+    /* justify-start */
+    color: white;
+    /* text-white */
+    cursor: pointer;
+    /* cursor-pointer */
+}
+
+@media (min-width: 1024px) {
+    .logoContainer {
+        display: flex;
+        /* lg:flex */
+    }
+}
+
+.logo {
+    font-family: 'LogoFont', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0;
+}
+
+.centerContainer {
+    /* flex-1 flex justify-center */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.rightSection {
+    display: none;
+    /* hidden */
+    justify-content: flex-end;
+    /* justify-end */
+}
+
+@media (min-width: 1024px) {
+    .rightSection {
+        display: flex;
+        /* lg:flex */
+    }
+}
+
+.collections {
+    display: flex;
+    align-items: center;
+}
+
+/* Replicating .collections button from original SCSS */
+.collections button {
+    font-family: 'buttonFont', sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+    letter-spacing: 0;
+    font-size: 15px;
+    background-color: transparent;
+    /* Was #2c2c2c in SCSS but text-white overrides? No, usually bg color. Wait, JSX only said text-white. I'll stick to original SCSS intent if implicit, or just use what JSX had. JSX had className="text-white". The SCSS had background-color: #2c2c2c. I will assume I should keep the SCSS style if it was applying, but check if it was actually applying. */
+    /* If the button in JSX didn't use styles.something, and .collections was applied to parent, then .collections button selector applies. */
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 20px;
+    border: none;
+}
+
+.walletIcon {
+    border-radius: 12px;
+    /* rounded-xl */
+    color: white;
+    /* text-white */
+    margin-right: 4px;
+    /* mr-1 */
+}
+
+.collectionButton {
+    color: white;
+    /* text-white */
+}
+
+.wishlistIcon {
+    color: white;
+    /* text-white */
+    cursor: pointer;
+    /* cursor-pointer */
+    height: 24px;
+    /* h-6 */
+    width: 24px;
+    /* w-6 */
+    margin-left: 24px;
+    /* ml-6 */
+}
+
+.cartLink {
+    padding: 0;
+    /* p-0 */
+}
+
+.cartIcon {
+    color: white;
+    /* text-white */
+    cursor: pointer;
+    /* cursor-pointer */
+    margin-left: 24px;
+    /* ml-6 */
+    height: 24px;
+    /* h-6 */
+    width: 24px;
+    /* w-6 */
+}

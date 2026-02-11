@@ -15,7 +15,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
 import Image from "next/image";
-import  styles from './header.module.scss'
+import styles from './SwiftlyHeader.module.css';
 
 const SwiftlyHeader = ({
 	disabledOutSideClick,
@@ -44,21 +44,21 @@ const SwiftlyHeader = ({
 	return (
 		<>
 			<div
-				className='hidden lg:flex items-center justify-center h-[30px] text-[13px] tracking-[1px] text-center px-3'
+				className={styles.announcementBar}
 				style={{
 					background: themeCodes.header.announcement_bar_bg,
 					color: themeCodes.header.announcement_bar_text,
 				}}>
 				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
 			</div>
-			<div className='w-full' style={{ background: themeCodes.header.header_bg }}>
+			<div className={styles.headerWrapper} style={{ background: themeCodes.header.header_bg }}>
 
 				<div
 					id='heroesVillains_desktop_header_menu'
-					className='w-full flex items-center justify-between lg:px-8 lg:py-2 lg:h-20'>
+					className={styles.headerContent}>
 					{/* set width only to keep content center aligned */}
-					<div className='w-40 hidden lg:flex items-center justify-start text-white cursor-pointer'>
-						<div className={`${styles.logo}`} onClick={() => navigate(PATH_ROOT)}>
+					<div className={styles.logoContainer}>
+						<div className={styles.logo} onClick={() => navigate(PATH_ROOT)}>
 							{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 						</div>
 					</div>
@@ -82,23 +82,23 @@ const SwiftlyHeader = ({
 						} */}
 
 					{/* <div className='flex-1 flex justify-center'> */}
-						<ChatContainer
-							disabledOutSideClick={disabledOutSideClick}
-							config={config}
-							trackCollectionData={trackCollectionData}
-							isBTInstance={isBTInstance}
-						/>
+					<ChatContainer
+						disabledOutSideClick={disabledOutSideClick}
+						config={config}
+						trackCollectionData={trackCollectionData}
+						isBTInstance={isBTInstance}
+					/>
 					{/* </div> */}
 
 					{/* set width only to keep the aura center aligned */}
-					<div className=' hidden lg:flex justify-end'>
-						<div className={` ${styles.collections} flex items-center`}>
+					<div className={styles.rightSection}>
+						<div className={styles.collections}>
 							{
 								storeData?.is_droppWallet_connect_enabled &&
- 								<Image src={walletIcon} onClick={() => setisDropDown(true)}  alt="wallet" height={24} width={24} className="rounded-xl text-white mr-1  " />
- 							}
+								<Image src={walletIcon} onClick={() => setisDropDown(true)} alt="wallet" height={24} width={24} className={styles.walletIcon} />
+							}
 
-							<button className="text-white"
+							<button className={styles.collectionButton}
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))
 								}>
@@ -108,12 +108,12 @@ const SwiftlyHeader = ({
 							{currentUser?.emailId ? (
 								<FaRegHeart
 									onClick={onWishlistClick}
-									className='text-white cursor-pointer h-6 w-6 ml-6'
+									className={styles.wishlistIcon}
 								/>
 							) : null}
 							{storeData?.pdp_settings?.is_add_to_cart_button && (
-								<Link href='/cart' className="p-0">
-									<FiShoppingCart className='text-white cursor-pointer ml-6 h-6 w-6' />
+								<Link href='/cart' className={styles.cartLink}>
+									<FiShoppingCart className={styles.cartIcon} />
 								</Link>
 							)}
 							<UserProfileMenu

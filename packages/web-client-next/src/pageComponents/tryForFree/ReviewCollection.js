@@ -155,7 +155,7 @@ import dynamic from "next/dynamic";
 const ReviewCollectionStepHelp = dynamic(() => import("./ReviewCollectionStepHelp"), {
 	ssr: false,
 	loading: () => (
-		<div className='flex justify-center'>
+		<div className={styles.centeredFlex}>
 			<Spin />
 		</div>
 	),
@@ -165,7 +165,7 @@ const ReviewCollectionStepContent = dynamic(
 	{
 		ssr: false,
 		loading: () => (
-			<div className='flex justify-center'>
+			<div className={styles.centeredFlex}>
 				<Spin />
 			</div>
 		),
@@ -176,7 +176,7 @@ const ReviewCollectionStepPublish = dynamic(
 	{
 		ssr: false,
 		loading: () => (
-			<div className='flex justify-center'>
+			<div className={styles.centeredFlex}>
 				<Spin />
 			</div>
 		),
@@ -214,7 +214,7 @@ export const STEPS = {
 
 const LoadingIndicator = () => {
 	return (
-		<div className='flex justify-center'>
+		<div className={styles.centeredFlex}>
 			<Spin />
 		</div>
 	);
@@ -4089,7 +4089,7 @@ const ReviewCollection = (props) => {
 									{/* sort products and filter products section end */}
 
 									{/* Add more kewords button */}
-									<div className="flex justify-between items-center">
+									<div className={styles.flexJustifyBetween}>
 										<div>
 										</div>
 										<div
@@ -4400,8 +4400,8 @@ const ReviewCollection = (props) => {
 
 									{/* hastag component */}
 									{enableFilters ? (
-										<div className={`flex items-center gap-2 flex-wrap w-full`}>
-											<div className="w-full">
+										<div className={styles.filtersContainer}>
+											<div className={styles.wFull}>
 												<ProductFiltersTags
 													isproductSection={true}
 													productFilters={filters}
@@ -4500,10 +4500,10 @@ const ReviewCollection = (props) => {
 																				{/* <Option value="cancel">Cancel</Option> */}
 																			</Select>
 																		</div>
-																		<div className="flex items-center gap-2">
+																		<div className={styles.flexItemsCenterGap2}>
 																			<div className='flex py-1 pl-2 whitespace-nowrap'>
 																				<Checkbox
-																					className='text-xs md:text-sm text-newcolor-100 editcollection_checkbox'
+																					className={`${styles.checkboxLabel} editcollection_checkbox`}
 																					indeterminate={
 																						selectedProducts.length > 0 &&
 																						selectedProducts.length <
@@ -4517,20 +4517,20 @@ const ReviewCollection = (props) => {
 																					{selectedProducts.length} Selected
 																				</Checkbox>
 																			</div>
-																			<div className="flex items-center gap-2">
-																				<button className="flex items-center text-xs rounded-2xl leading-none cursor-pointer border border-violet-100 hover:bg-transparent bg-violet-100 text-white hover:text-slat-104 px-2 py-1 transform transition duration-300" onClick={handleYesClick}>Done</button>
-																				<button className="flex items-center text-xs rounded-2xl leading-none cursor-pointer border border-violet-100 hover:bg-transparent bg-violet-100 text-white hover:text-slat-104 px-2 py-1 transform transition duration-300" onClick={handleCancelClick}>Cancel</button>
+																			<div className={styles.flexItemsCenterGap2}>
+																				<button className={styles.buttonDoneCancel} onClick={handleYesClick}>Done</button>
+																				<button className={styles.buttonDoneCancel} onClick={handleCancelClick}>Cancel</button>
 																			</div>
 																		</div>
 																	</>
 																) :
 																	(
 																		<div
-																			className={`flex focus:bg-white bg-violet-100   items-center px-2 ${styles.edit_collection_sort_product_list} h-8 md:h-9 rounded-lg`}
+																			className={`${styles.actionSelectWrapper} ${styles.edit_collection_sort_product_list}`}
 																			style={{ width: "200px" }}
 																		>
 																			<Select
-																				className={`${style['custom-select-editcollection']}   w-full text-white placeholder-white`}
+																				className={`${style['custom-select-editcollection']} ${styles.actionSelect}`}
 																				placeholder="Next Action"
 																				onClick={() => setEnableSelectProduct(true)}
 																				onChange={handleSelectChange}
@@ -4546,14 +4546,14 @@ const ReviewCollection = (props) => {
 																	)
 																}
 															</div>
-															<div className='flex items-center text-newcolor-100'>
+															<div className={styles.statusMessageContainer}>
 																{addTomWishlistSuccess &&
 																	addToWishlistData &&
 																	addToWishlistData.showcase &&
 																	addToWishlistData.products &&
 																	addToWishlistData.products.length &&
 																	addToWishlistData.products[0].starred && (
-																		<p className="text-newcolor-100">
+																		<p className={styles.statusMessageText}>
 																			Showcased{" "}
 																			{addToWishlistData.products.length}{" "}
 																			product(s) on the top
@@ -4564,7 +4564,7 @@ const ReviewCollection = (props) => {
 																	removeFromWishlistData.products &&
 																	removeFromWishlistData.products.length && (
 																		<>
-																			<p className="text-newcolor-100">
+																			<p className={styles.statusMessageText}>
 																				{removeFromWishlistData.products.length}{" "}
 																				product(s) have been deleted
 																			</p>
@@ -4575,15 +4575,15 @@ const ReviewCollection = (props) => {
 													) : null}
 													{/* sort by products */}
 													{productsToShow.length ? (
-														<div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
+														<div className={`${styles.sortByWrapper} sort_dropdown`}>
 															{/* <div className="colloction_details_tag_div"></div> */}
-															<div className={`flex items-center overflow-hidden w-auto h-8 pl-3 border border-solid border-newcolor-300 rounded-2xl ${styles.edit_collection_sort_product_list} `}>
-																<label className="whitespace-nowrap mt-0.5 text-xs md:text-sm font-semibold text-newcolor-100">
+															<div className={`${styles.sortBySelectContainer} ${styles.edit_collection_sort_product_list}`}>
+																<label className={styles.sortByLabel}>
 																	Sort by :
 																</label>
 																<Select
 																	name='sortBy'
-																	className='w-full font-bold ant_icon'
+																	className={`${styles.sortBySelect} ant_icon`}
 																	size='small'
 																	value={selectedSortOption.id}
 																	onChange={handleSortOptionChange}>
@@ -4599,10 +4599,10 @@ const ReviewCollection = (props) => {
 												</div>
 												{
 													enableFilters ? (
-														<div className='flex filter-options-popover-wrapper relative top-1'>
+														<div className={`${styles.filterOptionsWrapper} filter-options-popover-wrapper`}>
 															<Tooltip title='Click to see filter options'>
 																<div
-																	className='flex items-center cursor-pointer'
+																	className={styles.filterIcon}
 																	onClick={() => {
 																		handleFilterOptionsVisibleChange(
 																			!filterOptionsVisible
@@ -4616,7 +4616,7 @@ const ReviewCollection = (props) => {
 												}
 											</div>
 											{multiProductsSelectionMessage ? (
-												<div className='mt-2.5'>
+												<div className={styles.multiProductMessage}>
 													<p>{multiProductsSelectionMessage}</p>
 												</div>
 											) : null}
@@ -4624,9 +4624,9 @@ const ReviewCollection = (props) => {
 									) : null}
 
 									{enableFilters || productsToShow.length ? (
-										<div className='flex items-center justify-end gap-2'>
+										<div className={styles.filterFooter}>
 											{!enableSelectProduct ? (
-												<div className='flex gap-2 ml-auto'>
+												<div className={styles.filterFooterActions}>
 													{/* {isShowAddProductsForAmazon ? (
 														<div className='amazon-button-loader'>
 															<Tooltip title='Add Products from Amazon'>

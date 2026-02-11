@@ -25,7 +25,6 @@ const Modal = ({
 	headerTextClassName = styles.headerTextDefault,
 	closeClassName = styles.textSizeXl1_5,
 }) => {
-	console.log('onClose', onClose);
 
 	const [showChatModal, showWishlistModal] = useSelector((state) => [
 		state.chatV2.showChatModal,

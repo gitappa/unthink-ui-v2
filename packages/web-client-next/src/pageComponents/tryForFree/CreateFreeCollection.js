@@ -148,7 +148,7 @@ const createCollectionOptions = [
 
 const LoadingIndicator = () => {
 	return (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	);
@@ -210,7 +210,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	const [collectionData, setCollectionData] = useState({
 		...defaultCollectionData,
 	});
-	
+
 
 	const dispatch = useDispatch();
 	const [showFaqCount, setShowFaqCount] = useState(false);
@@ -409,9 +409,8 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				) {
 					if (!data.video_url) {
 						// video URL must entered
-						errorList.video_url = `${
-							showUploadVideo ? "Please upload video" : "Please enter video URL"
-						}`;
+						errorList.video_url = `${showUploadVideo ? "Please upload video" : "Please enter video URL"
+							}`;
 						isValid = false;
 					}
 				} else if (
@@ -419,9 +418,8 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				) {
 					if (!data.image_url) {
 						// image URL must entered
-						errorList.image_url = `${
-							showUploadImage ? "Please upload image" : "Please enter image URL"
-						}`;
+						errorList.image_url = `${showUploadImage ? "Please upload image" : "Please enter image URL"
+							}`;
 						isValid = false;
 					}
 				}
@@ -619,7 +617,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		() =>
 			isAdminLoggedIn &&
 			collectionData.createCollectionWay ===
-				createCollectionOptionsKeys.from_scratch,
+			createCollectionOptionsKeys.from_scratch,
 		[isAdminLoggedIn, collectionData.createCollectionWay]
 	);
 
@@ -826,7 +824,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				<img
 					src={star_ai_icon?.src || star_ai_icon}
 					className='w-28 md:w-36 cursor-pointer mt-6'
-					// className='w-24 md:w-32 rounded-full bg-orange-100 cursor-pointer mt-6'
+				// className='w-24 md:w-32 rounded-full bg-orange-100 cursor-pointer mt-6'
 				/>
 			</div>
 		</div>
@@ -846,7 +844,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		() =>
 			isAdminLoggedIn &&
 			collectionData.createCollectionWay ===
-				createCollectionOptionsKeys.video_url,
+			createCollectionOptionsKeys.video_url,
 		[isAdminLoggedIn, collectionData.createCollectionWay]
 	);
 
@@ -1064,11 +1062,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														.map((i) => (
 															<label
 																key={i.id}
-																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 ${styles.hovercard_div} ${
-																	collectionData.createCollectionWay === i.id
+																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 ${styles.hovercard_div} ${collectionData.createCollectionWay === i.id
 																		? "bg-indigo-103 text-white"
 																		: "bg-white"
-																}`}>
+																	}`}>
 																<input
 																	type='radio'
 																	name='createCollectionWay'
@@ -1080,36 +1077,34 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	className='hidden'
 																/>
 																<div
-																	className={`w-full h-full flex items-center justify-center text-lg font-semibold ${
-																		createCollectionOptionsKeys.video_url ===
+																	className={`w-full h-full flex items-center justify-center text-lg font-semibold ${createCollectionOptionsKeys.video_url ===
 																			i.id &&
-																		collectionData.createCollectionWay ===
+																			collectionData.createCollectionWay ===
 																			i.id
 																			? "text-white font-bold"
 																			: createCollectionOptionsKeys.video_url ===
-																			  i.id
-																			? "gap-0"
-																			: collectionData.createCollectionWay ===
-																			  i.id
-																			? "text-white font-bold gap-9"
-																			: "text-black-100 gap-9"
-																	}`}>
+																				i.id
+																				? "gap-0"
+																				: collectionData.createCollectionWay ===
+																					i.id
+																					? "text-white font-bold gap-9"
+																					: "text-black-100 gap-9"
+																		}`}>
 																	<span>{i.title}</span>
 																	<Image
-																		className={`${styles.createCollection_image} ${
-																			createCollectionOptionsKeys.video_url ===
+																		className={`${styles.createCollection_image} ${createCollectionOptionsKeys.video_url ===
 																				i.id &&
-																			collectionData.createCollectionWay ===
+																				collectionData.createCollectionWay ===
 																				i.id
 																				? styles.createCollection_image_Active2
 																				: createCollectionOptionsKeys.video_url ===
-																				  i.id
-																				? styles.createCollection_image_video
-																				: collectionData.createCollectionWay ===
-																				  i.id
-																				? styles.createCollection_image_Active
-																				: ""
-																		}`}
+																					i.id
+																					? styles.createCollection_image_video
+																					: collectionData.createCollectionWay ===
+																						i.id
+																						? styles.createCollection_image_Active
+																						: ""
+																			}`}
 																		src={i.icon}
 																		alt={i.title}
 																		width={28}
@@ -1127,7 +1122,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 												{collectionData.createCollectionWay ? (
 													<div>
 														{collectionData.createCollectionWay ===
-														createCollectionOptionsKeys.blog_url ? (
+															createCollectionOptionsKeys.blog_url ? (
 															<>
 																<label className='mb-1 block'>
 																	Blog/Article URL
@@ -1147,7 +1142,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														) : null}
 
 														{collectionData.createCollectionWay ===
-														createCollectionOptionsKeys.video_url ? (
+															createCollectionOptionsKeys.video_url ? (
 															<>
 																{showUploadVideo ? (
 																	<>
@@ -1237,11 +1232,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 																{error.video_url && (
 																	<p
-																		className={`text-red-500 my-1 h-3.5 leading-none ${
-																			showUploadVideo
+																		className={`text-red-500 my-1 h-3.5 leading-none ${showUploadVideo
 																				? "flex justify-center items-center"
 																				: ""
-																		}`}>
+																			}`}>
 																		{error.video_url}
 																	</p>
 																)}
@@ -1286,7 +1280,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 													 } */}
 
 														{collectionData.createCollectionWay ===
-														createCollectionOptionsKeys.image_url ? (
+															createCollectionOptionsKeys.image_url ? (
 															<>
 																{showUploadImage ? (
 																	<>
@@ -1371,11 +1365,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 																{error.image_url && (
 																	<p
-																		className={`text-red-500 my-1 h-3.5 leading-none ${
-																			showUploadImage
+																		className={`text-red-500 my-1 h-3.5 leading-none ${showUploadImage
 																				? "flex justify-center items-center"
 																				: ""
-																		}`}>
+																			}`}>
 																		{error.image_url}
 																	</p>
 																)}
@@ -1414,7 +1407,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 														{collectionData.createCollectionWay !==
 															createCollectionOptionsKeys.video_url &&
-														collectionData.createCollectionWay !==
+															collectionData.createCollectionWay !==
 															createCollectionOptionsKeys.image_url ? (
 															<>
 																<label className='mb-1 block'>
@@ -1435,7 +1428,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														) : null}
 
 														{collectionData.createCollectionWay ===
-														createCollectionOptionsKeys.from_scratch ? (
+															createCollectionOptionsKeys.from_scratch ? (
 															<>
 																<label className='mb-1 block'>
 																	Tell us what you want to write about, AI will
@@ -1540,11 +1533,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														onClick={createPlistCollection}
 														type='submit'
 														disabled={isUploading}
-														className={`min-w-24 md:min-w-40 text-xs md:text-sm z-10 ${
-															isUploading
+														className={`min-w-24 md:min-w-40 text-xs md:text-sm z-10 ${isUploading
 																? "bg-indigo-400 cursor-not-allowed"
 																: "bg-indigo-103"
-														} border-none rounded-md py-1 md:py-3 px-3.5 h-11 font-bold text-white`}>
+															} border-none rounded-md py-1 md:py-3 px-3.5 h-11 font-bold text-white`}>
 														Next
 													</button>
 												</div>

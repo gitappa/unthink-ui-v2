@@ -41,6 +41,7 @@ import { getUserCollection } from "../Auth/redux/actions";
 // import listening_avatar from "../../images/videos/listening_avatar.gif";
 import Cookies from "js-cookie";
 import { SocketContext } from "../../context/socketV2";
+import styles from "./tryForFree.module.scss";
 
 const { Dragger } = Upload;
 
@@ -492,7 +493,7 @@ const ReviewCollectionStepPublish = ({
 			return (
 				<Tooltip key={index} title={item.attributes?.label || "Product"} color="blue">
 					<div
-						className="absolute w-6 h-6 bg-blue-500 rounded-full cursor-pointer animate-pulse"
+						className={styles.pulseIndicator}
 						style={{
 							left: `${adjustedX}px`,
 							top: `${adjustedY}px`,
@@ -599,12 +600,12 @@ const ReviewCollectionStepPublish = ({
 						<div className={`grid grid-cols-1 tablet:grid-cols-2 gap-10 tablet:gap-8 ${authUserCollections.length === 0 ? "" : "items-center"}`}>
 							<div className='flex flex-col gap-10'>
 								<div>
-									<label className='text-xl font-normal block mb-0.75'>
+									<label className={styles.titleLabel}>
 										Title*
 									</label>
 									{checkIsFavoriteCollection(currentCollection) ? (
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full max-w-366 cursor-not-allowed text-gray-101'
+											className={`${styles.inputField} cursor-not-allowed text-gray-101`}
 											name='collection_name'
 											type='text'
 											value={favorites_collection_name}
@@ -612,7 +613,7 @@ const ReviewCollectionStepPublish = ({
 										/>
 									) : (
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-12 rounded-xl w-full max-w-366'
+											className={styles.inputField}
 											placeholder='Enter collection title'
 											name='collection_name'
 											type='text'
@@ -622,19 +623,19 @@ const ReviewCollectionStepPublish = ({
 										/>
 									)}
 									{postPageFormErrors.collection_name && (
-										<p className='text-red-400 text-xs mt-2'>
+										<p className={styles.errorTextSmall}>
 											{postPageFormErrors.collection_name}
 										</p>
 									)}
 								</div>
 
 								<div>
-									<div className="flex items-center justify-between desktop:justify-start desktop:gap-56">
-										<label className='text-xl font-normal block mb-0.75 whitespace-nowrap'>Cover Image</label>
+									<div className={styles.publishHeader}>
+										<label className={`${styles.titleLabel} whitespace-nowrap`}>Cover Image</label>
 										{
 											updatedData?.cover_image && (
-												<div className="p-2 cursor-pointer" onClick={handleRemoveImage}>
-													<CloseCircleOutlined className="text-xl" />
+												<div className={styles.removeImageButton} onClick={handleRemoveImage}>
+													<CloseCircleOutlined className={styles.closeIcon} />
 												</div>
 											)
 										}
@@ -643,7 +644,7 @@ const ReviewCollectionStepPublish = ({
 										{!isDragAndDropVisible ? (
 											<>
 												{!updatedData.cover_image ? (
-													<div className="relative w-full max-w-366 aspect-square rounded-2xl">
+													<div className={styles.mediaContainer}>
 														{updatedData.video_url && (
 															<ReactPlayer
 																url={updatedData.video_url}
@@ -653,7 +654,7 @@ const ReviewCollectionStepPublish = ({
 																width="100%"
 																height="100%"
 																playsinline
-																className="rounded-2xl Video_player"
+																className={`${styles.videoPlayer} Video_player`}
 																onMouseEnter={() => setIsVideoHovered(true)}
 																onMouseLeave={() => setIsVideoHovered(false)}
 															/>
@@ -662,7 +663,7 @@ const ReviewCollectionStepPublish = ({
 												) : (
 													<div
 														ref={imageContainerRef}
-														className="relative w-full max-w-366 aspect-square rounded-2xl overflow-hidden"
+														className={styles.mediaWrapper}
 														onMouseEnter={() => setIsVideoHovered(true)}
 														onMouseLeave={() => setIsVideoHovered(false)}
 													>
@@ -676,7 +677,7 @@ const ReviewCollectionStepPublish = ({
 																objectFit: "cover"
 															}}
 															// effect="blur"
-															className="rounded-2xl"
+															className={styles.videoPlayer}
 															onLoad={() => {
 																if (imageContainerRef.current) {
 																	const { width, height } = imageContainerRef.current.getBoundingClientRect();
@@ -699,20 +700,20 @@ const ReviewCollectionStepPublish = ({
 												)}
 												<button
 													onClick={() => setIsDragAndDropVisible(true)}
-													className='hidden lg:inline-block text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103 mt-4 mr-4'>
+													className={styles.updateCoverButton}>
 													Update cover image
 												</button>
 												{matchedCollection?.enable_ai_cover_image === true &&
 													(
 														<button
 															onClick={handleDataAiImageRequest}
-															className='hidden lg:inline-block text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103 mt-4 mr-4'>
+															className={styles.updateCoverButton}>
 															Generate AI Image
 														</button>
 													)}
 											</>
 										) : (
-											<div className="w-full max-w-366 aspect-square mt-4">
+											<div className={styles.uploadDraggerContainerPublish}>
 												{isUploading ? (
 													<Spin className='flex items-center justify-center h-32' />
 												) : (
@@ -743,7 +744,7 @@ const ReviewCollectionStepPublish = ({
 															onChange={handleCoverImageUpload}
 														>
 															<button
-																className='hidden lg:inline-block text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103 mt-4 mr-4'>
+																className={styles.updateCoverButton}>
 																Upload cover image
 															</button>
 														</Dragger>
@@ -793,7 +794,7 @@ const ReviewCollectionStepPublish = ({
 									authUserCollections.length === 0 && (
 										<div className='max-w-439 flex justify-center flex-col items-center'>
 											<div className='relative w-full'>
-												<div className='bubble bubble-bottom-left ml-auto md:ml-24 w-full-50 md:w-full-100 md:max-w-439 text-left'>
+												<div className={`bubble bubble-bottom-left ${styles.bubbleMessage} w-full-50 md:w-full-100 md:max-w-439 text-left`}>
 													Congratulations!
 													<br /> Your page is ready to publish!
 												</div>
@@ -821,7 +822,7 @@ const ReviewCollectionStepPublish = ({
 													<MdShare
 														className={`${isPostPageFormTouched
 															? "cursor-not-allowed"
-															: "cursor-pointer" 
+															: "cursor-pointer"
 															} h-7 w-7 `}
 														role='button'
 														onClick={() =>
