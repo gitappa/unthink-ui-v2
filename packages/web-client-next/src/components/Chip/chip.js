@@ -1,11 +1,11 @@
 import React from "react";
-
+import styles from "./chip.module.css";
 
 const Chip = (props) => {
 	const chipClassName = props.className;
 	const propData = {
 		...props,
-		className: `bg-gray-400 rounded-full ${chipClassName ?? ""}`,
+		className: `${styles.chip} ${chipClassName ?? ""}`,
 	};
 	return <div {...propData}>{props.children}</div>;
 };

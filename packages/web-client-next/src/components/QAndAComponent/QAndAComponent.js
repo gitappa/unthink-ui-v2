@@ -22,7 +22,7 @@ import header_aura from "../../images/chat/header_aura_image_transparent.png";
 import star_ai_icon_logo from "../../images/unthink_star_ai_icon.svg";
 
 
-import styles from './qAndAComponent.module.scss';
+import styles from './QAndAComponent.module.css';
 
 const QAndAComponent = ({
 	id,
@@ -77,19 +77,19 @@ const QAndAComponent = ({
 			<WrapperComponent>
 				<div>
 					<div>
-						<p className='md:leading-none font-normal flex items-center justify-between mb-0 text-white'>
-							<span className='text-2xl tablet:text-4xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+						<p className={styles.formHeader}>
+							<span className={`${styles.formTitle} ellipsis_1`}>
 								Ask Aura
 							</span>
 							<CloseOutlined
 								id={`${id}_close_icon`}
 								onClick={() => handlePopoverVisibleChange(false)}
-								className='flex text-2xl cursor-pointer text-white'
+								className={styles.closeIcon}
 							/>
 						</p>
 					</div>
 
-					<div className='mt-2'>
+					<div className={styles.chatWrapper}>
 						<Chat
 							submitChatInput={submitChatInput}
 							chatInputMetadata={chatInputMetadata}
@@ -101,14 +101,14 @@ const QAndAComponent = ({
 						/>
 					</div>
 
-					<div className='mt-2 response-content-container'>
+					<div className={`${styles.responseContent} response-content-container`}>
 						{products?.widgetHeader ? (
 							<p
-								className='mb-2 text-white text-justify'
+								className={styles.widgetHeader}
 								dangerouslySetInnerHTML={{ __html: products.widgetHeader }}
 							/>
 						) : null}
-						<div className='max-w-max mx-auto grid grid-cols-2 gap-4'>
+						<div className={styles.productsGrid}>
 							{products?.product_list?.map((product) => (
 								<ProductCard
 									key={product.mfr_code}
@@ -138,7 +138,7 @@ const QAndAComponent = ({
 	return (
 		<div
 			id={popoverId}
-			className='z-30 fixed bottom-2 right-2 tablet:bottom-8 tablet:right-8 mb-20 tablet:mb-0'>
+			className={styles.wrapper}>
 			<Tooltip
 				placement='left'
 				getPopupContainer={() =>
@@ -148,13 +148,13 @@ const QAndAComponent = ({
 				open={popoverTooltipVisible && !popoverVisible}
 				onOpenChange={handlePopoverTooltipVisibleChange}>
 				<div
-					className='flex cursor-pointer bg-indigo-600 rounded-full text-lg tablet:text-4xl text-white'
+					className={styles.triggerButton}
 					role='button'
 					onClick={onChatClick}>
 					<img
 						id={`header_chat_aura_${CHAT_TYPE_QANDACHAT}`}
 						src={star_ai_icon_logo}
-						className='rounded-full h-12 lg:h-16 w-12 lg:w-16'
+						className={styles.triggerImage}
 					/>
 				</div>
 			</Tooltip>

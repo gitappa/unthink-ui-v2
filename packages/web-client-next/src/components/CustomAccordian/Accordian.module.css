@@ -1,0 +1,88 @@
+/* Accordian CSS Module */
+
+.accordionWrapper {
+    margin-bottom: 36px;
+    /* mb-9 */
+}
+
+.accordionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.accordionTitle {
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-size: 16px;
+    /* text-base */
+    font-weight: 400;
+    /* font-normal */
+}
+
+.accordionContentText {
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    font-size: 16px;
+    /* text-base */
+    transition: opacity 0.15s linear;
+    /* transition-opacity ease-linear */
+}
+
+.opacityFull {
+    opacity: 1;
+    /* opacity-100 */
+}
+
+.opacityNone {
+    opacity: 0;
+    /* opacity-0 */
+}
+
+/* FAQ Container */
+.faqContainer {
+    max-width: 56rem;
+    /* max-w-4xl */
+    margin-left: auto;
+    /* mx-auto */
+    margin-right: auto;
+    font-family: 'Fira Sans', sans-serif;
+    /* font-firaSans */
+}
+
+.faqTitle {
+    font-size: 30px;
+    /* text-3xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .faqTitle {
+        font-size: 48px;
+        /* lg:text-5xl */
+        line-height: 54px;
+        /* lg:leading-54 */
+    }
+}
+
+.faqContent {
+    margin-top: 40px;
+    /* mt-10 */
+}
+
+@media (min-width: 1024px) {
+    .faqContent {
+        margin-top: 80px;
+        /* lg:mt-20 */
+    }
+}
+
+.listDisc {
+    list-style-type: disc;
+    /* list-disc */
+    padding-left: 40px;
+    /* pl-10 */
+}

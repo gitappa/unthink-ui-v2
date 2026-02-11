@@ -1,150 +1,153 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
- import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import Image from "next/image";
 
-const HeroSection = ({im,collectionData}) => {
-// console.log('ssdsds',collectionData );
+import styles from "./HeroSection.module.css";
+
+const HeroSection = ({ im, collectionData }) => {
+
+  // console.log('ssdsds',collectionData );
 
 
 
 
 
 
-    const videoUrlRaw =  "https://www.youtube.com/watch?v=hrAOIj01B6E";
+  const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   let videoUrl = typeof videoUrlRaw === "string" ? videoUrlRaw : "";
   const thumbnailImage = collectionData?.thumbnail_image || collectionData?.image;
-     const [isClient, setIsClient] = useState(false);
-    //   const videoContainerRef = useRef(null);
+  const [isClient, setIsClient] = useState(false);
+  //   const videoContainerRef = useRef(null);
 
-       const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  
+
   const videoContainerRef = useRef(null);
   const handlePlayClick = () => setIsPlaying(true);
   const handlePauseClick = () => setIsPlaying(false);
 
-    // Extract actual video URL from tracking URL
-    if (videoUrl.includes("dpholvw.net/click") && videoUrl.includes("url=")) {
-      try {
-        const urlParams = new URLSearchParams(videoUrl.split("?")[1]);
-        const actualVideoUrl = urlParams.get("url");
-        if (actualVideoUrl) {
-          videoUrl = decodeURIComponent(actualVideoUrl);
-        }
-      } catch (error) {
-        console.error("Error parsing video URL:", error);
+  // Extract actual video URL from tracking URL
+  if (videoUrl.includes("dpholvw.net/click") && videoUrl.includes("url=")) {
+    try {
+      const urlParams = new URLSearchParams(videoUrl.split("?")[1]);
+      const actualVideoUrl = urlParams.get("url");
+      if (actualVideoUrl) {
+        videoUrl = decodeURIComponent(actualVideoUrl);
       }
+    } catch (error) {
+      console.error("Error parsing video URL:", error);
     }
+  }
 
-     // Hydration-safe effect to set isClient
-      useEffect(() => {
-        setIsClient(true);
-      }, []);
-    
-      // Check if mobile device
-      useEffect(() => {
-        if (!isClient) return;
-    
-        const checkMobile = () => {
-          setIsMobile(window.innerWidth < 768);
-        };
-    
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-        return () => window.removeEventListener("resize", checkMobile);
-      }, [isClient]);
-    
-      // Check if the video container is visible in the viewport
-      useEffect(() => {
-        if (!isClient) return;
-    
-        const handleScroll = () => {
-          if (videoContainerRef.current) {
-            const rect = videoContainerRef.current.getBoundingClientRect();
-            setIsVisible(rect.top >= 0 && rect.bottom <= window.innerHeight);
-          }
-        };
-    
-        handleScroll(); // Check on mount
-        window.addEventListener("scroll", handleScroll); // Check on scroll
-    
-        return () => window.removeEventListener("scroll", handleScroll); // Cleanup
-      }, [isClient]);
-    
+  // Hydration-safe effect to set isClient
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Check if mobile device
+  useEffect(() => {
+    if (!isClient) return;
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [isClient]);
+
+  // Check if the video container is visible in the viewport
+  useEffect(() => {
+    if (!isClient) return;
+
+    const handleScroll = () => {
+      if (videoContainerRef.current) {
+        const rect = videoContainerRef.current.getBoundingClientRect();
+        setIsVisible(rect.top >= 0 && rect.bottom <= window.innerHeight);
+      }
+    };
+
+    handleScroll(); // Check on mount
+    window.addEventListener("scroll", handleScroll); // Check on scroll
+
+    return () => window.removeEventListener("scroll", handleScroll); // Cleanup
+  }, [isClient]);
+
   return (
-    <div className=" relative mt-7">
-        <div
-          className=" relative cursor-pointer"
-          style={{ minHeight: "68vh", height: "700px" }}
-          onClick={handlePlayClick}
-        >
-          {isClient ? (
-            videoUrlRaw ? (
-              <ReactPlayer
-                url={videoUrlRaw}
-                playing={isPlaying}
-                onPlay={handlePlayClick}
-                onPause={handlePauseClick}
-                muted={true}
-                loop={true}
-                width="100%"
-                height="100%"
-                playsinline
-                controls={true}
-                light={thumbnailImage || true}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                <p className="text-gray-600">No video available</p>
-              </div>
-            )
+    <div className={styles.heroWrapper}>
+      <div
+        className={styles.playerContainer}
+        style={{ minHeight: "68vh", height: "700px" }}
+        onClick={handlePlayClick}
+      >
+        {isClient ? (
+          videoUrlRaw ? (
+            <ReactPlayer
+              url={videoUrlRaw}
+              playing={isPlaying}
+              onPlay={handlePlayClick}
+              onPause={handlePauseClick}
+              muted={true}
+              loop={true}
+              width="100%"
+              height="100%"
+              playsinline
+              controls={true}
+              light={thumbnailImage || true}
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-200">
-              <p className="text-gray-600">Loading...</p>
+            <div className={styles.noVideoContainer}>
+              <p className={styles.noVideoText}>No video available</p>
             </div>
-          )}
+          )
+        ) : (
+          <div className={styles.loadingContainer}>
+            <p className={styles.loadingText}>Loading...</p>
+          </div>
+        )}
 
-          <div className="absolute -bottom-14 w-full">
-            <div className="pb-2">
-              <Swiper
-                scrollbar={{
-                  hide: false,
-                }}
-                modules={[Scrollbar]}
-                spaceBetween={10}
-                slidesPerView={6}
-                className="mySwipers "
-                style={{ width: "100%" }}
-                breakpoints={{
-                  0: {
-                    slidesPerView: 2, // mobile
-                  },
-                  640: {
-                    slidesPerView: 3, // sm
-                  },
-                  768: {
-                    slidesPerView: 4, // md
-                  },
-                  1024: {
-                    slidesPerView: 5, // lg
-                  },
-                  1380: {
-                    slidesPerView: 6, // xl
-                  },
-                }}
-              >
-                {collectionData.product_lists?.map((collection ,id)=>(
-                 <SwiperSlide key={id}>
-                  <Image src={collection.image } width={23} height={33} className="h-48 shadow-md w-48 rounded-xl" />
-                </SwiperSlide> 
-                ))}
-              </Swiper>
-              {/* <Image src={im} className="h-25 w-25 rounded-xl" />
+        <div className={styles.sliderContainer}>
+          <div className={styles.sliderContent}>
+            <Swiper
+              scrollbar={{
+                hide: false,
+              }}
+              modules={[Scrollbar]}
+              spaceBetween={10}
+              slidesPerView={6}
+              className="mySwipers "
+              style={{ width: "100%" }}
+              breakpoints={{
+                0: {
+                  slidesPerView: 2, // mobile
+                },
+                640: {
+                  slidesPerView: 3, // sm
+                },
+                768: {
+                  slidesPerView: 4, // md
+                },
+                1024: {
+                  slidesPerView: 5, // lg
+                },
+                1380: {
+                  slidesPerView: 6, // xl
+                },
+              }}
+            >
+              {collectionData.product_lists?.map((collection, id) => (
+                <SwiperSlide key={id}>
+                  <Image src={collection.image} width={23} height={33} className={styles.slideImage} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            {/* <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />
@@ -160,10 +163,10 @@ const HeroSection = ({im,collectionData}) => {
               <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" />
               <Image src={im} className="h-25 w-25 rounded-xl" /> */}
-            </div>
           </div>
         </div>
       </div>
+    </div>
   )
 }
 

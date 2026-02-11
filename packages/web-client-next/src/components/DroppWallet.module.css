@@ -1,0 +1,24 @@
+.textBlack {
+    color: #000000;
+    /* text-black */
+}
+
+.closeButton {
+    position: absolute;
+    top: 12px;
+    /* top-3 */
+    right: 12px;
+    /* right-3 */
+    cursor: pointer;
+    font-size: 20px;
+    /* text-xl */
+    padding: 8px;
+    /* p-2 */
+    border-radius: 9999px;
+    /* rounded-full */
+}
+
+.closeButton:hover {
+    color: #6b7280;
+    /* hover:text-gray-500 */
+}
