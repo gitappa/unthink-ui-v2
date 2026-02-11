@@ -14,8 +14,10 @@ import { filterAvailableProductList } from "../../helper/utils";
 import { SIMILAR_MODAL_Z_INDEX } from "../../constants/codes";
 import { is_store_instance } from "../../constants/config";
 
+import styles from "./SimilarProducts.module.css";
+
 const sliderSettings = {
-	className: "w-full",
+	className: styles.sliderWrapper,
 	dots: false,
 	infinite: false,
 	centerMode: false,
@@ -28,18 +30,18 @@ const sliderSettings = {
 
 const SimilarProductsSkeleton = ({ isLoading }) =>
 	isLoading ? (
-		<div className='h-180 lg:h-340 p-2 grid grid-cols-2 lg:grid-cols-4 gap-0.75 lg:gap-6 pt-7'>
-			<Skeleton.Input active className='w-full h-full' />
-			<Skeleton.Input active className='w-full h-full' />
-			<Skeleton.Input active className='w-full h-full hidden lg:block' />
-			<Skeleton.Input active className='w-full h-full hidden lg:block' />
+		<div className={styles.skeletonContainer}>
+			<Skeleton.Input active className={styles.skeletonItem} />
+			<Skeleton.Input active className={styles.skeletonItem} />
+			<Skeleton.Input active className={styles.skeletonItemDesktop} />
+			<Skeleton.Input active className={styles.skeletonItemDesktop} />
 		</div>
 	) : null;
 
 const SimilarProductsNotFound = ({ isProductsNotFound }) =>
 	isProductsNotFound ? (
-		<div className='flex m-auto'>
-			<h2 className='m-0 text-xl'>Products Not Found</h2>
+		<div className={styles.notFoundContainer}>
+			<h2 className={styles.notFoundText}>Products Not Found</h2>
 		</div>
 	) : null;
 
@@ -98,21 +100,21 @@ const SimilarProducts = ({
 			}}
 			zIndex={SIMILAR_MODAL_Z_INDEX}
 			key='bottom'>
-			<div className='flex flex-col h-full'>
-				<div className='text-xl lg:text-2xl flex justify-between items-center'>
-					<h1 className='m-0'>Similar Products</h1>
-					<CloseOutlined onClick={onSimilarClose} className='cursor-pointer' />
+			<div className={styles.drawerContent}>
+				<div className={styles.drawerHeader}>
+					<h1 className={styles.title}>Similar Products</h1>
+					<CloseOutlined onClick={onSimilarClose} className={styles.closeIcon} />
 				</div>
 				<SimilarProductsSkeleton isLoading={isFetching} />
 				<SimilarProductsNotFound
 					isProductsNotFound={!isFetching && !products.length}
 				/>
 				{!isFetching && products.length ? (
-					<div className='pt-4'>
+					<div className={styles.sliderContainer}>
 						<Slider {...sliderSettings}>
 							{products.map((product) => (
 								<div
-									className='w-40 sm:w-180 lg:w-80 cursor-pointer mr-2.5 lg:mr-4 h-180 lg:h-340'
+									className={styles.productCardWrapper}
 									key={product.mfr_code}>
 									<ProductCard
 										product={product}

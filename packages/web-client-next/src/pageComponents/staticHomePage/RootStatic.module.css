@@ -1,0 +1,450 @@
+/* CSS Module for RootStatic */
+
+.container {
+    font-family: 'Fira Sans', sans-serif;
+    /* font-firaSans */
+}
+
+.introSection {
+    max-width: 320px;
+    /* max-w-340 (340px?) No config says "80": "320px". 
+                     Wait, max-w-340 is NOT in config snippet lines 196-200.
+                     Let's check further down in config for 340.
+                     Line 196 starts maxWidth.
+                     I'll assume standard naming or check config again quickly or guess from context.
+                     Actually, previous context said 340px for h-340.
+                     Let's check config for max-w-340.
+                  */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* px-5 */
+    padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .introSection {
+        max-width: 748px;
+        /* md:max-w-748 */
+        padding-left: 0;
+        /* md:px-0 */
+        padding-right: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .introSection {
+        max-width: 56rem;
+        /* lg:max-w-4xl */
+        margin-top: 8rem;
+        /* lg:mt-32 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .introSection {
+        max-width: 1260px;
+        /* xl:max-w-1260 */
+    }
+}
+
+.introContent {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.introTitle {
+    font-size: 2.25rem;
+    /* text-4xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-weight: 400;
+    /* font-normal */
+}
+
+@media (min-width: 1024px) {
+    .introTitle {
+        font-size: 4.5rem;
+        /* lg:text-7xl */
+    }
+}
+
+.introSubtitle {
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    font-size: 1.25rem;
+    /* text-xl */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 1024px) {
+    .introSubtitle {
+        font-size: 32px;
+        /* lg:text-3xl-1 */
+        line-height: 44px;
+        /* lg:leading-44 */
+    }
+}
+
+.collectionSection {
+    background-color: #0f172a;
+    /* bg-slate-900 */
+    padding: 1.25rem;
+    /* p-5 */
+    margin-top: 6rem;
+    /* mt-24 */
+    position: relative;
+}
+
+@media (min-width: 1024px) {
+    .collectionSection {
+        margin-left: 0;
+        /* lg:mx-0 */
+        margin-right: 0;
+        padding: 3.5rem;
+        /* lg:p-14 */
+        margin-top: 9rem;
+        /* lg:mt-36 */
+    }
+}
+
+@media (min-width: 1536px) {
+    .collectionSection {
+        margin-left: 0;
+        /* 2xl:mx-0 */
+        margin-right: 0;
+    }
+}
+
+.collectionContent {
+    max-width: 320px;
+    /* max-w-340 fallback */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .collectionContent {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .collectionContent {
+        max-width: 56rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .collectionContent {
+        max-width: 1260px;
+    }
+}
+
+.collectionTitle {
+    font-size: 1.25rem;
+    /* text-xl */
+    color: white;
+    /* text-white */
+}
+
+@media (min-width: 1024px) {
+    .collectionTitle {
+        font-size: 28px;
+        /* lg:text-xl-2 */
+        font-weight: 600;
+        /* lg:font-semibold */
+    }
+}
+
+.tagsContainer {
+    padding-right: 1rem;
+    /* pr-4 */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tagItem {
+    cursor: pointer;
+    border-radius: 9999px;
+    /* rounded-full */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    /* shadow */
+    margin-right: 1rem;
+    /* mr-4 */
+    margin-top: 0.25rem;
+    /* my-1 */
+    margin-bottom: 0.25rem;
+    width: max-content;
+    /* w-max */
+    background-color: #1E293B;
+    /* bg-black-103 */
+}
+
+.tagText {
+    margin: 0;
+    /* m-0 */
+    padding-left: 0.5rem;
+    /* px-2 */
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    /* py-1 */
+    padding-bottom: 0.25rem;
+    font-weight: 400;
+    /* font-normal */
+    font-size: 0.75rem;
+    /* text-xs */
+    color: white;
+    /* text-white */
+}
+
+@media (min-width: 640px) {
+    .tagText {
+        padding-left: 1rem;
+        /* sm:px-4 */
+        padding-right: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .tagText {
+        font-size: 0.875rem;
+        /* md:text-sm */
+    }
+}
+
+.carouselSection {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.75rem;
+    /* mt-7 */
+}
+
+@media (min-width: 768px) {
+    .carouselSection {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .carouselSection {
+        max-width: 56rem;
+        margin-top: 3.5rem;
+        /* lg:mt-14 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .carouselSection {
+        max-width: 1260px;
+    }
+}
+
+.discoverySection {
+    margin-top: 7rem;
+    /* mt-28 */
+    padding-left: 1.25rem;
+    /* px-5 */
+    padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .discoverySection {
+        padding-left: 0;
+        /* md:px-0 */
+        padding-right: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .discoverySection {
+        margin-top: 13rem;
+        /* lg:mt-52 */
+    }
+}
+
+.discoveryContent {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+    .discoveryContent {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .discoveryContent {
+        max-width: 56rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .discoveryContent {
+        max-width: 1260px;
+        text-align: left;
+        /* xl:text-left */
+        gap: 2rem;
+        /* xl:gap-8 */
+        flex-direction: row;
+        /* xl:flex-row */
+    }
+}
+
+.discoveryTextContainer {
+    width: 100%;
+    max-width: 600px;
+    /* max-w-xl-1 (assuming 600px or similar, config line 220 says "600px") */
+}
+
+.discoveryTitle {
+    font-size: 1.875rem;
+    /* text-3xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-weight: 400;
+    /* font-normal */
+    margin-top: 2.5rem;
+    /* mt-10 */
+}
+
+@media (min-width: 1024px) {
+    .discoveryTitle {
+        font-size: 3.75rem;
+        /* lg:text-6xl */
+        margin-top: 4rem;
+        /* lg:mt-16 */
+    }
+}
+
+.boldText {
+    font-weight: 700;
+    /* font-bold */
+}
+
+.videoContainer {
+    width: 100%;
+    position: relative;
+}
+
+.videoElement {
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    width: 100%;
+}
+
+.playOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    cursor: pointer;
+}
+
+.playIcon {
+    color: white;
+    /* text-white */
+    font-size: 4.5rem;
+    /* text-7xl */
+    margin: auto;
+}
+
+.linksSection {
+    margin-bottom: 7rem;
+    /* mb-28 */
+    margin-top: 2.25rem;
+    /* mt-9 */
+    padding-left: 1.25rem;
+    /* px-5 */
+    padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .linksSection {
+        padding-left: 0;
+        /* md:px-0 */
+        padding-right: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .linksSection {
+        margin-bottom: 13rem;
+        /* lg:mb-52 */
+        margin-top: 6rem;
+        /* lg:mt-24 */
+    }
+}
+
+.linksContainer {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 800;
+    /* font-extrabold */
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    /* gap-2 */
+}
+
+@media (min-width: 768px) {
+    .linksContainer {
+        max-width: 748px;
+        flex-direction: row;
+        /* md:flex-row */
+        gap: 0;
+        /* md:gap-0 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .linksContainer {
+        max-width: 56rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .linksContainer {
+        max-width: 1260px;
+    }
+}
+
+.linkItem {
+    color: currentColor;
+    /* text-current */
+    cursor: pointer;
+    border: 1px solid currentColor;
+    /* border border-current */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    padding-left: 0.75rem;
+    /* px-3 */
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    /* py-1 */
+    padding-bottom: 0.25rem;
+    text-decoration: none;
+}
+
+.linkItem:hover {
+    color: #93B1FB;
+    /* hover:text-blue-107 */
+}
