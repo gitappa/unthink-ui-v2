@@ -1,0 +1,110 @@
+/* AskAuraCard CSS Module */
+
+.cardWrapper {
+    height: 180px;
+    /* h-180 */
+    width: 100%;
+    /* w-full */
+}
+
+@media (min-width: 1024px) {
+    .cardWrapper {
+        height: 340px;
+        /* lg:h-340 */
+    }
+}
+
+.cardInner {
+    overflow: hidden;
+    /* overflow-hidden */
+    position: relative;
+    /* relative */
+    cursor: pointer;
+    /* cursor-pointer */
+    height: 100%;
+    /* h-full */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    /* shadow-3xl */
+    background-color: #475569;
+    /* bg-slat-101 */
+    color: white;
+    /* text-white */
+}
+
+.innerSmall {
+    width: 10rem;
+    /* w-40 (160px) */
+}
+
+@media (min-width: 1024px) {
+    .innerSmall {
+        width: 180px;
+        /* lg:w-180 */
+    }
+}
+
+.innerMedium {
+    width: 10rem;
+    /* w-40 */
+}
+
+@media (min-width: 640px) {
+    .innerMedium {
+        width: 180px;
+        /* sm:w-180 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .innerMedium {
+        width: 20rem;
+        /* lg:w-80 (320px) */
+    }
+}
+
+.contentWrapper {
+    height: 100%;
+    /* h-full */
+    display: flex;
+    /* flex */
+    text-align: center;
+    /* text-center */
+    flex-direction: column;
+    /* flex-col */
+    justify-content: center;
+    /* justify-center */
+}
+
+.textSmall {
+    font-size: 0.875rem;
+    /* text-sm */
+    line-height: 1.25rem;
+}
+
+@media (min-width: 640px) {
+    .textSmall {
+        font-size: 1.125rem;
+        /* sm:text-lg */
+        line-height: 1.75rem;
+    }
+}
+
+.textLarge {
+    font-size: 1rem;
+    /* text-base */
+    line-height: 1.5rem;
+    font-weight: 700;
+    /* font-bold */
+    text-decoration: underline;
+    /* underline */
+}
+
+@media (min-width: 640px) {
+    .textLarge {
+        font-size: 1.875rem;
+        /* sm:text-3xl */
+        line-height: 2.25rem;
+    }
+}

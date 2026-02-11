@@ -1,0 +1,81 @@
+/* VideoModal CSS Module */
+
+.modalBackdrop {
+    position: fixed;
+    /* fixed */
+    display: flex;
+    /* flex */
+    justify-content: center;
+    /* justify-center */
+    align-items: center;
+    /* items-center */
+    width: 100%;
+    /* w-full */
+    height: 100vh;
+    /* h-screen */
+    left: 0;
+    /* left-0 */
+    top: 0;
+    /* top-0 */
+    z-index: 40;
+    /* z-40 */
+    backdrop-filter: blur(4px);
+    /* backdrop-blur-sm (default sm is 4px) */
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modalContent {
+    width: 20rem;
+    /* w-80 (320px) */
+    margin-left: auto;
+    /* mx-auto */
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .modalContent {
+        width: 504px;
+        /* md:w-504 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .modalContent {
+        width: 695px;
+        /* xl:w-695 */
+    }
+}
+
+.closeIcon {
+    font-size: 28px;
+    /* text-xl-2 */
+    color: white;
+    /* text-white */
+    float: right;
+    /* float-right */
+    padding-top: 1rem;
+    /* py-4 */
+    padding-bottom: 1rem;
+    cursor: pointer;
+    /* cursor-pointer */
+}
+
+.videoFrame {
+    height: 14rem;
+    /* h-56 (224px) */
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .videoFrame {
+        height: 340px;
+        /* md:h-340 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .videoFrame {
+        height: 456px;
+        /* xl:h-456 */
+    }
+}

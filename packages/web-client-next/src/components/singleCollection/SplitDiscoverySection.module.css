@@ -1,0 +1,294 @@
+/* SplitDiscoverySection CSS Module */
+
+.container {
+    margin-top: 5rem;
+    /* mt-20 */
+}
+
+.title {
+    font-size: 2.25rem;
+    /* text-4xl */
+    line-height: 2.5rem;
+    font-weight: 600;
+    /* font-semibold */
+}
+
+.contentWrapper {
+    display: flex;
+    /* flex */
+    margin-top: 1.5rem;
+    /* mt-6 */
+    height: 700px;
+    /* h-700 */
+    gap: 1.75rem;
+    /* gap-7 */
+    width: 100%;
+    /* w-full */
+}
+
+.imageColumn {
+    display: flex;
+    /* flex */
+    gap: 1rem;
+    /* gap-4 */
+    width: 100%;
+    /* w-full */
+    height: 700px;
+    /* inline style */
+}
+
+.imageGridColumn {
+    width: 80%;
+    /* w-4/5 */
+}
+
+.imageTop {
+    width: 100%;
+    /* w-full */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+    height: 50%;
+    /* inline style */
+    object-fit: cover;
+}
+
+.imageBottom {
+    width: 100%;
+    /* w-full */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    height: 40%;
+    /* inline style */
+    object-fit: cover;
+}
+
+.imageTopRight {
+    width: 100%;
+    /* w-full */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    height: 40%;
+    /* inline style */
+    object-fit: cover;
+}
+
+.imageBottomRight {
+    width: 100%;
+    /* w-full */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    margin-top: 0.75rem;
+    /* mt-3 */
+    height: 50%;
+    /* inline style */
+    object-fit: cover;
+}
+
+.infoColumn {
+    width: 100%;
+    /* w-full */
+    color: white;
+    /* text-white */
+}
+
+.treasureCard {
+    min-height: 455px;
+    /* inline style */
+    display: flex;
+    /* flex */
+    gap: 0.75rem;
+    /* gap-3 */
+    position: relative;
+    /* relative */
+    border-color: #f7c951;
+    /* border-secondary */
+    border-width: 3px;
+    /* border-3 */
+    border-style: solid;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    background-image: linear-gradient(to right, #9a9b9b, #f7c951);
+    /* from-gray-101 to-secondary */
+    padding: 1.25rem;
+    /* p-5 */
+}
+
+@media (min-width: 1536px) {
+    .treasureCard {
+        padding: 1.5rem;
+        /* 2xl:p-6 */
+    }
+}
+
+.treasureContent {
+    width: 100%;
+    /* w-full */
+    display: flex;
+    /* flex */
+    justify-content: space-between;
+    /* justify-between */
+    flex-direction: column;
+    /* flex-col */
+}
+
+.treasureText {
+    text-align: center;
+    /* text-center */
+}
+
+.qrCodeContainer {
+    margin: auto;
+    /* m-auto */
+    text-align: center;
+    /* text-center */
+}
+
+.qrCodeImage {
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    margin-top: 1rem;
+    /* mt-4 */
+    margin-bottom: 0.5rem;
+    /* mb-2 */
+    background-color: white;
+    /* bg-white */
+    width: 6.25rem;
+    /* w-25 (100px) */
+    height: 6.25rem;
+    /* h-25 */
+}
+
+@media (min-width: 1536px) {
+    .qrCodeImage {
+        width: 10rem;
+        /* 2xl:w-40 (160px) */
+        height: 10rem;
+        /* 2xl:h-40 */
+    }
+}
+
+.qrText {
+    font-size: 1.125rem;
+    /* text-lg */
+}
+
+.challengeContainer {
+    width: 100%;
+    /* w-full */
+}
+
+.challengeTitle {
+    font-weight: 600;
+    /* font-semibold */
+    text-align: center;
+    /* text-center */
+}
+
+@media (min-width: 1280px) {
+    .challengeTitle {
+        font-size: 1.875rem;
+        /* xl:text-3xl */
+        line-height: 2.25rem;
+    }
+}
+
+@media (min-width: 1536px) {
+    .challengeTitle {
+        font-size: 2.25rem;
+        /* 2xl:text-4xl */
+        line-height: 2.5rem;
+    }
+}
+
+.legsImage {
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    margin-top: 0.75rem;
+    /* mt-3 */
+    position: absolute;
+    /* absolute */
+    bottom: 0;
+    /* bottom-0 */
+    right: 0;
+    /* right-0 */
+    width: 10rem;
+    /* w-40 (160px) */
+    height: 10rem;
+    /* h-40 */
+}
+
+@media (min-width: 1280px) {
+    .legsImage {
+        height: 12rem;
+        /* xl:h-48 (192px) */
+        width: 12rem;
+        /* xl:w-48 */
+    }
+}
+
+@media (min-width: 1536px) {
+    .legsImage {
+        height: 14rem;
+        /* 2xl:h-56 (224px) */
+        width: 14rem;
+        /* 2xl:w-56 */
+    }
+}
+
+.stylistCard {
+    background-image: linear-gradient(to right, #6D28D9, #A855F7);
+    /* from-purple-102 to-purple-101 */
+    padding: 1.5rem;
+    /* p-6 */
+    position: relative;
+    /* relative */
+    margin-top: 1.25rem;
+    /* mt-5 */
+    align-items: center;
+    /* items-center */
+    display: flex;
+    /* flex */
+    gap: 1.25rem;
+    /* gap-5 */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    border-color: #6D28D9;
+    /* border-purple-102 */
+    border-width: 3px;
+    /* border-3 */
+    border-style: solid;
+}
+
+.roboImage {
+    margin-top: 0.75rem;
+    /* mt-3 */
+    width: 6.25rem;
+    /* w-25 */
+    height: 6.25rem;
+    /* h-25 */
+}
+
+.stylistTitle {
+    font-size: 1.875rem;
+    /* text-3xl */
+    line-height: 2.25rem;
+    font-weight: 600;
+    /* font-semibold */
+}
+
+.sparkleImage {
+    margin-top: 0.75rem;
+    /* mt-3 */
+    width: 1.75rem;
+    /* w-7 */
+    height: 1.75rem;
+    /* h-7 */
+    position: absolute;
+    /* absolute */
+    right: 0.75rem;
+    /* right-3 */
+    top: 0.5rem;
+    /* top-2 */
+}

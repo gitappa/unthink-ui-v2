@@ -689,18 +689,16 @@ const ProductCard = ({
             <>
               {!enableSelect ? (
                 <h1
-                  className={`m-0 ${size === "small" ? "text-base" : "text-2xl"
-                    } font-semibold text-white top-1/2 product_buy_now ${styles['product-buy-now']} ${styles['product-action-buttons-container']}`}>
+                  className={`${styles['product-buy-now']} ${size === "small" ? styles['product-buy-now-small'] : styles['product-buy-now-medium']} product_buy_now ${styles['product-action-buttons-container']}`}>
                   {isProductUrlAvailable ? buyNowTitle : null}
                   {isProductUrlAvailable ? (
-                    <Image src={openInNewTabIcon} alt="open" width={20} height={20} className="text-white ml-2.5 w-5 h-5" />
+                    <Image src={openInNewTabIcon} alt="open" width={20} height={20} className={styles['product-buy-now-icon']} />
                   ) : null}
                 </h1>
               ) : null}
               {product.brand && (
                 <h1
-                  className={`box-border text-white opacity-80 ${size === "small" ? "text-sm" : "text-base"
-                    } text-center px-0.75`}>
+                  className={`${styles['product-brand-text']} ${size === "small" ? "" : styles['product-brand-text-base']}`}>
                   {buyNowSubTitle || `From ${product.brand}`} </h1>
               )}
               {(storeData?.pdp_settings?.is_buy_button ||
@@ -785,11 +783,11 @@ const ProductCard = ({
                     role={onStarClick ? "button" : "img"}
                     onClick={handleStarClick}>
                     {product.starred ? (
-                      <StarFilled className='flex text-secondary' />
+                      <StarFilled className={styles['icon-filled']} />
                     ) : (
-                      <StarOutlined className='flex text-black-200' />
+                      <StarOutlined className={styles['icon-outlined']} />
                     )}
-                    <span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+                    <span className={`${styles['showcase-text']} showcase-btn-text`}>
                       Showcase
                     </span>
                   </button>
@@ -801,11 +799,11 @@ const ProductCard = ({
                     role={onStarClick ? "button" : "img"}
                     onClick={handleStarClick}>
                     {product.starred ? (
-                      <StarFilled className='flex text-secondary' />
+                      <StarFilled className={styles['icon-filled']} />
                     ) : (
-                      <StarOutlined className='flex text-black-200' />
+                      <StarOutlined className={styles['icon-outlined']} />
                     )}
-                    <span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+                    <span className={`${styles['showcase-text']} showcase-btn-text`}>
                       Showcase
                     </span>
                   </button>
@@ -834,12 +832,12 @@ const ProductCard = ({
               className={`   gap-${size === "small" ? "2" : "3"
                 }`}>
               <div
-                className={`flex absolute top-3 right-2 z-50 gap-2 items-center self-baseline product_remove_icon`}
+                className={`${styles['remove-icon-wrapper']} flex product_remove_icon`}
                 onClick={removeFromWishlistClick}>
                 <p
-                  className={`rounded-full z-50 flex mb-0 justify-center items-center font-semibold text-black-101 bg-white  ${size === "small"
-                    ? "lg:text-base h-5 w-5 p-1"
-                    : "lg:text-2xl h-6 w-6 p-1"
+                  className={`${styles['remove-icon-circle']} ${size === "small"
+                    ? styles['icon-circle-small']
+                    : styles['icon-circle-medium']
                     }`}>
                   <RxCross2 />
                 </p>
@@ -849,15 +847,15 @@ const ProductCard = ({
           )}
         {/* product card header */}
         <div
-          className={`box-border absolute top-0 w-full flex ${enableViewSimilar ||
-              (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                showRemoveIcon) ||
-              enableSelect
-              ? "flex-row-reverse"
-              : ""
-            } justify-between ${size === "small"
-              ? "px-2 lg:px-2.5 h-12"
-              : "px-2 lg:p-2.5 h-12 lg:h-20"
+          className={`${styles['header-container']} ${enableViewSimilar ||
+            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+              showRemoveIcon) ||
+            enableSelect
+            ? styles['flex-reverse']
+            : ""
+            } ${size === "small"
+              ? styles['header-small']
+              : styles['header-medium']
             } z-20`}
         >
           {/* reversed contents for hover css */}
@@ -899,12 +897,12 @@ const ProductCard = ({
                         className={`    gap-${size === "small" ? "2" : "3"
                           }`}>
                         <div
-                          className={`flex gap-2 items-center self-baseline product_remove_icon`}
+                          className={`${styles['product-menu-item']} product_remove_icon`}
                           onClick={removeFromWishlistClick}>
                           <p
-                            className={`rounded-full flex mb-0 justify-center items-center  text-gray-101 bg-gray-100  ${size === "small"
-                              ? "lg:text-base h-5 w-5 p-1"
-                              : "lg:text-2xl h-6 w-6 p-1"
+                            className={`${styles['menu-item-circle']} ${size === "small"
+                              ? styles['icon-circle-small']
+                              : styles['icon-circle-medium']
                               }`}>
                             <RxCross2 />
                           </p>
@@ -916,9 +914,9 @@ const ProductCard = ({
                     <div className={styles['product-menu-item']} onClick={handleCopyClick} >
 
                       <div
-                        className={` text-gray-101 mb-0 bg-gray-100 rounded-full  flex justify-center items-center  ${size === "small"
-                          ? "lg:text-base  h-5 w-5 p-1"
-                          : "lg:text-2xl h-6 w-6 p-1"
+                        className={`${styles['menu-item-circle']} ${size === "small"
+                          ? styles['icon-circle-small']
+                          : styles['icon-circle-medium']
                           }`}
                       >
                         <LuCopy className='  ' />
