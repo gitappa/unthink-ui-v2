@@ -1,0 +1,420 @@
+/* CSS Module for Brands */
+
+.container {
+    font-family: 'Fira Sans', sans-serif;
+    /* font-firaSans */
+}
+
+.introSection {
+    margin-top: 4rem;
+    /* mt-16 */
+}
+
+@media (min-width: 1024px) {
+    .introSection {
+        margin-top: 5rem;
+        /* lg:mt-20 */
+    }
+}
+
+.introContent {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+    .introContent {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .introContent {
+        max-width: 56rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .introContent {
+        max-width: 80rem;
+        /* xl:max-w-7xl */
+        padding-left: 2rem;
+        /* xl:px-8 */
+        padding-right: 2rem;
+        text-align: left;
+        /* xl:text-left */
+        gap: 2rem;
+        /* xl:gap-8 */
+        flex-direction: row;
+        /* xl:flex-row */
+        margin-top: 0;
+    }
+}
+
+.introTextContainer {
+    width: 100%;
+    max-width: 600px;
+    /* max-w-xl-1 */
+}
+
+.introTitle {
+    font-size: 2.25rem;
+    /* text-4xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-weight: 400;
+    /* font-normal */
+    margin-top: 2.5rem;
+    /* mt-10 */
+    font-family: 'Fira Sans', sans-serif;
+}
+
+@media (min-width: 1024px) {
+    .introTitle {
+        font-size: 4.5rem;
+        /* lg:text-7xl */
+        margin-top: 4rem;
+        /* lg:mt-16 */
+    }
+}
+
+.boldText {
+    font-weight: 700;
+    /* font-bold */
+}
+
+.introSubtitle {
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    font-size: 1.25rem;
+    /* text-xl */
+    font-family: 'Fira Sans', sans-serif;
+    max-width: 42rem;
+    /* max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+}
+
+@media (min-width: 1024px) {
+    .introSubtitle {
+        font-size: 32px;
+        /* lg:text-3xl-1 */
+        line-height: 44px;
+        /* lg:leading-44 */
+    }
+}
+
+.videoContainer {
+    width: 100%;
+    position: relative;
+}
+
+.videoElement {
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    width: 100%;
+}
+
+.playOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    cursor: pointer;
+}
+
+.playIcon {
+    color: white;
+    /* text-white */
+    font-size: 4.5rem;
+    /* text-7xl */
+    margin: auto;
+}
+
+.audienceSection {
+    margin-top: 7rem;
+    /* mt-28 */
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .audienceSection {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .audienceSection {
+        max-width: 56rem;
+        margin-top: 13rem;
+        /* lg:mt-52 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .audienceSection {
+        max-width: 1260px;
+    }
+}
+
+.audienceTitle {
+    font-size: 1.875rem;
+    /* text-3xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-weight: 400;
+    /* font-normal */
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .audienceTitle {
+        font-size: 3rem;
+        /* lg:text-5xl */
+    }
+}
+
+.pacificoText {
+    font-family: 'Pacifico', cursive;
+    /* font-pacifico */
+}
+
+.aiSection {
+    margin-top: 7rem;
+    /* mt-28 */
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .aiSection {
+        max-width: 748px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .aiSection {
+        max-width: 56rem;
+        margin-top: 13rem;
+        /* lg:mt-52 */
+    }
+}
+
+@media (min-width: 1280px) {
+    .aiSection {
+        max-width: 1260px;
+    }
+}
+
+.aiTitle {
+    margin-right: auto;
+    font-size: 1.875rem;
+    /* text-3xl */
+    color: #F1F5F9;
+    /* text-lightgray-101 */
+    font-weight: 400;
+    /* font-normal */
+}
+
+@media (min-width: 1024px) {
+    .aiTitle {
+        font-size: 3rem;
+        /* lg:text-5xl */
+    }
+}
+
+.aiSubtitle {
+    margin-right: auto;
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    font-size: 1.125rem;
+    /* text-lg */
+    font-weight: 400;
+    /* font-normal */
+}
+
+@media (min-width: 1024px) {
+    .aiSubtitle {
+        font-size: 26px;
+        /* lg:text-xl-1.5 */
+    }
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    /* mt-12 */
+    gap: 1.75rem;
+    /* gap-7 */
+    width: 100%;
+    max-width: 56rem;
+    /* max-w-4xl */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .chatContainer {
+        gap: 0;
+        /* md:gap-0 */
+    }
+}
+
+.chatRow {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.75rem;
+    /* gap-3 */
+    margin-left: auto;
+}
+
+@media (min-width: 768px) {
+    .chatRow {
+        flex-direction: row;
+        /* md:flex-row */
+        gap: 1.75rem;
+        /* md:gap-7 */
+        margin-bottom: -0.625rem;
+        /* md:-mb-2.5 */
+    }
+}
+
+.chatRowReverse {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.75rem;
+    /* gap-3 */
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .chatRowReverse {
+        flex-direction: row-reverse;
+        /* md:flex-row-reverse */
+        gap: 1.75rem;
+        /* md:gap-7 */
+        margin-top: -0.625rem;
+        /* md:-mt-2.5 */
+        margin-bottom: -0.625rem;
+        /* md:-mb-2.5 */
+    }
+}
+
+/* Specific adjustment for last item */
+.chatRowLast {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.75rem;
+    /* gap-3 */
+    margin-left: auto;
+}
+
+@media (min-width: 768px) {
+    .chatRowLast {
+        flex-direction: row;
+        /* md:flex-row */
+        gap: 1.75rem;
+        /* md:gap-7 */
+        margin-top: -0.625rem;
+        /* md:-mt-2.5 */
+    }
+}
+
+.chatBubble {
+    background-color: #0f172a;
+    /* bg-slate-900 */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    padding: 1rem;
+    /* p-4 */
+}
+
+.chatTitle {
+    font-size: 1.25rem;
+    /* text-xl */
+    line-height: normal;
+    color: #E2E8F0;
+    /* text-gray-103 */
+    font-weight: 400;
+    /* font-normal */
+}
+
+@media (min-width: 1024px) {
+    .chatTitle {
+        font-size: 1.5rem;
+        /* lg:text-2xl */
+        line-height: 44px;
+        /* lg:leading-44 */
+    }
+}
+
+.chatText {
+    color: #94A3B8;
+    /* text-lightgray-104 */
+    font-size: 1rem;
+    /* text-md (assuming base size 1rem) usually text-base. md is not standard. config doesn't show text-md. Assuming base. */
+    margin: 0;
+}
+
+@media (min-width: 1024px) {
+    .chatText {
+        font-size: 1.125rem;
+        /* lg:text-lg */
+    }
+}
+
+.chatImageContainer {
+    width: 15rem;
+    /* w-60 */
+    height: 15rem;
+    /* h-60 */
+}
+
+.chatImage {
+    margin-left: auto;
+    width: 15rem;
+    /* w-60 */
+    height: 15rem;
+    /* h-60 */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    object-fit: cover;
+    /* object-cover */
+}
+
+.contactSection {
+    margin-top: 7rem;
+    /* mt-28 */
+    margin-bottom: 7rem;
+    /* mb-28 */
+}
+
+@media (min-width: 1024px) {
+    .contactSection {
+        margin-top: 8rem;
+        /* lg:mt-32 */
+        margin-bottom: 15rem;
+        /* lg:mb-60 (60 * 0.25 = 15rem) */
+    }
+}

@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: baseline;
+}
+
+.image {
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: center;
+  margin: 0;
+  color: #000000;
+}
+
+:global(.dark) .title {
+  color: #ffffff;
+}

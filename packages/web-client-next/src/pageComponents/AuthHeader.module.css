@@ -1,0 +1,91 @@
+/* CSS Module for AuthHeader */
+
+.headerRow {
+    background-color: rgba(33, 45, 64, 0.8);
+    /* bg-blue-105 (212d40) + bg-opacity-80 */
+    align-items: center;
+    height: 100%;
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+    padding-top: 0.75rem;
+    /* pt-3 */
+}
+
+.backToStoreCol {
+    margin-top: 0.75rem;
+    /* mt-3 */
+}
+
+@media (min-width: 768px) {
+    .backToStoreCol {
+        margin-top: 0;
+        /* md:mt-0 */
+    }
+}
+
+.homeIcon {
+    color: white;
+    /* text-white */
+    font-size: 1.5rem;
+    /* text-2xl */
+    margin-left: 1.5rem;
+    /* ml-6 */
+    cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+    .homeIcon {
+        margin-left: 3.5rem;
+        /* lg:ml-14 */
+    }
+}
+
+.logoCol {
+    display: flex;
+    justify-content: center;
+    /* justify-center */
+    align-items: center;
+    /* items-center */
+    margin-top: 0.75rem;
+    /* mt-3 */
+}
+
+.poweredByText {
+    color: white;
+    /* text-white */
+}
+
+.logoLink {
+    display: flex;
+    /* flex */
+}
+
+.logoImage {
+    cursor: pointer;
+    padding-left: 0.5rem;
+    /* pl-2 */
+}
+
+.profileCol {
+    display: flex;
+    justify-content: flex-end;
+    /* justify-end */
+    align-items: center;
+    /* items-center */
+    padding-right: 1.25rem;
+    /* pr-5 */
+    margin-top: 0.75rem;
+    /* mt-3 */
+}
+
+@media (min-width: 1024px) {
+    .profileCol {
+        padding-right: 3.5rem;
+        /* lg:pr-14 */
+    }
+}
+
+.linkText {
+    color: white;
+    /* text-white */
+}

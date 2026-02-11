@@ -690,7 +690,7 @@ const SingleCollectionProductList = ({
   }) => {
     if (blogCollectionPage?.collection_name && !isSingleCollectionSharedPage) {
       return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-4 lg:pt-0 lg:mt-0 mt-5">
+        <div className={styles.productGrid}>
           {showCoverImage &&
             (blogCollectionPage?.cover_image ||
               blogCollectionPage?.video_url) && (
@@ -698,8 +698,8 @@ const SingleCollectionProductList = ({
                 ref={videoContainerRef}
                 className={
                   isSocialMediaVideo(blogCollectionPage.video_url)
-                    ? "hidden"
-                    : "relative h-80 w-full sm:h-370 sm:w-370 lg:h-700 lg:w-656 col-span-2 sm:col-span-2 sm:row-span-2 flex-grow overflow-hidden"
+                    ? styles.coverMediaHidden
+                    : styles.coverMediaContainer
                 }
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -713,7 +713,7 @@ const SingleCollectionProductList = ({
                       className={
                         isSocialMediaVideo(blogCollectionPage.video_url)
                           ? ""
-                          : `absolute top-0 left-0 w-full h-full Video_player`
+                          : `${styles.videoPlayerAbsolute} Video_player`
                       }
                       url={blogCollectionPage.video_url}
                       playing={(isMobile && isVisible) || isHovered} // Autoplay on mobile or when hovered on desktop
@@ -726,7 +726,7 @@ const SingleCollectionProductList = ({
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                      className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
                         }`}
                       onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
                     />
@@ -734,7 +734,7 @@ const SingleCollectionProductList = ({
                 ) : blogCollectionPage?.cover_image ? (
                   <img
                     onClick={() => showCollectionDetails && onSeeAllClick()}
-                    className={`h-full object-cover rounded-xl w-full ${showCollectionDetails ? "cursor-pointer" : ""
+                    className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
                       }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
@@ -745,7 +745,7 @@ const SingleCollectionProductList = ({
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
                     <>
                       <ReactPlayer
-                        className={`absolute top-0 left-0 w-full h-full Video_player`}
+                        className={`${styles.videoPlayerAbsolute} Video_player`}
                         url={blogCollectionPage.video_url}
                         playing={false}
                         muted={true}
@@ -757,7 +757,7 @@ const SingleCollectionProductList = ({
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                        className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
                           }`}
                         onClick={() => showCollectionDetails && onSeeAllClick()}
                       />
@@ -819,7 +819,7 @@ const SingleCollectionProductList = ({
       isSingleCollectionSharedPage
     ) {
       return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-4 lg:pt-0 lg:mt-0 mt-5">
+        <div className={styles.productGrid}>
           {showCoverImage &&
             (blogCollectionPage?.cover_image ||
               blogCollectionPage?.video_url) && (
@@ -827,8 +827,8 @@ const SingleCollectionProductList = ({
                 ref={videoContainerRef}
                 className={
                   isSocialMediaVideo(blogCollectionPage.video_url)
-                    ? "hidden"
-                    : "relative h-80 w-full sm:h-370 sm:w-370 lg:h-700 lg:w-656 col-span-2 sm:col-span-2 sm:row-span-2 flex-grow overflow-hidden"
+                    ? styles.coverMediaHidden
+                    : styles.coverMediaContainer
                 }
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -842,7 +842,7 @@ const SingleCollectionProductList = ({
                       className={
                         isSocialMediaVideo(blogCollectionPage.video_url)
                           ? ""
-                          : `absolute top-0 left-0 w-full h-full Video_player`
+                          : `${styles.videoPlayerAbsolute} Video_player`
                       }
                       url={blogCollectionPage.video_url}
                       playing={(isMobile && isVisible) || isHovered} // Autoplay on mobile or when hovered on desktop
@@ -855,7 +855,7 @@ const SingleCollectionProductList = ({
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                      className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
                         }`}
                       onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
                     />
@@ -863,7 +863,7 @@ const SingleCollectionProductList = ({
                 ) : blogCollectionPage?.cover_image ? (
                   <img
                     onClick={() => showCollectionDetails && onSeeAllClick()}
-                    className={`h-full object-cover rounded-xl w-full ${showCollectionDetails ? "cursor-pointer" : ""
+                    className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
                       }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
@@ -874,7 +874,7 @@ const SingleCollectionProductList = ({
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
                     <>
                       <ReactPlayer
-                        className={`absolute top-0 left-0 w-full h-full Video_player`}
+                        className={`${styles.videoPlayerAbsolute} Video_player`}
                         url={blogCollectionPage.video_url}
                         playing={false}
                         muted={true}
@@ -886,7 +886,7 @@ const SingleCollectionProductList = ({
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`absolute top-0 left-0 w-full h-full z-10 ${showCollectionDetails ? "cursor-pointer" : ""
+                        className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
                           }`}
                         onClick={() => showCollectionDetails && onSeeAllClick()}
                       />
@@ -977,16 +977,15 @@ const SingleCollectionProductList = ({
   // }, [singleCollection, autoProductsData, collectionId]);
 
   return (
-    <div className="max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto w-full">
+    <div className={styles.pageWrapper}>
       {singleCollection?.faqs?.length > 0 &&
         autoProductsData.length > 0 &&
         isSingleCollectionSharedPage &&
         (userId || (publish && isSingleCollectionSharedPage)) && (
-          <div className="flex items-center gap-4 mb-4 lg:mx-0 mx-2">
+          <div className={styles.tabsRow}>
             {/* PRODUCTS TAB */}
             <p
-              className={`cursor-pointer px-2 lg:px-4 flex items-center h-7 lg:h-10 rounded-10	 text-sm lg:text-base 
-      						${activeTab === "products" ? "border border-purple-500 bg-purple-100 text-purple-700 font-semibold" : "text-gray-700"}  `}
+              className={`${styles.tabButton} ${activeTab === "products" ? styles.tabButtonActive : styles.tabButtonInactive}`}
               onClick={() => setActiveTab("products")}
             >
               PRODUCTS
@@ -995,12 +994,10 @@ const SingleCollectionProductList = ({
             {/* FAQ TAB */}
 
             <p
-              className={`cursor-pointer  px-2 lg:px-4 flex items-center h-7 lg:h-10 rounded-10	 text-sm lg:text-base
-      ${activeTab === "faq"
-                  ? "border border-purple-500 bg-purple-100 text-purple-700 font-semibold"
-                  : "text-gray-700"
-                }
-    `}
+              className={`${styles.tabButton} ${activeTab === "faq"
+                ? styles.tabButtonActive
+                : styles.tabButtonInactive
+                }`}
               onClick={() => setActiveTab("faq")}
             >
               FAQS{" "}
@@ -1011,16 +1008,16 @@ const SingleCollectionProductList = ({
         blogCollectionPage.collection_name && (
           <>
             <div className="colloction_details_cards_div">
-              <div className="lg:container lg:mx-auto">
+              <div className={styles.lgContainer}>
                 {isSingleCollectionSharedPage &&
                   (userId || (publish && isSingleCollectionSharedPage)) && (
-                    <div className="lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto px-3 lg:px-0">
+                    <div className={styles.tagsOuterContainer}>
                       {showTagsSelection &&
                         tagsToShow?.length &&
                         autoProductsData.length ? (
-                        <div className={`pb-1 md:pb-4 colloction_details_tag`}>
-                          <div className="flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div">
-                            <div className={`flex items-center gap-3 ${styles.colloectionDetailScroll}`}>
+                        <div className={`${styles.tagsPadding} colloction_details_tag`}>
+                          <div className={`${styles.tagsFlexRow} tag_responsive_div`}>
+                            <div className={`${styles.tagsScrollWrapper} ${styles.colloectionDetailScroll}`}>
                               <Swiper
                                 slidesPerView="auto"
                                 spaceBetween={10}
@@ -1039,25 +1036,20 @@ const SingleCollectionProductList = ({
                                       style={{ width: "auto" }}
                                     >
                                       <div
-                                        className={`flex items-center h-30 lg:h-36 justify-center rounded-2xl border-2 border-newcolor-300 my-1 md:my-3 w-max flex-shrink-0 ${selectedTags.includes(tag) ||
+                                        className={`${styles.tagChip} ${selectedTags.includes(tag) ||
                                           (selectedTags.length === 0 &&
                                             tag === "All")
-                                          ? "bg-newcolor-200"
-                                          : "bg-white"
+                                          ? styles.tagChipSelected
+                                          : styles.tagChipDefault
                                           } ${isDisabled
-                                            ? "opacity-50 cursor-not-allowed"
+                                            ? styles.tagChipDisabled
                                             : ""
                                           }`} // Disable styling
                                       >
                                         <h3
-                                          className={`m-0 px-3 font-normal text-xs sm:text-xs md:text-sm lg:text-base break-word-only ${selectedTags.includes(tag) ||
-                                            (selectedTags.length === 0 &&
-                                              tag === "All")
-                                            ? "text-newcolor-100"
-                                            : "text-newcolor-100"
-                                            } ${allowSelectTags && !isDisabled
-                                              ? "cursor-pointer"
-                                              : ""
+                                          className={`${styles.tagText} ${allowSelectTags && !isDisabled
+                                            ? styles.cursorPointer
+                                            : ""
                                             }`} // Prevent click
                                           onClick={
                                             allowSelectTags && !isDisabled
@@ -1075,7 +1067,7 @@ const SingleCollectionProductList = ({
                             </div>
                             {isOverflowing && (
                               <div
-                                className={`absolute right-0 ${styles.addmore_image}`}
+                                className={`${styles.videoPlayerAbsolute} ${styles.addmore_image}`}
                                 style={{ cursor: "pointer", zIndex: 10 }}
                                 onClick={() => {
                                   if (swiperRef.current) {
@@ -1094,9 +1086,9 @@ const SingleCollectionProductList = ({
 
                       {showTagsSelection &&
                         Object.keys(filteredFirstValue).length > 0 && (
-                          <div className="pb-1 md:pb-5 colloction_details_tag">
-                            <div className="flex items-center gap-10 lg:gap-12 2xl:gap-16 relative tag_responsive_div">
-                              <div className={`flex items-center gap-3 overflow-x-scroll ${styles.colloectionDetailScroll}`}>
+                          <div className={`${styles.tagsPaddingSmall} colloction_details_tag`}>
+                            <div className={`${styles.tagsFlexRow} tag_responsive_div`}>
+                              <div className={`${styles.keywordScrollWrapper} ${styles.colloectionDetailScroll}`}>
                                 <Swiper
                                   slidesPerView="auto"
                                   spaceBetween={10}
@@ -1115,8 +1107,8 @@ const SingleCollectionProductList = ({
                                               key={`${key}-${index}`}
                                               style={{ width: "auto" }}
                                             >
-                                              <div className="flex items-center h-25 lg:h-30 justify-center rounded-2xl shadow my-1 md:my-3 w-max flex-shrink-0 bg-white px-3">
-                                                <span className="text-xs sm:text-xs md:text-sm lg:text-base text-newcolor-100">
+                                              <div className={styles.keywordChip}>
+                                                <span className={styles.keywordChipText}>
                                                   #{tag.trim()}
                                                 </span>
                                               </div>
@@ -1130,8 +1122,8 @@ const SingleCollectionProductList = ({
                                           key={key}
                                           style={{ width: "auto" }}
                                         >
-                                          <div className="flex items-center h-25 lg:h-30 justify-center rounded-2xl shadow my-1 md:my-3 w-max flex-shrink-0 bg-white px-3">
-                                            <h3 className="m-0 font-normal text-xs sm:text-xs md:text-sm lg:text-base break-word-only text-newcolor-100">
+                                          <div className={styles.keywordChip}>
+                                            <h3 className={styles.keywordTagText}>
                                               <span>{`${key} :`}</span>{" "}
                                               {Array.isArray(values)
                                                 ? values.join(", ")
@@ -1147,7 +1139,7 @@ const SingleCollectionProductList = ({
 
                               {isOverflowing2 && (
                                 <div
-                                  className={`absolute right-0 ${addmore_image}`}
+                                  className={`${styles.videoPlayerAbsolute} ${styles.addmore_image}`}
                                   style={{ cursor: "pointer", zIndex: 10 }}
                                   onClick={() => {
                                     if (swiperRef2.current) {
@@ -1164,16 +1156,16 @@ const SingleCollectionProductList = ({
 
                       {isSingleCollectionSharedPage && productsData.length ? (
                         <div
-                          className={`flex md:flex-row justify-between lg:items-center mb-5 lg:mb-10 mt-9 lg:mt-0 ${enableSelectProduct ? "flex-col" : "flex-row"
+                          className={`${styles.selectBarRow} ${enableSelectProduct ? styles.selectBarRowWithCol : styles.selectBarRowDefault
                             }`}
                         >
                           {/* {isUserLogin ? ( */}
-                          <div className="flex text-xs md:text-base lg:text-lg">
+                          <div className={styles.selectBarLeft}>
                             {enableSelectProduct ? (
-                              <div className="flex items-center leading-44">
-                                <div className="flex border border-gray-106 rounded py-2 pl-2">
+                              <div className={styles.selectCheckRow}>
+                                <div className={styles.selectCheckBorder}>
                                   <Checkbox
-                                    className="text-xs md:text-base text-violet-100 checkbox_singleCollection"
+                                    className={`${styles.checkboxText} checkbox_singleCollection`}
                                     indeterminate={
                                       isTagProductSelected &&
                                       !isTagProductsAllSelected
@@ -1192,9 +1184,9 @@ const SingleCollectionProductList = ({
                                       : null
                                   }
                                   className={`${selectedProducts.length
-                                    ? "text-violet-100 cursor-pointer"
-                                    : "text-gray-104 cursor-not-allowed"
-                                    } mb-0 ml-2 underline`}
+                                    ? styles.addToTextActive
+                                    : styles.addToTextDisabled
+                                    } ${styles.addToText}`}
                                   title="Click to add selected products in collection"
                                   role="button"
                                 >
@@ -1203,7 +1195,7 @@ const SingleCollectionProductList = ({
 
                                 <p
                                   onClick={() => handleResetSelectProduct()}
-                                  className="text-violet-100 mb-0 ml-2 underline cursor-pointer"
+                                  className={styles.cancelText}
                                   role="button"
                                 >
                                   Cancel
@@ -1211,7 +1203,7 @@ const SingleCollectionProductList = ({
                               </div>
                             ) : (
                               <p
-                                className="flex items-center rounded-2xl justify-center text-white cursor-pointer lg:leading-44 leading-3 py-2  lg:px-2 px-3 whitespace-nowrap	   h-8.5 lg:h-10 bg-violet-100 text-xs sm:text-xs md:text-sm lg:text-base font-semibold"
+                                className={styles.addToCollectionBtn}
                                 role="link"
                                 onClick={() => setEnableSelectProduct(true)}
                                 title="Click and select multiple products to add to collection"
@@ -1223,22 +1215,22 @@ const SingleCollectionProductList = ({
                           {/* ) : null} */}
 
                           {/* sort by product  */}
-                          <div className="flex gap-10 lg:gap-12 2xl:gap-16 sort_dropdown">
+                          <div className={`${styles.sortRow} sort_dropdown`}>
                             {/* <div className="colloction_details_tag_div"></div> */}
-                            <div className="flex items-center w-auto h-8.5 lg:h-10 pl-3 border-2 border-solid border-newcolor-300 rounded-2xl collection_page_sort_product_list">
-                              <label className="whitespace-nowrap text-xs sm:text-xs md:text-sm lg:text-base font-semibold text-newcolor-100">
+                            <div className={`${styles.sortContainer} collection_page_sort_product_list`}>
+                              <label className={styles.sortLabel}>
                                 Sort by :
                               </label>
                               <Select
                                 name="sortBy"
-                                className="w-full"
+                                className={styles.sortSelectFull}
                                 size="small"
                                 value={selectedSortOption?.id}
                                 onChange={handleSortOptionChange}
                               >
                                 {PRODUCT_SORT_OPTIONS?.map((item) => (
                                   <Option
-                                    className="text-newcolor-100"
+                                    className={styles.sortOptionText}
                                     key={item.id}
                                     value={item.id}
                                   >
@@ -1253,9 +1245,9 @@ const SingleCollectionProductList = ({
                     </div>
                   )}
               </div>
-              <div className="max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto single-collection-class">
+              <div className={`${styles.collectionWrapper} single-collection-class`}>
                 {showCollectionDetails && (
-                  <div className="flex pb-1 md:pb-5 gap-3.5">
+                  <div className={styles.detailsRow}>
                     {showUserImage &&
                       (profile_image || blogCollectionPage.profile_image) &&
                       (user_name || blogCollectionPage.user_name) && (
@@ -1268,7 +1260,7 @@ const SingleCollectionProductList = ({
                                   blogCollectionPage.profile_image,
                                 )
                               }
-                              className="w-14 md:w-32 h-14 md:h-32 aspect-square object-cover rounded-full my-auto"
+                              className={styles.userAvatar}
                             />
                           ) : (
                             (() => {
@@ -1279,7 +1271,7 @@ const SingleCollectionProductList = ({
                               return route ? (
                                 <Link
                                   href={route}
-                                  className="px-0 flex items-center w-14 md:w-32 h-14 md:h-32 aspect-square object-cover my-auto"
+                                  className={styles.userAvatarLink}
                                 >
                                   <img
                                     src={
@@ -1288,11 +1280,11 @@ const SingleCollectionProductList = ({
                                         blogCollectionPage.profile_image,
                                       )
                                     }
-                                    className="w-full rounded-full"
+                                    className={styles.userAvatarFull}
                                   />
                                 </Link>
                               ) : (
-                                <div className="px-0 flex items-center w-14 md:w-32 h-14 md:h-32 aspect-square object-cover my-auto">
+                                <div className={styles.userAvatarLink}>
                                   <img
                                     src={
                                       getFinalImageUrl(profile_image) ||
@@ -1300,7 +1292,7 @@ const SingleCollectionProductList = ({
                                         blogCollectionPage.profile_image,
                                       )
                                     }
-                                    className="w-full rounded-full"
+                                    className={styles.userAvatarFull}
                                   />
                                 </div>
                               );
@@ -1309,10 +1301,10 @@ const SingleCollectionProductList = ({
                         </>
                       )}
 
-                    <div className="w-full flex flex-col gap-2 mt-3.5">
-                      <div className="flex justify-between">
+                    <div className={styles.contentColumn}>
+                      <div className={styles.titleRow}>
                         <h1
-                          className="text-xl md:text-xl-2 font-semibold underline cursor-pointer capital-first-letter"
+                          className={`${styles.collectionTitle} capital-first-letter`}
                           style={{ overflowWrap: "anywhere" }}
                           onClick={onSeeAllClick}
                         >
@@ -1324,7 +1316,7 @@ const SingleCollectionProductList = ({
                         {qrCodeGeneratorURL &&
                           blogCollectionPage.status === PUBLISHED ? (
                           <img
-                            className="w-20 h-20 object-cover md:hidden"
+                            className={styles.qrCodeMobile}
                             src={qrCodeGeneratorURL}
                           />
                         ) : null}
@@ -1336,7 +1328,7 @@ const SingleCollectionProductList = ({
 									View all
 								</Button> */}
                       </div>
-                      <div className='relative'>
+                      <div className={styles.descriptionWrapper}>
                         {blogCollectionPage.description ? (
                           <>
                             <>
@@ -1344,15 +1336,15 @@ const SingleCollectionProductList = ({
 													{blogCollectionPage.description}
 												</p>
 												<button onClick={()=>setExpanded(!isExpanded)}>{isExpanded ? 'Readmore' : 'Readless'}</button> */}
-                              <div className='relative'>
+                              <div className={styles.descriptionWrapper}>
                                 <p
                                   ref={textRef}
-                                  className={`text-sm lg:text-lg text-justify leading-normal whitespace-pre-line 
+                                  className={`${styles.descriptionText} 
     ${expanded
                                       ? ""
                                       : productsData?.length === 0
-                                        ? "ellipsis_3   leading-normal"
-                                        : "ellipsis_2 "
+                                        ? "ellipsis_3"
+                                        : "ellipsis_2"
                                     }
   `}
                                 >
@@ -1362,7 +1354,7 @@ const SingleCollectionProductList = ({
                                 {!expanded && showMoreEnabled && (
                                   <span
                                     onClick={() => setExpanded(true)}
-                                    className=' pb-0 lg:pb-0.5   text-blue-600 text-sm font-medium cursor-pointer hover:underline bg-white '>
+                                    className={styles.readMoreLink}>
                                     Read more
                                   </span>
                                 )}
@@ -1370,7 +1362,7 @@ const SingleCollectionProductList = ({
                                 {expanded && showMoreEnabled && (
                                   <span
                                     onClick={() => setExpanded(false)}
-                                    className=' text-blue-600 text-sm  block  font-medium cursor-pointer hover:underline'>
+                                    className={styles.readLessLink}>
                                     Read less
                                   </span>
                                 )}
@@ -1386,7 +1378,7 @@ const SingleCollectionProductList = ({
                     {/* for desktop screen : QR code */}
 
 
-                    <div className='relative flex justify-between w-6 lg:w-7'>
+                    <div className={styles.shareIconWrapper}>
                       {showShareCollection && (
                         <ShareOptions
                           url={sharePageUrl}
@@ -1399,10 +1391,10 @@ const SingleCollectionProductList = ({
                       )}
                       {/* {sharePageUrl && ( */}
                       <img
-                        className={`flex w-auto  ${showShareCollection ? "pointer-events-none" : ""
+                        className={`${styles.shareIcon} ${showShareCollection ? styles.shareIconEventsNone : ""
                           } ${blogCollectionPage.status === PUBLISHED
-                            ? "cursor-pointer"
-                            : "cursor-not-allowed opacity-50"
+                            ? styles.shareIconEnabled
+                            : styles.shareIconDisabled
                           }`}
                         src={share_icon}
                         title={
@@ -1462,10 +1454,10 @@ const SingleCollectionProductList = ({
                   <div>
                     {!!showcasedProductsData.length ? (
                       <div>
-                        <p className="mb-4 text-xl lg:text-3xl font-bold mt-3">
+                        <p className={styles.topPicksTitle}>
                           Top Picks
                         </p>
-                        <div className="flex flex-col lg:flex-row ">
+                        <div className={styles.flexColLgRow}>
                           <RenderProductsList
                             list={showcasedProductsData}
                             showAuraTileFlag={
@@ -1480,11 +1472,11 @@ const SingleCollectionProductList = ({
                     ) : null}
 
                     {!!autoProductsData.length ? (
-                      <div className="mt-8  lg:mt-10">
-                        <p className="mb-4 text-xl lg:text-3xl font-bold">
+                      <div className={styles.moreFromSection}>
+                        <p className={styles.moreFromTitle}>
                           More from this collection
                         </p>
-                        <div className="flex flex-col lg:flex-row ">
+                        <div className={styles.flexColLgRow}>
                           <RenderProductsList
                             list={autoProductsData}
                             showAuraTileFlag={showAuraTile}
@@ -1497,7 +1489,7 @@ const SingleCollectionProductList = ({
                     ) : null}
                   </div>
                 ) : (
-                  <div className="flex flex-col lg:flex-row ">
+                  <div className={styles.flexColLgRow}>
                     <RenderProductsList
                       list={productsData}
                       showAuraTileFlag={showAuraTile}
@@ -1508,10 +1500,10 @@ const SingleCollectionProductList = ({
                   </div>
                 )}
                 {!isSingleCollectionSharedPage && productsData.length ? (
-                  <div className="flex justify-center mt-3 md:mt-4 ">
+                  <div className={styles.seeFullRow}>
                     <Button
                       type="primary"
-                      className="rounded-full bg-transparent font-semibold border-2 border-indigo-600 dark:border-black-200 text-indigo-600 dark:text-black-200"
+                      className={styles.seeFullBtn}
                       onClick={onSeeAllClick}
                     >
                       See the full collection
@@ -1537,17 +1529,17 @@ const SingleCollectionProductList = ({
       {activeTab === "faq" &&
         singleCollection?.faqs?.length > 0 &&
         isSingleCollectionSharedPage && (
-          <div className="mt-5 lg:px-0 px-2">
+          <div className={styles.faqSection}>
             <Collapse
               accordion
               items={singleCollection?.faqs?.map((faq, index) => ({
                 key: index + 1,
                 label: (
-                  <span className="font-sans">
+                  <span className={styles.faqLabel}>
                     {index + 1}. {faq.question}
                   </span>
                 ),
-                children: <p className="text-black font-sans ">{faq.answer}</p>,
+                children: <p className={styles.faqAnswer}>{faq.answer}</p>,
               }))}
             />
           </div>

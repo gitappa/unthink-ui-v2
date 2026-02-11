@@ -1,0 +1,235 @@
+.askQuestionPopoverOverlay {
+    display: block;
+}
+
+/* Wrapper */
+.wrapper {
+    z-index: 30;
+    position: fixed;
+    bottom: 8px;
+    /* bottom-2 */
+    right: 8px;
+    /* right-2 */
+    margin-bottom: 80px;
+    /* mb-20 */
+}
+
+@media (min-width: 768px) {
+    .wrapper {
+        bottom: 80px;
+        /* md:bottom-20 */
+        right: 12px;
+        /* md:right-3 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .wrapper {
+        bottom: 32px;
+        /* lg:bottom-8 */
+        right: 32px;
+        /* lg:right-8 */
+    }
+}
+
+@media (min-width: 768px) {
+    .wrapper {
+        margin-bottom: 0;
+        /* tablet:mb-0 */
+    }
+}
+
+/* Trigger Button */
+.triggerButton {
+    display: flex;
+    cursor: pointer;
+    background-color: #4f46e5;
+    /* bg-indigo-600 */
+    border-radius: 9999px;
+    /* rounded-full */
+    font-size: 18px;
+    /* text-lg */
+    color: white;
+    /* text-white */
+    padding: 8px;
+    /* p-2 */
+}
+
+@media (min-width: 768px) {
+    .triggerButton {
+        font-size: 36px;
+        /* tablet:text-4xl */
+        padding: 16px;
+        /* tablet:p-4 */
+    }
+}
+
+.triggerIcon {
+    margin: auto;
+    /* m-auto */
+}
+
+/* Form Header */
+.formHeader {
+    line-height: 1;
+    /* md:leading-none */
+    font-weight: 400;
+    /* font-normal */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    /* mb-0 */
+    color: white;
+    /* text-white */
+}
+
+.formTitle {
+    font-size: 24px;
+    /* text-2xl */
+    color: #232524;
+    /* text-black-100 */
+    font-weight: 600;
+    /* font-semibold */
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .formTitle {
+        font-size: 36px;
+        /* tablet:text-4xl */
+    }
+}
+
+@media (min-width: 1324px) {
+    .formTitle {
+        font-size: 28px;
+        /* desktop:text-display-l */
+        line-height: 32px;
+    }
+}
+
+.closeIcon {
+    display: flex;
+    font-size: 24px;
+    /* text-2xl */
+    cursor: pointer;
+    color: white;
+    /* text-white */
+}
+
+/* Success Text */
+.successResultWrapper {
+    margin-left: auto;
+    /* mx-auto */
+    margin-right: auto;
+}
+
+.successTitle {
+    color: white;
+    /* text-white */
+}
+
+.successSubtitle {
+    color: white;
+    /* text-white */
+}
+
+/* Form Content */
+.formContentWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    /* mt-6 */
+    margin-bottom: 24px;
+    /* mb-6 */
+    color: #E2E8F0;
+    /* text-gray-103 */
+}
+
+@media (min-width: 768px) {
+    .formContentWrapper {
+        display: flex;
+        /* tablet:flex */
+    }
+}
+
+.formDescription {
+    margin-bottom: 0;
+    /* mb-0 */
+    font-size: 20px;
+    /* text-xl */
+    color: #232524;
+    /* text-black-100 */
+}
+
+.formTextarea {
+    text-align: left;
+    color: #9a9b9b;
+    /* placeholder-gray-101 */
+    background-color: #F1F5F9;
+    /* bg-slate-100 */
+    outline: none;
+    padding-left: 12px;
+    /* px-3 */
+    padding-right: 12px;
+    padding-top: 12px;
+    /* pt-3 */
+    border-radius: 12px;
+    /* rounded-xl */
+    width: 100%;
+    /* w-full */
+    overflow: hidden;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.formTextarea::placeholder {
+    color: #9a9b9b;
+    /* placeholder-gray-101 */
+}
+
+/* Submit */
+.submitWrapper {
+    margin-top: 24px;
+    /* mt-6 */
+    text-align: right;
+}
+
+.submitButton {
+    background-color: #4f46e5;
+    /* bg-indigo-600 */
+    border-radius: 4px;
+    /* rounded */
+    color: white;
+    /* text-white */
+    padding-top: 8px;
+    /* py-2 */
+    padding-bottom: 8px;
+    font-weight: 400;
+    /* font-normal */
+    font-size: 16px;
+    /* text-base */
+    padding-left: 20px;
+    /* px-5 */
+    padding-right: 20px;
+    white-space: nowrap;
+    height: min-content;
+    /* h-min */
+    align-self: flex-end;
+    /* self-end */
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .submitButton {
+        margin-top: 0;
+        /* tablet:mt-0 */
+    }
+}

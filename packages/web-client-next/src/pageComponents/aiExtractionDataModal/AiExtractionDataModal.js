@@ -14,6 +14,8 @@ import {
 import { createWishlist } from "../wishlistActions/createWishlist/redux/actions";
 import { current_store_name } from "../../constants/config";
 
+import styles from "./AiExtractionDataModal.module.css";
+
 const AiExtractionDataModal = ({
 	extractionData,
 	authUser,
@@ -21,10 +23,10 @@ const AiExtractionDataModal = ({
 	filter_settings,
 }) => {
 	const dispatch = useDispatch();
-	console.log('display_url','faq');
-	console.log('extractionData',extractionData);
-	
-	
+	console.log('display_url', 'faq');
+	console.log('extractionData', extractionData);
+
+
 
 	const handleModalClose = useCallback(() => {
 		dispatch(setAiExtractionData(null));
@@ -40,8 +42,8 @@ const AiExtractionDataModal = ({
 			video_url: extractionData.data.video_url,
 			uploaded_source: extractionData.request.uploaded_source,
 			redirectToEditCollectionPage: true,
-			display_url:extractionData.data.display_url,
-			faqs :extractionData.data?.faqs,
+			display_url: extractionData.data.display_url,
+			faqs: extractionData.data?.faqs,
 		}
 
 		if (extractionData.data.keyword_tag_map) {
@@ -57,7 +59,7 @@ const AiExtractionDataModal = ({
 						keyword_tag_map[key].brand = brandsToShow.length
 							? brandsToShow
 							: undefined;
-					}    
+					}
 				}
 			}
 
@@ -68,7 +70,7 @@ const AiExtractionDataModal = ({
 		navigate(PATH_CREATE_COLLECTION);
 		handleModalClose();
 	}, []);
-console.log('extractionData.data.display_url',extractionData.data.display_url);
+	console.log('extractionData.data.display_url', extractionData.data.display_url);
 
 	console.log("extractionData", extractionData);
 
@@ -80,28 +82,28 @@ console.log('extractionData.data.display_url',extractionData.data.display_url);
 		// onClose={handleModalClose}
 		>
 			<div>
-				<h3 className='text-xl mb-4'>
+				<h3 className={styles.modalTitle}>
 					Click on the button below to view the prepared content and products.
 				</h3>
-				<div className='grid grid-cols-5 gap-4 text-lg'>
-					<div className='col-span-1'>
+				<div className={styles.summaryGrid}>
+					<div className={styles.labelCol}>
 						<b>Title:</b>
 					</div>
-					<div className='col-span-4 break-words'>
+					<div className={styles.valueCol}>
 						<b>{extractionData?.data?.title}</b>
 					</div>
-					<div className='col-span-1'>Description:</div>
-					<div className='col-span-4'>{extractionData?.data?.description}</div>
+					<div className={styles.labelCol}>Description:</div>
+					<div className={styles.descriptionValueCol}>{extractionData?.data?.description}</div>
 
-					<div className='col-span-5 flex ml-auto'>
+					<div className={styles.actionCol}>
 						<button
 							type='button'
 							onClick={() => handleModalClose()}
-							className='min-w-24 text-xs md:text-sm z-10 rounded-md py-2.5 px-3.5 h-full font-bold text-indigo-400 border-2 border-indigo-400 mr-4'>
+							className={styles.discardButton}>
 							Discard
 						</button>
 						<button
-							className='ml-auto bg-indigo-600 py-2 px-8 text-white rounded-lg'
+							className={styles.nextButton}
 							onClick={handleViewClick}>
 							Next
 						</button>

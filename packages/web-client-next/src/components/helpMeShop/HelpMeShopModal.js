@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate";
+import styles from "./HelpMeShopModal.module.css";
 
 import { setHelpMeShopModalOpen } from "../../pageComponents/shared/redux/actions";
 
@@ -47,7 +48,7 @@ export default function HelpMeShopModal() {
 				okText='Preview'
 				onCancel={handleCancel}>
 				<p>Enter your message for shopping help</p>
-				<p className='mb-2'>Message :</p>
+				<p className={styles.messageLabel}>Message :</p>
 				<TextArea
 					rows={4}
 					value={message}

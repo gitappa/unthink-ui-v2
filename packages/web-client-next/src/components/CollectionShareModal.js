@@ -8,6 +8,7 @@ import {
 	LinkedinOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "../helper/useNavigate";
+import styles from "./CollectionShareModal.module.css";
 
 import xIcon from "../images/x_white_icon.png";
 import Modal from "./modal/Modal";
@@ -57,8 +58,8 @@ const CollectionShareModal = ({
 	);
 
 
-	console.log("collectionRedirectPath",collectionRedirectPath);
-	
+	console.log("collectionRedirectPath", collectionRedirectPath);
+
 
 	const collectionPageUrl = useMemo(
 		() => (window?.location.origin || "") + collectionRedirectPath || allCollectionsList.path,
@@ -102,7 +103,7 @@ const CollectionShareModal = ({
 	};
 
 
-	console.log( "collectionDetails",collectionDetails);
+	console.log("collectionDetails", collectionDetails);
 
 
 
@@ -123,7 +124,7 @@ const CollectionShareModal = ({
 			// okButtonProps={{ className: "hidden" }}
 			>
 				<div>
-					<h1 className='text-xl font-bold capital-first-letter'>
+					<h1 className={styles.collectionTitle}>
 						{collectionDetails.collection_name}
 					</h1>
 				</div>
@@ -136,13 +137,13 @@ const CollectionShareModal = ({
 						/>
 					</div>
 				) : null} */}
-				<div className='mt-2'>
-					<div className='flex items-center justify-between'>
+				<div className={styles.shareSection}>
+					<div className={styles.shareHeader}>
 						<p>
 							<b>Share your collection with your friends and followers!</b>
 						</p>
 						<button
-							className='rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white bg-indigo-600'
+							className={styles.viewCollectionBtn}
 							onClick={handlePreviewCollectionPage}>
 							View Collection
 						</button>
@@ -151,63 +152,63 @@ const CollectionShareModal = ({
 						<Alert
 							message='Before sharing the collection page, Please make sure that the collection is published.'
 							type='info'
-							className='rounded-md text-base mt-4 md:mt-6'
+							className={styles.alertMessage}
 						/>
 					)}
 
-					<div className='flex flex-col gap-4 md:gap-6'>
-						<div className='grid grid-cols-1 md:grid-cols-2 mt-4 md:mt-6'>
-							<div className='grid gap-4 grid-cols-3 md:grid-cols-1 mt-2 md:pl-2.5 md:order-last'>
+					<div className={styles.shareContent}>
+						<div className={styles.shareGrid}>
+							<div className={styles.socialGrid}>
 								<a
 									href={socialMediaUrls.facebook}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl'
+									className={styles.socialLink}
 									style={{ backgroundColor: "#4267B2" }}>
-									<FacebookOutlined className='flex justify-center items-center h-full' />
+									<FacebookOutlined className={styles.socialIconFlex} />
 								</a>
 								<a
 									href={socialMediaUrls.whatsapp}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl'
+									className={styles.socialLink}
 									style={{ backgroundColor: "#128C7E" }}>
-									<WhatsAppOutlined className='flex justify-center items-center h-full' />
+									<WhatsAppOutlined className={styles.socialIconFlex} />
 								</a>
 								<a
 									href={socialMediaUrls.twitter}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl flex items-center justify-center bg-black-100'>
+									className={styles.twitterLink}>
 									<img
 										src={xIcon}
 										width={28}
 										height={28}
-										className='flex justify-center items-center'
+										className={styles.twitterIcon}
 									/>
 								</a>
 								<a
 									href={socialMediaUrls.linkedin}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl'
+									className={styles.socialLink}
 									style={{ backgroundColor: "#0072b1" }}>
-									<LinkedinOutlined className='flex justify-center items-center h-full' />
+									<LinkedinOutlined className={styles.socialIconFlex} />
 								</a>
 							</div>
 
 							{qrCodeGeneratorURL ? (
-								<div className='flex items-center justify-center mt-4 md:mt-0'>
+								<div className={styles.qrCodeWrapper}>
 									<img
-										className='w-full max-w-208 object-cover'
+										className={styles.qrCodeImage}
 										src={qrCodeGeneratorURL}
 									/>
 								</div>
 							) : null}
 						</div>
 
-						<div className='border p-1 rounded flex break-all'>
+						<div className={styles.urlBox}>
 							{copybaseUrl}{" "}
 							<CopyToClipboard
 								text={copybaseUrl}
 								onCopy={() => message.success("Copied", 1)}>
-								<CopyOutlined className='text-xl flex ml-auto' />
+								<CopyOutlined className={styles.copyIconLarge} />
 							</CopyToClipboard>
 						</div>
 					</div>

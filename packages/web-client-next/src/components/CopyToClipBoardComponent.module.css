@@ -1,0 +1,11 @@
+.copyIcon {
+    padding-left: 8px;
+    /* pl-2 */
+    font-size: 14px;
+    /* text-sm */
+    line-height: 1;
+    /* leading-none */
+    vertical-align: text-top;
+    /* align-text-top */
+    cursor: pointer;
+}

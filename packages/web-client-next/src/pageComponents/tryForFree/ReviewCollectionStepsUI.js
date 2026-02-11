@@ -15,11 +15,11 @@ const ReviewCollectionStepsUI = ({
 
 	const MobileViewStep = ({ text, step }) => (
 		<div
-			className={`flex items-center ${disabledSteps.includes(step)
-				? "text-indigo-105 cursor-not-allowed"
-				: "cursor-pointer"
+			className={`${styles.mobileStep} ${disabledSteps.includes(step)
+				? styles.disabled
+				: ""
 				} ${currentView === step
-					? "active bg-slat-103 py-0.75 px-3 rounded-full text-white"
+					? styles.active
 					: ""
 				}`}
 			role='button'
@@ -75,7 +75,7 @@ const ReviewCollectionStepsUI = ({
 			<div style={{ position: "relative" }}>
 				{/* Image displayed above the dot */}
 				<div
-					className={`steps-icon ${isActive ? "active" : ""} ${isFinished ? "finished" : ""} ${currentStep.title ==='Publish' ? 'rotate-left' : ''} `}
+					className={`steps-icon ${isActive ? "active" : ""} ${isFinished ? "finished" : ""} ${currentStep.title === 'Publish' ? 'rotate-left' : ''} `}
 					onClick={!currentStep.disabled ? currentStep.onClick : undefined}
 				>
 					{currentStep.icon}
@@ -88,12 +88,12 @@ const ReviewCollectionStepsUI = ({
 	return (
 		<>
 			{/* Mobile View */}
-			<div className='flex md:hidden mb-2'>
-				<div className='flex text-indigo-103 mx-auto max-w-287 w-full my-3 justify-between text-base font-semibold mobile-view-steps'>
+			<div className={styles.mobileStepsContainer}>
+				<div className={`${styles.mobileStepsWrapper} ${styles['mobile-view-steps']}`}>
 					<MobileViewStep text='Content' step={STEPS.CONTENT} />
-					<div className='flex items-center'>{">"}</div>
+					<div className={styles.flexGap2}>{">"}</div>
 					<MobileViewStep text='Products' step={STEPS.PRODUCTS} />
-					<div className='flex items-center'>{">"}</div>
+					<div className={styles.flexGap2}>{">"}</div>
 					<MobileViewStep text='Publish' step={STEPS.PUBLISH} />
 				</div>
 			</div>
@@ -121,24 +121,24 @@ const ReviewCollectionStepsUI = ({
 				</div>
 			</div> */}
 			{/* Desktop View */}
-			<div className={`${styles.stepsScope} hidden md:flex items-center my-10`}>
-				<div className="steps_bar_div w-full">
+			<div className={`${styles.stepsScope} ${styles.desktopStepsWrapper}`}>
+				<div className={`steps_bar_div ${styles.stepsBarDiv}`}>
 					<div
-						className={`w-full text-2xl text-white`}
+						className={styles.stepsContainer}
 					>
 						<Steps
-							className="w-full text-black-100"
-						current={
-							currentView === STEPS.HELP
-								? -1
-								: currentView === STEPS.CONTENT
-									? 0
-									: currentView === STEPS.PRODUCTS
-										? 1
-										: currentView === STEPS.PUBLISH
-											? 2
-											: Object.values(STEPS).indexOf(currentView)
-						}
+							className={styles.stepsComponent}
+							current={
+								currentView === STEPS.HELP
+									? -1
+									: currentView === STEPS.CONTENT
+										? 0
+										: currentView === STEPS.PRODUCTS
+											? 1
+											: currentView === STEPS.PUBLISH
+												? 2
+												: Object.values(STEPS).indexOf(currentView)
+							}
 							progressDot={progressDotRender} // Use custom progressDot function
 							labelPlacement="horizontal"
 							size="small"

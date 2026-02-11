@@ -5,6 +5,8 @@ import { useNavigate } from "../../helper/useNavigate";
 import RequestOurMediaKitModal from "./RequestOurMediaKitModal";
 import { generateOnContactFormSubmit } from "../../helper/utils";
 
+import styles from './ContactUsField.module.css';
+
 const ContactUsField = ({
 	id,
 	inputProps = {},
@@ -101,7 +103,7 @@ const ContactUsField = ({
 	);
 
 	return (
-		<div className='max-w-xl-1 mx-auto'>
+		<div className={styles.container}>
 			{collectFullInfo && isRequestMediaKitModalOpen && (
 				<RequestOurMediaKitModal
 					formId={id}
@@ -111,9 +113,9 @@ const ContactUsField = ({
 				/>
 			)}
 			<form id={formId} ref={contactUsForm}>
-				<div className='flex items-center'>
+				<div className={styles.inputWrapper}>
 					<Input
-						className='text-left h-12 rounded-md lg:rounded-l-md border-0 hover:border-opacity-0 placeholder-gray-400'
+						className={styles.inputField}
 						placeholder='Enter your email address'
 						name='email'
 						type='text'
@@ -123,19 +125,19 @@ const ContactUsField = ({
 					/>
 
 					<input name='contact_number' type='hidden' />
-				<input name='page_url' type='hidden' value={pageUrl} />
+					<input name='page_url' type='hidden' value={pageUrl} />
 
 					{collectFullInfo ? (
 						<button
 							type='submit'
 							onClick={handleRequestMediaKitModalOpen}
-							className='w-60 text-xs md:text-sm z-10 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-12 font-bold -ml-2.5 text-white'>
+							className={`${styles.submitButton} ${styles.submitButtonWide}`}>
 							{buttonText || "Request our media kit"}
 						</button>
 					) : (
 						<button
 							type='submit'
-							className='w-40 text-xs md:text-sm z-10 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-12 font-bold -ml-2.5 text-white'>
+							className={`${styles.submitButton} ${styles.submitButtonNormal}`}>
 							{buttonText || "Get Started"}
 						</button>
 					)}

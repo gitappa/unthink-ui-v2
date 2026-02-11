@@ -9,6 +9,7 @@ import { handleRecProductClick } from "../../pageComponents/recommendations/redu
 import { getIsRootPage, getIsSharedPage } from "../../helper/utils";
 import { useNavigate } from "../../helper/useNavigate";
 import { favorites_collection_name } from "../../constants/codes";
+import styles from "./SingleCollection.module.css";
 
 const { Text } = Typography;
 
@@ -76,31 +77,31 @@ const SingleCollection = ({
 
 	if (showLoading) {
 		return (
-			<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto pt-10 lg:pt-20'>
-				<Skeleton.Input active={true} className='w-1/2 h-10 mb-9' />
-				<div className='flex flex-col lg:flex-row'>
-					<div className='h-180 md:h-200 lg:h-700 w-full'>
+			<div className={styles.container}>
+				<Skeleton.Input active={true} className={styles.skeletonTitle} />
+				<div className={styles.skeletonRow}>
+					<div className={styles.skeletonMainImage}>
 						<Skeleton.Input
 							active={true}
-							className='w-full h-180 md:h-200 lg:h-700'
+							className={styles.skeletonMainImage}
 						/>
 					</div>
-					<div className='w-full grid grid-cols-2 gap-2.5 lg:gap-4 lg:pl-5 pt-3'>
+					<div className={styles.skeletonGrid}>
 						<Skeleton.Input
 							active={true}
-							className='lg:max-w-480 h-180 lg:h-full'
+							className={styles.skeletonGridItem}
 						/>
 						<Skeleton.Input
 							active={true}
-							className='lg:max-w-480 h-180 lg:h-full'
+							className={styles.skeletonGridItem}
 						/>
 						<Skeleton.Input
 							active={true}
-							className='lg:max-w-480 h-180 lg:h-full'
+							className={styles.skeletonGridItem}
 						/>
 						<Skeleton.Input
 							active={true}
-							className='lg:max-w-480 h-180 lg:h-full'
+							className={styles.skeletonGridItem}
 						/>
 					</div>
 				</div>
@@ -112,13 +113,13 @@ const SingleCollection = ({
 
 	return (
 		(!(getIsRootPage() && collection?.product_list?.length === 0) && (
-			<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto pt-10 lg:pt-20'>
+			<div className={styles.container}>
 				{!isSingleCollectionSharedPage && (
-					<div className='pb-1 md:pb-5'>
-						<div className='flex justify-between'>
+					<div className={styles.headerSection}>
+						<div className={styles.headerRow}>
 							<h1
 								onClick={onTitleClick}
-								className='text-xl md:text-xl-2 font-semibold capitalize collection_title underline cursor-pointer max-w-max'>
+								className={`${styles.collectionTitle} collection_title`}>
 								{collection?.name === "favorites" &&
 								collection?.type === "system"
 									? favorites_collection_name
@@ -127,39 +128,33 @@ const SingleCollection = ({
 							{(authUser?.user_name || sharedUser?.user_name) && (
 								<Button
 									type='primary'
-									className='rounded-lg dark:bg-black-200 dark:border-black-200'
-									// ghost
+									className={styles.viewAllButton}
 									onClick={onTitleClick}>
 									View all
 								</Button>
-								// <h1
-								// 	className='text-base text-purple-101 underline cursor-pointer min-w-max'
-								// 	onClick={onTitleClick}>
-								// 	View
-								// </h1>
 							)}
 						</div>
 						{collection?.description ? (
-							<p className='text-sm max-w-xl-1 mt-3 leading-normal ellipsis_2'>
+							<p className={styles.description}>
 								{collection.description}
 							</p>
 						) : null}
 					</div>
 				)}
 				{collection?.product_list?.length ? (
-					<div className='flex flex-col lg:flex-row'>
-						<div className='w-full grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-2 lg:pt-0'>
+					<div className={styles.productsRow}>
+						<div className={styles.productsGrid}>
 							{!isSingleCollectionSharedPage && collection?.cover_image && (
-								<div className='h-180 md:h-200 w-full lg:h-700 lg:w-656px col-span-2 sm:col-span-3 md:col-span-3 lg:col-span-2 lg:row-span-2 flex-grow'>
+								<div className={styles.coverImageWrapper}>
 									<img
 										onClick={onTitleClick}
-										className='h-full object-cover rounded-xl w-full cursor-pointer'
+										className={styles.coverImage}
 										src={collection?.cover_image}
 									/>
 								</div>
 							)}
 							{productsToShow.map((product) => (
-								<div className='' key={product.mfr_code}>
+								<div className={styles.productCardWrapper} key={product.mfr_code}>
 									<ProductCard
 										product={product}
 										onProductClick={onProductClick}
@@ -177,19 +172,16 @@ const SingleCollection = ({
 						</div>
 					</div>
 				) : (
-					<div className='text-center text-lg font-medium'>
+					<div className={styles.noProducts}>
 						No products found
 					</div>
 				)}
 				{!showMore &&
-					// (collection?.cover_image
-					// 	? productsData?.length > 8
-					// 	: productsData?.length > 12) && (
 					productsData?.length > 16 && (
-						<div className='mt-6 flex justify-center'>
+						<div className={styles.showMoreWrapper}>
 							<Button
 								type='primary'
-								className='rounded-lg h-8'
+								className={styles.showMoreButton}
 								ghost
 								onClick={() => setShowMore(true)}>
 								Show more

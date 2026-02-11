@@ -54,11 +54,13 @@ import {
 
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
+import filterStyles from "../productFilters/productFilters.module.scss";
 import { CustomFilter } from "../customFilter/CustomFilter";
 import ReviewCollectionContainerWrapper from "./ReviewCollectionContainerWrapper";
 
 import Image from "next/image";
 import filterIcon from "../../images/filter_outline.svg";
+import styles from "./tryForFree.module.scss";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import { replaceAndUpdateUserCollectionData } from "../Auth/redux/actions";
 
@@ -932,9 +934,9 @@ const ReviewCollectionStepContent = ({
 
 					{isGeneratedByBlog ? (
 						<div>
-							<div className='flex justify-between mt-4 mb-2'>
+							<div className={styles.infoSection}>
 								<div>
-									<p className='mb-0 text-xl'>Blog/Article URL</p>
+									<p className={styles.infoText}>Blog/Article URL</p>
 								</div>
 								{showSettings ? (
 									<div className='text-base'>
@@ -951,12 +953,12 @@ const ReviewCollectionStepContent = ({
 									</div>
 								) : null}
 							</div>
-							<div className='bg-slate-100 rounded-xl'>
+							<div className={styles.videoUrlInputContainer}>
 								<input
 									name='blog_url'
 									value={updatedData.blog_url}
 									placeholder='Enter Blog URL'
-									className='text-left placeholder-gray-101 outline-none px-3 h-10 bg-white rounded-xl w-full avoid_autofill_bg'
+									className={`${styles.videoUrlInput} avoid_autofill_bg`}
 									onChange={handleInputChange}
 									disabled={currentCollection.status === IN_PROGRESS}
 								/>
@@ -975,16 +977,16 @@ const ReviewCollectionStepContent = ({
 								) : null} */}
 							</div>
 							{errors.blog_url && (
-								<p className='text-red-500'>{errors.blog_url}</p>
+								<p className={styles.stepContentError}>{errors.blog_url}</p>
 							)}
 						</div>
 					) : (
 						<>
 							{isGeneratedByDesc ? (
 								<div>
-									<div className='flex justify-between mt-4 mb-2'>
+									<div className={styles.infoSection}>
 										<div>
-											<p className='mb-0 text-xl'>Your input</p>
+											<p className={styles.infoText}>Your input</p>
 										</div>
 
 										{showSettings ? (
@@ -1007,12 +1009,12 @@ const ReviewCollectionStepContent = ({
 										value={updatedData.description_old}
 										rows={2}
 										placeholder='Type two lines here..'
-										className='text-left placeholder-gray-101 bg-white outline-none px-3 pt-3 rounded-xl w-full resize-none overflow-hidden'
+										className={styles.stepContentTextArea}
 										onChange={handleInputChange}
 										disabled={currentCollection.status === IN_PROGRESS}
 									/>
 									{errors.description_old && (
-										<p className='text-red-500'>{errors.description_old}</p>
+										<p className={styles.stepContentError}>{errors.description_old}</p>
 									)}
 								</div>
 							) : null}
@@ -1021,16 +1023,16 @@ const ReviewCollectionStepContent = ({
 
 					{isGeneratedByImage ? (
 						<div className='mt-4'>
-							<label className='text-xl block mb-0.75'>Image</label>
+							<label className={styles.stepContentLabel}>Image</label>
 							<div>
 								{isUploading ? (
-									<div className='h-36 flex items-center justify-center'>
+									<div className={styles.uploadDraggerContainer}>
 										<Spin
-											className='w-full mx-auto'
+											className={styles.uploadSpinner}
 											indicator={
 												<LoadingOutlined
 													style={{ fontSize: 30 }}
-													className='text-blue-700'
+													className={styles.uploadSpinnerIndicator}
 													spin
 												/>
 											}
@@ -1038,16 +1040,16 @@ const ReviewCollectionStepContent = ({
 										/>
 									</div>
 								) : (
-									<div className='flex flex-col items-center justify-center'>
+									<div className={styles.previewContainer}>
 										{updatedData.image_url ? (
 											<>
 												<img
 													src={updatedData.image_url}
 													width='100%'
 													// loading='lazy'
-													className='object-contain rounded-xl max-w-340'
+													className={styles.imagePreview}
 												/>
-												<div className='text-xl block mb-0.75 underline cursor-pointer'>
+												<div className={styles.changeMediaLink}>
 													<span
 														onClick={() =>
 															handleUploadedDataChange("image_url", "")
@@ -1058,7 +1060,7 @@ const ReviewCollectionStepContent = ({
 											</>
 										) : (
 											<Dragger
-												className='bg-transparent h-56 w-56'
+												className={styles.draggerComponent}
 												{...uploadImageProps}
 												name='image_url'
 												showUploadList={false}>
@@ -1082,18 +1084,18 @@ const ReviewCollectionStepContent = ({
 
 					{isGeneratedByVideo ? (
 						<div className='mt-4'>
-							<label className='text-xl block mb-0.75'>
+							<label className={styles.stepContentLabel}>
 								{currentCollection.uploaded_source ? "Video" : "Video URL"}
 							</label>
 							<div>
 								{isUploading ? (
-									<div className='h-36 flex items-center justify-center'>
+									<div className={styles.uploadDraggerContainer}>
 										<Spin
-											className='w-full mx-auto'
+											className={styles.uploadSpinner}
 											indicator={
 												<LoadingOutlined
 													style={{ fontSize: 30 }}
-													className='text-blue-700'
+													className={styles.uploadSpinnerIndicator}
 													spin
 												/>
 											}
@@ -1101,18 +1103,18 @@ const ReviewCollectionStepContent = ({
 										/>
 									</div>
 								) : currentCollection.uploaded_source ? (
-									<div className='flex flex-col items-center justify-center'>
+									<div className={styles.previewContainer}>
 										{updatedData.video_url ? (
 											<>
 												<video
 													controls
-													className='object-cover rounded-xl w-auto h-auto max-h-80'>
+													className={styles.videoPreview}>
 													<source
 														src={updatedData.video_url}
 														type='video/mp4'
 													/>
 												</video>
-												<div className='text-xl block mb-0.75 underline cursor-pointer'>
+												<div className={styles.changeMediaLink}>
 													<span
 														onClick={() =>
 															handleUploadedDataChange("video_url", "")
@@ -1123,7 +1125,7 @@ const ReviewCollectionStepContent = ({
 											</>
 										) : (
 											<Dragger
-												className='bg-transparent h-56 w-56'
+												className={styles.draggerComponent}
 												{...uploadVideoProps}
 												name='video_url'
 												showUploadList={false}>
@@ -1137,12 +1139,12 @@ const ReviewCollectionStepContent = ({
 										)}
 									</div>
 								) : (
-									<div className='bg-slate-100 rounded-xl'>
+									<div className={styles.videoUrlInputContainer}>
 										<input
 											name='video_url'
 											value={updatedData.video_url}
 											placeholder='Enter Video URL'
-											className='text-left placeholder-gray-101 outline-none px-3 h-10 bg-white rounded-xl w-full avoid_autofill_bg'
+											className={`${styles.videoUrlInput} avoid_autofill_bg`}
 											onChange={handleInputChange}
 											disabled={currentCollection.status === IN_PROGRESS}
 										/>
@@ -1153,12 +1155,12 @@ const ReviewCollectionStepContent = ({
 					) : null}
 
 					{isGeneratedByImage || isGeneratedByBlog || isGeneratedByVideo || isGeneratedByDesc ? (
-						<div className='flex justify-end h-fit-content gap-2 mt-2'>
+						<div className={styles.regenerateButtonWrapper}>
 							<Tooltip
 								title={`Regenerate the content and suggest more ${TAGS_TITLE} with AI.`}>
 								<button
 									onClick={onTryAgainClick}
-									className='px-2 py-0.75 sm:px-4 w-max text-black underline whitespace-nowrap'>
+									className={styles.regenerateButton}>
 									Regenerate content & keywords
 								</button>
 							</Tooltip>
@@ -1166,8 +1168,8 @@ const ReviewCollectionStepContent = ({
 					) : null}
 
 					<div>
-						<div className='flex justify-between mt-4 mb-2'>
-							<p className='mb-0 text-xl'>
+						<div className={styles.infoSection}>
+							<p className={styles.infoText}>
 								I wrote some content for you. Please add your creative touch to
 								it!
 							</p>
@@ -1202,14 +1204,14 @@ const ReviewCollectionStepContent = ({
 						</div>
 					) : null} */}
 						</div>
-						<div className='bg-white rounded-xl'>
+						<div className={styles.contentContainer}>
 							<textarea
 								name='description'
 								value={updatedData.description}
 								ref={textAreaRef}
 								rows={default_description_textarea_rows}
 								placeholder='Type two lines here..'
-								className='text-left placeholder-gray-101 bg-white outline-none px-3 pt-3 rounded-xl w-full resize-none overflow-hidden'
+								className={styles.stepContentTextArea}
 								onChange={handleInputChange}
 								disabled={currentCollection.status === IN_PROGRESS}
 							/>
@@ -1243,7 +1245,7 @@ const ReviewCollectionStepContent = ({
 							) : null} */}
 						</div>
 						{errors.description && (
-							<p className='text-red-500'>{errors.description}</p>
+							<p className={styles.stepContentError}>{errors.description}</p>
 						)}
 					</div>
 					{isShowImproveContent ? (
@@ -1254,34 +1256,34 @@ const ReviewCollectionStepContent = ({
 										regenerate_desc: true,
 									})
 								}
-								className='px-2 py-0.75 sm:px-4 w-max text-black underline whitespace-nowrap'>
+								className={styles.regenerateButton}>
 								Improve content
 							</button>
 						</div>
 					) : null}
 
 					{showTags ? (
-						<div className='flex justify-end mt-4'>
+						<div className={styles.generateTagsButtonWrapper}>
 							<Tooltip
 								title={`Fetch a new set of products with latest ${TAGS_TITLE}.`}>
 								<button
 									onClick={onFetchTagsWithAI}
-									className='cursor-pointer bg-indigo-600 rounded text-white font-normal text-base py-1 px-2 '>
+									className={styles.generateTagsButton}>
 									Generate <span className='capitalize'>{TAGS_TITLE}</span>
 								</button>
 							</Tooltip>
 						</div>
 					) : currentCollection?._id ? (
-						<div className='flex flex-col'>
-							<div className='w-full'>
+						<div className={styles.stepsContentWrapper}>
+							<div className={styles.wFull}>
 								<div className='mt-4 mb-2'>
-									<p className='text-xl'>
+									<p className={styles.fetchingTagsMessage}>
 										{currentCollection.status === IN_PROGRESS
 											? `Fetching ${TAGS_TITLE}..`
 											: "I'll look for these products. Please edit this list as needed!"}
 									</p>
 								</div>
-								<div className="flex w-full">
+								<div className={styles.tagsInputWrapper}>
 									{/* {isGeneratedByDesc ? (
 										<div className='text-right'>
 											<Tooltip title={`Get ${TAGS_TITLE} with AI.`}>
@@ -1310,7 +1312,7 @@ const ReviewCollectionStepContent = ({
 										handleEditTagsChange={handleTagsChange}
 										handleAddKeywords={true}
 									/>
-									{/* <div className='bg-slate-100 rounded-xl'>
+									{/* <div className={styles.videoUrlInputContainer}>
 										<Select
 											mode='tags'
 											className='w-full text-base review_collection_content_tags_input'
@@ -1341,11 +1343,11 @@ const ReviewCollectionStepContent = ({
 									  )
 									: null} */}
 							</div>
-							<div className='flex flex-col-reverse md:flex-row justify-between md:gap-5 mt-2'>
+							<div className={styles.tipsContainer}>
 								{!isEmpty(updatedData.blog_filter) &&
 									isEmpty(selectedTags) &&
 									!showEditTagsInput ? (
-									<div className='flex flex-row gap-2'>
+									<div className={styles.tipsText}>
 										<InfoCircleOutlined className='tablet:text-lg leading-5' />
 										<p className='flex items-center leading-5 mb-0'>
 											Click on the keywords above to see associated filters. You
@@ -1374,7 +1376,7 @@ const ReviewCollectionStepContent = ({
 													regenerate_desc: false,
 												})
 											}
-											className='px-2 py-0.75 sm:px-4 w-max text-black underline whitespace-nowrap mt-2'>
+											className={styles.improveTagsButton}>
 											Improve <span className='lowercase'>{TAGS_TITLE}</span>
 										</button>
 									</div>
@@ -1384,10 +1386,10 @@ const ReviewCollectionStepContent = ({
 					) : null}
 
 					{!isEmpty(selectedTags) ? (
-						<div className='flex items-center justify-end mt-4 filter-options-popover-wrapper'>
+						<div className={`${styles.filtersTriggerContainer} filter-options-popover-wrapper`}>
 							<Tooltip title='Click to see filter options'>
 								<div
-									className='flex items-center'
+									className={styles.filtersTrigger}
 									onClick={() =>
 										setFilterOptionsVisible(!filterOptionsVisible)
 									}>
@@ -1396,9 +1398,9 @@ const ReviewCollectionStepContent = ({
 										alt='Filters'
 										width={28}
 										height={28}
-										className='mr-1'
+										className={styles.marginRight1}
 									/>
-									<p className='underline font-medium cursor-pointer lg:mt-0 whitespace-nowrap ml-1 text-base'>
+									<p className={styles.filtersTriggerText}>
 										Filters
 									</p>
 								</div>
@@ -1416,8 +1418,8 @@ const ReviewCollectionStepContent = ({
 								isShowCustomFilter={true}
 								handleSaveEditCustomFilter={handleSaveEditCustomFilter}
 								selectedTag={selectedTags}
-								clearFiltersThemeClassName='text-black-100'
-								buttonThemeClassName='bg-indigo-103'
+								clearFiltersThemeClassName={filterStyles.clearFiltersBlack}
+								buttonThemeClassName={filterStyles.buttonThemeIndigo}
 							/>
 						</div>
 					) : null}
@@ -1443,18 +1445,18 @@ const ReviewCollectionStepContent = ({
 
 					{filterOptionsVisible && !isEmpty(selectedTags) ? (
 						<>
-							<div className='flex flex-col gap-5 shadow-3xl p-5 mt-4 rounded-xl bg-slate-200'>
-								<div className='flex items-center gap-4 ml-auto'>
+							<div className={styles.filtersPanel}>
+								<div className={styles.filtersPanelHeader}>
 									{isFiltersAvailable ? (
 										<p
-											className='text-lg text-black-100 cursor-pointer'
+											className={styles.clearAllFilters}
 											role='button'
 											onClick={handleClearFiltersClick}>
 											Clear All
 										</p>
 									) : null}
 									<CloseOutlined
-										className='cursor-pointer text-2xl text-black-100 flex'
+										className={styles.closeFiltersIcon}
 										role='button'
 										title='close filters'
 										onClick={() => setFilterOptionsVisible(false)}
@@ -1472,15 +1474,15 @@ const ReviewCollectionStepContent = ({
 					) : null}
 
 					{isCategoryTagsEnabled && updatedData.category_tags && (
-						<div className='grid grid-cols-1 tablet:grid-cols-2 gap-4 mt-5'>
+						<div className={styles.categoryTagsContainer}>
 							{Object.keys(updatedData.category_tags).map((tagsKey) => (
-								<div className='w-full'>
-									<div className='tablet:flex tablet:justify-between mb-2 text-gray-103'>
+								<div className={styles.categoryTagWrapper}>
+									<div className={styles.categoryTagLabel}>
 										<p>{tagsKey}</p>
 									</div>
 									<Select
 										mode='tags'
-										className='w-full desktop:max-w-480 text-base tag-select-input'
+										className={`${styles.categoryTagSelect} text-base tag-select-input`}
 										placeholder={`Enter ${TAGS_TITLE}`}
 										value={updatedData.category_tags[tagsKey] || []}
 										onChange={(values) =>
@@ -1493,13 +1495,13 @@ const ReviewCollectionStepContent = ({
 							))}
 						</div>
 					)}
-					<div className='flex'>
-						<div className='ml-auto flex h-fit-content gap-2 mt-4'>
+					<div className={styles.flexRow}>
+						<div className={styles.getProductsButtonContainer}>
 							<Tooltip
 								title={`Get a new set of products with latest ${TAGS_TITLE}.`}>
 								<button
 									onClick={handleFetchProductsClick}
-									className='bg-indigo-103 rounded-md shadow px-2 py-0.75 sm:px-4 w-max text-white whitespace-nowrap'>
+									className={styles.getProductsButton}>
 									Get products
 								</button>
 							</Tooltip>
@@ -1568,7 +1570,7 @@ const ReviewCollectionStepContent = ({
 										<Select
 											mode='multiple'
 											name='gender'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder='Select gender'
 											value={updatedData.settings?.gender || []}
 											size='large'
@@ -1586,16 +1588,16 @@ const ReviewCollectionStepContent = ({
 								{displayableFilter.includes("age_group") &&
 								availableFilters?.age_group?.length ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Age group
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("age_group")
 													}
@@ -1607,7 +1609,7 @@ const ReviewCollectionStepContent = ({
 										<Select
 											mode='multiple'
 											name='age_group'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder='Select Age group'
 											value={updatedData.settings?.age_group || []}
 											size='large'
@@ -1625,16 +1627,16 @@ const ReviewCollectionStepContent = ({
 								{displayableFilter.includes("discount") &&
 								availableFilters?.discount?.length ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Discount
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("discount")
 													}
@@ -1646,7 +1648,7 @@ const ReviewCollectionStepContent = ({
 
 										<Select
 											mode='multiple'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder={`Enter discount`}
 											value={updatedData.settings?.discount || []}
 											size='large'
@@ -1666,16 +1668,16 @@ const ReviewCollectionStepContent = ({
 								{displayableFilter.includes("brand") &&
 								availableFilters?.brand?.length ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Brand
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("brand")
 													}
@@ -1687,7 +1689,7 @@ const ReviewCollectionStepContent = ({
 
 										<Select
 											mode='multiple'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder='Select brands'
 											onChange={(values) =>
 												handleSettingsTagsInputChange("brand", values)
@@ -1705,16 +1707,16 @@ const ReviewCollectionStepContent = ({
 
 								{displayableFilter.includes("color") ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Color
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("color")
 													}
@@ -1726,7 +1728,7 @@ const ReviewCollectionStepContent = ({
 
 										<Select
 											mode='tags'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder={`Enter Color`}
 											value={updatedData.settings?.color || []}
 											size='large'
@@ -1742,16 +1744,16 @@ const ReviewCollectionStepContent = ({
 								{displayableFilter.includes("occasion") &&
 								availableFilters?.occasion?.length ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Room
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("occasion")
 													}
@@ -1763,7 +1765,7 @@ const ReviewCollectionStepContent = ({
 
 										<Select
 											mode='multiple'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder={`Enter room`}
 											value={updatedData.settings?.occasion || []}
 											size='large'
@@ -1782,17 +1784,17 @@ const ReviewCollectionStepContent = ({
 
 								{displayableFilter.includes("custom_filter") ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Custom filter{" "}
 												<span className='text-sm'>(max 25 characters)</span>
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("custom_filter")
 													}
@@ -1802,7 +1804,7 @@ const ReviewCollectionStepContent = ({
 											</div>
 										</div>
 										<Input
-											className='outline-none px-3 h-10 bg-slate-100 rounded-xl w-full'
+											className={styles.customTextInput}
 											placeholder='Enter custom filter'
 											name='custom_filter'
 											value={updatedData.settings?.custom_filter || ""}
@@ -1819,16 +1821,16 @@ const ReviewCollectionStepContent = ({
 
 								{displayableFilter.includes("price") ? (
 									<div>
-										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+										<div className={styles.inputLabelRow}>
+											<label className={styles.inputLabelText}>
 												Price range
 											</label>
-											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+											<div className={styles.optionalLabelGroup}>
+												<label className={styles.optionalLabelText}>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className={styles.textGray103}
 													onChange={() =>
 														handleSettingsStrictSelectChange("price")
 													}
@@ -1837,10 +1839,10 @@ const ReviewCollectionStepContent = ({
 													)}></Checkbox>
 											</div>
 										</div>
-										<div className='flex flex-row'>
+										<div className={styles.flexRow}>
 											<Input
 												type='text'
-												className='outline-none px-3 h-10 bg-slate-100 rounded-xl w-full'
+												className={styles.customTextInput}
 												placeholder='Minimum'
 												value={updatedData.settings?.price?.min || ""}
 												onChange={(e) =>
@@ -1848,12 +1850,12 @@ const ReviewCollectionStepContent = ({
 												}
 												name='priceRange-min'
 											/>
-											<span className='flex justify-center items-center  text-gray-103 text-base mx-5'>
+											<span className={styles.flexCenterGray103Mx5}>
 												to
 											</span>
 											<Input
 												type='text'
-												className='outline-none px-3 h-10 bg-slate-100 rounded-xl w-full'
+												className={styles.customTextInput}
 												placeholder='Maximum'
 												value={updatedData.settings?.price?.max || ""}
 												onChange={(e) =>
@@ -1888,7 +1890,7 @@ const ReviewCollectionStepContent = ({
 
 										<Select
 											mode='tags'
-											className='w-full text-base tag-select-input'
+											className={`tag-select-input ${styles.tagSelectInput}`}
 											placeholder={`Enter material`}
 											value={updatedData.settings?.material || []}
 											size='large'
@@ -1917,7 +1919,7 @@ const ReviewCollectionStepContent = ({
 										title={`Fetch a new set of products with latest ${TAGS_TITLE}.`}>
 										<button
 											onClick={handleFetchProductsClick}
-											className='bg-indigo-600 rounded text-white py-2 font-normal text-base px-5  whitespace-nowrap h-min'>
+											className={styles.indigoButton}>
 											Find products
 										</button>
 									</Tooltip>
@@ -1947,12 +1949,12 @@ const ReviewCollectionStepContent = ({
 			) : null}
 			{
 				showBackdropLoader && (
-					<div className='fixed top-0 left-0 flex justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-102 z-20'>
+					<div className={styles.fixedOverlayGray102}>
 						<Spin
 							// indicator={<LoadingOutlined className='text-3xl-1' spin />}
 							indicator={
 								<Loading3QuartersOutlined
-									className='flex text-6xl-1 text-indigo-100'
+									className={styles.flexText6xlIndigo100}
 									spin
 								/>
 							}

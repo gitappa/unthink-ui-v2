@@ -15,6 +15,7 @@ import {
 } from "../../constants/codes";
 import SponsorProductModal from "../sponsorProductModal";
 import { filterAvailableProductList, filterProductListBySelectedTags } from "../../helper/utils";
+import styles from "./tryForFree.module.scss";
 
 const ReviewCollectionPlist = ({
 	status,
@@ -187,51 +188,51 @@ const ReviewCollectionPlist = ({
 
 	return (
 		<div>
-			<div className='mx-auto'>
+			<div className={styles.centeredContainer}>
 				{isFetching && !productLists.length ? (
-					<div className='grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-4'>
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
+					<div className={styles.skeletonGrid}>
+						<Skeleton.Input active className={styles.skeletonInput} />
+						<Skeleton.Input active className={styles.skeletonInput} />
+						<Skeleton.Input active className={styles.skeletonInput} />
+						<Skeleton.Input active className={styles.skeletonInput} />
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden md:block'
+							className={`${styles.skeletonInput} ${styles.hiddenMdBlock}`}
 						/>
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden md:block lg:block'
+							className={`${styles.skeletonInput} ${styles.hiddenMdBlockLgBlock}`}
 						/>
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden lg:block'
+							className={`${styles.skeletonInput} ${styles.hiddenLgBlock}`}
 						/>
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden lg:block'
+							className={`${styles.skeletonInput} ${styles.hiddenLgBlock}`}
 						/>
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden lg:block'
+							className={`${styles.skeletonInput} ${styles.hiddenLgBlock}`}
 						/>
 						<Skeleton.Input
 							active
-							className='w-40 lg:w-180 h-180 hidden lg:block'
+							className={`${styles.skeletonInput} ${styles.hiddenLgBlock}`}
 						/>
 					</div>
 				) : (
 					<>
 						{isStarredProductsExists ? (
-							<div className='mt-4 tablet:mt-8'>
-								<div className='flex gap-2'>
-									<p className='m-0 text-base font-bold'>Top Picks</p>
+							<div className={styles.topPicksContainer}>
+								<div className={styles.flexGap2}>
+									<p className={styles.titleBold}>Top Picks</p>
 									<StarFilled
 										height='fit-content'
 										role='img'
-										className='flex my-auto z-20 text-base text-secondary'
+										className={styles.starIcon}
 									/>
 								</div>
-								<div className='grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-2.5 tablet:gap-4 mt-1 w-max mx-auto'>
+								<div className={styles.productsGrid}>
 									{sponsor_details?.product_list
 										? sponsor_details?.product_list.map((product) => (
 											<ProductCard
@@ -311,9 +312,9 @@ const ReviewCollectionPlist = ({
 
 
 						{isOtherProductsExists ? (
-							<div className="mt-8 tablet:mt-12">
+							<div className={styles.moreFromCollectionContainer}>
 								{isStarredProductsExists ? (
-									<p className="mb-1 text-base">More from this collection</p>
+									<p className={styles.moreFromCollectionTitle}>More from this collection</p>
 								) : null}
 
 								{selectedTags.length === 0 ? (
@@ -357,10 +358,10 @@ const ReviewCollectionPlist = ({
 											};
 
 											return (
-												<div key={tag} className="mb-6">
+												<div key={tag} className={styles.tagGroup}>
 													{/* Display the tag heading */}
-													<div className="flex justify-between items-center mb-4">
-														<div className="flex items-center gap-2">
+													<div className={styles.tagHeader}>
+														<div className={styles.tagTitleGroup}>
 															{
 																enableSelectProduct && (
 																	<input
@@ -370,12 +371,12 @@ const ReviewCollectionPlist = ({
 																	/>
 																)
 															}
-															<h3 className="text-base font-bold">{tag}</h3>
+															<h3 className={styles.tagTitle}>{tag}</h3>
 														</div>
 														{/* Show See More button when the number of products exceeds the limit */}
 														{products.length > 5 && !isExpanded && (
 															<button
-																className="flex items-center gap-0.5 text-xs rounded-2xl cursor-pointer bg-violet-100 text-white px-3 py-2"
+																className={styles.seeMoreButton}
 																onClick={handleSeeMoreClick}
 															>
 																See More
@@ -383,7 +384,7 @@ const ReviewCollectionPlist = ({
 														)}
 														{isExpanded && (
 															<button
-																className="flex items-center gap-0.5 text-xs rounded-2xl cursor-pointer bg-violet-100 text-white px-3 py-2"
+																className={styles.seeMoreButton}
 																onClick={handleSeeMoreClick}
 															>
 																See Less
@@ -392,7 +393,7 @@ const ReviewCollectionPlist = ({
 													</div>
 
 													{/* Display the products in a grid */}
-													<div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-2.5 tablet:gap-4 w-max mx-auto">
+													<div className={styles.productsGrid}>
 														{visibleProducts.map((product) => (
 															<ProductCard
 																key={product.mfr_code}
@@ -423,7 +424,7 @@ const ReviewCollectionPlist = ({
 									})()
 								) : (
 									// Show products without groupings (your current logic)
-									<div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-2.5 tablet:gap-4 w-max mx-auto">
+									<div className={styles.productsGrid}>
 										{otherProducts.map((product) => (
 											<ProductCard
 												key={product.mfr_code}
@@ -484,8 +485,8 @@ const ReviewCollectionPlist = ({
 			) : null} */}
 
 			{!productLists?.length && !isFetching && !isEditTagsOpen && (
-				<div className='w-full text-center py-6'>
-					<p className='text-xl mb-2'>
+				<div className={styles.emptyStateContainer}>
+					<p className={styles.emptyStateMessage}>
 						{isFetchingProducts
 							? "Finding products that match your content"
 							: isTagsSelected
@@ -493,10 +494,10 @@ const ReviewCollectionPlist = ({
 								: "We did not find any products."}
 					</p>
 					{!isFetchingProducts && (
-						<p className='text-base'>
+						<p className={styles.emptyStateHint}>
 							Try using{" "}
 							<span
-								className='text-indigo-103 cursor-pointer'
+								className={styles.differentTagsLink}
 								role='button'
 								onClick={handleEditTagsBtnClick}>
 								different {TAGS_TITLE}
@@ -508,13 +509,13 @@ const ReviewCollectionPlist = ({
 			)}
 
 			{(showFetchMoreButton && ( // UPDATE // will be added later
-				<div className='mt-6 flex justify-center'>
+				<div className={styles.fetchMoreContainer}>
 					{fetchMoreLoading ? (
-						<Spin className='flex h-8' />
+						<Spin className={styles.loadingSpinner} />
 					) : (
 						<Button
 							type='primary'
-							className='rounded-lg h-8'
+							className={styles.fetchMoreButton}
 							ghost
 							onClick={() =>
 								handleConfirmRefetchProducts({ isFetchMore: true })

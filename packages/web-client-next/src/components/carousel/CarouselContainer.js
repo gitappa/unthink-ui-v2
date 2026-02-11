@@ -12,6 +12,7 @@ import { getFinalImageUrl } from "../../helper/utils";
 import carousel_arrow_icon from "../../images/carousel_arrow_icon.png";
 
 import styles from './Carousal.module.scss';
+import cssStyles from './CarouselContainer.module.css';
 import ReactPlayer from "react-player";
 import Modal from "../modal/Modal";
 
@@ -96,15 +97,16 @@ function CarousalContainer({
 			// };
 		}
 
-		return () => {};
+		return () => { };
 	}, [containerRef.current]);
-useEffect(() => {
-  if (previewVisible) {
-    document.body.style.overflow = "hidden";   // disable scroll
-  } else {
-    document.body.style.overflow = "auto";     // enable scroll
-  }}, [previewVisible])
-  
+	useEffect(() => {
+		if (previewVisible) {
+			document.body.style.overflow = "hidden";   // disable scroll
+		} else {
+			document.body.style.overflow = "auto";     // enable scroll
+		}
+	}, [previewVisible])
+
 	const [hoveredIndex, setHoveredIndex] = useState(null);
 
 	const handleMouseEnter = (index) => {
@@ -124,17 +126,17 @@ useEffect(() => {
 
 	return (
 		<  >
-			 
+
 
 			{showOuterTitle && (
 				<>
-					<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto lg:mb-8'>
-						<h1 className='text-display-l font-semibold'>
+					<div className={cssStyles.outerTitleWrapper}>
+						<h1 className={cssStyles.outerTitle}>
 							Featured Collections
 						</h1>
 						{description ? (
-							<div className='block w-full mt-2 lg:mt-3'>
-								<Text className='text-sm lg:text-lg leading-6 max-w-3xl-1 w-full whitespace-pre-line'>
+							<div className={cssStyles.descriptionBlock}>
+								<Text className={cssStyles.descriptionText}>
 									{description}
 								</Text>
 							</div>
@@ -142,7 +144,7 @@ useEffect(() => {
 					</div>
 				</>
 			)}
-			<div className='overflow-hidden'>
+			<div className={cssStyles.overflowHidden}>
 				<div className={styles.un_bt_gallery}>
 					{!hideTitle && (
 						<div className={styles.un_bt_carousel_title_container}>
@@ -157,7 +159,7 @@ useEffect(() => {
 						</div>
 					)}
 
-					<div className={`${styles.un_bt_gallery_container} select-none`}>
+					<div className={`${styles.un_bt_gallery_container} ${cssStyles.selectNone}`}>
 						{items?.map((item, i) => {
 							const displayItems = [...totalItems].splice(0, 5);
 							const positionIndex = displayItems.includes(i + 1)
@@ -167,19 +169,18 @@ useEffect(() => {
 							return (
 								<div
 									key={i}
-									className={`${styles.un_bt_gallery_item} ${
-										positionIndex ? styles[`un_bt_gallery_item_${positionIndex}`] : ""
-									}`}
+									className={`${styles.un_bt_gallery_item} ${positionIndex ? styles[`un_bt_gallery_item_${positionIndex}`] : ""
+										}`}
 									onMouseEnter={() => handleMouseEnter(i)}
 									onMouseLeave={handleMouseLeave}
 									onClick={() => handleItemClick && handleItemClick(item)}>
 									{/* Show video if hovered, otherwise show image */}
 									{collection_image_list ? (
-										<div className='relative w-full h-full'>
+										<div className={cssStyles.relativeFullSize}>
 											<Image
 												src={getFinalImageUrl(item)}
 												alt={item?.title || 'carousel-image'}
-												className={`${styles.un_bt_cover_image} w-full`}
+												className={`${styles.un_bt_cover_image} ${cssStyles.coverImageFull}`}
 												draggable={false}
 												fill
 												style={{ objectFit: 'cover' }}
@@ -192,11 +193,11 @@ useEffect(() => {
 										</div>
 									) : item.cover_image ? (
 										hoveredIndex === i &&
-										item.video_url &&
-										!isSocialMediaVideo(item.video_url) ? (
+											item.video_url &&
+											!isSocialMediaVideo(item.video_url) ? (
 											<>
 												<ReactPlayer
-													className='absolute top-0 left-0 w-full h-full Video_player'
+													className={`${cssStyles.videoPlayer} Video_player`}
 													url={item.video_url}
 													playing={true} // Autoplay video on hover
 													muted={true}
@@ -208,9 +209,8 @@ useEffect(() => {
 												/>
 												{/* Transparent overlay to block interaction with the video */}
 												<div
-													className={`absolute top-0 left-0 w-full h-full z-10 ${
-														handleItemClick ? "cursor-pointer" : ""
-													}`}
+													className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
+														}`}
 													onClick={() =>
 														handleItemClick && handleItemClick(item)
 													} // Redirect to details page on click
@@ -231,7 +231,7 @@ useEffect(() => {
 									) : item.video_url && !isSocialMediaVideo(item.video_url) ? (
 										<>
 											<ReactPlayer
-												className='absolute top-0 left-0 w-full h-full Video_player'
+												className={`${cssStyles.videoPlayer} Video_player`}
 												url={item.video_url}
 												playing={hoveredIndex === i} // Play video only on hover
 												muted={true}
@@ -243,9 +243,8 @@ useEffect(() => {
 											/>
 											{/* Transparent overlay to block interaction with the video */}
 											<div
-												className={`absolute top-0 left-0 w-full h-full z-10 ${
-													handleItemClick ? "cursor-pointer" : ""
-												}`}
+												className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
+													}`}
 												onClick={() => handleItemClick && handleItemClick(item)} // Redirect to details page on click
 											/>
 										</>
@@ -267,8 +266,8 @@ useEffect(() => {
 							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
 							onClick={handlePrevArrowClick}>
 							<div className={styles.un_bt_gallery_controls_inner_container}>
-								<Image 
-									src={carousel_arrow_icon} 
+								<Image
+									src={carousel_arrow_icon}
 									alt='previous arrow'
 									width={40}
 									height={40}
@@ -279,8 +278,8 @@ useEffect(() => {
 							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
 							onClick={handleNextArrowClick}>
 							<div className={styles.un_bt_gallery_controls_inner_container}>
-								<Image 
-									src={carousel_arrow_icon} 
+								<Image
+									src={carousel_arrow_icon}
 									alt='next arrow'
 									width={40}
 									height={40}
@@ -290,24 +289,24 @@ useEffect(() => {
 					</div>
 				</div>
 
-			 
+
 			</div>
-			 
-			<div  >	
-				{previewVisible && 
-				<div className="product-image-modal-overlay" >
-				 <div className=" product-image-modal-container overflow-hidden " style={{minHeight:'85vh'}}>
-					<button onClick={()=>{setPreviewVisible(false), setPreviewImage('') }} className="text-white cursor-pointer text-xl font-semibold  text-right  mb-3  absolute top-3 right-5 "  >X</button>
-					<div className='relative w-full h-img-popup'>
-						<Image 
-							src={previewImage} 
-							alt='preview image'
-							fill
-							style={{ objectFit: 'contain' }}
-						/>
+
+			<div  >
+				{previewVisible &&
+					<div className="product-image-modal-overlay" >
+						<div className="product-image-modal-container" style={{ minHeight: '85vh', overflow: 'hidden' }}>
+							<button onClick={() => { setPreviewVisible(false), setPreviewImage('') }} className={cssStyles.previewCloseBtn}  >X</button>
+							<div className={cssStyles.previewImageWrapper}>
+								<Image
+									src={previewImage}
+									alt='preview image'
+									fill
+									style={{ objectFit: 'contain' }}
+								/>
+							</div>
+						</div>
 					</div>
-				 </div>
-				</div>
 
 				}
 			</div>

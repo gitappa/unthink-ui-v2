@@ -3,10 +3,11 @@
 // mobile : h-36px w-36px
 
 import React from "react";
+import styles from "./Loader.module.css";
 
 const AuraCameraSpinLoader = () => {
 	return (
-		<div className='border-2 border-dashed border-indigo-600 dark:border-lightgray-101 aura_camera_spin_loader'></div>
+		<div className={`${styles.auraCameraLoader} aura_camera_spin_loader`}></div>
 	);
 };
 

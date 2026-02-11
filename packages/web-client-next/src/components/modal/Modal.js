@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CloseOutlined } from "@ant-design/icons";
+import styles from "./Modal.module.css";
 
 import {
 	makeBodyOverflowHidden,
@@ -17,15 +18,14 @@ const Modal = ({
 	size = "md",
 	headerText,
 	subText,
-	subTextClassName ='lg:text-base text-sm mt-2',
-	contentWrapperSpacingClassName = "px-8 py-4",
-	zIndexClassName = "z-40",
-	headerTextSpacingClassName = "py-6 px-4",
-	headerTextClassName = "text-xl-1.5 font-semibold",
-	closeClassName = "text-xl-1.5",
+	subTextClassName = styles.subTextDefault,
+	contentWrapperSpacingClassName = styles.contentSpacingDefault,
+	zIndexClassName = styles.zIndex40,
+	headerTextSpacingClassName = styles.headerTextSpacingDefault,
+	headerTextClassName = styles.headerTextDefault,
+	closeClassName = styles.textSizeXl1_5,
 }) => {
-	console.log('onClose',onClose);
-	
+
 	const [showChatModal, showWishlistModal] = useSelector((state) => [
 		state.chatV2.showChatModal,
 		state.appState.wishlist.showWishlistModal,
@@ -48,27 +48,27 @@ const Modal = ({
 			};
 		}
 
-		return () => {};
+		return () => { };
 	}, [isOpen]);
 
 	const maxWidthClassName = useMemo(() => {
 		switch (size) {
 			case "xs":
-				return "max-w-480 mx-4 tablet:mx-0";
+				return styles.sizeXs;
 
 			case "sm":
-				return "max-w-480 mx-4 tablet:mx-0 desktop:max-w-704";
+				return styles.sizeSm;
 
 			case "x-sm":
-				return "mx-4 tablet:mx-0 max-w-964";
+				return styles.sizeXSm;
 
 			case "md":
 			default:
-				return "max-w-480 mx-4 tablet:mx-0 tablet:max-w-704 desktop:max-w-1260";
+				return styles.sizeMd;
 		}
 	}, [size]);
 
-	const showHeader = useMemo(	
+	const showHeader = useMemo(
 		() => headerText || onClose,
 		[headerText, onClose]
 	);
@@ -77,16 +77,16 @@ const Modal = ({
 		return (
 			<div
 				// unthinkNextGenModalClass class added to handle body overflow scroll bar
-				className={`${unthinkNextGenModalClass} fixed flex justify-center z-50 items-center w-full h-screen overflow-auto left-0 top-0 backdrop-filter backdrop-blur-xs bg-gray-102 ${zIndexClassName}`}
+				className={`${unthinkNextGenModalClass} ${styles.modalOverlay} ${zIndexClassName}`}
 				onClick={() => maskClosable && onClose && onClose()}>
 				<div
-					className={`max-h-screen w-full mx-auto ${maxWidthClassName} pt-5`}
+					className={`${styles.modalContentWrapper} ${maxWidthClassName}`}
 					onClick={(e) => e.stopPropagation()} // to avoid click on backDrop // prevent bubbling
 				>
-					<div className='pb-5'>
+					<div className={styles.modalContentInner}>
 						{showHeader ? (
 							<div
-								className={`modal-header flex justify-between bg-white rounded-t-xl ${headerTextSpacingClassName} ${subText ?'items-start': ''}` }>
+								className={`${styles.modalHeader} ${headerTextSpacingClassName} ${subText ? styles.modalHeaderItemsStart : styles.modalHeaderItemsCenter}`}>
 								<div>
 									{headerText && (
 										<h2 className={`${headerTextClassName}`}>{headerText}</h2>
@@ -95,11 +95,11 @@ const Modal = ({
 										<p className={`${subTextClassName}`}>{subText}</p>
 									)}
 								</div>
-								<div className='flex'>
+								<div className={styles.closeWrapper}>
 									{onClose && (
 										<CloseOutlined
 											onClick={onClose}
-											className={`close flex items-center font-semibold cursor-pointer ${closeClassName}`}
+											className={`close ${styles.closeBase} ${closeClassName}`}
 											role='button'
 										/>
 									)}
@@ -107,9 +107,8 @@ const Modal = ({
 							</div>
 						) : null}
 						<div
-							className={`modal-body bg-slate-200 ${
-								showHeader ? "rounded-b-xl" : "rounded-xl"
-							} ${contentWrapperSpacingClassName}`}>
+							className={`${styles.modalBody} ${showHeader ? styles.roundedBottom : styles.roundedAll
+								} ${contentWrapperSpacingClassName}`}>
 							{children}
 						</div>
 					</div>

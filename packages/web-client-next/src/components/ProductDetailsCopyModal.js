@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Modal, Row, Col, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import styles from "./ProductDetailsCopyModal.module.css";
 
 import { addSidInProductUrl } from "../helper/utils";
 import { PRODUCT_DUMMY_URL } from "../constants/codes";
@@ -27,11 +28,11 @@ const ProductDetailsCopyModal = ({
 				open={isOpen}
 				onCancel={onClose}
 				cancelText='Close'
-				okButtonProps={{ className: "hidden" }}>
-				<div className='flex flex-col gap-2'>
+				okButtonProps={{ className: styles.hidden }}>
+				<div className={styles.contentWrapper}>
 					{productDetails.name ? (
-						<Row className='pt-3'>
-							<Col className='capitalize' span={8}>
+						<Row className={styles.rowPadding}>
+							<Col className={styles.capitalize} span={8}>
 								Product Name:
 							</Col>
 							<Col span={16}>{productDetails.name}</Col>
@@ -40,7 +41,7 @@ const ProductDetailsCopyModal = ({
 					{productDetails.image ? (
 						<Row>
 							<b>Product Image Url</b>
-							<div className='border p-1 rounded flex break-all'>
+							<div className={styles.urlBox}>
 								<a href={productDetails.image} target='_blank'>
 									{productDetails.image}
 								</a>{" "}
@@ -52,24 +53,24 @@ const ProductDetailsCopyModal = ({
 											e.preventDefault();
 											e.stopPropagation();
 										}}
-										className='text-xl flex ml-2'
+										className={styles.copyIcon}
 									/>
 								</CopyToClipboard>
 							</div>
 						</Row>
 					) : null}
 					{productRedirectionUrl &&
-					productRedirectionUrl !== PRODUCT_DUMMY_URL ? (
+						productRedirectionUrl !== PRODUCT_DUMMY_URL ? (
 						<Row>
 							<b>Product Url</b>
-							<div className='border p-1 rounded flex break-all'>
+							<div className={styles.urlBox}>
 								<a href={productRedirectionUrl} target='_blank'>
 									{productRedirectionUrl}
 								</a>{" "}
 								<CopyToClipboard
 									text={productRedirectionUrl}
 									onCopy={() => message.success("Copied", 1)}>
-									<CopyOutlined className='text-xl flex ml-2' />
+									<CopyOutlined className={styles.copyIcon} />
 								</CopyToClipboard>
 							</div>
 						</Row>

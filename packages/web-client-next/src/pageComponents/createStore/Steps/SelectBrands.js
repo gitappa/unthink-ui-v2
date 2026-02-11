@@ -35,21 +35,22 @@ const SelectBrands = ({ brandList, selectedBrands, handleBrandsChange }) => {
 										className='w-full h-full'>
 										<div
 											onClick={() => onBrandSelect(brand.brand)}
-											className='bg-white flex justify-center items-center card-shadow text-lg cursor-pointer p-1 h-full'>
-											{brand.logo ? (
-												<LazyLoadImage
-													src={brand.logo}
-													alt={brand.brand}
-													width='100px'
-													height='auto'
-													effect='blur'
-													className='object-contain h-full'
-												/>
-											) : (
-												<span className='font-bold break-all text-center capitalize'>
-													{brand.brand}
-												</span>
+											className='bg-white flex justify-center items-center card-shadow text-lg cursor-pointer p-1 h-full relative overflow-hidden'>
+											{brand.logo && (
+												<div className='absolute inset-0 w-full h-full'>
+													<LazyLoadImage
+														src={brand.logo}
+														alt={brand.brand}
+														width='100%'
+														height='100%'
+														effect='blur'
+														className='object-cover w-full h-full blur-sm opacity-50'
+													/>
+												</div>
 											)}
+											<span className='font-bold break-all text-center capitalize relative z-10 px-2'>
+												{brand.brand}
+											</span>
 										</div>
 									</Badge>
 								</div>
