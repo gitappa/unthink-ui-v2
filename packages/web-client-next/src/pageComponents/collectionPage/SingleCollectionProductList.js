@@ -1067,8 +1067,8 @@ const SingleCollectionProductList = ({
                             </div>
                             {isOverflowing && (
                               <div
-                                className={`${styles.videoPlayerAbsolute} ${styles.addmore_image}`}
-                                style={{ cursor: "pointer", zIndex: 10 }}
+                                className={styles.addmore_image}
+                                style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
                                 onClick={() => {
                                   if (swiperRef.current) {
                                     swiperRef.current.slideNext();
@@ -1139,15 +1139,15 @@ const SingleCollectionProductList = ({
 
                               {isOverflowing2 && (
                                 <div
-                                  className={`${styles.videoPlayerAbsolute} ${styles.addmore_image}`}
-                                  style={{ cursor: "pointer", zIndex: 10 }}
+                                  className={styles.addmore_image}
+                                  style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
                                   onClick={() => {
                                     if (swiperRef2.current) {
                                       swiperRef2.current.slideNext();
                                     }
                                   }}
                                 >
-                                  <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
+                                  <Image src={Addmore} alt="Scroll Right" width='38' height='38' />
                                 </div>
                               )}
                             </div>

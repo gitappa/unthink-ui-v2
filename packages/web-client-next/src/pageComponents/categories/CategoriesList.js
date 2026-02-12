@@ -25,6 +25,7 @@ import {
 } from "../appLoader/redux/actions";
 import { updateCategoriesDataInfluencerWidgetStarred } from "./redux/actions";
 import { getStoreData, setStoreData } from "../store/redux/actions";
+import styles from "./categoriesList.module.scss";
 
 const CategoriesList = ({
 	category,
@@ -258,10 +259,10 @@ const CategoriesList = ({
 	);
 
 	return (
-		<div className='bg-gray-50 rounded-xl'>
+		<div className={styles.wrapper}>
 			{title && (
-				<div className='p-4 flex justify-between items-center'>
-					<h2 className='text-xl lg:text-xl-2 font-bold capitalize'>{title}</h2>
+				<div className={styles.titleHeader}>
+					<h2 className={styles.titleText}>{title}</h2>
 					{/* <button className='h-10 px-4 bg-indigo-600 text-white rounded-xl flex items-center font-bold'>
 						<PlusOutlined className='mr-2.5' />
 						Create New
@@ -269,11 +270,11 @@ const CategoriesList = ({
 				</div>
 			)}
 			{category?.next_level?.length ? (
-				<div className='pt-8 pb-6'>
+				<div className={styles.contentContainer}>
 					{/* show UI in chip format if widget type=suggestion_chip otherwise show in card and title format */}
 					{category.widget_type === category_widget_type_suggestion_chip ? (
 						<>
-							<div className='flex flex-wrap justify-center'>
+							<div className={styles.chipContainer}>
 								{category.next_level
 									.slice(
 										0,
@@ -287,11 +288,11 @@ const CategoriesList = ({
 											return (
 												<div
 													key={data.title}
-													className='cursor-pointer rounded-full shadow-m mx-4 my-5 w-max bg-slate-200'
+													className={styles.suggestionChip}
 													onClick={() => onCategoryClick(data)}>
 													<h3
 														level={5}
-														className='m-0 px-3 py-0.75 font-medium text-base md:text-xl text-black-103'>
+														className={styles.chipTitle}>
 														{data.title}
 													</h3>
 												</div>
@@ -311,10 +312,10 @@ const CategoriesList = ({
 					) : (
 						<>
 							<div
-								className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 ${showPeopleCardView
-									? "xl:grid-cols-6 2xl:grid-cols-7"
-									: "xl:grid-cols-5 2xl:grid-cols-6"
-									} gap-4 lg:gap-6 px-4 lg:px-6 transition-all ease-in duration-300`}>
+								className={`${styles.gridWrapper} ${showPeopleCardView
+									? styles.peopleGrid
+									: styles.defaultGrid
+									}`}>
 								{productsCountToShow
 									? category.next_level
 										.slice(
@@ -379,7 +380,7 @@ const CategoriesList = ({
 					)}
 				</div>
 			) : (
-				<h2 className='text-center mt-16 text-xl'>Categories not found</h2>
+				<h2 className={styles.notFoundHeading}>Categories not found</h2>
 			)}
 		</div>
 	);
@@ -388,16 +389,16 @@ const CategoriesList = ({
 export default React.memo(CategoriesList);
 
 const ShowMoreSection = ({ showMoreOpen, setShowMoreOpen }) => (
-	<div className='mt-12 text-center'>
+	<div className={styles.showMoreSection}>
 		{showMoreOpen ? (
 			<button
-				className='text-indigo-600 text-xl font-medium'
+				className={styles.showMoreButton}
 				onClick={() => setShowMoreOpen(false)}>
 				Show less
 			</button>
 		) : (
 			<button
-				className='text-indigo-600 text-xl font-medium'
+				className={styles.showMoreButton}
 				onClick={() => setShowMoreOpen(true)}>
 				View more
 			</button>

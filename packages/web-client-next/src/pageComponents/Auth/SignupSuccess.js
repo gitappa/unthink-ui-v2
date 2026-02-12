@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Result } from "antd";
+import styles from "./authPage.module.scss";
 
 export default function SignupSuccess({
 	isICodeVerified = false,
@@ -9,16 +10,16 @@ export default function SignupSuccess({
 }) {
 	return (
 		<Result
-			className='lg:w-2/4 mx-auto'
+			className={styles.signupSuccessResult}
 			status='success'
-			title={<span className='text-white'>You are almost there!</span>}
+			title={<span className={styles.signupSuccessTitle}>You are almost there!</span>}
 			subTitle={
 				isICodeVerified ? (
-					<span className='text-white'>
+					<span className={styles.signupSuccessSubtitle}>
 						Please click the Sign In button below to continue.
 					</span>
 				) : (
-					<span className='text-white'>
+					<span className={styles.signupSuccessSubtitle}>
 						Please click on the verification link sent to {email} to finish the
 						registration process.
 					</span>
@@ -27,7 +28,7 @@ export default function SignupSuccess({
 			extra={
 				showSignInButton && (
 					<Link href='/signin'>
-						<button className='bg-primary rounded text-white py-1 px-9 font-normal text-lg'>
+						<button className={styles.signupSuccessButton}>
 							Sign In
 						</button>
 					</Link>

@@ -45,7 +45,7 @@ const NotFoundPage = () => {
 					</>
 				) : null}
 				<br />
-				<Link className='text-indigo-600 underline' href='/'>
+				<Link style={{ color: '#4f46e5', textDecoration: 'underline' }} href='/'>
 					Go home
 				</Link>
 			</p>

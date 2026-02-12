@@ -489,7 +489,7 @@ const CollectionDetails = ({
                     width="100%"
                     height="100%"
                     playsinline
-                    className="CollectionDetails_Img object-contain rounded-xl sm:max-w-s-5 w-full sm:w-200 lg:w-260   aspect-square"
+                    className={styles.videoPlayer}
                     style={{ zIndex: 10 }} // Ensure video is on top
                   />
                 ) : (
@@ -555,11 +555,11 @@ const CollectionDetails = ({
           )}
         </div>
 
-        <div className={`w-full ${showMoreEnabled ? "" : "self-center"}`}>
-          <div className="flex justify-between gap-4 mx-auto mb-2">
-            <div className="w-full text-2xl lg:text-3xl md:leading-none font-normal flex flex-col mb-0">
+        <div className={`${styles.detailsContainer} ${showMoreEnabled ? "" : styles.selfCenter}`}>
+          <div className={styles.headerFlex}>
+            <div className={styles.titleColumn}>
               {is_store_instance && (
-                <div className={`flex items-center mb-2 justify-between`}>
+                <div className={styles.storeInfoFlex}>
                   {is_store_instance && collectionOwner && user_name ? (
                     <>
                       <Tooltip
@@ -577,28 +577,28 @@ const CollectionDetails = ({
                           return route ? (
                             <Link
                               href={route}
-                              className="flex items-center pl-0"
+                              className={styles.userInfoLink}
                             >
                               {profile_image && (
                                 <img
                                   src={getFinalImageUrl(profile_image)}
-                                  className="md:h-14 md:w-14 h-10 w-10 rounded-10 aspect-square object-cover mr-2"
+                                  className={styles.userAvatar}
                                 />
                               )}
                               {/* text-blue-103 */}
-                              <span className="text-base lg:text-xl-1 text-violet-100 font-semibold lg:font-bold  ">
+                              <span className={styles.userNameText}>
                                 @{user_name}
                               </span>
                             </Link>
                           ) : (
-                            <div className="flex items-center pl-0">
+                            <div className={styles.userInfoContainer}>
                               {profile_image && (
                                 <img
                                   src={getFinalImageUrl(profile_image)}
-                                  className="md:h-14 md:w-14 h-10 w-10 rounded-10 aspect-square object-cover mr-2"
+                                  className={styles.userAvatar}
                                 />
                               )}
-                              <span className="text-base lg:text-xl-1 text-violet-100 font-semibold lg:font-bold  ">
+                              <span className={styles.userNameText}>
                                 @{user_name}
                               </span>
                             </div>
@@ -606,11 +606,11 @@ const CollectionDetails = ({
                         })()}
                       </Tooltip>
 
-                      <div className="flex items-center gap-3">
+                      <div className={styles.actionsContainer}>
                         {!isGuestUser && isPageOwner && (
                           <EditOutlined
                             title="Edit Collection"
-                            className="flex items-center text-xl lg:text-xl-2 cursor-pointer"
+                            className={styles.editIconContainer}
                             onClick={
                               () =>
                                 navigate(
@@ -620,7 +620,7 @@ const CollectionDetails = ({
                           />
                         )}
 
-                        <div className="relative flex justify-between w-6 lg:w-7">
+                        <div className={styles.shareContainer}>
                           {showShareCollection && (
                             <ShareOptions
                               url={sharePageUrl}
@@ -633,11 +633,10 @@ const CollectionDetails = ({
                           )}
                           {sharePageUrl && collection.status === PUBLISHED && (
                             <img
-                              className={`flex w-auto mt-0.5 mb-auto ${showShareCollection ? "pointer-events-none" : ""
-                                } 
-																${collection.status === PUBLISHED
-                                  ? "cursor-pointer"
-                                  : "cursor-not-allowed opacity-50"
+                              className={`${styles.shareImg} ${showShareCollection ? styles.pointerEventsNone : ""
+                                } ${collection.status === PUBLISHED
+                                  ? styles.cursorPointer
+                                  : styles.cursorNotAllowed
                                 }`}
                               src={share_icon}
                               title={
@@ -656,20 +655,20 @@ const CollectionDetails = ({
                     </>
                   ) : (
                     <>
-                      <span className="text-newcolor-100 text-xs">
+                      <span className={styles.poweredByText}>
                         powered by
                       </span>
                       &nbsp;
                       <a
                         href="https://unthink.ai/"
                         target="_blank"
-                        className="flex p-0"
+                        className={styles.unthinkLogoLink}
                       >
                         <Image
                           src={unthink_black_log}
                           preview={false}
                           height={16}
-                          className="cursor-pointer"
+                          className={styles.unthinkLogoImg}
                         />
                       </a>
                     </>
@@ -677,7 +676,7 @@ const CollectionDetails = ({
                 </div>
               )}
               <div
-                className="break-word-only h-content ellipsis_3 text-2xl md:text-3xl lg:text-5xl 2xl:text-5xl lg:leading-54 2xl:leading-64 font-semibold lg:font-bold   text-newcolor-100"
+                className={styles.collectionName}
                 title={collection_name}
               >
                 {capitalFirstLetter(collection_name)}
@@ -727,12 +726,12 @@ const CollectionDetails = ({
           </div>
 
           {collection.video_url && (
-            <div className="flex items-center justify-between my-2 sm:my-5">
-              <span className="text-base lg:text-xl font-semibold leading-none whitespace-nowrap text-newcolor-100">
+            <div className={styles.inspiredByContainer}>
+              <span className={styles.inspiredByText}>
                 Inspired by
                 {collection?.display_url || collection.video_url ? (
                   <a
-                    className="p-0 pl-1 underline text-violet-100 text-base lg:text-xl font-semibold"
+                    className={styles.inspiredByLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     href={collection?.display_url || collection.video_url}
@@ -744,26 +743,26 @@ const CollectionDetails = ({
             </div>
           )}
 
-          <div className="mt-2">
+          <div className={styles.tagsContainer}>
             {showFeatureOnBTOnNonStore &&
               collection.hosted_stores?.includes(STORE_USER_NAME_BUDGETTRAVEL) ? (
-              <span className="inline-block px-2 py-1 bg-violet-100 text-white rounded-lg text-xs leading-none">
+              <span className={styles.tagBadge}>
                 Featured on Budget Travel store
               </span>
             ) : null}
             {showFeatureOnStore &&
               collection.hosted_stores?.includes(current_store_name) ? (
-              <span className="inline-block px-2 py-1 bg-violet-100 text-white rounded-lg text-xs leading-none">
+              <span className={styles.tagBadge}>
                 Featured on {storeDisplayName} store
               </span>
             ) : null}
           </div>
 
           {collection.blog_url && (
-            <div className="text-base font-semibold lg:text-xl pt-2 leading-none">
+            <div className={styles.fullArticleText}>
               Read the full article{" "}
               <a
-                className="p-0 underline text-violet-100"
+                className={styles.articleLink}
                 target="_blank"
                 href={collection.blog_url}
               >
@@ -774,39 +773,39 @@ const CollectionDetails = ({
 
           {collection.generated_by === COLLECTION_GENERATED_BY_IMAGE_BASED &&
             (collection.image_url || collection.cover_image) && (
-              <div className="text-base font-semibold lg:text-xl pt-2 leading-none">
+              <div className={styles.fullArticleText}>
                 Look inspired by the image
               </div>
             )}
 
-          <div className='relative'>
+          <div className={styles.relativeContainer}>
             <p
               ref={descriptionRef}
-              className={`text-newcolor-100 text-base lg:text-xl 2xl:text-2xl pt-2 whitespace-pre-line mb-0 ${isShowMoreActive ? "" : styles.collection_description_ellipsis
+              className={`${styles.descriptionText} ${isShowMoreActive ? "" : styles.collection_description_ellipsis
                 }`}>
               {collection?.description}
             </p>
             {showMoreEnabled &&
               (isShowMoreActive ? (
                 <span
-                  className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer block '
+                  className={styles.readMoreText}
                   onClick={() => dispatch(toggleShowMore(false))}>
                   Read less
                 </span>
               ) : (
                 <span
-                  className='text-base lg:text-xl 2xl:text-xl-1 text-newcolor-100 font-semibold cursor-pointer block  '
+                  className={styles.readMoreText}
                   onClick={() => dispatch(toggleShowMore(true))}>
                   Read more...
                 </span>
               ))}
           </div>
 
-          <div className="flex items-center gap-2 md:gap-5 ml-auto mt-5 all_collection_buttons">
+          <div className={`${styles.buttonsRow} all_collection_buttons`}>
             {isPageOwner ? (
               <button
                 onClick={() => setBannerModalOpen(true)}
-                className="flex items-center rounded-10 lg:rounded-15 border-2 text-newcolor-100 hover:text-white hover:bg-violet-100 transition-transform border-violet-100 justify-center text-xs md:text-sm font-semibold lg:font-bold w-2/4 h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10"
+                className={styles.actionButton}
               >
                 {collection?.sponsor_details?.banner?.image
                   ? "Update Banner"
@@ -816,7 +815,7 @@ const CollectionDetails = ({
 
             {isPageOwner &&
               (updateWishlistInProgress ? (
-                <Spin className="ml-5" />
+                <Spin className={styles.spinLeft} />
               ) : collection.status === DONE ? (
                 <CustomTooltip
                   messageText="Publish your first collection and join the Unthink creator club!"
@@ -825,7 +824,7 @@ const CollectionDetails = ({
                   overlayClassName="max-w-640"
                 >
                   <button
-                    className="flex items-center rounded-10 lg:rounded-15 border-2 text-newcolor-100 hover:text-white hover:bg-violet-100 transition-transform border-violet-100 justify-center text-xs md:text-sm font-semibold lg:font-bold w-2/4 h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10"
+                    className={styles.actionButton}
                     onClick={handlePublishCollection}
                     title="click to publish the collection"
                   >
@@ -835,7 +834,7 @@ const CollectionDetails = ({
               ) : (
                 collection.status === PUBLISHED && (
                   <button
-                    className={`flex items-center rounded-10 lg:rounded-15 border-2 text-newcolor-100 hover:text-white hover:bg-violet-100 transition-transform border-violet-100 justify-center text-xs md:text-sm font-semibold lg:font-bold w-2/4 h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10`}
+                    className={styles.actionButton}
                     onClick={handlePublishCollection}
                     title="Click to unpublish collection"
                   >
@@ -845,16 +844,13 @@ const CollectionDetails = ({
               ))}
           </div>
 
-          <div className="flex gap-2 mt-4 mb-4 sm:mb-0">
+          <div className={styles.featureRow}>
             {showFeatureOnBTOnNonStore ? (
               <button
                 onClick={() =>
                   handleFeatureCollectionOnStore(STORE_USER_NAME_BUDGETTRAVEL)
                 }
-                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${collection.status !== PUBLISHED
-                  ? "text-newcolor-100 border-violet-100 "
-                  : "text-newcolor-100 border-violet-100"
-                  } self-end`}
+                className={styles.featureButton}
                 disabled={collection.status !== PUBLISHED}
                 title={
                   collection.status !== PUBLISHED
@@ -874,10 +870,7 @@ const CollectionDetails = ({
                 onClick={() =>
                   handleFeatureCollectionOnStore(current_store_name)
                 }
-                className={`rounded-10 lg:rounded-15 border-2 hover:text-white hover:bg-violet-100 transition-transform justify-center text-xs md:text-sm font-semibold lg:font-bold w-full h-7 sm:w-2/4 lg:w-72 md:h-8 lg:h-10 ${collection.status !== PUBLISHED
-                  ? "text-newcolor-100 border-violet-100"
-                  : "text-newcolor-100 border-violet-100"
-                  } self-end`}
+                className={styles.featureButton}
                 disabled={collection.status !== PUBLISHED}
                 title={
                   collection.status !== PUBLISHED
@@ -910,7 +903,7 @@ const CollectionDetails = ({
         collection?.sponsor_details?.banner?.url ? (
         <Link
           href={collection.sponsor_details.banner.url}
-          className="flex px-0 mt-4"
+          className={styles.bannerLink}
           target="_blank"
         >
           <img
@@ -921,7 +914,7 @@ const CollectionDetails = ({
                 redirectionUrl: collection.sponsor_details.banner.url,
               })
             }
-            className="w-full object-cover rounded"
+            className={styles.bannerImage}
             style={{
               aspectRatio: "1 / 0.25",
             }}

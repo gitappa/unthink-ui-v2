@@ -1,0 +1,91 @@
+/* === AutoCreateCollectionModal Styles === */
+
+.formContainer {
+    z-index: 40;
+}
+
+.label {
+    font-size: 1rem; /* text-base */
+    color: var(--black-100, #171717);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 3px; /* mb-0.75 */
+}
+
+.labelWithMargin {
+    font-size: 1rem;
+    color: var(--black-100, #171717);
+    font-weight: 600;
+    display: block;
+    margin-top: 1rem; /* mt-4 */
+    margin-bottom: 3px;
+}
+
+.input {
+    text-align: left;
+    outline: none;
+    padding-left: 0.75rem; /* px-3 */
+    padding-right: 0.75rem;
+    height: 2.5rem; /* h-10 */
+    background-color: #f1f5f9; /* bg-slate-100 */
+    border-radius: 0.75rem; /* rounded-xl */
+    width: 100%;
+    border: none;
+}
+
+.input::placeholder {
+    color: var(--gray-101, #9ca3af);
+}
+
+.errorText {
+    color: #ef4444; /* text-red-500 */
+    margin-top: 0.25rem; /* my-1 */
+    margin-bottom: 0.25rem;
+    height: 14px; /* h-3.5 */
+    line-height: 1; /* leading-none */
+}
+
+.textareaContainer {
+    background-color: #f1f5f9; /* bg-slate-100 */
+    border-radius: 0.75rem; /* rounded-xl */
+}
+
+.textarea {
+    text-align: left;
+    background-color: #f1f5f9;
+    outline: none;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.75rem; /* pt-3 */
+    border-radius: 0.75rem;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    border: none;
+}
+
+.textarea::placeholder {
+    color: var(--gray-101, #9ca3af);
+}
+
+.actionsRow {
+    text-align: right;
+    margin-top: 1rem; /* mt-4 */
+}
+
+.submitButton {
+    border-radius: 0.75rem; /* rounded-xl */
+    color: var(--indigo-100, #e0e7ff);
+    font-weight: 700;
+    font-size: 0.75rem; /* text-xs */
+    padding: 0.5rem 1.125rem; /* py-2 px-4.5 */
+    background-color: #4f46e5; /* bg-indigo-600 */
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .submitButton {
+        font-size: 0.875rem; /* md:text-sm */
+    }
+}

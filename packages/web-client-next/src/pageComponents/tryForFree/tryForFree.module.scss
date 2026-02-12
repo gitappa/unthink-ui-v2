@@ -1576,7 +1576,6 @@
 .uploadDraggerContainerPublish {
     width: 100%;
     max-width: 366px;
-    aspect-ratio: 1 / 1;
     margin-top: 16px;
 }
 
@@ -1607,22 +1606,18 @@
 }
 
 .updateCoverButton { 
-    display: none;
-    
-    @media (min-width: 1024px) {
-        display: inline-block;
-        font-size: 14px;
-        z-index: 10;
-        border-radius: 12px;
-        padding: 10px 14px;
-        height: 100%;
-        font-weight: 700;
-        background-color: #7C74EC;
-        color: white;
-        border: 2px solid #7C74EC;
-        margin-top: 16px;
-        margin-right: 16px;
-    }
+    display: inline-block;
+    font-size: 14px;
+    z-index: 10;
+    border-radius: 12px;
+    padding: 10px 14px;
+    height: 100%;
+    font-weight: 700;
+    background-color: #7C74EC;
+    color: white;
+    border: 2px solid #7C74EC;
+    margin-top: 24px;
+    cursor: pointer;
 }
 
 .dragIcon {
@@ -2454,4 +2449,75 @@
 
 .wFull {
     width: 100%;
+}
+
+/* === ReviewCollectionContainerWrapper Styles === */
+
+.reviewCollectionContainerWrapper {
+    position: relative;
+    
+    @media (min-width: 768px) {
+        margin-left: 1rem; /* tablet:mx-4 */
+        margin-right: 1rem;
+    }
+
+    @media (min-width: 1324px) {
+        margin-left: 2rem; /* desktop:mx-8 */
+        margin-right: 2rem;
+    }
+}
+
+.classyBackgroundImage {
+    pointer-events: none;
+    opacity: 0.22;
+    width: 220px;
+    height: auto;
+    z-index: 0;
+    filter: blur(0.2px);
+}
+
+.bgImageTop {
+    position: absolute;
+    top: 6rem; /* top-24 */
+    left: -2.5rem; /* -left-10 */
+}
+
+.bgImageBottom {
+    position: absolute;
+    top: -2.5rem; /* -top-10 */
+    right: -2.5rem; /* -right-10 */
+}
+
+.contentGlass {
+    padding: 0.75rem; /* p-3 */
+    display: flex;
+    justify-content: center;
+
+    @media (min-width: 768px) {
+        padding-left: 1rem; /* tablet:px-4 */
+        padding-right: 1rem;
+        padding-top: 0.75rem; /* tablet:py-3 */
+        padding-bottom: 0.75rem;
+        border-radius: 1rem; /* tablet:rounded-2xl */
+    }
+
+    @media (min-width: 1324px) {
+        padding-left: 2rem; /* desktop:px-8 */
+        padding-right: 2rem;
+        padding-top: 1.5rem; /* desktop:py-6 */
+        padding-bottom: 1.5rem;
+    }
+}
+
+.innerContent {
+    width: 100%;
+    max-width: 20rem; /* max-w-s-3 */
+
+    @media (min-width: 768px) {
+        max-width: 768px; /* tablet:max-w-screen-tablet */
+    }
+    
+    @media (min-width: 1324px) {
+        max-width: 1324px; /* desktop:max-w-screen-desktop */
+    }
 }

@@ -1,6 +1,7 @@
 .collection_description_ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 5 !important;
+  line-clamp: 5 !important;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,8 +109,11 @@
 }
 
 .addmore_image {
-  right: -10px !important;
-  top: -6px;
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
 }
 
 .addmore_image_edit{
@@ -121,6 +125,418 @@
   width:38px;
   height:38px;
 }
+
+/* === CollectionDetails Converted Styles === */
+
+.detailsContainer {
+    width: 100%;
+    
+    &.selfCenter {
+        align-self: center;
+    }
+}
+
+.headerFlex {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem; /* gap-4 */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.titleColumn {
+    width: 100%;
+    font-size: 1.5rem; /* text-2xl */
+    line-height: 1; /* md:leading-none */
+    font-weight: 400; /* font-normal */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+
+    @media (min-width: 1024px) {
+        font-size: 1.875rem; /* lg:text-3xl */
+    }
+}
+
+.storeInfoFlex {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem; /* mb-2 */
+    justify-content: space-between;
+}
+
+.userInfoLink {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+}
+
+.userAvatar {
+    height: 2.5rem; /* h-10 */
+    width: 2.5rem; /* w-10 */
+    border-radius: 10px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    margin-right: 0.5rem; /* mr-2 */
+
+    @media (min-width: 768px) {
+        height: 3.5rem; /* md:h-14 */
+        width: 3.5rem; /* md:w-14 */
+    }
+}
+
+.userNameText {
+    font-size: 1rem; /* text-base */
+    color: #7C74EC; /* text-violet-100 */
+    font-weight: 600; /* font-semibold */
+
+    @media (min-width: 1024px) {
+        font-size: 1.375rem; /* lg:text-xl-1 (22px) */
+        font-weight: 700; /* lg:font-bold */
+    }
+}
+
+.editIconContainer {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem; /* text-xl */
+    cursor: pointer;
+
+    @media (min-width: 1024px) {
+        font-size: 1.75rem; /* lg:text-xl-2 (28px) */
+    }
+}
+
+.shareContainer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 1.5rem; /* w-6 */
+
+    @media (min-width: 1024px) {
+        width: 1.75rem; /* lg:w-7 */
+    }
+}
+
+.shareImg {
+    display: flex;
+    width: auto;
+    margin-top: 0.125rem; /* mt-0.5 */
+    margin-bottom: auto;
+}
+
+.pointerEventsNone {
+    pointer-events: none;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.cursorNotAllowed {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.poweredByText {
+    font-size: 0.75rem; /* text-xs */
+    color: #232524; /* text-newcolor-100 */
+}
+
+.unthinkLogoLink {
+    display: flex;
+    padding: 0;
+}
+
+.unthinkLogoImg {
+    cursor: pointer;
+}
+
+.collectionName {
+    word-break: break-word; /* break-word-only */
+    height: fit-content; /* h-content */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* ellipsis_3 handled by component class mixing usually */
+    
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600; /* font-semibold */
+    color: #232524; /* text-newcolor-100 */
+
+    @media (min-width: 768px) {
+        font-size: 1.875rem; /* md:text-3xl */
+    }
+
+    @media (min-width: 1024px) {
+        font-size: 3rem; /* lg:text-5xl */
+        line-height: 54px; /* lg:leading-54 */
+        font-weight: 700; /* lg:font-bold */
+    }
+    
+    @media (min-width: 1536px) {
+        font-size: 3rem; /* 2xl:text-5xl */
+        line-height: 64px; /* 2xl:leading-64 */
+    }
+}
+
+.inspiredByContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem; /* my-2 */
+    margin-bottom: 0.5rem;
+
+    @media (min-width: 640px) {
+        margin-top: 1.25rem; /* sm:my-5 */
+        margin-bottom: 1.25rem;
+    }
+}
+
+.inspiredByText {
+    font-size: 1rem; /* text-base */
+    font-weight: 600; /* font-semibold */
+    line-height: 1; /* leading-none */
+    white-space: nowrap;
+    color: #232524; /* text-newcolor-100 */
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+}
+
+.inspiredByLink {
+    padding: 0;
+    padding-left: 0.25rem; /* pl-1 */
+    text-decoration: underline;
+    color: #7C74EC; /* text-violet-100 */
+    font-size: 1rem; /* text-base */
+    font-weight: 600; /* font-semibold */
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+}
+
+.tagsContainer {
+    margin-top: 0.5rem; /* mt-2 */
+}
+
+.tagBadge {
+    display: inline-block;
+    padding-left: 0.5rem; /* px-2 */
+    padding-right: 0.5rem;
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    background-color: #7C74EC; /* bg-violet-100 */
+    color: white;
+    border-radius: 0.5rem; /* rounded-lg */
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1; /* leading-none */
+}
+
+.fullArticleText {
+    font-size: 1rem; /* text-base */
+    font-weight: 600; /* font-semibold */
+    padding-top: 0.5rem; /* pt-2 */
+    line-height: 1; /* leading-none */
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+}
+
+.articleLink {
+    padding: 0;
+    text-decoration: underline;
+    color: #7C74EC; /* text-violet-100 */
+}
+
+.descriptionText {
+    color: #232524; /* text-newcolor-100 */
+    font-size: 1rem; /* text-base */
+    padding-top: 0.5rem; /* pt-2 */
+    white-space: pre-line;
+    margin-bottom: 0;
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+
+    @media (min-width: 1536px) {
+        font-size: 1.5rem; /* 2xl:text-2xl */
+    }
+}
+
+.readMoreText {
+    font-size: 1rem; /* text-base */
+    color: #232524; /* text-newcolor-100 */
+    font-weight: 600; /* font-semibold */
+    cursor: pointer;
+    display: block;
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+
+    @media (min-width: 1536px) {
+        font-size: 1.375rem; /* 2xl:text-xl-1 */
+    }
+}
+
+.relativeContainer {
+    position: relative;
+}
+
+/* Button Styles */
+
+.buttonsRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+    margin-left: auto;
+    margin-top: 1.25rem; /* mt-5 */
+    /* all_collection_buttons class left in JSX if needed by external scripts, or I can remove it if purely safe styling */
+
+    @media (min-width: 768px) {
+        gap: 1.25rem; /* md:gap-5 */
+    }
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    border-radius: 10px; /* rounded-10 */
+    border-width: 2px;
+    color: #232524; /* text-newcolor-100 */
+    transition-property: transform;
+    border-color: #7C74EC; /* border-violet-100 */
+    justify-content: center;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
+    width: 50%; /* w-2/4 */
+    height: 1.75rem; /* h-7 */
+    background-color: transparent; /* implicit? */
+
+    &:hover {
+        color: white;
+        background-color: #7C74EC; /* bg-violet-100 */
+    }
+
+    @media (min-width: 640px) {
+        width: 50%; /* sm:w-2/4 */
+    }
+
+    @media (min-width: 768px) {
+        font-size: 0.875rem; /* md:text-sm */
+        height: 2rem; /* md:h-8 */
+    }
+
+    @media (min-width: 1024px) {
+        border-radius: 15px; /* lg:rounded-15 */
+        font-weight: 700; /* lg:font-bold */
+        width: 18rem; /* lg:w-72 */
+        height: 2.5rem; /* lg:h-10 */
+    }
+}
+
+.spinLeft {
+    margin-left: 1.25rem; /* ml-5 */
+}
+
+/* Feature Buttons Row */
+.featureRow {
+    display: flex;
+    gap: 0.5rem; /* gap-2 */
+    margin-top: 1rem; /* mt-4 */
+    margin-bottom: 1rem; /* mb-4 */
+
+    @media (min-width: 640px) {
+        margin-bottom: 0; /* sm:mb-0 */
+    }
+}
+
+.featureButton {
+    border-radius: 10px; /* rounded-10 */
+    border-width: 2px;
+    /* hover text white bg violet is same */
+    transition-property: transform;
+    justify-content: center;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
+    width: 100%; /* w-full */
+    height: 1.75rem; /* h-7 */
+    align-self: flex-end; /* self-end */
+    
+    color: #232524; /* text-newcolor-100 */
+    border-color: #7C74EC; /* border-violet-100 */
+    background-color: transparent;
+
+    &:hover {
+        color: white;
+        background-color: #7C74EC;
+    }
+
+    @media (min-width: 640px) {
+        width: 50%; /* sm:w-2/4 */
+    }
+
+    @media (min-width: 768px) {
+        font-size: 0.875rem; /* md:text-sm */
+        height: 2rem; /* md:h-8 */
+    }
+
+    @media (min-width: 1024px) {
+        border-radius: 15px; /* lg:rounded-15 */
+        font-weight: 700; /* lg:font-bold */
+        width: 18rem; /* lg:w-72 */
+        height: 2.5rem; /* lg:h-10 */
+    }
+}
+
+.bannerLink {
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 1rem; /* mt-4 */
+}
+
+.bannerImage {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.25rem; /* rounded */
+    /* aspect ratio inline style in JSX */
+}
+
+.videoPlayer {
+    /* CollectionDetails_Img global */
+    object-fit: contain; /* object-contain */
+    border-radius: 0.75rem; /* rounded-xl */
+    width: 100%; /* w-full */
+    aspect-ratio: 1 / 1; /* aspect-square */
+    
+    @media (min-width: 640px) {
+        width: 200px; /* sm:w-200 */
+        /* sm:max-w-s-5 ignored or folded into width? I'll assume width overrides it or it's similar */
+    }
+
+    @media (min-width: 1024px) {
+        width: 260px; /* lg:w-260 */
+    }
+}
+
+.userInfoContainer {
+    display: flex;
+    align-items: center;
+    padding-left: 0; /* pl-0 */
+}
+
+.actionsContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* gap-3 */
+}
+
 
 
 
@@ -203,9 +619,9 @@
   }
 
   .addmore_image{
-    right: -12px !important;
-    scale: 0.9 !important;
-    top:-15px !important;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.9);
   }
 
   .collection_page_sort_product_list .ant-select-selection-item {
@@ -256,10 +672,10 @@
 
 
   .addmore_image {
-    scale: 0.8 !important;
-    top: -23px !important;
-    right: -15px !important;
-}
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+  }
 
 }
 
@@ -313,7 +729,9 @@
   // }
 
 .addmore_image{
-  right: -12px !important;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 }

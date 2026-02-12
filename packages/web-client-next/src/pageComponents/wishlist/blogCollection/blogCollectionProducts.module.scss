@@ -1,0 +1,36 @@
+/* === BlogCollectionProducts Styles === */
+
+.productsGrid {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem; /* gap-1 */
+}
+
+/* Skeleton Styles */
+.skeletonItem {
+    width: 10rem; /* w-40 = 160px */
+    height: 11.25rem; /* h-180 approx 180px */
+    /* If h-180 is 180px */
+    height: 180px;
+
+    @media (min-width: 1024px) {
+        width: 180px; /* lg:w-180 */
+        height: 180px;
+    }
+}
+
+.emptyState {
+    margin-top: 5rem; /* mt-20 */
+    width: 100%;
+    text-align: center;
+}
+
+.emptyText {
+    font-size: 1.25rem; /* text-xl */
+    padding-top: 1.5rem; /* pt-6 */
+    width: 40%; /* w-2/5 */
+    display: inline-block;
+}

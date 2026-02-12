@@ -720,6 +720,7 @@ const ReviewCollectionStepPublish = ({
 													<>
 														<Dragger
 															className='w-full px-4 rounded-2xl'
+															style={{ aspectRatio: "1 / 1" }}
 															{...uploadProps}
 															name='cover_image'
 															showUploadList={false}
@@ -736,8 +737,7 @@ const ReviewCollectionStepPublish = ({
 															</p>
 														</Dragger>
 
-														<Dragger
-															className='w-52 h-52 px-4 rounded-2xl no_background_change_image'
+														<Upload
 															{...uploadProps}
 															name='cover_image'
 															showUploadList={false}
@@ -747,7 +747,7 @@ const ReviewCollectionStepPublish = ({
 																className={styles.updateCoverButton}>
 																Upload cover image
 															</button>
-														</Dragger>
+														</Upload>
 													</>
 												)}
 											</div>
