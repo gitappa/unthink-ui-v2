@@ -40,7 +40,7 @@ export default function RecommendationLineItem({
 				<div
 					className={"unthink-shared-collection-list__data-row"}
 					onClick={scrollToCuratedForYou}>
-					<Text className='font-medium'>Curated for you</Text>
+					<Text style={{ fontWeight: 500 }}>Curated for you</Text>
 				</div>
 			) : null;
 

@@ -1,0 +1,101 @@
+/* PeopleCard Styles */
+.card {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    background-color: #f1f5f9; /* bg-slate-100 */
+    border-radius: 0.75rem; /* rounded-xl */
+    padding: 2rem; /* p-8 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* shadow-m */
+    position: relative;
+}
+
+.imageWrapper {
+    width: 100%;
+}
+
+.image {
+    border-radius: 9999px; /* rounded-full */
+    aspect-ratio: 1 / 1; /* aspect-square */
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+}
+
+.footer {
+    width: 100%;
+    margin-top: 0.75rem; /* mt-3 */
+    border-bottom-left-radius: 0.75rem; /* rounded-b-xl */
+    border-bottom-right-radius: 0.75rem;
+}
+
+.title {
+    font-size: 1rem; /* text-base */
+    font-weight: 600; /* font-semibold */
+    color: #000000; /* text-black-200 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* overflow-ellipsis */
+    text-transform: capitalize;
+    height: 3.5rem; /* h-14 */
+    text-align: center;
+    margin: 0;
+
+    /* Line Clamp */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+
+    @media (min-width: 1024px) {
+        font-size: 1.25rem; /* lg:text-xl */
+    }
+}
+
+.adminButton {
+    margin-top: 0.5rem; /* mt-2 */
+    text-align: center;
+    width: 100%;
+}
+
+.creatorActive {
+    background-color: #BFC2CA; /* bg-gray-104 */
+    color: #4b5563; /* text-gray-600 */
+}
+
+.creatorInactive {
+    background-color: #94A3B8; /* bg-lightgray-104 */
+    color: #ffffff; /* text-white */
+}
+
+.signInButton {
+    margin-top: 0.5rem; /* mt-2 */
+    background-color: #f7c951; /* bg-secondary */
+    color: #083dc1; /* text-primary */
+    text-align: center;
+    width: 100%;
+}
+
+.starIconWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.starIconInner {
+    padding-right: 1rem; /* pr-4 */
+    padding-top: 1rem; /* pt-4 */
+}
+
+.starIcon {
+    font-size: 1.25rem; /* text-xl */
+    display: flex;
+    cursor: pointer;
+}
+
+.starActive {
+    color: #F2C94C; /* text-yellow-102 */
+}
+
+.starInactive {
+    color: #9e9e9e; /* text-gray-106 */
+}

@@ -11,6 +11,7 @@ import {
 } from "../../helper/utils";
 import { MAIN_SITE_URL, PATH_ROOT, PATH_STORE } from "../../constants/codes";
 import { current_store_name } from "../../constants/config";
+import styles from "./breadcrumbs.module.scss";
 
 const Breadcrumbs = ({
 	isRootPage: isInspirationDisable,
@@ -21,7 +22,7 @@ const Breadcrumbs = ({
 	is_store_instance,
 	currentCollectionName,
 	currentCollectionId,
-collectionsBy,
+	collectionsBy,
 	theme,
 	userName,
 	user_id,
@@ -70,9 +71,10 @@ collectionsBy,
 			breadCrumbItems.push({ label: currentCollectionName });
 		}
 
-		if(isCreateFreeCollectionPage){
-			breadCrumbItems.push({ label: currentCollectionName ,
-				url:isCreateFreeCollectionPage ? '/' : undefined
+		if (isCreateFreeCollectionPage) {
+			breadCrumbItems.push({
+				label: currentCollectionName,
+				url: isCreateFreeCollectionPage ? '/' : undefined
 			});
 		}
 
@@ -96,16 +98,16 @@ collectionsBy,
 	const mainSiteUrl = useMemo(() => MAIN_SITE_URL[current_store_name], []);
 
 	return (
-		<div className='lg:container lg:mx-auto pt-12'>
+		<div className={styles.breadcrumbsContainer}>
 			<div
-				className={`${isInspirationDisable ? "max-w-s-3 sm:max-w-lg-1" : "max-w-6xl-1 px-3"
-					} lg:max-w-3xl-2 2xl:max-w-6xl-2 lg:px-0 mx-auto`}>
-				<div className='flex items-center gap-3 text-base lg:text-lg'>
+				className={`${styles.breadcrumbsInner} ${isInspirationDisable ? styles.breadcrumbsInnerInspirationDisable : styles.breadcrumbsInnerDefault
+					}`}>
+				<div className={styles.breadcrumbsFlex}>
 					{/* Back Button for Collection Review Page */}
-					{( isCollectionReviewPage  || isCreateFreeCollectionPage ) && (
+					{(isCollectionReviewPage || isCreateFreeCollectionPage) && (
 						<>
 							<ArrowLeftOutlined
-								className="cursor-pointer text-lg lg:text-xl-1 mb-1.25 text-gray-600"
+								className={styles.backIcon}
 								onClick={() => window.history.back()}
 							/>
 							<div>/</div>
@@ -113,7 +115,7 @@ collectionsBy,
 					)}
 					{/* Home Icon */}
 					<HomeOutlined
-						className={`flex text-lg lg:text-xl-1 mb-1.25 ${isHomeDisable ? "text-gray-106 cursor-default" : "cursor-pointer"
+						className={`${styles.homeIcon} ${isHomeDisable ? styles.homeIconDisabled : styles.homeIconActive
 							}`}
 						onClick={() =>
 							!isHomeDisable &&
@@ -129,8 +131,8 @@ collectionsBy,
 								<div>/</div>
 								<div
 									className={`${item.url
-										? "cursor-pointer hover:underline"
-										: "text-gray-106 ellipsis_1"
+										? styles.breadcrumbLink
+										: styles.breadcrumbText
 										}`}
 									onClick={() => {
 										item.url && navigate(item?.url);

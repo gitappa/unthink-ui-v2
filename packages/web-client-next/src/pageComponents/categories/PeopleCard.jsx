@@ -4,6 +4,7 @@ import { StarFilled } from "@ant-design/icons";
 import { getFinalImageUrl } from "../../helper/utils";
 
 import defaultAvatar from "../../images/avatar.svg";
+import styles from "./peopleCard.module.scss";
 
 const PeopleCard = ({
 	categoryData,
@@ -20,9 +21,9 @@ const PeopleCard = ({
 		communityProperties;
 	return (
 		<div
-			className='flex flex-col cursor-pointer bg-slate-100 rounded-xl p-8 shadow-m relative'
+			className={styles.card}
 			onClick={() => handleCategoryClick(categoryData)}>
-			<div className='w-full'>
+			<div className={styles.imageWrapper}>
 				<img
 					loading='lazy'
 					src={
@@ -31,14 +32,14 @@ const PeopleCard = ({
 							: defaultAvatar
 					}
 					width='100%'
-					className='rounded-full aspect-square h-auto object-cover'
+					className={styles.image}
 				/>
 			</div>
 			{/* card footer */}
-			<div className='w-full mt-3 rounded-b-xl category-card-footer'>
+			<div className={`${styles.footer} category-card-footer`}>
 				<p
 					title={categoryData?.title}
-					className='text-base category-title lg:text-xl font-semibold text-black-200 overflow-hidden overflow-ellipsis capitalize h-14 text-center'>
+					className={`${styles.title} category-title`}>
 					{categoryData?.title}
 				</p>
 
@@ -54,9 +55,9 @@ const PeopleCard = ({
 										: feature_as_creator?.info
 								}>
 								<button
-									className={`mt-2 text-center w-full ${isCreator
-											? "bg-gray-104 text-gray-600"
-											: "bg-lightgray-104 text-white"
+									className={`${styles.adminButton} ${isCreator
+										? styles.creatorActive
+										: styles.creatorInactive
 										}`}
 									onClick={(e) =>
 										handleFeatureCreatorInfluencer(e, categoryData)
@@ -70,7 +71,7 @@ const PeopleCard = ({
 						{sign_in_as_creator?.is_display ? (
 							<Tooltip title={sign_in_as_creator?.info}>
 								<button
-									className='mt-2 bg-secondary text-primary text-center w-full'
+									className={styles.signInButton}
 									onClick={(e) =>
 										handleSignInAsInfluencer(e, categoryData.key)
 									}>
@@ -85,15 +86,14 @@ const PeopleCard = ({
 			{/* // FOR ADMIN USE ONLY
 				// START */}
 			{isAdminLoggedIn && categoryData.key && mark_as_seller?.is_display && (
-				<div className='absolute top-0 right-0'>
-					<div className='pr-4 pt-4'>
+				<div className={styles.starIconWrapper}>
+					<div className={styles.starIconInner}>
 						<Tooltip
 							title={
 								starred ? mark_as_seller?.remove_info : mark_as_seller?.info
 							}>
 							<StarFilled
-								className={`text-xl flex ${starred ? "text-yellow-102" : "text-gray-106"
-									}`}
+								className={`${styles.starIcon} ${starred ? styles.starActive : styles.starInactive}`}
 								onClick={(e) => {
 									handleStarInfluencer(e, categoryData);
 								}}

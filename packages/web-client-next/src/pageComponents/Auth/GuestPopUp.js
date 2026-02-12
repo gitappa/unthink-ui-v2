@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { CloseOutlined } from "@ant-design/icons";
 import { GuestPopUpShow } from './redux/actions';
 import { useDispatch } from 'react-redux';
-import styles from '../auraResponseProductsWithTags/chatSuggestionsWithProducts.module.scss'
+import popupStyles from '../auraResponseProductsWithTags/chatSuggestionsWithProducts.module.scss'
+import styles from './authPage.module.scss'
 
 
 function GuestPopUp({
@@ -22,40 +23,39 @@ function GuestPopUp({
     }
 
     return (
-        <form onSubmit={handleGuestSubmit} className={styles['popup-overlay'] }>
-            <div className={styles['popup-content'] }>
-                <div className="flex justify-between items-center gap-5 mb-5">
-                    <h2 className="text-xl font-medium">
+        <form onSubmit={handleGuestSubmit} className={popupStyles['popup-overlay']}>
+            <div className={popupStyles['popup-content']}>
+                <div className={styles.guestHeader}>
+                    <h2 className={styles.guestTitle}>
                         Please provide your email to ensure your collections are saved and accessible whenever you return.
                     </h2>
                     <CloseOutlined
-                        className="anticon anticon-close close flex items-center font-semibold cursor-pointer text-xl"
+                        className={styles.guestCloseIcon}
                         onClick={handClose}
                     />
                 </div>
-                <div className="">
-                    <label className="text-base text-left text-black-100 font-semibold block mb-0.75">Email Address</label>
+                <div>
+                    <label className={styles.guestLabel}>Email Address</label>
                     <input
-                        className={`text-left placeholder-gray-101 outline-none px-3 h-10 bg-slate-100 rounded-xl w-full ${errors.email ? "border-red-500" : ""
-                            }`}
+                        className={`${styles.guestInput} ${errors.email ? styles.guestInputError : ""}`}
                         name="email"
                         type="text"
                         placeholder="Email Address"
                         value={guestData.email}
                         onChange={guestChange}
                     />
-                    {errors.email && <p className="text-red-500 text-sm text-left mt-2">{errors.email}</p>}
+                    {errors.email && <p className={styles.guestErrorText}>{errors.email}</p>}
                 </div>
                 <div>
-                    <div className="text-right mt-4 flex gap-2 justify-end items-center">
+                    <div className={styles.guestActions}>
                         <button
                             type="submit"
-                            className="rounded-xl text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600"
+                            className={styles.guestButton}
                         >
                             Ok
                         </button>
                         <button
-                            className="rounded-xl text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600"
+                            className={styles.guestButton}
                             onClick={handleGuestSkip}
                         >
                             Skip

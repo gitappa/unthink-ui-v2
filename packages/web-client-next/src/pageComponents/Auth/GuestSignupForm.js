@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./authPage.module.scss";
 import { Input, Form, Result, Button, notification } from "antd";
 
 import AuthHeader from "../AuthHeader";
@@ -10,7 +11,7 @@ import {
 } from "../../constants/codes";
 
 const emailRegex =
-	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	/^(([^<>()[\]\\.,;:\s@"]+(\.[ ^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const GuestSignupForm = ({ defaultEmail }) => {
 	const navigate = useNavigate();
@@ -74,19 +75,19 @@ const GuestSignupForm = ({ defaultEmail }) => {
 	};
 
 	return (
-		<div className='min-h-screen static_page_bg'>
-			<div className='auth-header-container'>
+		<div className={`static_page_bg ${styles.guestSignupRoot}`}>
+			<div className={styles.authHeaderContainer}>
 				<AuthHeader hideProfile />
 			</div>
-			<div className='flex auth-container'>
-				<div className='w-full py-11 font-firaSans'>
+			<div className={`${styles.welcomeContainer} ${styles.authContainer}`}>
+				<div className={styles.guestSignupContent}>
 					{!isSuccess ? (
-						<div className='contact_us_container max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md'>
-							<div className='contact_us_inner_container py-8 lg:py-16 rounded-md'>
-								<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+						<div className={`contact_us_container ${styles.container}`}>
+							<div className={`contact_us_inner_container ${styles.innerContainer}`}>
+								<h1 className={styles.heading}>
 									Create your first collection
 								</h1>
-								<div className={`max-w-xl-1 mx-auto px-8 pt-8 md:py-8`}>
+								<div className={styles.guestSignupFormWrapper}>
 									<Form
 										name='signIn'
 										form={form}
@@ -98,18 +99,18 @@ const GuestSignupForm = ({ defaultEmail }) => {
 											help={validateEmail}
 											name='email'>
 											<Input
-												className='text-left h-12 rounded-md lg:rounded-l-md'
+												className={styles.input}
 												placeholder='Enter your email'
 											/>
 										</Form.Item>
-										<p className='text-red-500 text-center mb-4'>{error}</p>
-										<Form.Item className='mb-0 md:mb-6'>
-											<div className='flex justify-center'>
+										<p className={styles.guestSignupError}>{error}</p>
+										<Form.Item className={styles.guestSignupFormItem}>
+											<div className={styles.guestSignupButtonWrapper}>
 												<Button
 													loading={isSigningUp}
 													htmlType='submit'
 													size='large'
-													className='loading-button w-24 md:w-40 text-xs md:text-sm z-10 lg:mt-6 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold text-white'>
+													className={`loading-button ${styles.guestSignupButton}`}>
 													Try it now
 												</Button>
 											</div>
@@ -120,11 +121,11 @@ const GuestSignupForm = ({ defaultEmail }) => {
 						</div>
 					) : (
 						<Result
-							className='lg:w-2/4 mx-auto'
+							className={styles.resultContainer}
 							status='success'
-							title={<span className='text-white'>You are almost there!</span>}
+							title={<span className={styles.guestSignupResultTitle}>You are almost there!</span>}
 							subTitle={
-								<p className='text-white max-w-md mx-auto'>
+								<p className={styles.guestSignupResultSubtitle}>
 									Click on the verification mail sent to{" "}
 									{form.getFieldValue("email")} and come back to create your
 									first collection!{" "}

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import styles from "./authPage.module.scss";
 import { Input, Form, notification, Button } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Link from 'next/link';
@@ -42,8 +43,8 @@ const ResetPasswordFrom = (props) => {
 	};
 
 	return (
-		<div className='h-screen static_page_bg'>
-			<div className='auth-header-container'>
+		<div className={`static_page_bg ${styles.resetRoot}`}>
+			<div className={styles.authHeaderContainer}>
 				<AuthHeader
 					userTextLink={{
 						text: "Sign In",
@@ -51,15 +52,15 @@ const ResetPasswordFrom = (props) => {
 					}}
 				/>
 			</div>
-			<div className='my-11 contact_us_container max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md'>
-				<div className='contact_us_inner_container py-8 lg:py-16 rounded-md'>
-					<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-2xl lg:leading-44 font-bold text-white text-center mb-3'>
+			<div className={`contact_us_container ${styles.resetContainer}`}>
+				<div className={`contact_us_inner_container ${styles.innerContainer}`}>
+					<h1 className={styles.headingWelcome}>
 						Welcome Back {name}!
 					</h1>
-					<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-2xl lg:text-4xl lg:leading-44 font-bold text-white text-center'>
+					<h1 className={styles.headingReset}>
 						Reset Password
 					</h1>
-					<div className={`max-w-xl-1 mx-auto px-8 py-8`}>
+					<div className={styles.formWrapperReset}>
 						<Form
 							name='resetPassword'
 							initialValues={initialFormValue}
@@ -76,7 +77,7 @@ const ResetPasswordFrom = (props) => {
 								]}>
 								<Input.Password
 									placeholder='Enter a password'
-									className='text-left h-12 rounded-md lg:rounded-l-md reset-password-input'
+									className={`reset-password-input ${styles.input}`}
 									iconRender={(visible) =>
 										visible ? (
 											<EyeOutlined style={{ color: "white" }} />
@@ -110,23 +111,23 @@ const ResetPasswordFrom = (props) => {
 								<Input
 									type='password'
 									placeholder='Confirm your password'
-									className='text-left h-12 rounded-md lg:rounded-l-md'
+									className={styles.input}
 								/>
 							</Form.Item>
-							<p className='text-red-500 h-5'>{hasError}</p>
+							<p className={styles.errorText}>{hasError}</p>
 							<Form.Item>
-								<div className='flex justify-center'>
+								<div className={styles.buttonWrapper}>
 									<Button
 										loading={isResetting}
 										htmlType='submit'
-										className='loading-button w-24 md:w-40 text-xs md:text-sm z-10 mt-4 md:mt-0 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold -ml-2.5 text-white'>
+										className={`loading-button ${styles.submitButton}`}>
 										Reset Password
 									</Button>
 								</div>
 							</Form.Item>
-							<div className='text-center'>
-								<Link className='text-white' href='/signin'>
-									<span className='text-blue-107'>Sign In</span>
+							<div className={styles.signinLinkContainer}>
+								<Link className={styles.signinLink} href='/signin'>
+									<span className={styles.signinSpan}>Sign In</span>
 								</Link>
 							</div>
 						</Form>
