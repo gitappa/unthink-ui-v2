@@ -15,15 +15,36 @@ export const UserProfileMenu = ({
 	currentUser,
 	isSwiftlyStyledInstance = false,
 	isDoTheLookInstance = false,
-
+	isMobileMenu = false,
+	onClose
 }) => {
-	// URLSearchParamS
+	const items = headerProfileMenu?.items || [];
+
 	const dropdownMenuProps =
 		headerProfileMenu && Array.isArray(headerProfileMenu?.items)
 			? { menu: headerProfileMenu }
 			: Array.isArray(headerProfileMenu)
 				? { menu: { items: headerProfileMenu } }
 				: { overlay: headerProfileMenu };
+
+	if (isMobileMenu) {
+		return (
+			<div className="flex flex-col items-center gap-8 w-full py-10">
+				{items.map((item) => (
+					<div
+						key={item.key}
+						onClick={() => {
+							item.onClick && item.onClick();
+							onClose && onClose();
+						}}
+						className="text-xl font-medium text-white cursor-pointer hover:opacity-80 transition-opacity"
+					>
+						{item.label}
+					</div>
+				))}
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -74,7 +95,6 @@ export const UserProfileMenu = ({
 								// </Text>
 							) : (
 								<>
-
 									<Text
 										ellipsis={true}
 										className='m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
