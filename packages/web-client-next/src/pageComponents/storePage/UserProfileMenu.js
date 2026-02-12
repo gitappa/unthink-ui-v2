@@ -15,9 +15,11 @@ export const UserProfileMenu = ({
 	currentUser,
 	isSwiftlyStyledInstance = false,
 	isDoTheLookInstance = false,
-
+	isMobileMenu = false,
+	onClose
 }) => {
-	// URLSearchParamS
+	const items = headerProfileMenu?.items || [];
+
 	const dropdownMenuProps =
 		headerProfileMenu && Array.isArray(headerProfileMenu?.items)
 			? { menu: headerProfileMenu }
@@ -25,15 +27,34 @@ export const UserProfileMenu = ({
 				? { menu: { items: headerProfileMenu } }
 				: { overlay: headerProfileMenu };
 
+	if (isMobileMenu) {
+		return (
+			<div className="flex flex-col items-center gap-8 w-full py-10">
+				{items.map((item) => (
+					<div
+						key={item.key}
+						onClick={() => {
+							item.onClick && item.onClick();
+							onClose && onClose();
+						}}
+						className="text-xl font-medium text-white cursor-pointer hover:opacity-80 transition-opacity"
+					>
+						{item.label}
+					</div>
+				))}
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<Dropdown
 				overlayClassName='fixed'
 				disabled={isUserFetching}
 				{...dropdownMenuProps}
-				trigger={["click"]}
+				// trigger={["click"]}
 				destroyOnHidden>
-				<div className='pl-3 xl:pl-6 lg:flex items-center hidden cursor-pointer'>
+				<div className='pl-3 xl:pl-6 flex items-center cursor-pointer'>
 					{isSwiftlyStyledInstance || isDoTheLookInstance ? (
 						<div className="flex gap-2 items-center">
 							{currentUser?.user_name ? (
@@ -44,7 +65,7 @@ export const UserProfileMenu = ({
 								// 	{currentUser?.user_name}
 								// </Text>
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
-									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{fill:'white'}}/>
+									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white' }} />
 									{/* <BiSolidUserCircle /> */}
 								</Tooltip>
 							) : (
@@ -74,13 +95,12 @@ export const UserProfileMenu = ({
 								// </Text>
 							) : (
 								<>
-								 
-								<Text
-									ellipsis={true}
-									className='m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
-									SIGN IN
-								</Text>
-										</>
+									<Text
+										ellipsis={true}
+										className='m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
+										SIGN IN
+									</Text>
+								</>
 							)}
 							{/* <Image src={avatarImg} preview={false} className='pr-1 pl-2' /> */}
 						</>

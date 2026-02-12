@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./blogCollectionProducts.module.scss";
 import { Skeleton, Typography } from "antd";
 
 import ProductCard from "../../../components/singleCollection/ProductCard";
@@ -40,7 +41,7 @@ const BlogCollectionProducts = ({
 
 	return (
 		<div>
-			<div className='max-w-max mx-auto grid grid-cols-2 gap-1 '>
+			<div className={styles.productsGrid}>
 				{!showLoader &&
 					productList?.map((product) => (
 						<ProductCard
@@ -74,16 +75,16 @@ const BlogCollectionProducts = ({
 					))}
 				{showLoader && (
 					<>
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
-						<Skeleton.Input active className='w-40 lg:w-180 h-180' />
+						<Skeleton.Input active className={styles.skeletonItem} />
+						<Skeleton.Input active className={styles.skeletonItem} />
+						<Skeleton.Input active className={styles.skeletonItem} />
+						<Skeleton.Input active className={styles.skeletonItem} />
 					</>
 				)}
 			</div>
 			{!productList?.length && !showLoader && (
-				<div className='mt-20 w-full text-center'>
-					<Text className='text-xl pt-6 w-2/5'>
+				<div className={styles.emptyState}>
+					<Text className={styles.emptyText}>
 						{selectedCollection?.status === IN_PROGRESS
 							? "Fetching products..."
 							: "No products found"}

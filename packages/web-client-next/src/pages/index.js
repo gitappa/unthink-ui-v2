@@ -31,7 +31,7 @@ const Index = ({ ...props }) => {
 					}}
 				/>
 			) : (
-				<div className='overflow-hidden static_page_bg'>
+				<div className='static_page_bg' style={{ overflow: 'hidden' }}>
 					<Header
 						// showSignIn={false}
 						signInRedirectPath={ROUTES.TRY_FOR_FREE_PAGE}

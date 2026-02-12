@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import styles from "./authPage.module.scss";
 import {
 	Input,
 	Form,
@@ -68,75 +69,75 @@ const initialFormValue = {
 };
 
 let selectedIdpHintSignIn = "";
- 
-console.log('is_store_instance',is_store_instance);
+
+console.log('is_store_instance', is_store_instance);
 
 export const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage) => {
-	console.log('userDataaaaa',userData);
+	console.log('userDataaaaa', userData);
 	console.log(userData.attribution?.sammoon);
 	console.log(isSellerLoggedIn);
-	
-    try {
-  // 1️⃣ PRIORITY REDIRECT (works for all users)
-        if (redirectPage === "my-products") {
-            navigate("/my-products");
-            return;
-        }
-        if (redirectPage === "create-collection") {
-            navigate("/create-collection");
-            return;
-        }
-        // 2️⃣ Normal old logic
-        if (is_store_instance) {
-            // First time user → go to welcome page
-            if (
-                userData &&
-                !(userData.first_name || userData.filters) &&
-                !(userData.attribution?.sammoon?.total_collections > 0)
-            ) {
-	 
-				
-                navigate(PATH_ROOT);
-                return;
-            }
 
-            // Seller but not visited create collection
-            if (
-                isSellerLoggedIn &&
-                !localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
-            ) {
-                navigate(PATH_CREATE_COLLECTION);
-                return;
-            }
-            // Default
+	try {
+		// 1️⃣ PRIORITY REDIRECT (works for all users)
+		if (redirectPage === "my-products") {
+			navigate("/my-products");
+			return;
+		}
+		if (redirectPage === "create-collection") {
+			navigate("/create-collection");
+			return;
+		}
+		// 2️⃣ Normal old logic
+		if (is_store_instance) {
+			// First time user → go to welcome page
+			if (
+				userData &&
+				!(userData.first_name || userData.filters) &&
+				!(userData.attribution?.sammoon?.total_collections > 0)
+			) {
+
+
+				navigate(PATH_ROOT);
+				return;
+			}
+
+			// Seller but not visited create collection
+			if (
+				isSellerLoggedIn &&
+				!localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
+			) {
+				navigate(PATH_CREATE_COLLECTION);
+				return;
+			}
+			// Default
 			// if(userData.is_influencer){
-				// navigate(PATH_ROOT);
+			// navigate(PATH_ROOT);
 			// }
-            return;
-        }
+			return;
+		}
 
-        // Not store instance but already visited collection
-        if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
-            navigate(PATH_STORE);
-            return;
-        }
+		// Not store instance but already visited collection
+		if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
+			navigate(PATH_STORE);
+			return;
+		}
 
-        // Default for non-store
-        // navigate(PATH_CREATE_COLLECTION);
+		// Default for non-store
+		// navigate(PATH_CREATE_COLLECTION);
 
-    } catch (error) {
- 		
-        is_store_instance ? navigate(PATH_ROOT) : navigate(PATH_STORE);
-    }
+	} catch (error) {
+
+		is_store_instance ? navigate(PATH_ROOT) : navigate(PATH_STORE);
+	}
 };
 
 
 export default function SignInFormSection() {
-    const router = useRouter();
-    const navigate = useNavigate();
-    const [form] = Form.useForm();
-    const params = new URLSearchParams(router.asPath.split('?')[1] || '');
-    const redirectPage = params.get("page");
+	const router = useRouter();
+	const navigate = useNavigate();
+	const [form] = Form.useForm();
+	const params = new URLSearchParams(router.asPath.split('?')[1] || '');
+	const redirectPage = params.get("page");
 
 
 	const [hasError, setHasError] = useState("");
@@ -155,7 +156,7 @@ export default function SignInFormSection() {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
 	const [storeData] = useSelector((state) => [state.store.data]);
-console.log(user);
+	console.log(user);
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -188,7 +189,7 @@ console.log(user);
 	useEffect(() => {
 		if (user.isUserLogin) {
 			setIdpSignInMethod(selectedIdpHintSignIn); // store sign in method to show message when user comes back again to sign in
-			redirectOnSuccessSignIn(isSellerLoggedIn, user.data,redirectPage );
+			redirectOnSuccessSignIn(isSellerLoggedIn, user.data, redirectPage);
 			console.log("user.data", user.data);
 
 			// if (!(user.data?.first_name || user.data.filters)) {
@@ -288,7 +289,7 @@ console.log(user);
 	const onSignInWithLinkRequest = async () => {
 		try {
 			setHasError(() => "");
-			setShowProcessingLoader(true);	
+			setShowProcessingLoader(true);
 			form.validateFields(["email"]);
 			if (form.getFieldValue("email")) {
 				const res = await authAPIs.signInWithLinkRequestAPICall({
@@ -447,16 +448,16 @@ console.log(user);
 			return (
 				<div>
 					<Result
-						className='lg:w-2/4 mx-auto'
+						className={styles.resultContainer}
 						status='success'
 						title={
-							<span className='text-white'>
+							<span className={styles.textWhite}>
 								We have sent a link to {email}, please use that to sign in to
 								your account.
 							</span>
 						}
 						subTitle={
-							<div className='text-white mt-3'>
+							<div className={`${styles.textWhite} ${styles.mt3}`}>
 								{/* <p>
 									Please click on the link that has just been sent to your email
 									account for quick Sign In without password.
@@ -470,12 +471,12 @@ console.log(user);
 			return (
 				<div>
 					<Result
-						className='lg:w-2/4 mx-auto'
+						className={styles.resultContainer}
 						status='success'
-						title={<span className='text-white'>Success!</span>}
+						title={<span className={styles.textWhite}>Success!</span>}
 						subTitle={
-							<div className='text-white'>
-								<p className='m-0'>
+							<div className={styles.textWhite}>
+								<p style={{ margin: 0 }}>
 									A reset password link has been sent to your Email Account.
 								</p>
 								<p>
@@ -493,11 +494,11 @@ console.log(user);
 	};
 
 	return (
-		<div className='py-11'>
+		<div className={styles.root}>
 			{!successState.showSuccess ? (
-				<div className='contact_us_container max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md'>
-					<div className='contact_us_inner_container py-8 lg:py-16 rounded-md'>
-						<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+				<div className={`contact_us_container ${styles.container}`}>
+					<div className={`contact_us_inner_container ${styles.innerContainer}`}>
+						<h1 className={styles.heading}>
 							Welcome Back
 						</h1>
 						{/* HIDDEN VENLY from sign in for now */}
@@ -508,7 +509,7 @@ console.log(user);
 								className='max-w-xl-1 mt-4 mx-auto rounded-md w-max text-base'
 							/>
 						) : null} */}
-						<div className='max-w-xl-1 mx-auto p-4 sm:p-8'>
+						<div className={styles.formWrapper}>
 							<Form
 								name='signIn'
 								form={form}
@@ -525,7 +526,7 @@ console.log(user);
 										},
 									]}>
 									<Input
-										className='text-left h-12 rounded-md lg:rounded-l-md'
+										className={styles.input}
 										placeholder='Enter your email'
 									/>
 								</Form.Item>
@@ -541,7 +542,7 @@ console.log(user);
 											]}
 											className=''>
 											<Input.Password
-												className='text-left h-12 rounded-md lg:rounded-l-md'
+												className={styles.input}
 												placeholder='Enter your password'
 												iconRender={(visible) =>
 													visible ? (
@@ -552,7 +553,7 @@ console.log(user);
 												}
 											/>
 										</Form.Item>
-										<div className='flex items-center'>
+										<div className={styles.actionsContainer}>
 											{!!hasError && (
 												<div className=''>
 													{/* {hasErrorCode === ERR_CODE_USER_NOT_VERIFIED && ( */}
@@ -560,7 +561,7 @@ console.log(user);
 														htmlType='button'
 														size='large'
 														type='link'
-														className='font-bold text-blue-107 text-base hover:underline p-0'
+														className={styles.resendButton}
 														onClick={onResendVerificationMail}
 														title='Click here to resend the verification mail'>
 														Resend verification mail
@@ -569,7 +570,7 @@ console.log(user);
 												</div>
 											)}
 											<p
-												className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'
+												className={styles.resetPasswordText}
 												onClick={onResetPasswordRequest}>
 												Reset Password
 											</p>
@@ -577,45 +578,45 @@ console.log(user);
 									</>
 								)}
 								{!!hasError && (
-									<div className='lg:flex flex-col-reverse items-center my-4'>
+									<div className={styles.alertWrapper}>
 										{/* <p className='text-red-500 h-5'>{hasError}</p> */}
 										<Alert
 											message={hasError}
 											type='error'
-											className='w-full rounded-full py-0 px-2'
+											className={styles.alert}
 										/>
 									</div>
 								)}
 
 								<Form.Item>
-									<div className='flex flex-col items-center'>
+									<div className={styles.submitButtonContainer}>
 										{isSignInWithPasswordActive ? (
 											<Button
 												htmlType='submit'
 												size='large'
-												className='loading-button min-w-24 md:w-40 text-xs md:text-sm z-10 mt-4 md:mt-0 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold text-white'>
+												className={`loading-button ${styles.signInButton}`}>
 												Sign In
 											</Button>
 										) : (
 											<Button
 												htmlType='button'
 												size='large'
-												className='loading-button min-w-40 md:w-56 text-xs md:text-sm z-10 mt-4 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold text-white'
+												className={`loading-button ${styles.signInLinkButton}`}
 												onClick={() => setIsSignInWithPasswordActive(true)}>
 												Sign In with password
 											</Button>
 										)}
 
-										<div className='flex flex-col items-center'>
-											<p className='text-white my-4 text-base'>Or</p>
+										<div className={styles.submitButtonContainer}>
+											<p className={styles.orText}>Or</p>
 										</div>
 
 										{isSignInWithPasswordActive ? (
-											<div className='flex'>
+											<div className={styles.flex}>
 												<Button
 													htmlType='button'
 													size='large'
-													className='loading-button min-w-40 md:w-56 text-xs md:text-sm z-10 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold text-white'
+													className={`loading-button ${styles.signInLinkButton}`}
 													onClick={() => setIsSignInWithPasswordActive(false)}>
 													Get a sign-in link via email
 												</Button>
@@ -626,11 +627,11 @@ console.log(user);
 												</p> */}
 											</div>
 										) : (
-											<div className='flex'>
+											<div className={styles.flex}>
 												<Button
 													htmlType='submit'
 													size='large'
-													className='loading-button min-w-40 md:w-56 text-xs md:text-sm z-10 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold text-white'>
+													className={`loading-button ${styles.signInLinkButton}`}>
 													Get a sign-in link via email
 												</Button>
 
@@ -642,24 +643,24 @@ console.log(user);
 
 										{/* HIDDEN VENLY from sign in */}
 										{/* {enable_venly && (
-											<div className='flex flex-col items-center'>
-												<p className='text-white my-4 text-base'>Or</p>
-												<div className='max-w-xs'>
-													<div className='mb-4 flex'>
-														<h3 className='text-xl text-white'>
+											<div className={styles.venlyContainer}>
+												<p className={styles.orText}>Or</p>
+												<div className={styles.venlyButtonContainer}>
+													<div className={styles.venlyHeader}>
+														<h3 className={styles.venlyTitle}>
 															Sign In with <b>Venly</b> and Earn Rewards
 														</h3>
 														&nbsp;
 														<Tooltip title='Sign In with Venly and Earn Rewards'>
-															<InfoCircleOutlined className='text-xl text-blue-107' />
+															<InfoCircleOutlined className={styles.infoIcon} />
 														</Tooltip>
 													</div>
 													<Button
 														onClick={() => connectToVenly("google")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-gray-600'>
+														className={`loading-button ${styles.venlyButton}`}>
 														<img
-															className='w-10 pr-3'
+															className={styles.venlyButtonGoogleImg}
 															height={28}
 															width={28}
 															src={googleIcon}
@@ -669,9 +670,9 @@ console.log(user);
 													<Button
 														onClick={() => connectToVenly("facebook")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-blue-109'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<img
-															className='w-10 pr-3'
+															className={styles.venlyButtonGoogleImg}
 															height={28}
 															width={28}
 															src={facebookIcon}
@@ -681,9 +682,9 @@ console.log(user);
 													<Button
 														onClick={() => connectToVenly("twitter")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-sky-101'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<img
-															className='w-10 h-7 pr-3'
+															className={`${styles.venlyButtonGoogleImg}`}
 															height={28}
 															width={28}
 															src={twitterIcon}
@@ -693,9 +694,9 @@ console.log(user);
 													<Button
 														onClick={() => connectToVenly("password")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-gray-600'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<MailFilled
-															className='text-xl-2 pr-1'
+															className={styles.venlyButtonMailIcon}
 															height={28}
 															width={28}
 														/>
@@ -706,10 +707,10 @@ console.log(user);
 										)} */}
 									</div>
 								</Form.Item>
-								{/* <div className='text-center'>
-									<Link className='text-white' href='/signup'>
+								{/* <div className={styles.signinLinkContainer}>
+									<Link className={styles.signinLink} href='/signup'>
 										New User?{" "}
-										<span className='text-blue-107 whitespace-nowrap font-bold'>
+										<span className={styles.signinSpan}>
 											Sign up
 										</span>
 									</Link>
@@ -722,8 +723,8 @@ console.log(user);
 				<SuccessMessage />
 			)}
 			{showProcessingLoader && (
-				<div className='fixed z-30 top-0 left-0 flex justify-center items-center w-full h-full backdrop-filter backdrop-contrast-75'>
-					<Spin indicator={<LoadingOutlined className='text-3xl-1' spin />} />
+				<div className={styles.loaderOverlay}>
+					<Spin indicator={<LoadingOutlined className={styles.loaderIcon} spin />} />
 				</div>
 			)}
 		</div>

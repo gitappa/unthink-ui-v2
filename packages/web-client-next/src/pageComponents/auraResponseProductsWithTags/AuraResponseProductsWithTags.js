@@ -210,16 +210,16 @@ const AuraResponseProductsWithTags = ({
 				) : null}
 				{tags?.map((suggestion, index) => (
 					<div
-					id={`tag-${suggestion}`}
-					key={suggestion}
-					className={`${styles['aura-tag-item']} ${suggestion === selectedTag
-						? styles['aura-tag-selected']
-						: checkIsTagEnabled(suggestion)
-							? styles['aura-tag-enabled']
-							: styles['aura-tag-disabled']
-						} ${tags.length > 1 ? styles['aura-tag-text-multiple'] : ''}`}>
-					<h5
-						className={`${styles['aura-tag-text']} ${tags.length === 1 ? styles['aura-tag-text-single'] : ''}`}
+						id={`tag-${suggestion}`}
+						key={suggestion}
+						className={`${styles['aura-tag-item']} ${suggestion === selectedTag
+							? styles['aura-tag-selected']
+							: checkIsTagEnabled(suggestion)
+								? styles['aura-tag-enabled']
+								: styles['aura-tag-disabled']
+							} ${tags.length > 1 ? styles['aura-tag-text-multiple'] : ''}`}>
+						<h5
+							className={`${styles['aura-tag-text']} ${tags.length === 1 ? styles['aura-tag-text-single'] : ''}`}
 							onClick={() =>
 								checkIsTagEnabled(suggestion) &&
 								handleSuggestionClick(suggestion)

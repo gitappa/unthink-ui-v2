@@ -19,6 +19,7 @@ import {
 	SIGN_IN_EXPIRE_DAYS,
 } from "../../constants/codes";
 import { is_store_instance } from "../../constants/config";
+import styles from "./authPage.module.scss";
 
 const TokenSignIn = ({ token, location }) => {
 	const navigate = useNavigate();
@@ -85,8 +86,8 @@ const TokenSignIn = ({ token, location }) => {
 	};
 
 	return (
-		<div className='h-screen static_page_bg'>
-			<div className='auth-header-container'>
+		<div className={`static_page_bg ${styles.tokenSignInRoot}`}>
+			<div className={styles.authHeaderContainer}>
 				<AuthHeader
 					userTextLink={{
 						text: "Sign In",
@@ -94,8 +95,8 @@ const TokenSignIn = ({ token, location }) => {
 					}}
 				/>
 			</div>
-			<div className='fixed top-0 left-0 flex justify-center items-center w-full min-h-screen h-full backdrop-filter backdrop-contrast-75 z-20'>
-				<Spin indicator={<LoadingOutlined className='text-3xl-1' spin />} />
+			<div className={styles.tokenSignInLoader}>
+				<Spin indicator={<LoadingOutlined className={styles.loaderIcon} spin />} />
 			</div>
 		</div>
 	);

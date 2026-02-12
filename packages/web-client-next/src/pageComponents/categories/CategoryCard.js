@@ -1,15 +1,16 @@
 import React from "react";
+import styles from "./categoryCard.module.scss";
 
 const CategoryCard = ({ categoryData, handleCategoryClick }) => (
 	<div
-		className='flex flex-col cursor-pointer bg-slate-100 rounded-xl p-3 shadow-m'
+		className={styles.card}
 		onClick={() => handleCategoryClick(categoryData)}>
-		<div className='w-full'>
+		<div className={styles.imageWrapper}>
 			<img
 				loading='lazy'
 				src={categoryData.image_url}
 				width='100%'
-				className='rounded-xl aspect-square h-auto object-cover'
+				className={styles.image}
 			/>
 			{/* <LazyLoadImage
 				src={categoryData?.image_url}
@@ -18,10 +19,10 @@ const CategoryCard = ({ categoryData, handleCategoryClick }) => (
 			/> */}
 		</div>
 		{/* category card footer */}
-		<div className='w-full mt-3 rounded-b-xl category-card-footer'>
+		<div className={`${styles.footer} category-card-footer`}>
 			<p
 				title={categoryData?.title}
-				className='text-base category-title lg:text-xl font-semibold text-black-200 overflow-hidden overflow-ellipsis capitalize h-14 text-center'>
+				className={`${styles.title} category-title`}>
 				{categoryData?.title}
 			</p>
 		</div>

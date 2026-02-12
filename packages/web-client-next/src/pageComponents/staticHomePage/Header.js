@@ -57,34 +57,33 @@ const Header = ({
 
 	const getMenuItemActiveClassName = (paths) =>
 		paths.includes(currentPath)
-			? "text-blue-107 font-extrabold border-b-2 border-solid border-current"
+			? styles.menuLinkActive
 			: "";
 
 	const getSubMenuItemActiveClassName = (paths) =>
-		paths.includes(currentPath) ? "text-blue-107 font-extrabold" : "";
+		paths.includes(currentPath) ? styles.subMenuLinkActive : "";
 
 	return (
-		<div className='h-72 font-firaSans'>
+		<div className={styles.headerWrapper}>
 			<nav
-				className={`h-72 z-40 transform transition duration-300 ${
-					headerBgColor
-						? "bg-blue-105 bg-opacity-80"
-						: "bg-blue-105 bg-opacity-80 backdrop-filter backdrop-blur"
-				} fixed w-full top-0`}
+				className={`${styles.nav} ${headerBgColor
+						? styles.navDefault
+						: styles.navScrolled
+					}`}
 				ref={ref}>
 				<div
-					className={`max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto px-5 md:px-0 h-full flex justify-between items-center`}>
-					<div className='flex items-center text-white h-full'>
+					className={styles.navInner}>
+					<div className={styles.logoSection}>
 						<img
 							src={unthink_ai_logo_white}
 							alt='unthink_ai_logo_white'
 							height={28}
-							className='cursor-pointer'
+							className={styles.logo}
 							onClick={() => navigate("/")}
 						/>
-						<div className='pl-11 font-medium text-lightgray-103 hidden lg:flex items-center gap-4 xl:gap-6'>
+						<div className={styles.menuLinks}>
 							<Link
-								className={`text-current p-0 ${getMenuItemActiveClassName([
+								className={`${styles.menuLink} ${getMenuItemActiveClassName([
 									"/brands/",
 								])}`}
 								href='/brands'>
@@ -97,26 +96,26 @@ const Header = ({
 								href='/publishers'>
 								For Publishers
 							</Link> */}
-							<div className='relative dropdown group'>
+							<div className={styles.dropdown}>
 								<Link
-									className={`text-current p-0 ${getMenuItemActiveClassName([
+									className={`${styles.menuLink} ${getMenuItemActiveClassName([
 										"/publishers/",
 										"/influencers/",
 									])}`}
 									href='/publishers'>
 									Creators ▼
 								</Link>
-								<div className='dropdown_content rounded-md hidden absolute -right-7 pt-1 group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-slate-900 border border-slate-700 shadow-lg z-50 min-w-40'>
+								<div className={styles.dropdownContent}>
 									<Link
-										className={`text-base block px-4 py-2 hover:bg-slate-800 ${getSubMenuItemActiveClassName([
+										className={`${styles.subMenuLink} ${getSubMenuItemActiveClassName([
 											"/publishers/",
 										])}`}
 										href='/publishers'>
 										Publishers
 									</Link>
-									<hr className='my-1 border-slate-700' />
+									<hr className={styles.subMenuDivider} />
 									<Link
-										className={`text-base block px-4 py-2 hover:bg-slate-800 ${getSubMenuItemActiveClassName([
+										className={`${styles.subMenuLink} ${getSubMenuItemActiveClassName([
 											"/influencers/",
 										])}`}
 										href='/influencers'>
@@ -125,7 +124,7 @@ const Header = ({
 								</div>
 							</div>
 							<Link
-								className={`text-current p-0 ${getMenuItemActiveClassName([
+								className={`${styles.menuLink} ${getMenuItemActiveClassName([
 									"/pop-up-store/",
 								])}`}
 								href='/pop-up-store'>
@@ -159,7 +158,7 @@ const Header = ({
 							</div> */}
 							{/* <div className='relative dropdown'> */}
 							<Link
-								className={`text-current p-0 ${getMenuItemActiveClassName([
+								className={`${styles.menuLink} ${getMenuItemActiveClassName([
 									"/about/",
 								])}`}
 								href='/about'>
@@ -179,12 +178,12 @@ const Header = ({
 									</a>
 								</div>
 							</div> */}
-							<a className={`text-current p-0`} href={PATH_BLOG}>
+							<a className={styles.menuLink} href={PATH_BLOG}>
 								Blog
 							</a>
 						</div>
 					</div>
-					<div className='pl-8 hidden lg:flex items-center font-semibold text-lightgray-103'>
+					<div className={styles.rightSection}>
 						{/* <Link
 							className={`text-current mx-2 p-0 xl:mx-3 ${getMenuItemActiveClassName(
 								["/about/"]
@@ -197,14 +196,14 @@ const Header = ({
 						</a> */}
 						{showSignIn && (
 							<button
-								className='mx-2 xl:mx-3 text-current font-semibold text-sm'
+								className={styles.signInButton}
 								onClick={() => navigate(signInRedirectPath)}>
 								Sign in
 							</button>
 						)}
 						{showScheduleDemo && (
 							<button
-								className='mx-2 xl:mx-3 px-3.5 py-2 text-current border-2 border-current rounded-3xl font-semibold text-sm'
+								className={styles.scheduleDemoButton}
 								onClick={() => navigate("/schedule-demo")}>
 								Schedule a Demo
 							</button>
@@ -217,26 +216,26 @@ const Header = ({
 						</button> */}
 					</div>
 					<div
-						className='px-3 lg:hidden cursor-pointer flex items-center h-full'
+						className={styles.mobileMenuButton}
 						onClick={() => setShowMenu(true)}>
-					<Image src={menu_icon} alt='menu_icon' width={24} height={24} />
-				</div>
+						<Image src={menu_icon} alt='menu_icon' width={24} height={24} />
+					</div>
 
-				{showMenu && (
-					<div className='fixed top-0 left-0 flex flex-col w-full h-screen p-5 overflow-hidden bg-blue-105 text-white z-40'>
-							<div className='text-2xl'>
+					{showMenu && (
+						<div className={styles.mobileMenu}>
+							<div className={styles.mobileMenuClose}>
 								<CloseOutlined
-									className='float-right'
+									className={styles.mobileMenuCloseIcon}
 									onClick={() => setShowMenu((prevState) => !prevState)}
 								/>
 							</div>
-							<div className='flex flex-col w-full items-center justify-center p-5'>
+							<div className={styles.mobileMenuContent}>
 								{MenuItems.map((item, index) =>
 									item && item.url ? (
 										item.url === PATH_BLOG ? (
 											<a
 												onClick={() => setShowMenu(false)}
-												className='my-2.5'
+												className={styles.mobileMenuItem}
 												href={item.url}
 												key={index}>
 												{item.title}
@@ -244,7 +243,7 @@ const Header = ({
 										) : (
 											<Link
 												onClick={() => setShowMenu(false)}
-												className='my-2.5'
+												className={styles.mobileMenuItem}
 												href={item.url}
 												key={index}>
 												{item.title}
@@ -254,14 +253,14 @@ const Header = ({
 								)}
 								{showSignIn && (
 									<button
-										className='mx-2 xl:mx-3 px-3.5 py-0.75 my-2.5 text-current border-2 border-current rounded-3xl font-semibold text-sm'
+										className={styles.mobileSignInButton}
 										onClick={() => navigate(signInRedirectPath)}>
 										Sign in
 									</button>
 								)}
 								{showScheduleDemo && (
 									<button
-										className='mx-2 xl:mx-3 px-3.5 py-2 my-2.5 text-current border-2 border-current rounded-3xl font-semibold text-sm'
+										className={styles.mobileScheduleDemoButton}
 										onClick={() => navigate("/schedule-demo")}>
 										Schedule a Demo
 									</button>

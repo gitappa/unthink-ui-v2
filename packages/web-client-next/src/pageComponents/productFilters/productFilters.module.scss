@@ -80,6 +80,7 @@
 
 /* Aura variant: border border-slat-103 text-slat-103 text-base py-0.5 px-2 */
 .tagPillAura {
+
   border-radius: 22px;
   display: flex;
   align-items: center;
@@ -89,7 +90,7 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 14px;
   line-height: 1.5rem;
   color: #334155;
   border: 1px solid #334155;
@@ -112,6 +113,7 @@
 .scrollArrow {
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 /* Actions row: flex items-center flex-nowrap md:flex-shrink-0 gap-2 md:w-auto w-full */

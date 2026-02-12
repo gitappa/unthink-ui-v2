@@ -5,6 +5,7 @@ import { notification } from "antd";
 
 import Modal from "../../components/modal/Modal";
 import { setAuraChatSetting } from "../../hooks/chat/redux/actions";
+import styles from "./AuraChatSettingModal.module.css";
 
 export const AuraChatSettingModalModes = {
 	AURA: "AURA",
@@ -161,22 +162,22 @@ const AuraChatSettingModal = ({
 	return (
 		<Modal isOpen={isOpen} headerText='Settings' onClose={onClose}>
 			<div>
-				<h3 className='text-lg mb-4'>
-					<InfoCircleOutlined className='mr-1 inline-flex' />
+				<h3 className={styles.description}>
+					<InfoCircleOutlined className={styles.infoIcon} />
 					Updating it can get the unexpected results. You can always come back
 					and restore default.
 				</h3>
-				<div className='grid grid-cols-1 gap-4'>
-					<div className='grid grid-cols-1 desktop:grid-cols-2 gap-4'>
+				<div className={styles.container}>
+					<div className={styles.gridContainer}>
 						{modes[mode].map((mode) => (
 							<div key={mode}>
-								<label className='text-lg'>
+								<label className={styles.label}>
 									<b>{templateData[mode].title}</b>
 								</label>
 								<textarea
 									rows={15}
 									id='aura-chat-modal-tags-template-textarea'
-									className='w-full rounded-xl px-1'
+									className={styles.textarea}
 									placeholder={templateData[mode].placeholder}
 									name={mode}
 									value={setting[mode] ?? ""}
@@ -186,14 +187,14 @@ const AuraChatSettingModal = ({
 						))}
 					</div>
 
-					<div className='flex'>
+					<div className={styles.buttonContainer}>
 						<button
-							className='ml-auto bg-transparent py-2 px-8 text-indigo-600 rounded-lg'
+							className={styles.restoreButton}
 							onClick={() => handleRestoreDefaultClick()}>
 							<b>Restore default</b>
 						</button>
 						<button
-							className='bg-indigo-600 py-2 px-8 text-white rounded-lg'
+							className={styles.saveButton}
 							onClick={() => handleSaveClick({ closeOnSuccess: true })}>
 							Save
 						</button>

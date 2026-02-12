@@ -788,7 +788,7 @@ const ProfileAttributes = ({
                 <div className="mt-5">
                     <Title level={2} className="text-center text-white mb-5">Attributes</Title>
                     <div className="flex gap-4">
-                        <div className="mb-5 w-1/4">
+                        <div className="mb-5 md:w-1/4 w-full" >
                             <label className="block mb-1 text-sm font-medium text-white">Store Type</label>
                             <Select
                                 placeholder="Select Store Type"
@@ -808,7 +808,7 @@ const ProfileAttributes = ({
                             {storeTypeError && <p className="text-red-500 text-xs mt-1">Store Type is required</p>}
                         </div>
 
-                        <div className="mb-5 w-1/4">
+                        <div className="mb-5 md:w-1/4 w-full">
                             <label className="block mb-1 text-sm font-medium text-white">Store Reference</label>
                             <Select
                                 placeholder="Select Store Reference"

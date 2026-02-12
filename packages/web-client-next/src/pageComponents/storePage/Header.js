@@ -588,7 +588,6 @@ const Header = ({
 				{isBTInstance && <BudgetTravelHeader />}
 
 				{isSamskaraInstance ||
-					isHeroesVillainsInstance ||
 					isSwiftlyStyledInstance ||
 					isDoTheLookInstance ? (
 					<>
@@ -781,14 +780,14 @@ const Header = ({
 			)}
 
 			{showMenu && (
-				<div className='fixed z-50 top-0 left-0 w-full h-full bg-blue-105 overflow-auto'>
-					<div className='flex justify-end p-4'>
+				<div className='fixed z-50  top-0 left-0 w-full h-full bg-black overflow-auto' style={{ backgroundColor: "#060709ff" }}>
+					<div className='flex justify-end p-6'>
 						<CloseOutlined
-							className='text-white text-xl'
+							className='text-white text-2xl cursor-pointer'
 							onClick={() => setShowMenu(false)}
 						/>
 					</div>
-					<div className='flex justify-center items-center w-full mt-4 mobile-profile-menu'>
+					<div className='flex flex-col justify-center items-center w-full min-h-[70vh] mobile-profile-menu'>
 						{showProfileIcon ? (
 							<UserProfileMenu
 								isUserFetching={isUserFetching}
@@ -796,6 +795,8 @@ const Header = ({
 								currentUser={currentUser}
 								isSwiftlyStyledInstance={isSwiftlyStyledInstance}
 								isDoTheLookInstance={isDoTheLookInstance}
+								isMobileMenu={true}
+								onClose={() => setShowMenu(false)}
 							/>
 						) : null}
 					</div>

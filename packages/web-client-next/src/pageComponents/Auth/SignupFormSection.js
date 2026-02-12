@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "./authPage.module.scss";
 import { Input, Form, Tooltip, Button, Alert, Spin } from "antd";
 import {
 	InfoCircleOutlined,
@@ -316,43 +317,43 @@ export default function SignupFormSection() {
 	};
 
 	return (
-		<div className='py-11'>
+		<div className={styles.root}>
 			{!isSuccess ? (
-				<div className='contact_us_container max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto py-10 lg:py-20 px-7 md:px-14 lg:px-28 rounded-md'>
-					<div className='contact_us_inner_container py-8 lg:py-16 rounded-md'>
+				<div className={`contact_us_container ${styles.container}`}>
+					<div className={`contact_us_inner_container ${styles.innerContainer}`}>
 						{isVenlyConnected ? (
 							<>
 								{!isEmpty(venlyUserInfo?.wallets) ? (
 									<>
 										{formEmailValue && (
-											<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+											<h1 className={styles.heading}>
 												Welcome, {formEmailValue}!
 											</h1>
 										)}
-										<h2 className='max-w-md px-6 lg:max-w-2xl mx-auto lg:text-lg lg:leading-44 text-white text-center'>
+										<h2 className={`${styles.heading}`} style={{ fontWeight: 'normal', fontSize: 'inherit' }}>
 											Please enter the username of your choice to continue.
 										</h2>
 									</>
 								) : (
 									<>
-										<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+										<h1 className={styles.heading}>
 											Continue and create an account on Unthink.ai.
 										</h1>
-										<h2 className='max-w-md px-6 lg:max-w-2xl mx-auto lg:text-lg lg:leading-44 text-white text-center'>
+										<h2 className={`${styles.heading}`} style={{ fontWeight: 'normal', fontSize: 'inherit' }}>
 											You can always connect a wallet later to receive rewards.
 										</h2>
-										<h2 className='max-w-md px-6 lg:max-w-2xl mx-auto lg:text-lg lg:leading-44 text-white text-center'>
+										<h2 className={`${styles.heading}`} style={{ fontWeight: 'normal', fontSize: 'inherit' }}>
 											Please enter the username of your choice to continue.
 										</h2>
 									</>
 								)}
 							</>
 						) : (
-							<h1 className='max-w-md px-6 lg:max-w-2xl mx-auto text-lg lg:text-3xl-1 lg:leading-44 font-bold text-white text-center'>
+							<h1 className={styles.heading}>
 								Join our growing community today!
 							</h1>
 						)}
-						<div className='max-w-xl-1 mx-auto p-4 sm:p-8'>
+						<div className={styles.formWrapper}>
 							<Form
 								name='signup'
 								form={form}
@@ -367,13 +368,13 @@ export default function SignupFormSection() {
 								{
 									<div
 										className={
-											!enable_venly && !isVenlyConnected ? "" : "hidden" // hiding for disabled venly and if venly connected
+											!enable_venly && !isVenlyConnected ? "" : styles.hidden // hiding for disabled venly and if venly connected
 										}>
-										<label htmlFor='email' className='text-white'>
+										<label htmlFor='email' className={styles.label}>
 											Email
 										</label>
 										<Form.Item
-											className='w-full signup_email'
+											className={`${styles.formItem} signup_email`}
 											name='email'
 											rules={[
 												{
@@ -383,8 +384,7 @@ export default function SignupFormSection() {
 											]}>
 											<Input
 												id='email'
-												className={`text-left h-12 rounded-md lg:rounded-l-md ${isVenlyConnected ? "bg-gray-104" : ""
-													}`}
+												className={`${styles.input} ${isVenlyConnected ? styles.inputVenlyConnected : ""}`}
 												placeholder='Enter your email'
 												onBlur={onEmailBlur}
 												disabled={isVenlyConnected}
@@ -394,18 +394,18 @@ export default function SignupFormSection() {
 								}
 								{(isVenlyConnected || !enable_venly) && (
 									<>
-										<label htmlFor='username' className='text-white'>
+										<label htmlFor='username' className={styles.label}>
 											Username
 										</label>
 										<Form.Item
-											className='w-full'
+											className={styles.formItem}
 											name='user_name'
 											rules={[
 												{ required: true, message: "Please enter a username!" },
 											]}>
 											<Input
 												id='user_name'
-												className='text-left h-12 rounded-md lg:rounded-l-md bg-white'
+												className={styles.inputUsername}
 												placeholder='Enter a username'
 												autoComplete='off'
 											// suffix={
@@ -436,18 +436,18 @@ export default function SignupFormSection() {
 								)}
 								{(isVenlyConnected || !enable_venly) && (
 									<>
-										<label htmlFor='username' className='text-white'>
+										<label htmlFor='username' className={styles.label}>
 											Instagram UserName
 										</label>
 										<Form.Item
-											className='w-full'
+											className={styles.formItem}
 											name='insta_user_name'
 											rules={[
 												{ required: true, message: "Please enter a username!" },
 											]}>
 											<Input
 												id='insta_user_name'
-												className='text-left h-12 rounded-md lg:rounded-l-md bg-white'
+												className={styles.inputUsername}
 												placeholder='Enter a Instagram user_name'
 												autoComplete='off'
 											// suffix={
@@ -476,9 +476,9 @@ export default function SignupFormSection() {
 										</Form.Item>
 									</>
 								)}
-								{/* <Form.Item className='w-full' name='iCode'>
+								{/* <Form.Item className={styles.formItem} name='iCode'>
 									<Input
-										className='text-left h-12 rounded-md lg:rounded-l-md'
+										className={styles.input}
 										placeholder='Enter your referral code'
 										suffix={
 											<>
@@ -493,10 +493,10 @@ export default function SignupFormSection() {
 																: "Click to verify entered referral code"
 														}>
 														{isICodeVerified ? (
-															<CheckCircleOutlined className='text-green-500 ml-1' />
+															<CheckCircleOutlined className={styles.verifiedIcon} />
 														) : (
 															<span
-																className='ml-1 text-right text-blue-500 cursor-pointer'
+																className={styles.verifyLink}
 																onClick={onVerifyICode}>
 																Verify
 															</span>
@@ -509,11 +509,11 @@ export default function SignupFormSection() {
 								</Form.Item> */}
 								{!enable_venly && !isVenlyConnected && (
 									<>
-										<label htmlFor='password' className='text-white'>
+										<label htmlFor='password' className={styles.label}>
 											Password
 										</label>
 										<Form.Item
-											className='w-full'
+											className={styles.formItem}
 											name='password'
 											rules={[
 												{
@@ -523,7 +523,7 @@ export default function SignupFormSection() {
 											]}>
 											<Input.Password
 												id='password'
-												className='text-left h-12 rounded-md lg:rounded-l-md'
+												className={styles.input}
 												placeholder='Create a password'
 												iconRender={(visible) =>
 													visible ? (
@@ -535,11 +535,11 @@ export default function SignupFormSection() {
 											/>
 										</Form.Item>
 
-										<label htmlFor='cPassword' className='text-white'>
+										<label htmlFor='cPassword' className={styles.label}>
 											Confirm Password
 										</label>
 										<Form.Item
-											className='w-full'
+											className={styles.formItem}
 											name='cPassword'
 											rules={[
 												{
@@ -562,24 +562,24 @@ export default function SignupFormSection() {
 											<Input
 												id='cPassword'
 												type={"password"}
-												className='text-left h-12 rounded-md lg:rounded-l-md'
+												className={styles.input}
 												placeholder='Confirm your password'
 											/>
 										</Form.Item>
 									</>
 								)}
 								{hasError && (
-									<div className='lg:flex items-center my-4'>
+									<div className={styles.alertWrapper}>
 										{/* <p className='text-red-500 h-5'>{hasError}</p> */}
 										<Alert
 											message={hasError}
 											type='error'
-											className='w-full rounded-full py-0 px-2'
+											className={styles.alert}
 										/>
 									</div>
 								)}
 								<Form.Item>
-									<div className='flex flex-col items-center'>
+									<div className={styles.submitButtonContainer}>
 										{/* //
 											// hidden the custom email sign up options for now to let user continue with venly only when venly is enabled //
 											// */}
@@ -587,30 +587,30 @@ export default function SignupFormSection() {
 											<Button
 												htmlType='submit'
 												size='large'
-												className='loading-button w-24 md:w-40 text-xs md:text-sm z-10 mt-4 md:mt-0 bg-indigo-600 border-none rounded-md py-3 px-3.5 h-full font-bold -ml-2.5 text-white'>
+												className={`loading-button ${styles.submitButton}`}>
 												{isVenlyConnected ? "Continue" : "Sign Up"}
 											</Button>
 										)}
 										{!isVenlyConnected && enable_venly && (
-											<div className='flex flex-col items-center'>
-												{/* <p className='text-white my-4 text-base'>Or</p> */}
-												<div className='max-w-xs'>
+											<div className={styles.venlyContainer}>
+												{/* <p className={styles.orText}>Or</p> */}
+												<div className={styles.venlyButtonContainer}>
 													{/* removed border and extra padding from above line */}
-													<div className='mb-4 flex'>
-														<h3 className='text-xl text-white'>
+													<div className={styles.venlyHeader}>
+														<h3 className={styles.venlyTitle}>
 															Sign Up with <b>Venly</b> and Earn Rewards
 														</h3>
 														&nbsp;
 														<Tooltip title='Sign Up with Venly and Earn Rewards'>
-															<InfoCircleOutlined className='text-xl text-blue-107' />
+															<InfoCircleOutlined className={styles.infoIcon} />
 														</Tooltip>
 													</div>
 													<Button
 														onClick={() => connectToVenly("google")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-gray-600'>
+														className={`loading-button ${styles.venlyButton}`}>
 														<img
-															className='w-10 pr-3'
+															className={styles.venlyButtonGoogleImg}
 															height={28}
 															width={28}
 															src={googleIcon}
@@ -620,9 +620,9 @@ export default function SignupFormSection() {
 													{/* <Button
 														onClick={() => connectToVenly("facebook")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-blue-109'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<img
-															className='w-10 pr-3'
+															className={styles.venlyButtonGoogleImg}
 															height={28}
 															width={28}
 															src={facebookIcon}
@@ -632,9 +632,9 @@ export default function SignupFormSection() {
 													{/* <Button
 														onClick={() => connectToVenly("twitter")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-sky-101'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<img
-															className='w-10 h-7 pr-3'
+															className={styles.venlyButtonGoogleImg}
 															height={28}
 															width={28}
 															src={twitterIcon}
@@ -644,9 +644,9 @@ export default function SignupFormSection() {
 													<Button
 														onClick={() => connectToVenly("password")}
 														size='large'
-														className='loading-button w-full whitespace-normal flex items-center text-xs md:text-sm z-10 mt-4 bg-white border-none rounded-md py-2 px-3.5 h-full font-bold text-gray-600'>
+														className={`loading-button ${styles.venlyButton} ${styles.mt4}`}>
 														<MailFilled
-															className='text-xl-2 pr-1'
+															className={styles.venlyButtonMailIcon}
 															height={28}
 															width={28}
 														/>
@@ -659,10 +659,10 @@ export default function SignupFormSection() {
 								</Form.Item>
 							</Form>
 							{!isVenlyConnected && (
-								<div className='text-center'>
-									<Link className='text-white' href='/signin'>
+								<div className={styles.signinLinkContainer}>
+									<Link className={styles.signinLink} href='/signin'>
 										Already have an account?{" "}
-										<span className='text-blue-107 whitespace-nowrap font-bold'>
+										<span className={styles.signinSpan}>
 											Sign in
 										</span>
 									</Link>
@@ -681,8 +681,8 @@ export default function SignupFormSection() {
 				</div>
 			)}
 			{showProcessingLoader && (
-				<div className='fixed z-30 top-0 left-0 flex justify-center items-center w-full h-full backdrop-filter backdrop-contrast-75'>
-					<Spin indicator={<LoadingOutlined className='text-3xl-1' spin />} />
+				<div className={styles.loaderOverlay}>
+					<Spin indicator={<LoadingOutlined className={styles.loaderIcon} spin />} />
 				</div>
 			)}
 		</div>
