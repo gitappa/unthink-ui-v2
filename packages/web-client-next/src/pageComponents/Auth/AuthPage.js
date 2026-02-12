@@ -19,8 +19,8 @@ export default function AuthPage(props) {
 		[normalizedPathname]
 	);
 	// console.log('isSignUpPage',isSignUpPage );
- 
-	
+
+
 	const isCreateAccount = React.useMemo(
 		() => normalizedPathname === "/create-account",
 		[normalizedPathname]
@@ -33,8 +33,8 @@ export default function AuthPage(props) {
 
 
 	return (
-		<div className={`min-h-screen static_page_bg ${styles.authPageRoot}`}>
-			<div className='auth-header-container'>
+		<div className={`static_page_bg ${styles.authPageRoot}`}>
+			<div className={styles.authHeaderContainer}>
 				<AuthHeader
 					userTextLink={{
 						text: (isSignUpPage || isCreateAccount) ? "Sign In" : undefined,
@@ -43,14 +43,14 @@ export default function AuthPage(props) {
 					hideProfile={!isSignUpPage && !isCreateAccount}
 				/>
 			</div>
-			<div className='flex auth-container'>
+			<div className={styles.authContainer}>
 				{/* <div className='w-3/5 hidden lg:block need-help-section-container'>
 					<NeedHelpSection />
 				</div>
 				<div className='lg:w-2/5 w-full bg-gray-100'></div> */}
-				<div className='w-full'>
+				<div className={styles.contentWrapper}>
 					{isSignUpPage ? <SignupFormSection /> : isCreateAccount ? <CreateAccountSection /> : <SignInFormSection />}
-				</div> 
+				</div>
 			</div>
 		</div>
 	);

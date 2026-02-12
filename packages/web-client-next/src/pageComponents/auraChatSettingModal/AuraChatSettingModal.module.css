@@ -1,0 +1,65 @@
+.description {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.infoIcon {
+    margin-right: 0.25rem;
+    display: inline-flex;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 1324px) {
+    .gridContainer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.label {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.textarea {
+    width: 100%;
+    border-radius: 0.75rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
+.buttonContainer {
+    display: flex;
+}
+
+.restoreButton {
+    margin-left: auto;
+    background-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: #4f46e5;
+    border-radius: 0.5rem;
+}
+
+.saveButton {
+    background-color: #4f46e5;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: #ffffff;
+    border-radius: 0.5rem;
+}
