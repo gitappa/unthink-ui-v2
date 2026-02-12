@@ -8,29 +8,30 @@
 
 /* Remove border from Ant Design select components */
 .ant-select {
-    border: none !important;
+  border: none !important;
 }
 
 .ant-select-selector {
-    border: none !important;
+  border: none !important;
 }
 
 :where(.css-dev-only-do-not-override-mncuj7).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
-    border: none !important;
-   
+  border: none !important;
+
 }
 
 .static_page_bg {
-    background: linear-gradient(180deg, #222F44 0%, #0E131B 100%);
+  background: linear-gradient(180deg, #222F44 0%, #0E131B 100%);
 }
 
 .profile-brand-wrapper {
-    padding-top: 100%;
+  padding-top: 100%;
 }
 
 .card-shadow {
-    box-shadow: 0px 0px 5px 0px #fff;
+  box-shadow: 0px 0px 5px 0px #fff;
 }
+
 .ant-steps-item-title {
   color: #ffffff !important;
 }
@@ -67,23 +68,23 @@
 }
 
 .Product_Cards_Div {
-    height: 60vh;
-    overflow-y: scroll !important;
-    position: relative; 
-    padding-right: 15px;
+  height: 60vh;
+  overflow-y: scroll !important;
+  position: relative;
+  /* padding-right: 15px; */
 }
 
-p{
+p {
   margin-bottom: 0 !important;
 }
 
 .hover-fancy {
-transition: transform 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 
 .hover-fancy:hover {
-transform: translateY(-3px) scale(1.05);
+  transform: translateY(-3px) scale(1.05);
 }
 
 ::-webkit-scrollbar {
@@ -96,10 +97,12 @@ transform: translateY(-3px) scale(1.05);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #9ca3af; /* gray-400 */
+  background-color: #9ca3af;
+  /* gray-400 */
   border-radius: 10px;
 }
-.mySwipers{
+
+.mySwipers {
   height: 220px;
   padding: 0 30px !important;
 }
@@ -110,6 +113,7 @@ transform: translateY(-3px) scale(1.05);
     opacity: 0;
     transform: scale(0.85) translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -120,28 +124,32 @@ transform: translateY(-3px) scale(1.05);
   animation: menuSlideIn 0.3s ease-out;
   transform-origin: top right;
 }
+
 /* img{
   max-width: fit-content;
 } */
- :where(.css-dev-only-do-not-override-mncuj7).ant-image .ant-image-mask {
+:where(.css-dev-only-do-not-override-mncuj7).ant-image .ant-image-mask {
   inset: unset !important;
 }
-.ant-select-selector{
+
+.ant-select-selector {
   box-shadow: none !important;
 }
+
 .collection_page_sort_product_list .ant-select-arrow {
-    align-items: center !important;
-    background: #d4ccfc80 !important;
-    border-radius: 12px !important;
-    display: flex !important;
-    justify-content: center !important;
-    padding: 14px 12px !important;
-    position: absolute !important;
-    right: 5px !important;
-    text-align: center !important;
-    top: 15% !important;
+  align-items: center !important;
+  background: #d4ccfc80 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  padding: 14px 12px !important;
+  position: absolute !important;
+  right: 5px !important;
+  text-align: center !important;
+  top: 15% !important;
 }
-.collection_page_sort_product_list .ant-select-selection-item{
+
+.collection_page_sort_product_list .ant-select-selection-item {
   padding-right: 50px !important;
   color: #0E131B !important;
   font-weight: 600 !important;
@@ -149,21 +157,22 @@ transform: translateY(-3px) scale(1.05);
 }
 
 .ellipsis_2 {
- display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
-text-overflow: ellipsis;
- }
- .ellipsis_3 {
- display: -webkit-box;
--webkit-line-clamp: 3;
--webkit-box-orient: vertical;
-overflow: hidden;
-text-overflow: ellipsis;
- }
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
- .summer-vibes {
+.ellipsis_3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summer-vibes {
   background: linear-gradient(90deg, #4D84C2, #B557A5, #E6864E);
   color: #fff;
   padding: 8px 16px;
@@ -190,51 +199,51 @@ text-overflow: ellipsis;
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
+
 /* .rotate-left{
     transform: rotate(-20deg) !important;
 } */
-.ant-select-selection-item-content{
+.ant-select-selection-item-content {
   color: #0E131B;
   font-weight: normal;
 }
- 
 
 
 
-.tryForFree_custom-select-editcollection__u24Q7
-.ant-select-selector {
-  background-color: #7c74ec  !important;
+
+.tryForFree_custom-select-editcollection__u24Q7 .ant-select-selector {
+  background-color: #7c74ec !important;
   /* color: whitesmoke; */
 }
-.tryForFree_custom-select-editcollection__u24Q7 
-.ant-select-selection-item{
+
+.tryForFree_custom-select-editcollection__u24Q7 .ant-select-selection-item {
   color: white !important;
 
 }
-.tryForFree_custom-select-editcollection__u24Q7 
-.ant-select-arrow{
-      background: #d4ccfc !important;
-    border-radius: 8px !important;
-    padding: 12px 8px !important;
-    position: absolute !important;
-    right: 0 !important;
-    top: 31% !important;
+
+.tryForFree_custom-select-editcollection__u24Q7 .ant-select-arrow {
+  background: #d4ccfc !important;
+  border-radius: 8px !important;
+  padding: 12px 8px !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 31% !important;
 }
-.tryForFree_edit_collection_sort_product_list__lAKgX 
-.ant-select-arrow{
-    background: #d4ccfc !important;
-    border-radius: 8px !important;
-    padding: 12px 8px !important;
-    position: absolute !important;
-    /* right: 0 !important; */
-    top: 29% !important;
-    color: #0E131B;
+
+.tryForFree_edit_collection_sort_product_list__lAKgX .ant-select-arrow {
+  background: #d4ccfc !important;
+  border-radius: 8px !important;
+  padding: 12px 8px !important;
+  position: absolute !important;
+  /* right: 0 !important; */
+  top: 29% !important;
+  color: #0E131B;
 }
-.tryForFree_edit_collection_sort_product_list__lAKgX 
-.ant-select-selector{
- background-color: transparent !important;
+
+.tryForFree_edit_collection_sort_product_list__lAKgX .ant-select-selector {
+  background-color: transparent !important;
 }
- .tryForFree_edit_collection_sort_product_list__lAKgX 
- .ant-select-selection-item{
+
+.tryForFree_edit_collection_sort_product_list__lAKgX .ant-select-selection-item {
   padding-right: 50px !important;
- }
+}
