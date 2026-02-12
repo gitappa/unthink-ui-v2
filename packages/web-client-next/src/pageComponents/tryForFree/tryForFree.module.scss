@@ -1373,6 +1373,9 @@
     @media (min-width: 768px) {
         height: 36px;
     }
+    @media (max-width: 768px) {
+        width: 60% !important;
+    }
 }
 
 .actionSelect {
@@ -1429,6 +1432,13 @@
     padding-left: 12px;
     border: 1px solid #D4CCFC; /* border-newcolor-300 */
     border-radius: 16px;
+    @media (max-width: 768px) {
+        margin-top: 10px;
+        width: 60% !important;
+    }
+    .ant-select-selection-item{
+        font-size: 12px !important;
+    }
 }
 
 .sortByLabel {
@@ -2063,6 +2073,10 @@
 
     @media (min-width: 768px) {
         gap: 0; /* md:gap-0 */
+        
+    }
+    @media (max-width: 768px) {
+        width: 100% !important;
     }
 
     @media (min-width: 1324px) {

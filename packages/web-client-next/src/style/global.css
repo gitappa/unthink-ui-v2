@@ -247,3 +247,13 @@ p {
 .tryForFree_edit_collection_sort_product_list__lAKgX .ant-select-selection-item {
   padding-right: 50px !important;
 }
+
+@media (max-width: 768px) {
+  .ant-select-selection-item {
+    width: 80px;
+    /* set required width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

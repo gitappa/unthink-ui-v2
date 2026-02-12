@@ -4471,7 +4471,7 @@ const ReviewCollection = (props) => {
 										multiProductsSelectionMessage ? (
 										<div>
 											<div className={`${style.sortRowWrapper} edit_page_sort_div`}>
-												<div className={`flex gap-2 items-end justify-between w-full ${enableSelectProduct ? "selectedActive_button_mobile" : ""}`} >
+												<div className={`md:flex gap-2 items-end justify-between w-full ${enableSelectProduct ? "selectedActive_button_mobile" : ""}`} >
 													{/* edit products */}
 													{showProductSelection ? (
 														<div className={style.flexRowGap2Wrap}>
