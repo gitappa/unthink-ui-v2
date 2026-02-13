@@ -1,9 +1,81 @@
-.down-circle-outlined {
-    background: rgb(154, 154, 154);
+/* Scroll to Next Collection Button */
+.scrollButtonWrapper {
+    z-index: 30;
+    position: fixed;
+    height: 96px;
+    width: 74px;
+    margin-bottom: 74px;
+    bottom: 8px;
+    right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: radial-gradient(circle, #4f46e5 0%, rgba(255, 255, 255, 0) 50%);
 
-    .anticon-down-circle {
+    @media (min-width: 1024px) {
+        margin-bottom: 0;
+    }
+
+    :global(.anticon-down-circle) {
         display: flex;
+    }
+}
+
+.scrollButtonIcon {
+    color: #ffffff;
+    font-size: 36px;
+    cursor: pointer;
+    border-radius: 9999px;
+
+    @media (min-width: 768px) {
+        font-size: 48px;
+    }
+}
+
+/* Collections Container */
+.collectionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+        gap: 48px;
+    }
+}
+
+/* Load More Observer */
+.loadMoreObserver {
+    height: 40px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Load More Button */
+.loadMoreButtonWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.loadMoreButton {
+    background-color: #8b5cf6;
+    color: #ffffff;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #7c3aed;
     }
 }
 
