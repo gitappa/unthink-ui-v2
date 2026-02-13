@@ -644,8 +644,7 @@ const ProductCard = ({
   }, [clickedMfrCode]);
   return (
     <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
-      className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''}
-       ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
+      className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
       <div
         className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
         // onClick={handleProductClick}
@@ -834,12 +833,12 @@ const ProductCard = ({
               <div
                 className={`${styles['remove-icon-wrapper']} flex product_remove_icon`}
                 onClick={removeFromWishlistClick}>
-                <p
+                <p style={{color:'#f8f6f4'}}
                   className={`${styles['remove-icon-circle']} ${size === "small"
                     ? styles['icon-circle-small']
                     : styles['icon-circle-medium']
                     }`}>
-                  <RxCross2 />
+                  <RxCross2 style={{color:'#f8f6f4'}}/>
                 </p>
 
               </div>
@@ -856,7 +855,7 @@ const ProductCard = ({
             } ${size === "small"
               ? styles['header-small']
               : styles['header-medium']
-            } z-20`}
+            }`}
         >
           {/* reversed contents for hover css */}
 
@@ -897,16 +896,16 @@ const ProductCard = ({
                         className={`    gap-${size === "small" ? "2" : "3"
                           }`}>
                         <div
-                          className={`${styles['product-menu-item']} product_remove_icon`}
+                          className={`${styles['remove-icon-wrapper']} ${styles['product-menu-item']}`}
                           onClick={removeFromWishlistClick}>
                           <p
-                            className={`${styles['menu-item-circle']} ${size === "small"
+                            className={`${styles['remove-icon-circle']} ${size === "small"
                               ? styles['icon-circle-small']
                               : styles['icon-circle-medium']
                               }`}>
                             <RxCross2 />
                           </p>
-                          <p className="text-gray-101 mb-0">Remove</p>
+                          <p className={styles['text-gray']}>Remove</p>
                         </div>
                       </div>
                     )}
@@ -919,15 +918,15 @@ const ProductCard = ({
                           : styles['icon-circle-medium']
                           }`}
                       >
-                        <LuCopy className='  ' />
+                        <LuCopy />
 
                       </div>
-                      <p className="text-gray-101 m-0">Copy</p>
+                      <p className={styles['text-gray']}>Copy</p>
                     </div>
                   )}
 
                   {isAdminLoggedIn && isCustomProductsPage && (
-                    <div className="flex gap-2 items-center" onClick={(e) => {
+                    <div className={styles['product-menu-item']} onClick={(e) => {
                       handleProductClick();
                       e.stopPropagation();
                     }}>
@@ -941,7 +940,7 @@ const ProductCard = ({
                           className={styles['product-cart-icon-smalls']}
                         />
                       </p>
-                      <p className=" text-gray-101 m-0">Edit</p>
+                      <p className={styles['text-gray']}>Edit</p>
                     </div>
 
                   )}
@@ -983,13 +982,9 @@ const ProductCard = ({
 
                 <button
                   className={`${styles['product-heart-button']}`}
-                //  ${isCustomProductsPage
-                // 	? "right-1 top-20 mt-5"
-                // 	: "top-2 mt-0 right-1"}												
                 >
-                  <Image className={`text-lg z-40 flex ${styles.add_to_wishlist_icon}`} src={heart} height={20} width={20} />
+                  <Image className={styles['add_to_wishlist_icon']} src={heart} height={20} width={20} />
                 </button>
-                {/* <p className="text-gray-101 m-0">Wishlist</p> */}
               </div>
             )}
           </div>
@@ -1002,11 +997,7 @@ const ProductCard = ({
           {/* Product Name */}
           <div className={styles['product-name-section']}>
             {/* Brand Info */}
-            {/* {product?.brand ? ( */}
-            <p className={styles['product-brand-footer-text']}>From <span className='font-medium'>{product?.brand || '\u00A0'}</span></p>
-            {/* ) : (
- 							null
-						)} */}
+            <p className={styles['product-brand-footer-text']}>From <span>{product?.brand || '\u00A0'}</span></p>
 
             <Text
               ellipsis={{ tooltip: product.name }}
@@ -1019,12 +1010,7 @@ const ProductCard = ({
             {/* SOLD Badge */}
             {product?.avlble === 0 && (
               <div
-                className="p-1 leading-none text-red-500 text-xs product_card_footer_item"
-                style={{
-                  backgroundColor: "#fff2f0",
-                  border: "1px solid #ffccc7",
-                  width: "fit-content",
-                }}
+                className={styles['product-sold-badge']}
               >
                 SOLD
               </div>
@@ -1099,8 +1085,7 @@ const ProductCard = ({
           }
 
           {/* Price Section */}
-          {/* {(product?.price || product?.listprice)  ?  */}
-          <div className={`flex justify-between items-center gap-2 mt-2 ${product?.price || product?.listprice ? 'min-h-[32px]' : 'min-h-[32px]'}`}>
+          <div className={`${styles['product-price-container']} ${product?.price || product?.listprice ? styles['product-price-container-height'] : styles['product-price-container-height']}`}>
             <div className={styles['product-price-display']} >
 
               <span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
@@ -1148,17 +1133,16 @@ const ProductCard = ({
                 >
                   <Image
                     style={{ filter: !product?.price && !product?.listprice ? 'brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)' : '' }}
-                    src={shopping} height={20} width={20} className={`cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
-                  {/* <Image src={buyicon} height={30} width={30}/>	 */}
+                    src={shopping} height={20} width={20} className={`${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
                   Buy Now
                 </button>
               ) : (
                 <button
-                  className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']} ${!product?.price && !product?.listprice ? 'hidden' : 'block'}`}
+                  className={`${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']} ${!product?.price && !product?.listprice ? styles['hidden'] : styles['block']}`}
                   onClick={handleAddToCart}
                   disabled={!product?.price && !product?.listprice}
                 >
-                  <Image src={shopping} height={20} width={20} className={`text-black-100 cursor-pointer ${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
+                  <Image src={shopping} height={20} width={20} className={`${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
                   Add to Cart
                 </button>
               )}
@@ -1178,7 +1162,7 @@ const ProductCard = ({
           onClose={() => handleVTOCancel()}
           size='md'>
           {vtoResultImageUrl ? (
-            <div className='flex flex-col items-center justify-center'>
+            <div className={styles['product-vto-result-container']}>
               <img src={vtoResultImageUrl} alt="VTO Result" className={styles['product-vto-result-image']} />
               <div className={styles['product-vto-buttons-group']}>
                 <button
@@ -1197,35 +1181,28 @@ const ProductCard = ({
             <>
               {loading ?
                 <div className={styles['product-vto-loading-container']}>
-                  <LoadingOutlined className='text-5xl text-indigo-600 animate-spin' />
+                  <LoadingOutlined className={styles['product-vto-loading-spinner']} />
                   <div className={styles['product-vto-loading-text']}>
                     <p className={styles['product-vto-loading-title']}>AI is generating your image</p>
                     <p className={styles['product-vto-loading-subtitle']}>Please wait while we process your request...</p>
                   </div>
                 </div> :
                 <form onSubmit={handleVTOclick}>
-                  <div className='flex flex-col items-center justify-center relative' >
-                    {showLoader ? <LoadingOutlined className='text-2xl text-gray-600 mb-2' /> :
+                  <div className={styles['product-vto-upload-container']} >
+                    {showLoader ? <LoadingOutlined className={styles['product-vto-loading-spinner']} /> :
                       <>
                         {uploadedImages.length < 1 && (
-                          // <Dragger
-                          // 	className='bg-transparent h-20 w-20 border border-dashed border-gray-400 rounded-xl hover:border-brown-100 transition-all'
-                          // 	{...uploadImageDraggerProps}
-                          // 	name='upload_image'>
-                          // 	<p className='text-gray-600'>+</p>
-                          // </Dragger>
-
                           <div className={styles['product-vto-upload-container']}>
-                            <h4 className="text-xl font-semibold text-start mb-3">Upload Your Image </h4>
+                            <h4 className={styles['product-vto-upload-title']}>Upload Your Image </h4>
                             <Upload.Dragger
-                              className='bg-transparent h-56 w-56'
+                              className={styles['product-vto-upload-zone']}
                               {...uploadImageDraggerProps}
                               name='upload_image'
                               showUploadList={false}>
-                              <p className='ant-upload-drag-icon'>
+                              <p className={styles['product-vto-upload-icon']}>
                                 <UploadOutlined />
                               </p>
-                              <p className='w-4/6 mx-auto'>
+                              <p className={styles['product-vto-upload-text']}>
                                 Click or drag file(s) to this area
                               </p>
                             </Upload.Dragger>
@@ -1234,22 +1211,20 @@ const ProductCard = ({
                       </>
                     }
                     {uploadedImages.length > 0 &&
-                      <div className="relative ">
-                        <img src={uploadedImages[0]} alt="Uploaded" className="mt-2 max-h-40" />
-                        <CloseCircleOutlined className='text-white text-xl absolute right-0 top-2' onClick={() => setUploadedImages([])} />
+                      <div className={styles['product-vto-uploaded-image-container']}>
+                        <img src={uploadedImages[0]} alt="Uploaded" className={styles['product-vto-uploaded-image']} />
+                        <CloseCircleOutlined className={styles['product-vto-close-uploaded']} onClick={() => setUploadedImages([])} />
                       </div>
                     }
                   </div>
                   <h4 className={styles['product-vto-prompt-label']}> Add a prompt for AI (optional) </h4>
                   <textarea
-                    className='text-left placeholder-gray-101 mt-2 outline-none rounded-xl w-full px-3 py-2 resize-none'
+                    className={styles['product-vto-prompt-input']}
                     placeholder='Enter description...'
                     name='description'
                     type='text'
                     onChange={(e) => setDescriptionget(e.target.value)}
                     value={descriptionget}
-                    // value={product.description}
-                    // onChange={(e) => handleProductInputChange(e, product.mfr_code)}
                     rows={5}
                   />
 
@@ -1272,40 +1247,33 @@ const ProductCard = ({
             height='fit-content'
             onClick={handleStarClick}
             role={onStarClick ? "button" : "img"}
-            className={`flex my-auto z-20 ${size === "small" ? "lg:text-sm" : "lg:text-xl"
-              } ${product.starred ? "text-secondary" : "text-black-200"} ${onStarClick ? "cursor-pointer" : "cursor-default"
-              }`}
+            className={`${styles['product-chin-star-icon']} ${size === "small" ? styles['product-chin-star-icon-small'] : styles['product-chin-star-icon-medium']} ${product.starred ? styles['product-chin-star-icon-filled'] : styles['product-chin-star-icon-default']} ${onStarClick ? styles['product-chin-star-icon-clickable'] : styles['product-chin-star-icon-not-clickable']}`}
           />
           {enableCopyFeature && (
             <div
-              className='flex items-center self-baseline text-black-200 my-auto cursor-pointer'
+              className={styles['product-chin-copy-button']}
               onClick={handleCopyClick}>
-              <CopyOutlined className='text-base flex' />
+              <CopyOutlined className={styles['product-chin-copy-icon']} />
             </div>
           )}
           <div
-            className='flex items-center self-baseline product_remove_icon   text-black-200 my-auto'
+            className={styles['product-chin-remove-button']}
             onClick={removeFromWishlistClick}>
-            <CloseCircleOutlined className='text-base flex  ' />
+            <CloseCircleOutlined className={styles['product-chin-remove-icon']} />
           </div>
         </div>
       )}
       {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
         (showEdit || showStar || showRemoveIcon) && (
           <div
-            className={`flex gap-2  justify-between items-center product-card-action-container ${size === "small" ? "lg:text-base" : "lg:text-xl"
-              }`}>
+            className={`${styles['product-action-cover-container']} ${size === "small" ? styles['product-action-cover-container-small'] : styles['product-action-cover-container-medium']}`}>
             <div>
               {showRemoveIcon ? (
                 <button
-                  className='flex text-black-200 p-1 bg-white rounded-full product-remove-btn absolute top-4 right-2 z-50'
-                  // tabindex='-1'
+                  className={styles['product-action-cover-remove-button']}
                   onClick={(e) => removeFromWishlistClick(e)}>
-                  <RxCross2 className={`rounded-full z-50 flex mb-0 justify-center items-center font-bold text-black-102   ${size === "small"
-                    ? "lg:text-base h-5 w-5 "
-                    : "lg:text-2xl h-6 w-6"
-                    }`} />
-                  <span className='box-border leading-none font-bold pl-2 hidden transition-all remove-btn-text'>
+                  <RxCross2 className={`${styles['product-action-cover-remove-icon']} ${size === "small" ? styles['product-action-cover-remove-icon-small'] : styles['product-action-cover-remove-icon-medium']}`} />
+                  <span className={styles['product-action-cover-remove-text']}>
                     Remove
                   </span>
                 </button>
@@ -1314,12 +1282,12 @@ const ProductCard = ({
             <div>
               {showEdit ? (
                 <button
-                  className='flex text-black-200 product-showcase-btn cursor-pointer  '
+                  className={styles['product-action-cover-edit-button']}
                   tabindex='-1'
                   role='button'
                   onClick={handleEditClick}>
-                  <EditFilled className='flex text-black-200' />
-                  <span className='box-border leading-none font-bold pl-2 hidden transition-all showcase-btn-text'>
+                  <EditFilled className={styles['product-action-cover-edit-icon']} />
+                  <span className={styles['product-action-cover-edit-text']}>
                     Edit
                   </span>
                 </button>
