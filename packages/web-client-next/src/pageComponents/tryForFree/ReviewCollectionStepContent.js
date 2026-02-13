@@ -854,28 +854,28 @@ const ReviewCollectionStepContent = ({
 			<ReviewCollectionContainerWrapper>
 				<div>
 					{/* Title section START */}
-					<div className='tablet:flex'>
+					<div className={styles.tabletFlex}>
 						<div>
-							{/* <p className='md:leading-none font-normal capitalize flex items-center mb-0 text-white'>
-						<span className='text-2xl lg:text-3xl break-word-only ellipsis_1'>
+							{/* <p className={`${styles.leadingNoneMd} ${styles.fontNormal} capitalize ${styles.flex} ${styles.itemsCenter} ${styles.mb0} text-white`}>
+						<span className={`${styles.text2xl} ${styles.lg} ${styles.text3xl} ${styles.breakWordOnly} ${styles.ellipsis1}`}>
 							Content
 						</span>
-						<EditOutlined className='text-2xl flex ml-2 my-auto' />
+						<EditOutlined className={`${styles.text2xl} ${styles.flex} ${styles.ml2}`} />
 					</p> */}
 						</div>
-						<div className='ml-auto flex h-fit-content gap-2'>
+						<div className={`${styles.mlAuto} ${styles.flex} ${styles.hFitContent} ${styles.gap2}`}>
 							<>
 								<button
 									type='button'
 									onClick={handleDiscard}
-									className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold text-indigo-103 border-2 border-indigo-103 ml-auto'>
+									className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.textIndigo103} ${styles.border2} ${styles.borderIndigo103} ${styles.mlAuto}`}>
 									Cancel
 								</button>
 
 								{!isNewCollection && (
 									<button
 										onClick={handlePreviewCollectionPage}
-										className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 border-2 border-indigo-103 text-white'
+										className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.border2} ${styles.borderIndigo103} ${styles.textWhite}`}
 									// isNewCollection ? "bg-indigo-400" : "bg-indigo-600"
 									// disabled={isNewCollection}
 									>
@@ -892,12 +892,12 @@ const ReviewCollectionStepContent = ({
 												checkReFetchProductsCalled: true,
 											})
 										}
-										className='hidden lg:inline-block text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103'>
+										className={`${styles.hiddenLg} ${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.textWhite} ${styles.p3} ${styles.border2} ${styles.borderIndigo103}`}>
 										Next
 									</button>
 								</div>
 
-								{/* <div className='mt-4 sm:mt-0'>
+								{/* <div className={`${styles.mt4} sm:mt-0`}>
 							<PublishingOptionsDropdown
 								handleSelectPublishingOption={handleSelectPublishingOption}
 								selectedOption={publishingOption}
@@ -911,10 +911,10 @@ const ReviewCollectionStepContent = ({
 					{/* Title section END */}
 
 					<div>
-						<label className='text-xl block mb-2'>Title</label>
+						<label className={`${styles.textXl} ${styles.block} ${styles.mb2}`}>Title</label>
 						{checkIsFavoriteCollection(currentCollection) ? (
 							<input
-								className='text-left placeholder-gray-101 outline-none px-3 h-10 bg-white rounded-xl w-full cursor-not-allowed text-gray-101 avoid_autofill_bg'
+								className={`${styles.textLeft} ${styles.placeholderGray101} ${styles.outlineNone} ${styles.px3} ${styles.h10} ${styles.bgWhite} ${styles.roundedXl} ${styles.wFull} ${styles.cursorNotAllowed} ${styles.textGray101} avoid_autofill_bg`}
 								name='collection_name'
 								type='text'
 								value={favorites_collection_name}
@@ -922,7 +922,7 @@ const ReviewCollectionStepContent = ({
 							/>
 						) : (
 							<input
-								className={`text-left placeholder-gray-101 outline-none px-3 h-10 bg-white rounded-xl w-full avoid_autofill_bg`}
+								className={`${styles.textLeft} ${styles.placeholderGray101} ${styles.outlineNone} ${styles.px3} ${styles.h10} ${styles.bgWhite} ${styles.roundedXl} ${styles.wFull} avoid_autofill_bg`}
 								placeholder='Enter collection title'
 								name='collection_name'
 								type='text'
@@ -939,14 +939,14 @@ const ReviewCollectionStepContent = ({
 									<p className={styles.infoText}>Blog/Article URL</p>
 								</div>
 								{showSettings ? (
-									<div className='text-base'>
+									<div className={styles.text_base}>
 										<span
-											className='cursor-pointer flex items-center'
+											className={`${styles.cursorPointer} ${styles.flex} ${styles.itemsCenter}`}
 											onClick={handleSettingsClick}
 											role='button'>
 											<SettingFilled
 												id='create_collection_setting_icon'
-												className='flex mr-1'
+												className={styles.flex}
 											/>
 											Settings
 										</span>
@@ -990,14 +990,14 @@ const ReviewCollectionStepContent = ({
 										</div>
 
 										{showSettings ? (
-											<div className='text-base'>
+											<div className={styles.text_base}>
 												<span
-													className='cursor-pointer flex items-center'
+													className={`${styles.cursorPointer} ${styles.flex} ${styles.itemsCenter}`}
 													onClick={handleSettingsClick}
 													role='button'>
 													<SettingFilled
 														id='create_collection_setting_icon'
-														className='flex mr-1'
+														className={styles.flex}
 													/>
 													Settings
 												</span>
@@ -1022,7 +1022,7 @@ const ReviewCollectionStepContent = ({
 					)}
 
 					{isGeneratedByImage ? (
-						<div className='mt-4'>
+						<div className={styles.mt4}>
 							<label className={styles.stepContentLabel}>Image</label>
 							<div>
 								{isUploading ? (
@@ -1067,7 +1067,7 @@ const ReviewCollectionStepContent = ({
 												<p className='ant-upload-drag-icon'>
 													<UploadOutlined />
 												</p>
-												<p className='w-4/6 mx-auto'>
+												<p className={`${styles.w4_6} ${styles.mxAuto}`}>
 													Click or drag file to this area to upload Image
 												</p>
 											</Dragger>
@@ -1077,13 +1077,13 @@ const ReviewCollectionStepContent = ({
 							</div>
 
 							{errors.image_url && (
-								<p className='text-red-500 text-center'>{errors.image_url}</p>
+								<p className={`${styles.textRed500} ${styles.textCenter}`}>{errors.image_url}</p>
 							)}
 						</div>
 					) : null}
 
 					{isGeneratedByVideo ? (
-						<div className='mt-4'>
+						<div className={styles.mt4}>
 							<label className={styles.stepContentLabel}>
 								{currentCollection.uploaded_source ? "Video" : "Video URL"}
 							</label>
@@ -1132,7 +1132,7 @@ const ReviewCollectionStepContent = ({
 												<p className='ant-upload-drag-icon'>
 													<UploadOutlined />
 												</p>
-												<p className='w-4/6 mx-auto'>
+												<p className={`${styles.w4_6} ${styles.mxAuto}`}>
 													Click or drag file to this area to upload video
 												</p>
 											</Dragger>
@@ -1348,8 +1348,8 @@ const ReviewCollectionStepContent = ({
 									isEmpty(selectedTags) &&
 									!showEditTagsInput ? (
 									<div className={styles.tipsText}>
-										<InfoCircleOutlined className='tablet:text-lg leading-5' />
-										<p className='flex items-center leading-5 mb-0'>
+										<InfoCircleOutlined className={`${styles.tabletTextLg} ${styles.leading5}`} />
+										<p className={`${styles.flex} ${styles.itemsCenter} ${styles.leading5} ${styles.mb0}`}>
 											Click on the keywords above to see associated filters. You
 											can edit them as needed!
 										</p>
@@ -1409,7 +1409,7 @@ const ReviewCollectionStepContent = ({
 					) : null}
 
 					{!isEmpty(selectedTags) ? (
-						<div className='mt-4'>
+						<div className={styles.mt4}>
 							<ProductFiltersTags
 								productFilters={filters}
 								handleFiltersInputClear={handleFiltersInputClear}
@@ -1482,7 +1482,7 @@ const ReviewCollectionStepContent = ({
 									</div>
 									<Select
 										mode='tags'
-										className={`${styles.categoryTagSelect} text-base tag-select-input`}
+										className={`${styles.categoryTagSelect} ${styles.text_base} tag-select-input`}
 										placeholder={`Enter ${TAGS_TITLE}`}
 										value={updatedData.category_tags[tagsKey] || []}
 										onChange={(values) =>

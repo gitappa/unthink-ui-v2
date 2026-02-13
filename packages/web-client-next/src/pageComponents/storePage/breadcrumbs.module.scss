@@ -1,7 +1,6 @@
 .breadcrumbsContainer {
-    padding-top: 3rem; /* pt-12 */
-    margin-left: auto;
-    margin-right: auto;
+    padding: 48px 12px 0px 12px; /* pt-12 */
+   
 }
 
 @media (min-width: 1024px) {
@@ -28,9 +27,8 @@
 }
 
 .breadcrumbsInnerDefault {
-    max-width: 72rem; /* max-w-6xl-1 */
-    padding-left: 0.75rem; /* px-3 */
-    padding-right: 0.75rem;
+    max-width: 992px; /* max-w-6xl-1 */
+ 
 }
 
 .breadcrumbsInnerInspirationDisable {
@@ -91,7 +89,7 @@
 }
 
 .breadcrumbText {
-    color: #d1d5db; /* text-gray-106 */
+    color: #a4a6aa; /* text-gray-106 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

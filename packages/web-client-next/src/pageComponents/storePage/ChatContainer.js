@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Tooltip } from "antd";
+import styles from "./ChatContainer.module.css";
 
 import {
 	AURA_CLICK,
@@ -420,17 +421,17 @@ const ChatContainer = ({
 	return (
 		<>
 			{ storeData?.is_searchOptions_enabled ?
-			<div className='hidden lg:flex justify-center items-center gap-2 lg:gap-3 xl:w-1/2 mx-1'>
+			<div className={styles.chatContainerWrapper}>
 				{/* {!isBTNormalUserLoggedIn ? ( */}
-				<div className='flex justify-center items-center'>
+				<div className={styles.auraIconContainer}>
 					<Tooltip
 						title='Meet AURA - your AI shopping assistant'
 						placement='bottomLeft'>
 						<span> 
 							<Image
 								src={star_ai_icon}
-								className={`cursor-pointer  ${isSwiftlyStyledInstance || isDoTheLookInstance
-									? "rounded-full p-1  border-2 border-solid bg-white border-indigo-600"
+								className={`${styles.auraIcon} ${isSwiftlyStyledInstance || isDoTheLookInstance
+									? styles.auraIconStyled
 									: ""
 									}`}                            // className={`rounded-full bg-orange-100 cursor-pointer`}
 								onClick={() => onChatClick && onChatClick()}
@@ -457,14 +458,14 @@ const ChatContainer = ({
 					isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
 				/>
 			</div> :
-			<div className='hidden lg:flex justify-center items-center gap-2 lg:gap-3 xl:w-1/2 mx-1'></div>
+			<div className={styles.chatContainerWrapper}></div>
 }
 
 			<div
-				className={`transform transition duration-300 ${showChatModal
-					? "translate-y-0 delay-300 opacity-100 chat_modal_open"
-					: "-translate-y-full opacity-0 chat_modal_close"
-					} fixed top-0 left-0 right-0 z-40 h-full overflow-auto`}>
+				className={`${styles.chatModalOverlay} ${showChatModal
+					? styles.chatModalOpen
+					: styles.chatModalClose
+					}`}>
 				<ChatModal
 					handleMicrophoneClick={handleMicrophoneClick}
 					streaming={streaming}

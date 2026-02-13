@@ -816,14 +816,14 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	]);
 
 	const AuraGuideUI = ({ message }) => (
-		<div className={`${styles.bubbleScope} max-w-s-3 tablet:max-w-lg desktop:max-w-964 mx-auto flex justify-center flex-col items-center`}>
-			<div className='relative mb-6 w-full'>
-				<div className='bubble bubble-bottom-left ml-auto md:ml-24 w-full-50 md:w-full-100 md:max-w-748'>
+		<div className={styles.auraGuideContainer}>
+			<div className={styles.auraGuideInner}>
+				<div className={styles.auraGuideBubble}>
 					{message || systemText}
 				</div>
 				<img
 					src={star_ai_icon?.src || star_ai_icon}
-					className='w-28 md:w-36 cursor-pointer mt-6'
+					className={styles.auraGuideIcon}
 				// className='w-24 md:w-32 rounded-full bg-orange-100 cursor-pointer mt-6'
 				/>
 			</div>
@@ -892,12 +892,12 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	};
 
 	return (
-		<div className='min-h-screen bg-lightgray-109 tablet:bg-white font-firaSans'>
+		<div className={styles.createFreeCollectionContainer}>
 			{/* removed header because, now we are showing the review collection page with aura header with store page component */}
 			{/* <AuthHeader hideProfile /> */}
 
-			<div className='pt-12 pb-40 md:pb-20 lg:pb-16 flex'>
-				<div className='w-full tablet:max-w-screen-tablet desktop:max-w-screen-desktop tablet:mx-auto'>
+			<div className={styles.createFreeCollectionContent}>
+				<div className={styles.createFreeCollectionInner}>
 					{/* steps UI */}
 					<ReviewCollectionStepsUI
 						STEPS={STEPS}
@@ -910,9 +910,9 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 					<ReviewCollectionContainerWrapper>
 						{currentView === STEPS.CONTENT && (
-							<div className='mb-6 leading-none'>
-								<p className='font-normal flex items-center mb-0 text-slat-104'>
-									<span className='text-xl-1 md:text-2xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+							<div className={styles.createCollectionHeader}>
+								<p className={styles.createCollectionHeaderText}>
+									<span className={styles.createCollectionTitle}>
 										Create a Collection
 									</span>
 								</p>
@@ -922,15 +922,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 						<Suspense fallback={<LoadingIndicator />}>
 							{currentView === STEPS.HELP && ( // help step
 								<>
-									<div className='flex flex-col md:flex-row justify-between gap-2 md:gap-0 mb-6'>
-										<p className='md:leading-none font-normal capitalize flex items-center mb-0 text-slat-104'>
-											<span className='text-2xl desktop:text-display-l font-semibold break-word-only'>
+									<div className={styles.helpStepContainer}>
+										<p className={styles.helpStepTitle}>
+											<span className={styles.helpStepTitleText}>
 												How to create your first collection
 											</span>
 										</p>
 										<button
 											onClick={() => handleChangeView(STEPS.CONTENT)}
-											className='min-w-24 md:min-w-40 w-full max-w-max text-xs md:text-sm z-10 rounded-md py-2.5 px-3.5 h-full font-bold text-indigo-103 border-2 border-indigo-103 ml-auto md:ml-0'>
+											className={styles.skipTutorialButton}>
 											Skip Tutorial
 										</button>
 									</div>
@@ -945,8 +945,8 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 						{currentView === STEPS.CONTENT && (
 							<>
-								<div className='grid grid-cols-1 tablet:grid-cols-5 gap-4'>
-									<div className='tablet:col-span-2'>
+								<div className={styles.contentGrid}>
+									<div className={styles.contentGridLeft}>
 										<AuraGuideUI />
 										{/* {showAIPrompt ? (
 											<div className='text-base'>
@@ -1007,10 +1007,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 											</div>
 										) : null} */}
 									</div>
-									<div className={`tablet:col-span-3 text-base ${styles.input_shadow_div}`}>
+									<div className={`${styles.contentGridRight} ${styles.input_shadow_div}`}>
 										{openCreateCollection ? (
-											<form className='w-full h-full flex flex-col'>
-												<label className='mb-3 block'>
+											<form className={styles.formContainer}>
+												<label className={styles.formLabel}>
 													You can create an ecommerce collection in the
 													following ways
 												</label>
@@ -1056,15 +1056,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														</label>
 													))} */}
 
-												<div className={`grid grid-cols-2 ${styles.createCollection_card_div}`}>
+												<div className={`${styles.createCollectionOptionsGrid} ${styles.createCollection_card_div}`}>
 													{createCollectionTypes
 														.filter((c) => c.isDisplay)
 														.map((i) => (
 															<label
 																key={i.id}
-																className={`flex flex-col items-center justify-center w-full h-32 cursor-pointer p-3 ${styles.hovercard_div} ${collectionData.createCollectionWay === i.id
-																		? "bg-indigo-103 text-white"
-																		: "bg-white"
+																className={`${styles.createCollectionOptionCard} ${styles.hovercard_div} ${collectionData.createCollectionWay === i.id
+																		? styles.active
+																		: ""
 																	}`}>
 																<input
 																	type='radio'
@@ -1074,21 +1074,21 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																		collectionData.createCollectionWay === i.id
 																	}
 																	onChange={handleInputChange}
-																	className='hidden'
+																	className={styles.createCollectionOptionInput}
 																/>
 																<div
-																	className={`w-full h-full flex items-center justify-center text-lg font-semibold ${createCollectionOptionsKeys.video_url ===
+																	className={`${styles.createCollectionOptionContent} ${createCollectionOptionsKeys.video_url ===
 																			i.id &&
 																			collectionData.createCollectionWay ===
 																			i.id
-																			? "text-white font-bold"
+																			? styles.videoActive
 																			: createCollectionOptionsKeys.video_url ===
 																				i.id
-																				? "gap-0"
+																				? styles.videoInactive
 																				: collectionData.createCollectionWay ===
 																					i.id
-																					? "text-white font-bold gap-9"
-																					: "text-black-100 gap-9"
+																					? styles.defaultActive
+																					: styles.defaultInactive
 																		}`}>
 																	<span>{i.title}</span>
 																	<Image
@@ -1115,7 +1115,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														))}
 												</div>
 
-												<p className='text-red-500 my-1 h-3.5 leading-none'>
+												<p className={styles.errorMessage}>
 													{error.createCollectionWay}
 												</p>
 
@@ -1124,18 +1124,18 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														{collectionData.createCollectionWay ===
 															createCollectionOptionsKeys.blog_url ? (
 															<>
-																<label className='mb-1 block'>
+																<label className={styles.formLabel}>
 																	Blog/Article URL
 																</label>
 																<input
-																	className='text-left placeholder-gray-101 outline-none px-3 h-12 bg-white rounded-xl w-full avoid_autofill_bg shadow-2xl'
+																	className={`${styles.inputField} avoid_autofill_bg shadow-2xl`}
 																	placeholder='Enter URL'
 																	name='blog_url'
 																	type='text'
 																	value={collectionData.blog_url}
 																	onChange={handleInputChange}
 																/>
-																<p className='text-red-500 my-1 h-3.5 leading-none'>
+																<p className={styles.errorMessage}>
 																	{error.blog_url}
 																</p>
 															</>
@@ -1146,19 +1146,19 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 															<>
 																{showUploadVideo ? (
 																	<>
-																		<label className='mb-1 block'>
+																		<label className={styles.formLabel}>
 																			Upload video
 																		</label>
 
-																		<div className='mb-4'>
+																		<div className={styles.uploadContainer}>
 																			{isUploading ? (
-																				<div className='h-36 flex items-center justify-center'>
+																				<div className={styles.uploadSpinnerContainer}>
 																					<Spin
-																						className='w-full mx-auto'
+																						className={styles.uploadSpinnerWrapper}
 																						indicator={
 																							<LoadingOutlined
 																								style={{ fontSize: 30 }}
-																								className='text-blue-700'
+																								className={styles.uploadSpinnerIcon}
 																								spin
 																							/>
 																						}
@@ -1166,17 +1166,17 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					/>
 																				</div>
 																			) : collectionData.video_url ? (
-																				<div className='flex flex-col items-center justify-center my-4'>
+																				<div className={styles.uploadPreviewContainer}>
 																					<video
 																						controls
-																						className='object-cover rounded-xl w-auto h-auto max-h-80'>
+																						className={styles.uploadedVideo}>
 																						<source
 																							src={collectionData.video_url}
 																							type='video/mp4'
 																						/>
 																					</video>
 
-																					<div className='text-center underline lg:text-lg text-base cursor-pointer'>
+																					<div className={styles.changeMediaLink}>
 																						<span
 																							onClick={() =>
 																								handleUploadDataChange(
@@ -1189,19 +1189,19 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					</div>
 																				</div>
 																			) : (
-																				<div className='flex flex-col items-center justify-center my-4'>
+																				<div className={styles.draggerContainer}>
 																					<Dragger
-																						className='bg-transparent h-56 w-56'
+																						className={styles.draggerComponent}
 																						{...uploadVideoProps}
 																						name='video_url'
 																						showUploadList={false}
 																						required={
 																							!collectionData.video_url
 																						}>
-																						<p className='ant-upload-drag-icon'>
+																						<p className={styles.draggerIcon}>
 																							<UploadOutlined />
 																						</p>
-																						<p className='w-4/6 mx-auto'>
+																						<p className={styles.draggerText}>
 																							Click or drag file to this area to
 																							upload Video
 																						</p>
@@ -1212,15 +1212,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	</>
 																) : (
 																	<>
-																		<div className='flex gap-2 mb-1'>
-																			<label className='block'>Video URL</label>
+																		<div className={styles.videoUrlInputGroup}>
+																			<label className={styles.videoUrlLabel}>Video URL</label>
 																			<Tooltip title='Only the first 3 minutes of video data will be captured. Contact the admin to process longer videos.'>
-																				<InfoCircleOutlined className='flex items-center cursor-pointer mb-1' />
+																				<InfoCircleOutlined className={styles.videoUrlTooltip} />
 																			</Tooltip>
 																		</div>
 
 																		<input
-																			className='text-left placeholder-gray-101 outline-none px-3 h-12 bg-white rounded-xl w-full avoid_autofill_bg shadow-2xl'
+																			className={`${styles.inputField} avoid_autofill_bg shadow-2xl`}
 																			placeholder='Enter URL'
 																			name='video_url'
 																			type='text'
@@ -1232,15 +1232,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 																{error.video_url && (
 																	<p
-																		className={`text-red-500 my-1 h-3.5 leading-none ${showUploadVideo
-																				? "flex justify-center items-center"
+																		className={`${styles.errorMessage} ${showUploadVideo
+																				? styles.errorMessageCentered
 																				: ""
 																			}`}>
 																		{error.video_url}
 																	</p>
 																)}
 
-																<label className='mb-1 block mt-4'>
+																<label className={styles.additionalInfoLabel}>
 																	Additional Information
 																</label>
 																<textarea
@@ -1248,15 +1248,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	value={collectionData.description}
 																	rows={5}
 																	placeholder={"Type two lines here.."}
-																	className='text-left placeholder-gray-101 outline-none p-3 bg-white rounded-xl w-full'
+																	className={styles.textareaField}
 																	onChange={handleInputChange}
 																/>
-																<div className='text-center font-medium text-lg my-3'>
+																<div className={styles.orDivider}>
 																	Or
 																</div>
-																<div className='flex justify-center items-center'>
+																<div className={styles.toggleModeContainer}>
 																	<div
-																		className='underline cursor-pointer flex justify-center items-center mb-3'
+																		className={styles.toggleModeLink}
 																		role='button'
 																		title={
 																			showUploadVideo
@@ -1284,19 +1284,19 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 															<>
 																{showUploadImage ? (
 																	<>
-																		<label className='mb-1 block'>
+																		<label className={styles.formLabel}>
 																			Upload image
 																		</label>
 
-																		<div className='mb-4'>
+																		<div className={styles.uploadContainer}>
 																			{isUploading ? (
-																				<div className='h-36 flex items-center justify-center'>
+																				<div className={styles.uploadSpinnerContainer}>
 																					<Spin
-																						className='w-full mx-auto'
+																						className={styles.uploadSpinnerWrapper}
 																						indicator={
 																							<LoadingOutlined
 																								style={{ fontSize: 30 }}
-																								className='text-blue-700'
+																								className={styles.uploadSpinnerIcon}
 																								spin
 																							/>
 																						}
@@ -1304,16 +1304,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					/>
 																				</div>
 																			) : collectionData.image_url ? (
-																				<div className='flex flex-col items-center justify-center my-4'>
+																				<div className={styles.uploadPreviewContainer}>
 																					<img
 																						src={collectionData.image_url}
-																						// height='100%'
 																						width='100%'
 																						// loading='lazy'
-																						className='object-cover rounded-xl max-w-340'
+																						className={styles.uploadedImage}
 																					/>
 
-																					<div className='text-center underline lg:text-lg text-base cursor-pointer'>
+																					<div className={styles.changeMediaLink}>
 																						<span
 																							onClick={() =>
 																								handleUploadDataChange(
@@ -1326,19 +1325,19 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					</div>
 																				</div>
 																			) : (
-																				<div className='flex flex-col items-center justify-center my-4'>
+																				<div className={styles.draggerContainer}>
 																					<Dragger
-																						className='bg-transparent h-56 w-56'
+																						className={styles.draggerComponent}
 																						{...uploadImageProps}
 																						name='image_url'
 																						showUploadList={false}
 																						required={
 																							!collectionData.image_url
 																						}>
-																						<p className='ant-upload-drag-icon'>
+																						<p className={styles.draggerIcon}>
 																							<UploadOutlined />
 																						</p>
-																						<p className='w-4/6 mx-auto'>
+																						<p className={styles.draggerText}>
 																							Click or drag file to this area to
 																							upload Image
 																						</p>
@@ -1349,11 +1348,11 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	</>
 																) : (
 																	<>
-																		<label className='mb-1 block'>
+																		<label className={styles.formLabel}>
 																			Image URL
 																		</label>
 																		<input
-																			className='text-left placeholder-gray-101 outline-none px-3 h-12 bg-white rounded-xl w-full avoid_autofill_bg shadow-2xl'
+																			className={`${styles.inputField} avoid_autofill_bg shadow-2xl`}
 																			placeholder='Enter URL'
 																			name='image_url'
 																			type='text'
@@ -1365,15 +1364,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 																{error.image_url && (
 																	<p
-																		className={`text-red-500 my-1 h-3.5 leading-none ${showUploadImage
-																				? "flex justify-center items-center"
+																		className={`${styles.errorMessage} ${showUploadImage
+																				? styles.errorMessageCentered
 																				: ""
 																			}`}>
 																		{error.image_url}
 																	</p>
 																)}
 
-																<label className='mb-1 block mt-4'>
+																<label className={styles.additionalInfoLabel}>
 																	Additional Information
 																</label>
 																<textarea
@@ -1381,15 +1380,15 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	value={collectionData.description}
 																	rows={5}
 																	placeholder={"Type two lines here.."}
-																	className='text-left placeholder-gray-101 outline-none p-3 bg-white rounded-xl w-full'
+																	className={styles.textareaField}
 																	onChange={handleInputChange}
 																/>
-																<div className='text-center font-medium text-lg my-3'>
+																<div className={styles.orDivider}>
 																	Or
 																</div>
-																<div className='flex justify-center items-center'>
+																<div className={styles.toggleModeContainer}>
 																	<div
-																		className='underline cursor-pointer mb-3'
+																		className={styles.toggleModeLink}
 																		role='button'
 																		title={
 																			showUploadImage
@@ -1410,18 +1409,18 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 															collectionData.createCollectionWay !==
 															createCollectionOptionsKeys.image_url ? (
 															<>
-																<label className='mb-1 block'>
+																<label className={styles.formLabel}>
 																	Give a name for your Collection
 																</label>
 																<input
-																	className='text-left placeholder-gray-101 outline-none px-3 h-12 bg-white rounded-xl w-full avoid_autofill_bg shadow-2xl'
+																	className={`${styles.inputField} avoid_autofill_bg shadow-2xl`}
 																	placeholder='Give a name for your collection. Do not sweat it - you can change it later!'
 																	name='name'
 																	type='text'
 																	value={collectionData.name}
 																	onChange={handleInputChange}
 																/>
-																<p className='text-red-500 my-1 h-3.5 leading-none'>
+																<p className={styles.errorMessage}>
 																	{error.name}
 																</p>
 															</>
@@ -1430,7 +1429,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 														{collectionData.createCollectionWay ===
 															createCollectionOptionsKeys.from_scratch ? (
 															<>
-																<label className='mb-1 block'>
+																<label className={styles.formLabel}>
 																	Tell us what you want to write about, AI will
 																	generate something for you
 																</label>
@@ -1441,10 +1440,10 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																	placeholder={
 																		"Type two lines here..\nFor eg.\nWhen you go on a #hiking trip in the #fall season, don't forget to carry a warm full sleeve shirt.."
 																	}
-																	className='text-left placeholder-gray-101 outline-none p-3 bg-white rounded-xl w-full'
+																	className={styles.textareaField}
 																	onChange={handleInputChange}
 																/>
-																<p className='text-red-500 my-1 h-3.5 leading-none'>
+																<p className={styles.errorMessage}>
 																	{error.description}
 																</p>
 
@@ -1486,7 +1485,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 												) : null}
 
 												{collectionData.createCollectionWay && (
-													<div className='mb-5 '>
+													<div className={styles.faqSection}>
 														{createCollectionTypes
 															.filter(
 																(item) =>
@@ -1506,14 +1505,14 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 																	{item.is_faq_count_display === true &&
 																		showFaqCount && (
-																			<div className='flex gap-2 items-center mt-1'>
-																				<p className='text-sm'>FAQ Count</p>
+																			<div className={styles.faqCountContainer}>
+																				<p className={styles.faqCountLabel}>FAQ Count</p>
 																				<InputNumber
 																					min={0}
 																					max={20}
 																					value={count}
 																					onChange={(value) => setCount(value)}
-																					className='  rounded-10  w-14'
+																					className={styles.faqCountInput}
 																				/>
 																			</div>
 																		)}
@@ -1522,38 +1521,38 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 													</div>
 												)}
 
-												<div className='flex justify-end mt-auto gap-4'>
+												<div className={styles.formActions}>
 													<button
 														type='button'
 														onClick={handleCancel}
-														className='min-w-24 md:min-w-40 text-xs md:text-sm z-10 rounded-md py-1 md:py-2.5 px-3.5 h-11 font-bold text-indigo-400 border-2 border-indigo-400'>
+														className={styles.cancelButton}>
 														Cancel
 													</button>
 													<button
 														onClick={createPlistCollection}
 														type='submit'
 														disabled={isUploading}
-														className={`min-w-24 md:min-w-40 text-xs md:text-sm z-10 ${isUploading
-																? "bg-indigo-400 cursor-not-allowed"
-																: "bg-indigo-103"
-															} border-none rounded-md py-1 md:py-3 px-3.5 h-11 font-bold text-white`}>
+														className={`${styles.nextButton} ${isUploading
+																? styles.disabled
+																: styles.enabled
+															}`}>
 														Next
 													</button>
 												</div>
 											</form>
 										) : (
 											// not using now, set openCreateCollection default true
-											<div className='flex justify-end items-end h-full'>
+											<div className={styles.formActions}>
 												<button
 													onClick={handleCancel}
 													type='button'
-													className='min-w-24 md:min-w-40 text-xs md:text-sm z-10 rounded-md py-2.5 px-7 font-bold text-indigo-400 border-2 border-indigo-400'>
+													className={styles.comeBackLaterButton}>
 													I'll come back later
 												</button>
 												<button
 													type='submit'
 													onClick={() => setOpenCreateCollection(true)}
-													className='bg-indigo-600 rounded text-white py-2.5 w-full font-normal text-base max-w-s-1'>
+													className={styles.letsGoButton}>
 													Ok, lets go!
 												</button>
 											</div>
@@ -1569,41 +1568,40 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 			</div>
 
 			{(isVideoDataExtractionStarted || createWishlistInProgress) && (
-				<div className='fixed top-0 left-0 flex flex-col justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-112 z-20'>
+				<div className={styles.loadingOverlay}>
 					<Spin
-						// indicator={<LoadingOutlined className='text-3xl-1' spin />}
 						indicator={
 							<Loading3QuartersOutlined
-								className='flex text-6xl-1 text-indigo-100'
+								className={styles.loadingSpinnerLarge}
 								spin
 							/>
 						}
 					/>
 
 					{createWishlistInProgress ? (
-						<p className='text-lg text-indigo-100 mt-4'>
-							<b>Generating Content</b>
+						<p className={styles.loadingText}>
+							<b className={styles.loadingTextBold}>Generating Content</b>
 						</p>
 					) : null}
 					{isVideoDataExtractionStarted ? (
-						<p className='text-lg text-indigo-100 mt-4 text-center max-w-640'>
-							<b>Preparing the content from the video.</b>
+						<p className={`${styles.loadingText} ${styles.loadingTextCenter}`}>
+							<b className={styles.loadingTextBold}>Preparing the content from the video.</b>
 							<br />
-							<b>
+							<b className={styles.loadingTextBold}>
 								We will notify you once it is ready.
 								<br />
 								Meanwhile feel free to{" "}
 								<span
 									onClick={handleAskAuraClick}
 									role='button'
-									className='underline cursor-pointer'>
+									className={styles.loadingTextLink}>
 									search for products
 								</span>{" "}
 								or{" "}
 								<span
 									onClick={handleCancel}
 									role='button'
-									className='underline cursor-pointer'>
+									className={styles.loadingTextLink}>
 									visit the store
 								</span>
 								.

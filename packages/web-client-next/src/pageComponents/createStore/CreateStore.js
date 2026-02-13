@@ -335,14 +335,14 @@ const CreateStore = () => {
 
 
 	return (
-		<div className='h-full min-h-screen static_page_bg'>
+		<div className={`${styles['profilePageWrapper']} static_page_bg`}>
 			<div className={styles['profile-header-container']}>
 				<AuthHeader hideProfile showBackToStore={user?.data?.filters} />
 			</div>
-			<div className={`${styles['profile-container']} px-8 lg:px-0`}>
+			<div className={`${styles['profile-container']} ${styles['profileContainerPadding']}`}>
 				{!successMessage ? (
 					<>
-						<div className='w-full mt-4 md:mt-0'>
+						<div className={styles['stepsWrapper']}>
 							{!isMobile ? (
 								<Steps
 									responsive={false}
@@ -356,28 +356,28 @@ const CreateStore = () => {
 									))}
 								</Steps>
 							) : (
-								<div className='border-white border-b flex justify-center pb-2'>
-									<div className='text-white bg-blue-500 w-6 h-6 rounded-full text-center'>
-										<span className="text-white">{currentStep + 1}</span>
+								<div className={styles['mobileStepIndicator']}>
+									<div className={styles['mobileStepNumber']}>
+										<span className={styles['mobileStepNumber']}>{currentStep + 1}</span>
 									</div>
-									<div className='text-white pl-4'>
-										<span className="text-white">{steps[currentStep]}</span>
+									<div className={styles['mobileStepTitle']}>
+										<span className={styles['mobileStepTitle']}>{steps[currentStep]}</span>
 									</div>
 								</div>
 							)}
 						</div>
-						<div className='lg:w-3/5 mx-auto py-14'>{getStepContent()}</div>
+						<div className={styles['stepContentWrapper']}>{getStepContent()}</div>
 					</>
 				) : (
 					<div>
 						<Result
-							className='lg:w-2/4 mx-auto'
+							className={styles['resultContainer']}
 							status='success'
-							title={<span className='text-white'>Success!</span>}
-							subTitle={<span className='text-white'>{successMessage}</span>}
+							title={<span className={styles['resultTitle']}>Success!</span>}
+							subTitle={<span className={styles['resultSubtitle']}>{successMessage}</span>}
 							extra={[
 								<button
-									className='bg-primary rounded text-white py-1 px-6 font-normal text-lg'
+									className={styles['resultButton']}
 									onClick={() =>
 										user?.enablePlist
 											? navigate("/")

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Button, Checkbox, Typography } from "antd";
 
 import SelectBrands from "./SelectBrands";
+import styles from "./ProfileFavoriteBrands.module.scss";
 
 const { Title } = Typography;
 
@@ -50,27 +51,27 @@ const ProfileFavoriteBrands = ({
 
 	return (
 		<div>
-			<Row justify='space-between' className='xl:px-44 lg:px-28'>
-				<Col span={24} className='flex justify-end'>
+			<Row justify='space-between' className={styles['headerRow']}>
+				<Col span={24} className={styles['buttonCol']}>
 					<Button type='primary' onClick={onContinue}>
 						Continue
 					</Button>
 				</Col>
 			</Row>
-			<Title className='text-white text-center my-7' level={4}>
+			<Title className={styles['title']} level={4} style={{color:"white"}}>
 				Pick the brands that you would like to choose products from
 			</Title>
-			<div className='flex justify-between pt-3'>
+			<div className={styles['selectAllWrapper']}>
 				<Checkbox
-					className='text-white text-base'
+					className={styles['selectAllCheckbox']}
 					onChange={selectAllChange}
 					checked={allSelected}>
 					Select all
 				</Checkbox>
 			</div>
-			<div className='h-6 mb-2 mt-1'>
+			<div className={styles['errorContainer']}>
 				{hasError && (
-					<p className='text-red-500 m-0'>Please select at-least one brand</p>
+					<p className={styles['errorText']}>Please select at-least one brand</p>
 				)}
 			</div>
 			<SelectBrands

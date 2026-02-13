@@ -1,0 +1,64 @@
+/* ProfileFavoriteBrands Component Styles */
+
+.headerRow {
+    padding-left: 112px;
+    padding-right: 112px;
+
+    @media (min-width: 1024px) {
+        padding-left: 112px;
+        padding-right: 112px;
+    }
+
+    @media (min-width: 1280px) {
+        padding-left: 176px;
+        padding-right: 176px;
+    }
+}
+
+.buttonCol {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.title {
+    color: #ffffff;
+    text-align: center;
+    margin-top: 28px;
+    margin-bottom: 28px;
+}
+
+.selectAllWrapper {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 12px;
+}
+
+.selectAllCheckbox {
+    color: #ffffff;
+    font-size: 16px;
+
+    :global(.ant-checkbox-inner) {
+        background-color: transparent;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    :global(.ant-checkbox-checked .ant-checkbox-inner) {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    :global(.ant-checkbox + span) {
+        color: #ffffff;
+    }
+}
+
+.errorContainer {
+    height: 24px;
+    margin-bottom: 8px;
+    margin-top: 4px;
+}
+
+.errorText {
+    color: #ef4444;
+    margin: 0;
+}

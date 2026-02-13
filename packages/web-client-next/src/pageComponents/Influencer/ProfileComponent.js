@@ -19,6 +19,7 @@ import defaultAvatar from "../../images/avatar.svg";
 import share_icon from "../../images/profilePage/share_icon.svg";
 import unthink_favicon from "../../images/staticpageimages/unthink_favicon.png";
 import { PROFILE } from "../../constants/codes";
+import styles from "./ProfileComponent.module.css";
 
 const { Text } = Typography;
 
@@ -48,20 +49,19 @@ const ProfileComponent = ({
 				{isShowBanner && (
 					<div>
 						<Image
-							style={{ aspectRatio: "3.1/1" }}
 							src={getFinalImageUrl(pageUser.cover_image)}
 							preview={false}
 							width={"100%"}
-							className='h-full object-cover lg:rounded-2xl'
+							className={styles['banner-image']}
 						/>
 
-						<div className='absolute top-3 left-3 block lg:hidden ml-11'>
+						<div className={styles['logo-container']}>
 							{instance_logo ? (
 								<Image
 									src={instance_logo}
 									width={100}
 									preview={false}
-									className='max-h-12 object-contain cursor-pointer'
+									className={styles['logo-image']}
 									onClick={() => home_page_url && navigate(home_page_url)}
 								/>
 							) : !is_store_instance ? (
@@ -71,22 +71,20 @@ const ProfileComponent = ({
 					</div>
 				)}
 				<div
-					className={`mx-4 block lg:flex ${isShowBanner ? "lg:mx-12" : "lg:mx-0"
-						}`}>
-					<div className={`${isShowBanner ? "-mt-16 lg:-mt-28" : "pt-2"}`}>
+					className={`${styles['profile-container']} ${isShowBanner ? styles['profile-container-with-banner'] : styles['profile-container-without-banner']}`}>
+					<div className={`${isShowBanner ? styles['profile-image-wrapper-with-banner'] : styles['profile-image-wrapper']}`}>
 						<Image
 							src={getFinalImageUrl(pageUser.profile_image) || defaultAvatar}
 							preview={false}
-							className={`${showRoundedImage ? "rounded-10" : "rounded-10"
-								} object-cover max-w-s-2 w-120 lg:w-260 h-120 lg:h-260 backdrop-filter shadow-md`}
+							className={styles['profile-image']}
 							width={"100%"}
 						/>
 					</div>
-					<div className='w-full flex flex-col xl:flex-row'>
-						<div className='flex justify-between gap-4 my-4 w-full'>
-							<div className='flex lg:w-full flex-col gap-2 lg:gap-4'>
+					<div className={styles['profile-content']}>
+						<div className={styles['profile-header']}>
+							<div className={styles['profile-info']}>
 								<h1
-									className={`text-xl md:text-3xl lg:text-4xl lg:leading-72 font-medium m-0 capitalize lg:px-6`}>
+									className={styles['profile-name']}>
 									{name}
 								</h1>
 								{/* {!getIsCollectionPage() && (
@@ -100,39 +98,39 @@ const ProfileComponent = ({
 								)} */}
 								{/* powered by unthink */}
 								{is_store_instance && (
-									<div className='flex items-center gap-1 lg:px-6 mt-1 lg:mt-0'>
-										<span className='text-sm text-gray-106 whitespace-nowrap'>powered by</span>&nbsp;
+									<div className={styles['powered-by-container']}>
+										<span className={styles['powered-by-text']}>powered by</span>&nbsp;
 										<a
 											href='https://unthink.ai/'
 											target='_blank'
-											className='flex p-0'>
+											className={styles['powered-by-link']}>
 											<Image
 												src={unthink_black_log}
 												preview={false}
 												height={"100%"}
-												className='cursor-pointer h-3 lg:h-4'
+												className={styles['powered-by-logo']}
 											/>
 										</a>
 									</div>
 								)}
 
-								<div className='w-full lg:px-6 mt-2 hidden xl:flex'>
-									<Text className='text-sm lg:text-lg leading-6 max-w-3xl-1 w-full whitespace-pre-line'>
+								<div className={styles['description-container']}>
+									<Text className={styles['description-text']}>
 										{pageUser.description || "Take a look at my collections"}
 									</Text>
 								</div>
 							</div>
-							<div className="flex gap-4 items-start">
+							<div className={styles['actions-container']}>
 								{isMyProfilePage && !isGuestUser && isPageOwner && (
 									<EditOutlined
 										title='Edit Collection'
-										className='flex text-xl lg:text-xl-2 cursor-pointer'
+										className={styles['edit-icon']}
 										onClick={
 											() => navigate(PROFILE) // redirection to edit profile page
 										}
 									/>
 								)}
-								<div className='relative flex justify-between'>
+								<div className={styles['share-container']}>
 									{showShareProfile && (
 										<>
 										<ShareOptions
@@ -148,9 +146,9 @@ const ProfileComponent = ({
 									)}
 									{/* // added div for responsive in mobile ui */}
 									{sharePageUrl && (
-										<div className='flex w-5 lg:w-6'>
+										<div className={styles['share-icon-wrapper']}>
 											<Image
-												className='cursor-pointer'
+												className={styles['share-icon']}
 												src={share_icon}
 												preview={false}
 												onClick={() => setShowShareProfile(!showShareProfile)}
@@ -167,8 +165,8 @@ const ProfileComponent = ({
 								<Image src={header_darktheme} preview={false} width={33} />
 							</div> */}
 						</div>
-						<div className='w-full lg:px-6 mt-2 flex xl:hidden'>
-							<Text className='text-sm lg:text-lg leading-6 max-w-3xl-1 w-full whitespace-pre-line'>
+						<div className={styles['description-mobile']}>
+							<Text className={styles['description-text']}>
 								{pageUser.description || "Take a look at my collections"}
 							</Text>
 						</div>

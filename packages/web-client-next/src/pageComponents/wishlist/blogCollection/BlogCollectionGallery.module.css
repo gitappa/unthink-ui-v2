@@ -1,0 +1,255 @@
+/* Main Container */
+.mainContainer {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  height: 100%;
+}
+
+@media (min-width: 1024px) {
+  .mainContainer {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+  }
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.backButtonIcon {
+  font-size: 1rem;
+  display: flex;
+}
+
+.backButtonText {
+  padding-left: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Header Section */
+.headerSection {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.collectionNameContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.capitalFirstLetter {
+  text-transform: capitalize;
+}
+
+.collectionName {
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  word-break: break-all;
+}
+
+.urlText {
+  font-size: 0.75rem;
+  color: #4F5250;
+  font-weight: 400;
+  padding: 0;
+}
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.actionLink {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0EA5E9;
+  cursor: pointer;
+}
+
+.divider {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  border-color: #9a9b9b;
+}
+
+.inlineFlexButton {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.buttonText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0EA5E9;
+}
+
+.spinContainer {
+  display: flex;
+  align-items: center;
+  height: 2rem;
+}
+
+/* Alert Section */
+.alertContainer {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Tags Section */
+.tagsLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.tagsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+
+.tagsInput {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.tagsInputField {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.tagsErrorText {
+  color: #dc2626;
+  font-weight: 400;
+}
+
+.tagsSaveButton {
+  margin-top: 0.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 1.5rem;
+}
+
+.tagsCancelButton {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 1.5rem;
+}
+
+.tagsDisplayContainer {
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  width: max-content;
+  background-color: #EFF6FF;
+}
+
+.tagText {
+  margin: 0 !important;
+  padding: 4px 16px ;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  color: #1E293B;
+}
+
+.modifyTagsLink {
+  font-size: 0.75rem;
+  font-weight: 700;
+   padding: 4px 0px ;
+  color: #0EA5E9;
+  cursor: pointer;
+}
+
+/* Products Section */
+.productsLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.selectProductsContainer {
+  margin-bottom: 0.875rem;
+}
+
+.selectedProductsInfo {
+  display: flex;
+  align-items: center;
+  line-height: 44px;
+}
+
+.checkboxContainer {
+  display: flex;
+  border: 1px solid;
+  border-color: #9e9e9e;
+  border-radius: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.checkboxText {
+  font-size: 0.875rem;
+}
+
+.actionButtonSmall {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.deleteButton {
+  color: #0EA5E9;
+}
+
+.showcaseButton {
+  color: #0EA5E9;
+}
+
+.infoIcon {
+  padding-left: 0.25rem;
+  display: flex;
+}
+
+.selectLink {
+  margin-bottom: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  line-height: 44px;
+  font-size: 0.875rem;
+}
+
+.selectLinkText {
+  color: #0EA5E9;
+}
+
+/* Loading Overlay */
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: brightness(0.75);
+}
+
+.spinnerContainer {
+  display: flex;
+  height: 2rem;
+}

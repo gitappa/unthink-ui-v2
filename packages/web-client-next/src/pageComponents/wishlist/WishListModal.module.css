@@ -1,0 +1,229 @@
+/* Header and Layout */
+.headerContainer {
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.closeIcon {
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  margin: auto 0;
+  padding: 0.5rem;
+}
+
+/* Create Wishlist Button */
+.createWishlistButton {
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  margin-top: 2.25rem;
+  background-color: white;
+  border-radius: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  cursor: pointer;
+}
+
+.createWishlistIcon {
+  color: #0EA5E9;
+  font-size: 1.125rem;
+}
+
+.createWishlistText {
+  padding-left: 1rem;
+  color: #0EA5E9;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Collection Selection Message */
+.selectionMessage {
+  font-size: 22px;
+  font-weight: 500;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+}
+
+/* Collection Tabs */
+.tabsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tabButtonBase {
+  padding: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabButtonLeft {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: calc(100% - 50px);
+}
+
+.tabButtonRight {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  width: calc(100% - 50px);
+}
+
+.tabButtonActive {
+  background-color: #0EA5E9;
+  color: white;
+}
+
+.tabButtonInactive {
+  background-color: transparent;
+  border: 2px solid;
+  border-style: solid;
+  border-color: #0EA5E9;
+  color: #0EA5E9;
+}
+
+/* Product Selection Container */
+.productSelectionContainer {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.75rem;
+}
+
+.selectionControls {
+  display: flex;
+  align-items: center;
+  line-height: 44px;
+}
+
+.checkboxContainer {
+  display: flex;
+  border: 1px solid;
+  border-color: #9e9e9e;
+  border-radius: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.checkboxText {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .checkboxText {
+    font-size: 1.125rem;
+  }
+}
+
+.actionButton {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  text-decoration: underline;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .actionButton {
+    font-size: 1.125rem;
+  }
+}
+
+.deleteButton {
+  color: #BFC2CA;
+  cursor: not-allowed;
+}
+
+.deleteButtonEnabled {
+  color: #0EA5E9;
+  cursor: pointer;
+}
+
+.cancelButton {
+  color: #0EA5E9;
+  cursor: pointer;
+}
+
+.selectableButton {
+  color: #0EA5E9;
+  cursor: pointer;
+  line-height: 44px;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .selectableButton {
+    font-size: 1.125rem;
+  }
+}
+
+/* Wishlist Items Section */
+.wishlistItemsContainer {
+  margin-top: 1.25rem;
+}
+
+/* Favorites Section */
+.favoritesContainer {
+  padding-top: 2.25rem;
+}
+
+.favoritesTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding-left: 2rem;
+}
+
+.favoritesContent {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 2.25rem;
+}
+
+/* Loading Overlay */
+.loadingOverlay {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: brightness(0.75);
+}
+
+/* Drawer Body Content */
+.drawerBodyContent {
+  width: 100%;
+  height: auto;
+}
+
+.drawerInner {
+  width: 100%;
+  max-width: 28rem;
+  margin-left: auto;
+  height: 100%;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}

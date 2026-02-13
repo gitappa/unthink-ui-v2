@@ -6,6 +6,7 @@ import { current_store_name } from "../../../constants/config";
 import { STORE_USER_NAME_FASHIONDEMO, STORE_USER_NAME_GOLDSURA } from "../../../constants/codes";
 import { useDispatch } from "react-redux";
 import { getStoredAttributes, updateAttributePool, updateStoredAttributePool } from "../redux/action";
+import styles from "./ProfileAttributes.module.scss";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -368,24 +369,24 @@ const AttributeCard = ({
     };
 
     return (
-        <Card className="text-base antd_card_hrading" title={title} style={{ width: "100%" }}>
+        <Card className={`${styles['cardTitle']} antd_card_hrading`} title={title} style={{ width: "100%" }}>
             {isEditable && isAddButtonShowMasterPool && (
                 <>
                     <Button
                         type="dashed"
                         onClick={() => setShowKeywordInput(prev => !prev)}
                         icon={<PlusOutlined />}
-                        className="mb-2 w-full"
+                        className={styles['addKeywordButton']}
                     >
                         Add New Keyword
                     </Button>
 
                     {showKeywordInput && (
-                        <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-5">
+                        <div className={styles['keywordInputWrapper']}>
                             <input
                                 type="text"
                                 placeholder="Enter new keyword"
-                                className="border border-black-300 placeholder-black-101 px-3 py-2 rounded-md text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={styles['keywordInput']}
                                 value={newKeywordInput}
                                 onChange={(e) => setNewKeywordInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleAddNewKeyword()}
@@ -394,7 +395,7 @@ const AttributeCard = ({
                                 type="primary"
                                 onClick={handleAddNewKeyword}
                                 disabled={!newKeywordInput.trim()}
-                                className="w-full sm:w-auto h-full py-2"
+                                className={styles['keywordAddButton']}
                             >
                                 Add
                             </Button>
@@ -413,21 +414,21 @@ const AttributeCard = ({
                     return (
                         <div
                             key={key}
-                            className={`p-3 h-14 rounded cursor-pointer mb-2 ${activeMasterPoolKey === key ? "bg-blue-100 border border-blue-500" : "bg-gray-100 hover:bg-blue-100"}`}
+                            className={`${styles['masterPoolItem']} ${activeMasterPoolKey === key ? styles['masterPoolItemActive'] : ''}`}
                             onClick={() => {
                                 handleAddToMasterKey(key);
                                 setActiveMasterPoolKey(key);
                             }}
                         >
-                            <strong className="text-base">{key.replace("_", " ")}</strong>
+                            <strong className={styles['masterPoolItemText']}>{key.replace("_", " ")}</strong>
                         </div>
                     );
                 }
 
                 return (
-                    <div className="flex flex-wrap gap-2 text-base w-full" key={key} style={{ marginBottom: 10 }}>
-                        <div className="flex justify-between w-full items-center p-3 bg-gray-100 rounded">
-                            <div className="flex items-center gap-2">
+                    <div className={styles['attributeWrapper']} key={key} style={{ marginBottom: 10 }}>
+                        <div className={styles['attributeHeader']}>
+                            <div className={styles['attributeHeaderLeft']}>
                                 {
                                     (isEditable || sourcePool === 'catalog' || sourcePool === 'collection') &&
                                     <Checkbox
@@ -446,7 +447,7 @@ const AttributeCard = ({
                                         }
                                     }}
                                 />
-                                <strong className="text-base">{key.replace("_", " ")}</strong>
+                                <strong className={styles['attributeKeyText']}>{key.replace("_", " ")}</strong>
                             </div>
 
                             {selectedTags.size > 0 && expandedKeys[key] && (isEditable || sourcePool === 'catalog' || sourcePool === 'collection') && (
@@ -455,7 +456,7 @@ const AttributeCard = ({
                                     trigger={['click']}
                                     placement="bottomRight"
                                 >
-                                    <Button className="px-4 py-3" size="small">
+                                    <Button className={styles['actionsButton']} size="small">
                                         Actions <DownOutlined />
                                     </Button>
                                 </Dropdown>
@@ -479,10 +480,7 @@ const AttributeCard = ({
                                 <>
                                     {values.map((value) => (
                                         <Tag
-                                            className={`p-1 px-3 text-sm whitespace-normal cursor-pointer ${selectedTags.has(`${key}:${value}`)
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-gray-100 text-black"
-                                                }`}
+                                            className={`${styles['tag']} ${selectedTags.has(`${key}:${value}`) ? styles['tagSelected'] : ''}`}
                                             key={value}
                                             onClick={() => toggleSelectTag(key, value)}
                                         >
@@ -493,7 +491,7 @@ const AttributeCard = ({
                                         <>
                                             {!visibleAddInputKeys[key] ? (
                                                 <Button
-                                                    className="p-3 h-7 text-sm whitespace-normal cursor-pointer"
+                                                    className={styles['addTagButton']}
                                                     size="small"
                                                     type="dashed"
                                                     icon={<PlusOutlined />}
@@ -502,15 +500,15 @@ const AttributeCard = ({
                                                     Add Tag
                                                 </Button>
                                             ) : (
-                                                <div className="flex mt-2 gap-2 w-full">
+                                                <div className={styles['addTagInputWrapper']}>
                                                     <input
-                                                        className="w-full border p-1 px-2 rounded text-sm"
+                                                        className={styles['addTagInput']}
                                                         placeholder="Add new tag"
                                                         value={newTagInputs[key] || ""}
                                                         onChange={(e) => handleInputChange(key, null, e.target.value)}
                                                     />
                                                     <Button
-                                                        className="h-full w-25"
+                                                        className={styles['addTagSubmitButton']}
                                                         type="primary"
                                                         size="small"
                                                         onClick={() => handleAddNewTag(key, null)}
@@ -524,9 +522,9 @@ const AttributeCard = ({
                                 </>
                             ) : (
                                 Object.entries(values || {}).map(([subKey, subValues]) => (
-                                    <div className="flex flex-wrap gap-2 w-full" key={subKey} style={{ marginBottom: 10 }}>
-                                        <div className="flex justify-between w-full items-center p-3 bg-gray-100 rounded">
-                                            <div className="flex items-center gap-2">
+                                    <div className={styles['subAttributeWrapper']} key={subKey} style={{ marginBottom: 10 }}>
+                                        <div className={styles['attributeHeader']}>
+                                            <div className={styles['attributeHeaderLeft']}>
                                                 {
                                                     (isEditable || sourcePool === 'catalog' || sourcePool === 'collection') &&
                                                     <Checkbox
@@ -539,7 +537,7 @@ const AttributeCard = ({
                                                     icon={expandedKeys[`${key}.${subKey}`] ? <MinusOutlined /> : <PlusOutlined />}
                                                     onClick={() => toggleSubExpand(key, subKey)}
                                                 />
-                                                <strong className="text-base">{subKey.replace("_", " ")}</strong>
+                                                <strong className={styles['attributeKeyText']}>{subKey.replace("_", " ")}</strong>
                                             </div>
                                             {selectedTags.size > 0 && expandedKeys[`${key}.${subKey}`] && (isEditable || sourcePool === 'catalog' || sourcePool === 'collection') && (
                                                 <div>
@@ -548,7 +546,7 @@ const AttributeCard = ({
                                                         trigger={['click']}
                                                         placement="bottomRight"
                                                     >
-                                                        <Button className="px-4 py-3" size="small">
+                                                        <Button className={styles['actionsButton']} size="small">
                                                             Actions <DownOutlined />
                                                         </Button>
                                                     </Dropdown>
@@ -568,15 +566,15 @@ const AttributeCard = ({
                                             }
                                         </div>
                                         {isEditable && isAddButtonShowMasterPool && (
-                                            <div className="flex mt-2 gap-2 w-full">
+                                            <div className={styles['addTagInputWrapper']}>
                                                 <input
-                                                    className="w-full border p-1 px-2 rounded text-sm"
+                                                    className={styles['addTagInput']}
                                                     placeholder="Add new tag"
                                                     value={newTagInputs[`${key}.${subKey}`] || ""}
                                                     onChange={(e) => handleInputChange(key, subKey, e.target.value)}
                                                 />
                                                 <Button
-                                                    className="h-full w-25"
+                                                    className={styles['addTagSubmitButton']}
                                                     type="primary"
                                                     size="small"
                                                     onClick={() => handleAddNewTag(key, subKey)}
@@ -588,10 +586,7 @@ const AttributeCard = ({
                                         {expandedKeys[`${key}.${subKey}`] &&
                                             subValues.map((value) => (
                                                 <Tag
-                                                    className={`p-1 px-3 text-sm whitespace-normal cursor-pointer ${selectedTags.has(`${key}:${value}`)
-                                                        ? "bg-blue-500 text-white"
-                                                        : "bg-gray-100 text-black"
-                                                        }`}
+                                                    className={`${styles['tag']} ${selectedTags.has(`${key}:${value}`) ? styles['tagSelected'] : ''}`}
                                                     key={value}
                                                     onClick={() => toggleSelectTag(key, value)}
                                                 >
@@ -762,12 +757,12 @@ const ProfileAttributes = ({
     }
 
     return (
-        <div className='additional-brands-wrapper'>
+        <div className={styles['additionalBrandsWrapper']}>
             <Row justify='space-between'>
-                <Col span={24} className='flex justify-between'>
+                <Col span={24} className={styles['headerRow']}>
                     <Button type='primary' onClick={prevStep}>Back</Button>
                     <Button
-                        className='loading-button'
+                        className={styles['loadingButton']}
                         type='primary'
                         onClick={() => {
                             const hasError = !selectedPool1 || !selectedPool2;
@@ -785,14 +780,14 @@ const ProfileAttributes = ({
                 </Col>
             </Row>
             {isAdminLoggedIn ? (
-                <div className="mt-5">
-                    <Title level={2} className="text-center text-white mb-5">Attributes</Title>
-                    <div className="flex gap-4">
-                        <div className="mb-5 md:w-1/4 w-full" >
-                            <label className="block mb-1 text-sm font-medium text-white">Store Type</label>
+                <div className={styles['contentWrapper']}>
+                    <Title level={2} className={styles['title']} style={{color:'white'}}>Attributes</Title>
+                    <div className={styles['selectWrapper']}>
+                        <div className={styles['selectGroup']} >
+                            <label className={styles['selectLabel']}>Store Type</label>
                             <Select
                                 placeholder="Select Store Type"
-                                className={`h-10 w-full ${storeTypeError ? 'border-2 rounded-lg border-red-500' : ''}`}
+                                className={`${styles['select']} ${storeTypeError ? styles['selectError'] : ''}`}
                                 value={selectedPool1}
                                 onChange={(value) => {
                                     setSelectedPool1(value);
@@ -805,14 +800,14 @@ const ProfileAttributes = ({
                                     })) || []
                                 }
                             />
-                            {storeTypeError && <p className="text-red-500 text-xs mt-1">Store Type is required</p>}
+                            {storeTypeError && <p className={styles['errorText']}>Store Type is required</p>}
                         </div>
 
-                        <div className="mb-5 md:w-1/4 w-full">
-                            <label className="block mb-1 text-sm font-medium text-white">Store Reference</label>
+                        <div className={styles['selectGroup']}>
+                            <label className={styles['selectLabel']}>Store Reference</label>
                             <Select
                                 placeholder="Select Store Reference"
-                                className={`h-10 w-full ${storeRefError ? 'border-2 rounded-lg border-red-500' : ''}`}
+                                className={`${styles['select']} ${storeRefError ? styles['selectError'] : ''}`}
                                 value={selectedPool2}
                                 onChange={(value) => {
                                     setSelectedPool2(value);
@@ -825,7 +820,7 @@ const ProfileAttributes = ({
                                     })) || []
                                 }
                             />
-                            {storeRefError && <p className="text-red-500 text-xs mt-1">Store Reference is required</p>}
+                            {storeRefError && <p className={styles['errorText']}>Store Reference is required</p>}
                         </div>
                     </div>
 
@@ -834,7 +829,7 @@ const ProfileAttributes = ({
                         {attributePoolData?.master_pool && (
                             <Col span={12}>
                                 <AttributeCard
-                                    className="text-lg"
+                                    className={styles['cardTitle']}
                                     title="Master Pool"
                                     attributes={attributePoolData.master_pool}
                                     isAddButtonShowMasterPool={true}
@@ -869,7 +864,7 @@ const ProfileAttributes = ({
                                 {attributePoolData?.catalog && (
                                     <Col span={24}>
                                         <AttributeCard
-                                            className="text-lg"
+                                            className={styles['cardTitle']}
                                             title="Catalog"
                                             attributes={attributePoolData.catalog}
                                             onExportTags={handleExportTags}
@@ -910,14 +905,14 @@ const ProfileAttributes = ({
 
                     {
                         !attributePoolData?.master_pool && !attributePoolData?.catalog && !attributePoolData?.collection && selectedPool2 && selectedPool1 && (
-                            <div className="text-center text-white text-lg cursor-pointer my-10">
+                            <div className={styles['noDataText']}>
                                 <span>No attribute pool data found.</span>
                             </div>
                         )
                     }
                 </div>
             ) : null}
-            <div className='text-center text-secondary underline text-lg cursor-pointer mt-3'>
+            <div className={styles['skipLink']}>
                 <span onClick={nextStep}>Skip and continue</span>
             </div>
         </div>
