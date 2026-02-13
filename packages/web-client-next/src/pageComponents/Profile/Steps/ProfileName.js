@@ -31,6 +31,7 @@ import {
 	current_store_name,
 	super_admin,
 } from "../../../constants/config";
+import styles from "./ProfileName.module.scss";
 
 const { Title } = Typography;
 const { Dragger } = Upload;
@@ -160,10 +161,10 @@ const ProfileName = ({
 	return (
 		<div className='profile-detail-container  '>
 			<Row>
-				<Col span={24} className='flex justify-end'>
+				<Col span={24} className={styles.continueButtonWrapper}>
 					<Button
 						type='primary'
-						className={isUploadingImg && "text-blue-105 bg-blue-107"}
+						className={isUploadingImg && styles.continueButtonDisabled}
 						onClick={onContinue}
 						disabled={isUploadingImg}>
 						Continue
@@ -173,28 +174,28 @@ const ProfileName = ({
 
 			{isSellerLoggedIn || isCreaterAccount || isAdminLoggedIn ? (
 				<>
-					<Title className='text-white text-center my-7' level={4}>
+					<Title className={styles.titleWhiteCenterMy7} level={4}>
 						Your Brand Details
 					</Title>
 					<Row gutter={[20, 20]}>
 						<Col xs={24}>
 							<Input
 								name='brandName'
-								className='bg-transparent mt-1 text-white'
+								className={styles.inputBgTransparentMt1}
 								placeholder='Enter brand name'
 								value={sellerDetails.brandName}
 								onChange={handleSellerDataChange}
 							/>
 							{error.brand_name && (
-								<div className='h-3 error-text'>
-									<span className='text-red-500'>{error.brand_name}</span>
+								<div className={styles.errorContainer}>
+									<span className={styles.errorText}>{error.brand_name}</span>
 								</div>
 							)}
 						</Col>
 						<Col span={24}>
 							<TextArea
 								name='description'
-								className='bg-transparent text-white'
+								className={styles.textAreaBgTransparent}
 								rows={6}
 								placeholder='Enter brand description'
 								value={profileData.description}
@@ -204,7 +205,7 @@ const ProfileName = ({
 						<Col span={24}>
 							<Select
 								name="currency"
-								className="bg-transparent mt-1 w-full text-white"
+								className={styles.selectBgTransparentMt1}
 								placeholder="Select Currency"
 								value={sellerDetails.currency}
 								onChange={(value) => handleSellerDetailsChange("currency", value)}
@@ -213,8 +214,8 @@ const ProfileName = ({
 								<Option value="USD">USD</Option>
 							</Select>
 							{error.currency && (
-								<div className="h-3 error-text">
-									<span className="text-red-500">{error.currency}</span>
+								<div className={styles.errorContainer}>
+									<span className={styles.errorText}>{error.currency}</span>
 								</div>
 							)}
 						</Col>
@@ -222,21 +223,21 @@ const ProfileName = ({
 				</>
 			) : (
 				<>
-					<Title className='text-white text-center my-7' level={3}>
+					<Title className={styles.titleWhiteCenterMy7} level={3}>
 						Your Profile Details
 					</Title>
-					<Row gutter={[20, 20]} className='mt-6'>
+					<Row gutter={[20, 20]} className={styles.mt6}>
 						<Col xs={24} md={12}>
 							<Input
 								name='first_name'
-								className='bg-transparent'
+								className={styles.inputBgTransparent}
 								placeholder='Enter your first name'
 								value={profileData.first_name}
 								onChange={handleDataChange}
 							/>
-							<div className='h-3'>
+							<div className={styles.errorContainerH3}>
 								{error.first_name && (
-									<span className='text-red-500 error-text'>
+									<span className={`${styles.errorText} error-text`}>
 										{error.first_name}
 									</span>
 								)}
@@ -245,7 +246,7 @@ const ProfileName = ({
 						<Col xs={24} md={12}>
 							<Input
 								name='last_name'
-								className='bg-transparent'
+								className={styles.inputBgTransparent}
 								placeholder='Enter your last name'
 								value={profileData.last_name}
 								onChange={handleDataChange}
@@ -257,16 +258,16 @@ const ProfileName = ({
 
 			{/* for admin only cover image from edit profile and profile page */}
 			{showCoverImage ? (
-				<Row className='block mt-6'>
+				<Row className={styles.blockMt6}>
 					<Col span={24}>
 						{isUploading.cover_image && (
-							<div className='h-24 md:h-32 flex items-center justify-center'>
+							<div className={styles.uploadingCoverContainer}>
 								<Spin
-									className='w-full mx-auto'
+									className={styles.spinnerFullWidth}
 									indicator={
 										<LoadingOutlined
 											style={{ fontSize: 30 }}
-											className='text-blue-700'
+											className={styles.spinnerBlue}
 											spin
 										/>
 									}
@@ -276,17 +277,17 @@ const ProfileName = ({
 						)}
 						{!isUploading.cover_image &&
 							(profileData.cover_image ? (
-								<div className='flex flex-col items-center justify-center'>
-									<div className='w-full'>
+								<div className={styles.imagePreviewContainer}>
+									<div className={styles.imagePreviewWrapper}>
 										<LazyLoadImage
 											src={profileData.cover_image}
 											height='100%'
 											width='100%'
-											className='object-cover rounded-2xl'
+											className={styles.coverImage}
 											style={{ aspectRatio: "3.1/1" }}
 										/>
 									</div>
-									<div className='text-center text-secondary underline text-lg cursor-pointer'>
+									<div className={styles.removeChangeLink}>
 										<span onClick={() => handleChange("cover_image", "")}>
 											remove or change Cover
 										</span>
@@ -294,22 +295,22 @@ const ProfileName = ({
 								</div>
 							) : (
 								<Dragger
-									className='bg-transparent'
+									className={styles.draggerBgTransparent}
 									{...uploadProps}
 									name='cover_image'
 									showUploadList={false}>
-									<p className='ant-upload-drag-icon mb-3'>
+									<p className={styles.uploadIconMb3}>
 										<PictureOutlined />
 									</p>
-									<p className='ant-upload-text text-white'>
+									<p className={styles.uploadTextWhite}>
 										Click or drag a cover image to this area
 									</p>
-									<p className='ant-upload-text text-sm text-white'>
+									<p className={styles.uploadTextSmWhite}>
 										(Recommended size : 1240 * 400)
 									</p>
 									{savedImages?.cover_image && (
 										<p
-											className='text-secondary underline max-w-max mx-auto'
+											className={styles.cancelLink}
 											onClick={onCoverImageCancel}>
 											Cancel
 										</p>
@@ -319,16 +320,16 @@ const ProfileName = ({
 					</Col>
 				</Row>
 			) : null}
-			<Row className='mt-6'>
+			<Row className={styles.mt6}>
 				<Col span={24}>
 					{isUploading.profile_image && (
-						<div className='h-36 flex items-center justify-center'>
+						<div className={styles.uploadingProfileContainer}>
 							<Spin
-								className='w-full mx-auto'
+								className={styles.spinnerFullWidth}
 								indicator={
 									<LoadingOutlined
 										style={{ fontSize: 30 }}
-										className='text-blue-700'
+										className={styles.spinnerBlue}
 										spin
 									/>
 								}
@@ -338,38 +339,38 @@ const ProfileName = ({
 					)}
 					{!isUploading.profile_image &&
 						(profileData.profile_image ? (
-							<div className='flex flex-col items-center justify-center'>
-								<div className='max-w-s-1 w-120 lg:w-200 h-120 lg:h-200'>
+							<div className={styles.imagePreviewContainer}>
+								<div className={styles.profileImageWrapper}>
 									<LazyLoadImage
 										src={getFinalImageUrl(profileData.profile_image)}
 										height='100%'
 										width='100%'
 										// effect='blur'
-										className='object-cover rounded-xl max-w-s-1 w-120 lg:w-200 h-120 lg:h-200'
+										className={styles.profileImage}
 									/>
 								</div>
-								<div className='text-center text-secondary underline text-lg cursor-pointer'>
+								<div className={styles.removeChangeLink}>
 									<span onClick={() => handleChange("profile_image", "")}>
 										remove or change Avatar
 									</span>
 								</div>
 							</div>
 						) : (
-							<div className='flex flex-col items-center justify-center'>
+							<div className={styles.imagePreviewContainer}>
 								<Dragger
-									className='bg-transparent h-40 w-56'
+									className={styles.draggerProfileImage}
 									{...uploadProps}
 									name='profile_image'
 									showUploadList={false}>
-									<p className='ant-upload-drag-icon'>
+									<p className={styles.uploadIcon}>
 										<UserOutlined />
 									</p>
-									<p className='w-4/6 mx-auto text-white'>
+									<p className={styles.uploadTextProfileWhite}>
 										Click or drag file to this area to upload Avatar
 									</p>
 									{savedImages?.profile_image && (
 										<p
-											className='text-secondary underline max-w-max mx-auto'
+											className={styles.cancelLink}
 											onClick={onProfileImageCancel}>
 											Cancel
 										</p>
@@ -382,41 +383,41 @@ const ProfileName = ({
 
 			{isSellerLoggedIn || isCreaterAccount || isAdminLoggedIn ? (
 				<>
-					<Title className='text-white text-center my-7' level={4}>
+					<Title className={styles.titleWhiteCenterMy7} level={4}>
 						Social Media
 					</Title>
-					<Row gutter={[20, 20]} className='mt-6'>
+					<Row gutter={[20, 20]} className={styles.mt6}>
 						<Col xs={24}>
-							<div className='flex items-center'>
+							<div className={styles.socialMediaInputWrapper}>
 								<Image src={instagramIcon} width={28} height={28} alt='Instagram' />
 								<Input
 									name='instagramUrl'
-									className='bg-transparent ml-3 placeholder:text-gray-100 text-white'
+									className={styles.socialMediaInput}
 									placeholder='Enter Instagram URL'
 									value={sellerDetails.instagramUrl}
 									onChange={handleSellerDataChange}
 								/>
 							</div>
 							{error.instagramUrl && (
-								<div className='h-3  ml-10 error-text'>
-									<span className='text-red-500'>{error.instagramUrl}</span>
+								<div className={`${styles.errorContainer} ${styles.errorContainerMl10}`}>
+									<span className={styles.errorText}>{error.instagramUrl}</span>
 								</div>
 							)}
 						</Col>
 						<Col xs={24}>
-							<div className='flex items-center'>
+							<div className={styles.socialMediaInputWrapper}>
 								<Image src={facebookIcon} width={30} height={30} alt='Facebook' />
 								<Input
 									name='facebookUrl'
-									className='bg-transparent ml-3 text-white placeholder:text-gray-100'
+									className={styles.socialMediaInput}
 									placeholder='Enter facebook URL'
 									value={sellerDetails.facebookUrl}
 									onChange={handleSellerDataChange}
 								/>
 							</div>
 							{error.facebookUrl && (
-								<div className='h-3  ml-10 error-text'>
-									<span className='text-red-500'>{error.facebookUrl}</span>
+								<div className={`${styles.errorContainer} ${styles.errorContainerMl10}`}>
+									<span className={styles.errorText}>{error.facebookUrl}</span>
 								</div>
 							)}
 						</Col>
@@ -424,14 +425,14 @@ const ProfileName = ({
 				</>
 			) : (
 				<>
-					<Title className='text-white text-center my-7' level={4}>
+					<Title className={styles.titleWhiteCenterMy7} level={4}>
 						Write something about yourself
 					</Title>
 					<Row gutter={[20, 20]}>
 						<Col span={24}>
 							<TextArea
 								name='description'
-								className='bg-transparent mt-1'
+								className={styles.textAreaBgTransparentMt1}
 								rows={6}
 								placeholder='Enter description'
 								value={profileData.description}
@@ -442,7 +443,7 @@ const ProfileName = ({
 				</>
 			)}
 
-			<div className='text-center text-secondary underline text-lg cursor-pointer mt-3'>
+			<div className={styles.continueBottomLink}>
 				<span onClick={onContinue}>Continue</span>
 			</div>
 		</div>
