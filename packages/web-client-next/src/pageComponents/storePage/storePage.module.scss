@@ -779,23 +779,27 @@
     margin-right: auto;
 
     @media (min-width: 1024px) {
-        width: 1024px;
+        // width: 1024px;
     }
 }
 
 .pageDetailsInner {
-    max-width: 1152px;
-    margin-left: auto;
-    margin-right: auto;
-
-    @media (min-width: 1024px) {
-        max-width: 1280px;
-    }
-
-    @media (min-width: 1536px) {
-        max-width: 1536px;
-    }
+  max-width: 1152px;
+  margin: 0 auto;
 }
+
+@media (min-width: 1024px) {
+  .pageDetailsInner {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .pageDetailsInner {
+    max-width: 1536px;
+  }
+}
+
 
 /* Skeleton Loading States */
 .skeletonBanner {

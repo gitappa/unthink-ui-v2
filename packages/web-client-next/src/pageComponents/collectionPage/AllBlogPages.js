@@ -143,7 +143,7 @@ const AllBlogPages = ({
 
 	return (
 		<>
-			<div id={COLLECTIONS_ID} className='flex flex-col gap-5 md:gap-12'>
+			<div id={COLLECTIONS_ID} className={styles['collectionsContainer']}>
 				{pageUserCollections.map((blogCollectionPage) => (
 					<SingleCollectionProductList
 						key={blogCollectionPage._id}
@@ -181,19 +181,19 @@ const AllBlogPages = ({
 
 			{/* Load More Observer (Only for first 2 loads) */}
 			{autoLoadCount < 2 && dataEmpty.length !== 0 && (
-				<div ref={loadMoreRef} className="h-10 my-2 w-full flex justify-center items-center">
+				<div ref={loadMoreRef} className={styles['loadMoreObserver']}>
 					<Spin size="large" />
 				</div>
 			)}
 
 			{/* Load More Button (After 2 auto loads) */}
 			{autoLoadCount >= 2 && (influencerUserCollectionsCount === 10 || authUserCollectionsCount === 10) && dataEmpty.length !== 0 ? (
-				<div className="w-full flex justify-center my-4">
+				<div className={styles['loadMoreButtonWrapper']}>
 					{isLoading ? (
 						<Spin size="large" />
 					) : (
 						<button
-							className='bg-violet-100 text-white py-2 px-4 rounded-lg'
+							className={styles['loadMoreButton']}
 							onClick={onShowMoreClick}
 						>
 							Show More <ArrowRightOutlined />
@@ -203,9 +203,9 @@ const AllBlogPages = ({
 			) : null}
 
 
-			<div className='z-30 fixed h-24 w-18.5 mb-18.5 lg:mb-0 bottom-2 right-6 flex justify-center items-center down-circle-outlined'>
+			<div className={styles['scrollButtonWrapper']}>
 				<DownCircleOutlined
-					className='text-white text-3xl md:text-4xl cursor-pointer rounded-full'
+					className={styles['scrollButtonIcon']}
 					onClick={handleScrollToNextCollection}
 				/>
 			</div>
