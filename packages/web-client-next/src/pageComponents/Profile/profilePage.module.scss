@@ -116,3 +116,151 @@
 .image-container:hover .remove-btn {
   opacity: 1;
 }
+
+
+/* ProfilePage Component Styles */
+
+/* Profile Page Wrapper */
+.profilePageWrapper {
+    height: 100%;
+    min-height: 100vh;
+    background: #1a1d23;
+}
+
+:global(.static_page_bg) .profilePageWrapper,
+.profilePageWrapper:global(.static_page_bg) {
+    background: linear-gradient(180deg,#222f44,#0e131b);
+}
+
+.profileContainerPadding {
+    padding-left: 32px;
+    padding-right: 32px;
+
+    @media (min-width: 1024px) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Steps Wrapper */
+.stepsWrapper {
+    width: 100%;
+    margin-top: 16px;
+
+    @media (min-width: 768px) {
+        margin-top: 0;
+    }
+}
+
+/* Site Navigation Steps */
+.siteNavigationSteps {
+    box-shadow: none;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    :global(.ant-steps-item-title) {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    :global(.ant-steps-item-active .ant-steps-item-title) {
+        color: #ffffff !important;
+    }
+
+    :global(.ant-steps-item-finish .ant-steps-item-title) {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    :global(.ant-steps-item-wait .ant-steps-item-title) {
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    :global(.ant-steps-item-icon) {
+        background: transparent !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    :global(.ant-steps-item-active .ant-steps-item-icon) {
+        background: #2563eb !important;
+        border-color: #2563eb !important;
+    }
+
+    :global(.ant-steps-item-finish .ant-steps-item-icon) {
+        background: transparent !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+}
+
+/* Mobile Step Indicator */
+.mobileStepIndicator {
+    border-color: #ffffff;
+    border-bottom-width: 1px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 8px;
+}
+
+.mobileStepNumber {
+    color: #ffffff;
+    background-color: #3b82f6;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    text-align: center;
+}
+
+.mobileStepTitle {
+    color: #ffffff;
+    padding-left: 16px;
+}
+
+/* Step Content Wrapper */
+.stepContentWrapper {
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 40px;
+    padding-bottom: 40px;
+   
+
+    @media (min-width: 1024px) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Result Container */
+.resultContainer {
+    margin-left: auto;
+    margin-right: auto;
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
+}
+
+.resultTitle {
+    color: #ffffff;
+}
+
+.resultSubtitle {
+    color: #ffffff;
+}
+
+.resultButton {
+    background-color: var(--primary-color, #7C74EC);
+    border-radius: 4px;
+    color: #ffffff;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 24px;
+    padding-right: 24px;
+    font-weight: 400;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}

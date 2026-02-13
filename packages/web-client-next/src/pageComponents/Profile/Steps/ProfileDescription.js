@@ -53,7 +53,7 @@ const ProfileDescription = ({
 	};
 
 	return (
-		<div className='profile-detail-container xl:px-44 lg:px-28'>
+		<div className='profile-detail-container '>
 			<Row justify='space-between'>
 				<Col span={24} className='flex justify-between'>
 					<Button type='primary' onClick={prevStep}>

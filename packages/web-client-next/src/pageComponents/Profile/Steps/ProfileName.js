@@ -158,7 +158,7 @@ const ProfileName = ({
 	);
 
 	return (
-		<div className='profile-detail-container xl:px-44 lg:px-28'>
+		<div className='profile-detail-container  '>
 			<Row>
 				<Col span={24} className='flex justify-end'>
 					<Button
