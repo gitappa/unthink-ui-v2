@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../../helper/useNavigate";
+import styles from "./BlogCollectionGallery.module.css";
 
 import {
 	setIsEditWishlist,
@@ -272,7 +273,7 @@ const BlogCollectionGallery = ({
 								onBackClick();
 								dispatch(closeWishlistModal());
 							}}
-							className='text-primary cursor-pointer underline'>
+						style={{ color: "#083dc1", cursor: "pointer", textDecoration: "underline" }}>
 							{is_store_instance
 								? window.location.origin
 								: `${window.location.origin}${collectionPagePath}`}
@@ -404,12 +405,12 @@ const BlogCollectionGallery = ({
 	}, [selectedCollection._id, selectedCollection.status]);
 
 	return (
-		<div className='px-4 lg:px-7 h-full'>
-			<div className='flex items-center cursor-pointer' onClick={onBackClick}>
-				<ArrowLeftOutlined className='text-base flex' />
-				<Text className='pl-3 text-base font-medium'>Back</Text>
+		<div className={styles.mainContainer}>
+			<div className={styles.backButton} onClick={onBackClick}>
+				<ArrowLeftOutlined className={styles.backButtonIcon} />
+				<Text className={styles.backButtonText}>Back</Text>
 			</div>
-			<div className='py-6'>
+			<div className={styles.headerSection}>
 				{/* <>
 					<Skeleton.Input active={true} className='w-full h-4 lg:h-6' />
 					<Skeleton.Input active={true} className='w-2/4 h-4 lg:h-6 pt-2' />
@@ -421,64 +422,64 @@ const BlogCollectionGallery = ({
 					</div>
 				</> */}
 				<>
-					<div className='flex justify-between items-center'>
-						<div className='capital-first-letter'>
+					<div className={styles.collectionNameContainer}>
+						<div className={styles.capitalFirstLetter}>
 							<Text
 								onClick={handleRedirectToCollectionPage}
-								className='text-xl font-medium underline cursor-pointer break-all'>
+								className={styles.collectionName}>
 								{getCollectionNameToShow(selectedCollection)}
 							</Text>
 						</div>
 					</div>
 					{selectedCollection?.blog_url || selectedCollection?.video_url ? (
-						<Text className='text-xs text-black-200 font-normal p-0'>
+						<Text className={styles.urlText}>
 							{selectedCollection?.blog_url || selectedCollection?.display_url || selectedCollection.video_url}
 							<CopyToClipBoardComponent
 								textToCopy={selectedCollection?.blog_url || selectedCollection?.display_url || selectedCollection?.video_url}
 							/>
 						</Text>
 					) : null}
-					<div className='flex items-center mt-1'>
+					<div className={styles.actionsContainer}>
 						{selectedCollection.status !== IN_PROGRESS ? (
 							<>
 								<Text
-									className='text-xs font-bold text-blue-103 cursor-pointer'
+								className={styles.actionLink}
 									onClick={onQuickEditClick}>
 									Quick Edit
 								</Text>
-								<Divider className='mx-3 border-gray-101' type='vertical' />
+								<Divider className={styles.divider} type='vertical' />
 							</>
 						) : null}
 						{!isGuestUser && selectedCollection.status !== IN_PROGRESS && (
 							<div
-								className='inline-flex items-center cursor-pointer'
-								onClick={handleRedirectToNewEditCollectionPage}
-								role='button'>
-								<Text className='text-xs font-bold text-blue-103'>Edit</Text>
+							className={styles.inlineFlexButton}
+							onClick={handleRedirectToNewEditCollectionPage}
+							role='button'>
+							<Text className={styles.buttonText}>Edit</Text>
 								{/* <div className='inline-block px-1.25 py-0.5 ml-1 bg-green-500 text-white rounded-lg text-xs leading-none'>
 									new
 								</div> */}
 							</div>
 						)}
-						<Divider className='mx-3 border-gray-101' type='vertical' />
+						<Divider className={styles.divider} type='vertical' />
 						{selectedCollection.status !== IN_PROGRESS && (
 							<>
 								<Text
-									className='text-xs font-bold cursor-pointer text-blue-103'
+									className={styles.actionLink}
 									title={`click to ${selectedCollection.status === PUBLISHED ? "Unpublish" : "publish"
 										} the collection`}
 									onClick={handlePublishCollection}>
 									{selectedCollection.status === PUBLISHED ? "Unpublish" : "publish"}
 								</Text>
-								<Divider className='mx-3 border-gray-101' type='vertical' />
+								<Divider className={styles.divider} type='vertical' />
 							</>
 						)}
 
 						{deleteWishlistInProgress ? (
-							<Spin className='flex items-center h-8' />
+							<Spin className={styles.spinContainer} />
 						) : (
 							<Text
-								className='text-xs font-bold text-blue-103 cursor-pointer'
+								className={styles.actionLink}
 								onClick={deleteCollectionPageClick}>
 								Delete
 							</Text>
@@ -486,7 +487,7 @@ const BlogCollectionGallery = ({
 					</div>
 					{isAutoPlist && selectedCollection.status && (
 						<Alert
-							className='my-3'
+							className={styles.alertContainer}
 							message={
 								showTagsInput
 									? `Please update the ${TAGS_TITLE} and click on save to fetch all the products.`
@@ -497,13 +498,13 @@ const BlogCollectionGallery = ({
 					)}
 					{(selectedCollection.tags?.length && (
 						<>
-							<h1 className='text-sm font-medium capitalize'>{TAGS_TITLE}</h1>
-							<div className='flex flex-wrap items-center w-full'>
+							<h1 className={styles.tagsLabel}>{TAGS_TITLE}</h1>
+							<div className={styles.tagsWrapper}>
 								{showTagsInput ? (
-									<div className='wishlist-tags mt-2 w-full'>
-										<Select
-											mode='tags'
-											className='w-full text-base'
+								<div className={styles.tagsInput}>
+									<Select
+										mode='tags'
+										className={styles.tagsInputField}
 											placeholder={`Enter ${TAGS_TITLE}`}
 											value={blogFilters}
 											onChange={handleTagChange}
@@ -514,19 +515,19 @@ const BlogCollectionGallery = ({
 											))}
 										</Select>
 										{blogFiltersError && (
-											<h1 className='text-red-500 font-normal'>
+										<h1 className={styles.tagsErrorText}>
 												{blogFiltersError}
 											</h1>
 										)}
 										<Button
 											onClick={editBlogFilters}
-											className='my-2 py-0 h-6'
-											type='primary'>
-											Save
-										</Button>
-										<Button
-											onClick={closeTagsFieldMode}
-											className='my-2 ml-2 py-0 h-6'
+										className={styles.tagsSaveButton}
+										type='primary'>
+										Save
+									</Button>
+									<Button
+										onClick={closeTagsFieldMode}
+										className={styles.tagsCancelButton}
 											type='primary'>
 											Cancel
 										</Button>
@@ -536,17 +537,17 @@ const BlogCollectionGallery = ({
 										{selectedCollection.tags?.map((tag) => (
 											<div
 												key={tag}
-												className='rounded-md shadow my-2 mr-2 w-max bg-lightgray-102'>
-												<Title
-													level={5}
-													className='m-0 px-2 sm:px-4 py-1 font-normal text-xs md:text-sm text-black-103'>
-													{tag}
-												</Title>
-											</div>
-										))}
-										{selectedCollection.status !== IN_PROGRESS && (
-											<Text
-												className='text-xs font-bold text-blue-103 cursor-pointer'
+											className={styles.tagsDisplayContainer}>
+											<Title
+												level={5}
+												className={styles.tagText}>
+												{tag}
+											</Title>
+										</div>
+									))}
+									{selectedCollection.status !== IN_PROGRESS && (
+										<Text
+											className={styles.modifyTagsLink}
 												onClick={() => setShowTagsInput(true)}
 												type='primary'>
 												Modify {TAGS_TITLE}
@@ -562,15 +563,15 @@ const BlogCollectionGallery = ({
 			</div>
 
 			{/* show collection products */}
-			<h1 className='text-sm font-medium mb-3'>Products</h1>
+		<h1 className={styles.productsLabel}>Products</h1>
 
-			{!isFetchingProduct && productLists.length ? (
-				<div className='flex mb-3.5'>
+		{!isFetchingProduct && productLists.length ? (
+			<div className={styles.selectProductsContainer}>
 					{enableSelectProduct ? (
-						<div className='flex items-center leading-44'>
-							<div className='flex border border-gray-106 rounded py-2 pl-2'>
-								<Checkbox
-									className='text-sm'
+					<div className={styles.selectedProductsInfo}>
+						<div className={styles.checkboxContainer}>
+							<Checkbox
+								className={styles.checkboxText}
 									indeterminate={
 										selectedProducts.length > 0 &&
 										selectedProducts.length < productLists.length
@@ -582,7 +583,7 @@ const BlogCollectionGallery = ({
 							</div>
 							<p
 								onClick={onDeleteSelectedProducts}
-								className='mb-0 ml-2 underline cursor-pointer'
+							className={styles.actionButtonSmall}
 								title='Click to delete selected products'
 								role='button'>
 								Delete
@@ -592,18 +593,18 @@ const BlogCollectionGallery = ({
 									onClick={() =>
 										showcaseCollectionProducts(selectedProducts, true)
 									}
-									className='mb-0 ml-2 underline cursor-pointer'
-									title='Click to showcase selected products'
-									role='button'>
-									Showcase
-								</p>
-								<Tooltip title='Choose products that should appear on the top of your collection'>
-									<InfoCircleOutlined className='pl-1 flex' />
-								</Tooltip>
-							</>
-							<p
-								onClick={() => setEnableSelectProduct(false)}
-								className='mb-0 ml-2 underline cursor-pointer'
+								className={styles.actionButtonSmall}
+								title='Click to showcase selected products'
+								role='button'>
+								Showcase
+							</p>
+							<Tooltip title='Choose products that should appear on the top of your collection'>
+								<InfoCircleOutlined className={styles.infoIcon} />
+							</Tooltip>
+						</>
+						<p
+							onClick={() => setEnableSelectProduct(false)}
+							className={styles.actionButtonSmall}
 								role='button'>
 								Cancel
 							</p>
@@ -611,7 +612,7 @@ const BlogCollectionGallery = ({
 					) : (
 						<p
 							onClick={() => setEnableSelectProduct(true)}
-							className='mb-0 underline cursor-pointer leading-44'
+							className={styles.selectLink}
 							title='Click and select multiple products to showcase on top or delete'
 							role='button'>
 							Select and delete or showcase on top
@@ -648,7 +649,7 @@ const BlogCollectionGallery = ({
 			</div> */}
 
 			{showLoader && (
-				<div className='absolute top-0 left-0 flex justify-center items-center w-full h-full backdrop-filter backdrop-contrast-75'>
+			<div className={styles.loadingOverlay}>
 					<Spin indicator={<LoadingOutlined className='text-3xl-1' spin />} />
 				</div>
 			)}

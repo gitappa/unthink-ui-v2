@@ -84,7 +84,8 @@
 
 @media (min-width: 1024px) {
   .coverImage {
-    width: 260px;
+    width: 355px;
+    height: 355px;
   }
 }
 

@@ -104,7 +104,7 @@ import DroppWallet from "../../components/DroppWallet.js";
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
 	loading: () => (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	),
@@ -112,7 +112,7 @@ const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 const Categories = dynamic(() => import("../categories/Categories.js"), {
 	ssr: false,
 	loading: () => (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	),
@@ -120,7 +120,7 @@ const Categories = dynamic(() => import("../categories/Categories.js"), {
 const EarnRewards = dynamic(() => import("../rewards/EarnRewards.js"), {
 	ssr: false,
 	loading: () => (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	),
@@ -128,7 +128,7 @@ const EarnRewards = dynamic(() => import("../rewards/EarnRewards.js"), {
 const ReviewCollection = dynamic(() => import("../tryForFree/ReviewCollection.js"), {
 	ssr: false,
 	loading: () => (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	),
@@ -139,7 +139,7 @@ const CreateFreeCollection = dynamic(
 	{
 		ssr: false,
 		loading: () => (
-			<div className='flex justify-center'>
+			<div className={styles.loadingIndicator}>
 				<Spin />
 			</div>
 		),
@@ -151,7 +151,7 @@ const CustomProducts = dynamic(
 	{
 		ssr: false,
 		loading: () => (
-			<div className='flex justify-center'>
+			<div className={styles.loadingIndicator}>
 				<Spin />
 			</div>
 		),
@@ -160,7 +160,7 @@ const CustomProducts = dynamic(
 
 const LoadingIndicator = () => {
 	return (
-		<div className='flex justify-center'>
+		<div className={styles.loadingIndicator}>
 			<Spin />
 		</div>
 	);
@@ -1060,7 +1060,7 @@ const StorePageWrapper = (props) => {
 	}, [current_store_name, current_store_id, handleCheck]);
 
 	return (
-		<div className='flex flex-col'>
+		<div className={styles.storePageContainer}>
 			<AdminInfluencerPopup />
 			{/* only two div should be used here */}
 			<Header
@@ -1132,7 +1132,7 @@ const StorePageWrapper = (props) => {
 
 			{!showIndividualPageContent && (
 				<div
-					className={`pt-6 lg:pt-12 grid gap-2 md:gap-6 lg:gap-12 ${isRootPage && (isSwiftlyStyledInstance || isDothelookInstance) ? "pb-0" : "pb-24"}`}>
+					className={`${styles.mainContentGrid} ${isRootPage && (isSwiftlyStyledInstance || isDothelookInstance) ? styles.mainContentGridNoPadding : styles.mainContentGridWithPadding}`}>
 					{/* // */}
 					{/* setting background as body color when any theme is selected */}
 					{/* // START //  */}
@@ -1337,8 +1337,8 @@ const StorePageWrapper = (props) => {
 			/>
 
 			{/* to create new tailwind classes in build */}
-			<span className='hidden lg:h-340 h-0 z-30 fixed bottom-26 lg:bottom-8 left-9 p-1 border-2 grid-cols-6 md:grid-cols-6' />
-			<span className='hidden tablet:grid-cols-6' />
+			<span className={styles.hiddenUtilityClasses} />
+			<span className={styles.hiddenTabletGrid} />
 
 			{/* {authUser.user_name === "takewalks" &&
 			!(isCreateFreeCollectionPage || isCollectionReviewPage) ? (
@@ -1348,12 +1348,12 @@ const StorePageWrapper = (props) => {
 			{/* show backdrop loader */}
 			{
 				showBackdropLoader && (
-					<div className='fixed top-0 left-0 flex justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-102 z-20'>
+					<div className={styles.backdropLoader}>
 						<Spin
-							// indicator={<LoadingOutlined className='text-3xl-1' spin />}
+							// indicator={<LoadingOutlined className={styles.backdropLoaderIconSmall} spin />}
 							indicator={
 								<Loading3QuartersOutlined
-									className='flex text-6xl-1 text-indigo-100'
+									className={styles.backdropLoaderIcon}
 									spin
 								/>
 							}

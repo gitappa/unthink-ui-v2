@@ -86,6 +86,7 @@ import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { connectVenlyWallet } from "../earnedRewardModal/redux/actions";
 import Cookies from "js-cookie";
 import { FaRegHeart } from "react-icons/fa";
+import styles from "./storePage.module.scss";
 
 const { Text } = Typography;
 
@@ -245,10 +246,10 @@ const Header = ({
 	const headerCreateMenu = [
 		{
 			key: 'create_collection',
-			className: 'py-2',
+			className: styles.headerMenuItemPy2,
 			label: (
 				<Link
-					className='text-white lg:text-black-200'
+					className={styles.headerMenuLinkText}
 					href={PATH_CREATE_COLLECTION}>
 					COLLECTION
 				</Link>
@@ -315,10 +316,10 @@ const Header = ({
 		if (!isUserLogin) {
 			items.push({
 				key: 'signin',
-				className: 'py-2',
+				className: styles.headerMenuItemPy2,
 				label: (
 					<Link
-						className='text-white lg:text-black-200'
+						className={styles.headerMenuLinkText}
 						href={
 							is_store_instance
 								? ROUTES.SIGN_IN_PAGE
@@ -332,10 +333,10 @@ const Header = ({
 			items.push(
 				{
 					key: 'createcollections',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					label: (
 						<Link
-							className='text-base px-3 text-white lg:text-black-200'
+							className={styles.headerMenuLinkTextBase}
 							href={PATH_CREATE_COLLECTION}>
 							Create {WISHLIST_TITLE}
 						</Link>
@@ -343,9 +344,9 @@ const Header = ({
 				},
 				{
 					key: 'myprofile',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					label: MY_PROFILE && (
-						<Link className='text-base px-3 text-white lg:text-black-200' href={MY_PROFILE}>
+						<Link className={styles.headerMenuLinkTextBase} href={MY_PROFILE}>
 							My Public Profile
 						</Link>
 					),
@@ -359,10 +360,10 @@ const Header = ({
 			if (is_store_instance && isSellerLoggedIn) {
 				items.push({
 					key: 'myproducts',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					onClick: () => navigate(ROUTES.MY_PRODUCTS),
 					label: (
-						<span className='text-base px-3 text-white lg:text-black-200'>
+						<span className={styles.headerMenuSpanTextBase}>
 							My Products
 						</span>
 					),
@@ -372,10 +373,10 @@ const Header = ({
 			if (isAdminLoggedIn) {
 				items.push({
 					key: 'community',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					onClick: onCategoriesClick,
 					label: (
-						<span className='text-base px-3 text-white lg:text-black-200'>
+						<span className={styles.headerMenuSpanTextBase}>
 							Community
 						</span>
 					),
@@ -384,9 +385,9 @@ const Header = ({
 
 			items.push({
 				key: 'editprofile',
-				className: 'py-2',
+				className: styles.headerMenuItemPy2,
 				label: PROFILE && (
-					<Link className='text-base px-3 text-white lg:text-black-200' href={PROFILE}>
+					<Link className={styles.headerMenuLinkTextBase} href={PROFILE}>
 						Edit Profile
 					</Link>
 				),
@@ -399,10 +400,10 @@ const Header = ({
 			if (enablePlist && !currentUser.trial_user) {
 				items.push({
 					key: 'store_settings',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					label: (
 						<Link
-							className='text-base px-3 text-white lg:text-black-200'
+							className={styles.headerMenuLinkTextBase}
 							href={CREATE_STORE}>
 							Store Settings
 						</Link>
@@ -417,10 +418,10 @@ const Header = ({
 			if (viewLeaderboardEnabled) {
 				items.push({
 					key: 'view_leaderboard',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					onClick: () => setShowLeaderboard(true),
 					label: (
-						<span className='text-base px-3 text-white lg:text-black-200'>
+						<span className={styles.headerMenuSpanTextBase}>
 							View Leaderboard
 						</span>
 					),
@@ -430,10 +431,10 @@ const Header = ({
 			if (isAdminLoggedIn) {
 				items.push({
 					key: 'stats',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					onClick: () => setShowAttributions(true),
 					label: (
-						<span className='text-base px-3 text-white lg:text-black-200'>
+						<span className={styles.headerMenuSpanTextBase}>
 							Stats
 						</span>
 					),
@@ -443,10 +444,10 @@ const Header = ({
 			if (enable_venly) {
 				items.push({
 					key: 'wallet',
-					className: 'py-2',
+					className: styles.headerMenuItemPy2,
 					onClick: onMyWalletClick,
 					label: (
-						<span className='text-base px-3 text-white lg:text-black-200'>
+						<span className={styles.headerMenuSpanTextBase}>
 							My Wallet
 						</span>
 					),
@@ -455,10 +456,10 @@ const Header = ({
 
 			items.push({
 				key: 'signout',
-				className: 'py-2',
+				className: styles.headerMenuItemPy2,
 				onClick: onSignOut,
 				label: (
-					<span className='text-base px-3 text-white lg:text-black-200'>
+					<span className={styles.headerMenuSpanTextBase}>
 						Sign Out
 					</span>
 				),
@@ -470,7 +471,7 @@ const Header = ({
 
 	const headerProfileMenu = {
 		items: getHeaderProfileMenuItems(),
-		className: 'bg-transparent lg:bg-white border-none flex lg:block flex-col items-center'
+		className: styles.headerProfileMenuContainer
 	};
 
 	return (
@@ -478,32 +479,30 @@ const Header = ({
 			{/* ----mobile ui start ---- */}
 			{!isSwiftlyStyledInstance || !isDoTheLookInstance ? ( // hide for swiftly styled store
 				<div
-					className={`h-72 bg-lightgray-101 dark:bg-black-200 dark:text-lightgray-101 z-40 fixed w-full bottom-0 shadow-md flex lg:hidden justify-between md:justify-around 
-				items-center px-8 py-2 transform transition-transform duration-300 text-black-103 ${showChatModal ? "translate-y-full" : "-translate-y-0"
-						}`}>
+					className={`${styles.mobileBottomNav} ${showChatModal ? styles.mobileBottomNavHidden : styles.mobileBottomNavVisible}`}>
 					{/* this div must have 3 child only to keep the aura center aligned */}
 					{showCategories || showPeople ? (
 						<>
 							{showCategories ? (
 								<div
-									className='flex flex-col items-center'
+									className={styles.mobileNavItem}
 									onClick={onCategoriesClick}>
-									<div className='flex'>
+									<div className={styles.mobileNavIconWrapper}>
 										<Image src={bagIcon} alt="Bag" width={20} height={20} />
 									</div>
-									<span className='text-xs sm:text-sm font-semibold leading-6'>
+									<span className={styles.mobileNavText}>
 										Discover
 									</span>
 								</div>
 							) : null}
 							{showPeople && ( // REMOVE people tab code is not required
 								<div
-									className='flex flex-col items-center'
+									className={styles.mobileNavItem}
 									onClick={onPeopleClick}>
-									<div className='flex'>
+									<div className={styles.mobileNavIconWrapper}>
 										<Image src={peopleIcon} alt="People" width={20} height={20} />
 									</div>
-									<span className='text-xs sm:text-sm font-semibold leading-6 pt-1'>
+									<span className={styles.mobileNavTextWithPt}>
 										People
 									</span>
 								</div>
@@ -522,24 +521,24 @@ const Header = ({
 							{" "}
 							{showRewards && (
 								<div
-									className='flex flex-col items-center'
+									className={styles.mobileNavItem}
 									onClick={onEarnRewardsClick}>
-									<div className='flex'>
+									<div className={styles.mobileNavIconWrapper}>
 										<Image src={rewardIcon} alt="Reward" width={20} height={20} />
 									</div>
-									<span className='text-xs sm:text-sm font-semibold leading-6'>
+									<span className={styles.mobileNavText}>
 										Rewards
 									</span>
 								</div>
 							)}
 							{isUserLogin ? (
 								<div
-									className='flex flex-col items-center cursor-pointer'
+									className={styles.mobileNavItemCursor}
 									onClick={onWishlistClick}>
-									<div className='flex'>
+									<div className={styles.mobileNavIconWrapper}>
 										<Image src={wishlistIcon} alt="Wishlist" width={20} height={20} />
 									</div>
-									<span className='text-xs sm:text-sm font-semibold leading-6 capitalize'>
+									<span className={styles.mobileNavTextCapitalize}>
 										{WISHLISTS_TITLE}
 									</span>
 								</div>
@@ -553,7 +552,7 @@ const Header = ({
 
 			{/* samskara mobile UI */}
 			{isSamskaraInstance ? (
-				<div className='z-40 sticky w-full top-0 border-b border-gray-107 text-black-103 lg:hidden'>
+				<div className={styles.mobileHeaderSticky}>
 					<SamskaraMobileHeader
 						showProfileIcon={showProfileIcon}
 						setShowMenu={setShowMenu}
@@ -563,7 +562,7 @@ const Header = ({
 
 			{/* heroesVillains mobile UI */}
 			{isHeroesVillainsInstance ? (
-				<div className='z-40 sticky w-full top-0 border-b border-gray-107 text-black-103 lg:hidden'>
+				<div className={styles.mobileHeaderSticky}>
 					<HeroesVillainsMobileHeader
 						showProfileIcon={showProfileIcon}
 						setShowMenu={setShowMenu}
@@ -573,7 +572,7 @@ const Header = ({
 
 			{/* swiftlyStyled mobile UI */}
 			{isSwiftlyStyledInstance || isDoTheLookInstance ? (
-				<div className='z-40 sticky w-full top-0 border-b border-gray-107 text-black-103 lg:hidden'>
+				<div className={styles.mobileHeaderSticky}>
 					<SwiftlyMobileHeader
 						showProfileIcon={showProfileIcon && isUserLogin}
 						setShowMenu={setShowMenu}
@@ -583,7 +582,7 @@ const Header = ({
 
 			{/* ----mobile ui end ---- */}
 
-			<div className='z-40 sticky w-full top-0 lg:shadow-md text-black-103'>
+			<div className={styles.desktopHeaderSticky}>
 				{/* budgettravel header */}
 				{isBTInstance && <BudgetTravelHeader />}
 
@@ -635,11 +634,11 @@ const Header = ({
 						)}
 					</>
 				) : (
-					<div className='flex justify-between md:justify-around items-center lg:h-72 lg:px-8 lg:py-2 bg-lightgray-101 dark:bg-lightgray-101'>
+					<div className={styles.desktopHeaderContainer}>
 						{/* this div must have 3 child only to keep the aura center aligned */}
-						<div className='hidden lg:flex items-center lg:mr-12 2xl:mr-16'>
+						<div className={styles.desktopHeaderLeft}>
 							{!is_store_instance && (
-								<Link href={ROUTES.STORE_PAGE} className='pr-14 xl:pr-20'>
+								<Link href={ROUTES.STORE_PAGE} className={styles.desktopHeaderLogoLink}>
 									<Image src={unthink_favicon} width={29} preview={false} />
 								</Link>
 							)}
@@ -675,9 +674,9 @@ const Header = ({
 								)} */}
 								{showPeople && ( // REMOVE people tab code is not required
 									<div
-										className='pl-3 xl:pl-6 lg:flex hidden items-center cursor-pointer'
+										className={styles.desktopNavItem}
 										onClick={onPeopleClick}>
-										<span className='xl:text-base font-semibold leading-6'>
+										<span className={styles.desktopNavText}>
 											PEOPLE
 										</span>
 									</div>
@@ -685,22 +684,22 @@ const Header = ({
 
 								{showRewards && (
 									<div
-										className='pl-3 xl:pl-6 lg:flex hidden items-center cursor-pointer'
+										className={styles.desktopNavItem}
 										onClick={onEarnRewardsClick}>
-										<span className='xl:text-base font-semibold leading-6 whitespace-nowrap'>
+										<span className={styles.desktopNavTextNoWrap}>
 											REWARDS
 										</span>
 									</div>
 								)}
 								{showCreate ? (
 									<Dropdown
-										overlayClassName='fixed'
+										overlayClassName={styles.dropdownOverlayFixed}
 										// disabled={isUserFetching}
 										menu={{ items: headerCreateMenu }}
 										trigger={["click"]}
 										destroyOnHidden>
-										<div className='pl-3 xl:pl-6 lg:flex hidden items-center cursor-pointer'>
-											<span className='xl:text-base font-semibold leading-6 uppercase'>
+										<div className={styles.desktopNavItem}>
+											<span className={styles.desktopNavTextUppercase}>
 												CREATE
 											</span>
 										</div>
@@ -730,10 +729,10 @@ const Header = ({
 									// 		/>
 									// 	</div>
 									// </Dropdown>
-									<div className='flex justify-between gap-2 items-center '>
+									<div className={styles.desktopProfileSection}>
 										<FaRegHeart
 											onClick={onWishlistClick}
-											className='text-black cursor-pointer h-6 w-6 lg:block hidden '
+											className={styles.desktopWishlistIcon}
 										/>
 										<UserProfileMenu
 											isUserFetching={isUserFetching}
@@ -756,7 +755,7 @@ const Header = ({
 
 			{/* for profile menu in mobile */}
 			{!(isUserFetching || isInfluencerFetching) && (
-				<div className='absolute top-3 px-3 flex lg:hidden z-10 w-full justify-end text-black-103'>
+				<div className={styles.mobileMenuIconContainer}>
 					{/* <div
 						className='text-lg text-black flex min-h-7 w-7 cursor-pointer bg-** radius- '
 						style={{
@@ -771,7 +770,7 @@ const Header = ({
 					<Image
 						src={menuIcon}
 						alt="Menu"
-						className='text-lg text-black flex h-7 w-7 cursor-pointer'
+						className={styles.mobileMenuIcon}
 						onClick={() => setShowMenu(true)}
 						width={28}
 						height={28}
@@ -780,14 +779,14 @@ const Header = ({
 			)}
 
 			{showMenu && (
-				<div className='fixed z-50  top-0 left-0 w-full h-full bg-black overflow-auto' style={{ backgroundColor: "#060709ff" }}>
-					<div className='flex justify-end p-6'>
+				<div className={styles.mobileMenuOverlay}>
+					<div className={styles.mobileMenuCloseContainer}>
 						<CloseOutlined
-							className='text-white text-2xl cursor-pointer'
+							className={styles.mobileMenuCloseIcon}
 							onClick={() => setShowMenu(false)}
 						/>
 					</div>
-					<div className='flex flex-col justify-center items-center w-full min-h-[70vh] mobile-profile-menu'>
+					<div className={styles.mobileMenuContent}>
 						{showProfileIcon ? (
 							<UserProfileMenu
 								isUserFetching={isUserFetching}

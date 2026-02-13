@@ -148,13 +148,34 @@ p {
   text-align: center !important;
   top: 15% !important;
 }
-
+.collection_page_sort_product_list .ant-select-selection-item {
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding-right: 50px !important;
+}
+@media (max-width:768px) {
 .collection_page_sort_product_list .ant-select-selection-item {
   padding-right: 50px !important;
   color: #0E131B !important;
   font-weight: 600 !important;
-  font-size: 16px !important;
+  font-size: 12px !important;
+  padding-right: 30px !important;
+
 }
+.collection_page_sort_product_list .ant-select-arrow {
+  align-items: center !important;
+  background: #d4ccfc80 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  padding: 12px 10px !important;
+  position: absolute !important;
+  right: 5px !important;
+  text-align: center !important;
+  top: 26% !important;
+}
+}
+
 
 .ellipsis_2 {
   display: -webkit-box;
@@ -257,3 +278,19 @@ p {
     text-overflow: ellipsis;
   }
 }
+
+/* Fix for CustomProducts Sort Select - Target the container */
+.CustomProducts_sort-container__ngfRu .ant-select .ant-select-selector {
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  color: #111827 !important;
+}
+
+.CustomProducts_sort-container__ngfRu .ant-select-focused .ant-select-selector {
+  box-shadow: none !important;
+}
+
+ 

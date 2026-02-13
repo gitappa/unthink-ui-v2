@@ -508,40 +508,40 @@ const ReviewCollectionStepPublish = ({
 	};
 
 	return (
-		<div className='publish-step-container'>
+			<div className={styles.publishStepContainer}>
 			<ReviewCollectionContainerWrapper>
 				{/* Title section START */}
-				<div className='flex md:items-center justify-between flex-col-reverse md:flex-row flex-wrap gap-5 md:gap-0'>
+				<div className={`${styles.flex} ${styles.mdItemsCenter} ${styles.justifyBetween} ${styles.flexColReverse} ${styles.mdFlexRow} ${styles.flexWrap} ${styles.gap5} ${styles.mdGap0}`}>
 					<div>
-						<p className='md:leading-none font-normal flex items-center mb-0 text-slat-104'>
+						<p className={`${styles.mdLeadingNone} ${styles.fontNormal} ${styles.flex} ${styles.itemsCenter} ${styles.mb0} ${styles.textSlatA104}`}>
 							{publishingOption === PUBLISHING_OPTION_PAGE ? (
 								<>
-									<span className='text-xl-1 md:text-2xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+								<span style={{color:'black'}} className={`${styles.textXl1} ${styles.mdText2xl} ${styles.desktopTextDisplayL} ${styles.fontSemibold} ${styles.breakWordOnly} ${styles.ellipsis1}`}>
 										Almost there!
 									</span>
 								</>
 							) : null}
 							{publishingOption === PUBLISHING_OPTION_EXPORT_PRODUCTS_CSV ? (
 								<>
-									<span className='text-xl-1 md:text-2xl desktop:text-display-l font-semibold break-word-only ellipsis_1'>
+								<span className={`${styles.textXl1} ${styles.mdText2xl} ${styles.desktopTextDisplayL} ${styles.fontSemibold} ${styles.breakWordOnly} ${styles.ellipsis1}`}>
 										Export products as a CSV file
 									</span>
 								</>
 							) : null}
 						</p>
 					</div>
-					<div className='ml-auto flex flex-wrap gap-2 h-fit-content'>
+					<div className={`${styles.mlAuto} ${styles.flex} ${styles.flexWrap} ${styles.gap2} ${styles.hFitContent}`} style={{alignItems:'center'}}>
 						{publishingOption === PUBLISHING_OPTION_PAGE &&
 							isPostPageFormTouched ? (
 							<>
 								<button
 									onClick={handlePostPageFormReset}
-									className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103 ml-auto'>
+									className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.textWhite} ${styles.p3} ${styles.border2} ${styles.borderIndigo103} ${styles.mlAuto}`}>
 									Discard
 								</button>
 								<button
 									onClick={handlePostPageFormSave}
-									className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103 min-w-40'>
+									className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.textWhite} ${styles.p3} ${styles.border2} ${styles.borderIndigo103} ${styles.minW40}`}>
 									Save Changes
 								</button>
 							</>
@@ -550,13 +550,13 @@ const ReviewCollectionStepPublish = ({
 								<button
 									type='button'
 									onClick={handleDiscard}
-									className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold text-indigo-103 border-2 border-indigo-103 md:ml-auto'>
+										className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.textIndigo103} ${styles.border2} ${styles.borderIndigo103} ${styles.mlAutoMd}`}>
 									Cancel
 								</button>
 
 								<button
 									onClick={() => handleChangeView(STEPS.PRODUCTS)}
-									className='hidden lg:inline-block text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103'>
+									className={`${styles.hiddenLg} ${styles.lgInlineBlock} ${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.textWhite} ${styles.p3} ${styles.border2} ${styles.borderIndigo103}`}>
 									Previous
 								</button>
 								<div>
@@ -570,20 +570,20 @@ const ReviewCollectionStepPublish = ({
 
 								<button
 									onClick={handlePreviewCollectionPage}
-									className='text-xs md:text-sm z-10 rounded-xl py-2.5 px-3.5 h-full font-bold bg-indigo-103 text-white p-3 border-2 border-indigo-103'>
+								className={`${styles.textXs} ${styles.textSmMd} ${styles.z10} ${styles.roundedXl} ${styles.py2_5} ${styles.px3_5} ${styles.hFull} ${styles.fontBold} ${styles.bgIndigo103} ${styles.textWhite} ${styles.p3} ${styles.border2} ${styles.borderIndigo103}`}>
 									{currentCollection.status === PUBLISHED ? "View" : "Preview"}
 								</button>
 								{currentCollection.status === DONE ? (
 									<button
 										onClick={onPublishButtonClick}
-										className='bg-indigo-103 rounded-xl text-white font-bold text-xs md:text-sm p-3 max-w-s-1'
+										className={styles.bgIndigo103RoundedXl}
 										title='click to publish the collection'>
 										Publish
 									</button>
 								) : currentCollection.status === PUBLISHED ?
 									<button
 										onClick={onPublishButtonClick}
-										className='bg-indigo-103 rounded-xl text-white font-bold text-xs md:text-sm p-3 max-w-s-1'
+										className={styles.bgIndigo103RoundedXl}
 										title='click to publish the collection'>
 										UnPublish
 									</button>
@@ -595,17 +595,17 @@ const ReviewCollectionStepPublish = ({
 				</div>
 				{/* Title section END */}
 
-				<div className='my-10 post-as-page-content'>
+					<div className={`${styles.my10} ${styles.postAsPageContent}`}>
 					{publishingOption === PUBLISHING_OPTION_PAGE ? (
-						<div className={`grid grid-cols-1 tablet:grid-cols-2 gap-10 tablet:gap-8 ${authUserCollections.length === 0 ? "" : "items-center"}`}>
-							<div className='flex flex-col gap-10'>
+						<div className={`${styles.gridCols1} ${styles.tabletGridCols2} ${styles.gap10} ${styles.tabletGap8} ${authUserCollections.length === 0 ? "" : styles.itemsCenter}`}>
+							<div className={`${styles.flex} ${styles.flexCol} ${styles.gap10}`}>
 								<div>
 									<label className={styles.titleLabel}>
 										Title*
 									</label>
 									{checkIsFavoriteCollection(currentCollection) ? (
 										<input
-											className={`${styles.inputField} cursor-not-allowed text-gray-101`}
+												className={`${styles.inputField} ${styles.cursorNotAllowed} ${styles.textGray101}`}
 											name='collection_name'
 											type='text'
 											value={favorites_collection_name}
@@ -631,7 +631,7 @@ const ReviewCollectionStepPublish = ({
 
 								<div>
 									<div className={styles.publishHeader}>
-										<label className={`${styles.titleLabel} whitespace-nowrap`}>Cover Image</label>
+										<label className={`${styles.titleLabel} ${styles.whitespaceNowrap}`}>Cover Image</label>
 										{
 											updatedData?.cover_image && (
 												<div className={styles.removeImageButton} onClick={handleRemoveImage}>
@@ -688,7 +688,7 @@ const ReviewCollectionStepPublish = ({
 
 														{/* Properly scaled overlay points */}
 														{cover_image_coordinates && containerDimensions.width > 0 && containerDimensions.height > 0 && (
-															<div className="absolute inset-0">
+															<div className={`${styles.absolute} ${styles.inset0}`}>
 																{renderPublishOverlay(
 																	cover_image_coordinates,
 																	containerDimensions.width,
@@ -715,11 +715,11 @@ const ReviewCollectionStepPublish = ({
 										) : (
 											<div className={styles.uploadDraggerContainerPublish}>
 												{isUploading ? (
-													<Spin className='flex items-center justify-center h-32' />
+													<Spin className={`${styles.flex} ${styles.itemsCenter} ${styles.justifyCenter} ${styles.h32}`} />
 												) : (
 													<>
 														<Dragger
-															className='w-full px-4 rounded-2xl'
+														className={`${styles.wFull} ${styles.px4} ${styles.rounded2xl}`}
 															style={{ aspectRatio: "1 / 1" }}
 															{...uploadProps}
 															name='cover_image'
@@ -732,7 +732,7 @@ const ReviewCollectionStepPublish = ({
 															<p className='ant-upload-text'>
 																Click or drag a file to this area to add a cover image (Optional)
 															</p>
-															<p className='ant-upload-text text-sm'>
+															<p className={`ant-upload-text ${styles.textSm}`}>
 																(Recommended size : 600 x 600)
 															</p>
 														</Dragger>
@@ -760,13 +760,13 @@ const ReviewCollectionStepPublish = ({
 									collection_properties?.collection_theme?.display_value
 										.length ? (
 									<div>
-										<div className='flex mb-0.75 w-full max-w-366'>
+										<div className={`${styles.flex} ${styles.mb0_75} ${styles.wFull} ${styles.maxW366}`}>
 											<label className='text-sm font-normal block'>
 												Organize your collection under a campaign or theme if
 												you like
 											</label>
 											<Tooltip title='Map this collection into one of these campaign or themes set up by your administrator (optional)'>
-												<InfoCircleOutlined className='text-base flex ml-2 mt-0.5' />
+											<InfoCircleOutlined className={`${styles.text_base} ${styles.flex} ${styles.ml2} ${styles.mt0_5}`} />
 											</Tooltip>
 										</div>
 										<Select
@@ -789,41 +789,41 @@ const ReviewCollectionStepPublish = ({
 									</div>
 								) : null}
 							</div>
-							<div className='flex flex-col gap-10 max-w-439'>
+							<div className={`${styles.flex} ${styles.flexCol} ${styles.gap10} ${styles.maxW439}`}>
 								{
 									authUserCollections.length === 0 && (
-										<div className='max-w-439 flex justify-center flex-col items-center'>
-											<div className='relative w-full'>
+										<div className={`${styles.maxW439} ${styles.flex} ${styles.justifyCenter} ${styles.flexCol} ${styles.itemsCenter}`}>
+											<div className={`${styles.relative} ${styles.wFull}`}>
 												<div className={`bubble bubble-bottom-left ${styles.bubbleMessage} w-full-50 md:w-full-100 md:max-w-439 text-left`}>
 													Congratulations!
 													<br /> Your page is ready to publish!
 												</div>
 												<img
 													src={star_ai_icon}
-													className='w-24 md:w-36 cursor-pointer mt-6'
+													className={`${styles.w24Md36} ${styles.cursorPointer} ${styles.mt6}`}
 												/>
 											</div>
 										</div>
 									)
 								}
 								<div>
-									<div className='flex justify-between'>
-										<label className='text-xl font-normal block mb-0.75'>
+									<div className={`${styles.flex} ${styles.justifyBetween}`}>
+									<label className={`${styles.textXl} ${styles.fontNormal} ${styles.block} ${styles.mb0_75}`}>
 											Collection Page URL
 										</label>
 										{currentCollection.status === PUBLISHED ? (
-											<div className='relative h-7 w-7'>
-												<Tooltip className=" h-7 w-7 "
-													title={
-														isPostPageFormTouched
-															? "Please save or discard the changes, to see the sharing options"
-															: "Click to see the sharing options"
-													}>
-													<MdShare
-														className={`${isPostPageFormTouched
-															? "cursor-not-allowed"
-															: "cursor-pointer"
-															} h-7 w-7 `}
+											<div className={`${styles.relative} ${styles.h7} ${styles.w7}`}>
+											<Tooltip className={`${styles.h7} ${styles.w7}`}
+												title={
+													isPostPageFormTouched
+														? "Please save or discard the changes, to see the sharing options"
+														: "Click to see the sharing options"
+												}>
+												<MdShare
+													className={`${isPostPageFormTouched
+														? styles.cursorNotAllowed
+														: styles.cursorPointer
+													} ${styles.h7} ${styles.w7}`}
 														role='button'
 														onClick={() =>
 															!isPostPageFormTouched && setShowShareOptions()
@@ -833,41 +833,41 @@ const ReviewCollectionStepPublish = ({
 											</div>
 										) : null}
 									</div>
-									<div className='p-3 bg-lightgray-110 rounded-xl w-full max-w-439'>
-										<p className='text-xl-3 break-all'>
-											<span className='font-medium'>
+									<div className={` ${styles.bgLightGray110} ${styles.roundedXl} ${styles.wFull} ${styles.maxW439}`}>
+										<p className={`${styles.textXl3} ${styles.breakAll}`}>
+											<span className={styles.fontMedium}>
 												{finalCollectionPagePath1}
 											</span>
-											<span className='font-bold'>
+											<span className={styles.fontBold}>
 												{finalCollectionPagePath2}
 											</span>
 										</p>
 									</div>
-									<p className='text-sm font-normal block mt-0.75'>
+									<p className={`${styles.textSm} ${styles.fontNormal} ${styles.block} ${styles.mt0_5}`}>
 										You can change the URL if you like
 									</p>
 								</div>
 
 								<div>
-									<div className='flex flex-col lg:flex-row items-center'>
-										<div className='w-full'>
-											<div className='flex items-center mb-0.75'>
-												<label
-													className='text-xl font-normal block'
+									<div className={`${styles.flex} ${styles.flexCol} ${styles.flexRowLg} ${styles.itemsCenter}`}>
+										<div className={styles.wFull}>
+										<div className={`${styles.flex} ${styles.itemsCenter} ${styles.mb0_75}`}>
+											<label
+												className={`${styles.textXl} ${styles.fontNormal} ${styles.block}`}
 													htmlFor='path-input'>
 													Page Slug*
 												</label>
 												<Tooltip title='You can edit this part of the URL as you wish. Having a good slug URL can help SEO.'>
-													<InfoCircleOutlined className='text-base flex mt-2 mb-1 ml-2' />
+													<InfoCircleOutlined className={`${styles.text_base} ${styles.flex} ${styles.mt2} ${styles.mb1} ${styles.ml2}`} />
 												</Tooltip>
 											</div>
-											<p className='text-xs max-w-439 mb-2'>
+										<p className={`${styles.textXs} ${styles.maxW439} ${styles.mb2}`}>
 												Spaces and special characters are not allowed except for
 												hyphens(-) and underscores(_)
 											</p>
 											<input
 												ref={inpurRef}
-												className='text-left placeholder-gray-101 outline-none px-3 h-10 bg-white rounded-xl w-full max-w-439'
+												className={`${styles.textLeft} ${styles.placeholderGray101} ${styles.outlineNone} ${styles.px3} ${styles.h10} ${styles.bgWhite} ${styles.roundedXl} ${styles.wFull} ${styles.maxW439}`}
 												placeholder='Enter your page URL slug'
 												id='path-input'
 												name='path'
@@ -879,7 +879,7 @@ const ReviewCollectionStepPublish = ({
 										</div>
 									</div>
 									{postPageFormErrors.path && (
-										<p className='text-red-400 text-xs mt-2'>
+											<p className={`${styles.textRed400} ${styles.textXs} ${styles.mt2}`}>
 											{postPageFormErrors.path}
 										</p>
 									)}
@@ -891,7 +891,7 @@ const ReviewCollectionStepPublish = ({
 						<>
 							<div>
 								{currentCollection.product_lists?.length ? (
-									<p className='text-lg text-white block'>
+									<p className={`${styles.textLg} ${styles.textWhite} ${styles.block}`}>
 										{/* Click on the button below to export the products in CSV file. */}
 									</p>
 								) : (
@@ -902,10 +902,10 @@ const ReviewCollectionStepPublish = ({
 									</p>
 								)}
 							</div>
-							<div className='mt-5'>
+							<div className={styles.mt5}>
 								{currentCollection.product_lists?.length && currentCollection._id ? (
 									<a
-										className='bg-indigo-103 rounded text-white py-2 font-normal text-base px-5'
+									className={`${styles.bgIndigo103} ${styles.rounded} ${styles.textWhite} ${styles.py2} ${styles.fontNormal} ${styles.text_base} ${styles.px5}`}
 										role='button'
 										href={`${auraYfretUserCollBaseUrl}${collectionProductsExportCsvURL}?collection_id=${currentCollection._id}`}
 										download
@@ -914,7 +914,7 @@ const ReviewCollectionStepPublish = ({
 									</a>
 								) : (
 									<p
-										className='text-lg block underline'
+										className={`${styles.textLg} ${styles.block} ${styles.underline}`}
 										onClick={() => handleChangeView(STEPS.PRODUCTS)}
 										role='button'
 										title='Click here, to go to products section'>

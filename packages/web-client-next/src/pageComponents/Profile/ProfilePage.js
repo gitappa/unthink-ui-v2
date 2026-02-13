@@ -476,14 +476,14 @@ const ProfilePage = () => {
 	};
 
 	return (
-		<div className='h-full min-h-screen static_page_bg'>
+		<div className={`${styles.profilePageWrapper} static_page_bg`}>
 			<div className='profile-header-container'>
 				<AuthHeader hideProfile showBackToStore />
 			</div>
-			<div className='profile-container px-8 lg:px-0'>
+			<div className={`profile-container ${styles.profileContainerPadding}`}>
 				{!isSuccess ? (
 					<>
-						<div className='w-full mt-4 md:mt-0'>
+						<div className={styles.stepsWrapper}>
 							{!isMobile ? (
 								<>
 							<Steps
@@ -492,7 +492,7 @@ const ProfilePage = () => {
   size='small'
   current={currentStep}
   onChange={onStepChange}
-  className="site-navigation-steps [&_.ant-steps-item-title]:!text-white [&_.ant-steps-item-wait_.ant-steps-item-title]:!text-white/70"
+  className={styles.siteNavigationSteps}
 >
   {steps.map((step, i) => (
     <Step key={i} title={step} />
@@ -500,40 +500,40 @@ const ProfilePage = () => {
 </Steps>
 								</>
 							) : (
-								<div className='border-white border-b flex justify-center pb-2'>
-									<div className='text-white bg-blue-500 w-6 h-6 rounded-full text-center'>
+								<div className={styles.mobileStepIndicator}>
+									<div className={styles.mobileStepNumber}>
 										<span>{currentStep + 1}</span>
 									</div>
-									<div className='text-white pl-4'>
+									<div className={styles.mobileStepTitle}>
 										<span>{steps[currentStep]}</span>
 									</div>
 								</div>
 							)}
 						</div>
-						<div className='lg:w-90% mx-auto py-14'>{getStepContent()}</div>
+						<div className={styles.stepContentWrapper}>{getStepContent()}</div>
 					</>
 				) : (
 					<div>
 						{isAdminLoggedIn ? (
 							<Result
-								className='lg:w-2/4 mx-auto'
+								className={styles.resultContainer}
 								status='success'
-								title={<span className='text-white'>Success!</span>}
+								title={<span className={styles.resultTitle}>Success!</span>}
 								subTitle={
-									<span className='text-white'>
+									<span className={styles.resultSubtitle}>
 										Your Profile/Brand details has been updated successfully!
 									</span>
 								}
 								extra={[
 									isMyProductsEnable ? (
 										<button
-											className='bg-primary rounded text-white py-1 px-6 font-normal text-lg'
+											className={styles.resultButton}
 											onClick={() => navigate(ROUTES.MY_PRODUCTS)}>
 											Add products
 										</button>
 									) : (
 										<button
-											className='bg-primary rounded text-white py-1 px-6 font-normal text-lg'
+											className={styles.resultButton}
 											onClick={() =>
 												user?.enablePlist && is_store_instance
 													? navigate("/")
@@ -546,17 +546,17 @@ const ProfilePage = () => {
 							/>
 						) : (
 							<Result
-								className='lg:w-2/4 mx-auto'
+								className={styles.resultContainer}
 								status='success'
-								title={<span className='text-white'>Success!</span>}
+								title={<span className={styles.resultTitle}>Success!</span>}
 								subTitle={
-									<span className='text-white'>
+									<span className={styles.resultSubtitle}>
 										Your profile has been updated successfully!
 									</span>
 								}
 								extra={[
 									<button
-										className='bg-primary rounded text-white py-1 px-6 font-normal text-lg'
+										className={styles.resultButton}
 										onClick={() =>
 											user?.enablePlist && is_store_instance
 												? navigate("/")

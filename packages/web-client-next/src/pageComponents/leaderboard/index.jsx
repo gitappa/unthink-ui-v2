@@ -24,6 +24,7 @@ import {
 import { COOKIE_DEBUG_VIEW_ADMIN_VIEW } from "../../constants/codes";
 import { useSelector } from "react-redux";
 import ShareOptions from "../shared/shareOptions";
+import styles from "./Leaderboard.module.scss";
 
 // const newUIEnable = true;
 
@@ -126,14 +127,14 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 						<>
 							<button
 								onClick={() => handleOpenUserProfile(user_name, user_id)}
-								className='px-0 hover:underline'>
+								className={styles['userNameButton']}>
 								<b>{user_name}</b>
 							</button>{" "}
 							{first_name?.trim() || last_name?.trim()
 								? `(${first_name || ""} ${last_name || ""})`
 								: ""}
 							{role === "super_admin" ? (
-								<div className='inline-block px-1.25 py-0.5 ml-1 bg-green-500 text-white rounded-lg text-xs leading-none'>
+								<div className={styles['adminBadge']}>
 									Admin
 								</div>
 							) : null}
@@ -247,21 +248,21 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 				headerText='Leaderboard'
 				onClose={handleClose}
 				size='md'>
-				<div className='flex min-h-400'>
+				<div className={styles['container']}>
 					{isLoading ? (
-						<div className='m-auto'>
+						<div className={styles['spinnerWrapper']}>
 							<Spin size='large' />
 						</div>
 					) : (
-						<div className='w-full'>
+						<div className={styles['contentWrapper']}>
 							{usersData.count ? (
 								<>
 									{isAdminLoggedIn || isStoreAdminLoggedIn ? (
 										<>
 											{downloadInCsvHRef && (
-												<div className='flex justify-end mb-4'>
+												<div className={styles['downloadButtonWrapper']}>
 													<a
-														className='bg-indigo-600 rounded-full text-white py-2 font-normal text-base px-5'
+														className={styles['downloadButton']}
 														role='button'
 														href={downloadInCsvHRef}
 														download>
@@ -270,16 +271,16 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 												</div>
 											)}
 
-											<div className='grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-5 gap-4'>
+											<div className={styles['statsGrid']}>
 												{usersData.count
 													.filter((user) => user.is_display && user.display_type !== "timestamp")
 													.map((user) => {
 														return (
-															<div key={user?.label} className='py-5 rounded-2xl bg-indigo-200 text-center'>
-																<p className='text-4xl font-bold'>
+															<div key={user?.label} className={styles['statCard']}>
+																<p className={styles['statValue']}>
 																	{user?.value}
 																</p>
-																<p className='font-bold'>{user?.label}</p>
+																<p className={styles['statLabel']}>{user?.label}</p>
 															</div>
 														);
 													})}
@@ -317,17 +318,17 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 												.filter((user) => user.is_display && user.display_type === "timestamp")
 												.map((user) => {
 													return (
-														<div className='text-right flex gap-2 justify-end items-center mt-3'>
-															<p className='text-base'>
+														<div className={styles['timestampWrapper']}>
+															<p className={styles['timestampLabel']}>
 																{user?.label}
 															</p>
-															<p className='font-bold'>{user?.value}</p>
+															<p className={styles['timestampValue']}>{user?.value}</p>
 														</div>
 													);
 												})}
-											<div className='overflow-auto'>
+											<div className={styles['tableWrapper']}>
 												<Table
-													className='mt-4 text-base min-w-296'
+													className={styles['table']}
 													columns={columns}
 													dataSource={usersData.data}
 													// onChange={onChange}
@@ -338,33 +339,32 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 										</>
 									) : (
 										isStagingEnv && (
-											<div className='mt-4 grid grid-cols-1 tablet:grid-cols-2 gap-8 text-base'>
-												<div className='bg-white shadow rounded'>
-													<div className='bg-indigo-600 p-2 text-white rounded-t font-bold text-center'>
+											<div className={styles['userViewGrid']}>
+												<div className={styles['card']}>
+													<div className={styles['cardHeader']}>
 														Current Rankings
 													</div>
-													<div className='p-4 text-center'>
+													<div className={styles['cardContent']}>
 														Congratulate the most active members of our
 														community 🎉
 													</div>
 													<div className=''>
-														<table className='border-t border-gray-104 w-full'>
+														<table className={styles['rankingsTable']}>
 															{usersData.data.map((user, index) => (
-																<tr className='border-b border-gray-104'>
-																	<td className='p-2 text-center'>
-																		<div className='relative flex items-center justify-center'>
+																<tr>
+																	<td>
+																		<div className={styles['trophyWrapper']}>
 																			{index === 0 ? (
-																				<TrophyFilled className='text-yellow-600 text-4xl' />
+																				<TrophyFilled className={styles['trophyGold']} />
 																			) : null}
 																			{index === 1 ? (
-																				<TrophyFilled className='text-gray-600 text-4xl' />
+																				<TrophyFilled className={styles['trophySilver']} />
 																			) : null}
 																			{index === 2 ? (
-																				<TrophyFilled className='text-yellow-700 text-4xl' />
+																				<TrophyFilled className={styles['trophyBronze']} />
 																			) : null}
 																			<span
-																				className={`absolute ${index < 3 ? "text-white" : ""
-																					}`}>
+																				className={`${styles['rankNumber']} ${index < 3 ? styles['rankNumberWhite'] : ''}`}>
 																				{index + 1}
 																			</span>
 																		</div>
@@ -372,7 +372,7 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 																	<td>{user.total_collections}000 pts</td>
 																	<td>
 																		<img
-																			className='rounded-full h-12 w-12 my-2 object-cover'
+																			className={styles['userAvatar']}
 																			src={user.profile_image || defaultAvatar}
 																		/>
 																	</td>
@@ -383,29 +383,29 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 														</table>
 													</div>
 												</div>
-												<div className='bg-white shadow rounded order-first tablet:order-last'>
-													<div className='bg-indigo-600 p-2 text-white rounded-t font-bold text-center'>
+												<div className={`${styles['card']} ${styles['myPointsCard']}`}>
+													<div className={styles['cardHeader']}>
 														My Points
 													</div>
 
 													{authUser.user_id ? (
-														<div className='px-2 py-4 grid grid-cols-2'>
+														<div className={styles['myPointsContent']}>
 															<div>
-																<div className='flex'>
+																<div className={styles['userProfileSection']}>
 																	<img
-																		className='rounded-full h-14 w-14 object-cover'
+																		className={styles['userAvatarLarge']}
 																		src={
 																			authUser.profile_image || defaultAvatar
 																		}
 																	/>
-																	<div className='ml-2'>
+																	<div className={styles['userInfo']}>
 																		<p>
 																			{authUser.first_name} {authUser.last_name}
 																		</p>
 																		<p>202000 points</p>
 																	</div>
 																</div>
-																<div className='relative mt-2'>
+																<div className={styles['shareButtonWrapper']}>
 																	{showShareProfile && (
 																		<ShareOptions
 																			url={sharePageUrl}
@@ -414,7 +414,7 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 																	)}
 																	{sharePageUrl && (
 																		<button
-																			className='py-1 px-4 text-white bg-indigo-600 rounded'
+																			className={styles['shareButton']}
 																			onClick={() =>
 																				setShowShareProfile(!showShareProfile)
 																			}>
@@ -429,32 +429,32 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 															</div>
 														</div>
 													) : null}
-													<hr className='border-gray-104' />
-													<p className='my-3 text-center'>
+													<hr className={styles['divider']} />
+													<p className={styles['challengeTitle']}>
 														<b>Live a little, increase your ranking</b>
 													</p>
-													<hr className='border-gray-104' />
-													<table className='w-full'>
-														<tr className='border-b border-gray-104'>
-															<th className='p-2'>Challenges</th>
+													<hr className={styles['divider']} />
+													<table className={styles['challengesTable']}>
+														<tr>
+															<th>Challenges</th>
 															<th>Points Earned</th>
 															<th>Max Points</th>
 														</tr>
 
-														<tr className='border-b border-gray-104'>
-															<td className='p-2'>Create/Update profile</td>
-															<td className='text-center'>200</td>
-															<td className='text-center'>20000</td>
+														<tr>
+															<td>Create/Update profile</td>
+															<td>200</td>
+															<td>20000</td>
 														</tr>
-														<tr className='border-b border-gray-104'>
-															<td className='p-2'>Create collections</td>
-															<td className='text-center'>200</td>
-															<td className='text-center'>20000</td>
+														<tr>
+															<td>Create collections</td>
+															<td>200</td>
+															<td>20000</td>
 														</tr>
-														<tr className='border-b border-gray-104'>
-															<td className='p-2'>Publish collections</td>
-															<td className='text-center'>200</td>
-															<td className='text-center'>20000</td>
+														<tr>
+															<td>Publish collections</td>
+															<td>200</td>
+															<td>20000</td>
 														</tr>
 													</table>
 												</div>
@@ -464,7 +464,7 @@ const Leaderboard = ({ isOpen, handleClose }) => {
 								</>
 							) : (
 								!isLoading && (
-									<div className='w-full text-center'>
+									<div className={styles['noDataMessage']}>
 										Unable to fetch details. Please try again later.
 									</div>
 								)
