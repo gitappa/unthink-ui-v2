@@ -278,16 +278,30 @@ display: block;
 .sort-container {
   display: flex;
   align-items: center;
-  width: 14rem;
-  height: 2.125rem;
-  padding-left: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  width: 100%;
+  height: 34px;
+  padding-left: 1rem;
+  padding-right: 4rem;
+  background: white;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+ 
+
+ 
+
+@media (min-width: 768px) {
+  .sort-container {
+    width: 15rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .sort-container {
-    width: 16rem;
+    width: 17rem;
     margin-left: auto;
   }
 }
@@ -295,10 +309,63 @@ display: block;
 .sort-label {
   white-space: nowrap;
   font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-right: 0.5rem;
 }
 
 .sort-select {
   width: 100%;
+}
+
+/* Target Ant Design Select component within sort-container */
+.sort-container :global(.ant-select) {
+  width: 100%;
+}
+
+.sort-container :global(.ant-select-selector) {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+}
+
+.sort-container :global(.ant-select-arrow) {
+  align-items: center !important;
+  background: #d4ccfc80 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  padding: 14px 11px !important;
+  position: relative !important;
+  right: 5px !important;
+  text-align: center !important;
+  top: auto !important;
+  margin-top: -2px !important;
+  margin-left: 10px;
+  /* transform: translateY(-50%) !important; */
+  color: black !important;
+  height: auto !important;
+  width: auto !important;
+  inset-inline-end: 5px !important;
+}
+
+.sort-container :global(.ant-select-arrow .anticon) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sort-container :global(.ant-select-focused .ant-select-selector) {
+  box-shadow: none !important;
+}
+
+.sort-container :global(.ant-select-selection-item) {
+  font-weight: 600;
+  color: #111827;
 }
 
 .products-container {
