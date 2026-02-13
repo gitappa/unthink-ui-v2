@@ -9,6 +9,7 @@ import useTheme from "../../hooks/chat/useTheme";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import { PATH_ROOT, STORE_USER_NAME_SWIFTLYSTYLED } from "../../constants/codes";
 import { current_store_name, is_store_instance } from "../../constants/config";
+import styles from "./swiftlyMobileHeader.module.scss";
 
 const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 	const dispatch = useDispatch();
@@ -25,50 +26,50 @@ const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 	return (
 		<>
 			<div
-				className='w-full px-2 py-1 text-center text-[11px] leading-4 tracking-[0.5px]'
+				className={styles.announcementBar}
 				style={{
 					background: themeCodes.header.announcement_bar_bg,
 					color: themeCodes.header.announcement_bar_text,
 				}}>
-				<span className='block whitespace-normal break-words'>
-					EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
+				<span className={styles.announcementText}>
+					EVERY OUTFIT HAS A LOVE STORY – LET'S CREATE YOURS TOGETHER!
 				</span>
 			</div>
 			<div
-				className='flex items-center px-3 text-white'
+				className={styles.headerContainer}
 				style={{ height: "56px", background: themeCodes.header.header_bg }}>
 				<button
 					type='button'
-					className='w-10 flex items-center justify-start'
+					className={styles.searchButton}
 					onClick={() => dispatch(setShowChatModal(true))}
 					aria-label='Search'>
 					<img
 						src={searchIcon}
 						alt='searchIcon'
-						className='h-6 w-6'
+						className={styles.searchIcon}
 						style={{ filter: "invert(1)" }}
 					/>
 				</button>
 
-				<div className='flex-1 min-w-0 text-center'>
+				<div className={styles.logoContainer}>
 					<span
-						className='cursor-pointer text-white font-medium truncate block'
+						className={styles.logoText}
 						onClick={() => navigate(PATH_ROOT)}>
 						{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
 					</span>
 				</div>
 
-				<div className='w-10 flex items-center justify-end'>
+				<div className={styles.profileIconWrapper}>
 					{showProfileIcon ? (
 						<button
 							type='button'
-							className='w-10 flex items-center justify-end'
+							className={styles.profileButton}
 							onClick={() => setShowMenu(true)}
 							aria-label='Open profile menu'>
 							<img
 								src={userIcon}
 								alt='userIcon'
-								className='h-6 w-6'
+								className={styles.userIcon}
 								style={{ filter: "invert(1)" }}
 							/>
 						</button>

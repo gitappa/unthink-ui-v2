@@ -87,3 +87,84 @@
 .collections:hover a {
     color: #ffffffc0;
 }
+
+
+/* SwiftlyMobileHeader Component Styles */
+
+/* Announcement Bar */
+.announcementBar {
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+.announcementText {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Header Container */
+.headerContainer {
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #ffffff;
+}
+
+/* Search Button */
+.searchButton {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.searchIcon {
+    height: 24px;
+    width: 24px;
+}
+
+/* Logo Container */
+.logoContainer {
+    flex: 1 1 0%;
+    min-width: 0;
+    text-align: center;
+}
+
+.logoText {
+    cursor: pointer;
+    color: #ffffff;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+/* Profile Icon Wrapper */
+.profileIconWrapper {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.profileButton {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.userIcon {
+    height: 24px;
+    width: 24px;
+}
