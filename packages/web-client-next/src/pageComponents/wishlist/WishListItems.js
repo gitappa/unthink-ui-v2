@@ -6,6 +6,7 @@ import {
 	UserOutlined,
 } from "@ant-design/icons";
 import { SortableHandle } from "react-sortable-hoc";
+import styles from "./WishListItems.module.css";
 
 import SortableContainer from "../../components/SortableContainer";
 import { favorites_collection_name, PUBLISHED } from "../../constants/codes";
@@ -40,7 +41,7 @@ const WishListItems = ({
 	};
 
 	const DragHandle = SortableHandle(() => (
-		<div className='mr-1'>
+		<div className={styles.dragHandleContainer}>
 			{/* <div
 				className='w-4 h-2'
 				style={{
@@ -62,8 +63,8 @@ const WishListItems = ({
 		return (
 			<div
 				key={wishlist._id}
-				className={`flex justify-between items-center py-2 px-3 mt-3 cursor-pointer ${wishlist.status !== PUBLISHED ? "bg-lightgray-107" : contentClassName
-					}`}
+				className={`${styles.wishlistItemContainer} ${wishlist.status !== PUBLISHED ? styles.unpublishedBg : styles.publishedContentBg}`}
+				style={contentClassName ? { backgroundColor: contentClassName.replace('bg-', '') } : {}}
 				onClick={(e) => {
 				if(enableSelectProduct && wishlist.collection_name != "Editor’s Picks"){
 					// e.preventDefault()
@@ -85,14 +86,13 @@ const WishListItems = ({
 								checked={isSelected}
 								onClick={handleSelectProduct}
 								onChange={() => { }} // fix onchange handler warning
-								className='lg:h-4 w-4 mr-2 cursor-pointer'
+								className={styles.checkboxInput}
 							/>
 						)}
 
 						{showStar && !enableSelectProduct && (
 							<StarFilled
-								className={`text-xl pr-3 flex ${wishlist.starred ? "text-yellow-102" : "text-gray-106"
-									}`}
+								className={`${styles.starIconContainer} ${wishlist.starred ? styles.starFilled : styles.starEmpty}`}
 								onClick={(e) => {
 									e.stopPropagation();
 									onStarClick(wishlist);
@@ -102,14 +102,14 @@ const WishListItems = ({
 					</>
 				)}
 
-				<h3 className='text-xl font-medium break-word-only m-0 w-full text-left capital-first-letter'>
-					{getCollectionNameToShow(wishlist)}
-					{authUserId && wishlist.user_id && wishlist.user_id !== authUserId ? (
-						<UserOutlined className='ml-1 text-indigo-600 inline-flex' />
+			<h3 className={styles.wishlistTitle}>
+				{getCollectionNameToShow(wishlist)}
+				{authUserId && wishlist.user_id && wishlist.user_id !== authUserId ? (
+					<UserOutlined className={styles.userIconBadge} />
 					) : null}
 				</h3>
-				<div className='flex items-center min-w-min relative'>
-					<ArrowRightOutlined className='text-xl flex' />
+			<div className={styles.arrowContainer}>
+				<ArrowRightOutlined className={styles.arrowIcon} />
 				</div>
 			</div>
 		);
@@ -117,9 +117,9 @@ const WishListItems = ({
 
 	return isWishlistFetching && !list.length ? (
 		<>
-			<Skeleton.Input active className='w-full h-9 my-2' />
-			<Skeleton.Input active className='w-full h-9 my-2' />
-			<Skeleton.Input active className='w-full h-9 my-2' />
+			<Skeleton.Input active className={styles.skeletonLoader} />
+			<Skeleton.Input active className={styles.skeletonLoader} />
+			<Skeleton.Input active className={styles.skeletonLoader} />
 		</>
 	) : (
 		<div>

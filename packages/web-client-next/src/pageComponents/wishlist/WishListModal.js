@@ -541,7 +541,7 @@ const WishListModal = ({
 										:
 										(
 											<Tooltip title='Click and select multiple products to delete'>
-											<p className={styles.selectableButton}>
+											<p className={styles.selectableButton} onClick={() => setEnableSelectProduct(true)} >
 												Select multiple products
 											</p>
 										</Tooltip>
