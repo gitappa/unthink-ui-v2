@@ -278,10 +278,10 @@ display: block;
 .sort-container {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 224px;
   height: 34px;
-  padding-left: 1rem;
-  padding-right: 4rem;
+  padding-left: 12px;
+  /* padding-right: 10px; */
   background: white;
   border: 1.5px solid #d1d5db;
   border-radius: 0.75rem;
@@ -339,8 +339,8 @@ display: block;
   border-radius: 12px !important;
   display: flex !important;
   justify-content: center !important;
-  padding: 14px 11px !important;
-  position: relative !important;
+  padding: 8px 10px !important;
+  position: absolute !important;
   right: 5px !important;
   text-align: center !important;
   top: auto !important;
@@ -366,6 +366,11 @@ display: block;
 .sort-container :global(.ant-select-selection-item) {
   font-weight: 600;
   color: #111827;
+  @media (max-width:768px) {
+ 
+      font-size: 12px !important;
+    padding-right: 40px !important;
+  }
 }
 
 .products-container {
