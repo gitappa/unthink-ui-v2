@@ -39,6 +39,10 @@
  .profile-image {
     width: 260px !important;
     height: 260px !important;
+    @media (max-width:768px) {
+        width: 120px !important;
+    height: 120px !important;
+    }
   }
 @media (min-width: 1024px) {
   .profile-container {

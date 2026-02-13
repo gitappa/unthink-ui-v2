@@ -293,4 +293,6 @@ p {
   box-shadow: none !important;
 }
 
- 
+ :where(.css-mncuj7).ant-image-preview-root .ant-image-preview-mask {
+  
+ }
