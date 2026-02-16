@@ -1346,21 +1346,19 @@ const StorePageWrapper = (props) => {
 			) : null} */}
 
 			{/* show backdrop loader */}
-			{
-				showBackdropLoader && (
-					<div className={styles.backdropLoader}>
-						<Spin
-							// indicator={<LoadingOutlined className={styles.backdropLoaderIconSmall} spin />}
-							indicator={
-								<Loading3QuartersOutlined
-									className={styles.backdropLoaderIcon}
-									spin
-								/>
-							}
-						/>
-					</div>
-				)
-			}
+				{showBackdropLoader && (
+				<div className='fixed top-0 left-0 flex justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-102 z-20'>
+					<Spin
+						// indicator={<LoadingOutlined className='text-3xl-1' spin />}
+						indicator={
+							<Loading3QuartersOutlined
+								className='flex text-6xl-1 text-indigo-100'
+								spin
+							/>
+						}
+					/>
+				</div>
+			)}
 
 		</div >
 	);
