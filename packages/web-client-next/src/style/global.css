@@ -301,4 +301,17 @@ p {
 .CustomProducts_sort-container__ngfRu .ant-select-focused .ant-select-selector {
   box-shadow: none !important;
 }
-
+.ant-image-preview-content{
+  display: none;
+}
+.ant-image-preview-operations-wrapper{
+  display: none;
+}
+:where(.css-dev-only-do-not-override-49qm).ant-image-preview-root .ant-image-preview-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    height: 100%;
+    background-color: transparent !important;
+    pointer-events: none;
+}
