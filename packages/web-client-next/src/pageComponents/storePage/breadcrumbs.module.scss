@@ -16,13 +16,13 @@
     /* lg:max-w-3xl-2 */
     /* 2xl:max-w-6xl-2 */
     @media (min-width: 1024px) {
-        max-width: 50rem; /* approx 3xl-2 */
+        max-width: 992px; /* approx 3xl-2 */
         padding-left: 0;
         padding-right: 0;
     }
 
     @media (min-width: 1536px) {
-        max-width: 74rem; /* approx 6xl-2 */
+        max-width:1328px; /* approx 6xl-2 */
     }
 }
 
@@ -33,13 +33,13 @@
  }
 }
 
-.breadcrumbsInnerInspirationDisable {
-    max-width: 22rem; /* max-w-s-3 */
+// .breadcrumbsInnerInspirationDisable {
+//     max-width: 22rem; /* max-w-s-3 */
 
-    @media (min-width: 640px) {
-        max-width: 33rem; /* sm:max-w-lg-1 */
-    }
-}
+//     @media (min-width: 640px) {
+//         max-width: 33rem; /* sm:max-w-lg-1 */
+//     }
+// }
 
 .breadcrumbsFlex {
     display: flex;

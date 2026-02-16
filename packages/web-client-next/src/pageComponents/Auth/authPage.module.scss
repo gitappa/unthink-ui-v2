@@ -289,7 +289,8 @@
 }
 
 .signInButton:hover {
-    background-color: none !important;
+    background-color: #4f46e5 !important;
+    color: white !important;
 }
 
 @media (min-width: 768px) {
@@ -312,6 +313,10 @@
     height: 100%;
     font-weight: 700;
     color: #ffffff;
+}
+.signInLinkButton:hover{
+    background-color: #4f46e5 !important;
+    color: white !important;
 }
 
 @media (min-width: 768px) {
