@@ -136,8 +136,6 @@ const ChatModal = ({
 		state.chatV2.socketId,
 	]);
 
-console.log('isFreshSearch',isFreshSearch);
-
 	const {
 		suggestions: { tags = [], title = "" },
 	} = suggestionsWithProducts;
