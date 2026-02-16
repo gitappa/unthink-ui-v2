@@ -4527,7 +4527,7 @@
     @media (min-width: 768px) {
         min-width: 10rem;
         font-size: 0.875rem;
-        padding-top: 0.625rem;
+        // padding-top: 0.625rem;
     }
     
     &:hover {
@@ -4555,7 +4555,7 @@
     @media (min-width: 768px) {
         min-width: 10rem;
         font-size: 0.875rem;
-        padding-top: 0.75rem;
+        // padding-top: 0.75rem;
     }
     
     &.enabled {
@@ -4634,6 +4634,7 @@
 
 .loadingTextBold {
     font-weight: 700;
+    color: white;
 }
 
 .loadingTextCenter {

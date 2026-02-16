@@ -1090,7 +1090,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					? styles.defaultActive
 																					: styles.defaultInactive
 																		}`}>
-																	<span className="video-title">{i.title}</span>
+																	<span className="video-title" style={{marginRight:4}}>{i.title}</span>
 																	<Image
 																		className={`${styles.createCollection_image} ${createCollectionOptionsKeys.video_url ===
 																				i.id &&
@@ -1568,11 +1568,12 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 			</div>
 
 			{(isVideoDataExtractionStarted || createWishlistInProgress) && (
-				<div className={styles.loadingOverlay}>
+				<div className='fixed top-0 left-0 flex flex-col justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-112 z-20'>
 					<Spin
+						// indicator={<LoadingOutlined className='text-3xl-1' spin />}
 						indicator={
 							<Loading3QuartersOutlined
-								className={styles.loadingSpinnerLarge}
+								className='flex text-6xl-1 text-indigo-100'
 								spin
 							/>
 						}
