@@ -909,7 +909,7 @@ additional_prompt:descriptionget || '',
                           <p className={styles['text-gray']}>Remove</p>
                         </div>
                       </div>
-                    )}
+                    )}₹
                   {enableCopyFeature && (
                     <div className={styles['product-menu-item']} onClick={handleCopyClick} >
 
@@ -920,12 +920,10 @@ additional_prompt:descriptionget || '',
                           }`}
                       >
                         <LuCopy />
-
                       </div>
                       <p className={styles['text-gray']}>Copy</p>
                     </div>
                   )}
-
                   {isAdminLoggedIn && isCustomProductsPage && (
                     <div className={styles['product-menu-item']} onClick={(e) => {
                       handleProductClick();
@@ -943,12 +941,7 @@ additional_prompt:descriptionget || '',
                       </p>
                       <p className={styles['text-gray']}>Edit</p>
                     </div>
-
                   )}
-
-
-
-
                 </div>}
             </>
           )}

@@ -1451,7 +1451,10 @@
   border: 2px solid #4F46E5;
   color: #4F46E5;
 }
-
+.seeFullBtn:hover{
+  background-color: transparent !important;
+  color: #4F46E5 !important;
+}
 /* FAQ section */
 .faqSection {
   margin-top: 20px;

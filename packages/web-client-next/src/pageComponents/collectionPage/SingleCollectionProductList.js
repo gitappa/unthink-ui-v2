@@ -1313,13 +1313,13 @@ const SingleCollectionProductList = ({
                             : blogCollectionPage.collection_name}
                         </h1>
                         {/* for mobile screen : QR code */}
-                        {qrCodeGeneratorURL &&
+                        {/* {qrCodeGeneratorURL &&
                           blogCollectionPage.status === PUBLISHED ? (
-                          <img
+                          <img 
                             className={styles.qrCodeMobile}
                             src={qrCodeGeneratorURL}
                           />
-                        ) : null}
+                        ) : null} */}
                         {/* <Button
 									type='primary'
 									className='rounded-lg dark:bg-black-200 dark:border-black-200 hidden md:block'
