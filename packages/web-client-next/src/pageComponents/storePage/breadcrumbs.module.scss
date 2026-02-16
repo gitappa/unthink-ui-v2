@@ -28,7 +28,9 @@
 
 .breadcrumbsInnerDefault {
     max-width: 992px; /* max-w-6xl-1 */
- 
+ @media (min-width:1536px) {
+    max-width: 1328px ;
+ }
 }
 
 .breadcrumbsInnerInspirationDisable {

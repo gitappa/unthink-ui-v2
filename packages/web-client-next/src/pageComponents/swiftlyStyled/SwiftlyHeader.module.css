@@ -35,7 +35,7 @@
     .headerContent {
         padding: 8px 32px;
         /* lg:px-8 lg:py-2 -> py-2 is 8px */
-        height: 80px;
+        height: 72px;
         /* lg:h-20 -> 80px */
     }
 }
