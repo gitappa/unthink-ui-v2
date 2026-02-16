@@ -707,7 +707,7 @@ const ReviewCollectionStepPublish = ({
 													(
 														<button
 															onClick={handleDataAiImageRequest}
-															className={styles.updateCoverButton}>
+															className={styles.updateCoverButton } style={{marginLeft:4}}>
 															Generate AI Image
 														</button>
 													)}
