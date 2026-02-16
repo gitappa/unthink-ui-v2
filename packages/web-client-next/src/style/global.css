@@ -153,14 +153,23 @@ p {
   font-weight: bold !important;
   padding-right: 50px !important;
 }
-@media (max-width:768px) {
+
+@media (max-width:1024px) {
+.collection_page_sort_product_list .ant-select-selection-item {
+  padding-right: 50px !important;
+  color: #0E131B !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding-right: 30px !important;
+}
+@media (max-width:768px) {  
 .collection_page_sort_product_list .ant-select-selection-item {
   padding-right: 50px !important;
   color: #0E131B !important;
   font-weight: 600 !important;
   font-size: 12px !important;
   padding-right: 30px !important;
-
+}
 }
 .collection_page_sort_product_list .ant-select-arrow {
   align-items: center !important;
@@ -292,7 +301,17 @@ p {
 .CustomProducts_sort-container__ngfRu .ant-select-focused .ant-select-selector {
   box-shadow: none !important;
 }
-
- :where(.css-mncuj7).ant-image-preview-root .ant-image-preview-mask {
-  
- }
+.ant-image-preview-content{
+  display: none;
+}
+.ant-image-preview-operations-wrapper{
+  display: none;
+}
+:where(.css-dev-only-do-not-override-49qm).ant-image-preview-root .ant-image-preview-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    height: 100%;
+    background-color: transparent !important;
+    pointer-events: none;
+}

@@ -1090,7 +1090,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 																					? styles.defaultActive
 																					: styles.defaultInactive
 																		}`}>
-																	<span>{i.title}</span>
+																	<span className="video-title">{i.title}</span>
 																	<Image
 																		className={`${styles.createCollection_image} ${createCollectionOptionsKeys.video_url ===
 																				i.id &&

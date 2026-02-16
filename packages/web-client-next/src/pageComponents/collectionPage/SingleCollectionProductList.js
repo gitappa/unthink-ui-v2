@@ -1025,7 +1025,7 @@ const SingleCollectionProductList = ({
                                 onSwiper={(swiper) =>
                                   (swiperRef.current = swiper)
                                 }
-                                className="colloectionDetailScroll"
+                                className={`${styles.tagsScrollWrapper} colloectionDetailScroll ${styles.colloectionDetailScroll}`}
                               >
                                 {tagsToShow.map((tag) => {
                                   const isDisabled = productCountMap[tag] === 0; // Check if the product length is 0

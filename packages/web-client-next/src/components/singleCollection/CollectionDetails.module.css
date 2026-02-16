@@ -71,14 +71,14 @@
 .coverImage {
   object-fit: contain;
   border-radius: 12px;
-  max-width: 385px;
+  max-width: auto ;
   width: 100%;
   aspect-ratio: 1 / 1;
 }
 
 @media (min-width: 640px) {
   .coverImage {
-    width: 200px;
+    width: 260px;
   }
 }
 
@@ -86,6 +86,12 @@
   .coverImage {
     width: 355px;
     height: 355px;
+  }
+}
+@media (min-width: 1328px) {
+  .coverImage {
+    width: 385px;
+    height: 385px;
   }
 }
 

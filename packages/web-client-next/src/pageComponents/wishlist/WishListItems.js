@@ -117,9 +117,9 @@ const WishListItems = ({
 
 	return isWishlistFetching && !list.length ? (
 		<>
-			<Skeleton.Input active className={styles.skeletonLoader} />
-			<Skeleton.Input active className={styles.skeletonLoader} />
-			<Skeleton.Input active className={styles.skeletonLoader} />
+			<Skeleton.Input active className='w-full h-9 my-2' />
+			<Skeleton.Input active className='w-full h-9 my-2' />
+			<Skeleton.Input active className='w-full h-9 my-2' />
 		</>
 	) : (
 		<div>
