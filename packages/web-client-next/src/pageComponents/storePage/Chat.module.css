@@ -23,6 +23,9 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   position: relative;
   height: 3.5rem;
+  @media (max-width:768px) {
+    height: 46px !important;
+  }
 }
 
 .chat_search_input_container_dark {
@@ -71,6 +74,10 @@
 
 .input_form_with_buttons {
   padding-left: 1rem;
+  @media (max-width:768px) {
+  padding-left:0px;
+    
+  }
 }
 
 .chat_input {
@@ -82,10 +89,19 @@
   outline: none;
   font-size: 1rem;
   box-shadow: none !important;
+    @media (max-width:768px) {
+    
+  font-size: 14px !important;
+  }
+  
 }
 
 .chat_input :global(.ant-input-clear-icon) {
   font-size: 18px !important;
+  @media (max-width:768px) {
+    
+  font-size: 14px !important;
+  }
 }
 
 .chat_input_dark {

@@ -245,7 +245,9 @@
 
 .chatmodal-search-option-subtitle-active {
   color: white;
-  /* display: flex; */
+  @media (max-width:768px) {
+  display: flex;
+  }
 }
 
 .chatmodal-search-option-example-link {

@@ -135,9 +135,6 @@ const ChatModal = ({
 		state.chatV2.auraOverlayCoordinates,
 		state.chatV2.socketId,
 	]);
-
-console.log('isFreshSearch',isFreshSearch);
-
 	const {
 		suggestions: { tags = [], title = "" },
 	} = suggestionsWithProducts;
@@ -992,7 +989,8 @@ console.log('isFreshSearch',isFreshSearch);
 								) : null}
 							</div>
 						</div>
-						{showChatLoader && !isFreshSearch && (
+						{showChatLoader && localChatMessage && 
+									(
 							<div className={styles['chatmodal-loading-bar-container']}>
 								<div className={styles['chatmodal-loading-bar']}></div>
 							</div>
