@@ -136,6 +136,8 @@ const ChatModal = ({
 		state.chatV2.socketId,
 	]);
 
+console.log('isFreshSearch',isFreshSearch);
+
 	const {
 		suggestions: { tags = [], title = "" },
 	} = suggestionsWithProducts;
@@ -990,7 +992,7 @@ const ChatModal = ({
 								) : null}
 							</div>
 						</div>
-						{showChatLoader && (
+						{showChatLoader && !isFreshSearch && (
 							<div className={styles['chatmodal-loading-bar-container']}>
 								<div className={styles['chatmodal-loading-bar']}></div>
 							</div>
