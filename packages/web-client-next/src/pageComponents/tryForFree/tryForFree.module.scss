@@ -409,7 +409,10 @@
     color: red; /* Default color is red */
     transition: color 0.3s ease-in-out; /* Smooth color transition */
     right: 14px;
-
+    @media (max-width:768px) {
+         width: 50px;
+    height: 70px;
+    }
 }
 
 .createCollection_card_div label:hover .createCollection_image {
@@ -431,6 +434,11 @@
     width: 120px !important;
     height: 150px !important;
     right: -10px !important;
+    @media (max-width:768px) {
+      width: 89px !important;
+        height: 97px !important;
+    }
+
 }
 
 .hovercard_div{
@@ -2191,7 +2199,7 @@
     z-index: 10;
     border-radius: 0.75rem; /* rounded-xl */
     padding-top: 0.625rem; /* py-2.5 */
-    padding-bottom: 0.625rem;
+    // padding-bottom: 0.625rem;
     padding-left: 0.875rem; /* px-3.5 */
     padding-right: 0.875rem;
     height: 100%;
@@ -4193,6 +4201,10 @@
         max-width: 748px;
         width: 75%;
     }
+    @media (max-width:1328px) {
+        width: 65%;
+        
+    }
 }
 
 .auraGuideIcon {
@@ -4287,6 +4299,7 @@
     
     &.videoInactive {
         gap: 0;
+         
     }
     
     &.defaultActive {
@@ -4297,7 +4310,7 @@
     
     &.defaultInactive {
         color: #000000;
-        gap: 2.25rem;
+        gap: 10px;
     }
 }
 
@@ -4500,7 +4513,7 @@
     z-index: 10;
     border-radius: 0.375rem;
     padding-top: 0.25rem;
-    padding-bottom: 0.625rem;
+    // padding-bottom: 0.625rem;
     padding-left: 0.875rem;
     padding-right: 0.875rem;
     height: 2.75rem;
@@ -4530,7 +4543,7 @@
     border: none;
     border-radius: 0.375rem;
     padding-top: 0.25rem;
-    padding-bottom: 0.75rem;
+    // padding-bottom: 0.75rem;
     padding-left: 0.875rem;
     padding-right: 0.875rem;
     height: 2.75rem;

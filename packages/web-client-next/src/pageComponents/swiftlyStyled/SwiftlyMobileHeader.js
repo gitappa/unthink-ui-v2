@@ -37,7 +37,7 @@ const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 			</div>
 			<div
 				className={styles.headerContainer}
-				style={{ height: "56px", background: themeCodes.header.header_bg }}>
+				style={{ height: "76px", background: themeCodes.header.header_bg }}>
 				<button
 					type='button'
 					className={styles.searchButton}

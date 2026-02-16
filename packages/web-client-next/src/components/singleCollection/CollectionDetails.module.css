@@ -88,6 +88,12 @@
     height: 355px;
   }
 }
+@media (min-width: 1328px) {
+  .coverImage {
+    width: 385px;
+    height: 385px;
+  }
+}
 
 .videoOverlay {
   position: absolute;
