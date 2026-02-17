@@ -936,6 +936,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+margin-left: 9px;
 }
 
 /* Individual tag chip */
@@ -952,7 +953,7 @@
   flex-shrink: 0;
 
   @media (min-width: 1024px) {
-    height: 36px;
+    height: 30px;
   }
   @media (min-width: 768px) {
     margin-top: 12px;
@@ -1047,6 +1048,9 @@
   align-items: center;
   gap: 12px;
   overflow-x: scroll;
+  @media (max-width:1024px) {
+    margin-top: 30px;
+  }
 }
 
 .tagsPaddingSmall {

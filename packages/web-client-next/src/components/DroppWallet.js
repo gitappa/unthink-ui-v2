@@ -20,7 +20,7 @@ const DroppWallet = ({ setisDropDown, isDropDown }) => {
     } = useDroppWallet({
         merchantId: '0.0.6784854',
         environment: 'SANDBOX',
-        apiBaseUrl: 'https://unthink-dropp-payment-stage-314035436999.us-central1.run.app/api/payments/get-authorize-url'
+        apiBaseUrl: 'https://unthink-dropp-payment-stage-314035436999.us-central1.run.app'
     });
 
     const handleQrConnect = async () => {
