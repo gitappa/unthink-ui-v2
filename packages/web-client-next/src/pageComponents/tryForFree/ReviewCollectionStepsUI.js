@@ -143,7 +143,7 @@ const ReviewCollectionStepsUI = ({
 							labelPlacement="horizontal"
 							size="small"
 							direction="horizontal" // Horizontal direction for desktop
-						>
+							>
 							{steps.map((step) => (
 								<Steps.Step
 									key={step.key}
