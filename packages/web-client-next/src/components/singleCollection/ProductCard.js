@@ -991,7 +991,7 @@ additional_prompt:descriptionget || '',
           {/* Product Name */}
           <div className={styles['product-name-section']}>
             {/* Brand Info */}
-            <p className={styles['product-brand-footer-text']}>From <span>{product?.brand || '\u00A0'}</span></p>
+            <p className={styles['product-brand-footer-text']}> <span>{product?.brand || '\u00A0'}</span></p>
 
             <Text
               ellipsis={{ tooltip: product.name }}
@@ -1106,7 +1106,7 @@ additional_prompt:descriptionget || '',
                       />
                     </span>
                     <span className={styles['product-discount-badge-text']}>
-                      {(discountPer && `-${discountPer}%`) || null}
+                      {(discountPer && `${discountPer}% OFF`) || null}
                     </span>
                   </>
                 )}

@@ -65,6 +65,7 @@ import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import ShareOptions from "../shared/shareOptions";
 import Image from "next/image";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 // Initialize Swiper modules
 SwiperCore.use([FreeMode]);
@@ -492,6 +493,7 @@ const SingleCollectionProductList = ({
     // If "All" is selected, reset selectedTags to an empty array; otherwise, select only the clicked tag
     setSelectedTags(value === "All" ? [] : [value]);
   }, []);
+console.log('selectedTags',selectedTags);
 
   useEffect(() => {
     if (isRootPage) {
@@ -1025,7 +1027,7 @@ const SingleCollectionProductList = ({
                                 onSwiper={(swiper) =>
                                   (swiperRef.current = swiper)
                                 }
-                                className={`${styles.tagsScrollWrapper} colloectionDetailScroll ${styles.colloectionDetailScroll}`}
+                                className={`${styles.tagsScrollWrapper}  colloectionDetailScroll ${styles.colloectionDetailScroll}`}
                               >
                                 {tagsToShow.map((tag) => {
                                   const isDisabled = productCountMap[tag] === 0; // Check if the product length is 0
@@ -1066,8 +1068,9 @@ const SingleCollectionProductList = ({
                               </Swiper>
                             </div>
                             {isOverflowing && (
+                              <>
                               <div
-                                className={styles.addmore_image}
+                                className={'absolute right-0  lg:h-10 h-8 lg:w-10 -top-1 md:top-1 lg:top-2 hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center'}
                                 style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
                                 onClick={() => {
                                   if (swiperRef.current) {
@@ -1075,8 +1078,21 @@ const SingleCollectionProductList = ({
                                   }
                                 }}
                               >
-                                <Image src={Addmore} alt="Scroll Right" width='72' height='72' />
+                                <MdOutlineKeyboardArrowLeft  alt="Scroll Right" width='72' height='72'  className="transform rotate-180 text-xl "/>
                               </div>
+                                  <div
+                                className={'absolute  lg:h-10 h-8 -top-1 md:top-1 lg:top-2 lg:w-10 bg-gray-50 ml-3 lg:ml-0  w-8 rounded-full flex hover:shadow-xl lg:-left-6 -left-5 justify-center items-center'}
+                                style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
+                                onClick={() => {
+                                  if (swiperRef.current) {
+                                    swiperRef.current.slidePrev();
+                                  }
+                                }}
+                              >
+                                <MdOutlineKeyboardArrowLeft alt="Scroll Left" width='72' height='72' />
+                              </div>
+                              </>
+                              
                             )}
                           </div>
                         </div>
@@ -1088,7 +1104,7 @@ const SingleCollectionProductList = ({
                         Object.keys(filteredFirstValue).length > 0 && (
                           <div className={`${styles.tagsPaddingSmall} colloction_details_tag`}>
                             <div className={`${styles.tagsFlexRow} tag_responsive_div`}>
-                              <div className={`${styles.keywordScrollWrapper} ${styles.colloectionDetailScroll}`}>
+                              <div className={`${styles.keywordScrollWrapper} `}>
                                 <Swiper
                                   slidesPerView="auto"
                                   spaceBetween={10}
@@ -1143,7 +1159,7 @@ const SingleCollectionProductList = ({
                                   style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
                                   onClick={() => {
                                     if (swiperRef2.current) {
-                                      swiperRef2.current.slideNext();
+                                      swiperRef2.current.slidePrev();
                                     }
                                   }}
                                 >

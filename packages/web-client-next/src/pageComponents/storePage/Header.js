@@ -479,7 +479,7 @@ const Header = ({
 			{/* ----mobile ui start ---- */}
 			{!isSwiftlyStyledInstance || !isDoTheLookInstance ? ( // hide for swiftly styled store
 				<div
-					className={`${styles.mobileBottomNav} ${showChatModal ? styles.mobileBottomNavHidden : styles.mobileBottomNavVisible}`}>
+					className={`${styles.mobileBottomNav} ${showChatModal ? styles.mobileBottomNavHidden :showCategories || showPeople || pageUser.user_name !== "RaniZaver" && storeData?.is_searchOptions_enabled  || showRewards || isUserLogin ? styles.mobileBottomNavVisible : 'hidden'}`}>
 					{/* this div must have 3 child only to keep the aura center aligned */}
 					{showCategories || showPeople ? (
 						<>

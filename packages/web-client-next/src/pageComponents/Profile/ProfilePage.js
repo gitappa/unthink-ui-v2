@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "../../helper/useNavigate";
+import { useRouter } from "next/router";
 import { Steps, Result, notification } from "antd";
 
 import AuthHeader from "../AuthHeader";
@@ -53,6 +53,7 @@ const initialSellerDetails = {
 };
 
 const ProfilePage = () => {
+	const router = useRouter();
 	const { width } = useWindowSize();
 	const isMobile = width <= 550;
 	const dispatch = useDispatch();
@@ -128,7 +129,7 @@ const ProfilePage = () => {
 					description,
 				}));
 			} else {
-				navigate("/store/");
+				router.push("/store/");
 			}
 		}
 	}, [user.data.emailId, user.data.user_id]);
@@ -528,7 +529,7 @@ const ProfilePage = () => {
 									isMyProductsEnable ? (
 										<button
 											className={styles.resultButton}
-											onClick={() => navigate(ROUTES.MY_PRODUCTS)}>
+											onClick={() => router.push(ROUTES.MY_PRODUCTS)}>
 											Add products
 										</button>
 									) : (
@@ -536,8 +537,8 @@ const ProfilePage = () => {
 											className={styles.resultButton}
 											onClick={() =>
 												user?.enablePlist && is_store_instance
-													? navigate("/")
-													: navigate("/store/")
+													? router.push("/")
+													: router.push("/store/")
 											}>
 											Go to store
 										</button>
@@ -559,8 +560,8 @@ const ProfilePage = () => {
 										className={styles.resultButton}
 										onClick={() =>
 											user?.enablePlist && is_store_instance
-												? navigate("/")
-												: navigate("/store/")
+												? router.push("/")
+												: router.push("/store/")
 										}>
 										Go to store
 									</button>,
