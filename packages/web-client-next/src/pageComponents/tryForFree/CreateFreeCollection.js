@@ -242,6 +242,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		success: createWishlistSuccess,
 		error: createWishlistError,
 	} = createWishlistReducer;
+console.log('createWishlistData',createWishlistData);
 
 	const [scratchAIPromptOpen, setScratchAIPromptOpen] = useState(false);
 
@@ -270,7 +271,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 
 		return () => setIsVideoDataExtractionStarted(false);
 	}, []);
-
+	const [propdata,setPropData]=useState(null)
 	useEffect(() => {
 		if (createWishlistSuccess) {
 			const _id = createWishlistData.data?._id;
@@ -284,10 +285,11 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				// 	},
 				// });
 			}
-
+				setPropData(true)
 			dispatch(createWishlistReset());
 		}
 	}, [createWishlistSuccess]);
+console.log('propdata',propdata);
 
 	useEffect(() => {
 		if (createWishlistError) {
@@ -906,6 +908,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 						enableHelpStep
 						handleChangeView={handleChangeView}
 						isSamskaraInstance={isSamskaraInstance}
+						propdata={propdata}
 					/>
 
 					<ReviewCollectionContainerWrapper>

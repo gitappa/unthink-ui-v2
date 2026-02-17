@@ -381,7 +381,9 @@ const ReviewCollection = (props) => {
 		state.chatV2.auraOverlayCoordinates,
 	]);
 	console.log('authUserCollections', authUserCollections);
-
+	console.log('addToWishlistReducer',addToWishlistReducer);
+	
+// const check = authUserCollections.find((userId)=> )
 	const { isFetching: updateWishlistInProgress } = updateWishlistReducer;
 	const { isFetching: deleteWishlistInProgress } = deleteWishlistReducer;
 
@@ -1304,23 +1306,22 @@ const ReviewCollection = (props) => {
 	// console.log(currentView === STEPS.PRODUCTS);
 	// console.log(currentCollection._id);
 
+console.log('updateWishlistInProgress',updateWishlistInProgress);
+console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 
 	useEffect(() => {
-		// console.log('EFFECT RUNNING - Checking conditions...');
+
 		if (
 			currentView === STEPS.PRODUCTS &&
-			isProductsFetchedForNewColl === null &&
+			isProductsFetchedForNewColl === false &&
 			!updateWishlistInProgress &&
-			!authUserCollectionsIsFetching &&
-			currentCollection._id
+			!authUserCollectionsIsFetching
 		) {
 			// call refetch products on products page view if the collection is new collection
 			handleConfirmRefetchProducts();
 			setIsProductsFetchedForNewColl(true);
 		}
-
-	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching, isProductsFetchedForNewColl, currentCollection._id]);
-
+	}, [currentView, updateWishlistInProgress, authUserCollectionsIsFetching,isProductsFetchedForNewColl]);
 	let fetchingTimer;
 
 	useEffect(() => {
@@ -4693,7 +4694,6 @@ const ReviewCollection = (props) => {
 											// }
 											currentSellerBrandDetails={currentSellerBrandDetails}
 											selectedTags={selectedTags}
-
 										/>
 									</div>
 								) : (
