@@ -136,7 +136,7 @@ const AutoCreateCollectionModal = ({
 			headerTextSpacingClassName='p-2.5'
 			headerTextClassName='text-xl font-medium'
 			closeClassName='text-xl'>
-			<form onSubmit={handleFormDataSubmit} className="z-40">
+			<form onSubmit={handleFormDataSubmit} className="z-50" >
 				<div>
 					<label className='text-base text-black-100 font-semibold block mb-0.75'>
 						Name of your collection

@@ -75,7 +75,7 @@ const Modal = ({
 
 	if (isOpen) {
 		return (
-			<div
+			<div style={{zIndex:50}}
 				// unthinkNextGenModalClass class added to handle body overflow scroll bar
 				className={`${unthinkNextGenModalClass} ${styles.modalOverlay} ${zIndexClassName}`}
 				onClick={() => maskClosable && onClose && onClose()}>

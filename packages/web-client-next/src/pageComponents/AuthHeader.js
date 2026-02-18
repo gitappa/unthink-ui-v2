@@ -47,17 +47,17 @@ export default function AuthHeader({
 					className={styles.profileCol}>
 					{userTextLink && userTextLink.to && (
 						<>
-							{MY_PROFILE && (
-								<Link className={styles.linkText} href={MY_PROFILE}>
+							{/* {MY_PROFILE && ( */}
+								<Link className={styles.linkText} href='/signin'>
 									{userTextLink.text}
 								</Link>
-							)}
+							{/* )} */}
 
-							{PROFILE && (
+							{/* {PROFILE && (
 								<Link className={styles.linkText} href={PROFILE}>
 									{userTextLink.text}
 								</Link>
-							)}
+							)} */}
 						</>
 					)}
 					<Image src={HeaderUser?.src || HeaderUser} preview={false} height={33} />

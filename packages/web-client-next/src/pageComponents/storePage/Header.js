@@ -144,6 +144,7 @@ const Header = ({
 		// state.store.data.associate_seller,
 		state.store.data,
 	]);
+console.log('isUserLogin',currentUser);
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -292,6 +293,9 @@ const Header = ({
 		[isUserLogin]
 	);
 	console.log(showProfileIcon);
+console.log('isStoreAdminLoggedIn',isStoreAdminLoggedIn );
+console.log('isAdminLoggedIn',isAdminLoggedIn);
+console.log('isStagingEnv',isStagingEnv);
 
 	const viewLeaderboardEnabled = useMemo(
 		() =>
