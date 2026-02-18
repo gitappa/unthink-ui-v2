@@ -435,7 +435,12 @@ export default function SignInFormSection() {
 	// }, []);
 
 	const SuccessMessage = () => {
-		const email = form.getFieldValue("email");
+		const [email, setEmail] = useState("");
+
+		useEffect(() => {
+			// Get email only on client side to avoid hydration mismatch
+			setEmail(form.getFieldValue("email") || "");
+		}, []);
 
 		if (successState.showVerificationMailSent) {
 			return (
