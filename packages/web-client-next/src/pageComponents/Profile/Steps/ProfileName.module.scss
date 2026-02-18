@@ -24,7 +24,9 @@
     background-color: transparent !important;
     color: white;
 }
-
+.inputBgTransparent::placeholder{
+    color: white !important;
+}
 .inputBgTransparentMt1 {
     background-color: transparent !important;
     margin-top: 4px !important;

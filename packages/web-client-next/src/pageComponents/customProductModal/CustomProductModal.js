@@ -329,8 +329,7 @@ const CustomProductModal = ({
 			// }
 			if (storeData?.pdp_settings?.is_buy_popup || pdp_page_enabled) {
 				onModalClose();
-
-				router.push(`/product/${product.mfr_code}`)
+				// router.push(`/product/${product.mfr_code}`)
 			} else {
 				setIsView(false);
 				onModalClose();

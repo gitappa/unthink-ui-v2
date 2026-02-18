@@ -20,6 +20,7 @@ import {
 } from "../helper/utils";
 import { PUBLISHED } from "../constants/codes";
 import { getTTid } from "../helper/getTrackerInfo";
+import Image from "next/image";
 
 const CollectionShareModal = ({
 	isOpen,
@@ -177,7 +178,7 @@ const CollectionShareModal = ({
 									href={socialMediaUrls.twitter}
 									target='_blank'
 									className={styles.twitterLink}>
-									<img
+									<Image
 										src={xIcon}
 										width={28}
 										height={28}

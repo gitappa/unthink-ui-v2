@@ -500,6 +500,7 @@ const AuraResponseProducts = ({
 
 	const onSaveOrShareProductsClick = useCallback(
 		({ isSave = false, isShare = false, isSkip = false }) => {
+			
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
@@ -551,6 +552,7 @@ const AuraResponseProducts = ({
 					dispatch(setIsCreateWishlist(true));
 				}
 			} else if (isShare) {
+				
 				dispatch(
 					openAutoCreateCollectionModal({
 						...createWishlistData,

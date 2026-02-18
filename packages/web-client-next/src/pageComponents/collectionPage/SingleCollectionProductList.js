@@ -1343,6 +1343,42 @@ console.log('selectedTags',selectedTags);
 									onClick={onSeeAllClick}>
 									View all
 								</Button> */}
+
+                 {/* for desktop screen : QR code */}
+
+
+                    <div className={styles.shareIconWrapper}>
+                      {showShareCollection && (
+                        <ShareOptions
+                          url={sharePageUrl}
+                          onClose={setShowShareCollection}
+                          collection={blogCollectionPage}
+                          isOpen={showShareCollection}
+                          qrCodeGeneratorURL={qrCodeGeneratorURL}
+                          collectionPagePath={collectionPagePath}
+                        />
+                      )}
+                      {/* {sharePageUrl && ( */}
+                      <img
+                        className={`${styles.shareIcon} ${showShareCollection ? styles.shareIconEventsNone : ""
+                          } ${blogCollectionPage.status === PUBLISHED
+                            ? styles.shareIconEnabled
+                            : styles.shareIconDisabled
+                          }`}
+                        src={share_icon}
+                        title={
+                          blogCollectionPage.status !== PUBLISHED
+                            ? "Please publish collection to share"
+                            : ""
+                        }
+                        onClick={() =>
+                          blogCollectionPage.status === PUBLISHED &&
+                          setShowShareCollection(!showShareCollection)
+                        }
+                      />
+                      {/* )} */}
+                    </div>
+                    
                       </div>
                       <div className={styles.descriptionWrapper}>
                         {blogCollectionPage.description ? (
@@ -1391,40 +1427,7 @@ console.log('selectedTags',selectedTags);
                       </div>
                     </div>
 
-                    {/* for desktop screen : QR code */}
-
-
-                    <div className={styles.shareIconWrapper}>
-                      {showShareCollection && (
-                        <ShareOptions
-                          url={sharePageUrl}
-                          onClose={setShowShareCollection}
-                          collection={blogCollectionPage}
-                          isOpen={showShareCollection}
-                          qrCodeGeneratorURL={qrCodeGeneratorURL}
-                          collectionPagePath={collectionPagePath}
-                        />
-                      )}
-                      {/* {sharePageUrl && ( */}
-                      <img
-                        className={`${styles.shareIcon} ${showShareCollection ? styles.shareIconEventsNone : ""
-                          } ${blogCollectionPage.status === PUBLISHED
-                            ? styles.shareIconEnabled
-                            : styles.shareIconDisabled
-                          }`}
-                        src={share_icon}
-                        title={
-                          blogCollectionPage.status !== PUBLISHED
-                            ? "Please publish collection to share"
-                            : ""
-                        }
-                        onClick={() =>
-                          blogCollectionPage.status === PUBLISHED &&
-                          setShowShareCollection(!showShareCollection)
-                        }
-                      />
-                      {/* )} */}
-                    </div>
+                   
 
                     {/* {qrCodeGeneratorURL &&
                     blogCollectionPage.status === PUBLISHED ? (
