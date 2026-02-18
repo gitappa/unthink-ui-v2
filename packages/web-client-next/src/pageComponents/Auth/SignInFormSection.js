@@ -261,20 +261,13 @@ export default function SignInFormSection() {
 	};
 
 	const onResetPasswordRequest = async () => {
-		console.log('dfd');
-		
 		try {
 			setShowProcessingLoader(true);
-		await form.validateFields(["email"]);
+			form.validateFields(["email"]);
 			if (form.getFieldValue("email")) {
-		console.log('dfd');
-
 				const res = await authAPIs.resetPasswordRequestAPICall({
 					email: form.getFieldValue("email"),
 				});
-				console.log(res.data);
-		console.log('dfd');
-				
 				if (res.data.status_code === 200) {
 					setSuccessState({
 						...successState,
@@ -288,28 +281,23 @@ export default function SignInFormSection() {
 				}
 			}
 		} catch (error) {
+				notification["error"]({
+			message: error.response.data.status_desc,
+		})
 		} finally {
 			setShowProcessingLoader(false);
 		}
 	};
 
 	const onSignInWithLinkRequest = async () => {
-		console.log('helloworld');
-		console.log(form.getFieldValue("email"));
-		
 		try {
 			setHasError(() => "");
 			setShowProcessingLoader(true);
-			await form.validateFields(["email"]);
+			form.validateFields(["email"]);
 			if (form.getFieldValue("email")) {
-		console.log('helloworld');
-
 				const res = await authAPIs.signInWithLinkRequestAPICall({
 					email: form.getFieldValue("email"),
 				});
-				console.log('resdata',res.data);
-		console.log('helloworld');
-				 
 				if (res.data.status_code === 200) {
 					setSuccessState({
 						...successState,
@@ -324,7 +312,6 @@ export default function SignInFormSection() {
 				}
 			}
 		} catch (error) {
-			console.log('Error in onSignInWithLinkRequest:', error);
 			setHasError(() => "Unable to process, Please try again after sometime");
 		} finally {
 			setShowProcessingLoader(false);
@@ -339,8 +326,6 @@ export default function SignInFormSection() {
 				const res = await authAPIs.resendVerificationMail({
 					email: form.getFieldValue("email"),
 				});
-				console.log(res.data);
-				
 				if (res.data.status_code === 200) {
 					setSuccessState({
 						...successState,
@@ -349,8 +334,7 @@ export default function SignInFormSection() {
 					});
 					resetErrorCode();
 				} else {
-					if (res.data.status_desc){ setHasError(res.data.status_desc); ErrorMesssage() ;console.log('dsd');
-					}
+					if (res.data.status_desc) setHasError(res.data.status_desc);
 					if (res.data.err_code) setHasErrorCode(res.data.err_code);
 				}
 			}
@@ -449,15 +433,7 @@ export default function SignInFormSection() {
 
 	// 	return "";
 	// }, []);
-console.log(hasErrorCode);
 
-	const ErrorMesssage =()=>{
-		notification["success"]({
-			// redirect user to store page using useEffect
-			message: "Sign In Success!",
-			duration: 3,
-		});
-	}
 	const SuccessMessage = () => {
 		const email = form.getFieldValue("email");
 
