@@ -301,10 +301,14 @@ const getUserInfoAPICall = (payload = {}) => {
 };
 
 const resetPasswordRequestAPICall = ({ email }) => {
+	console.log('dfdfd');
+	
 	const url = `${auraYfretUserCollBaseUrl}${resetPasswordRequestUrl}`;
 	const params = {
 		emailId: email,
 	};
+console.log('url',url);
+console.log(email);
 
 	return apiInstance({
 		url,

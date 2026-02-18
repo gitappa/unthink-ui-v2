@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./authPage.module.scss";
 import { Input, Form, notification, Button } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useNavigate } from "../../helper/useNavigate";
 import AuthHeader from "../AuthHeader";
 import { authAPIs } from "../../helper/serverAPIs";
@@ -13,29 +14,58 @@ const initialFormValue = {
 	cPassword: "",
 };
 
-const ResetPasswordFrom = (props) => {
+const ResetPasswordFrom = () => {
+	const router = useRouter();
 	const navigate = useNavigate();
 	const [hasError, setHasError] = useState("");
 	const [isResetting, setIsResetting] = useState(false);
+	const [name, setName] = useState("");
 
-	const token = useMemo(() => props["*"] ?? props.token, [props]);
-	const name = getParams("name");
+	// Get token from Next.js router params
+	const token = router.query.token;
+
+	useEffect(() => {
+		// Get name only on client side to avoid hydration mismatch
+		const nameParam = getParams("name");
+		if (nameParam) {
+			setName(nameParam);
+		}
+		
+		// Debug: Log token when router is ready
+		if (router.isReady) {
+			console.log("Reset password token:", token);
+		}
+	}, [router.isReady, token]);
 
 	const onFinish = async (values) => {
 		const { password } = values;
-		setIsResetting(true);
-		const res = await authAPIs.resetPasswordAPICall({ token, password });
-
-		if (res?.data?.status_code) {
-			if (res.data.status_code === 200) {
-				setHasError("");
-				notification.success({ message: "Password reset successfully!" });
-				navigate("/signin/");
-			} else if (res?.data?.status_desc) {
-				setHasError(res?.data?.status_desc);
-			}
+		
+		// Ensure token is available before making the API call
+		if (!token) {
+			setHasError("Invalid or missing reset token. Please request a new password reset link.");
+			return;
 		}
-		setIsResetting(false);
+		
+		setIsResetting(true);
+		try {
+			const res = await authAPIs.resetPasswordAPICall({ token, password });
+
+			if (res?.data?.status_code) {
+				if (res.data.status_code === 200) {
+					setHasError("");
+					notification.success({ message: "Password reset successfully!" });
+					navigate("/signin/");
+				} else if (res?.data?.status_desc) {
+					setHasError(res?.data?.status_desc);
+				}
+			}
+		} catch (error) {
+			const errorMessage = error?.response?.data?.status_desc || "Failed to reset password. Please try again.";
+			setHasError(errorMessage);
+			console.error("Reset password error:", error);
+		} finally {
+			setIsResetting(false);
+		}
 	};
 
 	const onFinishFailed = (errorInfo) => {

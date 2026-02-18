@@ -6,7 +6,8 @@ import React, {
 	useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { message, Image } from "antd";
+import { message } from "antd";
+import Image from 'next/image';
 import {
 	CopyOutlined,
 	EditOutlined,
@@ -357,12 +358,13 @@ const ProductDetails = ({ params, ...props }) => {
 			// alert("Payment initiation failed. Please try again.");
 		}
 	};
+  const [additionalimg,setAdditionalImg] = useState(null)
+console.log(productDetails?.additional_image);
 
-	if (pdploader === true) {
+	if (pdploader ) {
 
 		return <PDPPageSkeleton />
 	}
-
 	return (
 		<>
 			<div
@@ -384,10 +386,22 @@ const ProductDetails = ({ params, ...props }) => {
 							{!isEmpty(productDetails?.image) ? (
 								<img
 									className='w-full h-full object-contain rounded-xl'
-									src={productDetails.image}
+									src={additionalimg ||  productDetails.image} 
 									alt='Product Image'
 								/>
 							) : null}
+					{	
+						productDetails?.additional_image && productDetails?.additional_image.length > 0 ?
+						<div className="flex gap-2 mt-4 overflow-x-scroll w-full h-28">
+							{[productDetails.image,...(productDetails.additional_image)].map((img,i) =>(
+								<div key={i} className="">
+									<Image  className={`w-25 h-25  rounded-10 ${additionalimg === img ? 'border bg-purple-300 p-0.5' : ''} `} src={img} height={50} width={50} onClick={()=> setAdditionalImg(img)} />
+								</div>
+							))}
+						</div>
+						: null
+					}
+
 						</div>
 						<div className='flex flex-col gap-4 w-full lg:w-65%'>
 							<div className='text-xl-1 font-semibold'>
@@ -417,8 +431,8 @@ const ProductDetails = ({ params, ...props }) => {
 									)}
 									{sharePageUrl && (
 										<div className='flex w-auto'>
-											<Image
-												className='cursor-pointer'
+											<Image width={28} height={28}
+												className='cursor-pointer h-7 w-7'
 												src={share_icon}
 												preview={false}
 												onClick={() =>
@@ -687,19 +701,19 @@ const ProductDetails = ({ params, ...props }) => {
 								{brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
 									<div className='flex my-1.75 gap-5'>
 										{brandsDetails?.instagramUrl && (
-											<a
+											<a width={28} height={28}
 												href={brandsDetails?.instagramUrl}
 												target='_blank'
 												className='p-0'>
-												<img src={instagramIcon} width='28px' />
+												<Image src={instagramIcon} width='28px' height={28} />
 											</a>
 										)}
 										{brandsDetails?.facebookUrl && (
-											<a
+											<a width={28} height={28}
 												href={brandsDetails?.facebookUrl}
 												target='_blank'
 												className='p-0'>
-												<img src={facebookIcon} width='28px' />
+												<Image src={facebookIcon} width='28px'  height={28}/>
 											</a>
 										)}
 									</div>

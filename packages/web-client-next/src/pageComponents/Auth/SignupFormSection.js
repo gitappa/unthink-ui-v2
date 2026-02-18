@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./authPage.module.scss";
-import { Input, Form, Tooltip, Button, Alert, Spin } from "antd";
+import { Input, Form, Tooltip, Button, Alert, Spin, notification } from "antd";
 import {
 	InfoCircleOutlined,
 	CheckCircleOutlined,
@@ -135,6 +135,7 @@ export default function SignupFormSection() {
 			try {
 				payload.venlyUser = await generateVenlyUserDetails();
 			} catch (error) {
+			
 				isStagingEnv &&
 					console.log("venly error on signup get uer details : ", error); // should be removed later
 			}
@@ -159,13 +160,16 @@ export default function SignupFormSection() {
 						res.data.data.venlyUser,
 						res.data.data.influencer_code
 					);
-				} else {
+				} else {	
 					setIsSuccess(true);
 				}
 			} else if (res?.data?.status_desc) {
 				setHasError(res?.data?.status_desc);
 			}
 		} catch (error) {
+				notification["error"]({
+			message: error.response.data.status_desc})
+			// console.log('dfbdsgg',error);
 			setHasError("Failed to signup");
 		}
 

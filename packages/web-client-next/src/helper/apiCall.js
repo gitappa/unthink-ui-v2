@@ -39,8 +39,12 @@ export const apiInstance = ({
 			cancel = c;
 		}),
 	});
+	console.log('promise',promise);
+	
 	// Cancel the request
 	promise[CANCEL] = cancel;
+	console.log('promises',promise);
+
 	return promise;
 };
 
