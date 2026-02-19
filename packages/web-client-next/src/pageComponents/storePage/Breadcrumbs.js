@@ -12,6 +12,8 @@ import {
 import { MAIN_SITE_URL, PATH_ROOT, PATH_STORE } from "../../constants/codes";
 import { current_store_name } from "../../constants/config";
 import styles from "./breadcrumbs.module.scss";
+import { useSelector } from "react-redux";
+import {  useRouter } from "next/router";
 
 const Breadcrumbs = ({
 	isRootPage: isInspirationDisable,
@@ -28,6 +30,19 @@ const Breadcrumbs = ({
 	user_id,
 	isCreateFreeCollectionPage
 }) => {
+	const router = useRouter();
+	 const [
+		authUserName,
+	  ] = useSelector((state) => [
+		
+		state.influencer.data,])
+	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
+	console.log(`/influencer/${authUserName?.user_name}`  );
+	
+	console.log("pathname:", router.pathname);
+console.log("asPath:", router.asPath);
+console.log("query:", router.query);
+
 	const navigate = useNavigate();
 	const subDomain = typeof window !== 'undefined' ? getSubDomain(window.location.hostname) : null;
 
@@ -77,6 +92,9 @@ const Breadcrumbs = ({
 				url: isCreateFreeCollectionPage ? '/' : undefined
 			});
 		}
+		if(router.asPath === `/influencer/${authUserName?.user_name}/`){
+			breadCrumbItems.push({url:authUserName?.user_name ? '/' : ''})
+		}
 
 		return breadCrumbItems;
 	}, [
@@ -104,7 +122,7 @@ const Breadcrumbs = ({
 					}`}>
 				<div className={styles.breadcrumbsFlex}>
 					{/* Back Button for Collection Review Page */}
-					{(isCollectionReviewPage || isCreateFreeCollectionPage) && (
+					{(isCollectionReviewPage || isCreateFreeCollectionPage || router.asPath === `/influencer/${authUserName?.user_name}/`) && (
 						<>
 							<ArrowLeftOutlined
 								className={styles.backIcon}

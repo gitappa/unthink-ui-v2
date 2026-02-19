@@ -572,16 +572,16 @@ export default function SignupFormSection() {
 										</Form.Item>
 									</>
 								)}
-								{hasError && (
+								{/* {hasError && (
 									<div className={styles.alertWrapper}>
-										{/* <p className='text-red-500 h-5'>{hasError}</p> */}
+										<p className='text-red-500 h-5'>{hasError}</p>
 										<Alert
 											message={hasError}
 											type='error'
 											className={styles.alert}
 										/>
 									</div>
-								)}
+								)} */}
 								<Form.Item>
 									<div className={styles.submitButtonContainer}>
 										{/* //

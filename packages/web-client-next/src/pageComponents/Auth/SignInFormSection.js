@@ -22,7 +22,7 @@ import { authAPIs } from "../../helper/serverAPIs";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useNavigate } from "../../helper/useNavigate";
-import {
+import { 
 	getIdpLoginMethod,
 	getIsSellerLoggedIn,
 	setCookie,
@@ -71,20 +71,22 @@ const initialFormValue = {
 let selectedIdpHintSignIn = "";
 
 console.log('is_store_instance', is_store_instance);
-
-export const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage) => {
+export default function SignInFormSection() {
+  const router = useRouter(); 
+ const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage) => {
 	console.log('userDataaaaa', userData);
 	console.log(userData.attribution?.sammoon);
-	console.log(isSellerLoggedIn);
-
+	console.log('pinkukdfc',redirectPage);
 	try {
 		// 1️⃣ PRIORITY REDIRECT (works for all users)
 		if (redirectPage === "my-products") {
-			navigate("/my-products");
+			router.push("/my-products");
 			return;
 		}
 		if (redirectPage === "create-collection") {
-			navigate("/create-collection");
+			console.log('dfdfd');
+			
+			router.replace("/create-collection");
 			return;
 		}
 		// 2️⃣ Normal old logic
@@ -97,7 +99,7 @@ export const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage
 			) {
 
 
-				navigate(PATH_ROOT);
+				router.push(PATH_ROOT);
 				return;
 			}
 
@@ -106,34 +108,34 @@ export const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage
 				isSellerLoggedIn &&
 				!localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
 			) {
-				navigate(PATH_CREATE_COLLECTION);
+				router.push(PATH_CREATE_COLLECTION);
 				return;
 			}
 			// Default
-			// if(userData.is_influencer){
-			// navigate(PATH_ROOT);
-			// }
+			if(userData){
+			router.push(PATH_ROOT);
+			}
 			return;
 		}
 
 		// Not store instance but already visited collection
 		if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
-			navigate(PATH_STORE);
+			router.push(PATH_STORE);
 			return;
 		}
 
 		// Default for non-store
-		// navigate(PATH_CREATE_COLLECTION);
+		// router.push(PATH_CREATE_COLLECTION);
 
 	} catch (error) {
 
-		is_store_instance ? navigate(PATH_ROOT) : navigate(PATH_STORE);
+		is_store_instance ? router.push(PATH_ROOT) : router.push(PATH_STORE);
 	}
 };
 
 
-export default function SignInFormSection() {
-	const router = useRouter();
+
+	// const router = useRouter();
 	const navigate = useNavigate();
 	const [form] = Form.useForm();
 	const params = new URLSearchParams(router.asPath.split('?')[1] || '');
@@ -155,8 +157,9 @@ export default function SignInFormSection() {
 
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
+	const UserData = useSelector((state) =>  state.auth.user.data)
 	const [storeData] = useSelector((state) => [state.store.data]);
-	console.log(user);
+	console.log('pkgvkijghj',UserData );
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -198,7 +201,7 @@ export default function SignInFormSection() {
 			// 	is_store_instance ? navigate("/") : navigate("/store/");
 			// }
 		}
-	}, [user.isUserLogin]);
+	}, [user.isUserLogin,UserData]);
 
 	const handleUserSignInSuccess = (userId, emailId) => {
 		// START
@@ -243,7 +246,7 @@ export default function SignInFormSection() {
 					res.data.data?.emailId
 				) {
 					handleUserSignInSuccess(res.data.data.user_id, res.data.data.emailId);
-					navigate(PATH_ROOT);
+					// navigate(PATH_ROOT);
 					resetErrorCode();
 				} else {
 					if (res.data.status_desc) setHasError(res.data.status_desc);
