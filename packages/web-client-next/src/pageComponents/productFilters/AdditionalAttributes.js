@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect } from "react";
-import { Select, Input, Checkbox } from "antd";
+import { Select, Input, Checkbox, Button } from "antd";
 import { isValidNumber } from "../../helper/utils";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -171,8 +172,8 @@ const AdditionalAttributes = ({
 							) : null}
 
 							{attr.input_type === "multi_custom_input" ||
-							attr.key === "custom_filter" ? (
-								 
+								attr.key === "custom_filter" ? (
+
 								<div>
 									<div className='flex justify-between'>
 										<label
@@ -193,8 +194,13 @@ const AdditionalAttributes = ({
 											</div>
 										) : null}
 									</div>
+									<div className="relative">
+
 									<Select
-										mode='tags'
+										mode="tags"
+										open={false}
+										suffixIcon={null}
+										showSearch
 										className={`w-full product-filters-select-input ${fontSizeTheme}`}
 										placeholder={`Enter ${attr.key}`}
 										value={
@@ -206,7 +212,21 @@ const AdditionalAttributes = ({
 										onChange={(values) =>
 											handleAdditionalAttributesChange(attr.key, values)
 										}
-										dropdownStyle={{ display: "none" }}></Select>
+									/>
+									  {/* <button className=" bg-red-400 plusbutedit bg-transparent border-none right-0 opacity-35 text-black hover:!text-black focus:!text-black active:!text-black"
+    type=""
+    icon={<PlusOutlined className="hover:text-black focus:text-black active:text-black" />}
+    // onClick={handleAdd}
+    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+  /> */}
+  <Button
+  type="text"
+  className="no-effect-btn absolute top-1/2 -translate-y-1/2 right-0 opacity-35 text-black"
+  icon={<PlusOutlined />}
+/>
+									</div>
+
+									
 								</div>
 							) : null}
 
