@@ -315,3 +315,26 @@ p {
     background-color: transparent !important;
     pointer-events: none;
 }
+
+#signIn_email {
+  width: 100% !important;
+}
+#signIn_password {
+  width: 100% !important;
+  border-top-left-radius: 0.375rem;
+        border-bottom-left-radius: 0.375rem;
+        height: 100%;
+            background: transparent;
+}
+.authPage_input__OMDve{
+  display: flex;
+  align-items: center;
+      background: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d9d9d9;
+  margin-top: 40px;
+}
+.ant-input-password-icon{
+
+}
