@@ -338,3 +338,18 @@ p {
 .ant-input-password-icon{
 
 }
+.plusbutedit:hover{
+    color: #0E131B !important;
+}
+ .no-effect-btn:hover,
+.no-effect-btn:focus,
+.no-effect-btn:active {
+  color: inherit !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.no-effect-btn::after {
+  display: none !important;
+}

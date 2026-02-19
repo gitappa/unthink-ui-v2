@@ -643,6 +643,8 @@ additional_prompt:descriptionget || '',
 
     }
   }, [clickedMfrCode]);
+  console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
+  
   return (
     <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
       className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
@@ -826,7 +828,7 @@ additional_prompt:descriptionget || '',
             </div>
           )}
         </div>
-        {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
+        {/* {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
           showRemoveIcon && (
             <div
               className={`   gap-${size === "small" ? "2" : "3"
@@ -844,7 +846,7 @@ additional_prompt:descriptionget || '',
 
               </div>
             </div>
-          )}
+          )} */}
         {/* product card header */}
         <div
           className={`${styles['header-container']} ${enableViewSimilar ||
@@ -1261,7 +1263,7 @@ additional_prompt:descriptionget || '',
         (showEdit || showStar || showRemoveIcon) && (
           <div
             className={`${styles['product-action-cover-container']} ${size === "small" ? styles['product-action-cover-container-small'] : styles['product-action-cover-container-medium']}`}>
-            <div>
+            {/* <div>
               {showRemoveIcon ? (
                 <button
                   className={styles['product-action-cover-remove-button']}
@@ -1272,7 +1274,7 @@ additional_prompt:descriptionget || '',
                   </span>
                 </button>
               ) : null}
-            </div>
+            </div> */}
             <div>
               {showEdit ? (
                 <button
