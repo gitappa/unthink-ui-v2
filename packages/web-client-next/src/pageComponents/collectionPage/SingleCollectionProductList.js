@@ -338,10 +338,10 @@ const SingleCollectionProductList = ({
       selectedProducts.includes(p.mfr_code),
     );
 
-    dispatch(setProductsToAddInWishlist(SelectedProductsData));
     dispatch(openWishlistModal());
+    dispatch(setProductsToAddInWishlist(SelectedProductsData));
     if (isUserLoginCokkies) {
-      dispatch(setIsCreateWishlist(true));
+      // dispatch(setIsCreateWishlist(true));
     }
     handleResetSelectProduct();
   };
