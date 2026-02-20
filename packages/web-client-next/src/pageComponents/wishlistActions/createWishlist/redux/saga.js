@@ -306,8 +306,11 @@ function* createWishlistSaga(action) {
 			yield put(createWishlistSuccess(resData));
 
 			// redirect to edit collection page after successfully create new collection
-			if (action.payload?.redirectToEditCollectionPage) {
-				Router.push(`/collection/${resData.data._id}/review`);
+			if (action.payload?.redirectToEditCollectionPage) {				
+				Router.push({
+    pathname: `/collection/${resData.data._id}/review`,
+    query: { isNewCollection: true },
+  });
 			}
 			// open collection share modal and publish created collection
 
