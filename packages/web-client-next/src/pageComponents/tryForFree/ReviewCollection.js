@@ -337,9 +337,8 @@ const ReviewCollection = (props) => {
 		router?.query?.plistId ??
 		router?.query?.plist_id ??
 		router?.query?.id;
-	const isNewCollection =
-		!!props?.location?.state?.isNewCollection ||
-		String(router?.query?.isNewCollection || "").toLowerCase() === "true";
+const isNewCollection = router.query.isNewCollection === "true";
+console.log('isNewCollection',isNewCollection);
 
 	const {
 		data: authUser,
