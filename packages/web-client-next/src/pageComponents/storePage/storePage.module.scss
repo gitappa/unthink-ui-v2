@@ -653,12 +653,12 @@
     padding-right: 12px;
     color: black;
 
-    @media (min-width: 1024px) {
-        color: #1a1a1a;
+    @media (max-width: 768px) {
+        color: #ffffff;
     }
 }
 
-.headerProfileMenuContainer {
+.headerProfileMenuContainer {   
     background-color: transparent;
     border: none;
     display: flex;

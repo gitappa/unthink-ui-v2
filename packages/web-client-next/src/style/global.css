@@ -315,7 +315,9 @@ p {
     background-color: transparent !important;
     pointer-events: none;
 }
-
+.ant-image-preview-root .ant-image-preview-mask{
+  background-color: transparent !important;
+}
 #signIn_email {
   width: 100% !important;
 }
