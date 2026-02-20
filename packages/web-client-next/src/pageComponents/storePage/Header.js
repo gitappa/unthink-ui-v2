@@ -580,6 +580,7 @@ console.log('isStagingEnv',isStagingEnv);
 					<SwiftlyMobileHeader
 						showProfileIcon={showProfileIcon && isUserLogin}
 						setShowMenu={setShowMenu}
+						headerProfileMenu={headerProfileMenu}
 					/>
 				</div>
 			) : null}
