@@ -583,6 +583,8 @@ const Chat = ({
 								<Image
 									className={styles.cursor_pointer}
 									src={close_bg_icon}
+									width={24}
+									height={24}
 									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
@@ -597,7 +599,7 @@ const Chat = ({
 						</div>
 					) : null}
 
-					{showAuraIntro && !showChatModal && (
+					{/* {showAuraIntro && !showChatModal && (
 						<div
 							className={`${styles.aura_tooltip} ${styles.opacity_80}`}
 							onClick={(e) => e.stopPropagation()}>
@@ -605,6 +607,8 @@ const Chat = ({
 								<Image
 									className={styles.cursor_pointer}
 									src={close_bg_icon}
+									width={24}
+									height={24}
 									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
@@ -612,12 +616,12 @@ const Chat = ({
 									}}
 								/>
 							</div>
-							{/* <h1 className='text-xl-2 font-bold text-white m-0'>Meet Aura</h1>
+							<h1 className='text-xl-2 font-bold text-white m-0'>Meet Aura</h1>
 							<h2 className='text-xl font-medium text-white'>
 								Your voice shopping assistant
-							</h2> */}
+							</h2>
 						</div>
-					)}
+					)} */}
 					{/* will need to change placement */}
 					{/* {showException && exception?.message &&   (
 						<div
@@ -627,6 +631,8 @@ const Chat = ({
 								<Image
 									className={styles.cursor_pointer}
 									src={close_bg_icon}
+									width={24}
+									height={24}
 									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
