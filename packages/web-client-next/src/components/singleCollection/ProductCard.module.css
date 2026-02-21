@@ -395,6 +395,7 @@
   align-self: baseline;
   height: 24px;
   width: 24px;
+  margin: 4px;
 }
 
 @media (min-width: 1024px) {

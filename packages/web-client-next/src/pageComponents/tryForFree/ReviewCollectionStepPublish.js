@@ -523,10 +523,10 @@ const ReviewCollectionStepPublish = ({
 							) : null}
 							{publishingOption === PUBLISHING_OPTION_EXPORT_PRODUCTS_CSV ? (
 								<>
-								<span className={`${styles.textXl1} ${styles.mdText2xl} ${styles.desktopTextDisplayL} ${styles.fontSemibold} ${styles.breakWordOnly} ${styles.ellipsis1}`}>
+								<span style={{color:'black'}} className={`${styles.textXl1} ${styles.mdText2xl} ${styles.desktopTextDisplayL} ${styles.fontSemibold} ${styles.breakWordOnly} ${styles.ellipsis1}`}>
 										Export products as a CSV file
 									</span>
-								</>
+								</>	
 							) : null}
 						</p>
 					</div>
