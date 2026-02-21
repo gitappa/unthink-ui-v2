@@ -685,7 +685,7 @@ console.log('selectedTags',selectedTags);
   const publish = singleCollection.status === "published";
   const userId = influencerCollections.user_id === singleCollection.user_id;
 
-  const RenderProductsList = ({
+  const renderProductsList = ({
     list,
     showAuraTileFlag,
     isSingleCollectionSharedPage,
@@ -698,13 +698,13 @@ console.log('selectedTags',selectedTags);
               blogCollectionPage?.video_url) && (
               <div
                 ref={videoContainerRef}
-                className={
-                  isSocialMediaVideo(blogCollectionPage.video_url)
-                    ? styles.coverMediaHidden
-                    : styles.coverMediaContainer
-                }
+                className={`${isSocialMediaVideo(blogCollectionPage.video_url)
+                  ? styles.coverMediaHidden
+                  : styles.coverMediaContainer
+                  } ${showCollectionDetails ? styles.cursorPointer : ""}`}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => showCollectionDetails && onSeeAllClick()}
               >
                 {/* Show video if hovered, otherwise show the image */}
                 {blogCollectionPage?.video_url &&
@@ -728,14 +728,11 @@ console.log('selectedTags',selectedTags);
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
-                        }`}
-                      onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
+                      className={styles.videoOverlay}
                     />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
                   <img
-                    onClick={() => showCollectionDetails && onSeeAllClick()}
                     className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
                       }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
@@ -759,9 +756,7 @@ console.log('selectedTags',selectedTags);
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
-                          }`}
-                        onClick={() => showCollectionDetails && onSeeAllClick()}
+                        className={styles.videoOverlay}
                       />
                     </>
                   )
@@ -827,13 +822,13 @@ console.log('selectedTags',selectedTags);
               blogCollectionPage?.video_url) && (
               <div
                 ref={videoContainerRef}
-                className={
-                  isSocialMediaVideo(blogCollectionPage.video_url)
-                    ? styles.coverMediaHidden
-                    : styles.coverMediaContainer
-                }
+                className={`${isSocialMediaVideo(blogCollectionPage.video_url)
+                  ? styles.coverMediaHidden
+                  : styles.coverMediaContainer
+                  } ${showCollectionDetails ? styles.cursorPointer : ""}`}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => showCollectionDetails && onSeeAllClick()}
               >
                 {/* Show video if hovered, otherwise show the image */}
                 {blogCollectionPage?.video_url &&
@@ -857,14 +852,11 @@ console.log('selectedTags',selectedTags);
                     />
                     {/* Transparent overlay to block interaction with the video */}
                     <div
-                      className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
-                        }`}
-                      onClick={() => showCollectionDetails && onSeeAllClick()} // Redirect to details page on click
+                      className={styles.videoOverlay}
                     />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
                   <img
-                    onClick={() => showCollectionDetails && onSeeAllClick()}
                     className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
                       }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
@@ -888,9 +880,7 @@ console.log('selectedTags',selectedTags);
                       />
                       {/* Transparent overlay to block interaction with the video */}
                       <div
-                        className={`${styles.videoOverlay} ${showCollectionDetails ? styles.cursorPointer : ""
-                          }`}
-                        onClick={() => showCollectionDetails && onSeeAllClick()}
+                        className={styles.videoOverlay}
                       />
                     </>
                   )
@@ -1477,15 +1467,12 @@ console.log('selectedTags',selectedTags);
                           Top Picks
                         </p>
                         <div className={styles.flexColLgRow}>
-                          <RenderProductsList
-                            list={showcasedProductsData}
-                            showAuraTileFlag={
-                              autoProductsData.length ? false : showAuraTile
-                            }
-                            isSingleCollectionSharedPage={
-                              isSingleCollectionSharedPage
-                            }
-                          />
+                          {renderProductsList({
+                            list: showcasedProductsData,
+                            showAuraTileFlag:
+                              autoProductsData.length ? false : showAuraTile,
+                            isSingleCollectionSharedPage,
+                          })}
                         </div>
                       </div>
                     ) : null}
@@ -1496,26 +1483,22 @@ console.log('selectedTags',selectedTags);
                           More from this collection
                         </p>
                         <div className={styles.flexColLgRow}>
-                          <RenderProductsList
-                            list={autoProductsData}
-                            showAuraTileFlag={showAuraTile}
-                            isSingleCollectionSharedPage={
-                              isSingleCollectionSharedPage
-                            }
-                          />
+                          {renderProductsList({
+                            list: autoProductsData,
+                            showAuraTileFlag: showAuraTile,
+                            isSingleCollectionSharedPage,
+                          })}
                         </div>
                       </div>
                     ) : null}
                   </div>
                 ) : (
                   <div className={styles.flexColLgRow}>
-                    <RenderProductsList
-                      list={productsData}
-                      showAuraTileFlag={showAuraTile}
-                      isSingleCollectionSharedPage={
-                        isSingleCollectionSharedPage
-                      }
-                    />
+                    {renderProductsList({
+                      list: productsData,
+                      showAuraTileFlag: showAuraTile,
+                      isSingleCollectionSharedPage,
+                    })}
                   </div>
                 )}
                 {!isSingleCollectionSharedPage && productsData.length ? (
