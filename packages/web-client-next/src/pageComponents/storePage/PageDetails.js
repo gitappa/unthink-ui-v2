@@ -126,22 +126,22 @@ const publish = singleCollections.status === 'published'
 
   if (isPageLoading) {
     return (
-      <div className={styles.pageDetailsContainer}>
-        <div className={styles.pageDetailsInner}>
-          <Skeleton.Input active={true} className={styles.skeletonBanner} />
-          <div className={styles.skeletonProfileSection}>
-            <div className={styles.skeletonProfileImageWrapper}>
-              <Skeleton.Input
-                active={true}
-                className={styles.skeletonProfileImage}
-              />
-            </div>
-            <div className={styles.skeletonProfileInfo}>
-              <Skeleton.Input active className={styles.skeletonProfileName} />
-            </div>
-          </div>
-        </div>
-      </div>
+   <div className='lg:container lg:mx-auto'>
+				<div className='max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto'>
+					<Skeleton.Input active={true} className='w-full h-32 lg:h-80' />
+					<div className='ml-4 lg:ml-12 flex items-end'>
+						<div className='-mt-16 md:-mt-28 max-w-s-1 h-120 md:h-200'>
+							<Skeleton.Input
+								active={true}
+								className='w-120 md:w-200 h-120 md:h-200'
+							/>
+						</div>
+						<div className='lg:pb-4 pl-4 w-full'>
+							<Skeleton.Input active className='h-11 w-1/2' />
+						</div>
+					</div>
+				</div>
+			</div>
     );
   }
 	if (!userId && !publish && isSingleCollectionSharedPage && !isPageOwner ) {
