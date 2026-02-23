@@ -1,0 +1,3 @@
+export const VTO_ICON = 'VTO_ICON_CLICK'
+export const VTO_ICON_SUCCESS = 'VTO_ICON_SUCCESS'
+export const VTO_ICON_FAILURE = 'VTO_ICON_FAILURE'

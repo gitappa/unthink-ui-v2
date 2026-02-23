@@ -21,6 +21,7 @@ import creatorCollectionReducer from "../pageComponents/Auth/redux/CreatorReduce
 import attributePoolReducer from "../pageComponents/createStore/redux/reducer";
 import { cartReducer } from "../pageComponents/DeliveryDetails/redux/reducer";
 import PDP_LoaderReducer from "../pageComponents/storePage/redux/PDPLoaderReducer";
+import { VtoIconReducer } from "../components/singleCollection/redux/reducer";
 
 const rootReducer = combineReducers({
 	chat: chatReducer,
@@ -44,6 +45,8 @@ const rootReducer = combineReducers({
 	wishlistActions: wishlistActionsReducer, // handle wishlist (collection) actions only like, API call
 	cart:cartReducer,
 	PDP_LoaderReducer:PDP_LoaderReducer,
+	VtoIconReducer:VtoIconReducer,
+	
 });
 
 export default rootReducer;
