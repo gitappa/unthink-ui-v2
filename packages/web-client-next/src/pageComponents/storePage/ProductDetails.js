@@ -177,7 +177,7 @@ const ProductDetails = ({ params, ...props }) => {
 			getPercentage(productDetails.listprice, productDetails.price),
 		[productDetails?.listprice, productDetails?.price]
 	);
-
+ 
 	const currency = useMemo(
 		() =>
 			productDetails?.currency
@@ -715,7 +715,7 @@ console.log(productDetails?.additional_image);
 												className='p-0'>
 												<Image src={facebookIcon} width='28px'  height={28}/>
 											</a>
-										)}
+										)}	
 									</div>
 								) : null}
 								{brandsDetails?.info ? (

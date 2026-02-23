@@ -68,6 +68,8 @@ const ContextWrapper = ({ children }) => {
 		state.chatV2.userDataSent,
 		state.chatV2.isFreshSearch,
 	]);
+	// console.log(user);
+	
 	const dispatch = useDispatch();
 	const { onTrackStream } = useAudio(isAuraSpeaking);
 
@@ -142,7 +144,8 @@ const ContextWrapper = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (socketId) {
+ 
+		if (socketId && user ) {
 			const userInfo = {
 				access_key,
 				userId: getTTid(),
@@ -150,6 +153,8 @@ const ContextWrapper = ({ children }) => {
 				sessionId: getSid(),
 				prevSessionId: getPrevSid(),
 			};
+			console.log('userzq',user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length);
+				console.log( user?.data.filters?.[current_store_name]?.strict?.brand); 
 
 			if (getParams("unthink_internal") === "true" || isDebugCookie()) {
 				userInfo["debug"] = true;
@@ -157,10 +162,12 @@ const ContextWrapper = ({ children }) => {
 			// if (!isEnableAICookieFalse() && (isStagingEnv || isEnableAICookie())) {
 			userInfo["enableai"] = true;
 			// }
-			if (user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length) {
+			// if (user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length) {
+				// userInfo["filters"] = user.data.filters?.[current_store_name];
+			// }
+	if (user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length) {
 				userInfo["filters"] = user.data.filters?.[current_store_name];
 			}
-
 
 			if (window.localStorage.getItem("search_priority")) {
 				userInfo.search_priority =

@@ -181,7 +181,7 @@ const ProductCard = ({
     state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick
   ]);
-  console.log('ButtonClick',ButtonClick);
+  // console.log('ButtonClick',ButtonClick);
 
   // console.log('authUser', authUser);
   const [storeData] = useSelector((state) => [state.store.data]);
@@ -888,13 +888,28 @@ additional_prompt:descriptionget || '',
                 </div>
               )}
               {
-                widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+                widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !showWishlistModal &&
                 <Image src={more} height={20} width={20} onClick={(e) => { setMenuIcon(true); e.stopPropagation() }} className={styles[size === "small" ? 'product-menu-dropdown-small' : (!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ?'product-menu-icon' : 'product-menu-icon2']} />
               }
    {
-                widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                <Image src={more} height={20} width={20} onClick={(e) => { setMenuIcon(true); e.stopPropagation() }} className={styles[size === "small" ? 'product-menu-dropdown-small' : (!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ?'product-menu-icon' : 'product-menu-icon2']} />
-              }
+                widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER || showWishlistModal &&
+
+                 <div
+                          className={` ${styles['remove-icon']}`}
+                          
+                          onClick={removeFromWishlistClick}>
+                          <p
+                            className={`${styles['remove-icon-circle']} ${size === "small"
+                              ? styles['icon-circle-small']
+                              : styles['icon-circle-medium']
+                              }`}>
+                            <RxCross2 />
+                          </p>
+                          {/* <p className={styles['text-gray']}>Remove</p> */}
+                        </div>
+
+
+                }
               {menuIcon &&
                 <div ref={menuRef} onClick={(e) => e.stopPropagation()} className={styles[size === "small" ? 'product-menu-dropdown-mini' :(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ? 'product-menu-dropdown' : 'product-menu-dropdown2']}>
 

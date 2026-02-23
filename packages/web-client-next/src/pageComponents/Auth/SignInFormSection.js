@@ -315,6 +315,8 @@ export default function SignInFormSection() {
 				}
 			}
 		} catch (error) {
+			notification["error"]({
+			message: error.response.data.status_desc})
 			setHasError(() => "Unable to process, Please try again after sometime");
 		} finally {
 			setShowProcessingLoader(false);
@@ -588,16 +590,16 @@ export default function SignInFormSection() {
 										</div>
 									</>
 								)}
-								{!!hasError && (
+								{/* {!!hasError && (
 									<div className={styles.alertWrapper}>
-										{/* <p className='text-red-500 h-5'>{hasError}</p> */}
+										<p className='text-red-500 h-5'>{hasError}</p>
 										<Alert
 											message={hasError}
 											type='error'
 											className={styles.alert}
 										/>
 									</div>
-								)}
+								)} */}
 
 								<Form.Item>
 									<div className={styles.submitButtonContainer}>

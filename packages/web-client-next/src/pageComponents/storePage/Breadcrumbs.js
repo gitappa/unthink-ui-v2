@@ -39,9 +39,9 @@ const Breadcrumbs = ({
 	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
 	console.log(`/influencer/${authUserName?.user_name}`  );
 	
-	console.log("pathname:", router.pathname);
-console.log("asPath:", router.asPath);
-console.log("query:", router.query);
+// 	console.log("pathname:", router.pathname);
+// console.log("asPath:", router.asPath);
+// console.log("query:", router.query);
 
 	const navigate = useNavigate();
 	const subDomain = typeof window !== 'undefined' ? getSubDomain(window.location.hostname) : null;
