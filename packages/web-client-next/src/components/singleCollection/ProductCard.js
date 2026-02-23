@@ -892,7 +892,25 @@ additional_prompt:descriptionget || '',
                 <Image src={more} height={20} width={20} onClick={(e) => { setMenuIcon(true); e.stopPropagation() }} className={styles[size === "small" ? 'product-menu-dropdown-small' : (!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ?'product-menu-icon' : 'product-menu-icon2']} />
               }
    {
-                widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER || showWishlistModal &&
+                widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER   &&
+
+                 <div
+                          className={` ${styles['remove-icon']}`}
+                          
+                          onClick={removeFromWishlistClick}>
+                          <p
+                            className={`${styles['remove-icon-circle']} ${size === "small"
+                              ? styles['icon-circle-small']
+                              : styles['icon-circle-medium']
+                              }`}>
+                            <RxCross2 />
+                          </p>
+                          {/* <p className={styles['text-gray']}>Remove</p> */}
+                        </div>
+
+
+                }
+                   {      showWishlistModal &&
 
                  <div
                           className={` ${styles['remove-icon']}`}
