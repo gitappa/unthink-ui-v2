@@ -116,6 +116,7 @@ const ChatModal = ({
 		auraServerImage,
 		auraOverlayCoordinates,
 		socketId,
+		ButtonClick
 	] = useSelector((state) => [
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatMessage],
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
@@ -134,6 +135,7 @@ const ChatModal = ({
 		state.chatV2.auraServerImage,
 		state.chatV2.auraOverlayCoordinates,
 		state.chatV2.socketId,
+		state.VtoIconReducer.ButtonClick
 	]);
 	const {
 		suggestions: { tags = [], title = "" },
@@ -502,7 +504,7 @@ const ChatModal = ({
 
 	return (
 		<div
-			className={styles['chatmodal-modal-container']}
+			className={` ${styles['chatmodal-modal-container']} ${ButtonClick ? 'justify-center overflow-hidden' : ''} `}
 			ref={modalRef}>
 			{/* hide close icon for AuraChatPage */}
 			{!isAuraChatPage ? (

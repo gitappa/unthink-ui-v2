@@ -88,6 +88,7 @@ import Modal from "../modal/Modal";
 import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
+import { vtoIconState } from "./redux/actions";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -169,6 +170,7 @@ const ProductCard = ({
     store_id,
     authUser,
     customProductsData,
+    ButtonClick
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -177,9 +179,9 @@ const ProductCard = ({
     state.store.data.store_id,
     state.auth.user.data,
     state.auth.customProducts.data.data || [],
-    // state.wishlist.showWishlistModal
+    state.VtoIconReducer.ButtonClick
   ]);
-  console.log(showWishlistModal);
+  console.log('ButtonClick',ButtonClick);
 
   // console.log('authUser', authUser);
   const [storeData] = useSelector((state) => [state.store.data]);
@@ -601,7 +603,7 @@ additional_prompt:descriptionget || '',
   };
 
   const handleVTOCancel = () => {
-    setButtonClick(false);
+    dispatch(vtoIconState(false));
     setVtoResultImageUrl(null);
     setUploadedImages([]);
     setDescriptionget("");
@@ -616,7 +618,7 @@ additional_prompt:descriptionget || '',
       }
     } catch (e) {
       console.log(e);
-    } finally {
+    } finally { 
       dispatch(PDPloader(false));
     }
   };
@@ -673,7 +675,7 @@ additional_prompt:descriptionget || '',
             />
             {!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
               <div className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`} onClick={(e) => {
-                setButtonClick(true);
+               dispatch(vtoIconState(true));
                 e.stopPropagation();
               }}>
                 <Image height={20} width={20}
@@ -1172,9 +1174,9 @@ additional_prompt:descriptionget || '',
 
       </div>
 
-      {buttonClick ?
+      {ButtonClick ?
 
-        <Modal isOpen={buttonClick}
+        <Modal isOpen={ButtonClick}
           headerText={'Virtual Try-On'}
           subText='Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on.'
           onClose={() => handleVTOCancel()}
