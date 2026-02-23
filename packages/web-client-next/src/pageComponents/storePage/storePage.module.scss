@@ -858,3 +858,17 @@
     height: 44px;
     width: 50%;
 }
+.collectionButton {
+    font-family: 'buttonFont', sans-serif;
+    font-weight: bold;
+    // color: #ffffff;
+    letter-spacing: 0;
+    font-size: 15px;
+    background-color: transparent;
+    /* Was #2c2c2c in SCSS but text-white overrides? No, usually bg color. Wait, JSX only said text-white. I'll stick to original SCSS intent if implicit, or just use what JSX had. JSX had className="text-white". The SCSS had background-color: #2c2c2c. I will assume I should keep the SCSS style if it was applying, but check if it was actually applying. */
+    /* If the button in JSX didn't use styles.something, and .collections was applied to parent, then .collections button selector applies. */
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 20px;
+    border: none;
+}

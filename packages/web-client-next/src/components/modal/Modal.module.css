@@ -10,9 +10,9 @@
     overflow: auto;
     left: 0;
     top: 0;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
     /* backdrop-blur-xs */
-    background-color: #0f141f7a;
+    background-color: transparent;
     /* bg-gray-102 */
     z-index: 50;
 }

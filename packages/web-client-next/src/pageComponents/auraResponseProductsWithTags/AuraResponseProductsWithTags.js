@@ -184,30 +184,30 @@ const AuraResponseProductsWithTags = ({
 			) : null}
 
 			<div className={styles['aura-tags-wrapper']}>
-				{!isEmpty(allProductList) && tags.length > 1 ? (
-					<div
-						key='All'
-						className={`${styles['aura-tag-item']} ${!selectedTag && isAllEnabled
-							? styles['aura-tag-selected']
-							: isAllEnabled
-								? styles['aura-tag-enabled']
-								: styles['aura-tag-disabled']
-							}`}
-						onClick={() => isAllEnabled && handleSuggestionClick("")}>
-						<h5
-							className={styles['aura-tag-text']}>
-							All
-						</h5>
-						{!isAllEnabled ? (
-							<Skeleton.Button
-								className={styles['aura-tag-loading-skeleton']}
-								active
-								shape='round'
-								block
-							/>
-						) : null}
-					</div>
-				) : null}
+					{!isEmpty(allProductList) && tags.length > 1 ? (
+						<div
+							key='All'
+							className={`${styles['aura-tag-item']} ${!selectedTag && isAllEnabled
+								? styles['aura-tag-selected']
+								: isAllEnabled
+									? styles['aura-tag-enabled']
+									: styles['aura-tag-disabled']
+								}`}
+							onClick={() => isAllEnabled && handleSuggestionClick("")}>
+							<h5
+								className={styles['aura-tag-text']}>
+								All
+							</h5>
+							{!isAllEnabled ? (
+								<Skeleton.Button
+									className={styles['aura-tag-loading-skeleton']}
+									active
+									shape='round'
+									block
+								/>
+							) : null}
+						</div>
+					) : null}
 				{tags?.map((suggestion, index) => (
 					<div
 						id={`tag-${suggestion}`}

@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import { PlusOutlined } from "@ant-design/icons";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 // Initialize Swiper modules
 SwiperCore.use([FreeMode]);
 
@@ -87,7 +88,7 @@ const CollectionEditTags = ({
 							)
 						}
 						<div className={`flex w-full justify-end md:justify-between items-center flex-col-reverse md:flex-row`}>
-							<div className={`relative ${handleAddKeywords ? " w-full md:w-3/4 desktop:w-4/5" : "w-full"}`}>
+							<div className={`relative ${handleAddKeywords ? " w-full md:w-3/4 desktop:w-4/5 pl-6.5" : "w-full"}`}>
 								<Swiper
 									slidesPerView="auto"
 									spaceBetween={10}
@@ -137,17 +138,32 @@ const CollectionEditTags = ({
 									) : null}
 								</Swiper>
 								{isOverflowing && (
+									<>
 									<div
-										className="absolute right-0 addmore_image_edit top-0"
+										className="absolute right-0  lg:h-10 h-8 lg:w-10 -top-0 md:top-0 lg:-top-1
+										hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center"
 										style={{ cursor: "pointer", zIndex: 10 }}
 										onClick={() => {
 											if (swiperRef.current) {
 												swiperRef.current.slideNext();
 											}
 										}}
-									>
-										<img className="" src={Addmore} alt="Scroll Right" />
+										>
+										  <MdOutlineKeyboardArrowLeft  alt="Scroll Right" width='72' height='72'  className="transform rotate-180 text-lg "/>
 									</div>
+									<div
+																	className={'absolute  lg:h-10 h-8 -top-0 md:top-0 lg:-top-1 lg:w-10 bg-gray-50 ml-3 lg:ml-0  w-8 rounded-full flex hover:shadow-xl lg:-left-3.5 -left-5 justify-center items-center'}
+																	style={{ cursor: "pointer", zIndex: 10, position: 'absolute' }}
+																	onClick={() => {
+																	  if (swiperRef.current) {
+																		swiperRef.current.slidePrev();
+																	  }
+																	}}
+																  >
+																	<MdOutlineKeyboardArrowLeft alt="Scroll Left" width='72' height='72' />
+																  </div>
+										</>
+									
 								)}
 							</div>
 							{/* Add more kewords button */}

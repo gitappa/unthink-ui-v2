@@ -60,6 +60,7 @@ import {
 	makeBodyOverflowUnset,
 	getIsSellerLoggedIn,
 	AdminCheck,
+	getThemeCollectionsPagePath,
 } from "../../helper/utils";
 import AttributionModal from "../shared/AttributionModal";
 import {
@@ -87,6 +88,7 @@ import { connectVenlyWallet } from "../earnedRewardModal/redux/actions";
 import Cookies from "js-cookie";
 import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
+import { THEME_ALL } from "../../constants/themeCodes";
 
 const { Text } = Typography;
 
@@ -144,7 +146,7 @@ const Header = ({
 		// state.store.data.associate_seller,
 		state.store.data,
 	]);
-console.log('isUserLogin',currentUser);
+console.log('isUserLogin',showCreate	);
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -696,7 +698,7 @@ console.log('isStagingEnv',isStagingEnv);
 										</span>
 									</div>
 								)}
-								{showCreate ? (
+								{/* {showCreate ? (
 									<Dropdown
 										overlayClassName={styles.dropdownOverlayFixed}
 										// disabled={isUserFetching}
@@ -709,7 +711,13 @@ console.log('isStagingEnv',isStagingEnv);
 											</span>
 										</div>
 									</Dropdown>
-								) : null}
+								) : null} */}
+								<button className={styles.collectionButton}
+																onClick={() =>
+																	navigate(getThemeCollectionsPagePath(THEME_ALL))
+																}>
+																COLLECTIONS
+								</button>
 
 								{showProfileIcon ? (
 									// <Dropdown
