@@ -517,7 +517,7 @@ export default function SignInFormSection() {
 	return (
 		<div className={styles.root}>
 			{!successState.showSuccess ? (
-				<div className={`contact_us_container ${styles.container}`}>
+				<div className={` ${styles.contact_us_container} ${styles.container}`}>
 					<div className={`contact_us_inner_container ${styles.innerContainer}`}>
 						<h1 className={styles.heading}>
 							Welcome Back

@@ -6,6 +6,11 @@
 	height: calc(100% - 75px);
     display: flex;
 }
+.contact_us_container{
+background-image: url(./../../images/newStaticPageImages/contactUs_bg.svg);
+background-repeat: no-repeat;
+background-size: cover;
+}
 
 .signup-form-container input,
 .signin-form-container input,
