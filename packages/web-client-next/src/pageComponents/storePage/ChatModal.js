@@ -137,6 +137,8 @@ const ChatModal = ({
 		state.chatV2.socketId,
 		state.VtoIconReducer.ButtonClick
 	]);
+	console.log('auraServerImage',auraServerImage);
+	
 	const {
 		suggestions: { tags = [], title = "" },
 	} = suggestionsWithProducts;
@@ -158,7 +160,7 @@ const ChatModal = ({
 		setLocalChatMessage("");
 		dispatch(setShowChatModal(false));
 		showSubmitImageTooltip && setShowSubmitImageTooltip(false);
-	};
+	};	
 
 	const {
 		text: followUpQuery, //requestedText
