@@ -124,7 +124,7 @@ const publish = singleCollections.status === 'published'
     }
   }, [enablePageViewTracking, pageUser.user_id, isSingleCollectionSharedPage]);
 
-  if (isPageLoading) {
+  if (isPageLoading ) {
     return (
    <div className='lg:container lg:mx-auto'>
 				<div className='max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto'>
@@ -149,16 +149,17 @@ const publish = singleCollections.status === 'published'
 		return <BlogPageNotFound />
 	}
 
-  if (isSingleCollectionSharedPage) {
+  if (isSingleCollectionSharedPage && !isPageLoading  && !isPageOwner) {
     if (!currentSingleCollection._id) {
       // UPDATE // RE_CHECK LOGIC OR KEEP IT
       return <BlogPageNotFound />;
     }
   } else {
-    if (!pageUser.user_id) {
+    if (!pageUser.user_id && !isPageLoading && !isPageOwner) {
       return <UserNotFound />;
     }
   }
+// console.log('pageUser',pageUser);
 
   return (
     <>
