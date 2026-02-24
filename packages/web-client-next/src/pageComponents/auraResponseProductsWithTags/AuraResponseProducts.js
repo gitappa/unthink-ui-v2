@@ -548,9 +548,9 @@ const AuraResponseProducts = ({
 					})
 				);
 				dispatch(openWishlistModal());
-				if (isUserLoginCokkies) {
-					dispatch(setIsCreateWishlist(true));
-				}
+				// if (isUserLoginCokkies) {
+				// 	dispatch(setIsCreateWishlist(true));
+				// }
 			} else if (isShare) {
 				
 				dispatch(
