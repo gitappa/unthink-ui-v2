@@ -225,7 +225,9 @@ export default function SignInFormSection() {
 	};
 
 	const onFinish = async (values) => {
+
 		if (!isSignInWithPasswordActive) {
+			
 			// to continue with get link on mail and stop the password form submit
 			onSignInWithLinkRequest();
 			return;
@@ -253,8 +255,12 @@ export default function SignInFormSection() {
 					if (res.data.err_code) setHasErrorCode(res.data.err_code);
 				}
 			}
-		} catch {
+		} catch(e) {
 			setHasError("Failed to sign in");
+			notification["error"]({
+			message: e.response.data.status_desc,
+		})
+			
 		}
 		setShowProcessingLoader(false);
 	};
@@ -293,6 +299,8 @@ export default function SignInFormSection() {
 	};
 
 	const onSignInWithLinkRequest = async () => {
+
+
 		try {
 			setHasError(() => "");
 			setShowProcessingLoader(true);
@@ -316,7 +324,7 @@ export default function SignInFormSection() {
 			}
 		} catch (error) {
 			notification["error"]({
-			message: error.response.data.status_desc})
+			message: error.response.data.status_desc})			
 			setHasError(() => "Unable to process, Please try again after sometime");
 		} finally {
 			setShowProcessingLoader(false);
@@ -509,7 +517,7 @@ export default function SignInFormSection() {
 	return (
 		<div className={styles.root}>
 			{!successState.showSuccess ? (
-				<div className={`contact_us_container ${styles.container}`}>
+				<div className={` ${styles.contact_us_container} ${styles.container}`}>
 					<div className={`contact_us_inner_container ${styles.innerContainer}`}>
 						<h1 className={styles.heading}>
 							Welcome Back
@@ -616,7 +624,7 @@ export default function SignInFormSection() {
 												size='large'
 												className={`loading-button ${styles.signInLinkButton}`}
 												onClick={() => setIsSignInWithPasswordActive(true)}>
-												Sign In with password
+												Sign In with password	
 											</Button>
 										)}
 

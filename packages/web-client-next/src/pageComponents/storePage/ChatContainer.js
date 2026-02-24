@@ -21,6 +21,7 @@ import {
 	setChatProductsData,
 	setShowChatModal,
 	setChatSearchType,
+	resetAuraSearchResponse,
 } from "../../hooks/chat/redux/actions";
 import header_aura from "../../images/chat/header_aura_image_transparent.png";
 import star_ai_icon from "../../images/unthink_star_ai_icon.svg";
@@ -397,6 +398,7 @@ const ChatContainer = ({
 	const onChatClick = () => {
 		if (!showChatModal) {
 			dispatch(setShowChatModal(true));
+			dispatch(resetAuraSearchResponse()); // reset AURA response when change search option
 		}
 	};
 

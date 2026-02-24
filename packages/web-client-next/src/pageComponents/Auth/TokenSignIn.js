@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
 import { useDispatch } from "react-redux";
 import { Spin, notification } from "antd";
@@ -21,16 +22,17 @@ import {
 import { is_store_instance } from "../../constants/config";
 import styles from "./authPage.module.scss";
 
-const TokenSignIn = ({ token, location }) => {
+const TokenSignIn = () => {
+	const router = useRouter();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const params = typeof window !== 'undefined' && location?.search ? new URLSearchParams(location.search) : null;
+	const token = router.query.token;
+	const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
 	const redirectPage = params?.get("page");
 
 	useEffect(() => {
 		if (token) verifyToken(token);
 	}, [token]);
-
 	const redirectBackToHome = () => {
 		notification["success"]({
 			message: "Sign In Success!",

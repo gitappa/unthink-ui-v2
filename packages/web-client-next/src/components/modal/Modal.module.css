@@ -1,20 +1,17 @@
 /* ... existing ... */
 
 .modalOverlay {
-    position: fixed;
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 104vh;
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100vh;
-    overflow: auto;
-    left: 0;
-    top: 0;
-    backdrop-filter: blur(1px);
-    /* backdrop-blur-xs */
-    background-color: transparent;
-    /* bg-gray-102 */
-    z-index: 50;
+    z-index: 1000;
 }
 
 .zIndex40 {

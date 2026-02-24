@@ -211,13 +211,16 @@ const BlogCollectionGallery = ({
 
 	const handleRedirectToNewEditCollectionPage = () => {
 		navigate(getEditCollectionPagePath(selectedCollection._id));
-
+		if(showChatModal){
+			dispatch(setShowChatModal(false))
+		}
 		dispatch(closeWishlistModal());
 		dispatch(
 			getUserCollection({
 				_id: selectedCollection._id,
 			})
 		);
+		 
 		// dispatch(getSingleUserCollection({ _id: selectedCollection._id }));
 	}
 
