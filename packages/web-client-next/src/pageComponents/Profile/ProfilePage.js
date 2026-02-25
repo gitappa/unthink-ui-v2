@@ -94,7 +94,8 @@ const ProfilePage = () => {
 	});
 
 	const isAdminLoggedIn = AdminCheck(user?.data, current_store_name, adminUserId, admin_list);
-
+	console.log('isAdminLoggedIn',isAdminLoggedIn);
+	
 	useEffect(() => {
 		if (user.data.user_id) {
 			if (!authUserCollections.length && !authUserCollectionsIsFetching) {
@@ -250,11 +251,13 @@ const ProfilePage = () => {
 	// );
 
 	// isCreaterAccount 
+	// console.log('sdsdsdv',user?.data);
+	
 	useEffect(() => {
-		if (isCreaterAccount || isAdminLoggedIn) {
+		if (isCreaterAccount ) {
 			dispatch(getCreatoStoreData(user?.data?.shop[0]));
 		}
-	}, [isCreaterAccount, isAdminLoggedIn])
+	}, [isCreaterAccount])
 
 
 	const saveUserInfoData = async () => {

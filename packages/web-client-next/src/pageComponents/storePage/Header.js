@@ -301,14 +301,14 @@ console.log('isStagingEnv',isStagingEnv);
 
 	const viewLeaderboardEnabled = useMemo(
 		() =>
-			(isStoreAdminLoggedIn || isAdminLoggedIn || isStagingEnv) &&
+			(isStoreAdminLoggedIn || isStagingEnv) &&
 			!(
 				is_store_instance &&
 				(current_store_name === STORE_USER_NAME_SANTHAY ||
 					current_store_name === STORE_USER_NAME_HOMECENTRE ||
 					current_store_name === STORE_USER_NAME_FASHIONDEMO)
 			),
-		[isStoreAdminLoggedIn, isAdminLoggedIn, isStagingEnv]
+		[isStoreAdminLoggedIn, isStagingEnv]
 	);
 
 	// const isAssociateSeller = useMemo(
@@ -376,7 +376,7 @@ console.log('isStagingEnv',isStagingEnv);
 				});
 			}
 
-			if (isAdminLoggedIn) {
+			if (isStoreAdminLoggedIn || isStagingEnv ) {
 				items.push({
 					key: 'community',
 					className: styles.headerMenuItemPy2,
@@ -434,7 +434,7 @@ console.log('isStagingEnv',isStagingEnv);
 				});
 			}
 
-			if (isAdminLoggedIn) {
+			if (isStoreAdminLoggedIn || isStagingEnv) {
 				items.push({
 					key: 'stats',
 					className: styles.headerMenuItemPy2,
