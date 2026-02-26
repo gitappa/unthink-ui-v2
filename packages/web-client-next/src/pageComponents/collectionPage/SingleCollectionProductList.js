@@ -18,7 +18,9 @@ import {
   GuestPopUpShow,
 } from "../Auth/redux/actions";
 import ProductCard from "../../components/singleCollection/ProductCard";
-import share_icon from "../../images/profilePage/share_icon.svg";
+import share_icon from "../../images/profilePage/Share.svg";
+import Rightarrow from '../../images/profilePage/Rightarrow.svg'
+
 // import share_icon from "../../components/singleCollection/images/";
 
 import {
@@ -692,7 +694,7 @@ console.log('selectedTags',selectedTags);
   }) => {
     if (blogCollectionPage?.collection_name && !isSingleCollectionSharedPage) {
       return (
-        <div className={styles.productGrid}>
+        <div className={ styles.productGrid} style={{width:'100%'}}>
           {showCoverImage &&
             (blogCollectionPage?.cover_image ||
               blogCollectionPage?.video_url) && (
@@ -763,6 +765,29 @@ console.log('selectedTags',selectedTags);
                 )}
               </div>
             )}
+            <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' }`} >
+               {!isSingleCollectionSharedPage && productsData.length ? (
+                  <div className={styles.seeFullRow}>
+                    <div className="flex items-center gap-2">
+                    
+                    <p className={styles.para1}>{blogCollectionPage.collection_name}</p>
+                    <p className={styles.para2}>{list?.length} items</p>
+                    </div>
+
+                    <div className={`${styles.viewCollectionContainer}`}>
+
+                    <Button
+                      type="primary"
+                      className={styles.seeFullBtn}
+                      onClick={onSeeAllClick}
+                      >
+                     View Collection
+                    </Button>
+                    <Image src={Rightarrow} height={16} width={16} />
+                      </div>
+                  </div>
+                ) : null}
+          <div className={`${ blogCollectionPage?.cover_image ? styles.productItems : styles.productItems1 }`}>
 
           {list.length > 0 &&
             list?.map((product) => (
@@ -780,6 +805,7 @@ console.log('selectedTags',selectedTags);
                     collectionName: blogCollectionPage.collection_name,
                     collectionICode: pageUser.influencer_code,
                   }}
+                  collectionCards
                   showStar={false}
                   enableHoverShowcase={false}
                   onStarClick={() =>
@@ -803,6 +829,9 @@ console.log('selectedTags',selectedTags);
                 />
               </div>
             ))}
+          </div>
+            </div>
+
           {showAuraTileFlag && list.length > 0 && (
             <div>
               <AskAuraCard />
@@ -816,7 +845,7 @@ console.log('selectedTags',selectedTags);
       isSingleCollectionSharedPage
     ) {
       return (
-        <div className={styles.productGrid}>
+        <div className={styles.productGrid2}>
           {showCoverImage &&
             (blogCollectionPage?.cover_image ||
               blogCollectionPage?.video_url) && (
@@ -1349,23 +1378,27 @@ console.log('selectedTags',selectedTags);
                         />
                       )}
                       {/* {sharePageUrl && ( */}
+                      <div className={`${styles.sharecontainer}`}   onClick={() =>
+                          blogCollectionPage.status === PUBLISHED &&
+                          setShowShareCollection(!showShareCollection)
+                        }>
+
                       <img
                         className={`${styles.shareIcon} ${showShareCollection ? styles.shareIconEventsNone : ""
-                          } ${blogCollectionPage.status === PUBLISHED
-                            ? styles.shareIconEnabled
-                            : styles.shareIconDisabled
-                          }`}
+                        } ${blogCollectionPage.status === PUBLISHED
+                          ? styles.shareIconEnabled
+                          : styles.shareIconDisabled
+                        }`}
                         src={share_icon}
                         title={
                           blogCollectionPage.status !== PUBLISHED
-                            ? "Please publish collection to share"
-                            : ""
+                          ? "Please publish collection to share"
+                          : ""
                         }
-                        onClick={() =>
-                          blogCollectionPage.status === PUBLISHED &&
-                          setShowShareCollection(!showShareCollection)
-                        }
-                      />
+                      
+                        />
+                        <p style={{color:'#6A7282'}}>Share</p>
+                        </div>
                       {/* )} */}
                     </div>
                     
@@ -1460,9 +1493,9 @@ console.log('selectedTags',selectedTags);
 
                 {isSingleCollectionSharedPage &&
                   !!showcasedProductsData.length ? (
-                  <div>
+                  <div >
                     {!!showcasedProductsData.length ? (
-                      <div>
+                      <div className={styles.toppicksContainer}>
                         <p className={styles.topPicksTitle}>
                           Top Picks
                         </p>
@@ -1501,17 +1534,7 @@ console.log('selectedTags',selectedTags);
                     })}
                   </div>
                 )}
-                {!isSingleCollectionSharedPage && productsData.length ? (
-                  <div className={styles.seeFullRow}>
-                    <Button
-                      type="primary"
-                      className={styles.seeFullBtn}
-                      onClick={onSeeAllClick}
-                    >
-                      See the full collection
-                    </Button>
-                  </div>
-                ) : null}
+              
               </div>
             </div>
             {isPopupShow && isGuestPopUpShow && (

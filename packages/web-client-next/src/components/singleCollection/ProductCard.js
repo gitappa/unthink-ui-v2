@@ -133,6 +133,7 @@ const ProductCard = ({
   collection_status,
   localChatMessage,
   blogCollectionPage,
+  collectionCards 
 }) => {
   const navigate = useNavigate();
   console.log("hideAddToWishlist", widgetType);
@@ -645,11 +646,11 @@ additional_prompt:descriptionget || '',
 
     }
   }, [clickedMfrCode]);
-  console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
+  // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
   
   return (
     <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
-      className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] : styles['product-wrapper-medium']}`}>
+      className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] :collectionCards ? styles['product-wrapper-medium2'] : styles['product-wrapper-medium']}`}>
       <div
         className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
         // onClick={handleProductClick}

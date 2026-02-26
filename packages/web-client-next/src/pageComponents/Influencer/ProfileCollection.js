@@ -54,8 +54,8 @@ const ProfileCollection = ({
 			c.access !== COLLECTION_PUBLIC && checkSingleCollection(c.collection_id)
 	);
 
-	return (
-		<div className='mx-3 sm:container sm:mx-auto'>
+	return ( 
+		<div className='mx-3 sm:container sm:mx-auto'> 
 			{collectionsToShow.map((collection) => (
 				<div key={collection?.collection_id}>
 					<SingleCollection
