@@ -843,14 +843,20 @@ export const filterProductListBySelectedTags = (list, tags, tag_map) => {
 
 export const productCountToShow = (width, isCoverImageAvailable) => {
 	let count;
-
-	if (width >= 1536 || width < 640) {
+	if(width >= 1536){
+		if (isCoverImageAvailable) {
+			count = 6;
+		} else {
+			count = 9;
+		}
+	}
+	 else if (width >= 1536 || width < 640) {
 		count = 4;
 	} else if (width >= 640 && width < 1536) {
 		if (isCoverImageAvailable) {
-			count = 5;
+			count = 6;
 		} else {
-			count = 3;
+			count = 9;
 		}
 	}
 
