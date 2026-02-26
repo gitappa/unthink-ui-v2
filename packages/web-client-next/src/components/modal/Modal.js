@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
 import { CloseOutlined } from "@ant-design/icons";
 import styles from "./Modal.module.css";
@@ -74,11 +75,12 @@ const Modal = ({
 	);
 
 	if (isOpen) {
-		return (
+		const modalNode = (
 			<div style={{zIndex:50}}
 				// unthinkNextGenModalClass class added to handle body overflow scroll bar
 				className={`${unthinkNextGenModalClass} ${styles.modalOverlay} ${zIndexClassName}`}
 				onClick={() => maskClosable && onClose && onClose()}>
+				<div aria-hidden='true' className={styles.modalBackdrop} />
 				<div
 					className={`${styles.modalContentWrapper} ${maxWidthClassName}`}
 					onClick={(e) => e.stopPropagation()} // to avoid click on backDrop // prevent bubbling
@@ -115,6 +117,12 @@ const Modal = ({
 				</div>
 			</div>
 		);
+
+		if (typeof window !== "undefined" && window?.document?.body) {
+			return createPortal(modalNode, window.document.body);
+		}
+
+		return modalNode;
 	}
 
 	return null;

@@ -138,7 +138,6 @@ const ProductCard = ({
   const navigate = useNavigate();
   console.log("hideAddToWishlist", widgetType);
   // console.log('qzssddsdsds',product);
-  const [buttonClick, setButtonClick] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [descriptionget, setDescriptionget] = useState("");
   const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
@@ -676,7 +675,7 @@ additional_prompt:descriptionget || '',
             />
             {!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
               <div className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`} onClick={(e) => {
-               dispatch(vtoIconState(true));
+               dispatch(vtoIconState(product?.mfr_code || true));
                 e.stopPropagation();
               }}>
                 <Image height={20} width={20}
@@ -1208,9 +1207,9 @@ additional_prompt:descriptionget || '',
 
       </div>
 
-      {ButtonClick ?
+      {ButtonClick === product?.mfr_code ?
 
-        <Modal isOpen={ButtonClick}
+        <Modal isOpen={!!ButtonClick}
           headerText={'Virtual Try-On'}
           subText='Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on.'
           onClose={() => handleVTOCancel()}

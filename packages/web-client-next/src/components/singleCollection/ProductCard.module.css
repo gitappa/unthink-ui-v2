@@ -1198,7 +1198,7 @@ font-size: 10px;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 25px 0;
+  padding:0 0 25px 0;
 }
 
 .product-vto-upload-zone {
@@ -1274,8 +1274,7 @@ font-size: 10px;
   padding: 0.5rem 1.125rem;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
+   cursor: pointer;
   border: none;
   transition: all 0.3s ease;
 }
@@ -1283,8 +1282,7 @@ font-size: 10px;
 @media (min-width: 768px) {
   .product-vto-submit-form-button {
     font-size: 0.875rem;
-    margin-bottom: 20px;
-  }
+   }
 }
 
 .product-vto-submit-form-button-loading {
