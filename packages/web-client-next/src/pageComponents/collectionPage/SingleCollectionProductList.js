@@ -770,8 +770,8 @@ console.log('selectedTags',selectedTags);
                   <div className={styles.seeFullRow}>
                     <div className="flex items-center gap-2">
                     
-                    <p className={styles.para1}>{blogCollectionPage.collection_name}</p>
-                    <p className={styles.para2}>{list?.length} items</p>
+                    {/* <p className={styles.para1}>{blogCollectionPage.collection_name}</p>
+                    <p className={styles.para2}>{list?.length} items</p> */}
                     </div>
 
                     <div className={`${styles.viewCollectionContainer}`}>
