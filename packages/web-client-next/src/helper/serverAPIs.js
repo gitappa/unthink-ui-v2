@@ -1320,10 +1320,13 @@ const fetchCustomProductsAPICall = (filters = {}) => {
 	});
 };
 
-const fetchProductDetailsAPICall = (mfr_code) => {
+const fetchProductDetailsAPICall = (mfr_code,image) => {
+	console.log(image);
+	
 	const url = `${auraYfretUserCollBaseUrl}${fetchCustomProductsUrl}`;
 	const params = {
 		mfr_code,
+		image :JSON.stringify(image)
 	};
 
 	return apiInstance({
