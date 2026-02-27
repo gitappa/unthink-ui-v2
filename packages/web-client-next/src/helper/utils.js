@@ -796,6 +796,7 @@ export function isEmpty(value) {
 		(typeof value === "object" && Object.keys(value).length === 0) // check for empty object
 	);
 }
+console.log(!isEmpty());
 
 /**
  * return the collection default description based on the collection name

@@ -694,6 +694,42 @@ console.log('selectedTags',selectedTags);
     showAuraTileFlag,
     isSingleCollectionSharedPage,
   }) => {
+    const hasCoverMedia =
+      !!blogCollectionPage?.cover_image || !!blogCollectionPage?.video_url;
+
+    const renderCollectionCard = (product) => (
+      <ProductCard
+        product={product}
+        onProductClick={() => onProductClick(product)}
+        enableClickTracking={enableClickTracking}
+        productClickParam={{
+          iCode: authUser.influencer_code,
+          campCode: blogCollectionPage.campaign_code,
+          collectionId: blogCollectionPage._id,
+          collectionName: blogCollectionPage.collection_name,
+          collectionICode: pageUser.influencer_code,
+        }}
+        collectionCards
+        showStar={false}
+        enableHoverShowcase={false}
+        onStarClick={() =>
+          handleShowcaseCollectionProducts([product.mfr_code], !product.starred)
+        }
+        hideAddToWishlist={
+          !!product.sponsored || (is_store_instance && !isUserLogin)
+        }
+        hideViewSimilar={!!product.sponsored}
+        enableSelect={enableSelectProduct}
+        isSelected={selectedProducts.includes(product.mfr_code)}
+        setSelectValue={() => onSelectProductClick(product.mfr_code)}
+        collection_id={blogCollectionPage._id}
+        collection_name={blogCollectionPage.collection_name}
+        collection_path={blogCollectionPage.path}
+        collection_status={blogCollectionPage.status}
+        blogCollectionPage={blogCollectionPage}
+      />
+    );
+
     if (blogCollectionPage?.collection_name && !isSingleCollectionSharedPage) {
       return (
         <div className={ styles.productGrid} style={{width:'100%'}}>
@@ -767,7 +803,7 @@ console.log('selectedTags',selectedTags);
                 )}
               </div>
             )}
-            <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' } ${url ? '' : styles.cardsContainer}`} >
+            <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' } ${url ? '' : styles.cardsContainer} ${!hasCoverMedia ? styles.productItems1ClipContainer : ""}`} >
                {!isSingleCollectionSharedPage && productsData.length ? (
                   <div className={styles.seeFullRow}>
                     <div className="flex items-center gap-2">
@@ -789,49 +825,34 @@ console.log('selectedTags',selectedTags);
                       </div>
                   </div>
                 ) : null}
-          <div className={`${ blogCollectionPage?.cover_image || blogCollectionPage.video_url ? styles.productItems : styles.productItems1 }`}>
-
-          {list.length > 0 &&
-            list?.map((product) => (
-              // console.log("productsssss", list),
-
-              <div key={product.mfr_code}>
-                <ProductCard
-                  product={product}
-                  onProductClick={() => onProductClick(product)}
-                  enableClickTracking={enableClickTracking}
-                  productClickParam={{
-                    iCode: authUser.influencer_code,
-                    campCode: blogCollectionPage.campaign_code,
-                    collectionId: blogCollectionPage._id,
-                    collectionName: blogCollectionPage.collection_name,
-                    collectionICode: pageUser.influencer_code,
-                  }}
-                  collectionCards
-                  showStar={false}
-                  enableHoverShowcase={false}
-                  onStarClick={() =>
-                    handleShowcaseCollectionProducts(
-                      [product.mfr_code],
-                      !product.starred,
-                    )
-                  }
-                  hideAddToWishlist={
-                    !!product.sponsored || (is_store_instance && !isUserLogin)
-                  }
-                  hideViewSimilar={!!product.sponsored}
-                  enableSelect={enableSelectProduct}
-                  isSelected={selectedProducts.includes(product.mfr_code)}
-                  setSelectValue={() => onSelectProductClick(product.mfr_code)}
-                  collection_id={blogCollectionPage._id}
-                  collection_name={blogCollectionPage.collection_name}
-                  collection_path={blogCollectionPage.path}
-                  collection_status={blogCollectionPage.status}
-                  blogCollectionPage={blogCollectionPage}
-                />
-              </div>
-            ))}
-          </div>
+          {hasCoverMedia ? (
+            <div className={styles.productItems}>
+              {list.length > 0 &&
+                list.map((product) => (
+                  <div key={product.mfr_code}>
+                    {renderCollectionCard(product)}
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <Swiper
+              slidesPerView="auto"
+              spaceBetween={10}
+              freeMode={true}
+              watchOverflow={true}
+              className={styles.productItems1Swiper}
+            >
+              {list.length > 0 &&
+                list.map((product) => (
+                  <SwiperSlide
+                    key={product.mfr_code}
+                    className={styles.productItems1Slide}
+                  >
+                    {renderCollectionCard(product)}
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+          )}
             </div>
 
           {showAuraTileFlag && list.length > 0 && (

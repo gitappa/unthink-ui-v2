@@ -645,7 +645,23 @@ additional_prompt:descriptionget || '',
     }
   }, [clickedMfrCode]);
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
-  
+   const containerRef = useRef(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      setIsOverflowing(el.scrollWidth > el.clientWidth);
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, []);
+
   return (
     <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
       className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] :collectionCards ? styles['product-wrapper-medium2'] : styles['product-wrapper-medium']}`}>
@@ -1081,10 +1097,14 @@ additional_prompt:descriptionget || '',
               product?.sleeve?.length > 0) ||
             (storeData.pdp_settings?.buy_card_attributes?.[2] &&
               product?.fit?.length > 0) ? (
-            <div
-              className={`${styles.tagscontainer}`}
-            >
+                <div className={`${styles.tagsContainerWrapper}`}>
 
+            <div   ref={containerRef}
+              className={`${styles.tagscontainer} ${
+        isOverflowing ? styles.isOverflowing : ""
+      }`}
+            >
+ 
               {storeData.pdp_settings?.buy_card_attributes?.[0] &&
                 product?.size?.length > 0 && (
                   <span
@@ -1138,6 +1158,8 @@ additional_prompt:descriptionget || '',
                   </span>
                 )}
             </div>
+                </div>
+
           ) :
             <div className={`${styles.tagscontainer}`}> &nbsp;</div>
           }

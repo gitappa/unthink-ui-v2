@@ -114,6 +114,7 @@ const AuraResponseProducts = ({
 		selectedSearchOption,
 		isGuestPopUpShow,
 		showWishlistModal,
+		suggestionsTags,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.auth.user.isUserLogin,
@@ -124,6 +125,7 @@ const AuraResponseProducts = ({
 		state.chatV2.activeSearchOption || {},
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.appState.wishlist.showWishlistModal,
+		state.chatV2.suggestions?.selectedTag,
 	]);
 
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
@@ -173,7 +175,7 @@ const AuraResponseProducts = ({
 		});
 		return obj;
 	}, [productsFilters, displayableFilter]);
-
+ 
 	const isFiltersAvailable = useMemo(() => {
 		const finalFilters = removeEmptyItems(filters);
 		for (const key in finalFilters) {
@@ -326,13 +328,14 @@ const AuraResponseProducts = ({
 		moreProducts.selectedAdditionalTag,
 		authUser.user_name,
 	]);
+ 
 
 	const enableFilters = useMemo(
 		() =>
 			(chatProductsDataToShow.length > 0 || !isEmpty(filters)) &&
 			availableFilters &&
 			!products.selectedAdditionalTag &&
-			isTagEnabled,
+			isTagEnabled && suggestionsTags,
 		[
 			chatProductsDataToShow.length,
 			filters,
@@ -341,7 +344,7 @@ const AuraResponseProducts = ({
 			isTagEnabled,
 		]
 	);
-
+ 
 	const enableCustomFilter = useMemo(
 		() => customFilterStoreData?.is_display && enableFilters,
 		[customFilterStoreData?.is_display, enableFilters]

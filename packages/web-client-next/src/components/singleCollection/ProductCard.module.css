@@ -285,6 +285,29 @@
   overflow-x: scroll;
   scrollbar-width: none;
 }
+.tagscontainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 25px;
+  pointer-events: none;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.tagsContainerWrapper{
+  position: relative;
+}
+/* Show shadow when overflowing */
+.tagscontainer.isOverflowing::after {
+  opacity: 1;
+}
+
+.tagscontainer::-webkit-scrollbar {
+  display: none;
+}
 
 .product-buy-button {
   display: flex;

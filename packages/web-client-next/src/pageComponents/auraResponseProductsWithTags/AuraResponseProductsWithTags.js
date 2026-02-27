@@ -29,12 +29,13 @@ const AuraResponseProductsWithTags = ({
 	localChatMessage
 
 }) => {
-	const [suggestionsWithProducts, recommendationsWithProducts, moreProducts] = useSelector((state) => [
+	const [suggestionsWithProducts,suggestionsTags, recommendationsWithProducts, moreProducts] = useSelector((state) => [
 		state.chatV2.suggestions,
+		state.chatV2.suggestions?.selectedTag,
 		state.chatV2.recommendations,
 		state.chatV2.moreProducts,
 	]);
-
+ 
 
 	const dispatch = useDispatch();
 

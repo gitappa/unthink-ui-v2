@@ -888,6 +888,39 @@
     gap: 10px;
   }
 }
+
+.productItems1Swiper {
+  width: 100%;
+  padding: 10px 0 20px 0;
+}
+
+.productItems1Swiper :global(.swiper-wrapper) {
+  align-items: stretch;
+}
+
+.productItems1Slide {
+  width: auto !important;
+  height: auto;
+}
+
+.productItems1ClipContainer {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.productItems1ClipContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(to left, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
 /* Cover media container */
 .coverMediaContainer {
   position: relative;
@@ -1605,6 +1638,7 @@ color: #99A1AF;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
   // gap: 5px;
 }
 /* FAQ section */
