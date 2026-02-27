@@ -97,8 +97,10 @@ const SingleCollectionProductList = ({
   handleSortOptionChange,
   sharePageUrl,
   isRootPage = true,
+  isMyProfilePage,
 }) => {
-  console.log(sharePageUrl);
+const url = window.location.pathname === '/my-profile/'
+   console.log('isMyProfilePage',url  );
 
   const router = useRouter();
   const [statedata, setStatedata] = useState(null);
@@ -765,7 +767,7 @@ console.log('selectedTags',selectedTags);
                 )}
               </div>
             )}
-            <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' }`} >
+            <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' } ${url ? '' : styles.cardsContainer}`} >
                {!isSingleCollectionSharedPage && productsData.length ? (
                   <div className={styles.seeFullRow}>
                     <div className="flex items-center gap-2">
@@ -1573,4 +1575,4 @@ console.log('selectedTags',selectedTags);
   );
 };
 
-export default React.memo(SingleCollectionProductList);
+export default SingleCollectionProductList;
