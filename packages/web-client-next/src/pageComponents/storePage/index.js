@@ -290,8 +290,7 @@ const StorePageWrapper = (props) => {
 		isSuccessPage,
 		isHomepage,
 	} = props;
-	console.log(collection_id);
-	const [isDropDown, setisDropDown] = useState(false)
+ 	const [isDropDown, setisDropDown] = useState(false)
 	const {
 		my_products_enable: isMyProductsEnable,
 		seller_list: storeSellerList,
