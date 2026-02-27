@@ -69,7 +69,6 @@ import heart from './images/Card/heart.svg'
 import more from './images/Card/more.svg'
 import shopping from './images/Card/shopping-bag3.svg'
 
-import View_similar_icon from "../../images/view_similar_icon.svg?react";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import Image from "next/image";
 
@@ -881,7 +880,13 @@ additional_prompt:descriptionget || '',
                 <div
                   className={styles['product-view-similar']}
                   onClick={onSimilarClick}>
-                  <View_similar_icon className={styles['product-view-similar-icon']} />
+                  <Image 
+                    src="/images/view_similar_icon.svg" 
+                    alt="view similar" 
+                    width={24} 
+                    height={24} 
+                    className={styles['product-view-similar-icon']} 
+                  />
                   <span className={styles['product-view-similar-text']}>
                     View Similar
                   </span>
