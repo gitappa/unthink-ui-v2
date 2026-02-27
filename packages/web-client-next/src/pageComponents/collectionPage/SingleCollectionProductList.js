@@ -787,7 +787,7 @@ console.log('selectedTags',selectedTags);
                       </div>
                   </div>
                 ) : null}
-          <div className={`${ blogCollectionPage?.cover_image ? styles.productItems : styles.productItems1 }`}>
+          <div className={`${ blogCollectionPage?.cover_image || blogCollectionPage.video_url ? styles.productItems : styles.productItems1 }`}>
 
           {list.length > 0 &&
             list?.map((product) => (
