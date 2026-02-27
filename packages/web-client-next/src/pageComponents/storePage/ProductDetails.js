@@ -58,7 +58,7 @@ const ProductDetails = ({ params, ...props }) => {
 	const { collection, loading } = useSelector((state) => state.cart);
 	// console.log('collectionsuii', collection);
 	const [isloading, setIsLoading] = useState(true)
-
+ 
 
 	const [sellerDetails, customProductsData, authUser, pdploader] = useSelector((state) => [
 		state.store.data.sellerDetails || {},
@@ -66,8 +66,7 @@ const ProductDetails = ({ params, ...props }) => {
 		state.auth.user.data,
 		state.PDP_LoaderReducer.pdpLoader
 	]);
-	console.log('pdploader', pdploader);
-
+ 
 	const [store_id] =
 		useSelector((state) => [
 
@@ -87,7 +86,7 @@ const ProductDetails = ({ params, ...props }) => {
 	const fetchProductDetails = async () => {
 		try {
 			const products = await customProductsAPIs.fetchProductDetailsAPICall(
-				mfr_code
+				mfr_code,productDetails?.image
 			);
 			if (products && products.status === 200 && products.data) {
 				setFetchedProductDetails(products.data.data[0]);

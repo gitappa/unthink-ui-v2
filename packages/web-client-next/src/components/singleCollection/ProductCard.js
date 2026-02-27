@@ -609,9 +609,11 @@ additional_prompt:descriptionget || '',
   };
   const fetchProductDetails = async () => {
     dispatch(PDPloader(true));
+    console.log(product?.image);
+    
     try {
       const products =
-        await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode);
+        await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode,product?.image);
       if (products && products.status === 200 && products.data) {
         let data = products.data.data[0];
       }
@@ -645,7 +647,23 @@ additional_prompt:descriptionget || '',
     }
   }, [clickedMfrCode]);
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
-  
+   const containerRef = useRef(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      setIsOverflowing(el.scrollWidth > el.clientWidth);
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, []);
+
   return (
     <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
       className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] :collectionCards ? styles['product-wrapper-medium2'] : styles['product-wrapper-medium']}`}>
@@ -672,7 +690,7 @@ additional_prompt:descriptionget || '',
               className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
               loading='lazy'
             />
-            {!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+            {!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !showWishlistModal &&
               <div className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`} onClick={(e) => {
                dispatch(vtoIconState(product?.mfr_code || true));
                 e.stopPropagation();
@@ -1081,10 +1099,14 @@ additional_prompt:descriptionget || '',
               product?.sleeve?.length > 0) ||
             (storeData.pdp_settings?.buy_card_attributes?.[2] &&
               product?.fit?.length > 0) ? (
-            <div
-              className={`${styles.tagscontainer}`}
-            >
+                <div className={`${styles.tagsContainerWrapper}`}>
 
+            <div   ref={containerRef}
+              className={`${styles.tagscontainer} ${
+        isOverflowing ? styles.isOverflowing : ""
+      }`}
+            >
+ 
               {storeData.pdp_settings?.buy_card_attributes?.[0] &&
                 product?.size?.length > 0 && (
                   <span
@@ -1138,8 +1160,10 @@ additional_prompt:descriptionget || '',
                   </span>
                 )}
             </div>
+                </div>
+
           ) :
-            <div className={`${styles.tagscontainer}`}> &nbsp;</div>
+            <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>
           }
 
           {/* Price Section */}
