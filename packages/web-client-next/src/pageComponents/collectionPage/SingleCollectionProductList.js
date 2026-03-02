@@ -166,6 +166,10 @@ const url = window.location.pathname === '/my-profile/'
   const [showMoreEnabled, setShowMoreEnabled] = useState(false);
 
   const textRef = useRef(null);
+  const detailsRowRef = useRef(null);
+  const [mobileStickyTop, setMobileStickyTop] = useState(0);
+  const [mobileDetailsHeight, setMobileDetailsHeight] = useState(0);
+  const [mobileCoverHeight, setMobileCoverHeight] = useState(0);
   const productsData = useMemo(() => {
     const baseList = isSingleCollectionSharedPage
       ? singleCollection?.product_lists ||
@@ -210,6 +214,62 @@ const url = window.location.pathname === '/my-profile/'
       window.removeEventListener("resize", checkTextOverflow);
     };
   }, [blogCollectionPage?.description, expanded, productsData]);
+
+  useEffect(() => {
+    const updateMobileStickyMetrics = () => {
+      if (typeof window === "undefined") return;
+
+      if (window.innerWidth > 760) {
+        setMobileStickyTop(0);
+        setMobileDetailsHeight(0);
+        setMobileCoverHeight(0);
+        return;
+      }
+
+      const mobileHeader = document.querySelector(
+        '[data-store-mobile-sticky-header="true"]',
+      );
+
+      setMobileStickyTop(
+        mobileHeader
+          ? Math.ceil(mobileHeader.getBoundingClientRect().height)
+          : 0,
+      );
+
+      setMobileDetailsHeight(
+        detailsRowRef.current
+          ? Math.ceil(detailsRowRef.current.getBoundingClientRect().height)
+          : 0,
+      );
+
+      setMobileCoverHeight(
+        videoContainerRef.current
+          ? Math.ceil(videoContainerRef.current.getBoundingClientRect().height)
+          : 0,
+      );
+    };
+
+    updateMobileStickyMetrics();
+    const timeoutId = setTimeout(updateMobileStickyMetrics, 300);
+    const rafId = window.requestAnimationFrame(updateMobileStickyMetrics);
+
+    window.addEventListener("resize", updateMobileStickyMetrics);
+    window.addEventListener("orientationchange", updateMobileStickyMetrics);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", updateMobileStickyMetrics);
+      window.removeEventListener("orientationchange", updateMobileStickyMetrics);
+    };
+  }, [
+    blogCollectionPage?.description,
+    blogCollectionPage?.collection_name,
+    showCollectionDetails,
+    expanded,
+    productsData.length,
+    showCoverImage,
+  ]);
   // console.log('popopop',el.scrollHeight);
   // console.log('dfdfdfd',el.clientHeight);
 
@@ -738,7 +798,7 @@ console.log('selectedTags',selectedTags);
               blogCollectionPage?.video_url) && (
               <div
                 ref={videoContainerRef}
-                className={`${isSocialMediaVideo(blogCollectionPage.video_url)
+                className={`${styles.mobileCoverStickyBlock} ${isSocialMediaVideo(blogCollectionPage.video_url)
                   ? styles.coverMediaHidden
                   : styles.coverMediaContainer
                   } ${showCollectionDetails ? styles.cursorPointer : ""}`}
@@ -805,7 +865,9 @@ console.log('selectedTags',selectedTags);
             )}
             <div className={`${ blogCollectionPage?.cover_image ? '' : 'm-auto' } ${url ? '' : styles.cardsContainer} ${!hasCoverMedia ? styles.productItems1ClipContainer : ""}`} >
                {!isSingleCollectionSharedPage && productsData.length ? (
-                  <div className={styles.seeFullRow}>
+                  <div
+                    className={`${styles.seeFullRow} ${styles.mobileViewCollectionStickyRow}`}
+                  >
                     <div className="flex items-center gap-2">
                     
                     {/* <p className={styles.para1}>{blogCollectionPage.collection_name}</p>
@@ -1303,9 +1365,23 @@ console.log('selectedTags',selectedTags);
                     </div>
                   )}
               </div>
-              <div className={`${styles.collectionWrapper} single-collection-class`}>
+              <div
+                className={`${styles.collectionWrapper} single-collection-class`}
+                style={
+                  showCollectionDetails && !isSingleCollectionSharedPage
+                    ? {
+                      "--single-collection-sticky-top": `${mobileStickyTop}px`,
+                      "--single-collection-details-height": `${mobileDetailsHeight}px`,
+                      "--single-collection-cover-height": `${mobileCoverHeight}px`,
+                    }
+                    : undefined
+                }
+              >
                 {showCollectionDetails && (
-                  <div className={styles.detailsRow}>
+                  <div
+                    ref={detailsRowRef}
+                    className={`${styles.detailsRow} ${styles.mobileDetailsStickyBlock}`}
+                  >
                     {showUserImage &&
                       (profile_image || blogCollectionPage.profile_image) &&
                       (user_name || blogCollectionPage.user_name) && (
@@ -1420,7 +1496,7 @@ console.log('selectedTags',selectedTags);
                         }
                       
                         />
-                        <p style={{color:'#6A7282'}}>Share</p>
+                        <p style={{color:'#6A7282'}} className="hidden md:block">Share</p>
                         </div>
                       {/* )} */}
                     </div>

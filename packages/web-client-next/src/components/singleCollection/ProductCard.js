@@ -88,6 +88,7 @@ import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
+import { fetchProductDetails } from "./ProductRedux/actions";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -607,22 +608,22 @@ additional_prompt:descriptionget || '',
     setUploadedImages([]);
     setDescriptionget("");
   };
-  const fetchProductDetails = async () => {
-    dispatch(PDPloader(true));
-    console.log(product?.image);
+  // const fetchProductDetails = async () => {
+  //   dispatch(PDPloader(true));
+  //   console.log(product?.image);
     
-    try {
-      const products =
-        await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode,product?.image);
-      if (products && products.status === 200 && products.data) {
-        let data = products.data.data[0];
-      }
-    } catch (e) {
-      console.log(e);
-    } finally { 
-      dispatch(PDPloader(false));
-    }
-  };
+  //   try {
+  //     const products =
+  //       await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode,product?.image);
+      
+  //   } catch (e) {
+  //     console.log(e);
+  //   } finally { 
+  //     dispatch(PDPloader(false));
+  //   }
+  // };
+
+
   const savedProduct = (p) => {
     return customProductsData.find((item) => item.mfr_code === p);
   };
@@ -632,12 +633,13 @@ additional_prompt:descriptionget || '',
 
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
-      console.log('fdfdfdfq', product.url);
+      console.log('fdfdfdfq', product?.image);
 
       if (product.url === "dummy_url") {
 
         navigate(`/product/${clickedMfrCode}`);
-        fetchProductDetails();
+        // fetchProductDetails();
+        dispatch(fetchProductDetails({ mfr_code: clickedMfrCode, image: product?.image }))
       }
       else {
         window.open(product.url, '_blank')

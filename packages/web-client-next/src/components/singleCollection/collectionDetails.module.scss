@@ -835,6 +835,18 @@
     grid-template-columns: repeat(5, 1fr);
   }
 }
+
+.mobileDetailsStickyBlock {
+  position: static;
+}
+
+.mobileCoverStickyBlock {
+  position: static;
+}
+
+.mobileViewCollectionStickyRow {
+  position: static;
+}
 .productGrid2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1337,7 +1349,7 @@
 
 /* Collection details section */
 .collectionWrapper {
-  max-width: 330px;
+  max-width: 368px;
   margin-left: auto;
   margin-right: auto;
 
@@ -1676,5 +1688,38 @@ color: #99A1AF;
     width: 371px;
     margin: auto;
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 760px) {
+  .mobileDetailsStickyBlock {
+    position: sticky;
+    top: var(--single-collection-sticky-top, 0px);
+    z-index: 38;
+    background-color: #ffffff;
+    padding-bottom: 8px;
+  }
+
+  .mobileCoverStickyBlock {
+    position: sticky !important;
+    top: calc(
+      var(--single-collection-sticky-top, 0px) +
+      var(--single-collection-details-height, 0px)
+    ) !important;
+    z-index: 39;
+    background-color: #ffffff;
+    margin: auto;
+  }
+
+  .mobileViewCollectionStickyRow {
+    position: sticky;
+    top: calc(
+      var(--single-collection-sticky-top, 0px) +
+      var(--single-collection-details-height, 0px) +
+      var(--single-collection-cover-height, 0px)
+    );
+    z-index: 38;
+    background-color: #ffffff;
+    margin-bottom: 0;
   }
 }

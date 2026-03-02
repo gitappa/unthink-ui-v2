@@ -15,7 +15,8 @@ import storeDataSagas from "../pageComponents/store/redux/saga";
 import creatorCollectionWatcherSaga from "../pageComponents/Auth/redux/CreatorSaga";
 import collectionDetectSaga from "../pageComponents/createStore/redux/saga";
 import  cartSaga  from "../pageComponents/DeliveryDetails/redux/saga";
-
+import watchProductDetails from "../components/singleCollection/ProductRedux/saga";
+ 
 export default function* rootSaga() {
 	yield all(
 		[
@@ -35,6 +36,7 @@ export default function* rootSaga() {
 			...Object.values(creatorCollectionWatcherSaga),
 			...Object.values(collectionDetectSaga),
 			...Object.values(cartSaga),
+watchProductDetails
 		].map(fork)
 	);
 }

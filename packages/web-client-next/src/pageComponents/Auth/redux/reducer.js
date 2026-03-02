@@ -23,6 +23,7 @@ import {
 	SET_STARRED_USER_COLLECTIONS,
 	SET_UPDATED_STATUS_USER_COLLECTIONS,
 } from "./constants";
+import fetchProductReducer from "../../../components/singleCollection/ProductRedux/reducer";
 
 const userCollectionsInitialState = {
 	data: [],
@@ -227,6 +228,7 @@ const userReducer = (state = userInitialState, action = {}) => {
 const authReducer = combineReducers({
 	user: userReducer,
 	customProducts: customProductsReducer, // handle custom products actions only like, API call
+	fetchProduct:fetchProductReducer
 });
 
 export default authReducer;
