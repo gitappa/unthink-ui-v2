@@ -556,34 +556,40 @@ console.log('isStagingEnv',isStagingEnv);
 				</div>
 			) : null}
 
-			{/* samskara mobile UI */}
-			{isSamskaraInstance ? (
-				<div className={styles.mobileHeaderSticky}>
-					<SamskaraMobileHeader
-						showProfileIcon={showProfileIcon}
-						setShowMenu={setShowMenu}
-					/>
-				</div>
-			) : null}
+				{/* samskara mobile UI */}
+				{isSamskaraInstance ? (
+					<div
+						className={styles.mobileHeaderSticky}
+						data-store-mobile-sticky-header='true'>
+						<SamskaraMobileHeader
+							showProfileIcon={showProfileIcon}
+							setShowMenu={setShowMenu}
+						/>
+					</div>
+				) : null}
 
-			{/* heroesVillains mobile UI */}
-			{isHeroesVillainsInstance ? (
-				<div className={styles.mobileHeaderSticky}>
-					<HeroesVillainsMobileHeader
-						showProfileIcon={showProfileIcon}
-						setShowMenu={setShowMenu}
-					/>
-				</div>
-			) : null}
+				{/* heroesVillains mobile UI */}
+				{isHeroesVillainsInstance ? (
+					<div
+						className={styles.mobileHeaderSticky}
+						data-store-mobile-sticky-header='true'>
+						<HeroesVillainsMobileHeader
+							showProfileIcon={showProfileIcon}
+							setShowMenu={setShowMenu}
+						/>
+					</div>
+				) : null}
 
-			{/* swiftlyStyled mobile UI */}
-			{isSwiftlyStyledInstance || isDoTheLookInstance ? (
-				<div className={styles.mobileHeaderSticky}>
-					<SwiftlyMobileHeader
-						showProfileIcon={showProfileIcon && isUserLogin}
-						setShowMenu={setShowMenu}
-						headerProfileMenu={headerProfileMenu}
-					/>
+				{/* swiftlyStyled mobile UI */}
+				{isSwiftlyStyledInstance || isDoTheLookInstance ? (
+					<div
+						className={styles.mobileHeaderSticky}
+						data-store-mobile-sticky-header='true'>
+						<SwiftlyMobileHeader
+							showProfileIcon={showProfileIcon && isUserLogin}
+							setShowMenu={setShowMenu}
+							headerProfileMenu={headerProfileMenu}
+						/>
 				</div>
 			) : null}
 
