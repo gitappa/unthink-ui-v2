@@ -60,12 +60,14 @@ const ProductDetails = ({ params, ...props }) => {
 	const [isloading, setIsLoading] = useState(true)
  
 
-	const [sellerDetails, customProductsData, authUser, pdploader] = useSelector((state) => [
+	const [sellerDetails, customProductsData, authUser, pdploader,fetchProductImage] = useSelector((state) => [
 		state.store.data.sellerDetails || {},
 		state.auth.customProducts.data.data || [],
 		state.auth.user.data,
-		state.PDP_LoaderReducer.pdpLoader
+		state.PDP_LoaderReducer.pdpLoader,
+		state.auth.fetchProduct.image
 	]);
+ console.log('fetchProduct',fetchProductImage);
  
 	const [store_id] =
 		useSelector((state) => [
@@ -129,7 +131,7 @@ const ProductDetails = ({ params, ...props }) => {
 			item => item.mfr_code === productDetails?.mfr_code
 		)
 	}, [collection, productDetails]);
-	// console.log('cardItem',cardItem);
+	// console.log('cardItem',productDetails);
 
 	useEffect(() => {
 		if (mycartcollectionpath) {
@@ -358,8 +360,7 @@ const ProductDetails = ({ params, ...props }) => {
 		}
 	};
   const [additionalimg,setAdditionalImg] = useState(null)
-console.log(productDetails?.additional_image);
-
+ 
 	if (pdploader ) {
 
 		return <PDPPageSkeleton />
@@ -382,10 +383,10 @@ console.log(productDetails?.additional_image);
 						<div
 							className='w-full lg:max-w-439 h-auto lg:h-456 mx-auto border border-solid border-gray-107 rounded-xl'
 							style={{ height: "480px" }}>
-							{!isEmpty(productDetails?.image) ? (
+							{!isEmpty(productDetails?.image || fetchProductImage ) ? (
 								<img
 									className='w-full h-full object-contain rounded-xl'
-									src={additionalimg ||  productDetails.image} 
+									src={additionalimg ||  productDetails?.image || fetchProductImage} 
 									alt='Product Image'
 								/>
 							) : null}
@@ -402,6 +403,7 @@ console.log(productDetails?.additional_image);
 					}
 
 						</div>
+						{productDetails && 
 						<div className='flex flex-col gap-4 w-full lg:w-65%'>
 							<div className='text-xl-1 font-semibold'>
 								{productDetails?.name}
@@ -766,6 +768,7 @@ console.log(productDetails?.additional_image);
 								</div>
 							)}
 						</div>
+}
 					</div>
 				</div>
 			</div>
