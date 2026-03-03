@@ -739,7 +739,7 @@
 
 /* Outer wrapper */
 .pageWrapper {
-  max-width: 1200px;
+  // max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -748,7 +748,7 @@
     max-width: 992px;
   }
   @media (min-width: 1304px) {
-    max-width: 1176px;
+    max-width: 1205px;
   }
   @media (min-width: 1536px) {
     max-width: 1453px;
@@ -856,7 +856,7 @@
   gap: 10px;
   padding-top: 16px;
   margin-top: 20px;
-  @media (min-width: 720px) {
+  @media (min-width: 820px) {
     grid-template-columns: repeat(3, 1fr);
     // display: block;
   }
@@ -1352,18 +1352,20 @@
   max-width: 330px;
   margin-left: auto;
   margin-right: auto;
-
-  @media (min-width: 660px) {
-    max-width: 570px;
+  @media (min-width: 500px) {
+   max-width: 470px; // modifyed
   }
-  @media (min-width: 761px) {
-    max-width: 736px;
+  @media (min-width: 700px) {
+   max-width: 650px; // modifyed
   }
+  @media (min-width: 821px) {
+    max-width: 799px; //modiftyed 
+  } 
   @media (min-width: 1024px) {
     max-width: 992px;
   }
   @media (min-width: 1304px) {
-    max-width: 1176px;
+    max-width: 1205px;
   }
   @media (min-width: 1536px) {
     max-width: 1453px;
@@ -1441,7 +1443,7 @@
 .collectionTitle {
   font-size: 20px;
   font-weight: 600;
-  text-decoration: underline;
+  // text-decoration: underline;
   cursor: pointer;
   text-transform: capitalize;
 

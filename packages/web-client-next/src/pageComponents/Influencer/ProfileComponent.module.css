@@ -35,13 +35,24 @@
   margin-left: 1rem;
   margin-right: 1rem;
   display: block;
+
 }
+
  .profile-image {
     width: 260px !important;
     height: 260px !important;
+
     @media (max-width:768px) {
         width: 120px !important;
     height: 120px !important;
+    }
+     @media (max-width:1008px) {
+        width: 180px !important;
+    height: 180px !important;
+    }
+         @media (max-width:564px) {
+height:100px !important;
+  width: 100px !important;
     }
   }
 @media (min-width: 1024px) {

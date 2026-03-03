@@ -164,7 +164,7 @@ const publish = singleCollections.status === 'published'
   return (
     <>
       {pageUser && (isSingleCollectionSharedPage || !isHideProfileComponent) ? (
-        <div className={styles.pageDetailsContainer}>
+        <div className={`${isSingleCollectionSharedPage ? styles.pageDetailsContainer : styles.pageDetailsContainer1 } `}>
           <div className={styles.pageDetailsInner}>
             {isSingleCollectionSharedPage ? (
               <CollectionDetails

@@ -786,6 +786,25 @@
     }
 }
 
+.pageDetailsContainer1 {
+    margin-left: auto;
+    margin-right: auto;
+
+  @media (min-width: 1024px) {
+    max-width: 992px;
+  }
+  @media (min-width: 1304px) {
+    max-width: 1205px;
+  }
+  @media (min-width: 1536px) {
+    max-width: 1453px;
+  }
+  @media (min-width: 1736px) {
+    max-width: 1528px;
+  }
+}
+
+
 .pageDetailsInner {
   max-width: 1152px;
   margin: 0 auto;
