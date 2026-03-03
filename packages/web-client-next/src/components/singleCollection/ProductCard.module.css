@@ -26,12 +26,12 @@
 }
 
 .product-wrapper-medium {
-  width: 10rem;
+  width: 160px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 500px) {
   .product-wrapper-medium {
-    width: 11.25rem;
+    width: 220px;
   }
 }
 
@@ -43,7 +43,11 @@
 .product-wrapper-medium2 {
   width: 10rem;
 }
-
+@media (min-width: 500px) {
+  .product-wrapper-medium2 {
+    width: 230px;
+  }
+}
 @media (min-width: 640px) {
   .product-wrapper-medium2 {
     width: 11.25rem;
