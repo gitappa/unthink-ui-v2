@@ -27,7 +27,7 @@ import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 // const vtf_image = "/images/vtoIcon.svg";
-import vtf_image from './images/vtoIcon.svg'
+import vtf_image from "./images/vtoIcon.svg";
 import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
@@ -53,6 +53,7 @@ import { openProductModal } from "../../pageComponents/customProductModal/redux/
 import {
   addSidInProductUrl,
   AdminCheck,
+  cleanImage,
   getCurrentTheme,
   getFinalImageUrl,
   getPercentage,
@@ -64,15 +65,15 @@ import {
   PRODUCT_DUMMY_URL,
   WISHLIST_TITLE,
 } from "../../constants/codes";
-import camera from './images/Card/camera.svg'
-import heart from './images/Card/heart.svg'
-import more from './images/Card/more.svg'
-import shopping from './images/Card/shopping-bag3.svg'
+import camera from "./images/Card/camera.svg";
+import heart from "./images/Card/heart.svg";
+import more from "./images/Card/more.svg";
+import shopping from "./images/Card/shopping-bag3.svg";
 
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import Image from "next/image";
 
-import Link from 'next/link';
+import Link from "next/link";
 import { useNavigate } from "../../helper/useNavigate";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import useTheme from "../../hooks/chat/useTheme";
@@ -133,7 +134,7 @@ const ProductCard = ({
   collection_status,
   localChatMessage,
   blogCollectionPage,
-  collectionCards 
+  collectionCards,
 }) => {
   const navigate = useNavigate();
   console.log("hideAddToWishlist", widgetType);
@@ -170,7 +171,7 @@ const ProductCard = ({
     store_id,
     authUser,
     customProductsData,
-    ButtonClick
+    ButtonClick,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -179,7 +180,7 @@ const ProductCard = ({
     state.store.data.store_id,
     state.auth.user.data,
     state.auth.customProducts.data.data || [],
-    state.VtoIconReducer.ButtonClick
+    state.VtoIconReducer.ButtonClick,
   ]);
   // console.log('ButtonClick',ButtonClick);
 
@@ -269,10 +270,10 @@ const ProductCard = ({
           mft_code: product?.mfr_code,
           collection_path: authUserId
             ? addSidInProductUrl(
-              product.url,
-              authUserId,
-              blogCollectionPage?.collection_id,
-            )
+                product.url,
+                authUserId,
+                blogCollectionPage?.collection_id,
+              )
             : product.url,
           user_id: getTTid(),
           user_name: authUserName,
@@ -286,10 +287,10 @@ const ProductCard = ({
         // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
         const redirectionUrl = authUserId
           ? addSidInProductUrl(
-            product.url,
-            authUserId,
-            blogCollectionPage?.collection_id,
-          )
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
           : product.url;
         window.open(redirectionUrl, "_blank");
       } else if (
@@ -540,7 +541,7 @@ const ProductCard = ({
       setTimeout(() => onSuccess("ok"), 0);
     },
   };
-const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`
+  const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -550,8 +551,8 @@ const image_try = `Using the provided images: product image and person image/per
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt:image_try  || "",
-additional_prompt:descriptionget || '',
+      image_tryon_prompt: image_try || "",
+      additional_prompt: descriptionget || "",
       type: "tryon",
     };
     try {
@@ -611,18 +612,17 @@ additional_prompt:descriptionget || '',
   // const fetchProductDetails = async () => {
   //   dispatch(PDPloader(true));
   //   console.log(product?.image);
-    
+
   //   try {
   //     const products =
   //       await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode,product?.image);
-      
+
   //   } catch (e) {
   //     console.log(e);
-  //   } finally { 
+  //   } finally {
   //     dispatch(PDPloader(false));
   //   }
   // };
-
 
   const savedProduct = (p) => {
     return customProductsData.find((item) => item.mfr_code === p);
@@ -633,23 +633,25 @@ additional_prompt:descriptionget || '',
 
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
-      console.log('fdfdfdfq', product?.image);
-
+      // console.log('fdfdfdfq', product?.image);
+      const cleaned = cleanImage(product?.image);
+      if (cleaned) {
+        localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
+      }
       if (product.url === "dummy_url") {
-
         navigate(`/product/${clickedMfrCode}`);
         // fetchProductDetails();
-        dispatch(fetchProductDetails({ mfr_code: clickedMfrCode, image: product?.image }))
-      }
-      else {
-        window.open(product.url, '_blank')
+        // console.log(product?.image);
+
+        // dispatch(fetchProductDetails({ mfr_code: clickedMfrCode, image: product?.image }))
+      } else {
+        window.open(product.url, "_blank");
       }
       // fetchProductDetails();
-
     }
   }, [clickedMfrCode]);
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
-   const containerRef = useRef(null);
+  const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
   useEffect(() => {
@@ -667,15 +669,16 @@ additional_prompt:descriptionget || '',
   }, []);
 
   return (
-    <div style={{ backgroundColor: showWishlistModal ? 'white' : '' }}
-      className={`${styles['product-wrapper']} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles['product-wrapper-action-cover'] : ''} ${size === "small" ? styles['product-wrapper-small'] :collectionCards ? styles['product-wrapper-medium2'] : styles['product-wrapper-medium']}`}>
+    <div
+      style={{ backgroundColor: showWishlistModal ? "white" : "" }}
+      className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${size === "small" ? styles["product-wrapper-small"] : collectionCards ? styles["product-wrapper-medium2"] : styles["product-wrapper-medium"]}`}
+    >
       <div
-        className={`${styles['product-container']} ${showChinSection ? styles['product-container-top-rounded'] : styles['product-container-all-rounded']}`}
+        className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         // onClick={handleProductClick}
         onClick={() => {
           if (enableSelect) {
             handleProductClick();
-
           } else {
             setClickedMfrCode(product?.mfr_code);
           }
@@ -683,94 +686,118 @@ additional_prompt:descriptionget || '',
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
-          className={`${size === "small" ? styles['product-image-container-small'] : styles['product-image-container']}`}
+          className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
         >
-          <div style={{ width: '100%' }}>
+          <div style={{ width: "100%" }}>
             <img
               src={getFinalImageUrl(product.image)}
-              width='100%'
-              className={`${styles['product-image']} ${size === "small" ? styles['product-image-small'] : styles['product-image-medium']}`}
-              loading='lazy'
+              width="100%"
+              className={`${styles["product-image"]} ${size === "small" ? styles["product-image-small"] : styles["product-image-medium"]}`}
+              loading="lazy"
             />
-            {!isCustomProductsPage && storeData.is_tryon_enabled && !enableSelect && widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !showWishlistModal &&
-              <div className={`${size === "small" ? styles['product-vto-item-small'] : styles['product-vto-item']}`} onClick={(e) => {
-               dispatch(vtoIconState(product?.mfr_code || true));
-                e.stopPropagation();
-              }}>
-                <Image height={20} width={20}
-                  className={`${styles['product-vto-icon']}`}
-                  src={camera}
-                />
-                <p>Try On</p>
-              </div>
-            }
+            {!isCustomProductsPage &&
+              storeData.is_tryon_enabled &&
+              !enableSelect &&
+              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              !showWishlistModal && (
+                <div
+                  className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
+                  onClick={(e) => {
+                    dispatch(vtoIconState(product?.mfr_code || true));
+                    e.stopPropagation();
+                  }}
+                >
+                  <Image
+                    height={20}
+                    width={20}
+                    className={`${styles["product-vto-icon"]}`}
+                    src={camera}
+                  />
+                  <p>Try On</p>
+                </div>
+              )}
           </div>
 
           <div
-            className={styles['product-overlay']}
-            style={{ background: themeCodes.productCard.hover_bg }}>
+            className={styles["product-overlay"]}
+            style={{ background: themeCodes.productCard.hover_bg }}
+          >
             <>
               {!enableSelect ? (
                 <h1
-                  className={`${styles['product-buy-now']} ${size === "small" ? styles['product-buy-now-small'] : styles['product-buy-now-medium']} product_buy_now ${styles['product-action-buttons-container']}`}>
+                  className={`${styles["product-buy-now"]} ${size === "small" ? styles["product-buy-now-small"] : styles["product-buy-now-medium"]} product_buy_now ${styles["product-action-buttons-container"]}`}
+                >
                   {isProductUrlAvailable ? buyNowTitle : null}
                   {isProductUrlAvailable ? (
-                    <Image src={openInNewTabIcon} alt="open" width={20} height={20} className={styles['product-buy-now-icon']} />
+                    <Image
+                      src={openInNewTabIcon}
+                      alt="open"
+                      width={20}
+                      height={20}
+                      className={styles["product-buy-now-icon"]}
+                    />
                   ) : null}
                 </h1>
               ) : null}
               {product.brand && (
                 <h1
-                  className={`${styles['product-brand-text']} ${size === "small" ? "" : styles['product-brand-text-base']}`}>
-                  {buyNowSubTitle || `From ${product.brand}`} </h1>
+                  className={`${styles["product-brand-text"]} ${size === "small" ? "" : styles["product-brand-text-base"]}`}
+                >
+                  {buyNowSubTitle || `From ${product.brand}`}{" "}
+                </h1>
               )}
               {(storeData?.pdp_settings?.is_buy_button ||
                 storeData?.pdp_settings?.is_add_to_cart_button) && (
-                  <>
-                    {storeData?.pdp_settings?.is_buy_button ? (
-                      <button
-                        className={` ${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
-                        onClick={checkoutPayment}
-                      >
-                        Buy Now
-                      </button>
-                    ) : (
-                      <button
-                        className={styles['product-add-cart-button-header']}
-                      >
-                        Add to Cart
-                      </button>
-                    )}
-                  </>
-                )}
-
+                <>
+                  {storeData?.pdp_settings?.is_buy_button ? (
+                    <button
+                      className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                      onClick={checkoutPayment}
+                    >
+                      Buy Now
+                    </button>
+                  ) : (
+                    <button
+                      className={styles["product-add-cart-button-header"]}
+                    >
+                      Add to Cart
+                    </button>
+                  )}
+                </>
+              )}
             </>
             {!enableSelect ? (
-              <div className={styles['product-overlay-actions']}>
+              <div className={styles["product-overlay-actions"]}>
                 {enableHoverShowcase && (
-                  <div className={styles['product-action-group']}>
+                  <div className={styles["product-action-group"]}>
                     <button
-                      className={styles['product-star-button']}
+                      className={styles["product-star-button"]}
                       role={onStarClick ? "button" : "img"}
-                      onClick={handleStarClick}>
+                      onClick={handleStarClick}
+                    >
                       {product.starred ? (
-                        <StarFilled className={styles['product-star-icon-filled']} />
+                        <StarFilled
+                          className={styles["product-star-icon-filled"]}
+                        />
                       ) : (
-                        <StarOutlined className={styles['product-star-icon']} />
+                        <StarOutlined className={styles["product-star-icon"]} />
                       )}
-                      <span className={styles['product-action-label']}>
+                      <span className={styles["product-action-label"]}>
                         Showcase
                       </span>
                     </button>
                   </div>
                 )}
-                <div className={styles['product-button-group']}>
+                <div className={styles["product-button-group"]}>
                   {!hideAddToWishlist && (
                     <div
-                      className={styles['product-wishlist-button']}
-                      onClick={addToWishlistClick}>
-                      <HeartOutlined className={styles['product-wishlist-icon']} />
-                      <span className={styles['product-wishlist-label']}>
+                      className={styles["product-wishlist-button"]}
+                      onClick={addToWishlistClick}
+                    >
+                      <HeartOutlined
+                        className={styles["product-wishlist-icon"]}
+                      />
+                      <span className={styles["product-wishlist-label"]}>
                         Add to {WISHLIST_TITLE}
                       </span>
                     </div>
@@ -778,17 +805,19 @@ additional_prompt:descriptionget || '',
                   {enableCopyFeature && (
                     <CopyOutlined
                       onClick={handleCopyClick}
-                      className={styles['product-copy-icon']}
+                      className={styles["product-copy-icon"]}
                     />
                   )}
                   {/* <Link to='/cart'> */}
-                  {storeData?.pdp_settings?.is_add_to_cart_button &&
+                  {storeData?.pdp_settings?.is_add_to_cart_button && (
                     <p
-                      className={styles['product-add-cart-button']}
+                      className={styles["product-add-cart-button"]}
                       style={{ zIndex: 10000 }}
-                      onClick={(e) => handleAddToCart(e)}>
+                      onClick={(e) => handleAddToCart(e)}
+                    >
                       Add to Cart
-                    </p>}
+                    </p>
+                  )}
                   {/* </Link> */}
                 </div>
               </div>
@@ -797,36 +826,44 @@ additional_prompt:descriptionget || '',
 
           {/* Action Buttons */}
           {!enableSelect && (
-            <div className={styles['product-showcase-button-main']}>
+            <div className={styles["product-showcase-button-main"]}>
               <div>
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && showStar ? (
+                {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+                showStar ? (
                   <button
-                    className={`${styles['product-star-action-button']}`}
-                    tabindex='-1'
+                    className={`${styles["product-star-action-button"]}`}
+                    tabindex="-1"
                     role={onStarClick ? "button" : "img"}
-                    onClick={handleStarClick}>
+                    onClick={handleStarClick}
+                  >
                     {product.starred ? (
-                      <StarFilled className={styles['icon-filled']} />
+                      <StarFilled className={styles["icon-filled"]} />
                     ) : (
-                      <StarOutlined className={styles['icon-outlined']} />
+                      <StarOutlined className={styles["icon-outlined"]} />
                     )}
-                    <span className={`${styles['showcase-text']} showcase-btn-text`}>
+                    <span
+                      className={`${styles["showcase-text"]} showcase-btn-text`}
+                    >
                       Showcase
                     </span>
                   </button>
                 ) : null}
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar ? (
+                {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                showStar ? (
                   <button
-                    className={`${styles['product-star-action-button']}`}
-                    tabindex='-1'
+                    className={`${styles["product-star-action-button"]}`}
+                    tabindex="-1"
                     role={onStarClick ? "button" : "img"}
-                    onClick={handleStarClick}>
+                    onClick={handleStarClick}
+                  >
                     {product.starred ? (
-                      <StarFilled className={styles['icon-filled']} />
+                      <StarFilled className={styles["icon-filled"]} />
                     ) : (
-                      <StarOutlined className={styles['icon-outlined']} />
+                      <StarOutlined className={styles["icon-outlined"]} />
                     )}
-                    <span className={`${styles['showcase-text']} showcase-btn-text`}>
+                    <span
+                      className={`${styles["showcase-text"]} showcase-btn-text`}
+                    >
                       Showcase
                     </span>
                   </button>
@@ -870,169 +907,221 @@ additional_prompt:descriptionget || '',
           )} */}
         {/* product card header */}
         <div
-          className={`${styles['header-container']} ${enableViewSimilar ||
+          className={`${styles["header-container"]} ${
+            enableViewSimilar ||
             (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
               showRemoveIcon) ||
             enableSelect
-            ? styles['flex-reverse']
-            : ""
-            } ${size === "small"
-              ? styles['header-small']
-              : styles['header-medium']
-            }`}
+              ? styles["flex-reverse"]
+              : ""
+          } ${
+            size === "small" ? styles["header-small"] : styles["header-medium"]
+          }`}
         >
           {/* reversed contents for hover css */}
 
           {enableSelect ? (
             <div
-              className={`${styles['product-remove-icon-container']} ${size === "small" ? styles['product-remove-icon-container-small'] : ''}`}>
+              className={`${styles["product-remove-icon-container"]} ${size === "small" ? styles["product-remove-icon-container-small"] : ""}`}
+            >
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={isSelected}
                 onClick={handleSelectProduct}
-                onChange={() => { }} // fix onchange handler warning
-                className={`${styles[size === "small" ? 'product-checkbox-small' : 'product-checkbox-large']}`}
+                onChange={() => {}} // fix onchange handler warning
+                className={`${styles[size === "small" ? "product-checkbox-small" : "product-checkbox-large"]}`}
               />
             </div>
           ) : (
             <>
               {enableViewSimilar && (
                 <div
-                  className={styles['product-view-similar']}
-                  onClick={onSimilarClick}>
-                  <Image 
-                    src="/images/view_similar_icon.svg" 
-                    alt="view similar" 
-                    width={24} 
-                    height={24} 
-                    className={styles['product-view-similar-icon']} 
+                  className={styles["product-view-similar"]}
+                  onClick={onSimilarClick}
+                >
+                  <Image
+                    src="/images/view_similar_icon.svg"
+                    alt="view similar"
+                    width={24}
+                    height={24}
+                    className={styles["product-view-similar-icon"]}
                   />
-                  <span className={styles['product-view-similar-text']}>
+                  <span className={styles["product-view-similar-text"]}>
                     View Similar
                   </span>
                 </div>
               )}
-              {
-                widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !showWishlistModal &&
-                <Image src={more} height={20} width={20} onClick={(e) => { setMenuIcon(true); e.stopPropagation() }} className={styles[size === "small" ? 'product-menu-dropdown-small' : (!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ?'product-menu-icon' : 'product-menu-icon2']} />
-              }
-   {
-                widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER   &&
-
-                 <div
-                          className={` ${styles['remove-icon']}`}
-                          
-                          onClick={removeFromWishlistClick}>
-                          <p
-                            className={`${styles['remove-icon-circle']} ${size === "small"
-                              ? styles['icon-circle-small']
-                              : styles['icon-circle-medium']
-                              }`}>
-                            <RxCross2 />
-                          </p>
-                          {/* <p className={styles['text-gray']}>Remove</p> */}
-                        </div>
-
-
-                }
-                   {      showWishlistModal &&
-
-                 <div
-                          className={` ${styles['remove-icon']}`}
-                          
-                          onClick={removeFromWishlistClick}>
-                          <p
-                            className={`${styles['remove-icon-circle']} ${size === "small"
-                              ? styles['icon-circle-small']
-                              : styles['icon-circle-medium']
-                              }`}>
-                            <RxCross2 />
-                          </p>
-                          {/* <p className={styles['text-gray']}>Remove</p> */}
-                        </div>
-
-
-                }
-              {menuIcon &&
-                <div ref={menuRef} onClick={(e) => e.stopPropagation()} className={styles[size === "small" ? 'product-menu-dropdown-mini' :(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal ? 'product-menu-dropdown' : 'product-menu-dropdown2']}>
-
+              {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+                !showWishlistModal && (
+                  <Image
+                    src={more}
+                    height={20}
+                    width={20}
+                    onClick={(e) => {
+                      setMenuIcon(true);
+                      e.stopPropagation();
+                    }}
+                    className={
+                      styles[
+                        size === "small"
+                          ? "product-menu-dropdown-small"
+                          : (!hideAddToWishlist ||
+                                (widgetType ===
+                                  PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                  showStar)) &&
+                              !showWishlistModal
+                            ? "product-menu-icon"
+                            : "product-menu-icon2"
+                      ]
+                    }
+                  />
+                )}
+              {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
+                <div
+                  className={` ${styles["remove-icon"]}`}
+                  onClick={removeFromWishlistClick}
+                >
+                  <p
+                    className={`${styles["remove-icon-circle"]} ${
+                      size === "small"
+                        ? styles["icon-circle-small"]
+                        : styles["icon-circle-medium"]
+                    }`}
+                  >
+                    <RxCross2 />
+                  </p>
+                  {/* <p className={styles['text-gray']}>Remove</p> */}
+                </div>
+              )}
+              {showWishlistModal && (
+                <div
+                  className={` ${styles["remove-icon"]}`}
+                  onClick={removeFromWishlistClick}
+                >
+                  <p
+                    className={`${styles["remove-icon-circle"]} ${
+                      size === "small"
+                        ? styles["icon-circle-small"]
+                        : styles["icon-circle-medium"]
+                    }`}
+                  >
+                    <RxCross2 />
+                  </p>
+                  {/* <p className={styles['text-gray']}>Remove</p> */}
+                </div>
+              )}
+              {menuIcon && (
+                <div
+                  ref={menuRef}
+                  onClick={(e) => e.stopPropagation()}
+                  className={
+                    styles[
+                      size === "small"
+                        ? "product-menu-dropdown-mini"
+                        : (!hideAddToWishlist ||
+                              (widgetType ===
+                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                showStar)) &&
+                            !showWishlistModal
+                          ? "product-menu-dropdown"
+                          : "product-menu-dropdown2"
+                    ]
+                  }
+                >
                   {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
                     showRemoveIcon && (
                       <div
-                        className={`    gap-${size === "small" ? "2" : "3"
-                          }`}>
+                        className={`    gap-${size === "small" ? "2" : "3"}`}
+                      >
                         <div
-                          className={`${styles['remove-icon-wrapper']} ${styles['product-menu-item']}`}
-                          onClick={removeFromWishlistClick}>
+                          className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
+                          onClick={removeFromWishlistClick}
+                        >
                           <p
-                            className={`${styles['remove-icon-circle']} ${size === "small"
-                              ? styles['icon-circle-small']
-                              : styles['icon-circle-medium']
-                              }`}>
+                            className={`${styles["remove-icon-circle"]} ${
+                              size === "small"
+                                ? styles["icon-circle-small"]
+                                : styles["icon-circle-medium"]
+                            }`}
+                          >
                             <RxCross2 />
                           </p>
-                          <p className={styles['text-gray']}>Remove</p>
+                          <p className={styles["text-gray"]}>Remove</p>
                         </div>
                       </div>
                     )}
-                            {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+                  {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
                     showRemoveIcon && (
                       <div
-                        className={`    gap-${size === "small" ? "2" : "3"
-                          }`}>
+                        className={`    gap-${size === "small" ? "2" : "3"}`}
+                      >
                         <div
-                          className={`${styles['remove-icon-wrapper']} ${styles['product-menu-item']}`}
-                          onClick={removeFromWishlistClick}>
+                          className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
+                          onClick={removeFromWishlistClick}
+                        >
                           <p
-                            className={`${styles['remove-icon-circle']} ${size === "small"
-                              ? styles['icon-circle-small']
-                              : styles['icon-circle-medium']
-                              }`}>
+                            className={`${styles["remove-icon-circle"]} ${
+                              size === "small"
+                                ? styles["icon-circle-small"]
+                                : styles["icon-circle-medium"]
+                            }`}
+                          >
                             <RxCross2 />
                           </p>
-                          <p className={styles['text-gray']}>Remove</p>
+                          <p className={styles["text-gray"]}>Remove</p>
                         </div>
                       </div>
                     )}
                   {enableCopyFeature && (
-                    <div className={styles['product-menu-item']} onClick={handleCopyClick} >
-
+                    <div
+                      className={styles["product-menu-item"]}
+                      onClick={handleCopyClick}
+                    >
                       <div
-                        className={`${styles['menu-item-circle']} ${size === "small"
-                          ? styles['icon-circle-small']
-                          : styles['icon-circle-medium']
-                          }`}
+                        className={`${styles["menu-item-circle"]} ${
+                          size === "small"
+                            ? styles["icon-circle-small"]
+                            : styles["icon-circle-medium"]
+                        }`}
                       >
                         <LuCopy />
                       </div>
-                      <p className={styles['text-gray']}>Copy</p>
+                      <p className={styles["text-gray"]}>Copy</p>
                     </div>
                   )}
                   {isAdminLoggedIn && isCustomProductsPage && (
-                    <div className={styles['product-menu-item']} onClick={(e) => {
-                      handleProductClick();
-                      e.stopPropagation();
-                    }}>
+                    <div
+                      className={styles["product-menu-item"]}
+                      onClick={(e) => {
+                        handleProductClick();
+                        e.stopPropagation();
+                      }}
+                    >
                       <p
-                        className={`${styles['product-cart-button']} ${styles['product-cart-icon2']} ${size === "small" ? styles['product-cart-icon-small'] : styles['product-cart-icon-lg']}`}
+                        className={`${styles["product-cart-button"]} ${styles["product-cart-icon2"]} ${size === "small" ? styles["product-cart-icon-small"] : styles["product-cart-icon-lg"]}`}
                         onClick={(e) => e.stopPropagation()}
-                        style={{ backgroundColor: "#f8f6f4" }}>
+                        style={{ backgroundColor: "#f8f6f4" }}
+                      >
                         <FiEdit
-                          style={{ color: "#9a9b9b", backgroundColor: "#f8f6f4" }}
-
-                          className={styles['product-cart-icon-smalls']}
+                          style={{
+                            color: "#9a9b9b",
+                            backgroundColor: "#f8f6f4",
+                          }}
+                          className={styles["product-cart-icon-smalls"]}
                         />
                       </p>
-                      <p className={styles['text-gray']}>Edit</p>
+                      <p className={styles["text-gray"]}>Edit</p>
                     </div>
                   )}
-                </div>}
+                </div>
+              )}
             </>
           )}
 
           <div
             // ${enableViewSimilar && "w-3/4"} // removed class name
-            className={`product-name overflow-hidden product_details_container`}>
+            className={`product-name overflow-hidden product_details_container`}
+          >
             {/* <div className='flex'>
 							<Text
 								ellipsis={{ tooltip: product.name }}
@@ -1052,305 +1141,371 @@ additional_prompt:descriptionget || '',
           </div>
         </div>
 
-
-        {(!hideAddToWishlist || widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar) && !showWishlistModal && !enableSelect &&
-          <div className={styles['product-menu-item']}>
-            {!hideAddToWishlist && (
-              <div className={styles['product-menu-wishlist']} onClick={addToWishlistClick} >
-
-                <button
-                  className={`${styles['product-heart-button']}`}
+        {(!hideAddToWishlist ||
+          (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar)) &&
+          !showWishlistModal &&
+          !enableSelect && (
+            <div className={styles["product-menu-item"]}>
+              {!hideAddToWishlist && (
+                <div
+                  className={styles["product-menu-wishlist"]}
+                  onClick={addToWishlistClick}
                 >
-                  <Image className={styles['add_to_wishlist_icon']} src={heart} height={20} width={20} />
-                </button>
-              </div>
-            )}
-          </div>
-        }
-
-
+                  <button className={`${styles["product-heart-button"]}`}>
+                    <Image
+                      className={styles["add_to_wishlist_icon"]}
+                      src={heart}
+                      height={20}
+                      width={20}
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
         {/* product footer */}
-        <div className={`${styles['product-footer-main']} ${size === "small" ? styles['product-footer-main-small'] : styles['product-footer-main-medium']}`}>
+        <div
+          className={`${styles["product-footer-main"]} ${size === "small" ? styles["product-footer-main-small"] : styles["product-footer-main-medium"]}`}
+        >
           {/* Product Name */}
-          <div className={styles['product-name-section']}>
+          <div className={styles["product-name-section"]}>
             {/* Brand Info */}
-            <p className={styles['product-brand-footer-text']}> <span>{product?.brand || '\u00A0'}</span></p>
+            <p className={styles["product-brand-footer-text"]}>
+              {" "}
+              <span>{product?.brand || "\u00A0"}</span>
+            </p>
 
             <Text
               ellipsis={{ tooltip: product.name }}
-              className={styles['product-name-text']}>
-              {product.name || '\u00A0'}
+              className={styles["product-name-text"]}
+            >
+              {product.name || "\u00A0"}
             </Text>
-
-
 
             {/* SOLD Badge */}
             {product?.avlble === 0 && (
-              <div
-                className={styles['product-sold-badge']}
-              >
-                SOLD
-              </div>
+              <div className={styles["product-sold-badge"]}>SOLD</div>
             )}
           </div>
 
           {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
             product?.size?.length > 0) ||
-            (storeData.pdp_settings?.buy_card_attributes?.[1] &&
-              product?.sleeve?.length > 0) ||
-            (storeData.pdp_settings?.buy_card_attributes?.[2] &&
-              product?.fit?.length > 0) ? (
-                <div className={`${styles.tagsContainerWrapper}`}>
-
-            <div   ref={containerRef}
-              className={`${styles.tagscontainer} ${
-        isOverflowing ? styles.isOverflowing : ""
-      }`}
-            >
- 
-              {storeData.pdp_settings?.buy_card_attributes?.[0] &&
-                product?.size?.length > 0 && (
-                  <span
-                    className={`${styles.smalltags}`}
-                    style={{
-                      background: "#F5F5F5",
-                      width: "fit-content",
-
-                    }}
-                  >
-                    size:
-                    {Array.isArray(product?.size)
-                      ? product.size
-                        .map((f) => f.replace(/,+$/, "").trim())
-                        .join(", ")
-                      : product?.size?.replace(/,+$/, "").trim()}
-                  </span>
-                )}
-              {storeData.pdp_settings?.buy_card_attributes?.[1] &&
-                product?.sleeve?.length > 0 && (
-                  <span
-                    className={`${styles.smalltags}`}
-                    style={{
-                      background: "#F5F5F5",
-                      width: "fit-content",
-                    }}
-                  >
-                    sleeve :{" "}
-                    {Array.isArray(product?.sleeve)
-                      ? product.sleeve
-                        .map((f) => f.replace(/,+$/, "").trim())
-                        .join(", ")
-                      : product?.sleeve?.replace(/,+$/, "").trim()}
-                  </span>
-                )}
-              {storeData.pdp_settings?.buy_card_attributes?.[2] &&
-                product?.fit?.length > 0 && (
-                  <span
-                    className={`${styles.smalltags}`}
-                    style={{
-                      background: "#eeeeee",
-                      width: "fit-content",
-                    }}
-                  >
-                    fit:{" "}
-                    {Array.isArray(product?.fit)
-                      ? product.fit
-                        .map((f) => f.replace(/,+$/, "").trim())
-                        .join(", ")
-                      : product?.fit?.replace(/,+$/, "").trim()}
-                  </span>
-                )}
+          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+            product?.sleeve?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+            product?.fit?.length > 0) ? (
+            <div className={`${styles.tagsContainerWrapper}`}>
+              <div
+                ref={containerRef}
+                className={`${styles.tagscontainer} ${
+                  isOverflowing ? styles.isOverflowing : ""
+                }`}
+              >
+                {storeData.pdp_settings?.buy_card_attributes?.[0] &&
+                  product?.size?.length > 0 && (
+                    <span
+                      className={`${styles.smalltags}`}
+                      style={{
+                        background: "#F5F5F5",
+                        width: "fit-content",
+                      }}
+                    >
+                      size:
+                      {Array.isArray(product?.size)
+                        ? product.size
+                            .map((f) => f.replace(/,+$/, "").trim())
+                            .join(", ")
+                        : product?.size?.replace(/,+$/, "").trim()}
+                    </span>
+                  )}
+                {storeData.pdp_settings?.buy_card_attributes?.[1] &&
+                  product?.sleeve?.length > 0 && (
+                    <span
+                      className={`${styles.smalltags}`}
+                      style={{
+                        background: "#F5F5F5",
+                        width: "fit-content",
+                      }}
+                    >
+                      sleeve :{" "}
+                      {Array.isArray(product?.sleeve)
+                        ? product.sleeve
+                            .map((f) => f.replace(/,+$/, "").trim())
+                            .join(", ")
+                        : product?.sleeve?.replace(/,+$/, "").trim()}
+                    </span>
+                  )}
+                {storeData.pdp_settings?.buy_card_attributes?.[2] &&
+                  product?.fit?.length > 0 && (
+                    <span
+                      className={`${styles.smalltags}`}
+                      style={{
+                        background: "#eeeeee",
+                        width: "fit-content",
+                      }}
+                    >
+                      fit:{" "}
+                      {Array.isArray(product?.fit)
+                        ? product.fit
+                            .map((f) => f.replace(/,+$/, "").trim())
+                            .join(", ")
+                        : product?.fit?.replace(/,+$/, "").trim()}
+                    </span>
+                  )}
+              </div>
             </div>
-                </div>
-
-          ) :
+          ) : (
             <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>
-          }
+          )}
 
           {/* Price Section */}
-          <div className={`${styles['product-price-container']} ${product?.price || product?.listprice ? styles['product-price-container-height'] : styles['product-price-container-height']}`}>
-            <div className={styles['product-price-display']} >
-
-              <span className={`${styles['product-price-text']} ${size === "small" ? styles['product-price-text-small'] : styles['product-price-text-medium']}`}>
+          <div
+            className={`${styles["product-price-container"]} ${product?.price || product?.listprice ? styles["product-price-container-height"] : styles["product-price-container-height"]}`}
+          >
+            <div className={styles["product-price-display"]}>
+              <span
+                className={`${styles["product-price-text"]} ${size === "small" ? styles["product-price-text-small"] : styles["product-price-text-medium"]}`}
+              >
                 {product?.price || product?.listprice ? (
                   <span
                     dangerouslySetInnerHTML={{
                       __html: `${currencySymbol}${product.price || product.listprice}`,
                     }}
                   />
-                ) : (
-                  null
-                )}
+                ) : null}
               </span>
 
               {product?.price > 0 &&
                 product?.listprice > product?.price &&
                 discountPer > 0 && (
                   <>
-                    <span className={styles['product-listprice-text']}>
-                      <span className={styles['product-listprice-value']}
+                    <span className={styles["product-listprice-text"]}>
+                      <span
+                        className={styles["product-listprice-value"]}
                         dangerouslySetInnerHTML={{
                           __html: `${currencySymbol}${product.listprice}`,
                         }}
                       />
                     </span>
-                    <span className={styles['product-discount-badge-text']}>
+                    <span className={styles["product-discount-badge-text"]}>
                       {(discountPer && `${discountPer}% OFF`) || null}
                     </span>
                   </>
                 )}
             </div>
-
-
-
-
           </div>
-          {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) && !isCustomProductsPage && (
-            <>
-              {storeData?.pdp_settings?.is_buy_button ? (
-                <button
-                  style={{ background: !product?.price && !product?.listprice ? '#F2F1FD' : '#9690F0', color: !product?.price && !product?.listprice ? '#616161' : '' }}
-                  className={`${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']}`}
-                  onClick={checkoutPayment}
-                  disabled={!product?.price && !product?.listprice}
-                >
-                  <Image
-                    style={{ filter: !product?.price && !product?.listprice ? 'brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)' : '' }}
-                    src={shopping} height={20} width={20} className={`${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
-                  Buy Now
-                </button>
-              ) : (
-                <button
-                  className={`${size === "small" ? styles['product-buy-button-small'] : styles['product-buy-button']} ${!product?.price && !product?.listprice ? styles['hidden'] : styles['block']}`}
-                  onClick={handleAddToCart}
-                  disabled={!product?.price && !product?.listprice}
-                >
-                  <Image src={shopping} height={20} width={20} className={`${styles[showWishlistModal || size === 'small' ? 'product-cart-icon-small' : 'product-cart-icon-large']}`} />
-                  Add to Cart
-                </button>
-              )}
-            </>
-          )}
-
-
+          {(storeData?.pdp_settings?.is_buy_button ||
+            storeData?.pdp_settings?.is_add_to_cart_button) &&
+            !isCustomProductsPage && (
+              <>
+                {storeData?.pdp_settings?.is_buy_button ? (
+                  <button
+                    style={{
+                      background:
+                        !product?.price && !product?.listprice
+                          ? "#F2F1FD"
+                          : "#9690F0",
+                      color:
+                        !product?.price && !product?.listprice ? "#616161" : "",
+                    }}
+                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                    onClick={checkoutPayment}
+                    disabled={!product?.price && !product?.listprice}
+                  >
+                    <Image
+                      style={{
+                        filter:
+                          !product?.price && !product?.listprice
+                            ? "brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)"
+                            : "",
+                      }}
+                      src={shopping}
+                      height={20}
+                      width={20}
+                      className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
+                    />
+                    Buy Now
+                  </button>
+                ) : (
+                  <button
+                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]} ${!product?.price && !product?.listprice ? styles["hidden"] : styles["block"]}`}
+                    onClick={handleAddToCart}
+                    disabled={!product?.price && !product?.listprice}
+                  >
+                    <Image
+                      src={shopping}
+                      height={20}
+                      width={20}
+                      className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
+                    />
+                    Add to Cart
+                  </button>
+                )}
+              </>
+            )}
         </div>
-
       </div>
 
-      {ButtonClick === product?.mfr_code ?
-
-        <Modal isOpen={!!ButtonClick}
-          headerText={'Virtual Try-On'}
-          subText='Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on.'
+      {ButtonClick === product?.mfr_code ? (
+        <Modal
+          isOpen={!!ButtonClick}
+          headerText={"Virtual Try-On"}
+          subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
           onClose={() => handleVTOCancel()}
-          size='md'>
+          size="md"
+        >
           {vtoResultImageUrl ? (
-            <div className={styles['product-vto-result-container']}>
-              <img src={vtoResultImageUrl} alt="VTO Result" className={styles['product-vto-result-image']} />
-              <div className={styles['product-vto-buttons-group']}>
+            <div className={styles["product-vto-result-container"]}>
+              <img
+                src={vtoResultImageUrl}
+                alt="VTO Result"
+                className={styles["product-vto-result-image"]}
+              />
+              <div className={styles["product-vto-buttons-group"]}>
                 <button
                   onClick={handleVTOCancel}
-                  className={styles['product-vto-cancel-button']}>
+                  className={styles["product-vto-cancel-button"]}
+                >
                   Cancel
                 </button>
                 <button
                   onClick={handleVTODownload}
-                  className={styles['product-vto-submit-button']}>
+                  className={styles["product-vto-submit-button"]}
+                >
                   Download
                 </button>
               </div>
             </div>
           ) : (
             <>
-              {loading ?
-                <div className={styles['product-vto-loading-container']}>
-                  <LoadingOutlined className={styles['product-vto-loading-spinner']} />
-                  <div className={styles['product-vto-loading-text']}>
-                    <p className={styles['product-vto-loading-title']}>AI is generating your image</p>
-                    <p className={styles['product-vto-loading-subtitle']}>Please wait while we process your request...</p>
+              {loading ? (
+                <div className={styles["product-vto-loading-container"]}>
+                  <LoadingOutlined
+                    className={styles["product-vto-loading-spinner"]}
+                  />
+                  <div className={styles["product-vto-loading-text"]}>
+                    <p className={styles["product-vto-loading-title"]}>
+                      AI is generating your image
+                    </p>
+                    <p className={styles["product-vto-loading-subtitle"]}>
+                      Please wait while we process your request...
+                    </p>
                   </div>
-                </div> :
+                </div>
+              ) : (
                 <form onSubmit={handleVTOclick}>
-                  <div className={styles['product-vto-upload-container']} >
-                    {showLoader ? <LoadingOutlined className={styles['product-vto-loading-spinner']} /> :
+                  <div className={styles["product-vto-upload-container"]}>
+                    {showLoader ? (
+                      <LoadingOutlined
+                        className={styles["product-vto-loading-spinner"]}
+                      />
+                    ) : (
                       <>
                         {uploadedImages.length < 1 && (
-                          <div className={styles['product-vto-upload-container']}>
-                            <h4 className={styles['product-vto-upload-title']}>Upload Your Image </h4>
+                          <div
+                            className={styles["product-vto-upload-container"]}
+                          >
+                            <h4 className={styles["product-vto-upload-title"]}>
+                              Upload Your Image{" "}
+                            </h4>
                             <Upload.Dragger
-                              className={styles['product-vto-upload-zone']}
+                              className={styles["product-vto-upload-zone"]}
                               {...uploadImageDraggerProps}
-                              name='upload_image'
-                              showUploadList={false}>
-                              <p className={styles['product-vto-upload-icon']}>
+                              name="upload_image"
+                              showUploadList={false}
+                            >
+                              <p className={styles["product-vto-upload-icon"]}>
                                 <UploadOutlined />
                               </p>
-                              <p className={styles['product-vto-upload-text']}>
+                              <p className={styles["product-vto-upload-text"]}>
                                 Click or drag file(s) to this area
                               </p>
                             </Upload.Dragger>
                           </div>
                         )}
                       </>
-                    }
-                    {uploadedImages.length > 0 &&
-                      <div className={styles['product-vto-uploaded-image-container']}>
-                        <img src={uploadedImages[0]} alt="Uploaded" className={styles['product-vto-uploaded-image']} />
-                        <CloseCircleOutlined className={styles['product-vto-close-uploaded']} onClick={() => setUploadedImages([])} />
+                    )}
+                    {uploadedImages.length > 0 && (
+                      <div
+                        className={
+                          styles["product-vto-uploaded-image-container"]
+                        }
+                      >
+                        <img
+                          src={uploadedImages[0]}
+                          alt="Uploaded"
+                          className={styles["product-vto-uploaded-image"]}
+                        />
+                        <CloseCircleOutlined
+                          className={styles["product-vto-close-uploaded"]}
+                          onClick={() => setUploadedImages([])}
+                        />
                       </div>
-                    }
+                    )}
                   </div>
-                  <h4 className={styles['product-vto-prompt-label']}> Add a prompt for AI (optional) </h4>
+                  <h4 className={styles["product-vto-prompt-label"]}>
+                    {" "}
+                    Add a prompt for AI (optional){" "}
+                  </h4>
                   <textarea
-                    className={styles['product-vto-prompt-input']}
-                    placeholder='Enter description...'
-                    name='description'
-                    type='text'
+                    className={styles["product-vto-prompt-input"]}
+                    placeholder="Enter description..."
+                    name="description"
+                    type="text"
                     onChange={(e) => setDescriptionget(e.target.value)}
                     value={descriptionget}
                     rows={5}
                   />
 
-                  <div className={styles['product-vto-submit-container']}>
+                  <div className={styles["product-vto-submit-container"]}>
                     <button></button>
-                    <button type="submit" className={`${styles['product-vto-submit-form-button']} ${loading ? styles['product-vto-submit-form-button-loading'] : styles['product-vto-submit-form-button-active']}`}>Submit</button>
+                    <button
+                      type="submit"
+                      className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
+                    >
+                      Submit
+                    </button>
                   </div>
                 </form>
-              }
+              )}
             </>
           )}
         </Modal>
-        : null
-      }
+      ) : null}
 
       {/* // REMOVE // remove chin section integration and flag // not required */}
       {showChinSection && (
-        <div className={styles['product-chin-section']}>
+        <div className={styles["product-chin-section"]}>
           <StarOutlined
-            height='fit-content'
+            height="fit-content"
             onClick={handleStarClick}
             role={onStarClick ? "button" : "img"}
-            className={`${styles['product-chin-star-icon']} ${size === "small" ? styles['product-chin-star-icon-small'] : styles['product-chin-star-icon-medium']} ${product.starred ? styles['product-chin-star-icon-filled'] : styles['product-chin-star-icon-default']} ${onStarClick ? styles['product-chin-star-icon-clickable'] : styles['product-chin-star-icon-not-clickable']}`}
+            className={`${styles["product-chin-star-icon"]} ${size === "small" ? styles["product-chin-star-icon-small"] : styles["product-chin-star-icon-medium"]} ${product.starred ? styles["product-chin-star-icon-filled"] : styles["product-chin-star-icon-default"]} ${onStarClick ? styles["product-chin-star-icon-clickable"] : styles["product-chin-star-icon-not-clickable"]}`}
           />
           {enableCopyFeature && (
             <div
-              className={styles['product-chin-copy-button']}
-              onClick={handleCopyClick}>
-              <CopyOutlined className={styles['product-chin-copy-icon']} />
+              className={styles["product-chin-copy-button"]}
+              onClick={handleCopyClick}
+            >
+              <CopyOutlined className={styles["product-chin-copy-icon"]} />
             </div>
           )}
           <div
-            className={styles['product-chin-remove-button']}
-            onClick={removeFromWishlistClick}>
-            <CloseCircleOutlined className={styles['product-chin-remove-icon']} />
+            className={styles["product-chin-remove-button"]}
+            onClick={removeFromWishlistClick}
+          >
+            <CloseCircleOutlined
+              className={styles["product-chin-remove-icon"]}
+            />
           </div>
         </div>
       )}
       {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
         (showEdit || showStar || showRemoveIcon) && (
           <div
-            className={`${styles['product-action-cover-container']} ${size === "small" ? styles['product-action-cover-container-small'] : styles['product-action-cover-container-medium']}`}>
+            className={`${styles["product-action-cover-container"]} ${size === "small" ? styles["product-action-cover-container-small"] : styles["product-action-cover-container-medium"]}`}
+          >
             {/* <div>
               {showRemoveIcon ? (
                 <button
@@ -1366,12 +1521,15 @@ additional_prompt:descriptionget || '',
             <div>
               {showEdit ? (
                 <button
-                  className={styles['product-action-cover-edit-button']}
-                  tabindex='-1'
-                  role='button'
-                  onClick={handleEditClick}>
-                  <EditFilled className={styles['product-action-cover-edit-icon']} />
-                  <span className={styles['product-action-cover-edit-text']}>
+                  className={styles["product-action-cover-edit-button"]}
+                  tabindex="-1"
+                  role="button"
+                  onClick={handleEditClick}
+                >
+                  <EditFilled
+                    className={styles["product-action-cover-edit-icon"]}
+                  />
+                  <span className={styles["product-action-cover-edit-text"]}>
                     Edit
                   </span>
                 </button>

@@ -15,7 +15,7 @@ export const PDPPageSkeleton = () => {
         <div className="flex flex-col lg:flex-row gap-5">
 
           {/* Image skeleton */}
-          <div className="w-full lg:max-w-439 h-[480px] border rounded-xl p-4">
+          <div className="w-full lg:max-w-439 h-[480px]   rounded-xl p-4">
             <div className={`${styles.skeleton} w-full h-full rounded-xl`} />
           </div>
 
