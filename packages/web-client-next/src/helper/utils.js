@@ -988,3 +988,5 @@ export const AdminCheck = (authUser, currentStoreName, adminUserId, admin_list) 
 	const isUserIdMatch = authUser?.user_id === adminUserId;
 	return !!(isUserIdMatch || isEmailAdmin);
 };
+
+export const cleanImage = (img)=> typeof img === "string" ? img.replace(/"/g, "").trim() : "";
