@@ -102,6 +102,9 @@
     font-size: 11px;
     line-height: 16px;
     letter-spacing: 0.5px;
+    @media (max-width:768px) {
+        display: none;
+    }
 }
 
 .announcementText {
@@ -117,6 +120,9 @@
     padding-left: 12px;
     padding-right: 12px;
     color: #ffffff;
+    @media (max-width:768px) {
+        height: 60px !important;
+    }
 }
 
 /* Search Button */
