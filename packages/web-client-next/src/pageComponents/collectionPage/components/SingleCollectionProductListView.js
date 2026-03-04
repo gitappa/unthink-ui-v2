@@ -217,7 +217,7 @@ const SingleCollectionProductListView = ({
               </div>
             )}
           <div
-            className={`${blogCollectionPage?.cover_image ? "" : "m-auto"} ${url ? "" : styles.cardsContainer} ${!hasCoverMedia ? styles.productItems1ClipContainer : ""}`}
+            className={`w-full ${blogCollectionPage?.cover_image ? "" : "m-auto"} ${url ? "" : styles.cardsContainer} ${!hasCoverMedia ? styles.productItems1ClipContainer : ""}`}
           >
             {!isSingleCollectionSharedPage && productsData.length ? (
               <div
