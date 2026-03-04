@@ -882,6 +882,18 @@
     gap: 10px;
   }
 }
+
+@media (min-width: 1000px) {
+  .productItems > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .productItems > div :global([class*="product-wrapper-medium2"]) {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
 .productItems1{
     display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -941,7 +953,7 @@
   height: 290px;
   width: 100%;
   grid-column: span 2;
-  flex-grow: 1;
+  flex-grow: 0;
   overflow: hidden;
   position: static;
   top: auto;
@@ -957,21 +969,41 @@
     position: sticky;
   top: 107px;
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1000px) {
     height: 700px;
-    width: 580px;
+    width: 520px;
+    min-width: 520px;
+    max-width: 520px;
+    flex: 0 0 520px;
   }
-  @media (min-width: 1304px) {
-    width: 470px;
+    @media (min-width: 1302px) {
+    width: 480px;
+    min-width: 520px;
+    max-width: 520px;
+    flex: 0 0 520px;
+  }
+  @media (min-width: 1394px) {
+    width: 520px;
+    min-width: 520px;
+    max-width: 520px;
+    flex: 0 0 520px;
   }
   @media (min-width: 1536px) {
     height: 700px;
-    width: 519px;
+    width: 520px;
+    min-width: 520px;
+    max-width: 520px;
+    flex: 0 0 520px;
   }
 }
 
 .coverMediaHidden {
   display: none;
+}
+
+.cardsContainer {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* Video player overlay */
@@ -1730,5 +1762,27 @@ color: #99A1AF;
     z-index: 38;
     background-color: #ffffff;
     margin-bottom: 0;
+  }
+}
+
+/* Keep consistent desktop side gap from 1000px to 1535px */
+@media (min-width: 1000px) and (max-width: 1535px) {
+  .pageWrapper {
+    width: calc(100% - 80px);
+    max-width: none;
+  }
+
+  .lgContainer,
+  .collectionWrapper,
+  .tagsOuterContainer,
+  .tabsRow {
+    width: 100%;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .productItems {
+    gap: 12px;
   }
 }

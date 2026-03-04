@@ -786,6 +786,13 @@
     }
 }
 
+@media (min-width: 1000px) and (max-width: 1535px) {
+  .pageDetailsContainer {
+    width: calc(100% - 80px);
+    max-width: none;
+  }
+}
+
 .pageDetailsContainer1 {
     margin-left: auto;
     margin-right: auto;
