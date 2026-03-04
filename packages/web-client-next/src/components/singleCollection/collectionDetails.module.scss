@@ -1888,6 +1888,17 @@ color: #99A1AF;
     width: 349px !important;
     max-width: 349px !important;
   }
+
+  .productItems1Slide {
+    width: 349px !important;
+    min-width: 349px;
+    max-width: 349px;
+  }
+
+  .productItems1Slide :global([class*="product-wrapper-medium2"]) {
+    width: 349px !important;
+    max-width: 349px !important;
+  }
 }
 
 /* Figma desktop alignment */
