@@ -633,12 +633,12 @@ const ProductCard = ({
 
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
+      if (product.url === "dummy_url") {
       // console.log('fdfdfdfq', product?.image);
       const cleaned = cleanImage(product?.image);
       if (cleaned) {
         localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
       }
-      if (product.url === "dummy_url") {
         navigate(`/product/${clickedMfrCode}`);
         // fetchProductDetails();
         // console.log(product?.image);

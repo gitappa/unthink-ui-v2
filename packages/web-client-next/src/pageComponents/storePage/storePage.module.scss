@@ -786,6 +786,13 @@
     }
 }
 
+@media (min-width: 1000px) and (max-width: 1535px) {
+  .pageDetailsContainer {
+    width: calc(100% - 80px);
+    max-width: none;
+  }
+}
+
 .pageDetailsContainer1 {
     margin-left: auto;
     margin-right: auto;
@@ -797,7 +804,7 @@
     max-width: 1100px;
   } //new
   @media (min-width: 1304px) {
-    max-width: 1205px;
+    max-width: 1235px;
   }
   @media (min-width: 1536px) {
     max-width: 1453px;
