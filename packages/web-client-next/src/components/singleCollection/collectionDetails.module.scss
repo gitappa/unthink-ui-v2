@@ -1,3 +1,24 @@
+/* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .collection_description_ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 5 !important;
@@ -957,6 +978,8 @@
   overflow: hidden;
   position: static;
   top: auto;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+  will-change: opacity, transform;
  
   @media (min-width: 640px) {
     height: 370px;
@@ -1037,6 +1060,8 @@
   object-fit: cover;
   border-radius: 12px;
   width: 100%;
+  animation: fadeIn 0.6s ease-out 0.1s both;
+  will-change: opacity;
 }
 
 /* Container widths */
@@ -1054,6 +1079,8 @@
   margin-right: auto;
   padding-left: 12px;
   padding-right: 12px;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  will-change: opacity, transform;
 
   // @media (min-width: 640px) {
   //   max-width: 560px;
@@ -1227,6 +1254,8 @@
   justify-content: space-between;
   margin-bottom: 20px;
   margin-top: 36px;
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+  will-change: opacity, transform;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -1417,6 +1446,8 @@
   display: flex;
   padding-bottom: 4px;
   gap: 14px;
+  animation: fadeInUp 0.6s ease-out 0.15s both;
+  will-change: opacity, transform;
 
   @media (min-width: 768px) {
     padding-bottom: 20px;
@@ -1995,5 +2026,169 @@ color: #99A1AF;
   .para1,
   .para2 {
     display: none !important;
+  }
+}
+
+/* Product card animations with staggered delay */
+.productCardAnimated {
+  animation: fadeInUp 0.6s ease-out both;
+  will-change: opacity, transform;
+}
+
+/* Apply staggered animations for product items */
+.productItems > div:nth-child(1) {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.productItems > div:nth-child(2) {
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+}
+
+.productItems > div:nth-child(3) {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.productItems > div:nth-child(4) {
+  animation: fadeInUp 0.6s ease-out 0.35s both;
+}
+
+.productItems > div:nth-child(5) {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.productItems > div:nth-child(6) {
+  animation: fadeInUp 0.6s ease-out 0.45s both;
+}
+
+.productItems > div:nth-child(7) {
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.productItems > div:nth-child(8) {
+  animation: fadeInUp 0.6s ease-out 0.55s both;
+}
+
+/* Stagger animation for productGrid */
+.productGrid > div:nth-child(1) {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.productGrid > div:nth-child(2) {
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+}
+
+.productGrid > div:nth-child(3) {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.productGrid > div:nth-child(4) {
+  animation: fadeInUp 0.6s ease-out 0.35s both;
+}
+
+.productGrid > div:nth-child(5) {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+/* Stagger animation for productGrid2 */
+.productGrid2 > div:nth-child(1) {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.productGrid2 > div:nth-child(2) {
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+}
+
+.productGrid2 > div:nth-child(3) {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.productGrid2 > div:nth-child(4) {
+  animation: fadeInUp 0.6s ease-out 0.35s both;
+}
+
+.productGrid2 > div:nth-child(5) {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.productGrid2 > div:nth-child(6) {
+  animation: fadeInUp 0.6s ease-out 0.45s both;
+}
+
+/* Stagger animation for productItems1 */
+.productItems1 > div:nth-child(1) {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.productItems1 > div:nth-child(2) {
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+}
+
+.productItems1 > div:nth-child(3) {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.productItems1 > div:nth-child(4) {
+  animation: fadeInUp 0.6s ease-out 0.35s both;
+}
+
+.productItems1 > div:nth-child(5) {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.productItems1 > div:nth-child(6) {
+  animation: fadeInUp 0.6s ease-out 0.45s both;
+}
+
+.productItems1 > div:nth-child(7) {
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.productItems1 > div:nth-child(8) {
+  animation: fadeInUp 0.6s ease-out 0.55s both;
+}
+
+/* Smooth swiper slides animation */
+.productItems1Slide {
+  width: auto !important;
+  height: auto;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.productItems1Slide:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.productItems1Slide:nth-child(2) {
+  animation-delay: 0.25s;
+}
+
+.productItems1Slide:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.productItems1Slide:nth-child(4) {
+  animation-delay: 0.35s;
+}
+
+.productItems1Slide:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+/* Respect user's motion preferences for better accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .pageWrapper,
+  .coverMediaContainer,
+  .coverImage,
+  .detailsRow,
+  .tagsOuterContainer,
+  .selectBarRow,
+  .productGrid,
+  .productGrid2,
+  .productItems,
+  .productItems1,
+  .productItems1Slide {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
