@@ -1690,6 +1690,7 @@ color: #99A1AF;
   align-items: center;
   z-index: 10;
   // gap: 5px;
+  margin-bottom: 16px;
 }
 /* FAQ section */
 .faqSection {
@@ -1763,7 +1764,7 @@ color: #99A1AF;
 }
 
 /* Keep consistent desktop side gap from 1000px to 1535px */
-@media (min-width: 1000px) and (max-width: 1535px) {
+@media (min-width: 835px) and (max-width: 1535px) {
   .pageWrapper {
     width: calc(100% - 80px);
     max-width: none;
@@ -1785,19 +1786,24 @@ color: #99A1AF;
 }
 
 @media (min-width: 834px) and (max-width: 999px) {
-  .productGrid {
-    display: block;
-    margin-top: 0;
-  }
+  // .productGrid {
+  //   display: block;
+  //   margin-top: 0;
+  // }
 
   .coverMediaContainer {
     position: static;
     top: auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+    width: 360px;
+    max-width: 360px;
+    min-width: 360px;
     height: 420px;
     margin-bottom: 16px;
+    @media  (min-width: 834px) and (max-width: 883px) {
+       width: 330px;
+    max-width: 330px;
+    min-width: 330px;
+    }
   }
 
   .cardsContainer {
@@ -1805,21 +1811,26 @@ color: #99A1AF;
   }
 
   .productItems {
-    grid-template-columns: repeat(auto-fill, 230px);
+    grid-template-columns: repeat(auto-fill, 210px);
     column-gap: 12px;
     row-gap: 12px;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .productItems > div {
-    width: 230px;
-    min-width: 230px;
-    max-width: 230px;
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
   }
 
   .productItems > div :global([class*="product-wrapper-medium2"]) {
-    width: 230px !important;
-    max-width: 230px !important;
+    width: 210px !important;
+    max-width: 210px !important;
+      @media  (min-width: 834px) and (max-width: 883px) {
+       width: 190px !important;
+    max-width: 190px !important;
+  
+    }
   }
 }
 
@@ -1920,7 +1931,7 @@ color: #99A1AF;
   }
 
   .detailsRow {
-    padding-bottom: 44px;
+    padding-bottom: 42px;
   }
 
   .contentColumn {
