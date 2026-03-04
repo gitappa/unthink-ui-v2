@@ -822,7 +822,7 @@ const SingleCollectionProductListView = ({
                                   : ""
                               }
                             />
-                            <p style={{ color: "#6A7282" }} className="hidden md:block">
+                            <p style={{ color: "#6A7282" }} className="hidden md:block text-sm lg:text-base">
                               Share
                             </p>
                           </div>
@@ -835,7 +835,7 @@ const SingleCollectionProductListView = ({
                               <div className={styles.descriptionWrapper}>
                                 <p
                                   ref={textRef}
-                                  className={`${styles.descriptionText} 
+                                  className={` ${styles.descriptionText} 
     ${expanded
                                       ? ""
                                       : productsData?.length === 0
