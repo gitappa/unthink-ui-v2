@@ -470,6 +470,12 @@ console.log('isStagingEnv',isStagingEnv);
 					</span>
 				),
 			});
+			// if(!isSwiftlyStyledInstance || !isDoTheLookInstance && showCategories ){
+			// 	items.push({
+			// 		key:'Discover',
+
+			// 	})
+			// }
 		}
 
 		return items;
