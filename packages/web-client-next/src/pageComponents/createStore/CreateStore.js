@@ -353,7 +353,7 @@ const CreateStore = () => {
 									className={styles['site-navigation-steps']}>
 									{steps.map((step) => (
 										<Step title={step} />
-									))}
+									))}	
 								</Steps>
 							) : (
 								<div className={styles['mobileStepIndicator']}>

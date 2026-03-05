@@ -54,9 +54,9 @@ export const UserProfileMenu = ({
 				{...dropdownMenuProps}
 				// trigger={["click"]}
 				destroyOnHidden>
-				<div className='pl-3 xl:pl-6 flex items-center cursor-pointer'>
+				<div className=' flex items-center cursor-pointer'>
 					{isSwiftlyStyledInstance || isDoTheLookInstance ? (
-						<div className="flex gap-2 items-center">
+						<div className="flex gap-1 items-center">
 							{currentUser?.user_name ? (
 								// <Text
 								// 	title={currentUser?.user_name}
@@ -64,14 +64,14 @@ export const UserProfileMenu = ({
 								// 	className='m-0 xl:text-base text-white font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
 								// 	{currentUser?.user_name}
 								// </Text>
-								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
-									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white' }} />
-									{/* <BiSolidUserCircle /> */}
-								</Tooltip>
-							) : (
+								<>
+								<p className="header-username">{ currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0,10) + '...' : currentUser?.user_name}</p>
+ 									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white' ,filter:'brightness(0) opacity(0.7)'}} />
+								</>
+ 							) : (
 								<Text
 									ellipsis={true}
-									className='m-0 xl:text-base text-white font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
+									className='m-0 xl:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{color:'#4F4F4F'}}>
 									SIGN IN
 								</Text>
 							)}

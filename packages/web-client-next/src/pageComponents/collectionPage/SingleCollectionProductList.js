@@ -17,6 +17,7 @@ import {
   filterAvailableProductList,
   filterProductListBySelectedTags,
   getBlogCollectionPagePath,
+  getCurrentPath,
   setCookie,
 } from "../../helper/utils";
 import {
@@ -54,10 +55,13 @@ const SingleCollectionProductList = ({
   profile_image,
   selectedSortOption,
   handleSortOptionChange,
-  sharePageUrl,
+  sharePageUrl =`${window.location?.origin}${getCurrentPath()}`,
   isRootPage = true,
   isMyProfilePage,
 }) => {
+  console.log('sharePageUrl',sharePageUrl);
+
+  
 const url = window.location.pathname === '/my-profile/'
    console.log('isMyProfilePage',url  );
 

@@ -425,7 +425,7 @@ const ChatContainer = ({
 			{ storeData?.is_searchOptions_enabled ?
 			<div className={styles.chatContainerWrapper}>
 				{/* {!isBTNormalUserLoggedIn ? ( */}
-				<div className={styles.auraIconContainer}>
+				{/* <div className={styles.auraIconContainer}>
 					<Tooltip
 						title='Meet AURA - your AI shopping assistant'
 						placement='bottomLeft'>
@@ -442,7 +442,7 @@ const ChatContainer = ({
 							/>
 						</span>
 					</Tooltip>
-				</div>
+				</div> */}
 				{/* ) : null} */}
 				<Chat
 					handleMicrophoneClick={handleMicrophoneClick}

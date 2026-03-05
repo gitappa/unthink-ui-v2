@@ -1207,7 +1207,7 @@ const ProductCard = ({
                     <span
                       className={`${styles.smalltags}`}
                       style={{
-                        background: "#F5F5F5",
+                        // background: "#F5F5F5",
                         width: "fit-content",
                       }}
                     >
@@ -1224,7 +1224,7 @@ const ProductCard = ({
                     <span
                       className={`${styles.smalltags}`}
                       style={{
-                        background: "#F5F5F5",
+                        // background: "#F5F5F5",
                         width: "fit-content",
                       }}
                     >
@@ -1241,7 +1241,7 @@ const ProductCard = ({
                     <span
                       className={`${styles.smalltags}`}
                       style={{
-                        background: "#eeeeee",
+                        
                         width: "fit-content",
                       }}
                     >

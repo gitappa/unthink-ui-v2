@@ -358,3 +358,29 @@ p {
 .ProfileName_uploadIconMb3__gzS9a > .anticon {
   color: white;
 }
+.header-username{
+  font-size: 15px;
+  color: #4F4F4F;
+  font-weight: bold;
+}
+.ProfileName_selectBgTransparentMt1__GrFnd .ant-select-selector {
+  background-color: transparent !important;
+  /* border: 1px solid white !important;
+  border-radius: 5px !important; */
+   
+}
+.ProfileName_selectBgTransparentMt1__GrFnd .ant-select-arrow {
+  color: white;
+}
+.ProfileName_selectBgTransparentMt1__GrFnd .ant-select-selection-item{
+  color: white;
+
+
+}
+.profilePage_stepsWrapper__c9_V1 .ant-steps-item-icon{
+  display: none !important;
+}
+.profilePage_stepsWrapper__c9_V1 .ant-steps-item-title{
+  font-size: 24px;
+  margin-top: 10px;
+}

@@ -21,7 +21,10 @@
 }
 
 .headerWrapper {
-    width: 100%;
+    /* width: 100%; */
+    margin: 0 20px;
+    border-radius: 12px;
+    margin-top: 12px;
 }
 
 .headerContent {
@@ -29,11 +32,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* margin: 0 20px; */
 }
 
 @media (min-width: 1024px) {
     .headerContent {
-        padding: 8px 32px;
+        padding: 15px 16px;
         /* lg:px-8 lg:py-2 -> py-2 is 8px */
         height: 72px;
         /* lg:h-20 -> 80px */
@@ -41,6 +45,7 @@
 }
 
 .logoContainer {
+    color: #374365;
     width: 160px;
     /* w-40 */
     display: none;
@@ -48,7 +53,7 @@
     align-items: center;
     justify-content: flex-start;
     /* justify-start */
-    color: white;
+    /* color: white; */
     /* text-white */
     cursor: pointer;
     /* cursor-pointer */
@@ -63,8 +68,9 @@
 
 .logo {
     font-family: 'LogoFont', sans-serif;
-    font-size: 28px;
+    font-size: 22px;
     letter-spacing: 0;
+    font-weight: 800;
 }
 
 .centerContainer {
@@ -91,6 +97,7 @@
 .collections {
     display: flex;
     align-items: center;
+    gap: 18px;
 }
 
 /* Replicating .collections button from original SCSS */
@@ -103,10 +110,11 @@
     background-color: transparent;
     /* Was #2c2c2c in SCSS but text-white overrides? No, usually bg color. Wait, JSX only said text-white. I'll stick to original SCSS intent if implicit, or just use what JSX had. JSX had className="text-white". The SCSS had background-color: #2c2c2c. I will assume I should keep the SCSS style if it was applying, but check if it was actually applying. */
     /* If the button in JSX didn't use styles.something, and .collections was applied to parent, then .collections button selector applies. */
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     cursor: pointer;
-    margin-right: 20px;
+    /* margin-right: 20px; */
     border: none;
+    color: #4F4F4F;
 }
 
 .walletIcon {
@@ -114,7 +122,7 @@
     /* rounded-xl */
     color: white;
     /* text-white */
-    margin-right: 4px;
+    /* margin-right: 4px; */
     /* mr-1 */
 }
 
@@ -132,7 +140,7 @@
     /* h-6 */
     width: 24px;
     /* w-6 */
-    margin-left: 24px;
+    /* margin-left: 24px; */
     /* ml-6 */
 }
 

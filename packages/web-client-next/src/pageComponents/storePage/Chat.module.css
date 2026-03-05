@@ -118,22 +118,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding-right: 1rem;
+  /* padding-right: 1rem; */
   padding-left: 1px;
 }
 
 @media (min-width: 768px) {
   .input_controls_container {
     gap: 0.75rem;
-    padding-right: 1.625rem;
+    /* padding-right: 1.625rem; */
   }
 }
 
-.controls_divider {
+/* .controls_divider {
   border-left: 2px solid #000000;
   height: 1.75rem;
   
-}
+} */
 
 .controls_divider_dark {
   border-left-color: white;

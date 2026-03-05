@@ -22,9 +22,10 @@ export const THEME_CODES = {
 			hover_bg: "rgba(0, 0, 0, 0.7)",
 		},
 		header: {
-			announcement_bar_bg: "#bb0000",
-			announcement_bar_text: "#fff",
-			header_bg: "#2c2c2c",
+			announcement_bar_bg: "#e9e5fd",
+			announcement_bar_text: "black",
+			header_bg: "#f2f2f2",
+			font_weight:'860'
 		},
 		page_container_bg: "#fff",
 	},

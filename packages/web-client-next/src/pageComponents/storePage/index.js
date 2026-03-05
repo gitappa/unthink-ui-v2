@@ -280,7 +280,7 @@ const StorePageWrapper = (props) => {
 		isSharedPage = false,
 		isStorePage = false,
 		isCollectionPage = false,
-		isRootPage = false,
+		isRootPage = false,	
 		isCustomProductsPage = false,
 		isProductDetailPage = false,
 		isThemePage = false,
@@ -463,6 +463,7 @@ const StorePageWrapper = (props) => {
 	const [sharePageUrl, setSharePageUrl] = useState('');
 	console.log('sharepageUrls', sharePageUrl);
 
+console.log('isMyProfilePage',isCollectionPage);
 
 	// set collection theme from params
 	useEffect(() => {
@@ -473,7 +474,7 @@ const StorePageWrapper = (props) => {
 				: `${window.location?.origin}${getCurrentPath()}`;
 			setSharePageUrl(url);
 		}
-	}, [authUser?.user_id, authUser?.user_name, isMyProfilePage]);
+	}, [authUser?.user_id, authUser?.user_name, isMyProfilePage,isCollectionPage]);
 
 	useEffect(() => {
 		if (page_params?.collection_theme) {
