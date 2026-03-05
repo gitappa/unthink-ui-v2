@@ -822,7 +822,7 @@ const SingleCollectionProductListView = ({
                                   : ""
                               }
                             />
-                            <p style={{ color: "#6A7282" }} className="hidden md:block text-sm lg:text-base">
+                            <p  className="hidden md:block text-sm lg:text-base">
                               Share
                             </p>
                           </div>
