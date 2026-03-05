@@ -493,6 +493,13 @@ const Chat = ({
 						</div>
 					) : null}
 
+					{inputControls?.length ? (
+						<div className={`${styles.input_controls_container}`}>
+							<div className={`${styles.controls_divider} ${aura_header_theme === "dark" ? styles.controls_divider_dark : ""}`}></div>
+							{inputControls}
+						</div>
+					) : null}
+
 					<div
 						className={styles.input_wrapper}
 					>
@@ -568,12 +575,7 @@ const Chat = ({
 						{getSuffix()}
 					</div> */}
 
-					{inputControls?.length ? (
-						<div className={`${styles.input_controls_container}`}>
-							<div className={`${styles.controls_divider} ${aura_header_theme === "dark" ? styles.controls_divider_dark : ""}`}></div>
-							{inputControls}
-						</div>
-					) : null}
+					
 
 					{showSubmitImageTooltip ? (
 						<div

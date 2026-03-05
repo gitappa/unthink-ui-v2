@@ -110,6 +110,8 @@ const SingleCollectionProductListView = ({
   isUserLogin,
   onSelectProductClick,
 }) => {
+  console.log('sharePageUrl',sharePageUrl);
+  
   const renderProductsList = ({
     list,
     showAuraTileFlag,

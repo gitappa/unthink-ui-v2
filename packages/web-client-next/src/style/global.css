@@ -358,3 +358,8 @@ p {
 .ProfileName_uploadIconMb3__gzS9a > .anticon {
   color: white;
 }
+.header-username{
+  font-size: 15px;
+  color: #4F4F4F;
+  font-weight: bold;
+}

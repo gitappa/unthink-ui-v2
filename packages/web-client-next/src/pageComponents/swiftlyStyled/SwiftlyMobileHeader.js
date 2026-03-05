@@ -53,6 +53,15 @@ const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu,headerProfileMenu })
 			<div
 				className={styles.headerContainer}
 				style={{ height: "76px", background: themeCodes.header.header_bg }}>
+					<div className={styles.logoContainer}>
+					<span
+						className={styles.logoText}
+						onClick={() => navigate(PATH_ROOT)}>
+						{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
+					</span>
+				</div>
+				<div className="flex items-center gap-3">
+
 				<button
 					type='button'
 					className={styles.searchButton}
@@ -60,44 +69,42 @@ const SwiftlyMobileHeader = ({ showProfileIcon, setShowMenu,headerProfileMenu })
 					aria-label='Search'>
 					<img
 						src={searchIcon}
+						 style={{ filter: "grayscale(100%) brightness(40%)" }}
 						alt='searchIcon'
 						className={styles.searchIcon}
-						style={{ filter: "invert(1)" }}
+						// style={{ filter: "invert(1)" }}
 					/>
 				</button>
 
-				<div className={styles.logoContainer}>
-					<span
-						className={styles.logoText}
-						onClick={() => navigate(PATH_ROOT)}>
-						{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
-					</span>
-				</div>
+				
 
 				<div className={styles.profileIconWrapper}>
 					{showProfileIcon ? (
 						<button
 							type='button'
 							className={styles.profileButton}
-							style={{width:40}}
+							// style={{width:40}}
 							onClick={() => setShowMenu(true)}
 							aria-label='Open profile menu'>
 							<img
+							 style={{ filter: "grayscale(100%) brightness(40%)" }}
 								src={userIcon}
 								alt='userIcon'
 								className={styles.userIcon}
-								style={{ filter: "invert(1)" }}
+								// style={{ filter: "invert(1)" }}
 							/>
 						</button>
 					) : 
 					<Text 
 						ellipsis={true}
 						onClick={() => navigate(extractedMenuData?.[0]?.label?.props?.href)}
-						className='m-0 w-full xl:text-base text-white font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2 cursor-pointer'>
-						SIGN IN
+						className='m-0 w-full xl:text-base  font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2 cursor-pointer' style={{color:'#4F4F4F'}}>
+						SIGN IN 
 					</Text>
 					}
 				</div>
+				</div>
+
 			</div>
 		</>
 	);

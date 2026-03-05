@@ -58,6 +58,9 @@ const SingleCollectionProductList = ({
   isRootPage = true,
   isMyProfilePage,
 }) => {
+  console.log('sharePageUrl',sharePageUrl);
+
+  
 const url = window.location.pathname === '/my-profile/'
    console.log('isMyProfilePage',url  );
 

@@ -37,7 +37,7 @@ const SwiftlyHeader = ({
 	const onWishlistClick = () => {
 		dispatch(openWishlistModal());
 	};
-	console.log('applied', currentUser.emailId ? 'hello' : null);
+	// console.log('applied', currentUser.emailId ? 'hello' : null);
 
 	const [storeData] = useSelector((state) => [state.store.data]);
 	// console.log('zinsd',storeData.is_droppWallet_connect_enabled);
@@ -48,6 +48,7 @@ const SwiftlyHeader = ({
 				style={{
 					background: themeCodes.header.announcement_bar_bg,
 					color: themeCodes.header.announcement_bar_text,
+					fontWeight: themeCodes.header.font_weight,
 				}}>
 				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
 			</div>
@@ -93,10 +94,7 @@ const SwiftlyHeader = ({
 					{/* set width only to keep the aura center aligned */}
 					<div className={styles.rightSection}>
 						<div className={styles.collections}>
-							{
-								storeData?.is_droppWallet_connect_enabled &&
-								<Image src={walletIcon} onClick={() => setisDropDown(true)} alt="wallet" height={24} width={24} className={styles.walletIcon} />
-							}
+							
 
 							<button className={styles.collectionButton}
 								onClick={() =>
@@ -104,9 +102,13 @@ const SwiftlyHeader = ({
 								}>
 								COLLECTIONS
 							</button>
+							{
+								storeData?.is_droppWallet_connect_enabled &&
+								<Image src={walletIcon} style={{filter:'brightness(0) opacity(0.7)'}} onClick={() => setisDropDown(true)} alt="wallet" height={24} width={24} className={styles.walletIcon} />
+							}
 
 							{currentUser?.emailId ? (
-								<FaRegHeart
+								<FaRegHeart style={{filter:'brightness(0) opacity(0.7)'}}
 									onClick={onWishlistClick}
 									className={styles.wishlistIcon}
 								/>
