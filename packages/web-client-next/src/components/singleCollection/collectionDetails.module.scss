@@ -1094,6 +1094,9 @@
     grid-row: span 2;
     
   }
+ @media (min-width: 639px) and (max-width: 760px){
+    width: 100%;
+  }
   @media (min-width: 760px) {
     position: sticky;
     top: 107px;
@@ -1980,7 +1983,7 @@ color: #99A1AF;
   }
 }
 
-@media (min-width: 834px) and (max-width: 999px) {
+@media (min-width: 854px) and (max-width: 999px) {
   // .productGrid {
   //   display: block;
   //   margin-top: 0;
