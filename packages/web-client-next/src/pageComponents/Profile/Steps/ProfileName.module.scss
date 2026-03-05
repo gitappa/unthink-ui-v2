@@ -24,8 +24,8 @@
     background-color: transparent !important;
     color: white;
 }
-.inputBgTransparent::placeholder{
-    color: white !important;
+.inputBgTransparentMt1::placeholder{
+    color: rgb(233, 230, 230) !important;
 }
 .inputBgTransparentMt1 {
     background-color: transparent !important;
@@ -54,6 +54,11 @@
     width: 100% !important;
     color: #ffffff !important;
 }
+ .selectBgTransparentMt1{
+    border: 1px solid white !important;
+    border-radius: 5px;
+
+ }
 
 /* Error Container */
 .errorContainer {

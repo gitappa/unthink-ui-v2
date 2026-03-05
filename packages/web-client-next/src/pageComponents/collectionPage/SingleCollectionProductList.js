@@ -17,6 +17,7 @@ import {
   filterAvailableProductList,
   filterProductListBySelectedTags,
   getBlogCollectionPagePath,
+  getCurrentPath,
   setCookie,
 } from "../../helper/utils";
 import {
@@ -54,7 +55,7 @@ const SingleCollectionProductList = ({
   profile_image,
   selectedSortOption,
   handleSortOptionChange,
-  sharePageUrl,
+  sharePageUrl =`${window.location?.origin}${getCurrentPath()}`,
   isRootPage = true,
   isMyProfilePage,
 }) => {

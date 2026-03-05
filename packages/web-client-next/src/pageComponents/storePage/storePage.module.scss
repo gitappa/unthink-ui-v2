@@ -693,12 +693,14 @@
 
 /* Main Content Grid */
 .mainContentGrid {
-    padding-top: 24px;
     display: grid;
     gap: 8px;
+    padding-top: 0px;
 
     @media (min-width: 768px) {
         gap: 24px;
+    padding-top: 24px;
+        
     }
 
     @media (min-width: 1024px) {

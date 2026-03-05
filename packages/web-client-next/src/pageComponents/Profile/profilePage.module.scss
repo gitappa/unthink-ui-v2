@@ -157,7 +157,8 @@
     box-shadow: none;
     background: transparent;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
+justify-content: center;
+ font-weight: 700;
     :global(.ant-steps-item-title) {
         color: rgba(255, 255, 255, 0.5) !important;
     }
@@ -193,13 +194,14 @@
 /* Mobile Step Indicator */
 .mobileStepIndicator {
     border-color: #ffffff;
-    border-bottom-width: 1px;
+    // border-bottom-width: 1px;
     display: flex;
     justify-content: center;
     padding-bottom: 8px;
 }
 
 .mobileStepNumber {
+    display: none;
     color: #ffffff;
     background-color: #3b82f6;
     width: 24px;
