@@ -135,9 +135,11 @@ const ProductCard = ({
   localChatMessage,
   blogCollectionPage,
   collectionCards,
+  onAddSelectedProductsToCollection,
+
 }) => {
   const navigate = useNavigate();
-  console.log("hideAddToWishlist", widgetType);
+  console.log("hideAddToWishlist", hideAddToWishlist);
   // console.log('qzssddsdsds',product);
   const [showLoader, setShowLoader] = useState(false);
   const [descriptionget, setDescriptionget] = useState("");
@@ -182,7 +184,6 @@ const ProductCard = ({
     state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick,
   ]);
-  // console.log('ButtonClick',ButtonClick);
 
   // console.log('authUser', authUser);
   const [storeData] = useSelector((state) => [state.store.data]);
@@ -270,10 +271,10 @@ const ProductCard = ({
           mft_code: product?.mfr_code,
           collection_path: authUserId
             ? addSidInProductUrl(
-                product.url,
-                authUserId,
-                blogCollectionPage?.collection_id,
-              )
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
             : product.url,
           user_id: getTTid(),
           user_name: authUserName,
@@ -287,10 +288,10 @@ const ProductCard = ({
         // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
         const redirectionUrl = authUserId
           ? addSidInProductUrl(
-              product.url,
-              authUserId,
-              blogCollectionPage?.collection_id,
-            )
+            product.url,
+            authUserId,
+            blogCollectionPage?.collection_id,
+          )
           : product.url;
         window.open(redirectionUrl, "_blank");
       } else if (
@@ -634,11 +635,11 @@ const ProductCard = ({
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
       if (product.url === "dummy_url") {
-      // console.log('fdfdfdfq', product?.image);
-      const cleaned = cleanImage(product?.image);
-      if (cleaned) {
-        localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
-      }
+        // console.log('fdfdfdfq', product?.image);
+        const cleaned = cleanImage(product?.image);
+        if (cleaned) {
+          localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
+        }
         navigate(`/product/${clickedMfrCode}`);
         // fetchProductDetails();
         // console.log(product?.image);
@@ -667,6 +668,38 @@ const ProductCard = ({
 
     return () => window.removeEventListener("resize", checkOverflow);
   }, []);
+  // const useloginPopup =(e)=>{
+  //   e.preventDefault()
+  //   e.stopPropagation()
+  //    if (hideAddToWishlist ) {
+  //     console.log('hwllo ');
+
+  //         // setIsPopupShow(true);
+  //         dispatch(GuestPopUpShow(true));
+  //         return;
+  //       }
+  //     console.log('hwllo');
+  // }
+  //  const onAddSelectedProductsToCollection =(e)=>{
+  //   e?.preventDefault()
+  //   e?.stopPropagation()
+  //    if (hideAddToWishlist ) {
+  //     console.log('hwllo ');
+
+  //         // setIsPopupShow(true);
+  //         dispatch(GuestPopUpShow(true));
+  //         return;
+  //       }
+  //     console.log('hwllo');
+  // }
+  // const {
+  //   handleGuestSubmit,
+  //   errors,
+  //   handleGuestSkip,
+  //   guestChange,
+  //   guestData,
+  //   setIsPopupShow
+  // } = useGuestPopUtils(dispatch, hideAddToWishlist, onAddSelectedProductsToCollection);
 
   return (
     <div
@@ -748,23 +781,23 @@ const ProductCard = ({
               )}
               {(storeData?.pdp_settings?.is_buy_button ||
                 storeData?.pdp_settings?.is_add_to_cart_button) && (
-                <>
-                  {storeData?.pdp_settings?.is_buy_button ? (
-                    <button
-                      className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
-                      onClick={checkoutPayment}
-                    >
-                      Buy Now
-                    </button>
-                  ) : (
-                    <button
-                      className={styles["product-add-cart-button-header"]}
-                    >
-                      Add to Cart
-                    </button>
-                  )}
-                </>
-              )}
+                  <>
+                    {storeData?.pdp_settings?.is_buy_button ? (
+                      <button
+                        className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                        onClick={checkoutPayment}
+                      >
+                        Buy Now
+                      </button>
+                    ) : (
+                      <button
+                        className={styles["product-add-cart-button-header"]}
+                      >
+                        Add to Cart
+                      </button>
+                    )}
+                  </>
+                )}
             </>
             {!enableSelect ? (
               <div className={styles["product-overlay-actions"]}>
@@ -829,7 +862,7 @@ const ProductCard = ({
             <div className={styles["product-showcase-button-main"]}>
               <div>
                 {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                showStar ? (
+                  showStar ? (
                   <button
                     className={`${styles["product-star-action-button"]}`}
                     tabindex="-1"
@@ -849,7 +882,7 @@ const ProductCard = ({
                   </button>
                 ) : null}
                 {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                showStar ? (
+                  showStar ? (
                   <button
                     className={`${styles["product-star-action-button"]}`}
                     tabindex="-1"
@@ -907,16 +940,14 @@ const ProductCard = ({
           )} */}
         {/* product card header */}
         <div
-          className={`${styles["header-container"]} ${
-            enableViewSimilar ||
-            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-              showRemoveIcon) ||
-            enableSelect
+          className={`${styles["header-container"]} ${enableViewSimilar ||
+              (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                showRemoveIcon) ||
+              enableSelect
               ? styles["flex-reverse"]
               : ""
-          } ${
-            size === "small" ? styles["header-small"] : styles["header-medium"]
-          }`}
+            } ${size === "small" ? styles["header-small"] : styles["header-medium"]
+            }`}
         >
           {/* reversed contents for hover css */}
 
@@ -928,7 +959,7 @@ const ProductCard = ({
                 type="checkbox"
                 checked={isSelected}
                 onClick={handleSelectProduct}
-                onChange={() => {}} // fix onchange handler warning
+                onChange={() => { }} // fix onchange handler warning
                 className={`${styles[size === "small" ? "product-checkbox-small" : "product-checkbox-large"]}`}
               />
             </div>
@@ -963,15 +994,15 @@ const ProductCard = ({
                     }}
                     className={
                       styles[
-                        size === "small"
-                          ? "product-menu-dropdown-small"
-                          : (!hideAddToWishlist ||
-                                (widgetType ===
-                                  PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                  showStar)) &&
-                              !showWishlistModal
-                            ? "product-menu-icon"
-                            : "product-menu-icon2"
+                      size === "small"
+                        ? "product-menu-dropdown-small"
+                        : (!hideAddToWishlist ||
+                          (widgetType ===
+                            PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                            showStar)) &&
+                          !showWishlistModal
+                          ? "product-menu-icon"
+                          : "product-menu-icon"
                       ]
                     }
                   />
@@ -982,32 +1013,30 @@ const ProductCard = ({
                   onClick={removeFromWishlistClick}
                 >
                   <p
-                    className={`${styles["remove-icon-circle"]} ${
-                      size === "small"
+                    className={`${styles["remove-icon-circle"]} ${size === "small"
                         ? styles["icon-circle-small"]
                         : styles["icon-circle-medium"]
-                    }`}
+                      }`}
                   >
                     <RxCross2 />
                   </p>
                   {/* <p className={styles['text-gray']}>Remove</p> */}
                 </div>
               )}
-              {showWishlistModal &&  widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
+              {showWishlistModal && widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
                 <div
                   className={` ${styles["remove-icon"]}`}
                   onClick={removeFromWishlistClick}
                 >
                   <p
-                    className={`${styles["remove-icon-circle"]} ${
-                      size === "small"
+                    className={`${styles["remove-icon-circle"]} ${size === "small"
                         ? styles["icon-circle-small"]
                         : 'hidden'
-                    }`}
+                      }`}
                   >
                     <RxCross2 />
                   </p>
-                 </div>
+                </div>
               )}
               {menuIcon && (
                 <div
@@ -1015,15 +1044,15 @@ const ProductCard = ({
                   onClick={(e) => e.stopPropagation()}
                   className={
                     styles[
-                      size === "small"
-                        ? "product-menu-dropdown-mini"
-                        : (!hideAddToWishlist ||
-                              (widgetType ===
-                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                showStar)) &&
-                            !showWishlistModal
-                          ? "product-menu-dropdown"
-                          : "product-menu-dropdown2"
+                    size === "small"
+                      ? "product-menu-dropdown-mini"
+                      : (!hideAddToWishlist ||
+                        (widgetType ===
+                          PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                          showStar)) &&
+                        !showWishlistModal
+                        ? "product-menu-dropdown"
+                        : "product-menu-dropdown" ///use dropdown2
                     ]
                   }
                 >
@@ -1037,11 +1066,10 @@ const ProductCard = ({
                           onClick={removeFromWishlistClick}
                         >
                           <p
-                            className={`${styles["remove-icon-circle"]} ${
-                              size === "small"
+                            className={`${styles["remove-icon-circle"]} ${size === "small"
                                 ? styles["icon-circle-small"]
                                 : styles["icon-circle-medium"]
-                            }`}
+                              }`}
                           >
                             <RxCross2 />
                           </p>
@@ -1059,11 +1087,10 @@ const ProductCard = ({
                           onClick={removeFromWishlistClick}
                         >
                           <p
-                            className={`${styles["remove-icon-circle"]} ${
-                              size === "small"
+                            className={`${styles["remove-icon-circle"]} ${size === "small"
                                 ? styles["icon-circle-small"]
                                 : styles["icon-circle-medium"]
-                            }`}
+                              }`}
                           >
                             <RxCross2 />
                           </p>
@@ -1077,11 +1104,10 @@ const ProductCard = ({
                       onClick={handleCopyClick}
                     >
                       <div
-                        className={`${styles["menu-item-circle"]} ${
-                          size === "small"
+                        className={`${styles["menu-item-circle"]} ${size === "small"
                             ? styles["icon-circle-small"]
                             : styles["icon-circle-medium"]
-                        }`}
+                          }`}
                       >
                         <LuCopy />
                       </div>
@@ -1163,6 +1189,41 @@ const ProductCard = ({
             </div>
           )}
 
+        {/* without login  */}
+
+        {hideAddToWishlist &&
+          !showWishlistModal &&
+          !enableSelect && (
+            <div className={styles["product-menu-item"]}>
+              {/* {!hideAddToWishlist && ( */}
+              <div
+                className={styles["product-menu-wishlist"]}
+                onClick={(e) => onAddSelectedProductsToCollection(e)}
+              >
+                <button className={`${styles["product-heart-button"]}`}>
+                  <Image
+                    className={styles["add_to_wishlist_icon"]}
+                    src={heart}
+                    height={20}
+                    width={20}
+                  />
+                </button>
+              </div>
+              {/* )} */}
+            </div>
+          )}
+        {/* { isGuestPopUpShow && (
+              <GuestPopUp
+                handleGuestSubmit={handleGuestSubmit}
+                errors={errors}
+                handleGuestSkip={handleGuestSkip}
+                guestChange={guestChange}
+                guestData={guestData}
+                setIsPopupShow={setIsPopupShow}
+              />
+            )} */}
+
+
         {/* product footer */}
         <div
           className={`${styles["product-footer-main"]} ${size === "small" ? styles["product-footer-main-small"] : styles["product-footer-main-medium"]}`}
@@ -1190,16 +1251,15 @@ const ProductCard = ({
 
           {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
             product?.size?.length > 0) ||
-          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
-            product?.sleeve?.length > 0) ||
-          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
-            product?.fit?.length > 0) ? (
+            (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+              product?.sleeve?.length > 0) ||
+            (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+              product?.fit?.length > 0) ? (
             <div className={`${styles.tagsContainerWrapper}`}>
               <div
                 ref={containerRef}
-                className={`${styles.tagscontainer} ${
-                  isOverflowing ? styles.isOverflowing : ""
-                }`}
+                className={`${styles.tagscontainer} ${isOverflowing ? styles.isOverflowing : ""
+                  }`}
               >
                 {storeData.pdp_settings?.buy_card_attributes?.[0] &&
                   product?.size?.length > 0 && (
@@ -1213,8 +1273,8 @@ const ProductCard = ({
                       size:
                       {Array.isArray(product?.size)
                         ? product.size
-                            .map((f) => f.replace(/,+$/, "").trim())
-                            .join(", ")
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
                         : product?.size?.replace(/,+$/, "").trim()}
                     </span>
                   )}
@@ -1230,8 +1290,8 @@ const ProductCard = ({
                       sleeve :{" "}
                       {Array.isArray(product?.sleeve)
                         ? product.sleeve
-                            .map((f) => f.replace(/,+$/, "").trim())
-                            .join(", ")
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
                         : product?.sleeve?.replace(/,+$/, "").trim()}
                     </span>
                   )}
@@ -1240,15 +1300,15 @@ const ProductCard = ({
                     <span
                       className={`${styles.smalltags}`}
                       style={{
-                        
+
                         width: "fit-content",
                       }}
                     >
                       fit:{" "}
                       {Array.isArray(product?.fit)
                         ? product.fit
-                            .map((f) => f.replace(/,+$/, "").trim())
-                            .join(", ")
+                          .map((f) => f.replace(/,+$/, "").trim())
+                          .join(", ")
                         : product?.fit?.replace(/,+$/, "").trim()}
                     </span>
                   )}

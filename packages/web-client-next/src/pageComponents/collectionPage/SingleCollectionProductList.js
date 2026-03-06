@@ -352,7 +352,8 @@ const url = window.location.pathname === '/my-profile/'
 
   // console.log("isPopupShow", isPopupShow);
 
-  const onAddSelectedProductsToCollection = () => {
+  const onAddSelectedProductsToCollection = (e) => {
+    e?.stopPropagation()
     const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
     // const isGuestUserSkip = Cookies.get('isGuestSkip') === 'true';
     if (!isUserLogin && !isUserLoginCokkies) {

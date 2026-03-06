@@ -501,9 +501,10 @@ const AuraResponseProducts = ({
 		setEnableSelectProduct(true);
 	};
 
-	const onSaveOrShareProductsClick = useCallback(
-		({ isSave = false, isShare = false, isSkip = false }) => {
-			
+	const onAddSelectedProductsToCollection = useCallback(
+		(e,{ isSave = false, isShare = false, isSkip = false } = {}) => {
+			    e?.preventDefault();
+    e?.stopPropagation();
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
@@ -655,7 +656,7 @@ const AuraResponseProducts = ({
 	const handleGuestSkip = async () => {
 
 		if (guestActionRef.current === "share") {
-			onSaveOrShareProductsClick({ isShare: true, isSkip: true });
+			onAddSelectedProductsToCollection({ isShare: true, isSkip: true });
 		}
 		dispatch(GuestPopUpShow(false));
 	};
@@ -702,9 +703,9 @@ const AuraResponseProducts = ({
 							expires: SIGN_IN_EXPIRE_DAYS,
 						});
 						if (guestActionRef.current === "save") {
-							onSaveOrShareProductsClick({ isSave: true });
+							onAddSelectedProductsToCollection({ isSave: true });
 						} else if (guestActionRef.current === "share") {
-							onSaveOrShareProductsClick({ isShare: true });
+							onAddSelectedProductsToCollection({ isShare: true });
 						}
 					}
 				} catch (error) {
@@ -712,7 +713,7 @@ const AuraResponseProducts = ({
 				}
 			}
 		},
-		[guestData.email, onSaveOrShareProductsClick]
+		[guestData.email, onAddSelectedProductsToCollection]
 	);
 
 	useEffect(() => {
@@ -860,7 +861,7 @@ const AuraResponseProducts = ({
 												<button
 													className={styles['aura-products-action-button']}
 													onClick={() =>
-														onSaveOrShareProductsClick({ isSave: true })
+														onAddSelectedProductsToCollection({ isSave: true })
 													}
 													title='Select and add products to collection'>
 													Save
@@ -871,7 +872,7 @@ const AuraResponseProducts = ({
 											<button
 												className={styles['aura-products-action-button']}
 												onClick={() =>
-													onSaveOrShareProductsClick({ isShare: true })
+													onAddSelectedProductsToCollection({ isShare: true })
 												}
 												title='Select products and share published collection'>
 												Share
@@ -952,6 +953,7 @@ const AuraResponseProducts = ({
 											: COLLECTION_GENERATED_BY_SEARCH_BASED
 									}
 									localChatMessage={localChatMessage}
+									onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
 								/>
 							))}
 						</div>
@@ -1018,6 +1020,7 @@ const AuraResponseProducts = ({
 														: COLLECTION_GENERATED_BY_SEARCH_BASED
 												}
 												localChatMessage={localChatMessage}
+												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
 											/>
 										</SwiperSlide>
 									))}
@@ -1089,6 +1092,8 @@ const AuraResponseProducts = ({
 														: COLLECTION_GENERATED_BY_SEARCH_BASED
 												}
 												localChatMessage={localChatMessage}
+												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+												
 											/>
 										</SwiperSlide>
 									))}
