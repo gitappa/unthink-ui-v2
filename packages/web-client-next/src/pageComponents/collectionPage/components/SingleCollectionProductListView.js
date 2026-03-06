@@ -150,6 +150,7 @@ const SingleCollectionProductListView = ({
         collection_path={blogCollectionPage.path}
         collection_status={blogCollectionPage.status}
         blogCollectionPage={blogCollectionPage}
+        onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
       />
     );
 
@@ -378,6 +379,7 @@ const SingleCollectionProductListView = ({
                   collection_path={blogCollectionPage.path}
                   collection_status={blogCollectionPage.status}
                   blogCollectionPage={blogCollectionPage}
+                  onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
                 />
               </div>
             ))}
@@ -917,7 +919,7 @@ const SingleCollectionProductListView = ({
                 )}
               </div>
             </div>
-            {isPopupShow && isGuestPopUpShow && (
+            {isPopupShow && isGuestPopUpShow &&  (
               <GuestPopUp
                 handleGuestSubmit={handleGuestSubmit}
                 errors={errors}

@@ -52,7 +52,7 @@ export const UserProfileMenu = ({
 				overlayClassName='fixed'
 				disabled={isUserFetching}
 				{...dropdownMenuProps}
-				// trigger={["click"]}
+				trigger={["click"]}
 				destroyOnHidden>
 				<div className=' flex items-center cursor-pointer'>
 					{isSwiftlyStyledInstance || isDoTheLookInstance ? (

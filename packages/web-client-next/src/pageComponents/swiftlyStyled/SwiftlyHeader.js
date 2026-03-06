@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from 'next/link';
 import { useNavigate } from "../../helper/useNavigate";
 
@@ -10,7 +10,6 @@ import { UserProfileMenu } from "../storePage/UserProfileMenu";
 import { getThemeCollectionsPagePath } from "../../helper/utils";
 import { openWishlistModal } from "../wishlist/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { HeartOutlined } from "@ant-design/icons";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
@@ -34,12 +33,96 @@ const SwiftlyHeader = ({
 	const navigate = useNavigate();
 	const { themeCodes } = useTheme();
 	const dispatch = useDispatch();
+	const headerWrapperRef = useRef(null);
+	const headerContentRef = useRef(null);
+	const stickyStartYRef = useRef(0);
+	const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+	const [headerHeight, setHeaderHeight] = useState(0);
+	const [fixedLayout, setFixedLayout] = useState({ left: 0, width: 0 });
+
 	const onWishlistClick = () => {
 		dispatch(openWishlistModal());
 	};
 	// console.log('applied', currentUser.emailId ? 'hello' : null);
 
 	const [storeData] = useSelector((state) => [state.store.data]);
+	const syncStickyMetrics = useCallback(() => {
+		if (!headerWrapperRef.current || !headerContentRef.current) {
+			return;
+		}
+
+		const wrapperRect = headerWrapperRef.current.getBoundingClientRect();
+		const contentRect = headerContentRef.current.getBoundingClientRect();
+
+		stickyStartYRef.current = wrapperRect.top + window.scrollY;
+		setHeaderHeight((prevHeight) =>
+			prevHeight !== contentRect.height ? contentRect.height : prevHeight
+		);
+		setFixedLayout((prevLayout) => {
+			const nextLayout = {
+				left: wrapperRect.left,
+				width: wrapperRect.width,
+			};
+
+			if (
+				prevLayout.left === nextLayout.left &&
+				prevLayout.width === nextLayout.width
+			) {
+				return prevLayout;
+			}
+
+			return nextLayout;
+		});
+	}, []);
+
+	const handleStickyScroll = useCallback(() => {
+		const shouldFixHeader = window.scrollY >= stickyStartYRef.current;
+		setIsHeaderFixed((prevState) =>
+			prevState !== shouldFixHeader ? shouldFixHeader : prevState
+		);
+	}, []);
+
+	const handleStickyResize = useCallback(() => {
+		syncStickyMetrics();
+		handleStickyScroll();
+	}, [handleStickyScroll, syncStickyMetrics]);
+
+	useEffect(() => {
+		handleStickyResize();
+
+		window.addEventListener('scroll', handleStickyScroll, { passive: true });
+		window.addEventListener('resize', handleStickyResize);
+
+		return () => {
+			window.removeEventListener('scroll', handleStickyScroll);
+			window.removeEventListener('resize', handleStickyResize);
+		};
+	}, [handleStickyResize, handleStickyScroll]);
+
+	useEffect(() => {
+		if (!isHeaderFixed) {
+			return;
+		}
+
+		syncStickyMetrics();
+	}, [isHeaderFixed, syncStickyMetrics]);
+
+	const headerContentStyle = useMemo(() => {
+		if (!isHeaderFixed) {
+			return undefined;
+		}
+
+		return {
+			position: 'fixed',
+			top: 0,
+			left: `${fixedLayout.left}px`,
+			width: `${fixedLayout.width}px`,
+			zIndex: 60,
+			background: themeCodes.header.header_bg,
+			borderRadius:'12px'
+		};
+	}, [fixedLayout.left, fixedLayout.width, isHeaderFixed, themeCodes.header.header_bg]);
+
 	// console.log('zinsd',storeData.is_droppWallet_connect_enabled);
 	return (
 		<>
@@ -52,11 +135,19 @@ const SwiftlyHeader = ({
 				}}>
 				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
 			</div>
-			<div className={styles.headerWrapper} style={{ background: themeCodes.header.header_bg }}>
+			<div
+				ref={headerWrapperRef}
+				className={styles.headerWrapper}
+				style={{
+					background: themeCodes.header.header_bg,
+					minHeight: isHeaderFixed ? `${headerHeight}px` : undefined,
+				}}>
 
 				<div
+					ref={headerContentRef}
 					id='heroesVillains_desktop_header_menu'
-					className={styles.headerContent}>
+					className={styles.headerContent}
+					style={headerContentStyle}>
 					{/* set width only to keep content center aligned */}
 					<div className={styles.logoContainer}>
 						<div className={styles.logo} onClick={() => navigate(PATH_ROOT)}>
@@ -100,7 +191,7 @@ const SwiftlyHeader = ({
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))
 								}>
-								COLLECTIONS
+								Collection
 							</button>
 							{
 								storeData?.is_droppWallet_connect_enabled &&

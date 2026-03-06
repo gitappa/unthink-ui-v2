@@ -33,7 +33,7 @@
 }
 
 .chat_search_input_container_with_border {
-  border: 1px solid #d9d9d9;
+  border: 1px solid #D4CCFC;
 }
 
 /* Input Styles */
@@ -126,6 +126,21 @@
   .input_controls_container {
     gap: 0.75rem;
     /* padding-right: 1.625rem; */
+  }
+}
+
+.input_controls_container2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 1rem;
+  padding-left: 1px;
+}
+
+@media (min-width: 768px) {
+  .input_controls_container2 {
+    gap: 0.75rem;
+    padding-right: 1.625rem;
   }
 }
 

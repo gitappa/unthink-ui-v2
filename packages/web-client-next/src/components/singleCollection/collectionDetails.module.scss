@@ -1068,7 +1068,7 @@
 /* Cover media container */
 .coverMediaContainer {
   position: relative;
-  height: 290px;
+  height: 250px;
   width: 100%;
   grid-column: span 2;
   flex-grow: 0;
@@ -1099,7 +1099,7 @@
   }
   @media (min-width: 760px) {
     position: sticky;
-    top: 107px;
+    top: 75px;
   }
 
   @media (min-width: 1000px) {
@@ -1625,7 +1625,9 @@
   // text-decoration: underline;
   cursor: pointer;
   text-transform: capitalize;
-
+@media (max-width:768px) {
+  font-size: 18px;
+}
   
 }
 
