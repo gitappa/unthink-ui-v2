@@ -993,7 +993,7 @@ const ProductCard = ({
                   {/* <p className={styles['text-gray']}>Remove</p> */}
                 </div>
               )}
-              {showWishlistModal && (
+              {showWishlistModal &&  widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
                 <div
                   className={` ${styles["remove-icon"]}`}
                   onClick={removeFromWishlistClick}
@@ -1002,13 +1002,12 @@ const ProductCard = ({
                     className={`${styles["remove-icon-circle"]} ${
                       size === "small"
                         ? styles["icon-circle-small"]
-                        : styles["icon-circle-medium"]
+                        : 'hidden'
                     }`}
                   >
                     <RxCross2 />
                   </p>
-                  {/* <p className={styles['text-gray']}>Remove</p> */}
-                </div>
+                 </div>
               )}
               {menuIcon && (
                 <div

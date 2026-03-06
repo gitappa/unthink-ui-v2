@@ -414,7 +414,7 @@ const Chat = ({
 			<div key={`input-control-${index}`}>{icon}</div>
 		));
 	}, [micIcon, cameraIcon, searchIcon]);
-
+ 
 	return (
 		<>
 			<div
@@ -493,7 +493,7 @@ const Chat = ({
 						</div>
 					) : null}
 
-					{inputControls?.length ? (
+					{inputControls?.length  && !showChatModal?  (
 						<div className={`${styles.input_controls_container}`}>
 							<div className={`${styles.controls_divider} ${aura_header_theme === "dark" ? styles.controls_divider_dark : ""}`}></div>
 							{inputControls}
@@ -563,6 +563,12 @@ const Chat = ({
 							</h1>
 						</div> */}
 					</div>
+						{inputControls?.length  && showChatModal? (
+						<div className={`${styles.input_controls_container2}`}>
+							<div className={`${styles.controls_divider} ${aura_header_theme === "dark" ? styles.controls_divider_dark : ""}`}></div>
+							{inputControls}
+						</div>
+					) : null}
 					{/* <div
 						id={`chat_mobile_search_icon_${chatTypeKey}`}
 						className='flex items-center'
