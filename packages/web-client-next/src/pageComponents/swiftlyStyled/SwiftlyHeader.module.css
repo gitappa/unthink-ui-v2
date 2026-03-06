@@ -46,7 +46,7 @@
 
 .logoContainer {
     color: #374365;
-    width: 160px;
+    /* width: 160px; */
     /* w-40 */
     display: none;
     /* hidden */
@@ -115,7 +115,7 @@
     /* margin-right: 20px; */
     border: none;
     color: #4F4F4F;
-}
+ }
 
 .walletIcon {
     border-radius: 12px;

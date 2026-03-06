@@ -100,7 +100,7 @@ const SwiftlyHeader = ({
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))
 								}>
-								COLLECTIONS
+								Collection
 							</button>
 							{
 								storeData?.is_droppWallet_connect_enabled &&
