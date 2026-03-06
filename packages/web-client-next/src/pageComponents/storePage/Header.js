@@ -451,8 +451,8 @@ const Header = ({
         });
       }
 
-     
-      if (!isSwiftlyStyledInstance || !isDoTheLookInstance) {
+
+      if ((!isSwiftlyStyledInstance || !isDoTheLookInstance) && window.innerWidth <= 1024) {
         if (showCategories) {
           items.push({
             key: "Discover",
@@ -476,17 +476,17 @@ const Header = ({
         //     ),
         //   });
         // }
-		  items.push({
-            key: {WISHLISTS_TITLE},
-            className: styles.headerMenuItemPy2,
-            onClick: onWishlistClick,
-            label: (
-              <span className={styles.headerMenuSpanTextBase}>{WISHLISTS_TITLE}</span>
-            ),
-          });
+        items.push({
+          key: { WISHLISTS_TITLE },
+          className: styles.headerMenuItemPy2,
+          onClick: onWishlistClick,
+          label: (
+            <span className={styles.headerMenuSpanTextBase}>{WISHLISTS_TITLE}</span>
+          ),
+        });
 
       }
-	   items.push({
+      items.push({
         key: "signout",
         className: styles.headerMenuItemPy2,
         onClick: onSignOut,
@@ -508,9 +508,9 @@ const Header = ({
       {!isSwiftlyStyledInstance || !isDoTheLookInstance ? ( // hide for swiftly styled store
         <div
           className={`${styles.mobileBottomNav} ${showChatModal ? styles.mobileBottomNavHidden : showCategories || showPeople || (pageUser.user_name !== "RaniZaver" && storeData?.is_searchOptions_enabled) || showRewards || isUserLogin ?
-			//  styles.mobileBottomNavVisible 
-			'hidden'
-			 : "hidden"}`}
+            //  styles.mobileBottomNavVisible 
+            'hidden'
+            : "hidden"}`}
         >
           {/* this div must have 3 child only to keep the aura center aligned */}
           {showCategories || showPeople ? (
@@ -545,7 +545,7 @@ const Header = ({
           )}
 
           {pageUser.user_name !== "RaniZaver" &&
-          storeData?.is_searchOptions_enabled ? (
+            storeData?.is_searchOptions_enabled ? (
             <MobileChat onChatClick={onChatClick} />
           ) : null}
 
@@ -640,8 +640,8 @@ const Header = ({
         {isBTInstance && <BudgetTravelHeader />}
 
         {isSamskaraInstance ||
-        isSwiftlyStyledInstance ||
-        isDoTheLookInstance ? (
+          isSwiftlyStyledInstance ||
+          isDoTheLookInstance ? (
           <>
             {isSamskaraInstance && (
               <SamskaraHeader
@@ -714,10 +714,10 @@ const Header = ({
             />
 
             {showCategories ||
-            showPeople ||
-            showRewards ||
-            showCreate ||
-            showProfileIcon ? (
+              showPeople ||
+              showRewards ||
+              showCreate ||
+              showProfileIcon ? (
               <>
                 {/* {showCategories && (
 									<div
@@ -868,8 +868,7 @@ const Header = ({
         attribution={currentUser?.attribution}
         statsModalTitle={
           (currentUser.first_name || currentUser.last_name) &&
-          `Audience stats for ${currentUser.first_name || ""} ${
-            currentUser.last_name || ""
+          `Audience stats for ${currentUser.first_name || ""} ${currentUser.last_name || ""
           }:`
         }
         showAttributionModal={showAttributions}
