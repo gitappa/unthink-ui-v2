@@ -174,6 +174,7 @@ const ProductCard = ({
     authUser,
     customProductsData,
     ButtonClick,
+    isUserLogin
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -183,6 +184,7 @@ const ProductCard = ({
     state.auth.user.data,
     state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick,
+    state?.auth?.user?.isUserLogin,
   ]);
 
   // console.log('authUser', authUser);
@@ -1191,7 +1193,7 @@ const ProductCard = ({
 
         {/* without login  */}
 
-        {hideAddToWishlist &&
+        {hideAddToWishlist && !isUserLogin && size === 'medium' &&
           !showWishlistModal &&
           !enableSelect && (
             <div className={styles["product-menu-item"]}>
