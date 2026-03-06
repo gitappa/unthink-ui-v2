@@ -391,6 +391,7 @@
   font-size: 16px;
   @media (max-width: 768px) {
     font-size: 14px;
+    padding: 8px 6px;
   }
 }
 
@@ -772,6 +773,9 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: 35px;
+  @media (max-width:768px) {
+    padding: 5px 7px;
+  }
 }
 
 @media (min-width: 1000px) {
@@ -914,6 +918,9 @@
   margin-bottom: 5px;
   white-space: nowrap;
   background-color: #f2f2f7;
+  @media (max-width:768px) {
+  padding: 2px;    
+  }
 }
 
 .product-name-text {
@@ -1756,6 +1763,9 @@
 .product-price-container-height {
   min-height: 32px;
   margin-top: 0.5rem;
+  @media (max-width:768px) {
+    margin-top: 0px;
+  }
 }
 
 .hidden {
