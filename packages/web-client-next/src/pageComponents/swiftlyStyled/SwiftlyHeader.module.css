@@ -119,6 +119,7 @@
 
 .walletIcon {
     border-radius: 12px;
+    cursor: pointer;
     /* rounded-xl */
     color: white;
     /* text-white */
