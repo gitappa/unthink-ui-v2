@@ -139,27 +139,46 @@ const ReviewCollectionStepPublish = ({
 		return () => { };
 	}, [currentCollection, currentView]);
 
-	const uploadProps = useMemo(
-		() => ({
-			accept: "image/*",
-			multiple: false,
-			customRequest: async (info) => {
-				if (info?.file) {
-					// convert image to data URL
-					const reader = new FileReader();
-					reader.addEventListener("load", () =>
-						setCropAndResizeImageData({
-							isOpen: true,
-							selectedImage: reader.result?.toString() || "",
-							ImageFileName: info?.file?.name
-						})
-					);
-					reader.readAsDataURL(info.file);
-				}
-			},
-		}),
-		[handleUploadedDataChange]
-	);
+const uploadProps = useMemo(
+  () => ({
+    accept: "image/*",
+    multiple: false,
+    customRequest: async (info) => {
+      if (info?.file) {
+        const file = info.file;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+const img = new window.Image();     
+     img.src = e.target.result;
+
+          img.onload = () => {
+            const width = img.width;
+            const height = img.height;
+
+            if (width < 600 || height < 600) {
+             	notification.error({
+					 message: "Image must be at least 600 x 600 pixels",
+					//  description:
+					//    error?.response?.data?.message || "Unexpected error occurred",
+				   });
+              return;
+            }
+            setCropAndResizeImageData({
+              isOpen: true,
+              selectedImage: e.target.result?.toString() || "",
+              ImageFileName: file?.name,
+            });
+          };
+        };
+
+        reader.readAsDataURL(file);
+      }
+    },
+  }),
+  [handleUploadedDataChange]
+);
 
 	const handlePostPageInputChange = (e) => {
 		const { name, value } = e.target;
