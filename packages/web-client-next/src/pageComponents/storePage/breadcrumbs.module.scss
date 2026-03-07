@@ -44,11 +44,13 @@
 .breadcrumbsFlex {
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* gap-3 */
+    gap: 7px;
     font-size: 1rem; /* text-base */
+    margin-bottom: 5px;
 
     @media (min-width: 1024px) {
         font-size: 1.125rem; /* lg:text-lg */
+    gap: 0.75rem; /* gap-3 */
     }
 }
 
