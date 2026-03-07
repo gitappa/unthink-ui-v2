@@ -58,16 +58,21 @@
   }
 }
 .product-wrapper-medium2 {
-  width: 10rem;
+  width: 170px;
 }
 @media (min-width: 500px) {
   .product-wrapper-medium2 {
     width: 230px;
   }
 }
-@media (min-width: 640px) {
+@media (min-width: 640px )and (max-width: 699px) {
   .product-wrapper-medium2 {
-    width: 11.25rem;
+    width: 210px;
+  }
+}
+@media (min-width: 700px) and (max-width: 760px) {
+  .product-wrapper-medium2 {
+    width: 300px;
   }
 }
 @media (min-width: 1020px) {
