@@ -453,16 +453,16 @@ const Header = ({
 
 
       if ((!isSwiftlyStyledInstance || !isDoTheLookInstance) && window.innerWidth <= 1024) {
-        if (showCategories) {
-          items.push({
-            key: "Discover",
-            className: styles.headerMenuItemPy2,
-            onClick: onCategoriesClick,
-            label: (
-              <span className={styles.headerMenuSpanTextBase}>Discover</span>
-            ),
-          });
-        }
+        // if (showCategories) {
+        //   items.push({
+        //     key: "Discover",
+        //     className: styles.headerMenuItemPy2,
+        //     onClick: onCategoriesClick,
+        //     label: (
+        //       <span className={styles.headerMenuSpanTextBase}>Discover</span>
+        //     ),
+        //   });
+        // }
         // if (
         //   pageUser.user_name !== "RaniZaver" &&
         //   storeData?.is_searchOptions_enabled
