@@ -53,11 +53,11 @@ const TokenSignIn = () => {
 	};
 
 	const verifyToken = async (signInToken) => {
-console.log('hwlloworls');
+ 
 
 		try {
 			const res = await authAPIs.verifyTokenAPICall(signInToken);
-console.log(res.data.data);
+ 
 
 			if (
 				res.data.status_code === 200 &&

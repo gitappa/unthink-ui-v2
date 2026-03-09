@@ -70,8 +70,7 @@ const customProductsReducer = (state = initialState(), action = {}) => {
 				},
 				isLoading: false, // Ensure loading is stopped after removing
 			};
-
-			console.log("Updated State:", updatedState);
+ 
 
 			return updatedState;
 		}

@@ -487,11 +487,11 @@
   display: block;
 
   @media (min-width: 1024px) {
-    font-size: 1.25rem; /* lg:text-xl */
+    font-size: 18px; /* lg:text-xl */
   }
 
   @media (min-width: 1536px) {
-    font-size: 1.375rem; /* 2xl:text-xl-1 */
+    font-size: 18px; /* 2xl:text-xl-1 */
   }
 }
 
@@ -1099,7 +1099,7 @@
   }
   @media (min-width: 760px) {
     position: sticky;
-    top: 75px;
+    top: 85px;
   }
 
   @media (min-width: 1000px) {

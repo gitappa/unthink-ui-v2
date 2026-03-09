@@ -139,7 +139,7 @@ const ProductCard = ({
 
 }) => {
   const navigate = useNavigate();
-  console.log("hideAddToWishlist", hideAddToWishlist);
+  // console.log("hideAddToWishlist", hideAddToWishlist);
   // console.log('qzssddsdsds',product);
   const [showLoader, setShowLoader] = useState(false);
   const [descriptionget, setDescriptionget] = useState("");
@@ -151,7 +151,7 @@ const ProductCard = ({
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
   const menuRef = useRef(null);
-  console.log(menuIcon);
+  // console.log(menuIcon);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -229,7 +229,7 @@ const ProductCard = ({
     },
     [product, collection_id, allowEdit],
   );
-  console.log(product);
+  // console.log(product);
 
   const handleProductClick = async () => {
     if (enableSelect) {
@@ -253,8 +253,7 @@ const ProductCard = ({
       if (selectedSearchOption?.title) {
         // GTAG CONFIGURATION AURA
         // START
-        console.log(selectedSearchOption);
-
+ 
         gTagAuraProductClick({
           mft_code: product?.mfr_code,
           aura_widget: selectedSearchOption?.id,
@@ -1111,7 +1110,7 @@ const ProductCard = ({
                             : styles["icon-circle-medium"]
                           }`}
                       >
-                        <LuCopy />
+                        <LuCopy className={styles.copyIcon}/>
                       </div>
                       <p className={styles["text-gray"]}>Copy</p>
                     </div>
@@ -1367,8 +1366,8 @@ const ProductCard = ({
                         !product?.price && !product?.listprice
                           ? "#F2F1FD"
                           : "#9690F0",
-                      color:
-                        !product?.price && !product?.listprice ? "#616161" : "",
+                          cursor : !product?.price && !product?.listprice ? 'not-allowed' : 'pointer' ,
+                      color:  !product?.price && !product?.listprice ? "#616161" : "",
                     }}
                     className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
                     onClick={checkoutPayment}

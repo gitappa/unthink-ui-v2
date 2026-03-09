@@ -23,8 +23,7 @@ const AiExtractionDataModal = ({
 	filter_settings,
 }) => {
 	const dispatch = useDispatch();
-	console.log('display_url', 'faq');
-	console.log('extractionData', extractionData);
+ 
 
 
 
@@ -70,9 +69,7 @@ const AiExtractionDataModal = ({
 		navigate(PATH_CREATE_COLLECTION);
 		handleModalClose();
 	}, []);
-	console.log('extractionData.data.display_url', extractionData.data.display_url);
-
-	console.log("extractionData", extractionData);
+ 
 
 
 	return (

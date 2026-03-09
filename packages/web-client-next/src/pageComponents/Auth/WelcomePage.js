@@ -33,7 +33,7 @@ const WelcomePage = (props) => {
 
 	const isAdminLoggedIn = AdminCheck(authUser?.data, current_store_name, adminUserId, admin_list);
 
-	console.log(authUser);
+ 
 
 
 	const isSellerLoggedIn = useMemo(
@@ -49,7 +49,7 @@ const WelcomePage = (props) => {
 		]
 	);
 
-	console.log(isSellerLoggedIn);
+	 
 
 
 	const isPageLoading = useMemo(

@@ -50,7 +50,7 @@ const SwiftlyHeader = ({
 		if (!headerWrapperRef.current || !headerContentRef.current) {
 			return;
 		}
-
+ 
 		const wrapperRect = headerWrapperRef.current.getBoundingClientRect();
 		const contentRect = headerContentRef.current.getBoundingClientRect();
 
@@ -119,7 +119,7 @@ const SwiftlyHeader = ({
 			width: `${fixedLayout.width}px`,
 			zIndex: 60,
 			background: themeCodes.header.header_bg,
-			borderRadius:'12px'
+			// borderRadius:'12px'
 		};
 	}, [fixedLayout.left, fixedLayout.width, isHeaderFixed, themeCodes.header.header_bg]);
 
@@ -141,6 +141,7 @@ const SwiftlyHeader = ({
 				style={{
 					background: themeCodes.header.header_bg,
 					minHeight: isHeaderFixed ? `${headerHeight}px` : undefined,
+					margin: isHeaderFixed ? 0 : undefined,
 				}}>
 
 				<div

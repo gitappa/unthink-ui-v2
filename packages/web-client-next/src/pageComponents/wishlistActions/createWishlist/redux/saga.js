@@ -163,7 +163,7 @@ function* createWishlistSaga(action) {
 					collectionPageAPIs.getImageToDescriptionAPICall,
 					getImageToDescriptionPayload
 				);
-				console.log('attrResponse',attrResponse);
+ 
 				
 
 				// collection name for image collection getting from imageToDesc API response (backend)

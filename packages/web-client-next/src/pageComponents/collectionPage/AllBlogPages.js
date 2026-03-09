@@ -96,12 +96,12 @@ const AllBlogPages = ({
 				if (entries[0].isIntersecting) {
 					// If first API call returns <10 items, stop auto-loading
 					if (autoLoadCount === 0 && (authUserCollectionsCount !== 10 && influencerUserCollectionsCount !== 10)) {
-						console.log("Stopping auto-load, received less than 10 items on first call");
+				 
 						setAutoLoadCount(2); // Stop further auto-load
 					}
 					// Auto-load up to 2 times if at least 10 items are received
 					else if (autoLoadCount < 2) {
-						console.log("Auto-loading more items");
+				 
 						onShowMoreClick();
 						setAutoLoadCount(prev => prev + 1);
 					}
@@ -128,7 +128,7 @@ const AllBlogPages = ({
 	useEffect(() => {
 		if (pageUserCollections?.length === 0) {
 			setIsLoading(false);
-			console.log("Collections loaded successfully" );
+ 
 		}
 	}, [pageUserCollections]);
 

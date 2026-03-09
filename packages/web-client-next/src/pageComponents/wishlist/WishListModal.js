@@ -235,7 +235,7 @@ const WishListModal = ({
 
 		if (activeCollection === "Creator") {
 			if (collection.path) {
-				console.log(collection);
+			 
 				navigate(`/${collection.user_name}/collections/${collection.path}`);
 				dispatch(closeWishlistModal())
 				return;

@@ -570,8 +570,7 @@ const ReviewCollectionStepContent = ({
 			useUpdateTag
 
 		}) => {
-			console.log('keyword_tag_map', keyword_tag_map);
-
+ 
 			const editPayload = {
 				_id: currentCollection._id,
 				collection_name,
@@ -669,8 +668,7 @@ const ReviewCollectionStepContent = ({
 				const isKeywordEdited = JSON.stringify(currentMap) !== JSON.stringify(updatedMap);
 
 				if (isTagStillPresent && isKeywordEdited && !newTags.includes(tag)) {
-					console.log(tag, "keyword changed");
-					newTags.push(tag); // Add tag if its keyword data changed
+ 					newTags.push(tag); // Add tag if its keyword data changed
 				}
 			});
 
@@ -717,8 +715,7 @@ const ReviewCollectionStepContent = ({
 		const removedTag = typeof tagToRemove === "string" ? tagToRemove : tagToRemove[0]; // fix here
 
 		const newTags = updatedData.blog_filter?.filter((t) => t !== removedTag) || [];
-		console.log('newTags', newTags);
-
+ 
 		// Check for keyword edits of remaining tags
 		const updatedKeywordTagMap = updatedData.keyword_tag_map || {};
 		const currentKeywordTagMap = currentCollection.keyword_tag_map || {};
@@ -728,13 +725,11 @@ const ReviewCollectionStepContent = ({
 			const current = currentKeywordTagMap?.[tag] || {};
 			return JSON.stringify(updated) !== JSON.stringify(current);
 		});
-		console.log('modifiedTags', modifiedTags);
-
+ 
 		const filteredKeywordTagMap = Object.fromEntries(
 			Object.entries(updatedKeywordTagMap).filter(([key]) => key !== removedTag)
 		);
-		console.log('filteredKeywordTagMap', filteredKeywordTagMap);
-
+ 
 		const updatePayload = {
 			latest: newTags,
 			deleted: [removedTag],

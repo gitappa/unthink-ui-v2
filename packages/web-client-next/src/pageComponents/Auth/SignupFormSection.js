@@ -141,7 +141,7 @@ export default function SignupFormSection() {
 			}
 		}
 
-		console.log(payload);
+ 
 
 
 		try {

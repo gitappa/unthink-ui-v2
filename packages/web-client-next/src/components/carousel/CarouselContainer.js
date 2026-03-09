@@ -186,7 +186,7 @@ function CarousalContainer({
 												style={{ objectFit: 'cover' }}
 												onClick={() => {
 													setPreviewImage(getFinalImageUrl(item))
-													console.log("getFinalImageUrl", getFinalImageUrl(item))
+												 
 													setPreviewVisible(true)
 												}}
 											/>

@@ -315,7 +315,7 @@ const AddProductCard = ({
 		try {
 			const res = await collectionAPIs.FetchAddModifiedDataKeyUrl(payload);
 			if (res.data.status_code === 200) {
-				console.log("res", res);
+			 
 				setShowLoader(false);
 			}
 		} catch (error) {

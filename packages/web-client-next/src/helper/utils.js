@@ -208,7 +208,7 @@ export const getFinalImageUrl = (
   dimensionWidth,
   dimensionHeight
 ) => {
-	console.log(imgUrl);
+ 
 	
   if (!imgUrl) return imgUrl;
 
@@ -343,7 +343,7 @@ export const addSidInProductUrl = (string, sid, collection_id) => {
 			url.searchParams.set("unthink_source", Clickpage);
 			url.searchParams.set("unthink_medium", platform);
 			url.searchParams.set("unthink_campaign", collection_id);
-			console.log(url.toString());
+ 
 
 			return url.toString();
 		}
@@ -356,7 +356,7 @@ export const addSidInProductUrl = (string, sid, collection_id) => {
 		url.searchParams.set("unthink_medium", platform);
 		url.searchParams.set("unthink_campaign", collection_id);
 
-		console.log(url.toString());
+	 
 
 		return url.toString();
 	} catch (error) {
@@ -429,7 +429,7 @@ export function generateOnContactFormSubmit(
 		if (typeof window !== "undefined" && window.emailjs) {
 			window.emailjs.sendForm("service_grrt6ds", "template_1hm264c", this).then(
 				function () {
-					console.log("SUCCESS!");
+			 
 
 					// sending get started mail to the entered email
 					// START
@@ -494,7 +494,7 @@ export function generateOnScheduleDemoSubmit(
 		if (typeof window !== "undefined" && window.emailjs) {
 			window.emailjs.sendForm(serviceID, templateID, this).then(
 				function () {
-					console.log("SUCCESS!");
+			 
 
 					if (typeof document !== "undefined") {
 						document.getElementById(id)?.reset();
@@ -566,11 +566,7 @@ export const getBlogCollectionPagePath = (
 	hosted_stores = [],
 	collection_theme
 ) => {
-	console.log(user_name);
-	console.log(collectionId);
-	console.log(collectionPath);
-	console.log(user_id);
-	console.log(collection_theme);
+ 
 	
 	const isStoreInstance = getIsStoreInstance();
 
@@ -796,8 +792,7 @@ export function isEmpty(value) {
 		(typeof value === "object" && Object.keys(value).length === 0) // check for empty object
 	);
 }
-console.log(!isEmpty());
-
+ 
 /**
  * return the collection default description based on the collection name
  * @example
@@ -857,7 +852,7 @@ export const productCountToShow = (width, isCoverImageAvailable) => {
 		if (isCoverImageAvailable) {
 			count = 6;
 		} else {
-			count = 9;
+			count = 6;
 		}
 	}
 

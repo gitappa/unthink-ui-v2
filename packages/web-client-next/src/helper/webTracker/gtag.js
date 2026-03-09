@@ -11,7 +11,7 @@ export const gTagCollectionPageView = (data) => {
 	}
 	// let collection_id = data._id && data._id.toString();
 
-	console.log(data);
+ 
 
 	const {
 		collection_path,
@@ -47,14 +47,14 @@ export const gTagCollectionPageView = (data) => {
 	// url.searchParams.set('unthink_term', term);
 
 	const og_url = url.href;
-	console.log(og_url);
+ 
 
 	let user = user_id;
 	if (user && user_name) {
 		user = user + "|" + user_name;
 	}
 
-	console.log(user);
+ 
 
 	window.gtag &&
 		window.gtag(gTagEvent, event_collection_page_view, {
@@ -88,7 +88,7 @@ export const gTagCollectionProductClick = (data) => {
 		collection_name,
 	} = data;
 
-	console.log(data);
+ 
 
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
@@ -120,9 +120,7 @@ export const gTagCollectionProductClick = (data) => {
 	}
 
 	const og_url = url.href;
-	console.log(og_url);
-	console.log(user);
-
+	 
 	window.gtag &&
 		window.gtag(gTagEvent, event_collection_product_click, {
 			mft_code,
@@ -144,7 +142,7 @@ export const gTagAuraProductClick = (data) => {
 	}
 	const { mft_code, aura_widget, user_id, user_name, term } = data;
 
-	console.log(data);
+ 
 
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
@@ -176,9 +174,7 @@ export const gTagAuraProductClick = (data) => {
 	}
 
 	const og_url = url.href;
-
-	console.log(user);
-	console.log(og_url);
+ 
 
 	window.gtag &&
 		window.gtag(gTagEvent, event_aura_product_click, {
@@ -207,7 +203,7 @@ export const gTagShopWidgetClick = (data) => {
 		term
 	} = data;
 
-	console.log(data);
+ 
 
 	const mainUrl = window.location.href;
 	const url = new URL(mainUrl);
@@ -235,7 +231,7 @@ export const gTagShopWidgetClick = (data) => {
 
 	const og_url = url.href;
 
-	console.log(og_url);
+ 
 
 	// if (window.gtag) {
 	// 	window.gtag(gTagEvent, event_shop_widget_click, {

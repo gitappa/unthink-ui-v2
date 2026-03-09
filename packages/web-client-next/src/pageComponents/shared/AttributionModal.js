@@ -151,7 +151,7 @@ const AttributionModal = ({
 		};
 	}, [showAttributionModal]);
 
-	console.log(isAdminLoggedIn);
+ 
 
 
 	// transfer fungible token to specified wallet address
@@ -174,8 +174,7 @@ const AttributionModal = ({
 					secretType: venlyChainSecretType, // HEDERA
 				})
 				.then((result) => {
-					console.log("tokens transfer success result : ", result);
-					notification.success({
+ 					notification.success({
 						message: "Success",
 						description: `${value} tokens transferred successfully `,
 					});

@@ -13,8 +13,7 @@ const ReviewCollectionStepsUI = ({
 	enableHelpStep = false,
 	isSamskaraInstance,
 }) => {
-console.log('propdatas',propdata);
-
+ 
 	const MobileViewStep = ({ text, step }) => (
 		<div
 			className={`${styles.mobileStep} ${disabledSteps.includes(step)
@@ -54,7 +53,10 @@ console.log('propdatas',propdata);
 		{
 			title: "Products",
 			icon: <ShoppingCartOutlined className="steps_icons" />,
-			onClick: () => handleChangeView(STEPS.PRODUCTS),
+			onClick: () =>{
+				
+				 handleChangeView(STEPS.PRODUCTS)
+			},
 			disabled: disabledSteps.includes(STEPS.PRODUCTS),
 			key: STEPS.PRODUCTS,
 		},

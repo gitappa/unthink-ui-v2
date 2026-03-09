@@ -153,8 +153,7 @@ const ContextWrapper = ({ children }) => {
 				sessionId: getSid(),
 				prevSessionId: getPrevSid(),
 			};
-			console.log('userzq',user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length);
-				console.log( user?.data.filters?.[current_store_name]?.strict?.brand); 
+			 
 
 			if (getParams("unthink_internal") === "true" || isDebugCookie()) {
 				userInfo["debug"] = true;
@@ -223,7 +222,7 @@ const ContextWrapper = ({ children }) => {
 
 	const onServer = async (data) => {
 
-		console.log(data.image_url);
+	 
 
 
 		dispatch(setShowChatLoader(false));
@@ -381,8 +380,7 @@ const ContextWrapper = ({ children }) => {
 
 	const onOverlay = (data) => {
 		if (data.product_list_coordinates) {
-			console.log("onOverlay", data);
-			dispatch(setOverlayCoordinates(data.product_list_coordinates));
+ 			dispatch(setOverlayCoordinates(data.product_list_coordinates));
 		}
 	};
 

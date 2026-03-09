@@ -55,7 +55,7 @@ const ProfileName = ({
 		cover_image: false,
 	});
 
-	console.log("sellerDetails", sellerDetails);
+ 
 
 	//to store previous image on image change so can show previous image on cancel
 	const [savedImages, setSavedImages] = useState({
@@ -143,7 +143,7 @@ const ProfileName = ({
 
 	const isAdminLoggedIn = AdminCheck(user, current_store_name, adminUserId, admin_list);
 
-	console.log(isAdminLoggedIn);
+ 
 
 	const isStoreAdminLoggedIn = useMemo(
 		() => user.user_name && user.user_name === super_admin,

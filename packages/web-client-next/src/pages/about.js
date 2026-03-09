@@ -8,7 +8,7 @@ import static_page_bg from '../../style/index.module.scss'
 // export { getServerData } from "../helper/serverUtils";
 
 const AboutPageContainer = ({ path }) => {
-	console.log(static_page_bg);
+	 
 	
 	return (
 		<div className= {`${static_page_bg }`}>

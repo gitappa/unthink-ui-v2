@@ -473,7 +473,7 @@ const AuraResponseProducts = ({
 
 	const onSelectAllChange = () => {
 		// e.stopPropagation()
-		console.log('dfdfdfdfd');
+ 
 
 		const currentProducts = productsCache[currentTag] || [];
 		const currentProductCodes = currentProducts.map((p) => p.mfr_code);

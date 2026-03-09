@@ -70,13 +70,11 @@ const initialFormValue = {
 
 let selectedIdpHintSignIn = "";
 
-console.log('is_store_instance', is_store_instance);
+ 
 export default function SignInFormSection() {
   const router = useRouter(); 
  const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage) => {
-	console.log('userDataaaaa', userData);
-	console.log(userData.attribution?.sammoon);
-	console.log('pinkukdfc',redirectPage);
+ 
 	try {
 		// 1️⃣ PRIORITY REDIRECT (works for all users)
 		if (redirectPage === "my-products") {
@@ -84,7 +82,7 @@ export default function SignInFormSection() {
 			return;
 		}
 		if (redirectPage === "create-collection") {
-			console.log('dfdfd');
+		 
 			
 			router.replace("/create-collection");
 			return;
@@ -159,7 +157,7 @@ export default function SignInFormSection() {
 	const { user } = useSelector((state) => state.auth);
 	const UserData = useSelector((state) =>  state.auth.user.data)
 	const [storeData] = useSelector((state) => [state.store.data]);
-	console.log('pkgvkijghj',UserData );
+ 
 
 	const {
 		my_products_enable: isMyProductsEnable,
@@ -178,7 +176,7 @@ export default function SignInFormSection() {
 
 	const isAdminLoggedIn = AdminCheck(user?.data, current_store_name, adminUserId, admin_list);
 
-	console.log(isAdminLoggedIn);
+ 
 
 
 	const isSellerLoggedIn = useMemo(
@@ -193,8 +191,7 @@ export default function SignInFormSection() {
 		if (user.isUserLogin) {
 			setIdpSignInMethod(selectedIdpHintSignIn); // store sign in method to show message when user comes back again to sign in
 			redirectOnSuccessSignIn(isSellerLoggedIn, user.data, redirectPage);
-			console.log("user.data", user.data);
-
+			 
 			// if (!(user.data?.first_name || user.data.filters)) {
 			// 	navigate(WELCOME);
 			// } else {

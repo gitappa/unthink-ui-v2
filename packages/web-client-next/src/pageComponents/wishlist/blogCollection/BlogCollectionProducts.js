@@ -36,7 +36,7 @@ const BlogCollectionProducts = ({
 		dispatch(removeFromWishlist(payload));
 	};
 
-	console.log("productList: ", productList);
+	 
 
 
 	return (
