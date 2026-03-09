@@ -440,16 +440,16 @@ const Header = ({
         });
       }
 
-      if (enable_venly) {
-        items.push({
-          key: "wallet",
-          className: styles.headerMenuItemPy2,
-          onClick: onMyWalletClick,
-          label: (
-            <span className={styles.headerMenuSpanTextBase}>My Wallet</span>
-          ),
-        });
-      }
+      // if (enable_venly ) {
+      //   items.push({
+      //     key: "wallet",
+      //     className: styles.headerMenuItemPy2,
+      //     onClick: onMyWalletClick,
+      //     label: (
+      //       <span className={styles.headerMenuSpanTextBase}>My Wallet</span>
+      //     ),
+      //   });
+      // }
 
 
       if ((!isSwiftlyStyledInstance || !isDoTheLookInstance) && window.innerWidth <= 1024) {
@@ -481,10 +481,10 @@ const Header = ({
           className: styles.headerMenuItemPy2,
           onClick: onWishlistClick,
           label: (
-            <span className={styles.headerMenuSpanTextBase}>{WISHLISTS_TITLE}</span>
+            <span className={styles.headerMenuSpanTextBase}>My {WISHLISTS_TITLE}</span>
           ),
         });
-
+ 
       }
       items.push({
         key: "signout",

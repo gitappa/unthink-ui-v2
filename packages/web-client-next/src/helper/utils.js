@@ -857,7 +857,7 @@ export const productCountToShow = (width, isCoverImageAvailable) => {
 		if (isCoverImageAvailable) {
 			count = 6;
 		} else {
-			count = 9;
+			count = 6;
 		}
 	}
 
