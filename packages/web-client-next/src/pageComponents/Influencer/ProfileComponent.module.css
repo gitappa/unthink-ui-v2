@@ -1,7 +1,7 @@
 .banner-image {
-  aspect-ratio: 3.1 / 1;
+   
   width: 100%;
-  height: 100%;
+  height: 300px !important;
   object-fit: cover;
 }
 
@@ -91,6 +91,7 @@ height:100px !important;
 
 .profile-image-wrapper-with-banner {
   margin-top: -4rem;
+  margin-left: 10px;
 }
 
 @media (min-width: 1024px) {
@@ -146,7 +147,7 @@ height:100px !important;
 
 @media (min-width: 1024px) {
   .profile-info {
-    gap: 1rem;
+    gap: 0px;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
@@ -173,16 +174,18 @@ height:100px !important;
 }
 
 .powered-by-container {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-top: 0.25rem;
+   
 }
 
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) { */
   .powered-by-container {
-    margin-top: 0;
-  }
+    display: flex;
+    gap: 4px;
+    align-items: center;
+     position: absolute;
+     bottom: 20px;
+     right: 20px;
+  /* } */
 }
 
 .powered-by-text {
@@ -196,14 +199,32 @@ height:100px !important;
   padding: 0;
 }
 
+.social-icons-container {
+  display: flex;
+  gap: 1rem;
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  align-items: center;
+  z-index: 10;
+}
+
+.social-icons-container :global(.ant-image) {
+  display: flex !important;
+}
+
 .powered-by-logo {
   cursor: pointer;
   height: 16px !important;
+  @media (max-width:768px) {
+    width: 80px !important;
+  }
 }
 
 @media (min-width: 1024px) {
   .powered-by-logo {
     height: 1rem;
+    width: 100%;
   }
 }
 
@@ -234,6 +255,9 @@ height:100px !important;
 }
 
 .actions-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   display: flex;
   gap: 1rem;
   align-items: flex-start;

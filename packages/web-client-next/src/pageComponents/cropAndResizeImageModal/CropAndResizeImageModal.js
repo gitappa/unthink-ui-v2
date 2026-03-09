@@ -5,6 +5,7 @@ import Modal from "../../components/modal/Modal";
 import CropAndResizeImage from "./CropAndResizeImage";
 
 import styles from './cropAndResizeImageModal.module.scss';
+import { notification } from "antd";
 
 const TO_RADIANS = Math.PI / 180;
 
@@ -31,15 +32,26 @@ const CropAndResizeImageModal = ({
 		if (!image || !previewCanvas || !completedCrop) {
 			throw new Error("Crop canvas does not exist");
 		}
+ 
 
 		// This will size relative to the uploaded image size. If you want to size according to what they are looking at on screen, remove scaleX + scaleY
 		const scaleX = image.naturalWidth / image.width;
 		const scaleY = image.naturalHeight / image.height;
 
-		const offscreen = new OffscreenCanvas(
-			completedCrop.width * scaleX,
-			completedCrop.height * scaleY
-		);
+		const cropWidth = completedCrop.width * scaleX;
+	const cropHeight = completedCrop.height * scaleY;
+
+	// ✅ Prevent crop below 600x600
+	if (cropWidth < 600 || cropHeight < 600) {
+		notification.error({
+					 message: "Image must be at least 600 x 600 pixels",
+					//  description:
+					//    error?.response?.data?.message || "Unexpected error occurred",
+				   });
+		return;
+	}
+
+	const offscreen = new OffscreenCanvas(cropWidth, cropHeight);
 		const ctx = offscreen.getContext("2d");
 		if (!ctx) {
 			throw new Error("No 2d context");

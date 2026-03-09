@@ -17,11 +17,13 @@ import { useSelector } from "react-redux";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
 import Image from "next/image";
 import { getThemeCollectionsPagePath } from "../../helper/utils";
+import { THEME_ALL } from "../../constants/themeCodes";
 
 const SwiftlyMobileHeader = ({
   showProfileIcon,
   setShowMenu,
   headerProfileMenu,
+  setisDropDown
 }) => {
   const { Text } = Typography;
   const dispatch = useDispatch();
@@ -74,10 +76,10 @@ const SwiftlyMobileHeader = ({
         <div className="flex items-center gap-3">
           <button
             className={styles.collectionButton}
-            style={{ color: "black" }}
+            style={{ color: "black" ,fontWeight:700}}
             onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
           >
-            Collection
+            Collections
           </button>
 
           <button
