@@ -1636,6 +1636,9 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 
 	const handleInputChange = useCallback((e) => {
 		const { name, value } = e.target;
+		// if(value.length < 50){
+		// 	notification["error"]({ message: "You Have To Type Atleatst 50 Charactors" });
+		// }
 		collectionDetailsSaveRequired = true;
 		setUpdatedData((data) => ({ ...data, [name]: value }));
 	}, []);
@@ -2072,6 +2075,14 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 				return;
 			}
 
+			const descriptionLength = (updatedData?.description || "").trim().length;
+			if (view === STEPS.PRODUCTS && descriptionLength < 50) {
+				notification["error"]({
+					message: "Please type at least 50 characters in description",
+				});
+				return;
+			}
+
 			await handleSaveCurrentView(metadata);
 
 			switch (view) {
@@ -2095,7 +2106,7 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 					break;
 			}
 		},
-		[currentView, handleSaveCurrentView]
+		[currentView, handleSaveCurrentView, STEPS.PRODUCTS, updatedData?.description]
 	);
 
 	const isAdminLoggedIn = AdminCheck(authUser, current_store_name, adminUserId, admin_list);

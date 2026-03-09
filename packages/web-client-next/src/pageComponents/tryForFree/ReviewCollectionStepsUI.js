@@ -54,7 +54,10 @@ console.log('propdatas',propdata);
 		{
 			title: "Products",
 			icon: <ShoppingCartOutlined className="steps_icons" />,
-			onClick: () => handleChangeView(STEPS.PRODUCTS),
+			onClick: () =>{
+				
+				 handleChangeView(STEPS.PRODUCTS)
+			},
 			disabled: disabledSteps.includes(STEPS.PRODUCTS),
 			key: STEPS.PRODUCTS,
 		},
