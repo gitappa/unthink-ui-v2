@@ -626,6 +626,7 @@ const Header = ({
             showProfileIcon={showProfileIcon && isUserLogin}
             setShowMenu={setShowMenu}
             headerProfileMenu={headerProfileMenu}
+            setisDropDown={setisDropDown}
           />
         </div>
       ) : null}

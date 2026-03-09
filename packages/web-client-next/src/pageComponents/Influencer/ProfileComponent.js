@@ -20,7 +20,9 @@ import share_icon from "../../images/profilePage/share_icon.svg";
 import unthink_favicon from "../../images/staticpageimages/unthink_favicon.png";
 import { PROFILE } from "../../constants/codes";
 import styles from "./ProfileComponent.module.css";
-
+import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
+import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
+import Link from "next/link";
 const { Text } = Typography;
 
 const ProfileComponent = ({
@@ -34,6 +36,8 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
+	console.log(facebookIcon);
+	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
 	const [showShareProfile, setShowShareProfile] = useState(false);
@@ -42,14 +46,15 @@ const ProfileComponent = ({
 		() => showBanner && !!pageUser.cover_image,
 		[showBanner, pageUser.cover_image]
 	);
-
+console.log('pageUser',pageUser);
+const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp'
 	return (
 		<div>
 			<div>
-				{isShowBanner && (
-					<div>
+				{/* {isShowBanner && ( */}
+					<div className="relative"> 
 						<Image
-							src={getFinalImageUrl(pageUser.cover_image)}
+							src={isShowBanner ?  getFinalImageUrl(pageUser.cover_image) :DummyImg }
 							preview={false}
 							width={"100%"}
 							className={styles['banner-image']}
@@ -68,36 +73,7 @@ const ProfileComponent = ({
 								<Image src={unthink_favicon} width={29} preview={false} />
 							) : null}
 						</div>
-					</div>
-				)}
-				<div
-					className={`${styles['profile-container']} ${isShowBanner ? styles['profile-container-with-banner'] : styles['profile-container-without-banner']}`}>
-					<div className={`${isShowBanner ? styles['profile-image-wrapper-with-banner'] : styles['profile-image-wrapper']}`}>
-						<Image
-							src={getFinalImageUrl(pageUser.profile_image) || defaultAvatar}
-							preview={false}
-							className={styles['profile-image']}
-							width={"100%"}
-						/>
-					</div>
-					<div className={styles['profile-content']}>
-						<div className={styles['profile-header']}>
-							<div className={styles['profile-info']}>
-								<h1
-									className={styles['profile-name']}>
-									{name}
-								</h1>
-								{/* {!getIsCollectionPage() && (
-									<div className='flex'>
-										<Image
-											className='w-full'
-											src={verified_icon}
-											preview={false}
-										/>
-									</div>
-								)} */}
-								{/* powered by unthink */}
-								{is_store_instance && (
+							{is_store_instance && (
 									<div className={styles['powered-by-container']}>
 										<span className={styles['powered-by-text']}>powered by</span>&nbsp;
 										<a
@@ -113,14 +89,17 @@ const ProfileComponent = ({
 										</a>
 									</div>
 								)}
-
-								<div className={styles['description-container']}>
-									<Text className={styles['description-text']}>
-										{pageUser.description || "Take a look at my collections"}
-									</Text>
+								{pageUser?.sellerDetails && 
+								<div className={styles['social-icons-container']}>
+									<Link href={pageUser?.sellerDetails?.facebookUrl} target="_blank">
+									<Image src={facebookIcon.src} height={30} width={30} preview={false} alt="Facebook"/>
+									</Link>
+									<Link href={pageUser?.sellerDetails?.instagramUrl} target="_blank">
+									<Image src={instagramIcon.src} height={30} width={30} preview={false} alt="Instagram"/>
+									</Link>
 								</div>
-							</div>
-							<div className={styles['actions-container']}>
+									}
+								<div className={styles['actions-container']}>
 								{isMyProfilePage && !isGuestUser && isPageOwner && (
 									<EditOutlined
 										title='Edit Collection'
@@ -161,6 +140,45 @@ const ProfileComponent = ({
 									src={qrCodeGeneratorURL}
 								/> */}
 							</div>
+					</div>
+				{/* )} */}
+				<div
+					className={`${styles['profile-container']} ${isShowBanner ? styles['profile-container-with-banner'] : styles['profile-container-without-banner']}`}>
+					<div className={styles['profile-image-wrapper-with-banner'] }>
+						 {/* styles['profile-image-wrapper'] */}
+						<Image
+							src={getFinalImageUrl(pageUser.profile_image) || defaultAvatar}
+							preview={false}
+							className={styles['profile-image']}
+							width={"100%"}
+						/>
+					</div>
+					<div className={styles['profile-content']}>
+						<div className={styles['profile-header']}>
+							<div className={styles['profile-info']}>
+								<h1
+									className={styles['profile-name']}>
+									{name}
+								</h1>
+								{/* {!getIsCollectionPage() && (
+									<div className='flex'>
+										<Image
+											className='w-full'
+											src={verified_icon}
+											preview={false}
+										/>
+									</div>
+								)} */}
+								{/* powered by unthink */}
+							
+
+								<div className={styles['description-container']}>
+									<Text className={styles['description-text']}>
+										{pageUser.description || "Take a look at my collections"}
+									</Text>
+								</div>
+							</div>
+							
 							{/* <div className='pl-4 lg:hidden flex'>
 								<Image src={header_darktheme} preview={false} width={33} />
 							</div> */}
