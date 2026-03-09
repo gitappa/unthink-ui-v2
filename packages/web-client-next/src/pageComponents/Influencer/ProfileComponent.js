@@ -101,7 +101,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 									}
 								<div className={styles['actions-container']}>
 								{isMyProfilePage && !isGuestUser && isPageOwner && (
-									<EditOutlined
+									<EditOutlined 
 										title='Edit Collection'
 										className={styles['edit-icon']}
 										onClick={
@@ -112,7 +112,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 								<div className={styles['share-container']}>
 									{showShareProfile && (
 										<>
-										<ShareOptions
+										<ShareOptions 
 											url={qrCodeGeneratorURL}
 											setShow={setShowShareProfile}
 											isOpen={showShareProfile}
