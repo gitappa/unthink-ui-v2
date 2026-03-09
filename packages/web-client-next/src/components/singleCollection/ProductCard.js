@@ -1367,8 +1367,8 @@ const ProductCard = ({
                         !product?.price && !product?.listprice
                           ? "#F2F1FD"
                           : "#9690F0",
-                      color:
-                        !product?.price && !product?.listprice ? "#616161" : "",
+                          cursor : !product?.price && !product?.listprice ? 'not-allowed' : 'pointer' ,
+                      color:  !product?.price && !product?.listprice ? "#616161" : "",
                     }}
                     className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
                     onClick={checkoutPayment}

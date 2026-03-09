@@ -400,9 +400,9 @@
   }
 }
 
-.product-buy-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
+/* .product-buy-button:hover {
+  background-color:#8980ea !important;
+} */
 
 .product-buy-button-small {
   display: flex;
