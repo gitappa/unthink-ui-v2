@@ -266,3 +266,23 @@ justify-content: center;
         opacity: 0.9;
     }
 }
+
+.bannerBlackShadowWrapper {
+    position: relative;
+}
+
+@media (min-width: 1024px) {
+    .bannerBlackShadowWrapper {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+}
+
+.bannerBlackShadowLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow:
+        inset 0 -140px 120px -70px rgba(0, 0, 0, 0.9),
+        inset 0 0 90px rgba(0, 0, 0, 0.55);
+}

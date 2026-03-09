@@ -20,6 +20,7 @@ import share_icon from "../../images/profilePage/share_icon.svg";
 import unthink_favicon from "../../images/staticpageimages/unthink_favicon.png";
 import { PROFILE } from "../../constants/codes";
 import styles from "./ProfileComponent.module.css";
+import profilePageStyles from "../Profile/profilePage.module.scss";
 import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
 import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
 import Link from "next/link";
@@ -52,13 +53,14 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 		<div>
 			<div>
 				{/* {isShowBanner && ( */}
-					<div className="relative"> 
+					<div className={`relative ${profilePageStyles.bannerBlackShadowWrapper}`}> 
 						<Image
 							src={isShowBanner ?  getFinalImageUrl(pageUser.cover_image) :DummyImg }
 							preview={false}
 							width={"100%"}
 							className={styles['banner-image']}
 						/>
+						<div className={profilePageStyles.bannerBlackShadowLayer} />
 
 						<div className={styles['logo-container']}>
 							{instance_logo ? (
