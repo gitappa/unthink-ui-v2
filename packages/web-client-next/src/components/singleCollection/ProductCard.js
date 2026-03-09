@@ -1111,7 +1111,7 @@ const ProductCard = ({
                             : styles["icon-circle-medium"]
                           }`}
                       >
-                        <LuCopy />
+                        <LuCopy className={styles.copyIcon}/>
                       </div>
                       <p className={styles["text-gray"]}>Copy</p>
                     </div>
