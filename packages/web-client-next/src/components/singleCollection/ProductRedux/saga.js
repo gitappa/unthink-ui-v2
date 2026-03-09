@@ -8,12 +8,11 @@ import { FETCH_PRODUCT_DETAILS } from "./constants";
 import { customProductsAPIs } from "../../../helper/serverAPIs";
  
 function* fetchProductDetailsSaga(action) {
-    console.log('sss');
+    // console.log('sss');
     
   try {
     const { mfr_code, image } = action.payload;
-console.log(image);
-
+ 
     const res = yield call(
       customProductsAPIs.fetchProductDetailsAPICall,
       mfr_code,

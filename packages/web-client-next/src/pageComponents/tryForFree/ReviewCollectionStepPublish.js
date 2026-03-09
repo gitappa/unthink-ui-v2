@@ -99,7 +99,7 @@ const ReviewCollectionStepPublish = ({
 	);
 
 
-	console.log("cover_image_coordinates", cover_image_coordinates);
+ 
 
 	// Get actual container dimensions
 	useEffect(() => {
@@ -204,7 +204,7 @@ const img = new window.Image();
 	const matchedCollection = useMemo(() => {
 		if (!currentCollection?.generated_by) return null;
 
-		console.log("currentCollection?.generated_by", currentCollection?.generated_by)
+	 
 
 		return createCollectionTypes.find(
 			(item) => item.generated_by === currentCollection.generated_by
@@ -328,9 +328,9 @@ const img = new window.Image();
 			const res = await collectionAPIs.collectionDetectKeyApi(payload);
 
 			if (res.statusCode === 200) {
-				console.log("Success", res);
+				// console.log("Success", res);
 			} else {
-				console.log("Error:", res);
+				// console.log("Error:", res);
 			}
 		} catch (error) {
 			console.error("API Call Failed:", error);
@@ -396,7 +396,7 @@ const img = new window.Image();
 	const handleCoverImageUpload = (info) => {
 		if (info.file.status === "done") {
 			const file = info.file.originFileObj;
-			console.log("filehandleCoverImageUpload", file);
+		 
 
 			handleUploadedDataChange("cover_image", URL.createObjectURL(file));
 		}
@@ -437,9 +437,7 @@ const img = new window.Image();
 	// Add this debug effect
 	useEffect(() => {
 		if (cover_image_coordinates && containerDimensions.width > 0) {
-			console.log("=== DEBUG: Overlay Positioning ===");
-			console.log("Container Dimensions:", containerDimensions);
-			console.log("Original Image Size: 1024x1027");
+		 
 
 			const scaleX = containerDimensions.width / 1024;
 			const scaleY = containerDimensions.height / 1027;
@@ -449,9 +447,7 @@ const img = new window.Image();
 			const offsetX = (containerDimensions.width - scaledWidth) / 2;
 			const offsetY = (containerDimensions.height - scaledHeight) / 2;
 
-			console.log("Scale:", scale);
-			console.log("Scaled Image Size:", scaledWidth, "x", scaledHeight);
-			console.log("Offset X:", offsetX, "Offset Y:", offsetY);
+	 
 
 			cover_image_coordinates.forEach((item, index) => {
 				const originalX = item.point[0];
@@ -459,12 +455,7 @@ const img = new window.Image();
 				const adjustedX = (originalX * scale) + offsetX;
 				const adjustedY = (originalY * scale) + offsetY;
 
-				console.log(`Point ${index} (${item.attributes?.label}):`, {
-					original: `(${originalX}, ${originalY})`,
-					scaled: `(${adjustedX.toFixed(1)}, ${adjustedY.toFixed(1)})`,
-					visible: adjustedX >= 0 && adjustedX <= containerDimensions.width &&
-						adjustedY >= 0 && adjustedY <= containerDimensions.height
-				});
+			 
 			});
 		}
 	}, [containerDimensions, cover_image_coordinates]);

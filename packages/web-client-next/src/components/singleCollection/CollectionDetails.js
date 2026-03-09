@@ -65,7 +65,7 @@ const CollectionDetails = ({
   isPageOwner,
   isCollectionPage = true,
 }) => {
-  console.log(sharePageUrl);
+ 
 
   const navigate = useNavigate();
   const [showShareCollection, setShowShareCollection] = useState(false);
@@ -95,8 +95,7 @@ const CollectionDetails = ({
     state.auth.user.singleCollections.data,
     state.store.data.admin_list,
   ]);
-  console.log("sssssss", isShowMoreActive);
-  console.log("ssxcsss", showMoreEnabled)
+ 
 
   // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
@@ -189,9 +188,7 @@ const CollectionDetails = ({
     ],
   );
 
-  console.log("user_name", user_name);
-  console.log("isPageOwner", isPageOwner);
-
+ 
   const showFeatureOnStore = useMemo(
     () =>
       (isSuperAdminLoggedIn || isStoreAdminLoggedIn) &&
@@ -270,7 +267,7 @@ const CollectionDetails = ({
 
   const handleFeatureCollectionOnStore = useCallback(
     (storeName) => {
-      console.log("storeName", storeName);
+ 
 
       let hosted_stores = [...(collection.hosted_stores || [])];
 
@@ -371,7 +368,7 @@ const CollectionDetails = ({
     }
   }, []);
 
-  console.log("collection", collection.cover_image_coordinates);
+ 
 
   // Fixed renderOverlay function for CollectionDetails
   const renderOverlay = (

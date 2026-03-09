@@ -107,7 +107,7 @@ const ProfilePage = () => {
     adminUserId,
     admin_list,
   );
-  console.log("isAdminLoggedIn", isAdminLoggedIn);
+ 
 
   useEffect(() => {
     if (user.data.user_id) {
@@ -429,7 +429,7 @@ const ProfilePage = () => {
   const onContinue = () => {
     if (isUserInfoValid()) {
       !isLastStep && nextStep();
-      console.log("Saving user info data on continue click");
+    
       saveUserInfoData();
     }
   };
@@ -445,7 +445,7 @@ const ProfilePage = () => {
     }
   };
 
-  console.log(storeData, "user data in profile page");
+ 
 
   const getStepContent = () => {
     switch (currentStep) {

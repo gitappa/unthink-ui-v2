@@ -22,7 +22,7 @@ function* fetchCustomProductsSaga(action) {
 
 	const { product_sort_by, product_sort_order, filters, ipp, current_page } = action.payload
 
-	console.log("current_page in saga", current_page);
+	 
 
 	try {
 		const payload = {
@@ -33,7 +33,7 @@ function* fetchCustomProductsSaga(action) {
 			current_page
 		};
 
-		console.log("current_page", current_page);
+ 
 
 
 		const res = yield call(

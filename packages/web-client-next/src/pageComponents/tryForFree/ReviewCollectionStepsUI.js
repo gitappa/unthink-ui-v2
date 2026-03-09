@@ -13,8 +13,7 @@ const ReviewCollectionStepsUI = ({
 	enableHelpStep = false,
 	isSamskaraInstance,
 }) => {
-console.log('propdatas',propdata);
-
+ 
 	const MobileViewStep = ({ text, step }) => (
 		<div
 			className={`${styles.mobileStep} ${disabledSteps.includes(step)

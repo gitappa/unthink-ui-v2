@@ -137,7 +137,7 @@ const ChatModal = ({
 		state.chatV2.socketId,
 		state.VtoIconReducer.ButtonClick
 	]);
-	console.log('auraServerImage',auraServerImage);
+	 
 	
 	const {
 		suggestions: { tags = [], title = "" },
@@ -352,7 +352,7 @@ const ChatModal = ({
 	const [currentPage, setCurrentPage] = useState(0);
 	const [regenarateImage, setRegenarateImage] = useState(false);
 
-	console.log("activeSearchOption", activeSearchOption);
+	 
 
 
 	const handleSubmitChatInput = () => {
@@ -362,7 +362,7 @@ const ChatModal = ({
 			brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
 		};
 
-		console.log("isFollowUpQuery", isFollowUpQuery);
+ 
 
 		if (localChatMessage || chatImageUrl) {
 			// Condition 1 → smart_search follow-up image send
@@ -446,7 +446,7 @@ const ChatModal = ({
 			generate_overlay_enable: true,
 		};
 
-		console.log("data: " + JSON.stringify(metadata));
+		 
 
 		if (localChatMessage || chatImageUrl) {
 			submitChatInput(localChatMessage, null, metadata, null, imageGenerate);

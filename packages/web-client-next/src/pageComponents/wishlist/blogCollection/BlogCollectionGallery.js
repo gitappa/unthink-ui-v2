@@ -73,7 +73,7 @@ const BlogCollectionGallery = ({
 		(state) => state.appState.wishlist.selectedCollection
 	);
 
-	console.log('selectedCollection',selectedCollection);
+ 
 	
 
 	const [

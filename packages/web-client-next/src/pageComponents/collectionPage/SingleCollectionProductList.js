@@ -59,15 +59,15 @@ const SingleCollectionProductList = ({
   isRootPage = true,
   isMyProfilePage,
 }) => {
-  console.log('sharePageUrl',sharePageUrl);
+ 
 
   
 const url = window.location.pathname === '/my-profile/'
-   console.log('isMyProfilePage',url  );
+ 
 
   const router = useRouter();
   const [statedata, setStatedata] = useState(null);
-  console.log("statedatssa", blogCollectionPage);
+ 
 
   const dispatch = useDispatch();
   const navigate = useCallback((path) => router.push(path), [router]);
@@ -81,8 +81,7 @@ const url = window.location.pathname === '/my-profile/'
   const [showShareCollection, setShowShareCollection] = useState(false);
 
 
-  console.log("isSingleCollectionSharedPage", isSingleCollectionSharedPage);
-  console.log("singleCollectionaaaaaa", singleCollection);
+ 
 
   useEffect(() => {
     if (singleCollection) {
@@ -521,7 +520,7 @@ const url = window.location.pathname === '/my-profile/'
     // If "All" is selected, reset selectedTags to an empty array; otherwise, select only the clicked tag
     setSelectedTags(value === "All" ? [] : [value]);
   }, []);
-console.log('selectedTags',selectedTags);
+ 
 
   useEffect(() => {
     if (isRootPage) {
@@ -713,7 +712,7 @@ console.log('selectedTags',selectedTags);
   const publish = singleCollection.status === "published";
   const userId = influencerCollections.user_id === singleCollection.user_id;
 
-  console.log(publish);
+ 
 
   useEffect(() => {
     if (singleCollection) return;

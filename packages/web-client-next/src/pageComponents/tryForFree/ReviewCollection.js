@@ -338,7 +338,7 @@ const ReviewCollection = (props) => {
 		router?.query?.plist_id ??
 		router?.query?.id;
 const isNewCollection = router.query.isNewCollection === "true";
-console.log('isNewCollection',isNewCollection);
+ 
 
 	const {
 		data: authUser,
@@ -379,8 +379,7 @@ console.log('isNewCollection',isNewCollection);
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.auraOverlayCoordinates,
 	]);
-	console.log('authUserCollections', authUserCollections);
-	console.log('addToWishlistReducer',addToWishlistReducer);
+ 
 	
 // const check = authUserCollections.find((userId)=> )
 	const { isFetching: updateWishlistInProgress } = updateWishlistReducer;
@@ -450,12 +449,7 @@ console.log('isNewCollection',isNewCollection);
 	// console.log('currentCollection',currentCollection );
 	// console.log('singleCollections',singleCollections );
 	useEffect(() => {
-		console.log('singleCollections', singleCollections);
-		console.log('authUserCollections', authUserCollections);
-		console.log('showWishlistModal', showWishlistModal);
-		console.log('plistId', plistId);
-		console.log('currentCollection', currentCollection);
-
+ 
 		// Modal open aagumbothu Redux data varudhaa check
 		if (showWishlistModal && singleCollections && Object.keys(singleCollections).length > 0) {
 			return setCurrentCollection(singleCollections);
@@ -920,8 +914,7 @@ console.log('isNewCollection',isNewCollection);
 			}
 		}
 	}, [currentCollection._id]);
-	console.log(currentCollection);
-
+ 
 	// decide show at a time only filterOptions, hashtagsInput enableSelectProduct or edit tags input
 	const checkAndShowContainer = useCallback(
 		({
@@ -1304,9 +1297,7 @@ console.log('isNewCollection',isNewCollection);
 	// console.log('authUserCollectionsIsFetching',!authUserCollectionsIsFetching);
 	// console.log(currentView === STEPS.PRODUCTS);
 	// console.log(currentCollection._id);
-
-console.log('updateWishlistInProgress',updateWishlistInProgress);
-console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
+ 
 
 	useEffect(() => {
 
@@ -1751,8 +1742,8 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 				[name]: value,
 				fetchUserCollection: true,
 			};
-
-			console.log(editPayload);
+ 
+	 
 
 
 			dispatch(updateWishlist(editPayload));
@@ -1872,20 +1863,20 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 	const handleSaveContentChanges = useCallback(
 		async (metadata = {}, data = updatedData) => {
 			if (isFetchProductsInProgress) {
-				console.log("⚠ Already processing, skipping...");
+			 
 				return; // Prevent duplicate execution
 			}
 
 			// Prevent Double Execution using useRef
 			if (isSavingRef.current) {
-				console.log("⏳ Save in progress, skipping...");
+			 
 				return;
 			}
 			isSavingRef.current = true; // Mark as processing
 
 			if (isDataValid()) {
 				setErrors({ description: "" });
-				console.log("🚀 call handleSaveContentChanges");
+	 
 
 				let saveRequired = false;
 				const editPayload = {
@@ -1986,10 +1977,7 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 
 					await dispatch(updateWishlist(editPayload));
 
-					console.log(isProductsFetchedForNewColl);
-
-					console.log("refetchFlag", metadata.refetchFlag);
-					console.log("metadata.reFetchProductsCalled", metadata.reFetchProductsCalled);
+			 
 
 
 					if (!isGeneratedByMyProducts && !(isProductsFetchedForNewColl === false) && !metadata.reFetchProductsCalled &&
@@ -2082,6 +2070,8 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 				});
 				return;
 			}
+			console.log('hello');
+			
 
 			await handleSaveCurrentView(metadata);
 
@@ -2878,7 +2868,7 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 
 
 	const onSelectProductClick = (mfr_code) => {
-		console.log("mfr_code", mfr_code);
+	 
 
 		multiProductsSelectionMessage =
 			"*Select multiple products in a sequence easily with by hitting tab and then the space key";
@@ -3683,7 +3673,7 @@ console.log('authUserCollectionsIsFetching',authUserCollectionsIsFetching);
 	const handleCancelClick = () => {
 		setActionType("Next Action");
 		setEnableSelectProduct(false);
-		console.log(actionType);
+	 
 
 	};
 

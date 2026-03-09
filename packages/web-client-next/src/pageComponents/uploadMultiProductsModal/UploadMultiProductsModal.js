@@ -58,8 +58,7 @@ const UploadMultiProductsModal = ({
 	store_type,
 }) => {
 	const [productData, setProductData] = useState([...defaultProductData]);
-	console.log('productDataadsdsds',productData);
-	console.log('sellerDetails',sellerDetails);
+ 
 	// useEffect(() => {
 	// 		if (productData) {
 	// 			setProductData((prev) => ({
@@ -79,8 +78,7 @@ const UploadMultiProductsModal = ({
 	let additional_images= []
 
 	
-console.log('collectionValue',collectionValue);
-	
+ 	
 	const currentSellerBrandDetails = useMemo(
 		() => sellerDetails[authUser.user_name],
 		[sellerDetails, authUser.user_name]
@@ -397,14 +395,14 @@ console.log('collectionValue',collectionValue);
 	const [storeStyle, setStoreStyle] = useState("");
 	const [getMPCollections, setGetMPCollections] = useState([]);
 	const [newCollection, setNewCollection] = useState("");
-	console.log('newCollection',newCollection);
+ 
 	
 	const [collectionApi, setCollectionApi] = useState([]);
 	const [currency, setCurrency] = useState("USD");
 
 	const handleCurrencyChange = (value) => {
 		setCurrency(value);
-		console.log("Selected currency:", value);
+		 
 	};
 
 	const handleChange = async (value) => {
@@ -424,10 +422,9 @@ console.log('collectionValue',collectionValue);
 						brand_description:
 							res.data.data.suffix || autoGenerateHelperText.brand_description,
 					});
-					console.log("Collection successfully:", res.data.status_desc);
-					console.log("Collection successfully:", res.data.data);
+				 
 				} else {
-					console.log("Failed to fetch collection:", res.data?.status_desc);
+		 
 				}
 			} catch (err) {
 				console.error("Error while removing collection:", err);
@@ -451,11 +448,11 @@ console.log('collectionValue',collectionValue);
 		}
 	};
 
-	console.log("collectionApi", collectionApi);
+ 
 
 	const handleRemoveCollection = async (e, item) => {
 		e.stopPropagation(); // Prevent selecting item
-		console.log("Removing:", item);
+	 
 
 		const updated = getMPCollections.filter((i) => i !== item);
 
@@ -477,10 +474,8 @@ console.log('collectionValue',collectionValue);
 					payload
 				);
 				if (res.data?.status_code === 200) {
-					console.log("Collection removed successfully:", res.data.status_desc);
-				} else {
-					console.log("Failed to remove collection:", res.data?.status_desc);
-				}
+ 				} else {
+ 				}
 			} catch (err) {
 				console.error("Error while removing collection:", err);
 			}

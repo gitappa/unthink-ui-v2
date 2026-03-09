@@ -215,7 +215,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	const dispatch = useDispatch();
 	const [showFaqCount, setShowFaqCount] = useState(false);
 
-	console.log("collectionData", collectionData);
+ 
 
 	useEffect(() => {
 		socket.on("server", (data) => {
@@ -242,7 +242,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 		success: createWishlistSuccess,
 		error: createWishlistError,
 	} = createWishlistReducer;
-console.log('createWishlistData',createWishlistData);
+ 
 
 	const [scratchAIPromptOpen, setScratchAIPromptOpen] = useState(false);
 
@@ -289,7 +289,7 @@ console.log('createWishlistData',createWishlistData);
 			dispatch(createWishlistReset());
 		}
 	}, [createWishlistSuccess]);
-console.log('propdata',propdata);
+ 
 
 	useEffect(() => {
 		if (createWishlistError) {
@@ -656,13 +656,13 @@ console.log('propdata',propdata);
 	// const showTagTemplate =
 	// 	collectionData.createCollectionWay === createCollectionOptionsKeys.blog_url;
 
-	console.log("collectionData", collectionData);
+ 
 
 	const selectedType = createCollectionTypes.find(
 		(item) => item.id === createCollectionOptionsKeys.video_url
 	);
 
-	console.log("selectedType", selectedType);
+ 
 
 	const createPlistCollection = async (e) => {
 		e.preventDefault();
@@ -676,7 +676,7 @@ console.log('propdata',propdata);
 					(item) => item.id === createCollectionOptionsKeys.video_url
 				);
 
-				console.log("selectedType", selectedType);
+ 
 
 				handleDataExtractionRequest({
 					video_url: collectionData.video_url,

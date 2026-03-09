@@ -129,7 +129,7 @@ const FeatureSelection = ({ nextStep, prevStep, storeData }) => {
 
     const [fileName, setFileName] = useState("");
 
-    console.log("fileName", fileName);
+ 
 
 
     const handleFileUpload = async (file, fieldKey, fileType) => {

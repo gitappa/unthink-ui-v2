@@ -54,10 +54,10 @@ const DeliveryDetails = () => {
 		}
 	}, [dispatch, mycartcollectionpath]);
 
-	console.log("collection", collection);
+	 
 
 	const handleRemove = (products) => {
-		console.log("Removing products:", products);
+	 
 		const payload = {
 			products: [products],
 			collection_id: collection?.collection_id || collection?._id,

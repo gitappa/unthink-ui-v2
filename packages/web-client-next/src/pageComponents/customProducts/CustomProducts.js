@@ -85,7 +85,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 		admin_list: admin_list,
 	} = storeData;
 
-	console.log(store_type);
+ 
 
 	const [addProductsModalOpen, setAddProductsModalOpen] = useState(false);
 	const [uploadProductDefaultMode, setUploadProductDefaultMode] =
@@ -460,8 +460,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 		setCurrentPage(page - 1);
 		fetchCustomProductsList(page); // Pass current page to API call
 	};
-
-	console.log(currentPage);
+ 
 
 	const itemRender = (_, type, originalElement) => {
 		if (type === "prev") {

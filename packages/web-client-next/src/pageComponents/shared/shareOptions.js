@@ -95,7 +95,7 @@ function pdf(){
 		facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl.replace(/whatsapp/g, 'facebook'))}`,
 		linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(baseUrl.replace(/whatsapp/g, 'linkedin'))}`
 	};
-console.log('aaadsDsds');
+ 
 
 	return (
 			<Modal

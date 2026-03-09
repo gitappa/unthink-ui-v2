@@ -15,10 +15,10 @@ function* fetchPoolSaga(action) {
 }
 
 function* updatePoolSaga(action) {
-    console.log("UPDATE_STORED_ATTRIBUTE_POOL", action.payload);
+ 
     try {
         const response = yield call(customProductsAPIs.updatePoolAPICall, action.payload);
-        console.log("updatePoolAPICall", response.data);
+ 
         yield put(updateStoredAttributePoolSuccess(response?.data));
     } catch (error) {
         yield put(updateStoredAttributePoolFailure(error.message));

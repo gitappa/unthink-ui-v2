@@ -312,7 +312,7 @@ const StorePageWrapper = (props) => {
 		() => !!(collection_id || collection_path),
 		[collection_id, collection_path]
 	);
-	console.log(collection_path);
+ 
 
 	const isStoreHomePage = useMemo(
 		() => is_store_instance && isRootPage && !!shared_profile_on_root,
@@ -438,15 +438,14 @@ const StorePageWrapper = (props) => {
 		isHomepage
 	]);
 
-	console.log("pageUserCollections", pageUserCollections);
-
+	 
 
 	const [currentPage, setCurrentPage] = useState(0)
 	const [ipp, setIpp] = useState(10)
 	const [allCollectionData, setAllCollectionData] = useState(pageUserCollections); // working 
 	const [isLoading, setIsLoading] = useState(false);
 
-	console.log('allCollectionData', allCollectionData);
+ 
 
 	const currentSingleCollection = useMemo(
 		() =>
@@ -457,13 +456,11 @@ const StorePageWrapper = (props) => {
 			) || {},
 		[pageUserCollections, collection_id, collection_path, allCollectionData]
 	);
-	console.log('currentSingleCollection', currentSingleCollection);
+ 
 
 
 	const [sharePageUrl, setSharePageUrl] = useState('');
-	console.log('sharepageUrls', sharePageUrl);
-
-console.log('isMyProfilePage',isCollectionPage);
+ 
 
 	// set collection theme from params
 	useEffect(() => {
@@ -532,7 +529,7 @@ console.log('isMyProfilePage',isCollectionPage);
 					authUserCollections.length &&
 					currentSingleCollection._id
 				) {
-					console.log('hello worldss');
+ 
 
 					dispatch(
 						getSingleUserCollection({
@@ -545,7 +542,7 @@ console.log('isMyProfilePage',isCollectionPage);
 					);
 				} else {
 
-					console.log("collection_path", collection_path);
+		 
 
 					dispatch(
 						getInfluencerCollection({
@@ -598,7 +595,7 @@ console.log('isMyProfilePage',isCollectionPage);
 		// 	isFirstRender.current = false;
 		// 	return;
 		// }
-		console.log('dfdcdgd', isSharedPage);
+ 
 
 		if (
 			(isSharedPage) &&
@@ -727,7 +724,7 @@ console.log('isMyProfilePage',isCollectionPage);
 
 	const onShowMoreClick = () => {
 		if (authUserCollectionsCount !== 10 && influencerUserCollectionsCount !== 10) {
-			console.log("Stopping Show More, as last fetched data is less than 10.");
+		 
 			return;
 		}
 		setIsLoading(true);
@@ -779,7 +776,7 @@ console.log('isMyProfilePage',isCollectionPage);
 		dispatch(openMenuItem(""));
 	}, [props.location?.pathname]);
 
-	console.log("currentSingleCollection", currentSingleCollection);
+ 
 
 
 	// GTAG CONFIGURATION
@@ -800,7 +797,7 @@ console.log('isMyProfilePage',isCollectionPage);
 		}
 	}, [showWishlistModal]);
 
-	console.log('authUser', authUser);
+ 
 
 
 	useEffect(() => {
@@ -1040,7 +1037,7 @@ console.log('isMyProfilePage',isCollectionPage);
 	const handleCheck = () => {
 
 		const isGuestLoggedIn = Cookies.get("isGuestLoggedIn")
-		console.log("isGuestLoggedIn", isGuestLoggedIn);
+	 
 
 		if (isGuestLoggedIn == "true") {
 			dispatch(getUserInfo());

@@ -79,12 +79,12 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
   ]);
-  console.log("fetchProduct", fetchProductImage);
+ 
 
   const [store_id] = useSelector((state) => [state.store.data.store_id]);
-  console.log(productDetail);
+ 
   const imageFromQuery = cleanImage(router.query.image);
-  console.log(imageFromQuery);
+  
 
   //   useEffect(() => {
   //     return () => {
@@ -178,11 +178,7 @@ const ProductDetails = ({ params, ...props }) => {
     dispatch(addToCart(payload));
   };
 
-  useEffect(() => {
-    if (cardItem) {
-      console.log("cart updated");
-    }
-  }, []);
+ 
 
   const brandsDetails = useMemo(
     () => sellerDetails[productDetails?.brand],
@@ -364,7 +360,7 @@ const ProductDetails = ({ params, ...props }) => {
           },
         },
       );
-      console.log("Checkout response:", res.data);
+ 
       // 🔁 If API returns payment URL
       if (res?.data?.redirectUrl) {
         if (typeof window !== "undefined") {

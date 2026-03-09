@@ -29,11 +29,7 @@ const AdditionalAttributes = ({
 		}
 	};
 
-	console.log("additionalAttributesToShow", additionalAttributesToShow);
-	console.log("attributesData", attributesData);
-	console.log("attributesDataTags", attributesDataTags);
-	console.log("productDatasss", productData);
-	console.log("collectionValue", collectionValue);
+ 
 
 	// ✅ Sync attributesDataTags → productData.additionalAttributes.custom_filter
 	useEffect(() => {

@@ -301,14 +301,12 @@ const getUserInfoAPICall = (payload = {}) => {
 };
 
 const resetPasswordRequestAPICall = ({ email }) => {
-	console.log('dfdfd');
-	
+ 	
 	const url = `${auraYfretUserCollBaseUrl}${resetPasswordRequestUrl}`;
 	const params = {
 		emailId: email,
 	};
-console.log('url',url);
-console.log(email);
+ 
 
 	return apiInstance({
 		url,
@@ -528,8 +526,7 @@ const createCollectionAPICall = (payload) => {
 };
 
 const updateCollectionAPICall = (payload) => {
-	console.log("payload", payload);
-	const url = `${auraYfretUserCollBaseUrl}${updateCollectionURL}`;
+ 	const url = `${auraYfretUserCollBaseUrl}${updateCollectionURL}`;
 	const data = {
 		...payload,
 		store: current_store_name,
@@ -1321,7 +1318,7 @@ const fetchCustomProductsAPICall = (filters = {}) => {
 };
 
 const fetchProductDetailsAPICall = (mfr_code,image) => {
-	console.log(image);
+ 
 	
 	const url = `${auraYfretUserCollBaseUrl}${fetchCustomProductsUrl}`;
 	const params = {
@@ -1381,7 +1378,7 @@ const updateCustomProductsAPICall = (product_lists, user_id) => {
 const getMPCollectionsAPICall = (store_type) => {
 	const url = `${auraYfretUserCollBaseUrl}${getMPCollections}`;
 
-	console.log('store_type', store_type);
+ 
 
 	const normalizedStoreType = Array.isArray(store_type)
 		? store_type
@@ -1406,8 +1403,7 @@ const getMPCollectionsAPICall = (store_type) => {
 const saveMPCollectionsAPICall = (payload) => {
 	const url = `${auraYfretUserCollBaseUrl}${saveMPCollections}`;
 
-	console.log(payload);
-
+ 
 	const data = {
 		...payload,
 		store: current_store_name,
@@ -1424,7 +1420,7 @@ const saveMPCollectionsAPICall = (payload) => {
 const updatePoolAPICall = (payload) => {
 	const url = `${auraYfretUserCollBaseUrl}${updatePoolKeyUrl}`;
 
-	console.log(payload);
+ 
 
 	const data = {
 		...payload,

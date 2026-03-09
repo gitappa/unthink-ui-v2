@@ -59,18 +59,14 @@ const CollectionShareModal = ({
 	);
 
 
-	console.log("collectionRedirectPath", collectionRedirectPath);
+ 
 
 
 	const collectionPageUrl = useMemo(
 		() => (window?.location.origin || "") + collectionRedirectPath || allCollectionsList.path,
 		[collectionRedirectPath, window]
 	);
-
-	useEffect(() => {
-		console.log(collectionDetails);
-		console.log(collectionRedirectPath);
-	}, [collectionDetails])
+ 
 
 
 	const qrCodeGeneratorURL = useMemo(
@@ -90,7 +86,7 @@ const CollectionShareModal = ({
 	const collectionId = collectionDetails?.collection_id;
 
 
-	console.log('collectionPageUrl', window?.location.origin);
+ 
 
 	const baseUrl = `${collectionPageUrl}?utm_source=whatsapp&utm_medium=messaging&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=whatsapp&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
 
@@ -104,7 +100,7 @@ const CollectionShareModal = ({
 	};
 
 
-	console.log("collectionDetails", collectionDetails);
+	 
 
 
 

@@ -548,7 +548,7 @@ const CustomProductModal = ({
 
 	const handleCurrencyChange = (value) => {
 		setCurrencyEdit(value);
-		console.log("Selected currency:", value);
+	 
 	};
 
 	const currencySymbol = useMemo(
@@ -683,8 +683,7 @@ const CustomProductModal = ({
 			};
 		}
 	}, [handleProductDataSubmit]);
-
-	console.log("productDataq", productData);
+ 
 
 	// console.log("productData" ,productData.listprice, productData.price);
 
@@ -727,7 +726,7 @@ const CustomProductModal = ({
 					},
 				}
 			);
-			console.log("Checkout response:", res.data);
+			 
 			// 🔁 If API returns payment URL
 			if (res?.data?.redirectUrl) {
 				if (typeof window !== "undefined") {

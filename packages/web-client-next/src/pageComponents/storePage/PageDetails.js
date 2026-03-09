@@ -145,7 +145,7 @@ const publish = singleCollections.status === 'published'
     );
   }
 	if (!userId && !publish && isSingleCollectionSharedPage && !isPageOwner ) {
-		console.log('helloworld');
+	 
 		return <BlogPageNotFound />
 	}
 

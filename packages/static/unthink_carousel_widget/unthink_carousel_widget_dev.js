@@ -114,8 +114,7 @@ class MainCarouselWidget {
                 //     a.click();
                 // });
 
-                console.log("collection.collection_id", collection.collection_id);
-                console.log("collection.collection_id", collection._id);
+            
 
 
                 card.addEventListener("click", () => {

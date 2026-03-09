@@ -53,7 +53,7 @@ class MainUnthinkSamskaraWidget {
         fetch(UNapi_url)
             .then((response) => response.json())
             .then((response) => {
-                console.log("API Response", response);
+         
                 const blogCollections = response?.data
                     ?.filter(
                         (collection) =>

@@ -19,8 +19,7 @@ const creatorCollectionReducer = (state = initialState, action) => {
                 error: null,
             };
         case GET_CREATOR_COLLECTIONS_SUCCESS:
-            console.log("CreatorCollections", action.payload);
-            return {
+             return {
                 ...state,
                 loading: false,
                 CreatorCollections: action.payload?.data ?? [],

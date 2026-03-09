@@ -29,7 +29,7 @@ const attributePoolReducer = (state = initialState, action = {}) => {
             newState.isFetching = false;
             return newState;
         case UPDATE_ATTRIBUTE_POOL:
-            console.log("Updating attribute pool with new data:", payload);
+          
             newState.attributePool.data = payload;
             return newState;
         case UPDATE_STORED_ATTRIBUTE_POOL:
