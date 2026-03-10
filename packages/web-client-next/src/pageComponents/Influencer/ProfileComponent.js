@@ -24,6 +24,8 @@ import profilePageStyles from "../Profile/profilePage.module.scss";
 import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
 import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
 import Link from "next/link";
+import profilebanner from '../../images/package.jpg'
+
 const { Text } = Typography;
 
 const ProfileComponent = ({
@@ -37,7 +39,7 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
-	console.log(facebookIcon);
+	console.log(profilebanner);
 	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
@@ -55,7 +57,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 				{/* {isShowBanner && ( */}
 					<div className={`relative ${profilePageStyles.bannerBlackShadowWrapper}`}> 
 						<Image
-							src={isShowBanner ?  getFinalImageUrl(pageUser.cover_image) :DummyImg }
+							src={isShowBanner ?  getFinalImageUrl(pageUser.cover_image) :profilebanner.src }
 							preview={false}
 							width={"100%"}
 							className={styles['banner-image']}
