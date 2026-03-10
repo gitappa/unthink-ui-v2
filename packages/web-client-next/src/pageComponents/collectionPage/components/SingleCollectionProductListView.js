@@ -236,7 +236,7 @@ const SingleCollectionProductListView = ({
                   >
                     View Collection
                   </Button>
-                  <Image src={Rightarrow} height={16} width={16} />
+                  <Image src={Rightarrow} alt="View more" height={16} width={16} />
                 </div>
               </div>
             ) : null}
@@ -742,6 +742,7 @@ const SingleCollectionProductListView = ({
                                   blogCollectionPage.profile_image,
                                 )
                               }
+                              alt="User profile picture"
                               className={styles.userAvatar}
                             />
                           ) : (
@@ -762,6 +763,7 @@ const SingleCollectionProductListView = ({
                                         blogCollectionPage.profile_image,
                                       )
                                     }
+                                    alt="User profile picture"
                                     className={styles.userAvatarFull}
                                   />
                                 </Link>
@@ -774,6 +776,7 @@ const SingleCollectionProductListView = ({
                                         blogCollectionPage.profile_image,
                                       )
                                     }
+                                    alt="User profile picture"
                                     className={styles.userAvatarFull}
                                   />
                                 </div>
@@ -820,6 +823,7 @@ const SingleCollectionProductListView = ({
                                   : styles.shareIconDisabled
                                 }`}
                               src={share_icon}
+                              alt="Share collection"
                               title={
                                 blogCollectionPage.status !== PUBLISHED
                                   ? "Please publish collection to share"

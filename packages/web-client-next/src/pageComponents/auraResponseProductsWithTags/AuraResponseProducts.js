@@ -502,9 +502,13 @@ const AuraResponseProducts = ({
 	};
 
 	const onAddSelectedProductsToCollection = useCallback(
-		(e,{ isSave = false, isShare = false, isSkip = false } = {}) => {
-			    e?.preventDefault();
-    e?.stopPropagation();
+		(e =null,options ={}) => {
+			      const { isSave = false, isShare = false, isSkip = false } = options;
+
+    if (e?.preventDefault) {
+      e?.preventDefault();
+      e?.stopPropagation();
+    }
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
@@ -703,9 +707,9 @@ const AuraResponseProducts = ({
 							expires: SIGN_IN_EXPIRE_DAYS,
 						});
 						if (guestActionRef.current === "save") {
-							onAddSelectedProductsToCollection({ isSave: true });
+							onAddSelectedProductsToCollection( { isSave: true });
 						} else if (guestActionRef.current === "share") {
-							onAddSelectedProductsToCollection({ isShare: true });
+							onAddSelectedProductsToCollection( { isShare: true });
 						}
 					}
 				} catch (error) {
@@ -860,8 +864,8 @@ const AuraResponseProducts = ({
 											<div className={styles['aura-products-button-save-container']}>
 												<button
 													className={styles['aura-products-action-button']}
-													onClick={() =>
-														onAddSelectedProductsToCollection({ isSave: true })
+													onClick={(e) =>
+														onAddSelectedProductsToCollection(e,{ isSave: true })
 													}
 													title='Select and add products to collection'>
 													Save
@@ -871,8 +875,8 @@ const AuraResponseProducts = ({
 										<div className={styles['aura-products-button-share-container']}>
 											<button
 												className={styles['aura-products-action-button']}
-												onClick={() =>
-													onAddSelectedProductsToCollection({ isShare: true })
+												onClick={(e) =>
+													onAddSelectedProductsToCollection(e,{ isShare: true })
 												}
 												title='Select products and share published collection'>
 												Share
