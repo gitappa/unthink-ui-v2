@@ -1,7 +1,7 @@
 .banner-image {
    
   width: 100%;
-  height: 300px !important;
+  height: 350px !important;
   object-fit: cover;
 }
 
@@ -190,7 +190,7 @@ height:100px !important;
 
 .powered-by-text {
   font-size: 0.875rem;
-  color: #b8babd;
+  color: #ffffff;
   white-space: nowrap;
 }
 

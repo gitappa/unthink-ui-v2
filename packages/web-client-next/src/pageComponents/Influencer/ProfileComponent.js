@@ -77,17 +77,12 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 						</div>
 							{is_store_instance && (
 									<div className={styles['powered-by-container']}>
-										<span className={styles['powered-by-text']}>powered by</span>&nbsp;
+										<span className={styles['powered-by-text']}>powered by</span>
 										<a
 											href='https://unthink.ai/'
 											target='_blank'
 											className={styles['powered-by-link']}>
-											<Image
-												src={unthink_black_log}
-												preview={false}
-												height={"100%"}
-												className={styles['powered-by-logo']}
-											/>
+											 <p className="" style={{color:'#c0b8ea',fontStyle:'italic'}}>Unthink</p>
 										</a>
 									</div>
 								)}
