@@ -2,235 +2,237 @@
 
 /* Continue Button Wrapper */
 .continueButtonWrapper {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .continueButtonDisabled {
-    color: #6366f1 !important;
-    background-color: #dbeafe !important;
+  color: #6366f1 !important;
+  background-color: #dbeafe !important;
 }
 
 /* Title Styles */
 .titleWhiteCenterMy7 {
-    color: #ffffff !important;
-    text-align: center !important;
-    margin-top: 28px !important;
-    margin-bottom: 28px !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  margin-top: 28px !important;
+  margin-bottom: 28px !important;
 }
 
 /* Input Styles */
 .inputBgTransparent {
-    background-color: transparent !important;
-    color: white;
+  background-color: transparent !important;
+  color: white;
 }
-.inputBgTransparentMt1::placeholder{
-    color: rgb(233, 230, 230) !important;
+.inputBgTransparentMt1::placeholder {
+  color: rgb(233, 230, 230) !important;
 }
 .inputBgTransparentMt1 {
-    background-color: transparent !important;
-    margin-top: 4px !important;
-    color: #ffffff !important;
+  background-color: transparent !important;
+  margin-top: 4px !important;
+  color: #ffffff !important;
 }
 
 /* TextArea Styles */
 .textAreaBgTransparent {
-    background-color: transparent !important;
-    color: #ffffff !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
 .textAreaBgTransparentMt1 {
-    background-color: transparent !important;
-    margin-top: 4px !important;
-    color: white;
+  background-color: transparent !important;
+  margin-top: 4px !important;
+  color: white;
 }
-.textAreaBgTransparent::placeholder      {
-    color: white !important;
+.textAreaBgTransparentMt1::placeholder {
+  color: whitesmoke !important;
+}
+.textAreaBgTransparent::placeholder {
+  color: white !important;
 }
 /* Select Styles */
 .selectBgTransparentMt1 {
-    background-color: transparent !important;
-    margin-top: 4px !important;
-    width: 100% !important;
-    color: #ffffff !important;
+  background-color: transparent !important;
+  margin-top: 4px !important;
+  width: 100% !important;
+  color: #ffffff !important;
 }
- .selectBgTransparentMt1{
-    border: 1px solid white !important;
-    border-radius: 5px;
-
- }
+.selectBgTransparentMt1 {
+  border: 1px solid white !important;
+  border-radius: 5px;
+}
 
 /* Error Container */
 .errorContainer {
-    height: 12px;
+  height: 12px;
 }
 
 .errorContainerH3 {
-    height: 12px;
+  height: 12px;
 }
 
 .errorContainerMl10 {
-    margin-left: 40px;
+  margin-left: 40px;
 }
 
 .errorText {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 /* Margin Top */
 .mt6 {
-    margin-top: 24px;
+  margin-top: 24px;
 }
 
 .blockMt6 {
-    display: block;
-    margin-top: 24px;
+  display: block;
+  margin-top: 24px;
 }
 
 /* Uploading Container */
 .uploadingCoverContainer {
-    height: 96px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    @media (min-width: 768px) {
-        height: 128px;
-    }
+  @media (min-width: 768px) {
+    height: 128px;
+  }
 }
 
 .uploadingProfileContainer {
-    height: 144px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 144px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spinnerFullWidth {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .spinnerBlue {
-    color: #1d4ed8;
+  color: #1d4ed8;
 }
 
 /* Image Preview Container */
 .imagePreviewContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .imagePreviewWrapper {
-    width: 100%;
+  width: 100%;
 }
 
 .coverImage {
-    object-fit: cover;
-    border-radius: 16px;
+  object-fit: cover;
+  border-radius: 16px;
 }
 
 .profileImageWrapper {
-    max-width: 256px;
-    width: 120px;
-    height: 120px;
+  max-width: 256px;
+  width: 120px;
+  height: 120px;
 
-    @media (min-width: 1024px) {
-        width: 200px;
-        height: 200px;
-    }
+  @media (min-width: 1024px) {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 .profileImage {
-    object-fit: cover;
-    border-radius: 12px;
-    max-width: 256px;
-    width: 120px;
-    height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  max-width: 256px;
+  width: 120px;
+  height: 120px;
 
-    @media (min-width: 1024px) {
-        width: 200px;
-        height: 200px;
-    }
+  @media (min-width: 1024px) {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 .removeChangeLink {
-    text-align: center;
-    color: #f7c951;
-    text-decoration: underline;
-    font-size: 18px;
-    cursor: pointer;
+  text-align: center;
+  color: #f7c951;
+  text-decoration: underline;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 /* Dragger Styles */
 .draggerBgTransparent {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }
 
 .draggerProfileImage {
-    background-color: transparent !important;
-    height: 160px !important;
-    width: 224px !important;
+  background-color: transparent !important;
+  height: 160px !important;
+  width: 224px !important;
 }
 
 .uploadIcon {
-    margin-bottom: 0;
-    color:white;
+  margin-bottom: 0;
+  color: white;
 }
 
 .uploadIconMb3 {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .uploadTextWhite {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .uploadTextSmWhite {
-    font-size: 14px;
-    color: #ffffff;
+  font-size: 14px;
+  color: #ffffff;
 }
 
 .uploadTextProfileWhite {
-    width: 66.666667%;
-    margin-left: auto;
-    margin-right: auto;
-    color: #ffffff;
+  width: 66.666667%;
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffffff;
 }
 
 .cancelLink {
-    color: #f7c951;
-    text-decoration: underline;
-    max-width: max-content;
-    margin-left: auto;
-    margin-right: auto;
+  color: #f7c951;
+  text-decoration: underline;
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Social Media Input */
 .socialMediaInputWrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .socialMediaInput {
-    background-color: transparent !important;
-    margin-left: 12px !important;
-    color: #ffffff !important;
+  background-color: transparent !important;
+  margin-left: 12px !important;
+  color: #ffffff !important;
 
-    &::placeholder {
-        color: #f3f4f6 !important;
-    }
+  &::placeholder {
+    color: #f3f4f6 !important;
+  }
 }
 
 /* Continue Bottom Link */
 .continueBottomLink {
-    text-align: center;
-    color: #f7c951;
-    text-decoration: underline;
-    font-size: 18px;
-    cursor: pointer;
-    margin-top: 12px;
+  text-align: center;
+  color: #f7c951;
+  text-decoration: underline;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 12px;
 }

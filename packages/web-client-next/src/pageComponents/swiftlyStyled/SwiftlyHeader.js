@@ -187,17 +187,17 @@ const SwiftlyHeader = ({
 					<div className={styles.rightSection}>
 						<div className={styles.collections}>
 							
-
+{
+								storeData?.is_droppWallet_connect_enabled &&
+								<Image src={walletIcon} style={{filter:'brightness(0) opacity(0.7)'}} onClick={() => setisDropDown(true)} alt="wallet" height={24} width={24} className={styles.walletIcon} />
+							}
 							<button className={styles.collectionButton}
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))
 								}>
 								Collections
 							</button>
-							{
-								storeData?.is_droppWallet_connect_enabled &&
-								<Image src={walletIcon} style={{filter:'brightness(0) opacity(0.7)'}} onClick={() => setisDropDown(true)} alt="wallet" height={24} width={24} className={styles.walletIcon} />
-							}
+							
 
 							{currentUser?.emailId ? (
 								<FaRegHeart style={{filter:'brightness(0) opacity(0.7)'}}

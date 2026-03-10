@@ -36,11 +36,12 @@ const Breadcrumbs = ({
 	  ] = useSelector((state) => [
 		
 		state.influencer.data,])
-	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
-	console.log(`/influencer/${authUserName?.user_name}`  );
+// 	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
+// 	console.log(`/influencer/${authUserName?.user_name}`  );
+// 	console.log('isCollectionPage',isCollectionPage );
 	
 // 	console.log("pathname:", router.pathname);
-// console.log("asPath:", router.asPath);
+// console.log("asPath", router.asPath === '/categories/all/');
 // console.log("query:", router.query);
 
 	const navigate = useNavigate();
@@ -65,7 +66,7 @@ const Breadcrumbs = ({
 		}
 
 		const addUserName = userName;
-		const isCollectionOrReviewPage = isCollectionPage || isCollectionReviewPage;
+		const isCollectionOrReviewPage = isCollectionPage || isCollectionReviewPage ;
 		const checkForPageNoFond = !isCollectionOrReviewPage || currentCollectionId; // not showing user_name and theme breadcrumb on collection page if data not found
 
 		if (addUserName && checkForPageNoFond) {
@@ -78,9 +79,11 @@ const Breadcrumbs = ({
 		if (!addUserName && theme && checkForPageNoFond) {
 			breadCrumbItems.push({
 				label: theme,
-				url: isCollectionOrReviewPage ? getThemeCollectionsPagePath(theme) : undefined,
+				url: isCollectionOrReviewPage ? getThemeCollectionsPagePath(theme) : theme ? '/':   undefined,
 			});
 		}
+
+
 
 		if (isCollectionOrReviewPage) {
 			breadCrumbItems.push({ label: currentCollectionName });

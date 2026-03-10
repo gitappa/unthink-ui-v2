@@ -307,12 +307,18 @@ const StorePageWrapper = (props) => {
 	const isSignInRequired = useMemo(() => isStorePage, [isStorePage]); // redirecting user to sign in page if user is not logged in
 
 	const { collection_name: collection_path = router.query.collection_name, params: page_params } = props;
+	const queryCollectionTheme = Array.isArray(router.query.collection_theme)
+		? router.query.collection_theme[0]
+		: router.query.collection_theme;
+	const breadcrumbTheme = page_params?.collection_theme || queryCollectionTheme;
 
 	const isSingleCollectionSharedPage = useMemo(
 		() => !!(collection_id || collection_path),
 		[collection_id, collection_path]
 	);
  
+
+// console.log('isSingleCollectionSharedPage',isCollectionPage);
 
 	const isStoreHomePage = useMemo(
 		() => is_store_instance && isRootPage && !!shared_profile_on_root,
@@ -1093,7 +1099,7 @@ const StorePageWrapper = (props) => {
 					isCustomProductsPage ||
 					isStorePage ||
 
-					page_params?.collection_theme) ? (
+					breadcrumbTheme) ? (
 				<Breadcrumbs
 					isRootPage={isRootPage}
 					isCollectionPage={isCollectionPage}
@@ -1105,7 +1111,7 @@ const StorePageWrapper = (props) => {
 					currentCollectionName={currentSingleCollection?.collection_name}
 					currentCollectionId={currentSingleCollection?.collection_id}
 					collectionsBy={collectionsBy}
-					theme={page_params?.collection_theme} // Retrieve the theme from params to display coll_theme in the breadcrumbs.
+					theme={breadcrumbTheme} // Retrieve the theme from params/query to display coll_theme in the breadcrumbs.
 					userName={props.user_name} // Retrieve the user name from params to display influencer name in the breadcrumbs.
 					user_id={pageUser.user_id}
 				/>

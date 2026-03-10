@@ -52,6 +52,8 @@ const ShareOptions = (props) => {
 	useOnClickOutside(ref, handleClickOutside);
 
 	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose } = props;
+// console.log('url',url);
+// console.log('qrCodeGeneratorURL',qrCodeGeneratorURL);
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;

@@ -33,7 +33,7 @@ const AllBlogPages = ({
 }) => {
 	const { width } = useWindowSize();
 
-	console.log("pageUserCollections", pageUserCollections);
+	// console.log("pageUserCollections", pageUserCollections);
 
 
 	const [

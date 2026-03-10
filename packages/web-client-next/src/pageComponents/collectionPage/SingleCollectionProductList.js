@@ -36,6 +36,19 @@ import SingleCollectionProductListView from "./components/SingleCollectionProduc
 
 const tagsMinSizeForShowMore = 5;
 
+   function sharepageUrls (pageUser,blogCollectionPage){
+      return  getBlogCollectionPagePath(
+        pageUser?.user_name,
+        blogCollectionPage?.path,
+        blogCollectionPage?._id,
+        pageUser?.user_id,
+        blogCollectionPage?.status,
+        blogCollectionPage?.hosted_stores,
+        blogCollectionPage?.collection_theme,
+      )
+}
+console.log('sharepageUrls',sharepageUrls() );
+
 const SingleCollectionProductList = ({
   blogCollectionPage = {},
   enableClickTracking = false,
@@ -55,13 +68,13 @@ const SingleCollectionProductList = ({
   profile_image,
   selectedSortOption,
   handleSortOptionChange,
-  sharePageUrl =`${window.location?.origin}${getCurrentPath()}`,
+  sharePageUrl = `${window.location.host}${ sharepageUrls(pageUser,blogCollectionPage)} `,
   isRootPage = true,
   isMyProfilePage,
 }) => {
  
 
-  
+
 const url = window.location.pathname === '/my-profile/'
  
 
