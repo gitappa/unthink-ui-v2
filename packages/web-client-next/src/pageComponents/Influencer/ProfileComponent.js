@@ -39,7 +39,7 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
-	console.log(profilebanner);
+	// console.log(profilebanner);
 	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
@@ -49,7 +49,7 @@ const ProfileComponent = ({
 		() => showBanner && !!pageUser.cover_image,
 		[showBanner, pageUser.cover_image]
 	);
-console.log('pageUser',pageUser);
+// console.log('pageUser',pageUser);
 const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp'
 	return (
 		<div>
@@ -112,7 +112,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 									{showShareProfile && (
 										<>
 										<ShareOptions 
-											url={qrCodeGeneratorURL}
+											url={sharePageUrl}
 											setShow={setShowShareProfile}
 											isOpen={showShareProfile}
 											onClose={() => setShowShareProfile(false)}
