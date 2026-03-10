@@ -66,7 +66,7 @@ const Breadcrumbs = ({
 		}
 
 		const addUserName = userName;
-		const isCollectionOrReviewPage = isCollectionPage || isCollectionReviewPage;
+		const isCollectionOrReviewPage = isCollectionPage || isCollectionReviewPage ;
 		const checkForPageNoFond = !isCollectionOrReviewPage || currentCollectionId; // not showing user_name and theme breadcrumb on collection page if data not found
 
 		if (addUserName && checkForPageNoFond) {
@@ -79,9 +79,11 @@ const Breadcrumbs = ({
 		if (!addUserName && theme && checkForPageNoFond) {
 			breadCrumbItems.push({
 				label: theme,
-				url: isCollectionOrReviewPage ? getThemeCollectionsPagePath(theme) : undefined,
+				url: isCollectionOrReviewPage ? getThemeCollectionsPagePath(theme) : theme ? '/':   undefined,
 			});
 		}
+
+
 
 		if (isCollectionOrReviewPage) {
 			breadCrumbItems.push({ label: currentCollectionName });
