@@ -1068,7 +1068,7 @@
 /* Cover media container */
 .coverMediaContainer {
   position: relative;
-  height: 250px;
+  height: 230px;
   width: 100%;
   grid-column: span 2;
   flex-grow: 0;
@@ -1610,6 +1610,11 @@
   flex-direction: column;
   gap: 4px;
   margin-top: 14px;
+  @media (max-width:768px) {
+  gap: 2px;
+  margin-top: 7px;
+    
+  }
 }
 
 .titleRow {
@@ -1888,6 +1893,10 @@ color: #99A1AF;
   margin-bottom: 16px;
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+  @media (max-width:768px) {
+  margin-bottom: 6px;
+    
+  }
 }
 .viewCollectionContainer:hover{
   transform: translateX(5px);

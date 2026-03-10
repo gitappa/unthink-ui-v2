@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Tooltip } from "antd";
 import styles from "./ChatContainer.module.css";
@@ -82,6 +83,7 @@ const ChatContainer = ({
 	const [settingModalOpen, setSettingModalOpen] = useState(false);
 	const [isFollowUpQuery, setIsFollowUpQuery] = useState(false);
 	const [showSubmitImageTooltip, setShowSubmitImageTooltip] = useState(false);
+	const [portalTarget, setPortalTarget] = useState(null);
 
 	const closeChatModal = () => {
 		dispatch(setShowChatModal(false));
@@ -395,6 +397,10 @@ const ChatContainer = ({
 		}
 	}, [userAction]);
 
+	useEffect(() => {
+		setPortalTarget(document.body);
+	}, []);
+
 	const onChatClick = () => {
 		if (!showChatModal) {
 			dispatch(setShowChatModal(true));
@@ -419,6 +425,47 @@ const ChatContainer = ({
 
 	const isDoTheLookInstance =
 		is_store_instance && current_store_name === STORE_USER_NAME_DOTHELOOK;
+
+	const chatModalLayer = (
+		<>
+			<div
+				className={`${styles.chatModalOverlay} ${showChatModal
+					? styles.chatModalOpen
+					: styles.chatModalClose
+					}`}>
+				<ChatModal
+					handleMicrophoneClick={handleMicrophoneClick}
+					streaming={streaming}
+					submitChatInput={submitChatInput}
+					// submitImageUrl={submitImageUrl}
+					onChatClick={onChatClick}
+					onStopRecording={onStopRecording}
+					disabledOutSideClick={disabledOutSideClick}
+					showSettings={showSettings}
+					openSettingModal={openSettingModal}
+					chatInputMetadata={chatInputMetadata}
+					chatTypeKey={CHAT_TYPE_CHAT}
+					config={config}
+					trackCollectionData={trackCollectionData}
+					isBTInstance={isBTInstance}
+					inputRef={inputRef}
+					isFollowUpQuery={isFollowUpQuery}
+					setIsFollowUpQuery={setIsFollowUpQuery}
+					widgetHeaderRequest={widgetHeaderRequest}
+					showSubmitImageTooltip={showSubmitImageTooltip}
+					setShowSubmitImageTooltip={setShowSubmitImageTooltip}
+					isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
+					isAuraChatPage={isAuraChatPage}
+				/>
+			</div>
+			<AuraChatSettingModal
+				isOpen={settingModalOpen}
+				onClose={closeSettingModal}
+				mode={auraChatSettingMode}
+			// showImageTemplate={isShowImageTemplate}
+			/>
+		</>
+	);
 
 	return (
 		<>
@@ -463,45 +510,9 @@ const ChatContainer = ({
 			<div className={styles.chatContainerWrapper}></div>
 }
 
-			<div
-				className={`${styles.chatModalOverlay} ${showChatModal
-					? styles.chatModalOpen
-					: styles.chatModalClose
-					}`}>
-				<ChatModal
-					handleMicrophoneClick={handleMicrophoneClick}
-					streaming={streaming}
-					submitChatInput={submitChatInput}
-					// submitImageUrl={submitImageUrl}
-					onChatClick={onChatClick}
-					onStopRecording={onStopRecording}
-					disabledOutSideClick={disabledOutSideClick}
-					showSettings={showSettings}
-					openSettingModal={openSettingModal}
-					chatInputMetadata={chatInputMetadata}
-					chatTypeKey={CHAT_TYPE_CHAT}
-					config={config}
-					trackCollectionData={trackCollectionData}
-					isBTInstance={isBTInstance}
-					inputRef={inputRef}
-					isFollowUpQuery={isFollowUpQuery}
-					setIsFollowUpQuery={setIsFollowUpQuery}
-					widgetHeaderRequest={widgetHeaderRequest}
-					showSubmitImageTooltip={showSubmitImageTooltip}
-					setShowSubmitImageTooltip={setShowSubmitImageTooltip}
-					isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
-					isAuraChatPage={isAuraChatPage}
-				/>
-			</div>
-			<AuraChatSettingModal
-				isOpen={settingModalOpen}
-				onClose={closeSettingModal}
-				mode={auraChatSettingMode}
-			// showImageTemplate={isShowImageTemplate}
-			/>
+			{portalTarget ? createPortal(chatModalLayer, portalTarget) : null}
 		</>
 	);
 };
 
 export default ChatContainer;
-
