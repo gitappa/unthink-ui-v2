@@ -84,20 +84,16 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 											href='https://unthink.ai/'
 											target='_blank'
 											className={styles['powered-by-link']}>
-											 <p className="" style={{color:'#c0b8ea',fontStyle:'italic'}}>Unthink</p>
+											<Image
+												src={unthink_black_log}
+												preview={false}
+												height={"100%"}
+												className='cursor-pointer h-3 lg:h-4'
+											/>
 										</a>
 									</div>
 								)}
-								{pageUser?.sellerDetails && 
-								<div className={styles['social-icons-container']}>
-									<Link href={pageUser?.sellerDetails?.facebookUrl} target="_blank">
-									<Image src={facebookIcon.src} height={30} width={30} preview={false} alt="Facebook"/>
-									</Link>
-									<Link href={pageUser?.sellerDetails?.instagramUrl} target="_blank">
-									<Image src={instagramIcon.src} height={30} width={30} preview={false} alt="Instagram"/>
-									</Link>
-								</div>
-									}
+						
 								<div className={styles['actions-container']}>
 								{isMyProfilePage && !isGuestUser && isPageOwner && (
 									<EditOutlined 
@@ -175,6 +171,16 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 									<Text className={styles['description-text']}>
 										{pageUser.description || "Take a look at my collections"}
 									</Text>
+									{pageUser?.sellerDetails && 
+								<div className={styles['social-icons-container']}>
+									<Link href={pageUser?.sellerDetails?.facebookUrl} target="_blank">
+									<Image src={facebookIcon.src} height={30} width={30} preview={false} alt="Facebook"/>
+									</Link>
+									<Link href={pageUser?.sellerDetails?.instagramUrl} target="_blank">
+									<Image src={instagramIcon.src} height={30} width={30} preview={false} alt="Instagram"/>
+									</Link>
+								</div>
+									}
 								</div>
 							</div>
 							
@@ -187,6 +193,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 								{pageUser.description || "Take a look at my collections"}
 							</Text>
 						</div>
+								
 					</div>
 				</div>
 			</div>

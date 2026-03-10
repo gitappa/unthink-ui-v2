@@ -174,7 +174,8 @@ height:100px !important;
 @media (min-width: 1024px) {
   .profile-name {
     font-size: 2.25rem;
-    line-height: 4.5rem;
+    line-height: 30px;
+    margin-bottom: 14px;
   }
 }
 
@@ -207,11 +208,10 @@ height:100px !important;
 .social-icons-container {
   display: flex;
   gap: 1rem;
-  position: absolute;
-  bottom: 60px;
-  right: 20px;
+ 
   align-items: center;
   z-index: 10;
+  margin-top: 10px;
 }
 
 .social-icons-container :global(.ant-image) {
@@ -241,7 +241,7 @@ height:100px !important;
 
 @media (min-width: 1280px) {
   .description-container {
-    display: flex;
+    display: block;
   }
 }
 

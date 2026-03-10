@@ -442,6 +442,31 @@ const CollectionDetails = ({
 
   return (
     <>
+
+     {collection?.sponsor_details?.banner?.image &&
+        collection?.sponsor_details?.banner?.url ? (
+        <Link
+          href={collection.sponsor_details.banner.url}
+          className={styles.bannerLink}
+          target="_blank"
+        >
+          <img
+            onClick={() =>
+              handleCollectionBannerClick({
+                image: collection.sponsor_details.banner.image,
+                sponsored: true,
+                redirectionUrl: collection.sponsor_details.banner.url,
+              })
+            }
+            className={styles.bannerImage}
+            style={{
+              aspectRatio: "1 / 0.25",
+            }}
+            src={getFinalImageUrl(collection.sponsor_details.banner.image)}
+          />
+        </Link>
+      ) : null}
+      
       <div className={cssStyles.container}>
         <div
           ref={videoContainerRef}
@@ -896,29 +921,7 @@ const CollectionDetails = ({
           />
         )}
       </div>
-      {collection?.sponsor_details?.banner?.image &&
-        collection?.sponsor_details?.banner?.url ? (
-        <Link
-          href={collection.sponsor_details.banner.url}
-          className={styles.bannerLink}
-          target="_blank"
-        >
-          <img
-            onClick={() =>
-              handleCollectionBannerClick({
-                image: collection.sponsor_details.banner.image,
-                sponsored: true,
-                redirectionUrl: collection.sponsor_details.banner.url,
-              })
-            }
-            className={styles.bannerImage}
-            style={{
-              aspectRatio: "1 / 0.25",
-            }}
-            src={getFinalImageUrl(collection.sponsor_details.banner.image)}
-          />
-        </Link>
-      ) : null}
+     
 
       {collection?.sponsor_details?.collection_image_list?.length > 0 && (
         <CarousalContainer

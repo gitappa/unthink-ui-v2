@@ -36,11 +36,12 @@ const Breadcrumbs = ({
 	  ] = useSelector((state) => [
 		
 		state.influencer.data,])
-	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
-	console.log(`/influencer/${authUserName?.user_name}`  );
+// 	console.log('sdsvgfyeddf',router.asPath === `/influencer/${authUserName?.user_name}/`  );
+// 	console.log(`/influencer/${authUserName?.user_name}`  );
+// 	console.log('isCollectionPage',isCollectionPage );
 	
 // 	console.log("pathname:", router.pathname);
-// console.log("asPath:", router.asPath);
+// console.log("asPath", router.asPath === '/categories/all/');
 // console.log("query:", router.query);
 
 	const navigate = useNavigate();

@@ -314,6 +314,8 @@ const StorePageWrapper = (props) => {
 	);
  
 
+// console.log('isSingleCollectionSharedPage',isCollectionPage);
+
 	const isStoreHomePage = useMemo(
 		() => is_store_instance && isRootPage && !!shared_profile_on_root,
 		[is_store_instance, isRootPage, shared_profile_on_root]
