@@ -404,7 +404,7 @@ const Chat = ({
 			</div>
 		) : !isBTNormalUserLoggedIn ? (
 			<div className={`${styles.flex} ${styles.justify_center} ${styles.items_center} ${styles.w_4} ${styles.h_4}`}>
-				<Image src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} preview={false} onClick={() => inputRef.current.focus()} />
+				<Image src={headerSearchIcon} height={18} width={18} alt="Search" className={`${styles.search_icon_sm} text-black-200 dark:text-white ${styles.cursor_pointer}`} onClick={() => inputRef.current.focus()} />
 			</div>
 		) : null;
 
@@ -593,7 +593,6 @@ const Chat = ({
 									src={close_bg_icon}
 									width={24}
 									height={24}
-									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
 										setShowSubmitImageTooltip(false);
@@ -617,7 +616,6 @@ const Chat = ({
 									src={close_bg_icon}
 									width={24}
 									height={24}
-									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
 										dispatch(setShowAuraIntro(false));
@@ -641,7 +639,6 @@ const Chat = ({
 									src={close_bg_icon}
 									width={24}
 									height={24}
-									preview={false}
 									onClick={(e) => {
 										e.stopPropagation();
 										dispatch(setShowSocketException(false));

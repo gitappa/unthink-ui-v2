@@ -725,6 +725,7 @@ const ProductCard = ({
           <div style={{ width: "100%" }}>
             <img
               src={getFinalImageUrl(product.image)}
+              alt={product.name || "Product image"}
               width="100%"
               className={`${styles["product-image"]} ${size === "small" ? styles["product-image-small"] : styles["product-image-medium"]}`}
               loading="lazy"
@@ -744,6 +745,7 @@ const ProductCard = ({
                   <Image
                     height={20}
                     width={20}
+                    alt="Try on with camera"
                     className={`${styles["product-vto-icon"]}`}
                     src={camera}
                   />
@@ -987,6 +989,7 @@ const ProductCard = ({
                 !showWishlistModal && (
                   <Image
                     src={more}
+                    alt="More options"
                     height={20}
                     width={20}
                     onClick={(e) => {
@@ -1179,6 +1182,7 @@ const ProductCard = ({
                 >
                   <button className={`${styles["product-heart-button"]}`}>
                     <Image
+                      alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
                       src={heart}
                       height={20}
@@ -1203,6 +1207,7 @@ const ProductCard = ({
               >
                 <button className={`${styles["product-heart-button"]}`}>
                   <Image
+                    alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
@@ -1381,6 +1386,7 @@ const ProductCard = ({
                             : "",
                       }}
                       src={shopping}
+                      alt="Buy now"
                       height={20}
                       width={20}
                       className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
@@ -1395,6 +1401,7 @@ const ProductCard = ({
                   >
                     <Image
                       src={shopping}
+                      alt="Add to cart"
                       height={20}
                       width={20}
                       className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
