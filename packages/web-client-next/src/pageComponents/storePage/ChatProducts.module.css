@@ -27,7 +27,9 @@
 
 @media (min-width: 640px) {
   .chat-products-content {
-    max-width: 560px;
+max-width: 56rem;
+padding-left: 2.5rem;
+    padding-right: 2.5rem;
     gap: 1.25rem;
   }
 }
