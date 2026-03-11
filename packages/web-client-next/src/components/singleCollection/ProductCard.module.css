@@ -41,7 +41,22 @@
     width: 190px;
   }
 }
+.product-wrapper-medium-single{
+    width: 160px;
+    /* @media (min-width: 835px) and (max-width: 1535px) {
+    width: 300px;
 
+    } */
+      @media (min-width: 835px) {
+        width: 325px;
+      }
+      @media (min-width: 1271px) and (max-width: 1439px) {
+        width: 278px;
+      }
+  @media (min-width: 1440px) {
+    width: 20rem;
+}
+}
 .product-wrapper-medium {
   width: 160px;
 }

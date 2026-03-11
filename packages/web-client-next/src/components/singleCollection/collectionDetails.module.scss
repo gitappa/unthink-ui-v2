@@ -980,13 +980,22 @@
     grid-template-columns: repeat(3, 1fr);
     // display: block;
   }
-  @media (min-width: 1024px) {
+  @media  (min-width: 835px){
+    //  width: calc(100% - 80);
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+
+  }
+  @media (min-width: 1271px) and (max-width: 1439px) {
+     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     padding-top: 0;
     margin-top: 0;
+     width: 1202px;
   }
 
-  @media (min-width: 1530px) {
+  @media (min-width: 1440px) {
+     width: 1332px;
     grid-template-columns: repeat(4, 1fr);
   }
 }
