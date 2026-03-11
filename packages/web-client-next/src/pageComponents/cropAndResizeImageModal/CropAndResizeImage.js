@@ -54,7 +54,8 @@ const CropAndResizeImage = ({
 				onChange={(_, percentCrop) => onCropChange(percentCrop)}
 				onComplete={(c) => setCompletedCrop(c)}
 				aspect={aspect}
-				minHeight={100}
+				minHeight={600}
+				minWidth={600}
 				// circularCrop
 				className='h-content'>
 				<img
