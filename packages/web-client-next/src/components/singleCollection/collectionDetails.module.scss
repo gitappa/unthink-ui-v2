@@ -972,7 +972,9 @@
   grid-template-columns: repeat(2, 1fr);
   // display: flex;
   // align-items: center;
-
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: center;
   gap: 10px;
   padding-top: 16px;
   margin-top: 20px;
@@ -998,6 +1000,13 @@
      width: 1332px;
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.productGrid2 > div {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
 }
 .productItems {
   display: grid;

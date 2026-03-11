@@ -110,7 +110,7 @@ const SingleCollectionProductListView = ({
   isUserLogin,
   onSelectProductClick,
 }) => {
-  console.log('sharePageUrl');
+  // console.log('sharePageUrl');
   
   const renderProductsList = ({
     list,
