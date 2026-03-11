@@ -846,7 +846,7 @@ export const productCountToShow = (width, isCoverImageAvailable) => {
 			count = 9;
 		}
 	}
-	 else if (width >= 1536 || width < 640) {
+	 else if (width <1024  ) {
 		count = 4;
 	} else if (width >= 640 && width < 1536) {
 		if (isCoverImageAvailable) {

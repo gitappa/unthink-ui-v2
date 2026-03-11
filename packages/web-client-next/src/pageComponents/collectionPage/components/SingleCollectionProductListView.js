@@ -110,7 +110,7 @@ const SingleCollectionProductListView = ({
   isUserLogin,
   onSelectProductClick,
 }) => {
-  console.log('sharePageUrl',sharePageUrl);
+  // console.log('sharePageUrl');
   
   const renderProductsList = ({
     list,
@@ -380,6 +380,7 @@ const SingleCollectionProductListView = ({
                   collection_status={blogCollectionPage.status}
                   blogCollectionPage={blogCollectionPage}
                   onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+                  isSingleCollectionSharedPage={isSingleCollectionSharedPage}
                 />
               </div>
             ))}

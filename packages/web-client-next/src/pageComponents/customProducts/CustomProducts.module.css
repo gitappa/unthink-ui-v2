@@ -1,27 +1,51 @@
 .container {
   width: 100%;
-  max-width: 330px;
+  max-width: 350px;
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 5rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 500px) {
   .container {
-    max-width: 560px;
+    max-width: 470px;
+  }
+}
+
+@media (min-width: 700px) {
+  .container {
+    max-width: 650px;
+  }
+}
+
+@media (min-width: 821px) {
+  .container {
+    max-width: 799px;
+  }
+}
+
+@media (min-width: 801px) {
+  .container {
+    width: calc(100% - 70px);
+    max-width: none;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-    max-width: 992px;
     padding-bottom: 3rem;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1271px) and (max-width: 1439px) {
   .container {
-    max-width: 1328px;
+    max-width: 1202px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1332px;
   }
 }
 
@@ -390,7 +414,7 @@ display: block;
   gap: 0.625rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 699px) {
   .products-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -402,10 +426,20 @@ display: block;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1124px) {
   .products-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+.products-grid > div {
+  width: 100%;
+  min-width: 0;
+}
+
+.products-grid > div :global([class*="product-wrapper-medium"]) {
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .upload-card {

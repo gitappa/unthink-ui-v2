@@ -136,7 +136,7 @@ const ProductCard = ({
   blogCollectionPage,
   collectionCards,
   onAddSelectedProductsToCollection,
-
+  isSingleCollectionSharedPage,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -701,11 +701,21 @@ const ProductCard = ({
   //   guestData,
   //   setIsPopupShow
   // } = useGuestPopUtils(dispatch, hideAddToWishlist, onAddSelectedProductsToCollection);
+// console.log('isAuraModelPage',isAuraModelPage);
+
+  const productWrapperSizeClass =
+    size === "small"
+      ? styles["product-wrapper-small"]
+      : collectionCards
+        ? styles["product-wrapper-medium2"]
+        : isSingleCollectionSharedPage
+          ? styles["product-wrapper-medium-single"]
+            : styles["product-wrapper-medium-single"];
 
   return (
     <div
       style={{ backgroundColor: showWishlistModal ? "white" : "" }}
-      className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${size === "small" ? styles["product-wrapper-small"] : collectionCards ? styles["product-wrapper-medium2"] : styles["product-wrapper-medium"]}`}
+      className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${productWrapperSizeClass}`}
     >
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}

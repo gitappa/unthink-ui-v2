@@ -42,8 +42,9 @@
   @media (min-width: 1024px) {
     max-width: 992px;
   }
-      @media (min-width: 1154px) {
-    max-width: 1100px;
+      @media (min-width: 801px) {
+  width: calc(100% - 70px);
+  max-width: none;
   } //new
   @media (min-width: 1271px) and (max-width: 1439px) {
     max-width: 1202px;
