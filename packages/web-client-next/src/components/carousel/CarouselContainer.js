@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { Typography } from "antd";
@@ -17,6 +17,7 @@ import ReactPlayer from "react-player";
 import Modal from "../modal/Modal";
 
 const { Text } = Typography;
+const CAROUSEL_TRANSITION_MS = 720;
 
 function CarousalContainer({
 	items,
@@ -35,8 +36,13 @@ function CarousalContainer({
 		state.appState.carousel.action,
 	]);
 	const [totalItems, setTotalItems] = useState([]);
+	const [isTransitioning, setIsTransitioning] = useState(false);
 
 	const containerRef = useRef(null);
+	const transitionTimerRef = useRef(null);
+	const interactionLockedRef = useRef(false);
+	const dragStartXRef = useRef(null);
+	const isPointerDownRef = useRef(false);
 
 	useEffect(() => {
 		setTotalItems(() => {
@@ -62,43 +68,86 @@ function CarousalContainer({
 		}
 	}, [carouselAction]);
 
-	const handlePrevArrowClick = () => {
+	const lockInteraction = () => {
+		interactionLockedRef.current = true;
+		setIsTransitioning(true);
+		if (transitionTimerRef.current) {
+			clearTimeout(transitionTimerRef.current);
+		}
+		transitionTimerRef.current = setTimeout(() => {
+			interactionLockedRef.current = false;
+			setIsTransitioning(false);
+		}, CAROUSEL_TRANSITION_MS);
+	};
+
+	const triggerNavigation = (direction) => {
+		if (interactionLockedRef.current) return;
+		lockInteraction();
+
 		dispatch(
 			setCollectionCarouselAction({
 				type: "navigation",
-				action: "previous",
+				action: direction,
 				metadata: {},
 			})
 		);
+	};
+
+	const handlePrevArrowClick = () => {
+		triggerNavigation("previous");
 	};
 
 	const handleNextArrowClick = () => {
-		dispatch(
-			setCollectionCarouselAction({
-				type: "navigation",
-				action: "next",
-				metadata: {},
-			})
-		);
+		triggerNavigation("next");
 	};
 
 	useEffect(() => {
-		const containerElement = containerRef.current;
-		if (containerElement) {
-			// commented out the swipe feature on carousal // enable it when needed
-			// containerElement.addEventListener("swiperight", handlePrevArrowClick);
-			// containerElement.addEventListener("swipeleft", handleNextArrowClick);
-			// return () => {
-			// 	containerElement.removeEventListener(
-			// 		"swiperight",
-			// 		handlePrevArrowClick
-			// 	);
-			// 	containerElement.removeEventListener("swipeleft", handleNextArrowClick);
-			// };
+		return () => {
+			if (transitionTimerRef.current) {
+				clearTimeout(transitionTimerRef.current);
+				transitionTimerRef.current = null;
+			}
+			interactionLockedRef.current = false;
+			dragStartXRef.current = null;
+			isPointerDownRef.current = false;
+		}
+	}, []);
+
+	const handleCarouselWheel = (event) => {
+		const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+		if (Math.abs(delta) < 12) return;
+		event.preventDefault();
+		if (delta > 0) {
+			handleNextArrowClick();
+		} else {
+			handlePrevArrowClick();
+		}
+	};
+
+	const handlePointerDown = (event) => {
+		isPointerDownRef.current = true;
+		dragStartXRef.current = event.clientX;
+	};
+
+	const handlePointerUp = (event) => {
+		if (!isPointerDownRef.current || dragStartXRef.current === null) {
+			isPointerDownRef.current = false;
+			dragStartXRef.current = null;
+			return;
 		}
 
-		return () => { };
-	}, [containerRef.current]);
+		const deltaX = event.clientX - dragStartXRef.current;
+		if (Math.abs(deltaX) >= 55) {
+			if (deltaX < 0) {
+				handleNextArrowClick();
+			} else {
+				handlePrevArrowClick();
+			}
+		}
+
+		isPointerDownRef.current = false;
+		dragStartXRef.current = null;
+	};
 	useEffect(() => {
 		if (previewVisible) {
 			document.body.style.overflow = "hidden";   // disable scroll
@@ -159,7 +208,14 @@ function CarousalContainer({
 						</div>
 					)}
 
-					<div className={`${styles.un_bt_gallery_container} ${cssStyles.selectNone}`}>
+					<div
+						ref={containerRef}
+						className={`${styles.un_bt_gallery_container} ${cssStyles.selectNone} ${isTransitioning ? styles.is_transitioning : ""}`}
+						onWheel={handleCarouselWheel}
+						onPointerDown={handlePointerDown}
+						onPointerUp={handlePointerUp}
+						onPointerCancel={handlePointerUp}
+						onPointerLeave={handlePointerUp}>
 						{items?.map((item, i) => {
 							const displayItems = [...totalItems].splice(0, 5);
 							const positionIndex = displayItems.includes(i + 1)
@@ -251,7 +307,7 @@ function CarousalContainer({
 									) : null}
 
 									{/* Title Gradient */}
-									<div className='un_bt_title_gradiant'></div>
+									<div className={styles.un_bt_title_gradiant}></div>
 
 									{/* Card Title */}
 									<div className={styles.un_bt_card_title}>
@@ -262,30 +318,38 @@ function CarousalContainer({
 								</div>
 							);
 						})}
-						<div
-							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
-							onClick={handlePrevArrowClick}>
+							<button
+								type='button'
+								aria-label='Previous slide'
+								disabled={isTransitioning}
+								className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
+								onClick={handlePrevArrowClick}>
 							<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image
 									src={carousel_arrow_icon}
 									alt='previous arrow'
 									width={40}
 									height={40}
+									className={styles.un_bt_gallery_arrow_icon}
 								/>
 							</div>
-						</div>
-						<div
-							className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
-							onClick={handleNextArrowClick}>
+						</button>
+							<button
+								type='button'
+								aria-label='Next slide'
+								disabled={isTransitioning}
+								className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
+								onClick={handleNextArrowClick}>
 							<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image
 									src={carousel_arrow_icon}
 									alt='next arrow'
 									width={40}
 									height={40}
+									className={styles.un_bt_gallery_arrow_icon}
 								/>
 							</div>
-						</div>
+						</button>
 					</div>
 				</div>
 
