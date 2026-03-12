@@ -64,8 +64,8 @@
 
 .sizeSm {
     max-width: 480px;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    /* margin-left: 1rem;
+    margin-right: 1rem; */
 }
 
 @media (min-width: 768px) {
@@ -160,17 +160,27 @@
 }
 
 .contentSpacingDefault {
-    padding: 20px 2rem ;
+    padding: 20px 32px ;
+    @media (max-width:768px) {
+        padding: 10px 12px;
+    }
 }
 
 .headerTextSpacingDefault {
-    padding: 1.5rem 1rem;
+    padding: 24px 16px;
+    @media (max-width:768px) {
+        padding: 8px 8px;
+    }
 }
 
 .headerTextDefault {
     font-size: 26px;
     line-height: 32px;
     font-weight: 600;
+    @media (max-width:768px) {
+    font-size: 20px;
+        
+    }
 }
 
 .closeBase {
@@ -183,6 +193,9 @@
 .textSizeXl1_5 {
     font-size: 26px;
     line-height: 32px;
+    @media (max-width:768px) {
+        font-size: 20px;
+    }
 }
 
 .closeWrapper {

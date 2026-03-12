@@ -6,6 +6,8 @@ import userIcon from "../../images/swiftly-styled/User.svg";
 import userProfileIcon from "../../images/swiftly-styled/userprofile.png";
 import avatarImg from "../../images/avatar-black.svg";
 import Link from "next/link";
+import { ROUTES } from "../../constants/codes";
+import { is_store_instance } from "../../constants/config";
 
 const { Text } = Typography;
 
@@ -65,15 +67,17 @@ export const UserProfileMenu = ({
 								// 	{currentUser?.user_name}
 								// </Text>
 								<>
-								<p className="header-username">{ currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0,10) + '...' : currentUser?.user_name}</p>
- 									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white' ,filter:'brightness(0) opacity(0.7)'}} />
+									<p className="header-username">{currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0, 10) + '...' : currentUser?.user_name}</p>
+									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white', filter: 'brightness(0) opacity(0.7)' }} />
 								</>
- 							) : (
-								<Text
-									ellipsis={true}
-									className='m-0 xl:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{color:'#4F4F4F'}}>
-									SIGN IN
-								</Text>
+							) : (
+								<Link href={is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE}>
+									<Text
+										ellipsis={true}
+										className='m-0 xl:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{ color: '#4F4F4F' }}>
+										Sign In
+									</Text>
+								</Link>
 							)}
 							{/* <Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""}>
 								<Image src={userIcon} alt='userIcon' width={24} height={24} />
@@ -95,11 +99,13 @@ export const UserProfileMenu = ({
 								// </Text>
 							) : (
 								<>
-									<Text
-										ellipsis={true}
-										className='m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
-										SIGN IN
-									</Text>
+									<Link href={is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE}>
+										<Text
+											ellipsis={true}
+											className='m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2'>
+											Sign In
+										</Text>
+									</Link>
 								</>
 							)}
 							{/* <Image src={avatarImg} preview={false} className='pr-1 pl-2' /> */}

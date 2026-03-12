@@ -109,7 +109,7 @@ function pdf(){
 			// okButtonProps={{ className: "hidden" }}
 			>
 				<div>
-					<h1 className='text-2xl font-bold capital-first-letter'>
+					<h1 className='md:text-2xl text-xl font-bold capital-first-letter'>
 						{collectionName}
 					</h1>
 				</div>
@@ -144,25 +144,25 @@ function pdf(){
 
 					<div className='flex flex-col gap-4 md:gap-6'>
 						<div className='grid grid-cols-1 md:grid-cols-2 mt-2 lg:mt-3'>
-							<div className='grid gap-4 grid-cols-3 md:grid-cols-1 mt-2 md:pl-2.5 md:order-last'>
+							<div className='grid gap-3 md:gap-4  grid-cols-4 md:grid-cols-1 mt-2 md:pl-2.5 md:order-last'>
 								<a
 									href={socialMediaUrls.facebook}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl'
+									className='h-11 rounded    text-white text-center text-3xl'
 									style={{ backgroundColor: "#4267B2" }}>
 									<FacebookOutlined className='flex justify-center items-center h-full' />
 								</a>
 								<a
 									href={socialMediaUrls.whatsapp}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl'
+									className='h-11   rounded text-white text-center text-3xl'
 									style={{ backgroundColor: "#128C7E" }}>
 									<WhatsAppOutlined className='flex justify-center items-center h-full' />
 								</a>
 								<a
 									href={socialMediaUrls.twitter}
 									target='_blank'
-									className='h-11 rounded text-white text-center text-3xl flex items-center justify-center bg-gray-500'>
+									className='h-11 rounded    text-white text-center text-3xl flex items-center justify-center bg-gray-500'>
 									{/* <Image
 										src={xIcon}
 										width={28}
@@ -192,7 +192,7 @@ function pdf(){
 							) : null}
 						</div> 
 							{url && 
-						<div className='border p-1 rounded flex break-all text-lg '>
+						<div className='border p-1 rounded flex break-all text-base mb-2 md:text-lg '>
 							{url}{" "}
 							<CopyToClipboard className='text-lg'
 								text={url}
