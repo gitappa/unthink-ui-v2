@@ -77,6 +77,9 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 								<Image src={unthink_favicon} width={29} preview={false} />
 							) : null}
 						</div>
+						<div className="absolute bottom-16 right-8 bg-white p-1 rounded-10">
+							<img src={qrCodeGeneratorURL} alt="qr code"  className="h-20 w-20"/>
+						</div>
 							{is_store_instance && (
 									<div className={styles['powered-by-container']}>
 										<span className={styles['powered-by-text']}>powered by</span>

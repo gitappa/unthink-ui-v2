@@ -82,6 +82,11 @@
     width: 230px;
   }
 }
+@media (min-width: 820px) and (max-width: 854px) {
+  .product-wrapper-medium2 {
+    width: 210px ;
+  }
+}
 @media (min-width: 640px) and (max-width: 699px) {
   .product-wrapper-medium2 {
     width: 210px ;
@@ -1518,7 +1523,7 @@
   }
 
   .product-footer-main {
-    padding:0px 8px !important;
+    padding: 8px !important;
   }
 
   .product-heart-button {
@@ -2014,3 +2019,5 @@
   width: 25px;
   transform: none;
 }
+ 
+ 
