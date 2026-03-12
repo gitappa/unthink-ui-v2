@@ -320,20 +320,20 @@ const Header = ({
     const items = [];
 
     if (!isUserLogin) {
-      items.push({
-        key: "signin",
-        className: styles.headerMenuItemPy2,
-        label: (
-          <Link
-            className={styles.headerMenuLinkText}
-            href={
-              is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE
-            }
-          >
-            Sign In
-          </Link>
-        ),
-      });
+      // items.push({
+      //   key: "signin",
+      //   className: styles.headerMenuItemPy2,
+      //   label: (
+      //     <Link
+      //       className={styles.headerMenuLinkText}
+      //       href={
+      //         is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE
+      //       }
+      //     >
+      //       Sign In
+      //     </Link>
+      //   ),
+      // });
     } else {
       items.push(
         {

@@ -1088,7 +1088,7 @@
 /* Cover media container */
 .coverMediaContainer {
   position: relative;
-  height: 230px;
+  height: 210px;
   width: 100%;
   grid-column: span 2;
   flex-grow: 0;
@@ -1916,7 +1916,7 @@ color: #99A1AF;
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
   @media (max-width:768px) {
-  margin-bottom: 6px;
+  margin-bottom: 2px;
     
   }
 }
