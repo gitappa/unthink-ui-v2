@@ -7,7 +7,7 @@
   transition: all 0.3s ease;
   will-change: box-shadow, transform;
   @media (max-width: 768px) {
-    box-shadow: none;
+    /* box-shadow: none; */
   }
 }
 
@@ -18,8 +18,8 @@
 
 @media (max-width: 768px) {
   .product-wrapper:hover {
-    box-shadow: none;
-    transform: none;
+    /* box-shadow: none; */
+    /* transform: none; */
   }
 }
 

@@ -26,13 +26,14 @@ function CarousalContainer({
 	const [previewVisible, setPreviewVisible] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
 	const swiperRef = useRef(null);
+	const BUTTON_SLIDE_DURATION = 900;
 
 	const handlePrevArrowClick = () => {
-		swiperRef.current?.slidePrev(0);
+		swiperRef.current?.slidePrev(BUTTON_SLIDE_DURATION);
 	};
 
 	const handleNextArrowClick = () => {
-		swiperRef.current?.slideNext(0);
+		swiperRef.current?.slideNext(BUTTON_SLIDE_DURATION);
 	};
 
 	const handleCardClick = (item) => {

@@ -857,25 +857,33 @@
 
 /* Outer wrapper */
 .pageWrapper {
-  // max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
+ max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
 
-  @media (min-width: 1024px) {
-    max-width: 992px;
+  @media (min-width: 500px) {
+    max-width: 470px;
   }
-    @media (min-width: 1154px) {
-    max-width: 1100px;
+  @media (min-width: 700px) {
+    max-width: 650px;
+    width: 650px;
+  }
+      @media  (min-width: 835px)  and (max-width: 1535px) {
+           width: calc(100% - 80px);
+        max-width: none;
   } //new
-  @media (min-width: 1304px) {
-    max-width: 1235px;
+  @media (min-width: 1271px) and (max-width: 1439px) {
+    width: 1202px;
+    max-width: 1202px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  @media (min-width: 1536px) {
-    max-width: 1453px;
-  }
-  @media (min-width: 1736px) {
-    max-width: 1528px;
+ 
+  @media (min-width: 1440px) {
+   width: 1332px;
+    max-width: 1332px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -1573,7 +1581,35 @@
     max-width: 1528px;
   }
 }
+.faqSection{
+   max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
 
+  @media (min-width: 500px) {
+    max-width: 470px;
+  }
+  @media (min-width: 700px) {
+    max-width: 650px;
+  }
+      @media  (min-width: 835px) {
+          //  width: calc(100% - 80px);
+        max-width: none;
+  } //new
+  @media (min-width: 1271px) and (max-width: 1439px) {
+    width: 1202px;
+    max-width: 1202px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+ 
+  @media (min-width: 1440px) {
+   width: 1332px;
+    max-width: 1332px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 .detailsRow {
   display: flex;
   padding-bottom: 4px;
@@ -1996,10 +2032,10 @@ color: #99A1AF;
 
 /* Keep consistent desktop side gap from 1000px to 1535px */
 @media (min-width: 835px) and (max-width: 1535px) {
-  .pageWrapper {
-    width: calc(100% - 80px);
-    max-width: none;
-  }
+  // .pageWrapper {
+  //   width: calc(100% - 80px);
+  //   max-width: none;
+  // }
 
   .lgContainer,
   .collectionWrapper,
@@ -2089,11 +2125,11 @@ color: #99A1AF;
 
 /* Figma laptop alignment */
 @media (min-width: 1271px) and (max-width: 1439px) {
-  .pageWrapper {
-    min-width: 1271px;
-    width: 100%;
-    max-width: none;
-  }
+  // .pageWrapper {
+  //   min-width: 1271px;
+  //   width: 100%;
+  //   max-width: none;
+  // }
 
   .lgContainer,
   .collectionWrapper,
@@ -2167,11 +2203,11 @@ color: #99A1AF;
 
 /* Figma desktop alignment */
 @media (min-width: 1440px) {
-  .pageWrapper {
-    min-width: 1440px;
-    width: 100%;
-    max-width: none;
-  }
+  // .pageWrapper {
+  //   min-width: 1440px;
+  //   width: 100%;
+  //   max-width: none;
+  // }
 
   .lgContainer,
   .collectionWrapper,
