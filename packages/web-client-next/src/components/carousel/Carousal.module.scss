@@ -328,7 +328,7 @@
   }
 
   .un_bt_gallery_item_2 {
-    left: 28%;
+    left: 24%;
   }
 
   .un_bt_gallery_item_3 {
@@ -336,7 +336,7 @@
   }
 
   .un_bt_gallery_item_4 {
-    left: 72%;
+    left: 76%;
   }
 
   .un_bt_card_title {
@@ -356,16 +356,20 @@
 
 @media only screen and (max-width: 768px) {
   .un_bt_gallery_container {
-    --card-width: clamp(145px, 43vw, 230px);
-    --card-height: clamp(196px, 58vw, 292px);
+    --card-width: clamp(136px, 42vw, 220px);
+    --card-height: clamp(190px, 60vw, 292px);
   }
 
   .un_bt_gallery_item_2 {
-    left: 24%;
+    left: 28%;
+  }
+
+  .un_bt_gallery_item_3 {
+    display: none;
   }
 
   .un_bt_gallery_item_4 {
-    left: 76%;
+    left: 72%;
   }
 
   .un_bt_gallery_controls_previous {
@@ -374,6 +378,10 @@
 
   .un_bt_gallery_controls_next {
     right: 6px;
+    // display: none;  //new 
+  }
+  .un_bt_gallery_controls_inner_container{
+    // display: none;
   }
 }
 
@@ -383,8 +391,8 @@
   }
 
   .un_bt_gallery_container {
-    --card-width: clamp(132px, 61vw, 205px);
-    --card-height: clamp(184px, 84vw, 270px);
+    --card-width: clamp(126px, 44vw, 184px);
+    --card-height: clamp(176px, 62vw, 250px);
   }
 
   .un_bt_carousel_title_container {
@@ -402,11 +410,11 @@
   }
 
   .un_bt_gallery_item_2 {
-    left: 17%;
+    left: 27%;
   }
 
   .un_bt_gallery_item_4 {
-    left: 83%;
+    left: 73%;
   }
 
   .un_bt_title_gradiant {

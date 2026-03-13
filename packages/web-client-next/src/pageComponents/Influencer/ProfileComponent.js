@@ -14,7 +14,7 @@ import {
 // import verified_icon from "../../images/profilePage/verified_icon.svg";
 // import header_darktheme from "../../images/chat/header_darktheme_toggle.svg";
 // import header_aura from "../../images/chat/header_aura_image.png";
-import unthink_black_log from "../../images/unthink_black_log.svg";
+import unthink_black_log from "../../images/unthinkai.png";
 import defaultAvatar from "../../images/avatar.svg";
 import share_icon from "../../images/profilePage/share_icon.svg";
 import unthink_favicon from "../../images/staticpageimages/unthink_favicon.png";
@@ -39,7 +39,7 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
-	// console.log(profilebanner);
+	console.log('unthink_black_log',unthink_black_log);
 	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
@@ -78,7 +78,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 							) : null}
 						</div>
 						<div className="absolute bottom-16 right-8 bg-white p-1 rounded-10">
-							<img src={qrCodeGeneratorURL} alt="qr code"  className="h-20 w-20"/>
+							<img src={qrCodeGeneratorURL} alt="qr code"  className=" md:h-20 md:w-20 h-14 w-14"/>
 						</div>
 							{is_store_instance && (
 									<div className={styles['powered-by-container']}>
@@ -88,10 +88,11 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 											target='_blank'
 											className={styles['powered-by-link']}>
 											<Image
-												src={unthink_black_log}
+												src={unthink_black_log.src}
 												preview={false}
-												height={"100%"}
-												className='cursor-pointer h-3 lg:h-4'
+												height={unthink_black_log.height}
+												width={unthink_black_log.width}
+												className='cursor-pointer w-32 lg:w-36 h-10'
 											/>
 										</a>
 									</div>

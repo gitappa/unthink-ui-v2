@@ -384,3 +384,12 @@ p {
   font-size: 24px;
   margin-top: 10px;
 }
+.ant-image css-dev-only-do-not-override-mncuj7{
+  
+}
+.ProfileComponent_powered-by-link__qEJLf :where(.css-dev-only-do-not-override-mncuj7).ant-image{
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto !important;
+}
