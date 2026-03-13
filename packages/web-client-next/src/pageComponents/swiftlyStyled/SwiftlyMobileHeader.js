@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { Typography } from "antd";
@@ -10,6 +10,7 @@ import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import {
   PATH_ROOT,
   STORE_USER_NAME_SWIFTLYSTYLED,
+  ROUTES,
 } from "../../constants/codes";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import styles from "./swiftlyMobileHeader.module.scss";
@@ -28,7 +29,11 @@ const SwiftlyMobileHeader = ({
   const { Text } = Typography;
   const dispatch = useDispatch();
   const router = useRouter();
-  const navigate = (path) => router.push(path);
+  const navigate = useCallback((path) => {
+    if (router.isReady && path) {
+      router.push(path);
+    }
+  }, [router]);
   const { themeCodes } = useTheme();
   const [storeData] = useSelector((state) => [state.store.data]);
   // console.log('headerProfileMenu full:', headerProfileMenu);
@@ -73,10 +78,10 @@ const SwiftlyMobileHeader = ({
             {isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button
             className={styles.collectionButton}
-            style={{ color: "black" ,fontWeight:700}}
+            style={{ color: "#4F4F4F" ,fontWeight:700,fontSize:14,fontFamily:''}}
             onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
           >
             Collections
@@ -90,7 +95,7 @@ const SwiftlyMobileHeader = ({
           >
             <img
               src={searchIcon}
-              style={{ filter: "grayscale(100%) brightness(40%)" }}
+              style={{ filter: "brightness(0) opacity(0.7)" }}
               alt="searchIcon"
               className={styles.searchIcon}
               // style={{ filter: "invert(1)" }}
@@ -100,7 +105,7 @@ const SwiftlyMobileHeader = ({
           {storeData?.is_droppWallet_connect_enabled && (
             <Image
               src={walletIcon}
-              style={{ filter: "brightness(0) opacity(10)" }}
+              style={{ filter: "brightness(0) opacity(0.7)" }}
               onClick={() => setisDropDown(true)}
               alt="wallet"
               height={24}
@@ -119,7 +124,7 @@ const SwiftlyMobileHeader = ({
                 aria-label="Open profile menu"
               >
                 <img
-                  style={{ filter: "grayscale(100%) brightness(40%)" }}
+                  style={{ filter: "brightness(0) opacity(0.7)" }}
                   src={userIcon}
                   alt="userIcon"
                   className={styles.userIcon}
@@ -129,13 +134,14 @@ const SwiftlyMobileHeader = ({
             ) : (
               <Text
                 ellipsis={true}
-                onClick={() =>
-                  navigate(extractedMenuData?.[0]?.label?.props?.href)
-                }
+                onClick={() => {
+                  const signInPath = is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE;
+                  navigate(signInPath);
+                }}
                 className="m-0 w-full xl:text-base  font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2 cursor-pointer"
                 style={{ color: "#4F4F4F" }}
               >
-                SIGN IN
+                Sign In
               </Text>
             )}
           </div>

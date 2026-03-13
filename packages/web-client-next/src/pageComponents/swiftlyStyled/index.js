@@ -84,7 +84,7 @@ const SwiftlyStyledIndex = ({ authUser, pageUser, pageUserCollections }) => {
 	};
 
 	return (
-		<div className='index overflow-hidden'>
+		<div className='index overflow-hidden pt-6 lg:pt-12 grid gap-2 md:gap-6 lg:gap-10 pb-0'>
 			<MainContent />
 			{
 				isSwiftlyStyledInstance ? <CollectionsContent /> : ""

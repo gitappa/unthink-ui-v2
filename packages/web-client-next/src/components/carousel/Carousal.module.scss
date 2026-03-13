@@ -18,6 +18,31 @@
   overflow: visible;
 }
 
+.un_bt_swiper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.un_bt_swiper_slide {
+  width: var(--card-width) !important;
+  height: var(--card-height);
+  flex-shrink: 0;
+}
+
+.un_bt_gallery_item_swiper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #d5dbe1;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 1;
+  filter: drop-shadow(0px 14px 28px rgba(0, 0, 0, 0.2));
+  transition: none;
+}
+
 .un_bt_gallery_container::before {
   content: "";
   position: absolute;
@@ -207,22 +232,24 @@
 .un_bt_gallery_controls_inner_container {
   height: 56px;
   width: 56px;
-  background: rgba(0, 0, 0, 0.88);
+  background: #ffffff;
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .un_bt_gallery_arrow_icon {
   width: 24px;
   height: auto;
+  filter: brightness(0);
 }
 
 .un_bt_gallery_controls_previous {
-  left: max(2px, 0.8vw);
+  left: -10px;
 }
 
 .un_bt_gallery_controls_previous .un_bt_gallery_arrow_icon {
@@ -230,12 +257,15 @@
 }
 
 .un_bt_gallery_controls_next {
-  right: max(2px, 0.8vw);
+  right: -10px;
+  // transition: transform 0.2s ease;
 }
-
+// .un_bt_gallery_controls_next:active {
+//   transform: translateY(-1px);
+// }
 .un_bt_gallery_controls:hover .un_bt_gallery_controls_inner_container {
   transform: scale(1.04);
-  background: #050505;
+  background: #f5f5f5;
 }
 
 .un_bt_gallery_controls:disabled {
@@ -373,11 +403,11 @@
   }
 
   .un_bt_gallery_controls_previous {
-    left: 6px;
+    left: 0;
   }
 
   .un_bt_gallery_controls_next {
-    right: 6px;
+    right: 0;
     // display: none;  //new 
   }
   .un_bt_gallery_controls_inner_container{

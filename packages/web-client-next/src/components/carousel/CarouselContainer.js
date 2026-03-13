@@ -1,23 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
 import { Typography } from "antd";
-// import tocca from "tocca"; // to import tocca script when this component loads // removed library because it was causing build error
-
-import {
-	resetCollectionCarouselAction,
-	setCollectionCarouselAction,
-} from "./redux/action";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { FreeMode, Mousewheel } from "swiper";
+import "swiper/css";
+import "swiper/css/free-mode";
 import { getFinalImageUrl } from "../../helper/utils";
 import carousel_arrow_icon from "../../images/carousel_arrow_icon.png";
 
 import styles from './Carousal.module.scss';
 import cssStyles from './CarouselContainer.module.css';
 import ReactPlayer from "react-player";
-import Modal from "../modal/Modal";
 
 const { Text } = Typography;
-const CAROUSEL_TRANSITION_MS = 720;
+SwiperCore.use([FreeMode, Mousewheel]);
 
 function CarousalContainer({
 	items,
@@ -27,126 +23,29 @@ function CarousalContainer({
 	description,
 	collection_image_list,
 }) {
-
-	const dispatch = useDispatch();
 	const [previewVisible, setPreviewVisible] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
-
-	const [carouselAction] = useSelector((state) => [
-		state.appState.carousel.action,
-	]);
-	const [totalItems, setTotalItems] = useState([]);
-	const [isTransitioning, setIsTransitioning] = useState(false);
-
-	const containerRef = useRef(null);
-	const transitionTimerRef = useRef(null);
-	const interactionLockedRef = useRef(false);
-	const dragStartXRef = useRef(null);
-	const isPointerDownRef = useRef(false);
-
-	useEffect(() => {
-		setTotalItems(() => {
-			let array = items?.map((item, i) => i + 1);
-			return array.slice(-2).concat(array.slice(0, -2));
-		});
-	}, [items]);
-
-	const onNavigationChange = () => {
-		const currentItemsOrder = [...totalItems];
-		if (carouselAction?.action === "next") {
-			currentItemsOrder.push(currentItemsOrder.shift());
-		} else {
-			currentItemsOrder.unshift(currentItemsOrder.pop());
-		}
-		setTotalItems(currentItemsOrder);
-		dispatch(resetCollectionCarouselAction());
-	};
-
-	useEffect(() => {
-		if (carouselAction?.action && carouselAction?.type) {
-			onNavigationChange();
-		}
-	}, [carouselAction]);
-
-	const lockInteraction = () => {
-		interactionLockedRef.current = true;
-		setIsTransitioning(true);
-		if (transitionTimerRef.current) {
-			clearTimeout(transitionTimerRef.current);
-		}
-		transitionTimerRef.current = setTimeout(() => {
-			interactionLockedRef.current = false;
-			setIsTransitioning(false);
-		}, CAROUSEL_TRANSITION_MS);
-	};
-
-	const triggerNavigation = (direction) => {
-		if (interactionLockedRef.current) return;
-		lockInteraction();
-
-		dispatch(
-			setCollectionCarouselAction({
-				type: "navigation",
-				action: direction,
-				metadata: {},
-			})
-		);
-	};
+	const swiperRef = useRef(null);
 
 	const handlePrevArrowClick = () => {
-		triggerNavigation("previous");
+		swiperRef.current?.slidePrev(0);
 	};
 
 	const handleNextArrowClick = () => {
-		triggerNavigation("next");
+		swiperRef.current?.slideNext(0);
 	};
 
-	useEffect(() => {
-		return () => {
-			if (transitionTimerRef.current) {
-				clearTimeout(transitionTimerRef.current);
-				transitionTimerRef.current = null;
-			}
-			interactionLockedRef.current = false;
-			dragStartXRef.current = null;
-			isPointerDownRef.current = false;
-		}
-	}, []);
-
-	const handleCarouselWheel = (event) => {
-		const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-		if (Math.abs(delta) < 12) return;
-		event.preventDefault();
-		if (delta > 0) {
-			handleNextArrowClick();
-		} else {
-			handlePrevArrowClick();
-		}
+	const handleCardClick = (item) => {
+		if (!handleItemClick) return;
+		if (swiperRef.current && !swiperRef.current.allowClick) return;
+		handleItemClick(item);
 	};
 
-	const handlePointerDown = (event) => {
-		isPointerDownRef.current = true;
-		dragStartXRef.current = event.clientX;
-	};
-
-	const handlePointerUp = (event) => {
-		if (!isPointerDownRef.current || dragStartXRef.current === null) {
-			isPointerDownRef.current = false;
-			dragStartXRef.current = null;
-			return;
-		}
-
-		const deltaX = event.clientX - dragStartXRef.current;
-		if (Math.abs(deltaX) >= 55) {
-			if (deltaX < 0) {
-				handleNextArrowClick();
-			} else {
-				handlePrevArrowClick();
-			}
-		}
-
-		isPointerDownRef.current = false;
-		dragStartXRef.current = null;
+	const handlePreviewImageClick = (event, imageUrl) => {
+		if (swiperRef.current && !swiperRef.current.allowClick) return;
+		event.stopPropagation();
+		setPreviewImage(imageUrl);
+		setPreviewVisible(true);
 	};
 	useEffect(() => {
 		if (previewVisible) {
@@ -154,7 +53,7 @@ function CarousalContainer({
 		} else {
 			document.body.style.overflow = "auto";     // enable scroll
 		}
-	}, [previewVisible])
+	}, [previewVisible]);
 
 	const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -174,7 +73,7 @@ function CarousalContainer({
 	};
 
 	return (
-		<  >
+		<>
 
 
 			{showOuterTitle && (
@@ -208,45 +107,73 @@ function CarousalContainer({
 						</div>
 					)}
 
-					<div
-						ref={containerRef}
-						className={`${styles.un_bt_gallery_container} ${cssStyles.selectNone} ${isTransitioning ? styles.is_transitioning : ""}`}
-						onWheel={handleCarouselWheel}
-						onPointerDown={handlePointerDown}
-						onPointerUp={handlePointerUp}
-						onPointerCancel={handlePointerUp}
-						onPointerLeave={handlePointerUp}>
-						{items?.map((item, i) => {
-							const displayItems = [...totalItems].splice(0, 5);
-							const positionIndex = displayItems.includes(i + 1)
-								? displayItems.indexOf(i + 1) + 1
-								: null;
-
-							return (
-								<div
-									key={i}
-									className={`${styles.un_bt_gallery_item} ${positionIndex ? styles[`un_bt_gallery_item_${positionIndex}`] : ""
-										}`}
-									onMouseEnter={() => handleMouseEnter(i)}
-									onMouseLeave={handleMouseLeave}
-									onClick={() => handleItemClick && handleItemClick(item)}>
-									{/* Show video if hovered, otherwise show image */}
-									{collection_image_list ? (
-										<div className={cssStyles.relativeFullSize}>
+						<div className={`${styles.un_bt_gallery_container} ${cssStyles.selectNone}`}>
+							<Swiper
+								onSwiper={(swiper) => {
+									swiperRef.current = swiper;
+								}}
+								modules={[FreeMode, Mousewheel]}
+								slidesPerView='auto'
+								spaceBetween={16}
+								speed={480}
+								allowTouchMove={true}
+								simulateTouch={true}
+								followFinger={true}
+								touchRatio={1.15}
+								threshold={3}
+								touchStartPreventDefault={false}
+								touchReleaseOnEdges={true}
+								freeMode={{
+									enabled: true,
+									momentum: true,
+									momentumRatio: 0.9,
+									momentumVelocityRatio: 0.85,
+									minimumVelocity: 0.05,
+									momentumBounce: false,
+									sticky: false,
+								}}
+								mousewheel={{
+									forceToAxis: false,
+									releaseOnEdges: true,
+									sensitivity: 1,
+									thresholdDelta: 2,
+									thresholdTime: 40,
+								}}
+								grabCursor={true}
+								breakpoints={{
+									0: {
+										spaceBetween: 10,
+									},
+									768: {
+										spaceBetween: 12,
+									},
+									1024: {
+										spaceBetween: 16,
+									},
+								}}
+								className={styles.un_bt_swiper}>
+								{items?.map((item, i) => (
+									<SwiperSlide key={i} className={styles.un_bt_swiper_slide}>
+										<div
+											className={styles.un_bt_gallery_item_swiper}
+											onMouseEnter={() => handleMouseEnter(i)}
+											onMouseLeave={handleMouseLeave}
+											onClick={() => handleCardClick(item)}>
+										{/* Show video if hovered, otherwise show image */}
+										{collection_image_list ? (
+											<div className={cssStyles.relativeFullSize}>
 											<Image
 												src={getFinalImageUrl(item)}
 												alt={item?.title || 'carousel-image'}
 												className={`${styles.un_bt_cover_image} ${cssStyles.coverImageFull}`}
-												draggable={false}
-												fill
-												style={{ objectFit: 'cover' }}
-												onClick={() => {
-													setPreviewImage(getFinalImageUrl(item))
-												 
-													setPreviewVisible(true)
-												}}
-											/>
-										</div>
+													draggable={false}
+													fill
+													style={{ objectFit: 'cover' }}
+													onClick={(event) =>
+														handlePreviewImageClick(event, getFinalImageUrl(item))
+													}
+												/>
+											</div>
 									) : item.cover_image ? (
 										hoveredIndex === i &&
 											item.video_url &&
@@ -264,13 +191,13 @@ function CarousalContainer({
 													playsinline
 												/>
 												{/* Transparent overlay to block interaction with the video */}
-												<div
-													className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
-														}`}
-													onClick={() =>
-														handleItemClick && handleItemClick(item)
-													} // Redirect to details page on click
-												/>
+													<div
+														className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
+															}`}
+														onClick={() =>
+															handleCardClick(item)
+														} // Redirect to details page on click
+													/>
 											</>
 										) : (
 											<div className={styles.relative}>
@@ -298,11 +225,11 @@ function CarousalContainer({
 												playsinline
 											/>
 											{/* Transparent overlay to block interaction with the video */}
-											<div
-												className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
-													}`}
-												onClick={() => handleItemClick && handleItemClick(item)} // Redirect to details page on click
-											/>
+												<div
+													className={`${cssStyles.videoOverlay} ${handleItemClick ? cssStyles.cursorPointer : ""
+														}`}
+													onClick={() => handleCardClick(item)} // Redirect to details page on click
+												/>
 										</>
 									) : null}
 
@@ -311,20 +238,20 @@ function CarousalContainer({
 
 									{/* Card Title */}
 									<div className={styles.un_bt_card_title}>
-										<h1 className={styles.text_white} title={item?.title}>
-											<span>{item?.title}</span>
-										</h1>
-									</div>
-								</div>
-							);
-						})}
-							<button
-								type='button'
-								aria-label='Previous slide'
-								disabled={isTransitioning}
-								className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
-								onClick={handlePrevArrowClick}>
-							<div className={styles.un_bt_gallery_controls_inner_container}>
+											<h1 className={styles.text_white} title={item?.title}>
+												<span>{item?.title}</span>
+											</h1>
+										</div>
+										</div>
+									</SwiperSlide>
+								))}
+							</Swiper>
+								<button
+									type='button'
+									aria-label='Previous slide'
+									className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_previous}`}
+									onClick={handlePrevArrowClick}>
+								<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image
 									src={carousel_arrow_icon}
 									alt='previous arrow'
@@ -334,12 +261,11 @@ function CarousalContainer({
 								/>
 							</div>
 						</button>
-							<button
-								type='button'
-								aria-label='Next slide'
-								disabled={isTransitioning}
-								className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
-								onClick={handleNextArrowClick}>
+								<button
+									type='button'
+									aria-label='Next slide'
+									className={`${styles.un_bt_gallery_controls} ${styles.un_bt_gallery_controls_next}`}
+									onClick={handleNextArrowClick}>
 							<div className={styles.un_bt_gallery_controls_inner_container}>
 								<Image
 									src={carousel_arrow_icon}

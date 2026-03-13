@@ -1213,11 +1213,11 @@ const ProductCard = ({
               {/* {!hideAddToWishlist && ( */}
               <div
                 className={styles["product-menu-wishlist"]}
-                onClick={(e) => onAddSelectedProductsToCollection(e)}
+                onClick={(e) => onAddSelectedProductsToCollection(e,product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
                   <Image
-                    alt="Add to collection"
+                    alt="Add to collection" 
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
