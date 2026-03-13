@@ -150,7 +150,7 @@ const SingleCollectionProductListView = ({
         collection_path={blogCollectionPage.path}
         collection_status={blogCollectionPage.status}
         blogCollectionPage={blogCollectionPage}
-        onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+        onAddSelectedProductsToCollection={onAddSelectedProductsToCollection} //collectyion product data passing
       />
     );
 
@@ -860,7 +860,7 @@ const SingleCollectionProductListView = ({
                                     onClick={() => setExpanded(true)}
                                     className={styles.readMoreLink}
                                   >
-                                    Read more
+                                    Read more...
                                   </span>
                                 )}
 

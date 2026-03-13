@@ -18,6 +18,31 @@
   overflow: visible;
 }
 
+.un_bt_swiper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.un_bt_swiper_slide {
+  width: var(--card-width) !important;
+  height: var(--card-height);
+  flex-shrink: 0;
+}
+
+.un_bt_gallery_item_swiper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #d5dbe1;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 1;
+  filter: drop-shadow(0px 14px 28px rgba(0, 0, 0, 0.2));
+  transition: none;
+}
+
 .un_bt_gallery_container::before {
   content: "";
   position: absolute;
@@ -205,24 +230,26 @@
 }
 
 .un_bt_gallery_controls_inner_container {
-  height: 56px;
-  width: 56px;
-  background: rgba(0, 0, 0, 0.88);
+  height: 46px;
+  width: 46px;
+  background:#F9FAFB;
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  // border: 1px solid rgba(255, 255, 255, 0.95);
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .un_bt_gallery_arrow_icon {
-  width: 24px;
+  width: 14px;
   height: auto;
+  filter: brightness(0);
 }
 
 .un_bt_gallery_controls_previous {
-  left: max(2px, 0.8vw);
+  left: -6px;
 }
 
 .un_bt_gallery_controls_previous .un_bt_gallery_arrow_icon {
@@ -230,12 +257,12 @@
 }
 
 .un_bt_gallery_controls_next {
-  right: max(2px, 0.8vw);
+  right: -6px;
 }
 
 .un_bt_gallery_controls:hover .un_bt_gallery_controls_inner_container {
-  transform: scale(1.04);
-  background: #050505;
+  transform: scale(1.03);
+  background: rgba(240, 240, 240, 0.97);
 }
 
 .un_bt_gallery_controls:disabled {
@@ -248,7 +275,7 @@
 }
 
 .un_bt_gallery_controls:focus-visible .un_bt_gallery_controls_inner_container {
-  outline: 2px solid #fff;
+  outline: 2px solid rgba(130, 120, 220, 0.4);
   outline-offset: 2px;
 }
 
@@ -345,12 +372,12 @@
   }
 
   .un_bt_gallery_controls_inner_container {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .un_bt_gallery_arrow_icon {
-    width: 18px;
+    width: 13px;
   }
 }
 
@@ -373,15 +400,11 @@
   }
 
   .un_bt_gallery_controls_previous {
-    left: 6px;
+    left: -4px;
   }
 
   .un_bt_gallery_controls_next {
-    right: 6px;
-    // display: none;  //new 
-  }
-  .un_bt_gallery_controls_inner_container{
-    // display: none;
+    right: -4px;
   }
 }
 
@@ -432,7 +455,7 @@
   }
 
   .un_bt_gallery_arrow_icon {
-    width: 16px;
+    width: 12px;
   }
 }
 
