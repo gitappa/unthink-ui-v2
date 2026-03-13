@@ -374,6 +374,10 @@
 
   .un_bt_gallery_controls_next {
     right: 6px;
+    display: none;  //new 
+  }
+  .un_bt_gallery_controls_inner_container{
+    display: none;
   }
 }
 
