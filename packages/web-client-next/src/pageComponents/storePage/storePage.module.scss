@@ -692,7 +692,7 @@
 
 /* Main Content Grid */
 .mainContentGrid {
-    display: grid;
+    // display: grid;
     gap: 8px;
     padding-top: 0px;
 
@@ -797,8 +797,9 @@
     max-width: 650px;
   }
       @media  (min-width: 835px) and (max-width: 1535px){
-           width: calc(100% - 80px);
+         width: calc(100% - 70px);
         max-width: none;
+        margin: auto;
   } //new
   @media (min-width: 1271px) and (max-width: 1439px) {
     width: 1202px;

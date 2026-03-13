@@ -985,7 +985,7 @@
   justify-items: center;
   gap: 10px;
   padding-top: 16px;
-  margin-top: 20px;
+  // margin-top: 20px;
   @media (min-width: 820px) {
     grid-template-columns: repeat(3, 1fr);
     // display: block;
@@ -1229,9 +1229,12 @@
   align-items: center;
   gap: 40px;
   position: relative;
+      margin-top: 15px;
+
 
   @media (min-width: 1024px) {
     gap: 48px;
+      margin-top: 25px;
   }
   @media (min-width: 1536px) {
     gap: 64px;
@@ -1262,11 +1265,11 @@
   will-change: transform, box-shadow;
   cursor: pointer;
 
-  &:active {
-    transform: scale(0.95);
-    box-shadow: 0 4px 12px rgba(124, 116, 236, 0.4);
-    animation: scaleIn 0.3s ease-out;
-  }
+  // &:active {
+  //   transform: scale(0.95);
+  //   box-shadow: 0 4px 12px rgba(124, 116, 236, 0.4);
+  //   animation: scaleIn 0.3s ease-out;
+  // }
 
   @media (min-width: 1024px) {
     height: 30px;
@@ -1838,11 +1841,11 @@
 }
 .toppicksContainer {
   @media (max-width: 1024px) {
-    width: 570px;
+    // width: 570px;
     margin: auto;
   }
   @media (max-width: 720px) {
-    width: 330px;
+    // width: 330px;
     margin: auto;
   }
 }
@@ -1858,11 +1861,11 @@
     font-size: 30px;
     margin-bottom: 10px !important;
      width: 992px;
-    margin: auto;
+    // margin: auto;
   }
   @media (min-width: 1536px) {
     width: 1328px;
-    margin: auto;
+    // margin: auto;
 
   }
   
@@ -1894,7 +1897,7 @@
   @media (min-width: 1024px) {
     font-size: 30px;
       width: 992px;
-    margin:7px auto;
+    margin:7px 3px;
   }
   @media (min-width: 1530px) {
     width: 1328px;
