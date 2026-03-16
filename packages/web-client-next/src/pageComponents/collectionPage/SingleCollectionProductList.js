@@ -281,7 +281,7 @@ const url = window.location.pathname === '/my-profile/'
   const isTagProductsAllSelected = useMemo(() => {
     if (productsData) {
       return productsData.every((item) =>
-        selectedProducts.includes(item.mfr_code),
+        selectedProducts?.includes(item.mfr_code),
       );
     }
   }, [productsData, selectedProducts]);
@@ -361,25 +361,55 @@ const url = window.location.pathname === '/my-profile/'
   };
 
   const [isPopupShow, setIsPopupShow] = useState(false);
+  const [pendingProductsToAdd, setPendingProductsToAdd] = useState([]);
 
   // console.log("isPopupShow", isPopupShow);
 
-  const onAddSelectedProductsToCollection = (e) => {
-    e?.stopPropagation()
+  const resolveProductsToAdd = useCallback(
+    (product) => {
+      const sourceProducts =
+        singleCollection?.product_lists || blogCollectionPage?.product_lists || [];
+      const selectedMfrCodes = selectedProducts?.length
+        ? selectedProducts
+        : product?.mfr_code
+          ? [product.mfr_code]
+          : [];
+      const selectedFromSource = sourceProducts.filter((p) =>
+        selectedMfrCodes.includes(p.mfr_code),
+      );
+
+      if (selectedFromSource.length) return selectedFromSource;
+      if (product?.mfr_code) return [product];
+      return [];
+    },
+    [
+      blogCollectionPage?.product_lists,
+      selectedProducts,
+      singleCollection?.product_lists,
+    ],
+  );
+
+  const onAddSelectedProductsToCollection = (e, product) => {
+    e?.stopPropagation();
+    const productsToAdd = resolveProductsToAdd(product);
     const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
     // const isGuestUserSkip = Cookies.get('isGuestSkip') === 'true';
     if (!isUserLogin && !isUserLoginCokkies) {
+      setPendingProductsToAdd(productsToAdd);
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
       return;
     }
 
-    const SelectedProductsData = singleCollection.product_lists?.filter((p) =>
-      selectedProducts.includes(p.mfr_code),
-    );
+    const finalProductsToAdd = productsToAdd.length
+      ? productsToAdd
+      : pendingProductsToAdd;
+
+    if (!finalProductsToAdd.length) return;
 
     dispatch(openWishlistModal());
-    dispatch(setProductsToAddInWishlist(SelectedProductsData));
+    dispatch(setProductsToAddInWishlist(finalProductsToAdd));
+    setPendingProductsToAdd([]);
     if (isUserLoginCokkies) {
       // dispatch(setIsCreateWishlist(true));
     }
@@ -412,6 +442,7 @@ const url = window.location.pathname === '/my-profile/'
     // Cookies.set('isGuestSkip', true, { expires: GUESTSKIP_EXPIRE_HOURS / 24 });
     dispatch(GuestPopUpShow(false));
     setIsPopupShow(false);
+    setPendingProductsToAdd([]);
   };
 
   const handleGuestSubmit = useCallback(

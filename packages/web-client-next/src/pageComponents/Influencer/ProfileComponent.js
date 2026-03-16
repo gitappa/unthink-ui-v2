@@ -92,7 +92,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 												preview={false}
 												height={unthink_black_log.height}
 												width={unthink_black_log.width}
-												className='cursor-pointer w-32 lg:w-36 h-10'
+												className='cursor-pointer w-24 lg:w-36 h-10'
 											/>
 										</a>
 									</div>

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { notification, Typography, Upload } from "antd";
 import { IoBagHandleOutline } from "react-icons/io5";
 import styles from "./ProductCard.module.css";
+import { Swiper, SwiperSlide } from "swiper/react";
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   HeartOutlined,
@@ -174,7 +175,7 @@ const ProductCard = ({
     authUser,
     customProductsData,
     ButtonClick,
-    isUserLogin
+    isUserLogin,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -253,7 +254,7 @@ const ProductCard = ({
       if (selectedSearchOption?.title) {
         // GTAG CONFIGURATION AURA
         // START
- 
+
         gTagAuraProductClick({
           mft_code: product?.mfr_code,
           aura_widget: selectedSearchOption?.id,
@@ -272,10 +273,10 @@ const ProductCard = ({
           mft_code: product?.mfr_code,
           collection_path: authUserId
             ? addSidInProductUrl(
-              product.url,
-              authUserId,
-              blogCollectionPage?.collection_id,
-            )
+                product.url,
+                authUserId,
+                blogCollectionPage?.collection_id,
+              )
             : product.url,
           user_id: getTTid(),
           user_name: authUserName,
@@ -289,10 +290,10 @@ const ProductCard = ({
         // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
         const redirectionUrl = authUserId
           ? addSidInProductUrl(
-            product.url,
-            authUserId,
-            blogCollectionPage?.collection_id,
-          )
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
           : product.url;
         window.open(redirectionUrl, "_blank");
       } else if (
@@ -701,7 +702,7 @@ const ProductCard = ({
   //   guestData,
   //   setIsPopupShow
   // } = useGuestPopUtils(dispatch, hideAddToWishlist, onAddSelectedProductsToCollection);
-// console.log('isAuraModelPage',isAuraModelPage);
+  // console.log('isAuraModelPage',isAuraModelPage);
 
   const productWrapperSizeClass =
     size === "small"
@@ -710,7 +711,7 @@ const ProductCard = ({
         ? styles["product-wrapper-medium2"]
         : isSingleCollectionSharedPage
           ? styles["product-wrapper-medium-single"]
-            : styles["product-wrapper-medium-single"];
+          : styles["product-wrapper-medium-single"];
 
   return (
     <div
@@ -794,23 +795,23 @@ const ProductCard = ({
               )}
               {(storeData?.pdp_settings?.is_buy_button ||
                 storeData?.pdp_settings?.is_add_to_cart_button) && (
-                  <>
-                    {storeData?.pdp_settings?.is_buy_button ? (
-                      <button
-                        className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
-                        onClick={checkoutPayment}
-                      >
-                        Buy Now
-                      </button>
-                    ) : (
-                      <button
-                        className={styles["product-add-cart-button-header"]}
-                      >
-                        Add to Cart
-                      </button>
-                    )}
-                  </>
-                )}
+                <>
+                  {storeData?.pdp_settings?.is_buy_button ? (
+                    <button
+                      className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                      onClick={checkoutPayment}
+                    >
+                      Buy Now
+                    </button>
+                  ) : (
+                    <button
+                      className={styles["product-add-cart-button-header"]}
+                    >
+                      Add to Cart
+                    </button>
+                  )}
+                </>
+              )}
             </>
             {!enableSelect ? (
               <div className={styles["product-overlay-actions"]}>
@@ -875,7 +876,7 @@ const ProductCard = ({
             <div className={styles["product-showcase-button-main"]}>
               <div>
                 {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                  showStar ? (
+                showStar ? (
                   <button
                     className={`${styles["product-star-action-button"]}`}
                     tabindex="-1"
@@ -895,7 +896,7 @@ const ProductCard = ({
                   </button>
                 ) : null}
                 {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                  showStar ? (
+                showStar ? (
                   <button
                     className={`${styles["product-star-action-button"]}`}
                     tabindex="-1"
@@ -953,14 +954,16 @@ const ProductCard = ({
           )} */}
         {/* product card header */}
         <div
-          className={`${styles["header-container"]} ${enableViewSimilar ||
-              (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                showRemoveIcon) ||
-              enableSelect
+          className={`${styles["header-container"]} ${
+            enableViewSimilar ||
+            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+              showRemoveIcon) ||
+            enableSelect
               ? styles["flex-reverse"]
               : ""
-            } ${size === "small" ? styles["header-small"] : styles["header-medium"]
-            }`}
+          } ${
+            size === "small" ? styles["header-small"] : styles["header-medium"]
+          }`}
         >
           {/* reversed contents for hover css */}
 
@@ -972,7 +975,7 @@ const ProductCard = ({
                 type="checkbox"
                 checked={isSelected}
                 onClick={handleSelectProduct}
-                onChange={() => { }} // fix onchange handler warning
+                onChange={() => {}} // fix onchange handler warning
                 className={`${styles[size === "small" ? "product-checkbox-small" : "product-checkbox-large"]}`}
               />
             </div>
@@ -1008,15 +1011,15 @@ const ProductCard = ({
                     }}
                     className={
                       styles[
-                      size === "small"
-                        ? "product-menu-dropdown-small"
-                        : (!hideAddToWishlist ||
-                          (widgetType ===
-                            PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                            showStar)) &&
-                          !showWishlistModal
-                          ? "product-menu-icon"
-                          : "product-menu-icon"
+                        size === "small"
+                          ? "product-menu-dropdown-small"
+                          : (!hideAddToWishlist ||
+                                (widgetType ===
+                                  PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                  showStar)) &&
+                              !showWishlistModal
+                            ? "product-menu-icon"
+                            : "product-menu-icon"
                       ]
                     }
                   />
@@ -1027,46 +1030,49 @@ const ProductCard = ({
                   onClick={removeFromWishlistClick}
                 >
                   <p
-                    className={`${styles["remove-icon-circle"]} ${size === "small"
+                    className={`${styles["remove-icon-circle"]} ${
+                      size === "small"
                         ? styles["icon-circle-small"]
                         : styles["icon-circle-medium"]
-                      }`}
+                    }`}
                   >
                     <RxCross2 />
                   </p>
                   {/* <p className={styles['text-gray']}>Remove</p> */}
                 </div>
               )}
-              {showWishlistModal && widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
-                <div
-                  className={` ${styles["remove-icon"]}`}
-                  onClick={removeFromWishlistClick}
-                >
-                  <p
-                    className={`${styles["remove-icon-circle"]} ${size === "small"
-                        ? styles["icon-circle-small"]
-                        : 'hidden'
-                      }`}
+              {showWishlistModal &&
+                widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
+                  <div
+                    className={` ${styles["remove-icon"]}`}
+                    onClick={removeFromWishlistClick}
                   >
-                    <RxCross2 />
-                  </p>
-                </div>
-              )}
+                    <p
+                      className={`${styles["remove-icon-circle"]} ${
+                        size === "small"
+                          ? styles["icon-circle-small"]
+                          : "hidden"
+                      }`}
+                    >
+                      <RxCross2 />
+                    </p>
+                  </div>
+                )}
               {menuIcon && (
                 <div
                   ref={menuRef}
                   onClick={(e) => e.stopPropagation()}
                   className={
                     styles[
-                    size === "small"
-                      ? "product-menu-dropdown-mini"
-                      : (!hideAddToWishlist ||
-                        (widgetType ===
-                          PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                          showStar)) &&
-                        !showWishlistModal
-                        ? "product-menu-dropdown"
-                        : "product-menu-dropdown" ///use dropdown2
+                      size === "small"
+                        ? "product-menu-dropdown-mini"
+                        : (!hideAddToWishlist ||
+                              (widgetType ===
+                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                showStar)) &&
+                            !showWishlistModal
+                          ? "product-menu-dropdown"
+                          : "product-menu-dropdown" ///use dropdown2
                     ]
                   }
                 >
@@ -1080,10 +1086,11 @@ const ProductCard = ({
                           onClick={removeFromWishlistClick}
                         >
                           <p
-                            className={`${styles["remove-icon-circle"]} ${size === "small"
+                            className={`${styles["remove-icon-circle"]} ${
+                              size === "small"
                                 ? styles["icon-circle-small"]
                                 : styles["icon-circle-medium"]
-                              }`}
+                            }`}
                           >
                             <RxCross2 />
                           </p>
@@ -1101,10 +1108,11 @@ const ProductCard = ({
                           onClick={removeFromWishlistClick}
                         >
                           <p
-                            className={`${styles["remove-icon-circle"]} ${size === "small"
+                            className={`${styles["remove-icon-circle"]} ${
+                              size === "small"
                                 ? styles["icon-circle-small"]
                                 : styles["icon-circle-medium"]
-                              }`}
+                            }`}
                           >
                             <RxCross2 />
                           </p>
@@ -1118,12 +1126,13 @@ const ProductCard = ({
                       onClick={handleCopyClick}
                     >
                       <div
-                        className={`${styles["menu-item-circle"]} ${size === "small"
+                        className={`${styles["menu-item-circle"]} ${
+                          size === "small"
                             ? styles["icon-circle-small"]
                             : styles["icon-circle-medium"]
-                          }`}
+                        }`}
                       >
-                        <LuCopy className={styles.copyIcon}/>
+                        <LuCopy className={styles.copyIcon} />
                       </div>
                       <p className={styles["text-gray"]}>Copy</p>
                     </div>
@@ -1206,18 +1215,20 @@ const ProductCard = ({
 
         {/* without login  */}
 
-        {hideAddToWishlist && !isUserLogin && size === 'medium' &&
+        {hideAddToWishlist &&
+          !isUserLogin &&
+          size === "medium" &&
           !showWishlistModal &&
           !enableSelect && (
             <div className={styles["product-menu-item"]}>
               {/* {!hideAddToWishlist && ( */}
               <div
                 className={styles["product-menu-wishlist"]}
-                onClick={(e) => onAddSelectedProductsToCollection(e,product)}
+                onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
                   <Image
-                    alt="Add to collection" 
+                    alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
@@ -1238,7 +1249,6 @@ const ProductCard = ({
                 setIsPopupShow={setIsPopupShow}
               />
             )} */}
-
 
         {/* product footer */}
         <div
@@ -1267,68 +1277,62 @@ const ProductCard = ({
 
           {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
             product?.size?.length > 0) ||
-            (storeData.pdp_settings?.buy_card_attributes?.[1] &&
-              product?.sleeve?.length > 0) ||
-            (storeData.pdp_settings?.buy_card_attributes?.[2] &&
-              product?.fit?.length > 0) ? (
-            <div className={`${styles.tagsContainerWrapper}`}>
-              <div
-                ref={containerRef}
-                className={`${styles.tagscontainer} ${isOverflowing ? styles.isOverflowing : ""
-                  }`}
-              >
-                {storeData.pdp_settings?.buy_card_attributes?.[0] &&
-                  product?.size?.length > 0 && (
-                    <span
-                      className={`${styles.smalltags}`}
-                      style={{
-                        // background: "#F5F5F5",
-                        width: "fit-content",
-                      }}
-                    >
-                      size:
-                      {Array.isArray(product?.size)
-                        ? product.size
-                          .map((f) => f.replace(/,+$/, "").trim())
-                          .join(", ")
-                        : product?.size?.replace(/,+$/, "").trim()}
-                    </span>
-                  )}
-                {storeData.pdp_settings?.buy_card_attributes?.[1] &&
-                  product?.sleeve?.length > 0 && (
-                    <span
-                      className={`${styles.smalltags}`}
-                      style={{
-                        // background: "#F5F5F5",
-                        width: "fit-content",
-                      }}
-                    >
-                      sleeve :{" "}
-                      {Array.isArray(product?.sleeve)
-                        ? product.sleeve
-                          .map((f) => f.replace(/,+$/, "").trim())
-                          .join(", ")
-                        : product?.sleeve?.replace(/,+$/, "").trim()}
-                    </span>
-                  )}
-                {storeData.pdp_settings?.buy_card_attributes?.[2] &&
-                  product?.fit?.length > 0 && (
-                    <span
-                      className={`${styles.smalltags}`}
-                      style={{
+          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+            product?.sleeve?.length > 0) ||
+          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+            product?.fit?.length > 0) ? (
+            <div className={`${styles.tagsContainerWrapper } ${
+    isOverflowing ? styles.isOverflowing : ""
+  }`}>
+              <Swiper
+              ref={containerRef}
+  spaceBetween={8}
+  slidesPerView={"auto"}
+    freeMode={true}
+  className={styles.tagscontainer}
+>
+  {storeData.pdp_settings?.buy_card_attributes?.[0] &&
+    product?.size?.length > 0 && (
+      <SwiperSlide style={{ width: "auto" }}>
+        <span className={styles.smalltags}>
+          size:
+          {Array.isArray(product?.size)
+            ? product.size
+                .map((f) => f.replace(/,+$/, "").trim())
+                .join(", ")
+            : product?.size?.replace(/,+$/, "").trim()}
+        </span>
+      </SwiperSlide>
+    )}
 
-                        width: "fit-content",
-                      }}
-                    >
-                      fit:{" "}
-                      {Array.isArray(product?.fit)
-                        ? product.fit
-                          .map((f) => f.replace(/,+$/, "").trim())
-                          .join(", ")
-                        : product?.fit?.replace(/,+$/, "").trim()}
-                    </span>
-                  )}
-              </div>
+  {storeData.pdp_settings?.buy_card_attributes?.[1] &&
+    product?.sleeve?.length > 0 && (
+      <SwiperSlide style={{ width: "auto" }}>
+        <span className={styles.smalltags}>
+          sleeve :
+          {Array.isArray(product?.sleeve)
+            ? product.sleeve
+                .map((f) => f.replace(/,+$/, "").trim())
+                .join(", ")
+            : product?.sleeve?.replace(/,+$/, "").trim()}
+        </span>
+      </SwiperSlide>
+    )}
+
+  {storeData.pdp_settings?.buy_card_attributes?.[2] &&
+    product?.fit?.length > 0 && (
+      <SwiperSlide style={{ width: "auto" }}>
+        <span className={styles.smalltags}>
+          fit:
+          {Array.isArray(product?.fit)
+            ? product.fit
+                .map((f) => f.replace(/,+$/, "").trim())
+                .join(", ")
+            : product?.fit?.replace(/,+$/, "").trim()}
+        </span>
+      </SwiperSlide>
+    )}
+</Swiper>
             </div>
           ) : (
             <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>
@@ -1381,8 +1385,12 @@ const ProductCard = ({
                         !product?.price && !product?.listprice
                           ? "#F2F1FD"
                           : "#9690F0",
-                          cursor : !product?.price && !product?.listprice ? 'not-allowed' : 'pointer' ,
-                      color:  !product?.price && !product?.listprice ? "#616161" : "",
+                      cursor:
+                        !product?.price && !product?.listprice
+                          ? "not-allowed"
+                          : "pointer",
+                      color:
+                        !product?.price && !product?.listprice ? "#616161" : "",
                     }}
                     className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
                     onClick={checkoutPayment}
