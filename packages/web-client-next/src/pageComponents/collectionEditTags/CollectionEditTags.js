@@ -94,7 +94,7 @@ const CollectionEditTags = ({
 									spaceBetween={10}
 									freeMode={true}
 									onSwiper={(swiper) => (swiperRef.current = swiper)}
-									className="pb-1 pr-10 mr-5"
+									className="pb-1 px-8 mr-5"
 								>
 									{currentCollectionTags?.length ? (
 										<>
