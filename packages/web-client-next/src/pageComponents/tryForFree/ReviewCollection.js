@@ -1889,7 +1889,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 				const Keys = Object.keys(data.keyword_tag_map);
 				const getUpdatedTags = [];
 
-				Keys.forEach((key) => {
+				Keys?.forEach((key) => {
 					const currentTags = currentCollection.keyword_tag_map[key] || {};
 					const updatedTags = data.keyword_tag_map[key] || {};
 
