@@ -1,0 +1,94 @@
+name: CI elitetalentadvisors-next
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Cloud Run Deployment Prod (Next.js)
+    runs-on: ubuntu-latest
+    env:
+    env:
+    NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
+    NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
+
+    NEXT_PUBLIC_STAGING_ENV: "false"
+    NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
+
+    NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "elitetalentadvisors"
+
+    NEXT_PUBLIC_AURA_HEADER_THEME: "light"
+    NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "elitetalentadvisors"
+
+    NEXT_PUBLIC_CURRENT_STORE_NAME: "elitetalentadvisors"
+    NEXT_PUBLIC_CURRENT_STORE_ID: "79253626"
+
+    NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS: "false"
+    NEXT_PUBLIC_ENABLE_RECOMMENDATIONS: "false"
+    NEXT_PUBLIC_IS_STORE_INSTANCE: "true"
+
+    NEXT_PUBLIC_ADMIN_USER_ID: "175401710324820"
+
+    NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL: "https://auraprod.unthink.ai"
+
+    NEXT_PUBLIC_ENABLE_VENLY: "false"
+    NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL: ""
+
+    NEXT_PUBLIC_PDP_PAGE_ENABLED: "false"
+
+    NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: packages/web-client-next/node_modules
+          key: node-modules-${{ hashFiles('packages/web-client-next/package-lock.json') }}
+
+      - name: Install Dependencies
+        working-directory: "packages/web-client-next"
+        run: npm install
+
+      - name: Build Next.js App
+        working-directory: "packages/web-client-next"
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+
+      - name: Setup GCP Service Account
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.DEV_GCP_SA_KEY_NEW }}
+          export_default_credentials: true
+
+      - name: Authorize Docker
+        run: gcloud auth configure-docker us-docker.pkg.dev --quiet
+
+      - name: Build Docker Image
+        working-directory: "packages/web-client-next"
+        run: |
+          docker build \
+          --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-elitetalentadvisors-ui .
+
+      - name: Push Docker Image
+        run: |
+          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-elitetalentadvisors-ui
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy unthink-ui-next-elitetalentadvisors-ui \
+          --region us-central1 \
+          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-elitetalentadvisors-ui \
+          --platform managed \
+          --project ${{ secrets.DEV_GCP_PROJECT_ID }}
