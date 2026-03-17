@@ -2032,7 +2032,7 @@ color: #99A1AF;
     );
     z-index: 38;
     background-color: #ffffff;
-    margin-bottom: 0;
+    margin-bottom: 4px;
   }
 }
 
@@ -2171,10 +2171,10 @@ color: #99A1AF;
     line-height: 1.2;
   }
 
-  .descriptionText {
-    font-size: 16px;
-    line-height: 1.5;
-  }
+  // .descriptionText {
+  //   font-size: 16px;
+  //   line-height: 1.5;
+  // }
 
   .productItems {
     grid-template-columns: repeat(2, 349px);
