@@ -1193,6 +1193,13 @@ margin-top: 1px;
   width: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* @media (max-width:768px) {
+    height: 12px;
+    width: 12px;
+  } */
 }
 
 .product-cart-icon:hover {
@@ -1207,6 +1214,10 @@ margin-top: 1px;
 .product-cart-icon-smalls {
   height: 18px;
   width: 18px;
+  @media (max-width:768px) {
+     height: 12px;
+  width: 12px;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1625,7 +1636,7 @@ margin-top: 1px;
     display: flex;
     align-items: center;
     gap: 5px;
-   padding: 3px 4px;
+   padding: 3px 7px;
     border-radius: 35px;
     @media (max-width: 768px) {
       bottom: 13px;

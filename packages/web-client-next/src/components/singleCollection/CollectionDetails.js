@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useNavigate } from "../../helper/useNavigate";
 import { useDispatch, useSelector } from "react-redux";
 import { EditOutlined } from "@ant-design/icons";
-import { Image, Spin, Tooltip } from "antd";
+import { Image, notification, Spin, Tooltip, Upload } from "antd";
 
 import CustomBannerModal from "../../pageComponents/customBannerModal/CustomBannerModal";
 import ShareOptions from "../../pageComponents/shared/shareOptions";
@@ -30,6 +30,7 @@ import {
   STORE_DISPLAY_NAME,
   STORE_USER_NAME_BUDGETTRAVEL,
   COLLECTION_GENERATED_BY_IMAGE_BASED,
+  COLLECTION_COVER_IMG_SIZE_900_900,
 } from "../../constants/codes";
 
 import share_icon from "../../images/profilePage/share_icon.svg";
@@ -53,6 +54,10 @@ import ReactPlayer from "react-player";
 import SingleCollectionProductList from "../../pageComponents/collectionPage/SingleCollectionProductList";
 import { toggleShowMore } from "../../pageComponents/collectionPage/redux/actions";
 import CarousalContainer from "../carousel/CarouselContainer";
+import CropAndResizeImageModal from "../../pageComponents/cropAndResizeImageModal/CropAndResizeImageModal";
+import { profileAPIs } from "../../helper/serverAPIs";
+
+const { Dragger } = Upload;
 
 const CollectionDetails = ({
   sharePageUrl,
@@ -65,7 +70,7 @@ const CollectionDetails = ({
   isPageOwner,
   isCollectionPage = true,
 }) => {
- 
+
 
   const navigate = useNavigate();
   const [showShareCollection, setShowShareCollection] = useState(false);
@@ -95,7 +100,15 @@ const CollectionDetails = ({
     state.auth.user.singleCollections.data,
     state.store.data.admin_list,
   ]);
- 
+  const [cropAndResizeImageData, setCropAndResizeImageData] = useState({
+    isOpen: false,
+    selectedImage: "",
+  });
+  const Owner = authUser.user_name === collection.user_name
+  const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
+
+  // console.log('checkdata',jmidfhn);
+  // console.log(Owner || Adminlist);
 
   // State for overlay positioning
   const [containerDimensions, setContainerDimensions] = useState({
@@ -188,7 +201,7 @@ const CollectionDetails = ({
     ],
   );
 
- 
+
   const showFeatureOnStore = useMemo(
     () =>
       (isSuperAdminLoggedIn || isStoreAdminLoggedIn) &&
@@ -267,7 +280,7 @@ const CollectionDetails = ({
 
   const handleFeatureCollectionOnStore = useCallback(
     (storeName) => {
- 
+
 
       let hosted_stores = [...(collection.hosted_stores || [])];
 
@@ -368,7 +381,7 @@ const CollectionDetails = ({
     }
   }, []);
 
- 
+
 
   // Fixed renderOverlay function for CollectionDetails
   const renderOverlay = (
@@ -439,11 +452,109 @@ const CollectionDetails = ({
       );
     });
   };
+  const handleUploadedDataChange = useCallback(
+    (name, value) => {
+      const editPayload = {
+        _id: collection._id,
+        [name]: value,
+        fetchUserCollection: true,
+      };
+
+
+
+
+      dispatch(updateWishlist(editPayload));
+      // setUpdatedData({ ...updatedData, [name]: value });
+    },
+    [collection._id]
+  );
+  // Handle file upload for cover image
+  const handleCoverImageUpload = (info) => {
+    if (info.file.status === "done") {
+      const file = info.file.originFileObj;
+
+
+      handleUploadedDataChange("cover_image", URL.createObjectURL(file));
+    }
+  };
+  const uploadProps = useMemo(
+    () => ({
+      accept: "image/*",
+      multiple: false,
+      customRequest: async (info) => {
+        if (info?.file) {
+          const file = info.file;
+
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            const img = new window.Image();
+            img.src = e.target.result;
+
+            img.onload = () => {
+              const width = img.width;
+              const height = img.height;
+
+              if (width < 600 || height < 600) {
+                notification.error({
+                  message: "Image must be at least 600 x 600 pixels",
+                  //  description:
+                  //    error?.response?.data?.message || "Unexpected error occurred",
+                });
+                return;
+              }
+              setCropAndResizeImageData({
+                isOpen: true,
+                selectedImage: e.target.result?.toString() || "",
+                ImageFileName: file?.name,
+              });
+            };
+          };
+
+          reader.readAsDataURL(file);
+        }
+      },
+    }),
+    [handleUploadedDataChange],
+  );
+  // close crop and resize modal
+  const onCropAndResizeImageModalClose = useCallback(() => {
+    setCropAndResizeImageData({});
+  }, []);
+
+  const onCropAndResizeImageModalSubmit = useCallback(
+    async ({ blobData }) => {
+      try {
+        setCropAndResizeImageData({});
+        // setIsUploading(true);
+        if (blobData) {
+          const response = await profileAPIs.uploadImage({
+            file: blobData,
+            custom_size: COLLECTION_COVER_IMG_SIZE_900_900,
+          });
+          if (response?.data?.data && response.data.data[0]) {
+            handleUploadedDataChange("cover_image", response.data.data[0]?.url); // API call and updating local state with updated value
+          }
+        }
+      } catch (error) {
+        notification["error"]({
+          message: "Failed to upload cover image",
+        });
+      } finally {
+        // setIsUploading(false);
+        setIsDragAndDropVisible(false);
+      }
+    },
+    [handleUploadedDataChange],
+  );
+    const [isDragAndDropVisible, setIsDragAndDropVisible] = useState(
+      !collection.cover_image && !collection.video_url,
+    );
 
   return (
     <>
 
-     {collection?.sponsor_details?.banner?.image &&
+      {collection?.sponsor_details?.banner?.image &&
         collection?.sponsor_details?.banner?.url ? (
         <Link
           href={collection.sponsor_details.banner.url}
@@ -466,7 +577,7 @@ const CollectionDetails = ({
           />
         </Link>
       ) : null}
-      
+
       <div className={cssStyles.container}>
         <div
           ref={videoContainerRef}
@@ -515,7 +626,7 @@ const CollectionDetails = ({
                     style={{ zIndex: 10 }} // Ensure video is on top
                   />
                 ) : (
-                  <>
+                  <div className="relative">
                     <img
                       src={
                         collection.cover_image
@@ -534,6 +645,37 @@ const CollectionDetails = ({
                         }
                       }}
                     />
+                    {Owner || Adminlist &&
+                      <>
+                        <p className="z-40 absolute top-3 right-4 ">
+
+
+
+                          <Upload
+                            {...uploadProps}
+                            name='cover_image'
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <EditOutlined  
+                            title="Edit Collection"
+                            className={styles.editIconContainerowner}
+                             
+                          />
+                          </Upload>
+                        </p>
+
+                      </>
+                    }
+                    <CropAndResizeImageModal
+                      headerText="Crop and upload"
+                      isOpen={cropAndResizeImageData?.isOpen}
+                      onClose={onCropAndResizeImageModalClose}
+                      onSubmit={onCropAndResizeImageModalSubmit}
+                      aspect={1 / 1}
+                      selectedImg={cropAndResizeImageData?.selectedImage}
+                      ImageFileName={cropAndResizeImageData?.ImageFileName}
+                    />
 
                     {/* Properly scaled overlay points */}
                     {collection.cover_image_coordinates &&
@@ -547,7 +689,7 @@ const CollectionDetails = ({
                           )}
                         </div>
                       )}
-                  </>
+                  </div>
                 )}
               </div>
 
@@ -803,7 +945,7 @@ const CollectionDetails = ({
           <div className={styles.relativeContainer}>
             <p
               ref={descriptionRef}
-              className={`${isCollectionPage? 'lg:text-xl text-sm md:text-lg text-gray-105 whitespace-pre-wrap' : styles.descriptionText  } ${isShowMoreActive ? "" : styles.collection_description_ellipsis
+              className={`${isCollectionPage ? 'lg:text-xl text-sm md:text-lg text-gray-105 whitespace-pre-wrap' : styles.descriptionText} ${isShowMoreActive ? "" : styles.collection_description_ellipsis
                 }`}>
               {collection?.description}
             </p>
@@ -921,7 +1063,7 @@ const CollectionDetails = ({
           />
         )}
       </div>
-     
+
 
       {collection?.sponsor_details?.collection_image_list?.length > 0 && (
         <CarousalContainer

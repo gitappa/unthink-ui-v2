@@ -74,7 +74,7 @@ export const UserProfileMenu = ({
 								<Link href={is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE}>
 									<Text
 										ellipsis={true}
-										className='m-0 xl:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{ color: '#4F4F4F' }}>
+										className='m-0 lg:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{ color: '#4F4F4F' }}>
 										Sign In
 									</Text>
 								</Link>

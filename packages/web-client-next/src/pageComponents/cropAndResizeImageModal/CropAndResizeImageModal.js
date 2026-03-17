@@ -291,7 +291,7 @@ const CropAndResizeImageModal = ({
       </div>
       {/* // </Modal> */}
       <div
-        className={`flex justify-end gap-2 mt-2 ${!!completedCrop ? "z-40 absolute top-10 right-10" : "hidden"}`}
+        className={`flex justify-end gap-2 mt-2 ${!!completedCrop ? "z-50 absolute top-10 right-10" : "hidden"}`}
       >
         <button
           className="rounded-xl text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600"
