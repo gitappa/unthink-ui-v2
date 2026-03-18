@@ -47,7 +47,7 @@ const tagsMinSizeForShowMore = 5;
         blogCollectionPage?.collection_theme,
       )
 }
-console.log('sharepageUrls',sharepageUrls() );
+ 
 
 const SingleCollectionProductList = ({
   blogCollectionPage = {},
