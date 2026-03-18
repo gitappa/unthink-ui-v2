@@ -1,49 +1,24 @@
-name: CI swiftlystyled-next
+name: CI swiftlystyled
 
 on:
   push:
-    branches: 
+    branches:
       - master
   workflow_dispatch:
 
 jobs:
   build:
-    name: Cloud Run Deployment Prod
+    name: Cloud Run Deployment Prod (Next.js)
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Cache Node Modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Dependency
-        working-directory: "packages/web-client-next"
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Setup and run build on app
-        working-directory: "packages/web-client-next"
-        run: |
-          npm run build
-        env:
+    env:
           NODE_OPTIONS: "--max_old_space_size=4096"
 
           NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
           NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
-          GA_TRACKING_ID: "G-BEB892DM6D"
+          NEXT_PUBLIC_GA_TRACKING_ID: "G-BEB892DM6D"
 
           NEXT_PUBLIC_STAGING_ENV: "false"
+          NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
 
           NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "swiftlystyled"
 
@@ -67,35 +42,75 @@ jobs:
           NEXT_PUBLIC_PDP_PAGE_ENABLED: "false"
 
           NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node Modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Install Dependency
+        working-directory: "packages/web-client-next"
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --legacy-peer-deps
+      - name: Setup and run build on app
+        working-directory: "packages/web-client-next"
+        run: npm run build
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.DEV_GCP_SA_KEY }}
 
-      - name: Setup GCP Service Account
-        uses: google-github-actions/setup-gcloud@v0
-
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.DEV_GCP_SA_KEY_NEW }}
-          export_default_credentials: true
-
+      
       - name: Authorize
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
-          gcloud auth configure-docker us-docker.pkg.dev --quiet
-
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+      
       - name: Build
-        working-directory: "packages/web-client-next"
         run: |
-          docker build --tag us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-swiftlystyled-ui .
-
+          docker build \
+          --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-swiftlystyled-ui-v2 \
+          --build-arg NEXT_PUBLIC_BACKEND_URL=${{ env.NEXT_PUBLIC_BACKEND_URL }} \
+          --build-arg NEXT_PUBLIC_ACCESS_KEY=${{ env.NEXT_PUBLIC_ACCESS_KEY }} \
+          --build-arg NEXT_PUBLIC_STAGING_ENV=${{ env.NEXT_PUBLIC_STAGING_ENV }} \
+          --build-arg NEXT_PUBLIC_IS_KIOSK_ENABLED=${{ env.NEXT_PUBLIC_IS_KIOSK_ENABLED }} \
+          --build-arg NEXT_PUBLIC_SUPER_ADMIN_USER_NAME=${{ env.NEXT_PUBLIC_SUPER_ADMIN_USER_NAME }} \
+          --build-arg NEXT_PUBLIC_AURA_HEADER_THEME=${{ env.NEXT_PUBLIC_AURA_HEADER_THEME }} \
+          --build-arg NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT=${{ env.NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT }} \
+          --build-arg NEXT_PUBLIC_CURRENT_STORE_NAME=${{ env.NEXT_PUBLIC_CURRENT_STORE_NAME }} \
+          --build-arg NEXT_PUBLIC_CURRENT_STORE_ID=${{ env.NEXT_PUBLIC_CURRENT_STORE_ID }} \
+          --build-arg NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS=${{ env.NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS }} \
+          --build-arg NEXT_PUBLIC_ENABLE_RECOMMENDATIONS=${{ env.NEXT_PUBLIC_ENABLE_RECOMMENDATIONS }} \
+          --build-arg NEXT_PUBLIC_IS_STORE_INSTANCE=${{ env.NEXT_PUBLIC_IS_STORE_INSTANCE }} \
+          --build-arg NEXT_PUBLIC_ADMIN_USER_ID=${{ env.NEXT_PUBLIC_ADMIN_USER_ID }} \
+          --build-arg NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL=${{ env.NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL }} \
+          --build-arg NEXT_PUBLIC_ENABLE_VENLY=${{ env.NEXT_PUBLIC_ENABLE_VENLY }} \
+          --build-arg NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL=${{ env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL }} \
+          --build-arg NEXT_PUBLIC_PDP_PAGE_ENABLED=${{ env.NEXT_PUBLIC_PDP_PAGE_ENABLED }} \
+          --build-arg NEXT_PUBLIC_PAYMENT_URL=${{ env.NEXT_PUBLIC_PAYMENT_URL }} \
+          -f packages/web-client-next/Dockerfile .
+      
       - name: Push
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
-          docker push us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-swiftlystyled-ui
-
+          docker push us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-swiftlystyled-ui-v2
+      
       - name: Deploy
-        working-directory: "packages/web-client-next"
+        #working-directory: "packages/web-client-next"
         run: |
-          gcloud run deploy unthink-ui-next-swiftlystyled-ui \
+          gcloud run deploy unthink-ui-next-swiftlystyled-ui-v2 \
           --region us-central1 \
-          --image us-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/gcr.io/unthink-ui-next-swiftlystyled-ui \
+          --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-swiftlystyled-ui-v2 \
           --platform managed \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
