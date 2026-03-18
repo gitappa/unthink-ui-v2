@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button, Checkbox, Collapse, Select } from "antd";
+import { Button, Checkbox, Collapse, notification, Select, Upload } from "antd";
 import ReactPlayer from "react-player/lazy";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { MdOutlineFileUpload, MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 import ProductCard from "../../../components/singleCollection/ProductCard";
 import AskAuraCard from "../../../components/singleCollection/AskAuraCard";
@@ -24,12 +24,14 @@ import {
   WISHLIST_TITLE,
   favorites_collection_name,
   PRODUCT_SORT_OPTIONS,
+  COLLECTION_COVER_IMG_SIZE_900_900,
 } from "../../../constants/codes";
 import { is_store_instance, super_admin } from "../../../constants/config";
 import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
-
+import { profileAPIs } from "../../../helper/serverAPIs";
+import { EditOutlined } from "@ant-design/icons";
 const { Option } = Select;
 SwiperCore.use([FreeMode]);
 
@@ -109,9 +111,16 @@ const SingleCollectionProductListView = ({
   handleShowcaseCollectionProducts,
   isUserLogin,
   onSelectProductClick,
+  uploadProps,
+  Owner,
+  Adminlist,
+  handleCoverImageUpload
+
 }) => {
   // console.log('sharePageUrl');
   
+   
+
   const renderProductsList = ({
     list,
     showAuraTileFlag,
@@ -192,12 +201,36 @@ const SingleCollectionProductListView = ({
                     <div className={styles.videoOverlay} />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
+                  <>
                   <img
                     className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
-                      }`}
+                    }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
-                  />
+                    />
+                        {Owner || Adminlist &&
+                      <>
+                        <p className="z-40 absolute top-3 right-4 " onClick={(e) =>e.stopPropagation()}>
+
+
+
+                          <Upload
+                            {...uploadProps}
+                            name='cover_image'
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <MdOutlineFileUpload
+                            title="Edit Collection"
+                            className={styles.editIconContainerowner}
+                             
+                          />
+                          </Upload>
+                        </p>
+
+                      </>
+                    }
+                    </>
                 ) : (
                   blogCollectionPage?.video_url &&
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
@@ -317,12 +350,36 @@ const SingleCollectionProductListView = ({
                     <div className={styles.videoOverlay} />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
+                  <div className="relative">
                   <img
                     className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
-                      }`}
+                    }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
-                  />
+                    />
+                        {Owner || Adminlist &&
+                      <>
+                        <p className="z-40 absolute top-3 right-4 ">
+
+
+
+                          <Upload
+                            {...uploadProps}
+                            name='cover_image'
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <EditOutlined  
+                            title="Edit Collection"
+                            className={styles.editIconContainerowner}
+                             
+                          />
+                          </Upload>
+                        </p>
+
+                      </>
+                    }
+                    </div>
                 ) : (
                   blogCollectionPage?.video_url &&
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (

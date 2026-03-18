@@ -62,6 +62,7 @@ const CropAndResizeImage = ({
 					ref={imgRef}
 					alt='Crop me'
 					src={selectedImg}
+					className='img-crop'
 					// style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
 					onLoad={onImageLoad}
 				/>

@@ -316,6 +316,7 @@
   align-items: center;
   font-size: 1.25rem; /* text-xl */
   cursor: pointer;
+    fill: white ;
 
   @media (min-width: 1024px) {
     font-size: 1.75rem; /* lg:text-xl-2 (28px) */
@@ -646,7 +647,12 @@ svg{
   width: 100%;
   object-fit: cover;
   border-radius: 0.25rem; /* rounded */
-  /* aspect ratio inline style in JSX */
+@media (max-width: 768px) {
+  height: 220px;
+}
+@media (min-width: 768px) {
+  aspect-ratio: 1 / 0.25;
+}
 }
 
 .videoPlayer {
@@ -1994,12 +2000,26 @@ color: #99A1AF;
 }
 
 .faqLabel {
-  font-family: sans-serif;
+  // font-family: sans-serif;
+  font-weight: 700;
+   @media (min-width:768px) {
+      font-size: 15px;
+  }
+  @media (min-width:1024px) {
+      font-size: 16px;
+  }
 }
 
 .faqAnswer {
+
   color: black;
-  font-family: sans-serif;
+  // font-family: sans-serif;
+  @media (min-width:768px) {
+      font-size: 16px;
+  }
+  @media (min-width:1024px) {
+      font-size: 17px;
+  }
 }
 
 /* Checkbox area */
