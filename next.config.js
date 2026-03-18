@@ -3,6 +3,14 @@ const nextConfig = {
   reactStrictMode: false, // Disabled to prevent double rendering and Suspense hydration issues
   // swcMinify: true,
   
+  // Transpile @reown packages to fix ESM module resolution issues
+  transpilePackages: [
+    '@reown/appkit',
+    '@reown/appkit-common',
+    '@reown/appkit-controllers',
+    '@reown/walletkit',
+  ],
+  
   // // Skip ESLint during build
   // eslint: {
   //   ignoreDuringBuilds: true,
