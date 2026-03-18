@@ -40,13 +40,20 @@ const nextConfig = {
             /\.spec\.js$/,
             /\.test\.ts$/,
             /\.spec\.ts$/,
-            /@reown\/appkit-controllers\/dist\/esm\/tests/,
-            /@reown\/appkit-scaffold-ui\/dist\/esm\/test/,
+            /node_modules\/@reown\/appkit-controllers\/dist\/esm\/tests/,
+            /node_modules\/@reown\/appkit-scaffold-ui\/dist\/esm\/test/,
+            /node_modules\/@reown\/appkit-controllers\/dist\/cjs\/tests/,
+            /node_modules\/@reown\/appkit-scaffold-ui\/dist\/cjs\/test/,
           ]
         };
       }
       return rule;
     });
+
+    // Also add a more direct exclusion in the resolve.alias to skip problematic imports
+    if (!config.resolve.alias) {
+      config.resolve.alias = {};
+    }
 
     // Remove default SVG handling
     config.module.rules = config.module.rules.map((rule) => {
