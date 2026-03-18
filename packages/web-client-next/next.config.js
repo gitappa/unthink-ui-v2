@@ -25,12 +25,25 @@ const nextConfig = {
 
   // Webpack config for SVG handling with SVGR
   webpack: (config, { isServer }) => {
-    // Exclude test files from node_modules to prevent build errors
-    // Some packages (like @reown/appkit-controllers) include test files
-    // with invalid relative imports that break the build
-    config.module.rules.unshift({
-      test: /\.test\.js$/,
-      use: 'ignore-loader',
+    // Prevent webpack from attempting to bundle test files from @reown packages
+    // These test files have invalid relative imports that cause build failures
+    const rules = config.module.rules;
+    
+    // Find and modify the default JS/JSX loader to exclude test files
+    config.module.rules = rules.map(rule => {
+      if (rule.test && rule.test.toString().includes('js')) {
+        return {
+          ...rule,
+          exclude: [
+            ...(rule.exclude || []),
+            /\.test\.js$/,
+            /\.spec\.js$/,
+            /\.test\.ts$/,
+            /\.spec\.ts$/,
+          ]
+        };
+      }
+      return rule;
     });
 
     // Remove default SVG handling
