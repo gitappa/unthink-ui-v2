@@ -1,4 +1,4 @@
-name: CI budgettravel-next
+name: CI budgettravel
 
 on:
   push:
@@ -38,24 +38,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/checkout@main
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-
+          node-version: ${{ matrix.node-version }}
       - name: Cache Node Modules
+        id: cache-node-modules
         uses: actions/cache@v4
         with:
-          path: packages/web-client-next/node_modules
-          key: node-modules-${{ hashFiles('packages/web-client-next/package-lock.json') }}
-
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
         working-directory: "packages/web-client-next"
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --legacy-peer-deps
-
-      - name: Build Next.js App
+      - name: Setup and run build on app
         working-directory: "packages/web-client-next"
         run: npm run build
       - name: Authenticate to Google Cloud
@@ -102,11 +100,14 @@ jobs:
         run: |
           docker push us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-budgettravel-ui-v2
       
-      - name: Deploy to Cloud Run
+      - name: Deploy
+        #working-directory: "packages/web-client-next"
         run: |
           gcloud run deploy unthink-ui-next-budgettravel-ui-v2 \
           --region us-central1 \
           --image us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-budgettravel-ui-v2 \
           --platform managed \
           --project ${{ secrets.DEV_GCP_PROJECT_ID }}
+          
+
       
