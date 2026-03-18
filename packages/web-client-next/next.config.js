@@ -29,7 +29,7 @@ const nextConfig = {
     // These test files have invalid relative imports that cause build failures
     const rules = config.module.rules;
     
-    // Find and modify the default JS/JSX loader to exclude test files
+    // Find and modify the default JS/JSX loader to exclude test files and node_modules from problematic packages
     config.module.rules = rules.map(rule => {
       if (rule.test && rule.test.toString().includes('js')) {
         return {
@@ -40,6 +40,8 @@ const nextConfig = {
             /\.spec\.js$/,
             /\.test\.ts$/,
             /\.spec\.ts$/,
+            /@reown\/appkit-controllers\/dist\/esm\/tests/,
+            /@reown\/appkit-scaffold-ui\/dist\/esm\/test/,
           ]
         };
       }
