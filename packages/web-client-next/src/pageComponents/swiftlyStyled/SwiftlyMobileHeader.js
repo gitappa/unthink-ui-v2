@@ -19,6 +19,8 @@ import walletIcon from "../../components/singleCollection/images/wallet_new.svg"
 import Image from "next/image";
 import { getThemeCollectionsPagePath } from "../../helper/utils";
 import { THEME_ALL } from "../../constants/themeCodes";
+import { openWishlistModal } from "../wishlist/redux/actions";
+import { FaRegHeart } from "react-icons/fa6";
 
 const SwiftlyMobileHeader = ({
   showProfileIcon,
@@ -55,7 +57,9 @@ const SwiftlyMobileHeader = ({
       is_store_instance && current_store_name === STORE_USER_NAME_SWIFTLYSTYLED,
     [],
   );
-
+  const onWishlistClick = () => {
+    dispatch(openWishlistModal());
+  };
   return (
     <>
       <div
@@ -84,6 +88,7 @@ const SwiftlyMobileHeader = ({
             style={{ color: "#4F4F4F" ,fontWeight:700,fontSize:14,fontFamily:''}}
             onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
           >
+
             Collections
           </button>
 
@@ -102,7 +107,7 @@ const SwiftlyMobileHeader = ({
             />
           </button>
 
-          {storeData?.is_droppWallet_connect_enabled && (
+          {/* {storeData?.is_droppWallet_connect_enabled && (
             <Image
               src={walletIcon}
               style={{ filter: "brightness(0) opacity(0.7)" }}
@@ -112,7 +117,18 @@ const SwiftlyMobileHeader = ({
               width={24}
               className={styles.walletIcon}
             />
-          )}
+          )} */}
+
+          <FaRegHeart
+                                onClick={onWishlistClick}
+                                   style={{ filter: "brightness(0) opacity(0.7)" ,height:24,width:24}}
+            
+            
+              height={24}
+              width={24}
+                                className={styles.walletIcon}
+                              />
+
 
           <div className={styles.profileIconWrapper}>
             {showProfileIcon ? (

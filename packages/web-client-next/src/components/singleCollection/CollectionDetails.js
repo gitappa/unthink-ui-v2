@@ -56,6 +56,7 @@ import { toggleShowMore } from "../../pageComponents/collectionPage/redux/action
 import CarousalContainer from "../carousel/CarouselContainer";
 import CropAndResizeImageModal from "../../pageComponents/cropAndResizeImageModal/CropAndResizeImageModal";
 import { profileAPIs } from "../../helper/serverAPIs";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 const { Dragger } = Upload;
 
@@ -104,8 +105,8 @@ const CollectionDetails = ({
     isOpen: false,
     selectedImage: "",
   });
-  const Owner = authUser.user_name === collection.user_name
-  const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
+    const Owner = authUser.user_name === collection.user_name
+    const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
 
   // console.log('checkdata',jmidfhn);
   // console.log(Owner || Adminlist);
@@ -518,8 +519,9 @@ const CollectionDetails = ({
     [handleUploadedDataChange],
   );
   // close crop and resize modal
-  const onCropAndResizeImageModalClose = useCallback(() => {
+  const onCropAndResizeImageModalClose = useCallback((setCompletedCrop) => {
     setCropAndResizeImageData({});
+     setCompletedCrop(false);
   }, []);
 
   const onCropAndResizeImageModalSubmit = useCallback(
@@ -570,9 +572,9 @@ const CollectionDetails = ({
               })
             }
             className={styles.bannerImage}
-            style={{
-              aspectRatio: "1 / 0.25",
-            }}
+            // style={{
+            //   aspectRatio: "1 / 0.25",
+            // }}
             src={getFinalImageUrl(collection.sponsor_details.banner.image)}
           />
         </Link>
@@ -657,7 +659,7 @@ const CollectionDetails = ({
                             showUploadList={false}
                             onChange={handleCoverImageUpload}
                           >
-                            <EditOutlined  
+                            <MdOutlineFileUpload  
                             title="Edit Collection"
                             className={styles.editIconContainerowner}
                              

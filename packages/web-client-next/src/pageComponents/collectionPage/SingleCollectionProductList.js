@@ -21,18 +21,22 @@ import {
   setCookie,
 } from "../../helper/utils";
 import {
+  COLLECTION_COVER_IMG_SIZE_900_900,
   COOKIE_TT_ID,
   SIGN_IN_EXPIRE_DAYS,
 } from "../../constants/codes";
 import { addToWishlist } from "../wishlistActions/addToWishlist/redux/actions";
-import { current_store_name } from "../../constants/config";
+import { current_store_name, super_admin } from "../../constants/config";
 import {
   openWishlistModal,
   setProductsToAddInWishlist,
 } from "../wishlist/redux/actions";
-import { authAPIs } from "../../helper/serverAPIs";
+import { authAPIs, profileAPIs } from "../../helper/serverAPIs";
 import Cookies from "js-cookie";
 import SingleCollectionProductListView from "./components/SingleCollectionProductListView";
+import { updateWishlist } from "../wishlistActions/updateWishlist/redux/actions";
+import { notification } from "antd";
+import CropAndResizeImageModal from "../cropAndResizeImageModal/CropAndResizeImageModal";
 
 const tagsMinSizeForShowMore = 5;
 
@@ -72,7 +76,10 @@ const SingleCollectionProductList = ({
   isRootPage = true,
   isMyProfilePage,
 }) => {
- 
+   const [cropAndResizeImageData, setCropAndResizeImageData] = useState({
+     isOpen: false,
+     selectedImage: "",
+   });
 
 
 const url = window.location.pathname === '/my-profile/'
@@ -786,7 +793,123 @@ const url = window.location.pathname === '/my-profile/'
   //   if (collectionId) initializedFor.current = collectionId;
   // }, [singleCollection, autoProductsData, collectionId]);
 
+
+  const [admin_list ] = useSelector((state) => [ state.store.data.admin_list ]);
+        const Owner = authUser.user_name === singleCollection.user_name
+        const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
+        
+  const handleUploadedDataChange = useCallback(
+    (name, value) => {
+      const editPayload = {
+        _id: blogCollectionPage._id,
+        [name]: value,
+        fetchUserCollection: true,
+      };
+
+
+
+
+      dispatch(updateWishlist(editPayload));
+      // setUpdatedData({ ...updatedData, [name]: value });
+    },
+    [blogCollectionPage._id]
+  );
+  // Handle file upload for cover image
+  const handleCoverImageUpload = (info) => {
+    if (info.file.status === "done") {
+      const file = info.file.originFileObj;
+
+
+      handleUploadedDataChange("cover_image", URL.createObjectURL(file));
+    }
+  };
+  const uploadProps = useMemo(
+    () => ({
+      accept: "image/*",
+      multiple: false,
+      customRequest: async (info) => {
+        if (info?.file) {
+          const file = info.file;
+
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            const img = new window.Image();
+            img.src = e.target.result;
+
+            img.onload = () => {
+              const width = img.width;
+              const height = img.height;
+
+              if (width < 600 || height < 600) {
+                notification.error({
+                  message: "Image must be at least 600 x 600 pixels",
+                  //  description:
+                  //    error?.response?.data?.message || "Unexpected error occurred",
+                });
+                return;
+              }
+              setCropAndResizeImageData({
+                isOpen: true,
+                selectedImage: e.target.result?.toString() || "",
+                ImageFileName: file?.name,
+              });
+            };
+          };
+
+          reader.readAsDataURL(file);
+        }
+      },
+    }),
+    [handleUploadedDataChange],
+  );
+  // close crop and resize modal
+  const onCropAndResizeImageModalClose = useCallback((setCompletedCrop) => {
+    setCropAndResizeImageData({});
+    setCompletedCrop(false);
+  }, []);
+
+  const onCropAndResizeImageModalSubmit = useCallback(
+    async ({ blobData }) => {
+      try {
+        setCropAndResizeImageData({});
+        // setIsUploading(true);
+        if (blobData) {
+          const response = await profileAPIs.uploadImage({
+            file: blobData,
+            custom_size: COLLECTION_COVER_IMG_SIZE_900_900,
+          });
+          if (response?.data?.data && response.data.data[0]) {
+            handleUploadedDataChange("cover_image", response.data.data[0]?.url); // API call and updating local state with updated value
+          }
+        }
+      } catch (error) {
+        notification["error"]({
+          message: "Failed to upload cover image",
+        });
+      } finally {
+        // setIsUploading(false);
+        setIsDragAndDropVisible(false);
+      }
+    },
+    [handleUploadedDataChange],
+  );
+    const [isDragAndDropVisible, setIsDragAndDropVisible] = useState(
+      !blogCollectionPage.cover_image && !blogCollectionPage.video_url,
+    );
+
   return (
+    <>
+       <CropAndResizeImageModal
+                      headerText="Crop and upload"
+                      isOpen={cropAndResizeImageData?.isOpen}
+                      onClose={onCropAndResizeImageModalClose}
+                      onSubmit={onCropAndResizeImageModalSubmit}
+                      aspect={1 / 1}
+                      selectedImg={cropAndResizeImageData?.selectedImage}
+                      ImageFileName={cropAndResizeImageData?.ImageFileName}
+                    />
+
     <SingleCollectionProductListView
       singleCollection={singleCollection}
       autoProductsData={autoProductsData}
@@ -863,7 +986,13 @@ const url = window.location.pathname === '/my-profile/'
       handleShowcaseCollectionProducts={handleShowcaseCollectionProducts}
       isUserLogin={isUserLogin}
       onSelectProductClick={onSelectProductClick}
+      uploadProps={uploadProps}
+      Adminlist={Adminlist}
+      Owner={Owner}
+      handleCoverImageUpload={handleCoverImageUpload}
     />
+    </>
+
   );
 };
 

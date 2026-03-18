@@ -316,6 +316,7 @@
   align-items: center;
   font-size: 1.25rem; /* text-xl */
   cursor: pointer;
+    fill: white ;
 
   @media (min-width: 1024px) {
     font-size: 1.75rem; /* lg:text-xl-2 (28px) */
@@ -646,7 +647,12 @@ svg{
   width: 100%;
   object-fit: cover;
   border-radius: 0.25rem; /* rounded */
-  /* aspect ratio inline style in JSX */
+@media (max-width: 768px) {
+  height: 220px;
+}
+@media (min-width: 768px) {
+  aspect-ratio: 1 / 0.25;
+}
 }
 
 .videoPlayer {
@@ -1803,15 +1809,13 @@ transition: transform 0.3s ease;
     // animation: scaleIn 0.3s ease-out;
     // transform: scale(0.95);
  transform: translateY(-4px);
-    p {
-      // animation: textPulse 0.5s ease-out;
-    }
+   
   }
 
-  .sharecontainer:active .shareIcon,
-  .sharecontainer:active .shareIconEnabled {
-    animation: rotate 0.6s ease-out;
-  }
+  // .sharecontainer:active .shareIcon,
+  // .sharecontainer:active .shareIconEnabled {
+  //   animation: rotate 0.6s ease-out;
+  // }
 }
 
 @keyframes textPulse {
@@ -1848,7 +1852,7 @@ transition: transform 0.3s ease;
   cursor: pointer;
   filter: brightness(0);
   transition: transform 0.3s ease;
-  will-change: transform;
+  // will-change: transform;
   // @media (min-width:1000px) {
   //     &:active {
   //   animation: rotate 0.6s ease-out;
@@ -1996,12 +2000,26 @@ color: #99A1AF;
 }
 
 .faqLabel {
-  font-family: sans-serif;
+  // font-family: sans-serif;
+  font-weight: 700;
+   @media (min-width:768px) {
+      font-size: 15px;
+  }
+  @media (min-width:1024px) {
+      font-size: 16px;
+  }
 }
 
 .faqAnswer {
+
   color: black;
-  font-family: sans-serif;
+  // font-family: sans-serif;
+  @media (min-width:768px) {
+      font-size: 16px;
+  }
+  @media (min-width:1024px) {
+      font-size: 17px;
+  }
 }
 
 /* Checkbox area */

@@ -151,8 +151,8 @@ const CropAndResizeImageModal = ({
         image.naturalWidth,
         image.naturalHeight,
       );
-
       ctx.restore();
+      // setCompletedCrop("");
     },
     [],
   );
@@ -295,7 +295,7 @@ const CropAndResizeImageModal = ({
       >
         <button
           className="rounded-xl text-indigo-100 font-bold text-xs md:text-sm py-2 px-4.5 bg-indigo-600"
-          onClick={onClose}
+          onClick={()=>onClose(setCompletedCrop) }
         >
           Cancel
         </button>

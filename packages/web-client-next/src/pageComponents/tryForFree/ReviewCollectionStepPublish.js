@@ -372,8 +372,9 @@ const ReviewCollectionStepPublish = ({
   }, [currentCollection._id, currentCollection.status]);
 
   // close crop and resize modal
-  const onCropAndResizeImageModalClose = useCallback(() => {
+  const onCropAndResizeImageModalClose = useCallback((setCompletedCrop) => {
     setCropAndResizeImageData({});
+    setCompletedCrop(false);
   }, []);
 
   const onCropAndResizeImageModalSubmit = useCallback(
