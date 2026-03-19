@@ -177,6 +177,33 @@ const ProfileName = ({
 					<Title className={styles.titleWhiteCenterMy7} level={4}>
 						Your Brand Details
 					</Title>
+							<Row gutter={[20, 20]} className={styles.mt6}>
+						<Col xs={24} md={12}>
+							<Input
+								name='first_name'
+								className={styles.inputBgTransparent}
+								placeholder='Enter your first name'
+								value={profileData.first_name}
+								onChange={handleDataChange}
+							/>
+							<div className={styles.errorContainerH3}>
+								{error.first_name && (
+									<span className={`${styles.errorText} error-text`}>
+										{error.first_name}
+									</span>
+								)}
+							</div>
+						</Col>
+						<Col xs={24} md={12}>
+							<Input
+								name='last_name'
+								className={styles.inputBgTransparent}
+								placeholder='Enter your last name'
+								value={profileData.last_name}
+								onChange={handleDataChange}
+							/>
+						</Col>
+					</Row>
 					<Row gutter={[20, 20]}>
 						<Col xs={24}>
 							<Input
@@ -257,7 +284,7 @@ const ProfileName = ({
 			)}
 
 			{/* for admin only cover image from edit profile and profile page */}
-			{showCoverImage ? (
+			{/* {showCoverImage ? ( */}
 				<Row className={styles.blockMt6}>
 					<Col span={24}>
 						{isUploading.cover_image && (
@@ -319,7 +346,7 @@ const ProfileName = ({
 							))}
 					</Col>
 				</Row>
-			) : null}
+			{/* // ) : null} */}
 			<Row className={styles.mt6}>
 				<Col span={24}>
 					{isUploading.profile_image && (
