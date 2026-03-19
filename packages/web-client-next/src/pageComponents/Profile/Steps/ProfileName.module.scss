@@ -24,6 +24,10 @@
   background-color: transparent !important;
   color: white;
 }
+.inputBgTransparent::placeholder{
+  color: rgb(233, 230, 230) !important;
+
+}
 .inputBgTransparentMt1::placeholder {
   color: rgb(233, 230, 230) !important;
 }

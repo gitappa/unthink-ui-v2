@@ -119,8 +119,9 @@
 
 /* Replicating .collections button from original SCSS */
 .collections button {
-    font-family: 'buttonFont', sans-serif;
+    /* font-family: '-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji'; */
     font-weight: bold;
+    /* font-family: '-apple-system'; */
     color: #ffffff;
     letter-spacing: 0;
     font-size: 16px;

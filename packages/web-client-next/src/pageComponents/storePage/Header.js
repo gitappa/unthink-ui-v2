@@ -52,7 +52,6 @@ import {
 } from "../../constants/codes";
 import Link from "next/link";
 import { useRouter } from "next/router";
-const navigate = (path) => useRouter().push(path);
 import {
   checkAndGenerateUserId,
   clearStorages,
@@ -449,7 +448,7 @@ const Header = ({
       // }
 
 
-      if ((!isSwiftlyStyledInstance || !isDoTheLookInstance) && window.innerWidth <= 1024) {
+      if (storeData?.is_droppWallet_connect_enabled && window.innerWidth <= 1024) {
         // if (showCategories) {
         //   items.push({
         //     key: "Discover",
@@ -473,17 +472,22 @@ const Header = ({
         //     ),
         //   });
         // }
-        items.push({
-          key: { WISHLISTS_TITLE },
+        // if(storeData?.is_droppWallet_connect_enabled){
+        
+      // }
+ 
+      // }  
+      
+      items.push({
+          key: 'droppwalletconnect',
           className: styles.headerMenuItemPy2,
-          onClick: onWishlistClick,
+          onClick: () => setisDropDown(true),
           label: (
-            <span className={styles.headerMenuSpanTextBase}>My {WISHLISTS_TITLE}</span>
+            <span className={styles.headerMenuSpanTextBase}>Dropp Wallet Connect</span>
           ),
         });
- 
       }
-      items.push({
+        items.push({
         key: "signout",
         className: styles.headerMenuItemPy2,
         onClick: onSignOut,
@@ -498,7 +502,17 @@ const Header = ({
     items: getHeaderProfileMenuItems(),
     className: styles.headerProfileMenuContainer,
   };
-
+ {/* {storeData?.is_droppWallet_connect_enabled && (
+            <Image
+              src={walletIcon}
+              style={{ filter: "brightness(0) opacity(0.7)" }}
+              onClick={() => setisDropDown(true)}
+              alt="wallet"
+              height={24}
+              width={24}
+              className={styles.walletIcon}
+            />
+          )} */}
   return (
     <>
       {/* ----mobile ui start ---- */}
