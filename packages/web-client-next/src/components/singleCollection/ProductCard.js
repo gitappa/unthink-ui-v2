@@ -27,8 +27,6 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-// const vtf_image = "/images/vtoIcon.svg";
-import vtf_image from "./images/vtoIcon.svg";
 import { FaMinus } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
@@ -86,7 +84,7 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
 import Modal from "../modal/Modal";
-import { customProductsAPIs, profileAPIs } from "../../helper/serverAPIs";
+import { customProductsAPIs, profileAPIs, TryOnVto,   } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
@@ -551,6 +549,8 @@ const ProductCard = ({
     const url = window.location.origin;
     // setButtonClick(true);
 
+
+    
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
@@ -560,10 +560,7 @@ const ProductCard = ({
     };
     try {
       setLoading(true);
-      const res = await axios.post(
-        `https://auraprod.unthink.ai/cs/image_tryon/`,
-        payload,
-      );
+      const res = await TryOnVto(payload)
       setVtoResultImageUrl(res.data.data.image_url);
       setLoading(false);
     } catch (error) {
