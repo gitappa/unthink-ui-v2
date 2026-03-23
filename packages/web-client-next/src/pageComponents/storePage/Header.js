@@ -147,7 +147,7 @@ const Header = ({
     // state.store.data.associate_seller,
     state.store.data,
   ]);
- 
+ const removedata =false
 
   const {
     my_products_enable: isMyProductsEnable,
@@ -699,7 +699,25 @@ const Header = ({
             )}
           </>
         ) : (
+          <>
+               <SwiftlyHeader
+                isRootPage={isRootPage}
+                disabledOutSideClick={disabledOutSideClick}
+                config={config}
+                trackCollectionData={trackCollectionData}
+                isBTInstance={isBTInstance}
+                showProfileIcon={showProfileIcon && isUserLogin}
+                isUserFetching={isUserFetching}
+                headerProfileMenu={headerProfileMenu}
+                currentUser={currentUser}
+                isSwiftlyStyledInstance={isSwiftlyStyledInstance}
+                isDoTheLookInstance={isDoTheLookInstance}
+                setisDropDown={setisDropDown}
+              /> 
+              {removedata && 
           <div className={styles.desktopHeaderContainer}>
+            
+
             {/* this div must have 3 child only to keep the aura center aligned */}
             <div className={styles.desktopHeaderLeft}>
               {!is_store_instance && (
@@ -824,6 +842,9 @@ const Header = ({
               />
             )}
           </div>
+}
+          </>
+
         )}
       </div>
 

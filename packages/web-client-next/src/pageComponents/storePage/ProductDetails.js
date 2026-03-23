@@ -29,7 +29,11 @@ import {
   isEmpty,
   cleanImage,
 } from "../../helper/utils";
-import { customProductsAPIs, profileAPIs, TryOnVto } from "../../helper/serverAPIs";
+import {
+  customProductsAPIs,
+  profileAPIs,
+  TryOnVto,
+} from "../../helper/serverAPIs";
 
 import ShareOptions from "../shared/shareOptions";
 
@@ -77,7 +81,7 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductImage,
     fetchProductLoading,
     productDetail,
-    ButtonClick
+    ButtonClick,
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -86,14 +90,13 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.image,
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
-      state.VtoIconReducer.ButtonClick,
+    state.VtoIconReducer.ButtonClick,
   ]);
- 
 
   const [store_id] = useSelector((state) => [state.store.data.store_id]);
- 
+
   const imageFromQuery = cleanImage(router.query.image);
-    const [showLoader, setShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   //   useEffect(() => {
   //     return () => {
@@ -186,8 +189,6 @@ const ProductDetails = ({ params, ...props }) => {
     };
     dispatch(addToCart(payload));
   };
-
- 
 
   const brandsDetails = useMemo(
     () => sellerDetails[productDetails?.brand],
@@ -369,7 +370,7 @@ const ProductDetails = ({ params, ...props }) => {
           },
         },
       );
- 
+
       // 🔁 If API returns payment URL
       if (res?.data?.redirectUrl) {
         if (typeof window !== "undefined") {
@@ -382,51 +383,45 @@ const ProductDetails = ({ params, ...props }) => {
     }
   };
 
+  const handleUploadImage = async ({ file }) => {
+    try {
+      setShowLoader(true);
 
+      const response = await profileAPIs.uploadImage({ file });
+      const data = response?.data;
 
-
-
-
-    const handleUploadImage = async ({ file }) => {
-      try {
-        setShowLoader(true);
-  
-        const response = await profileAPIs.uploadImage({ file });
-        const data = response?.data;
-  
-        if (data?.status_code === 400 || data?.status === "failure") {
-          notification.error({
-            message: "Image Upload Failed",
-            description:
-              data?.status_desc || "Something went wrong. Please try again.",
-          });
-          return;
-        }
-        const url = data?.data?.[0]?.url;
-        setUploadedImages((prev) => prev.concat(url));
-        if (url) {
-          // setUploadedImages((prev) => [...prev, url]);
-          // additional_images.push(url)
-          notification.success({
-            message: "Image Uploaded Successfully",
-          });
-        }
-      } catch (error) {
-        console.error("Upload failed:", error);
-        console.log(error);
-
+      if (data?.status_code === 400 || data?.status === "failure") {
         notification.error({
           message: "Image Upload Failed",
           description:
-            error?.response?.data?.message || "Unexpected error occurred",
+            data?.status_desc || "Something went wrong. Please try again.",
         });
-      } finally {
-        setShowLoader(false);
+        return;
       }
-    };
+      const url = data?.data?.[0]?.url;
+      setUploadedImages((prev) => prev.concat(url));
+      if (url) {
+        // setUploadedImages((prev) => [...prev, url]);
+        // additional_images.push(url)
+        notification.success({
+          message: "Image Uploaded Successfully",
+        });
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      console.log(error);
 
+      notification.error({
+        message: "Image Upload Failed",
+        description:
+          error?.response?.data?.message || "Unexpected error occurred",
+      });
+    } finally {
+      setShowLoader(false);
+    }
+  };
 
-    const uploadImageDraggerProps = {
+  const uploadImageDraggerProps = {
     accept: "image/*",
     multiple: true,
     showUploadList: false,
@@ -438,9 +433,9 @@ const ProductDetails = ({ params, ...props }) => {
   const [additionalimg, setAdditionalImg] = useState(null);
   const [Loading, setLoading] = useState(false);
   const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-   const [descriptionget, setDescriptionget] = useState("");
-   const [uploadedImages, setUploadedImages] = useState([]);
-   const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
+  const [descriptionget, setDescriptionget] = useState("");
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -455,7 +450,7 @@ const ProductDetails = ({ params, ...props }) => {
     };
     try {
       setLoading(true);
-      const res = await TryOnVto(payload)
+      const res = await TryOnVto(payload);
       setVtoResultImageUrl(res.data.data.image_url);
       setLoading(false);
     } catch (error) {
@@ -541,243 +536,255 @@ const ProductDetails = ({ params, ...props }) => {
               {productDetails?.additional_image &&
               productDetails?.additional_image.length > 0 ? (
                 <Swiper
-  modules={[FreeMode]}
-  freeMode={true}
-  // grabCursor={true}
-  slidesPerView={"auto"}
-  spaceBetween={8}
-  className="mt-4 w-full h-28 cursor-pointer"
->
-  {[productDetails.image, ...productDetails.additional_image].map((img, i) => (
-    <SwiperSlide key={i} style={{ width: "auto" }}>
-      <div className="flex">
-        <Image
-          src={img}
-          height={50}
-          width={50}
-          className={`w-[110px] h-[110px] rounded-[10px] ${
-            additionalimg === img
-              ? "border bg-purple-300 p-0.5"
-              : ""
-          }`}
-          onClick={() => setAdditionalImg(img)}
-          alt="product"
-        />
-      </div>
-    </SwiperSlide>
-  ))}
-</Swiper>
-  ) : null
-}
-    
-            </div>
-
-          
-
-
-
-
-                                {ButtonClick === productDetails?.mfr_code ? (
-        <Modal
-          isOpen={!!ButtonClick}
-          headerText={"Virtual Try-On"}
-          subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
-          onClose={() => handleVTOCancel()}
-          size="md"
-        >
-          {vtoResultImageUrl ? (
-            <div className={styles["product-vto-result-container"]}>
-              <img
-                src={vtoResultImageUrl}
-                alt="VTO Result"
-                className={styles["product-vto-result-image"]}
-              />
-              <div className={styles["product-vto-buttons-group"]}>
-                <button
-                  onClick={handleVTOCancel}
-                  className={styles["product-vto-cancel-button"]}
+                  modules={[FreeMode]}
+                  freeMode={true}
+                  // grabCursor={true}
+                  slidesPerView={"auto"}
+                  spaceBetween={8}
+                  className="mt-4 w-full h-28 cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVTODownload}
-                  className={styles["product-vto-submit-button"]}
-                >
-                  Download
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              {Loading ? (
-                <div className={styles["product-vto-loading-container"]}>
-                  <LoadingOutlined
-                    className={styles["product-vto-loading-spinner"]}
-                  />
-                  <div className={styles["product-vto-loading-text"]}>
-                    <p className={styles["product-vto-loading-title"]}>
-                      AI is generating your image
-                    </p>
-                    <p className={styles["product-vto-loading-subtitle"]}>
-                      Please wait while we process your request...
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleVTOclick}>
-                  <div className={styles["product-vto-upload-container"]}>
-                    {showLoader ? (
-                      <LoadingOutlined
-                        className={styles["product-vto-loading-spinner"]}
-                      />
-                    ) : (
-                      <>
-                        {uploadedImages.length < 1 && (
-                          <div
-                            className={styles["product-vto-upload-container"]}
-                          >
-                            <h4 className={styles["product-vto-upload-title"]}>
-                              Upload Your Image{" "}
-                            </h4>
-                            <Upload.Dragger
-                              className={styles["product-vto-upload-zone"]}
-                              {...uploadImageDraggerProps}
-                              name="upload_image"
-                              showUploadList={false}
-                            >
-                              <p className={styles["product-vto-upload-icon"]}>
-                                <UploadOutlined />
-                              </p>
-                              <p className={styles["product-vto-upload-text"]}>
-                                Click or drag file(s) to this area
-                              </p>
-                            </Upload.Dragger>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    {uploadedImages.length > 0 && (
-                      <div
-                        className={
-                          styles["product-vto-uploaded-image-container"]
-                        }
-                      >
-                        <img
-                          src={uploadedImages[0]}
-                          alt="Uploaded"
-                          className={styles["product-vto-uploaded-image"]}
-                        />
-                        <CloseCircleOutlined
-                          className={styles["product-vto-close-uploaded"]}
-                          onClick={() => setUploadedImages([])}
+                  {[
+                    productDetails.image,
+                    ...productDetails.additional_image,
+                  ].map((img, i) => (
+                    <SwiperSlide key={i} style={{ width: "auto" }}>
+                      <div className="flex">
+                        <Image
+                          src={img}
+                          height={50}
+                          width={50}
+                          className={`w-[110px] h-[110px] rounded-[10px] ${
+                            additionalimg === img
+                              ? "border bg-purple-300 p-0.5"
+                              : ""
+                          }`}
+                          onClick={() => setAdditionalImg(img)}
+                          alt="product"
                         />
                       </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              ) : null}
+            </div>
+
+            {ButtonClick === productDetails?.mfr_code ? (
+              <Modal
+                isOpen={!!ButtonClick}
+                headerText={"Virtual Try-On"}
+                subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+                onClose={() => handleVTOCancel()}
+                size="md"
+              >
+                {vtoResultImageUrl ? (
+                  <div className={styles["product-vto-result-container"]}>
+                    <img
+                      src={vtoResultImageUrl}
+                      alt="VTO Result"
+                      className={styles["product-vto-result-image"]}
+                    />
+                    <div className={styles["product-vto-buttons-group"]}>
+                      <button
+                        onClick={handleVTOCancel}
+                        className={styles["product-vto-cancel-button"]}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleVTODownload}
+                        className={styles["product-vto-submit-button"]}
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {Loading ? (
+                      <div className={styles["product-vto-loading-container"]}>
+                        <LoadingOutlined
+                          className={styles["product-vto-loading-spinner"]}
+                        />
+                        <div className={styles["product-vto-loading-text"]}>
+                          <p className={styles["product-vto-loading-title"]}>
+                            AI is generating your image
+                          </p>
+                          <p className={styles["product-vto-loading-subtitle"]}>
+                            Please wait while we process your request...
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleVTOclick}>
+                        <div className={styles["product-vto-upload-container"]}>
+                          {showLoader ? (
+                            <LoadingOutlined
+                              className={styles["product-vto-loading-spinner"]}
+                            />
+                          ) : (
+                            <>
+                              {uploadedImages.length < 1 && (
+                                <div
+                                  className={
+                                    styles["product-vto-upload-container"]
+                                  }
+                                >
+                                  <h4
+                                    className={
+                                      styles["product-vto-upload-title"]
+                                    }
+                                  >
+                                    Upload Your Image{" "}
+                                  </h4>
+                                  <Upload.Dragger
+                                    className={
+                                      styles["product-vto-upload-zone"]
+                                    }
+                                    {...uploadImageDraggerProps}
+                                    name="upload_image"
+                                    showUploadList={false}
+                                  >
+                                    <p
+                                      className={
+                                        styles["product-vto-upload-icon"]
+                                      }
+                                    >
+                                      <UploadOutlined />
+                                    </p>
+                                    <p
+                                      className={
+                                        styles["product-vto-upload-text"]
+                                      }
+                                    >
+                                      Click or drag file(s) to this area
+                                    </p>
+                                  </Upload.Dragger>
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {uploadedImages.length > 0 && (
+                            <div
+                              className={
+                                styles["product-vto-uploaded-image-container"]
+                              }
+                            >
+                              <img
+                                src={uploadedImages[0]}
+                                alt="Uploaded"
+                                className={styles["product-vto-uploaded-image"]}
+                              />
+                              <CloseCircleOutlined
+                                className={styles["product-vto-close-uploaded"]}
+                                onClick={() => setUploadedImages([])}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <h4 className={styles["product-vto-prompt-label"]}>
+                          {" "}
+                          Add a prompt for AI (optional){" "}
+                        </h4>
+                        <textarea
+                          className={styles["product-vto-prompt-input"]}
+                          placeholder="Enter description..."
+                          name="description"
+                          type="text"
+                          onChange={(e) => setDescriptionget(e.target.value)}
+                          value={descriptionget}
+                          rows={5}
+                        />
+
+                        <div className={styles["product-vto-submit-container"]}>
+                          <button></button>
+                          <button
+                            type="submit"
+                            className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
                     )}
-                  </div>
-                  <h4 className={styles["product-vto-prompt-label"]}>
-                    {" "}
-                    Add a prompt for AI (optional){" "}
-                  </h4>
-                  <textarea
-                    className={styles["product-vto-prompt-input"]}
-                    placeholder="Enter description..."
-                    name="description"
-                    type="text"
-                    onChange={(e) => setDescriptionget(e.target.value)}
-                    value={descriptionget}
-                    rows={5}
-                  />
-
-                  <div className={styles["product-vto-submit-container"]}>
-                    <button></button>
-                    <button
-                      type="submit"
-                      className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
-              )}
-            </>
-          )}
-        </Modal>
-      ) : null}
-
+                  </>
+                )}
+              </Modal>
+            ) : null}
 
             {productDetails && (
               <div className="flex flex-col gap-4 w-full lg:w-65%">
                 <div className="flex justify-between items-center gap-2">
-
-                <div className="text-xl-1 font-semibold">
-                  {productDetails?.name}
-                </div>
-                <div className="flex justify-between items-center gap-4">
-                  <div className="flex gap-4 justify-end items-start">
-                  {productDetails?.user_id === authUser?.user_id ||
-                  productDetails?.brand === authUser?.user_name ? (
-                    <EditOutlined
-                      title="Edit product details"
-                      className="flex text-2xl lg:text-xl-2 cursor-pointer"
-                      onClick={() => handleOpenProductModal(true)}
-                    />
-                  ) : null}
+                  <div className="text-xl-1 font-semibold">
+                    {productDetails?.name}
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <div className="flex gap-4 justify-end items-start">
+                      {productDetails?.user_id === authUser?.user_id ||
+                      productDetails?.brand === authUser?.user_name ? (
+                        <EditOutlined
+                          title="Edit product details"
+                          className="flex text-2xl lg:text-xl-2 cursor-pointer"
+                          onClick={() => handleOpenProductModal(true)}
+                        />
+                      ) : null}
                       <div
-                              className=''
-                              onClick={(e) => {
-                                dispatch(vtoIconState(productDetails?.mfr_code || true));
-                                e.stopPropagation();
-                              }}
-                            >
-                              <Image
-                                height={28}
-                                width={28}
-                                alt="Try on with camera"
-                                className='cursor-pointer'
-                                src={camera}
-                              />
-                              {/* <p>Try On</p> */}
-                            </div>
-                  {/* {qrCodeGeneratorURL ? (
+                        className=""
+                        onClick={(e) => {
+                          dispatch(
+                            vtoIconState(productDetails?.mfr_code || true),
+                          );
+                          e.stopPropagation();
+                        }}
+                      >
+                        <Image
+                          height={28}
+                          width={28}
+                          alt="Try on with camera"
+                          className="cursor-pointer"
+                          src={camera}
+                        />
+                        {/* <p>Try On</p> */}
+                      </div>
+                      {/* {qrCodeGeneratorURL ? (
 									<img
 										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
 										src={qrCodeGeneratorURL}
 									/>
 								) : null} */}
-                </div>
-                      <div className="relative flex justify-between w-6 lg:w-7">
-                        
-                    {showShareProductDetails && (
-                      <ShareOptions
-                        url={sharePageUrl}
-                        setShow={setShowShareProductDetails}
-                        onClose={() => setShowShareProductDetails(false)}
-                        //   collection={blogCollectionPage}
-                        isOpen={showShareProductDetails}
-                        qrCodeGeneratorURL={qrCodeGeneratorURL}
-                        true
-                      />
-                    )}
-                    {sharePageUrl && (
-                      <div className="flex w-auto">
-                        <Image
-                          width={28}
-                          height={28}
-                          className="cursor-pointer h-7 w-7"
-                          src={share_icon}
-                          preview={false}
-                          onClick={() =>
-                            setShowShareProductDetails(!showShareProductDetails)
-                          }
+                    </div>
+                    <div className="relative flex justify-between w-6 lg:w-7">
+                      {showShareProductDetails && (
+                        <ShareOptions
+                          url={sharePageUrl}
+                          setShow={setShowShareProductDetails}
+                          onClose={() => setShowShareProductDetails(false)}
+                          //   collection={blogCollectionPage}
+                          isOpen={showShareProductDetails}
+                          qrCodeGeneratorURL={qrCodeGeneratorURL}
+                          true
                         />
-                      </div>
-                    )}
+                      )}
+                      {sharePageUrl && (
+                        <div className="flex w-auto">
+                          <Image
+                            width={28}
+                            height={28}
+                            className="cursor-pointer h-7 w-7"
+                            src={share_icon}
+                            preview={false}
+                            onClick={() =>
+                              setShowShareProductDetails(
+                                !showShareProductDetails,
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                </div>
-
-                 <div className="flex flex-col">
+                <div className="flex flex-col">
                   <div className="flex gap-3 items-center">
                     {productDetails?.price || productDetails?.listprice ? (
                       <span
@@ -822,7 +829,6 @@ const ProductDetails = ({ params, ...props }) => {
                     </span>
                   ) : null}
                 </div>
-           
 
                 {brandsDetails?.brandName && brandsDetails.brandDescription ? (
                   <div>
@@ -843,8 +849,6 @@ const ProductDetails = ({ params, ...props }) => {
                     </span>
                   </div>
                 ) : null}
-
-               
 
                 {brandsDetails?.paymentMethod ? (
                   <div>
