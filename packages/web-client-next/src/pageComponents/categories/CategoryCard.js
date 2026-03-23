@@ -1,16 +1,20 @@
 import React from "react";
+import Image from "next/image";
 import styles from "./categoryCard.module.scss";
 
 const CategoryCard = ({ categoryData, handleCategoryClick }) => (
+	// console.log('categoryData',categoryData.image_url),
+	
 	<div
 		className={styles.card}
 		onClick={() => handleCategoryClick(categoryData)}>
 		<div className={styles.imageWrapper}>
-			<img
-				loading='lazy'
-				src={categoryData.image_url}
-				width='100%'
+			<Image
+				src={categoryData?.image_url}
+				alt={categoryData?.title || 'Category'}
+				fill
 				className={styles.image}
+				style={{ objectFit: 'cover' }}
 			/>
 			{/* <LazyLoadImage
 				src={categoryData?.image_url}

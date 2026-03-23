@@ -15,6 +15,7 @@ import { FaRegHeart } from "react-icons/fa";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
 import Image from "next/image";
 import styles from './SwiftlyHeader.module.css';
+import { current_store_name, is_store_instance } from "../../constants/config";
 
 const SwiftlyHeader = ({
 	disabledOutSideClick,
@@ -152,7 +153,8 @@ const SwiftlyHeader = ({
 					{/* set width only to keep content center aligned */}
 					<div className={styles.logoContainer}>
 						<div className={styles.logo} onClick={() => navigate(PATH_ROOT)}>
-							{isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
+							{/* {isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"} */}
+							{is_store_instance && current_store_name}
 						</div>
 					</div>
 					{/* {

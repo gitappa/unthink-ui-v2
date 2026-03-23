@@ -1,4 +1,4 @@
-import { apiInstance } from "./apiCall";
+import { apiInstance, postApiCall } from "./apiCall";
 import {
 	// access_key,
 	auraYfretUserCollBaseUrl,
@@ -125,6 +125,11 @@ const updatePoolKeyUrl = "/attribute_pool/updateStoredAttributes/";
 const addModifiedDataKeyUrl = "/attribute_pool/addModifiedData/";
 const DeleteModifiedDataKeyUrl = "/attribute_pool/deleteMPCollectionData/";
 const GetModifiedDataKeyUrl = "/attribute_pool/getMPCollectionData/";
+
+
+// Vto Api
+const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/"
+
 
 const signupAPICall = ({ email, user_name, iCode, password, ...rest }) => {
 	const url = `${auraYfretUserCollBaseUrl}${signupUrl}`;
@@ -797,6 +802,16 @@ const uploadVideo = ({ file }) => {
 		data: formData,
 	});
 };
+export  const TryOnVto =(payload) =>{
+	console.log(payload);
+	
+	const url = VtoTryOn
+		return apiInstance({
+		url,
+		method: "post",
+		data: payload,
+	});
+}
 
 const uploadCSV_APICall = ({ file }) => {
 	const url = `${auraYfretUserCollBaseUrl}${uploadSVGUrl}`;

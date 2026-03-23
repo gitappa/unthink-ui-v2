@@ -6,12 +6,15 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { message } from "antd";
+import { message, notification, Upload } from "antd";
 import Image from "next/image";
 import {
   CopyOutlined,
   EditOutlined,
   ArrowLeftOutlined,
+  CloseCircleOutlined,
+  UploadOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Link from "next/link";
@@ -26,7 +29,7 @@ import {
   isEmpty,
   cleanImage,
 } from "../../helper/utils";
-import { customProductsAPIs } from "../../helper/serverAPIs";
+import { customProductsAPIs, profileAPIs, TryOnVto } from "../../helper/serverAPIs";
 
 import ShareOptions from "../shared/shareOptions";
 
@@ -52,6 +55,10 @@ import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
+import { vtoIconState } from "../../components/singleCollection/redux/actions";
+import camera from "../../components/singleCollection/images/Card/camera.svg";
+import Modal from "../../components/modal/Modal";
+import styles from "../../components/singleCollection/ProductCard.module.css";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -70,6 +77,7 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductImage,
     fetchProductLoading,
     productDetail,
+    ButtonClick
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -78,13 +86,14 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.image,
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
+      state.VtoIconReducer.ButtonClick,
   ]);
  
 
   const [store_id] = useSelector((state) => [state.store.data.store_id]);
  
   const imageFromQuery = cleanImage(router.query.image);
-  
+    const [showLoader, setShowLoader] = useState(false);
 
   //   useEffect(() => {
   //     return () => {
@@ -372,7 +381,129 @@ const ProductDetails = ({ params, ...props }) => {
       // alert("Payment initiation failed. Please try again.");
     }
   };
+
+
+
+
+
+
+    const handleUploadImage = async ({ file }) => {
+      try {
+        setShowLoader(true);
+  
+        const response = await profileAPIs.uploadImage({ file });
+        const data = response?.data;
+  
+        if (data?.status_code === 400 || data?.status === "failure") {
+          notification.error({
+            message: "Image Upload Failed",
+            description:
+              data?.status_desc || "Something went wrong. Please try again.",
+          });
+          return;
+        }
+        const url = data?.data?.[0]?.url;
+        setUploadedImages((prev) => prev.concat(url));
+        if (url) {
+          // setUploadedImages((prev) => [...prev, url]);
+          // additional_images.push(url)
+          notification.success({
+            message: "Image Uploaded Successfully",
+          });
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+        console.log(error);
+
+        notification.error({
+          message: "Image Upload Failed",
+          description:
+            error?.response?.data?.message || "Unexpected error occurred",
+        });
+      } finally {
+        setShowLoader(false);
+      }
+    };
+
+
+    const uploadImageDraggerProps = {
+    accept: "image/*",
+    multiple: true,
+    showUploadList: false,
+    customRequest: ({ file, onSuccess }) => {
+      handleUploadImage({ file });
+      setTimeout(() => onSuccess("ok"), 0);
+    },
+  };
   const [additionalimg, setAdditionalImg] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+   const [descriptionget, setDescriptionget] = useState("");
+   const [uploadedImages, setUploadedImages] = useState([]);
+   const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
+  const handleVTOclick = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const url = window.location.origin;
+    // setButtonClick(true);
+    const payload = {
+      image_urls: [productDetails.image, uploadedImages[0]],
+      store: storeData.store_name,
+      image_tryon_prompt: image_try || "",
+      additional_prompt: descriptionget || "",
+      type: "tryon",
+    };
+    try {
+      setLoading(true);
+      const res = await TryOnVto(payload)
+      setVtoResultImageUrl(res.data.data.image_url);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "Virtual Try-On Failed",
+        description:
+          error?.response?.data?.message ||
+          "Failed to process image. Please try again.",
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleVTODownload = async () => {
+    if (vtoResultImageUrl) {
+      try {
+        const response = await fetch(vtoResultImageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `vto-result-${Date.now()}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        notification.success({
+          message: "Download Successful",
+          description: "Your virtual try-on image has been downloaded.",
+        });
+        handleVTOCancel();
+      } catch (error) {
+        console.error("Download failed:", error);
+        notification.error({
+          message: "Download Failed",
+          description: "Failed to download the image. Please try again.",
+        });
+      }
+    }
+  };
+
+  const handleVTOCancel = () => {
+    dispatch(vtoIconState(false));
+    setVtoResultImageUrl(null);
+    setUploadedImages([]);
+    setDescriptionget("");
+  };
 
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
@@ -409,31 +540,180 @@ const ProductDetails = ({ params, ...props }) => {
               ) : null}
               {productDetails?.additional_image &&
               productDetails?.additional_image.length > 0 ? (
-                <div className="flex gap-2 mt-4 overflow-x-scroll w-full h-28">
-                  {[
-                    productDetails.image,
-                    ...productDetails.additional_image,
-                  ].map((img, i) => (
-                    <div key={i} className="">
-                      <Image
-                        className={`w-25 h-25  rounded-10 ${additionalimg === img ? "border bg-purple-300 p-0.5" : ""} `}
-                        src={img}
-                        height={50}
-                        width={50}
-                        onClick={() => setAdditionalImg(img)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+                <Swiper
+  modules={[FreeMode]}
+  freeMode={true}
+  // grabCursor={true}
+  slidesPerView={"auto"}
+  spaceBetween={8}
+  className="mt-4 w-full h-28 cursor-pointer"
+>
+  {[productDetails.image, ...productDetails.additional_image].map((img, i) => (
+    <SwiperSlide key={i} style={{ width: "auto" }}>
+      <div className="flex">
+        <Image
+          src={img}
+          height={50}
+          width={50}
+          className={`w-[110px] h-[110px] rounded-[10px] ${
+            additionalimg === img
+              ? "border bg-purple-300 p-0.5"
+              : ""
+          }`}
+          onClick={() => setAdditionalImg(img)}
+          alt="product"
+        />
+      </div>
+    </SwiperSlide>
+  ))}
+</Swiper>
+  ) : null
+}
+    
             </div>
+
+          
+
+
+
+
+                                {ButtonClick === productDetails?.mfr_code ? (
+        <Modal
+          isOpen={!!ButtonClick}
+          headerText={"Virtual Try-On"}
+          subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+          onClose={() => handleVTOCancel()}
+          size="md"
+        >
+          {vtoResultImageUrl ? (
+            <div className={styles["product-vto-result-container"]}>
+              <img
+                src={vtoResultImageUrl}
+                alt="VTO Result"
+                className={styles["product-vto-result-image"]}
+              />
+              <div className={styles["product-vto-buttons-group"]}>
+                <button
+                  onClick={handleVTOCancel}
+                  className={styles["product-vto-cancel-button"]}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleVTODownload}
+                  className={styles["product-vto-submit-button"]}
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {Loading ? (
+                <div className={styles["product-vto-loading-container"]}>
+                  <LoadingOutlined
+                    className={styles["product-vto-loading-spinner"]}
+                  />
+                  <div className={styles["product-vto-loading-text"]}>
+                    <p className={styles["product-vto-loading-title"]}>
+                      AI is generating your image
+                    </p>
+                    <p className={styles["product-vto-loading-subtitle"]}>
+                      Please wait while we process your request...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleVTOclick}>
+                  <div className={styles["product-vto-upload-container"]}>
+                    {showLoader ? (
+                      <LoadingOutlined
+                        className={styles["product-vto-loading-spinner"]}
+                      />
+                    ) : (
+                      <>
+                        {uploadedImages.length < 1 && (
+                          <div
+                            className={styles["product-vto-upload-container"]}
+                          >
+                            <h4 className={styles["product-vto-upload-title"]}>
+                              Upload Your Image{" "}
+                            </h4>
+                            <Upload.Dragger
+                              className={styles["product-vto-upload-zone"]}
+                              {...uploadImageDraggerProps}
+                              name="upload_image"
+                              showUploadList={false}
+                            >
+                              <p className={styles["product-vto-upload-icon"]}>
+                                <UploadOutlined />
+                              </p>
+                              <p className={styles["product-vto-upload-text"]}>
+                                Click or drag file(s) to this area
+                              </p>
+                            </Upload.Dragger>
+                          </div>
+                        )}
+                      </>
+                    )}
+                    {uploadedImages.length > 0 && (
+                      <div
+                        className={
+                          styles["product-vto-uploaded-image-container"]
+                        }
+                      >
+                        <img
+                          src={uploadedImages[0]}
+                          alt="Uploaded"
+                          className={styles["product-vto-uploaded-image"]}
+                        />
+                        <CloseCircleOutlined
+                          className={styles["product-vto-close-uploaded"]}
+                          onClick={() => setUploadedImages([])}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <h4 className={styles["product-vto-prompt-label"]}>
+                    {" "}
+                    Add a prompt for AI (optional){" "}
+                  </h4>
+                  <textarea
+                    className={styles["product-vto-prompt-input"]}
+                    placeholder="Enter description..."
+                    name="description"
+                    type="text"
+                    onChange={(e) => setDescriptionget(e.target.value)}
+                    value={descriptionget}
+                    rows={5}
+                  />
+
+                  <div className={styles["product-vto-submit-container"]}>
+                    <button></button>
+                    <button
+                      type="submit"
+                      className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              )}
+            </>
+          )}
+        </Modal>
+      ) : null}
+
+
             {productDetails && (
               <div className="flex flex-col gap-4 w-full lg:w-65%">
+                <div className="flex justify-between items-center gap-2">
+
                 <div className="text-xl-1 font-semibold">
                   {productDetails?.name}
                 </div>
-
-                <div className="flex gap-4 justify-end items-start">
+                <div className="flex justify-between items-center gap-4">
+                  <div className="flex gap-4 justify-end items-start">
                   {productDetails?.user_id === authUser?.user_id ||
                   productDetails?.brand === authUser?.user_name ? (
                     <EditOutlined
@@ -442,7 +722,31 @@ const ProductDetails = ({ params, ...props }) => {
                       onClick={() => handleOpenProductModal(true)}
                     />
                   ) : null}
-                  <div className="relative flex justify-between w-6 lg:w-7">
+                      <div
+                              className=''
+                              onClick={(e) => {
+                                dispatch(vtoIconState(productDetails?.mfr_code || true));
+                                e.stopPropagation();
+                              }}
+                            >
+                              <Image
+                                height={28}
+                                width={28}
+                                alt="Try on with camera"
+                                className='cursor-pointer'
+                                src={camera}
+                              />
+                              {/* <p>Try On</p> */}
+                            </div>
+                  {/* {qrCodeGeneratorURL ? (
+									<img
+										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
+										src={qrCodeGeneratorURL}
+									/>
+								) : null} */}
+                </div>
+                      <div className="relative flex justify-between w-6 lg:w-7">
+                        
                     {showShareProductDetails && (
                       <ShareOptions
                         url={sharePageUrl}
@@ -469,13 +773,56 @@ const ProductDetails = ({ params, ...props }) => {
                       </div>
                     )}
                   </div>
-                  {/* {qrCodeGeneratorURL ? (
-									<img
-										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
-										src={qrCodeGeneratorURL}
-									/>
-								) : null} */}
                 </div>
+
+                </div>
+
+                 <div className="flex flex-col">
+                  <div className="flex gap-3 items-center">
+                    {productDetails?.price || productDetails?.listprice ? (
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: `${currencySymbol}${
+                            productDetails.price || productDetails.listprice
+                          }`,
+                        }}
+                        className="text-2xl font-semibold"
+                      />
+                    ) : null}
+                    {productDetails?.price &&
+                    +productDetails.listprice > +productDetails?.price ? (
+                      <span className="text-base text-gray-101">
+                        MRP{" "}
+                        <span
+                          className="line-through"
+                          dangerouslySetInnerHTML={{
+                            __html: `${currencySymbol}${productDetails.listprice}`,
+                          }}
+                        />
+                      </span>
+                    ) : null}
+                    {discountPer ? (
+                      <span className="text-base   text-red-600">
+                        ( {discountPer}% OFF )
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {productDetails?.availability ? (
+                    <span
+                      className={`font-medium uppercase ${
+                        productDetails.availability === "out stock"
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      {productDetails.avlbl === 0
+                        ? "SOLD"
+                        : productDetails.availability}
+                    </span>
+                  ) : null}
+                </div>
+           
 
                 {brandsDetails?.brandName && brandsDetails.brandDescription ? (
                   <div>
@@ -497,51 +844,7 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 ) : null}
 
-                <div className="flex flex-col">
-                  <div className="flex gap-3 items-center">
-                    {productDetails?.price || productDetails?.listprice ? (
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: `${currencySymbol}${
-                            productDetails.price || productDetails.listprice
-                          }`,
-                        }}
-                        className="text-2xl font-semibold"
-                      />
-                    ) : null}
-                    {productDetails?.price &&
-                    +productDetails.listprice > +productDetails?.price ? (
-                      <span className="text-lg text-gray-101">
-                        MRP{" "}
-                        <span
-                          className="line-through"
-                          dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${productDetails.listprice}`,
-                          }}
-                        />
-                      </span>
-                    ) : null}
-                    {discountPer ? (
-                      <span className="text-lg text-red-600">
-                        ( {discountPer}% OFF )
-                      </span>
-                    ) : null}
-                  </div>
-
-                  {productDetails?.availability ? (
-                    <span
-                      className={`font-medium uppercase ${
-                        productDetails.availability === "out stock"
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {productDetails.avlbl === 0
-                        ? "SOLD"
-                        : productDetails.availability}
-                    </span>
-                  ) : null}
-                </div>
+               
 
                 {brandsDetails?.paymentMethod ? (
                   <div>
