@@ -63,6 +63,7 @@ import { vtoIconState } from "../../components/singleCollection/redux/actions";
 import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
+import pdpLayoutStyles from "./ProductDetails.module.scss";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -158,6 +159,7 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
+  console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {
     return collection?.product_lists?.find(
@@ -292,8 +294,10 @@ const ProductDetails = ({ params, ...props }) => {
   // scroll for tags
 
   const swiperRef = useRef(null); // To store Swiper instance
+  const thumbnailSwiperRef = useRef(null);
 
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isThumbnailOverflowing, setIsThumbnailOverflowing] = useState(false);
 
   const checkOverflow = () => {
     if (swiperRef.current && swiperRef.current.wrapperEl) {
@@ -302,14 +306,25 @@ const ProductDetails = ({ params, ...props }) => {
     }
   };
 
+  const checkThumbnailOverflow = () => {
+    if (thumbnailSwiperRef.current && thumbnailSwiperRef.current.wrapperEl) {
+      const { scrollWidth, clientWidth } = thumbnailSwiperRef.current.wrapperEl;
+      setIsThumbnailOverflowing(scrollWidth > clientWidth);
+    }
+  };
+
   useEffect(() => {
-    // Initial check
     checkOverflow();
-    // Recheck on resize
+    checkThumbnailOverflow();
+
     if (typeof window !== "undefined") {
-      window.addEventListener("resize", checkOverflow);
+      const handleResize = () => {
+        checkOverflow();
+        checkThumbnailOverflow();
+      };
+      window.addEventListener("resize", handleResize);
       return () => {
-        window.removeEventListener("resize", checkOverflow);
+        window.removeEventListener("resize", handleResize);
       };
     }
   }, [productDetails, pdploader]);
@@ -503,69 +518,126 @@ const ProductDetails = ({ params, ...props }) => {
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
   }
+
+  const hasContactDetails =
+    brandsDetails?.title ||
+    brandsDetails?.email ||
+    brandsDetails?.contact ||
+    brandsDetails?.instagramUrl ||
+    brandsDetails?.facebookUrl ||
+    brandsDetails?.info ||
+    brandsDetails?.couponCode ||
+    brandsDetails?.paymentDetails ||
+    brandsDetails?.shippingDetails;
+
   return (
-    <>
-      <div
-        className={`w-full max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto lg:pb-12 pb-20`}
-      >
-        <div className="flex flex-col w-full self-center my-12 gap-5">
-          <div
-            className="flex items-center cursor-pointer px-0"
+    <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
+      <div className=" " />
+      <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
+        <div className="flex flex-col w-full self-center my-8 lg:my-10 gap-6 lg:gap-8">
+          <button
+            className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
           >
-            <span className="text-xl leading-none flex mr-2">
+            <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
               <ArrowLeftOutlined />
             </span>
-            <span className="text-xl font-medium capitalize">Go back</span>
-          </div>
+            <span className="capitalize">Go back</span>
+          </button>
 
-          <div className="flex flex-col lg:flex-row gap-5">
-            <div
-              className={`w-full lg:max-w-439 h-auto lg:h-456 ${fetchProductImage ? "" : "mx-auto"}  border border-solid border-gray-107 rounded-xl`}
-              style={{ height: "480px" }}
-            >
-              {!isEmpty(productDetails?.image || fetchProductImage) ? (
-                <img
-                  className="w-full h-full object-contain rounded-xl"
-                  src={
-                    additionalimg || productDetails?.image || fetchProductImage
-                  }
-                  alt="Product Image"
-                />
-              ) : null}
-              {productDetails?.additional_image &&
-              productDetails?.additional_image.length > 0 ? (
-                <Swiper
-                  modules={[FreeMode]}
-                  freeMode={true}
-                  // grabCursor={true}
-                  slidesPerView={"auto"}
-                  spaceBetween={8}
-                  className="mt-4 w-full h-28 cursor-pointer"
-                >
-                  {[
-                    productDetails.image,
-                    ...productDetails.additional_image,
-                  ].map((img, i) => (
-                    <SwiperSlide key={i} style={{ width: "auto" }}>
-                      <div className="flex">
-                        <Image
-                          src={img}
-                          height={50}
-                          width={50}
-                          className={`w-[110px] h-[110px] rounded-[10px] ${
-                            additionalimg === img
-                              ? "border bg-purple-300 p-0.5"
-                              : ""
-                          }`}
-                          onClick={() => setAdditionalImg(img)}
-                          alt="product"
-                        />
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              ) : null}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-5 items-start">
+            <div className="flex flex-col gap-4 xl:sticky xl:top-6">
+              <div className="w-full  lg:w-full   mx-auto border border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
+                <div className="h-[300px] sm:h-[420px] lg:h-[500px] rounded-2xl bg-white/70   overflow-hidden">
+                  {!isEmpty(productDetails?.image || fetchProductImage) ? (
+                    <div className="relative">
+                      <img
+                        className="w-full h-full object-contain rounded-2xl"
+                        src={
+                          additionalimg ||
+                          productDetails?.image ||
+                          fetchProductImage
+                        }
+                        alt="Product Image"
+                      />
+                      {discountPer ? (
+                        <span className="text-[12px] font-bold text-white absolute top-[18px] left-[15px] bg-red-500 px-[8px] py-[3px] rounded-[25px]">
+                          {discountPer}% OFF
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+
+                {productDetails?.additional_image &&
+                productDetails?.additional_image.length > 0 ? (
+                  <div className="relative mt-4">
+                    <Swiper
+                      modules={[FreeMode]}
+                      freeMode={true}
+                      slidesPerView={"auto"}
+                      spaceBetween={10}
+                      onSwiper={(swiper) => {
+                        thumbnailSwiperRef.current = swiper;
+                        if (swiper?.wrapperEl) {
+                          const { scrollWidth, clientWidth } = swiper.wrapperEl;
+                          setIsThumbnailOverflowing(scrollWidth > clientWidth);
+                        }
+                      }}
+                      className="w-full cursor-pointer"
+                    >
+                      {[
+                        productDetails.image,
+                        ...productDetails.additional_image,
+                      ].map((img, i) => (
+                        <SwiperSlide key={i} style={{ width: "auto" }}>
+                          <div className="flex">
+                            <Image
+                              src={img}
+                              height={50}
+                              width={50}
+                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${
+                                additionalimg === img
+                                  ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
+                                  : "border-[#e8e2ff] hover:border-[#b8a9ff]"
+                              }`}
+                              onClick={() => setAdditionalImg(img)}
+                              alt="product"
+                            />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+
+                    {isThumbnailOverflowing && (
+                      <>
+                        <button
+                          type="button"
+                          className="absolute -left-2 sm:-left-3 top-1/2 -translate-y-1/2 h-8 w-8 lg:h-10 lg:w-10 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center z-10"
+                          onClick={() => {
+                            if (thumbnailSwiperRef.current) {
+                              thumbnailSwiperRef.current.slidePrev();
+                            }
+                          }}
+                        >
+                          <MdOutlineKeyboardArrowLeft className="text-xl text-[#1f2c3b]" />
+                        </button>
+                        <button
+                          type="button"
+                          className="absolute -right-2 sm:-right-3 top-1/2 -translate-y-1/2 h-8 w-8 lg:h-10 lg:w-10 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center z-10"
+                          onClick={() => {
+                            if (thumbnailSwiperRef.current) {
+                              thumbnailSwiperRef.current.slideNext();
+                            }
+                          }}
+                        >
+                          <MdOutlineKeyboardArrowLeft className="transform rotate-180 text-xl text-[#1f2c3b]" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ) : null}
+              </div>
             </div>
 
             {ButtonClick === productDetails?.mfr_code ? (
@@ -712,80 +784,57 @@ const ProductDetails = ({ params, ...props }) => {
             ) : null}
 
             {productDetails && (
-              <div className="flex flex-col gap-4 w-full lg:w-65%">
-                <div className="flex justify-between items-center gap-2">
-                  <div className="text-xl-1 font-semibold">
+              <div className="flex flex-col gap-4 md:gap-5 lg:gap-7 w-full   bg-white/95 ">
+                <div className="flex justify-between items-start gap-4">
+                  <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight  text-[#1f2c3b]">
                     {productDetails?.name}
-                  </div>
-                  <div className="flex justify-between items-center gap-4">
-                    <div className="flex gap-4 justify-end items-start">
+                  </h1>
+                  <div className="flex justify-between items-center gap-3 shrink-0">
+                    <div className="flex gap-3 justify-end items-start">
                       {productDetails?.user_id === authUser?.user_id ||
                       productDetails?.brand === authUser?.user_name ? (
-                        <EditOutlined
+                        <button
+                          className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                           title="Edit product details"
-                          className="flex text-2xl lg:text-xl-2 cursor-pointer"
                           onClick={() => handleOpenProductModal(true)}
-                        />
+                        >
+                          <EditOutlined className="text-xl" />
+                        </button>
                       ) : null}
-                      <div
-                        className=""
-                        onClick={(e) => {
-                          dispatch(
-                            vtoIconState(productDetails?.mfr_code || true),
-                          );
-                          e.stopPropagation();
-                        }}
-                      >
-                        <Image
-                          height={28}
-                          width={28}
-                          alt="Try on with camera"
-                          className="cursor-pointer"
-                          src={camera}
-                        />
-                        {/* <p>Try On</p> */}
-                      </div>
-                      {/* {qrCodeGeneratorURL ? (
-									<img
-										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
-										src={qrCodeGeneratorURL}
-									/>
-								) : null} */}
                     </div>
-                    <div className="relative flex justify-between w-6 lg:w-7">
+                    <div className="relative flex justify-between w-10 h-10">
                       {showShareProductDetails && (
                         <ShareOptions
                           url={sharePageUrl}
                           setShow={setShowShareProductDetails}
                           onClose={() => setShowShareProductDetails(false)}
-                          //   collection={blogCollectionPage}
                           isOpen={showShareProductDetails}
                           qrCodeGeneratorURL={qrCodeGeneratorURL}
                           true
                         />
                       )}
                       {sharePageUrl && (
-                        <div className="flex w-auto">
+                        <button
+                          className="flex w-10 h-10 items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                          onClick={() =>
+                            setShowShareProductDetails(!showShareProductDetails)
+                          }
+                        >
                           <Image
                             width={28}
                             height={28}
-                            className="cursor-pointer h-7 w-7"
+                            className="cursor-pointer h-6 w-6"
                             src={share_icon}
                             preview={false}
-                            onClick={() =>
-                              setShowShareProductDetails(
-                                !showShareProductDetails,
-                              )
-                            }
                           />
-                        </div>
+                        </button>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <div className="flex gap-3 items-center">
+                <div className="">
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
                     {productDetails?.price || productDetails?.listprice ? (
                       <span
                         dangerouslySetInnerHTML={{
@@ -793,13 +842,13 @@ const ProductDetails = ({ params, ...props }) => {
                             productDetails.price || productDetails.listprice
                           }`,
                         }}
-                        className="text-2xl font-semibold"
+                        className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                       />
                     ) : null}
                     {productDetails?.price &&
                     +productDetails.listprice > +productDetails?.price ? (
-                      <span className="text-base text-gray-101">
-                        MRP{" "}
+                      <span className="text-sm sm:text-base text-[#6b7280]">
+                        {/* MRP{" "} */}
                         <span
                           className="line-through"
                           dangerouslySetInnerHTML={{
@@ -808,19 +857,14 @@ const ProductDetails = ({ params, ...props }) => {
                         />
                       </span>
                     ) : null}
-                    {discountPer ? (
-                      <span className="text-base   text-red-600">
-                        ( {discountPer}% OFF )
-                      </span>
-                    ) : null}
                   </div>
 
                   {productDetails?.availability ? (
                     <span
-                      className={`font-medium uppercase ${
+                      className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
                         productDetails.availability === "out stock"
-                          ? "text-red-500"
-                          : "text-green-500"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-green-100 text-green-700"
                       }`}
                     >
                       {productDetails.avlbl === 0
@@ -830,127 +874,182 @@ const ProductDetails = ({ params, ...props }) => {
                   ) : null}
                 </div>
 
-                {brandsDetails?.brandName && brandsDetails.brandDescription ? (
-                  <div>
-                    <span className="text-lg font-medium leading-loose">
+                {/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
+                  <div className="">
+                    <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
                       About {brandsDetails.brandName}
                     </span>
-                    <p>{brandsDetails.brandDescription}</p>
+                    <p className="text-sm sm:text-[15px] lg:text-base text-[#364152] leading-7">
+                      {brandsDetails.brandDescription}
+                    </p>
                   </div>
-                ) : null}
+                ) : null} */}
 
                 {!brandsDetails && productDetails?.brand ? (
-                  <div>
-                    <span className="text-lg font-medium leading-loose">
-                      Brand :{" "}
+                  <div className=" ">
+                    <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
+                      Brand :
                     </span>
-                    <span className="text-slat-103">
+                    <span className="ml-1 text-slat-103 text-sm sm:text-[15px] lg:text-base">
                       {productDetails?.brand}
                     </span>
                   </div>
                 ) : null}
 
                 {brandsDetails?.paymentMethod ? (
-                  <div>
-                    <div className="text-lg font-medium leading-loose mb-1.75">
+                  <div className="">
+                    <div className="text-base sm:text-lg font-semibold leading-loose mb-2 text-[#182438]">
                       Payment Link
                     </div>
                     <div className="grid gap-2">
-                      {brandsDetails.paymentMethod.split(",").map((item) => {
-                        const link = item.trim();
-                        return (
-                          <a
-                            className="flex items-center justify-center max-w-480 py-1.75 border border-gray-101 rounded-xl hover:underline"
-                            target="_blank"
-                            href={link}
-                          >
-                            {link}
-                          </a>
-                        );
-                      })}
+                      {brandsDetails.paymentMethod
+                        .split(",")
+                        .map((item, idx) => {
+                          const link = item.trim();
+                          return (
+                            <a
+                              key={`${link}-${idx}`}
+                              className="flex items-center justify-center w-full py-2 border border-[#d9cdff] rounded-xl text-[#1f2c3b] bg-white hover:underline"
+                              target="_blank"
+                              rel="noreferrer"
+                              href={link}
+                            >
+                              {link}
+                            </a>
+                          );
+                        })}
                     </div>
                   </div>
                 ) : null}
 
-                {storeData?.pdp_settings?.is_add_to_cart_button && (
-                  <div className="flex gap-5  mt-16 mb-6 items-center ">
-                    <div className="border px-3 h-12 items-center flex gap-10 p-4 ">
+                <div className="">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                    {storeData?.pdp_settings?.is_add_to_cart_button && (
+                      <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
+                        <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
+                          <button
+                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                            onClick={() => {
+                              updateCartQuantity(cardItem?.qty - 1);
+                            }}
+                          >
+                            -
+                          </button>
+                          <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
+                            {cardItem?.qty || 0}
+                          </button>
+                          <button
+                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                            onClick={() => {
+                              updateCartQuantity(cardItem?.qty + 1 || 1);
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
+                          <button
+                            onClick={handleAddToCart}
+                            className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
+                            style={{
+                              backgroundColor: "#7c75ec",
+                            }}
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {storeData?.pdp_settings?.is_buy_button && (
                       <button
-                        className="  text-xl cursor-pointer"
-                        onClick={() => {
-                          updateCartQuantity(cardItem?.qty - 1);
-                        }}
-                      >
-                        -
-                      </button>
-                      <button className="  text-xl cursor-pointer">
-                        {cardItem?.qty || 0}
-                      </button>
-                      <button
-                        className="  text-xl cursor-pointer"
-                        onClick={() => {
-                          updateCartQuantity(cardItem?.qty + 1 || 1);
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                    <div className="text-white h-14 max-w-340 w-full ">
-                      <button
-                        onClick={handleAddToCart}
-                        className="text-white h-14  bg-violet-100 w-full rounded-15"
+                        className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 px-8 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                        disabled={
+                          !productDetails?.price && !productDetails?.listprice
+                        }
                         style={{
-                          backgroundColor: "#7c75c",
+                          background: "#7c75ec",
+                          cursor:
+                            !productDetails?.price && !productDetails?.listprice
+                              ? "not-allowed"
+                              : "",
                         }}
+                        onClick={checkoutPayment}
                       >
-                        Add to Cart
+                        Buy
                       </button>
-                    </div>
+                    )}
                   </div>
-                )}
-                {storeData?.pdp_settings?.is_buy_button && (
-                  <button
-                    className="w-fit  mt-4 inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2 px-9 font-normal text-lg rounded-10 shadow-lg "
-                    disabled={
-                      !productDetails?.price && !productDetails?.listprice
-                    }
-                    style={{
-                      background: "#7c75ec",
-                      cursor:
-                        !productDetails?.price && !productDetails?.listprice
-                          ? "not-allowed"
-                          : "",
-                    }}
-                    onClick={checkoutPayment}
-                  >
-                    Buy
-                  </button>
-                )}
+                </div>
 
                 {productDetails?.description && (
-                  <div>
-                    <div className="text-lg font-medium leading-loose border-b border-solid border-gray-107">
+                  <div className="">
+                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Product Description
+                    </div> */}
+                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
+                      {productDetails.description}
                     </div>
-                    <div className="mt-1.75">{productDetails.description}</div>
                   </div>
                 )}
+                {fieldsToDisplay.map((field) =>
+                  productDetails?.[field]?.length > 0 ? (
+                    <div className=" " key={field}>
+                      <div className="flex justify-between items-center gap-2 mb-7">
+                        <p className="text-[#9F9FA9] text-xl font-semibold capitalize">
+                          {field}
+                        </p>
+                        <p className="font-normal">
+                          {Array.isArray(productDetails?.[field])
+                            ? productDetails?.[field]?.join(", ")
+                            : productDetails?.[field]}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null,
+                )}
+                <div
+                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition"
+                  onClick={(e) => {
+                    dispatch(vtoIconState(productDetails?.mfr_code || true));
+                    e.stopPropagation();
+                  }}
+                >
+                  <div className="flex items-center gap-3  mb-4">
 
-                <div>
-                  <div className="text-lg font-medium leading-loose border-b border-solid border-gray-107">
+                  <Image
+                    height={24}
+                    width={24}
+                    alt="Try on with camera"
+                    className="cursor-pointer"
+                    src={camera}
+                    style={{
+                      filter: "sepia(100%) saturate(400%) hue-rotate(240deg)",
+                    }}
+                    />
+                  <p className="font-semibold text-xl-1">Virtual Try On</p>
+                    </div>
+                  <p>Scan the QR code with your phone to try this piece on virtually using augmented reality.</p>
+                </div>
+
+                <div className="">
+                  <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
                   </div>
                   <div className="flex flex-wrap gap-2 my-5">
                     {productDetails?.product_tag &&
                       productDetails?.product_tag.length > 0 &&
                       productDetails?.product_tag.map((tag, index) => (
-                        <div className="rounded-22 flex items-center whitespace-nowrap shadow h-30 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none text-slat-104 bg-white py-0.5">
+                        <div
+                          key={`${tag}-${index}`}
+                          className="rounded-full flex items-center whitespace-nowrap border border-[#ddd6ff] h-8 px-3 sm:px-4 font-medium text-xs md:text-sm leading-none text-[#374151] bg-white"
+                        >
                           {tag}
                         </div>
                       ))}
                   </div>
 
-                  <div className="relative w-full">
+                  {/* <div className="relative w-full">
                     <Swiper
                       slidesPerView="auto"
                       spaceBetween={10}
@@ -958,13 +1057,13 @@ const ProductDetails = ({ params, ...props }) => {
                       preventClicksPropagation={false}
                       freeMode={true}
                       onSwiper={(swiper) => (swiperRef.current = swiper)}
-                      className="pb-1 pr-10 mr-5"
+                      className="pb-1 pr-10 mr-5 pl-4 lg:pl-6"
                     >
                       {fieldsToDisplay.map((field) =>
                         productDetails?.[field]?.length > 0 ? (
                           <SwiperSlide key={field} style={{ width: "auto" }}>
                             <div
-                              className="rounded-22 flex items-center whitespace-nowrap shadow h-30 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none text-slate-600 bg-white py-0.5"
+                              className="rounded-full flex items-center whitespace-nowrap border border-[#ddd6ff] h-8 px-3 sm:px-4 font-medium text-xs md:text-sm leading-none text-[#334155] bg-white"
                               title={field}
                             >
                               <span className="font-semibold">{field} : </span>{" "}
@@ -979,7 +1078,7 @@ const ProductDetails = ({ params, ...props }) => {
                     {isOverflowing && (
                       <>
                         <div
-                          className="absolute right-0  lg:h-10 h-8 lg:w-10 top-0 lg:-top-1 hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center"
+                          className="absolute right-0 h-8 w-8 lg:h-10 lg:w-10 top-0 lg:-top-1 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center"
                           style={{ cursor: "pointer", zIndex: 10 }}
                           onClick={() => {
                             if (swiperRef.current) {
@@ -987,10 +1086,10 @@ const ProductDetails = ({ params, ...props }) => {
                             }
                           }}
                         >
-                          <MdOutlineKeyboardArrowLeft className="transform rotate-180 text-xl " />
+                          <MdOutlineKeyboardArrowLeft className="transform rotate-180 text-xl text-[#1f2c3b]" />
                         </div>
                         <div
-                          className="absolute  lg:h-10 h-8 top-0 lg:-top-1 lg:w-10 bg-gray-50  w-8 rounded-full flex hover:shadow-xl lg:-left-6 -left-5 justify-center items-center"
+                          className="absolute h-8 w-8 lg:h-10 lg:w-10 top-0 lg:-top-1 -left-4 lg:-left-3.5 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center"
                           style={{ cursor: "pointer", zIndex: 10 }}
                           onClick={() => {
                             if (swiperRef.current) {
@@ -998,40 +1097,36 @@ const ProductDetails = ({ params, ...props }) => {
                             }
                           }}
                         >
-                          <MdOutlineKeyboardArrowLeft className="text-xl " />
+                          <MdOutlineKeyboardArrowLeft className="text-xl text-[#1f2c3b]" />
                         </div>
                       </>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
-                <div>
-                  {(brandsDetails?.title ||
-                    brandsDetails?.email ||
-                    brandsDetails?.contact ||
-                    brandsDetails?.instagramUrl ||
-                    brandsDetails?.facebookUrl ||
-                    brandsDetails?.info ||
-                    brandsDetails?.couponCode ||
-                    brandsDetails?.paymentDetails ||
-                    brandsDetails?.shippingDetails) && (
-                    <div className="text-lg font-medium leading-loose border-b border-solid border-gray-107">
+                <div className="">
+                  {hasContactDetails && (
+                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Contact Details
                     </div>
                   )}
                   {brandsDetails?.title && (
-                    <div className="flex flex-row items-center my-1.75 text-base">
-                      <div className="w-1/4">Brand Name</div>
-                      <div className="text-gray-105">
-                        {brandsDetails.title}{" "}
+                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
+                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
+                        Brand Name
+                      </div>
+                      <div className="text-[#55657a]">
+                        {brandsDetails.title}
                       </div>
                     </div>
                   )}
                   {brandsDetails?.email && (
-                    <div className="flex flex-row items-center my-1.75 text-base">
-                      <div className="w-1/4"> Brand Email</div>
+                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
+                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
+                        Brand Email
+                      </div>
                       <a
-                        className="text-gray-105 p-0"
+                        className="text-[#55657a] p-0 hover:underline break-all"
                         href={`mailto:${brandsDetails.email}`}
                       >
                         {brandsDetails.email}
@@ -1039,10 +1134,12 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   )}
                   {brandsDetails?.contact && (
-                    <div className="flex flex-row items-center my-1.75 text-base">
-                      <div className="w-1/4">Contact</div>
+                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
+                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
+                        Contact
+                      </div>
                       <a
-                        className="text-gray-105 p-0"
+                        className="text-[#55657a] p-0 hover:underline"
                         href={`tel:${brandsDetails.contact}`}
                       >
                         {brandsDetails.contact}
@@ -1051,14 +1148,15 @@ const ProductDetails = ({ params, ...props }) => {
                   )}
 
                   {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
-                    <div className="flex my-1.75 gap-5">
+                    <div className="flex my-3 gap-4">
                       {brandsDetails?.instagramUrl && (
                         <a
                           width={28}
                           height={28}
                           href={brandsDetails?.instagramUrl}
                           target="_blank"
-                          className="p-0"
+                          rel="noreferrer"
+                          className="p-0 rounded-full transition hover:scale-105"
                         >
                           <Image src={instagramIcon} width="28px" height={28} />
                         </a>
@@ -1069,7 +1167,8 @@ const ProductDetails = ({ params, ...props }) => {
                           height={28}
                           href={brandsDetails?.facebookUrl}
                           target="_blank"
-                          className="p-0"
+                          rel="noreferrer"
+                          className="p-0 rounded-full transition hover:scale-105"
                         >
                           <Image src={facebookIcon} width="28px" height={28} />
                         </a>
@@ -1077,50 +1176,56 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   ) : null}
                   {brandsDetails?.info ? (
-                    <p className="text-base font-semibold mt-2">
+                    <p className="text-sm sm:text-base font-semibold mt-2 text-[#1f2c3b]">
                       {brandsDetails.info}
                     </p>
                   ) : null}
                 </div>
 
                 {brandsDetails?.couponCode ? (
-                  <div className="flex flex-row items-center my-1.75 text-base">
-                    <div className="w-1/4">Coupon Code</div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-base">{brandsDetails.couponCode}</p>{" "}
-                      <CopyToClipboard
-                        text={brandsDetails.couponCode}
-                        onCopy={() => message.success("Copied", 1)}
-                      >
-                        <CopyOutlined
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                          className="text-lg"
-                        />
-                      </CopyToClipboard>
+                  <div className="">
+                    <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
+                      <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
+                        Coupon Code
+                      </div>
+                      <div className="flex items-center gap-2 rounded-lg border border-[#dccfff] px-3 py-1.5 bg-white">
+                        <p className="text-sm sm:text-base text-[#1f2c3b]">
+                          {brandsDetails.couponCode}
+                        </p>
+                        <CopyToClipboard
+                          text={brandsDetails.couponCode}
+                          onCopy={() => message.success("Copied", 1)}
+                        >
+                          <CopyOutlined
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            className="text-lg cursor-pointer"
+                          />
+                        </CopyToClipboard>
+                      </div>
                     </div>
                   </div>
                 ) : null}
 
                 {brandsDetails?.paymentDetails && (
-                  <div>
-                    <div className="text-lg font-medium leading-loose border-b border-solid border-gray-107">
+                  <div className="">
+                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Payment Details
                     </div>
-                    <div className="mt-1.75">
+                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
                       {linkifyText(brandsDetails.paymentDetails)}
                     </div>
                   </div>
                 )}
 
                 {brandsDetails?.shippingDetails && (
-                  <div>
-                    <div className="text-lg font-medium leading-loose border-b border-solid border-gray-107">
+                  <div className="">
+                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Shipping Details
                     </div>
-                    <div className="mt-1.75">
+                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
                       {linkifyText(brandsDetails.shippingDetails)}
                     </div>
                   </div>
@@ -1130,7 +1235,7 @@ const ProductDetails = ({ params, ...props }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
