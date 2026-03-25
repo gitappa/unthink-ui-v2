@@ -521,7 +521,7 @@ const ProductDetails = ({ params, ...props }) => {
 
           <div className="flex flex-col lg:flex-row gap-5">
             <div
-              className={`w-full lg:max-w-439 h-auto lg:h-456 ${fetchProductImage ? "" : "mx-auto"}  border border-solid border-gray-107 rounded-xl`}
+              className={`w-full lg:min-w-439  h-auto lg:h-456 ${fetchProductImage ? "" : "mx-auto"}  border border-solid border-gray-107 rounded-xl`}
               style={{ height: "480px" }}
             >
               {!isEmpty(productDetails?.image || fetchProductImage) ? (
@@ -541,7 +541,7 @@ const ProductDetails = ({ params, ...props }) => {
                   // grabCursor={true}
                   slidesPerView={"auto"}
                   spaceBetween={8}
-                  className="mt-4 w-full h-28 cursor-pointer"
+                  className="mt-4 w-full h-32 cursor-pointer"
                 >
                   {[
                     productDetails.image,
@@ -553,7 +553,7 @@ const ProductDetails = ({ params, ...props }) => {
                           src={img}
                           height={50}
                           width={50}
-                          className={`w-[110px] h-[110px] rounded-[10px] ${
+                          className={`w-[110px] h-[120px] rounded-[10px] ${
                             additionalimg === img
                               ? "border bg-purple-300 p-0.5"
                               : ""
@@ -727,24 +727,7 @@ const ProductDetails = ({ params, ...props }) => {
                           onClick={() => handleOpenProductModal(true)}
                         />
                       ) : null}
-                      <div
-                        className=""
-                        onClick={(e) => {
-                          dispatch(
-                            vtoIconState(productDetails?.mfr_code || true),
-                          );
-                          e.stopPropagation();
-                        }}
-                      >
-                        <Image
-                          height={28}
-                          width={28}
-                          alt="Try on with camera"
-                          className="cursor-pointer"
-                          src={camera}
-                        />
-                        {/* <p>Try On</p> */}
-                      </div>
+                 
                       {/* {qrCodeGeneratorURL ? (
 									<img
 										className='w-20 lg:w-25 h-20 lg:h-25 object-cover'
@@ -871,6 +854,8 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   </div>
                 ) : null}
+                <div className="flex items-center gap-4">
+
 
                 {storeData?.pdp_settings?.is_add_to_cart_button && (
                   <div className="flex gap-5  mt-16 mb-6 items-center ">
@@ -926,6 +911,30 @@ const ProductDetails = ({ params, ...props }) => {
                     Buy
                   </button>
                 )}
+                     <div
+                        className="flex items-center gap-3 py-2 px-9 font-normal text-lg rounded-10 shadow-md  mt-4 bg-[#FAFAFA] cursor-pointer"
+                        onClick={(e) => {
+                          dispatch(
+                            vtoIconState(productDetails?.mfr_code || true),
+                          );
+                          e.stopPropagation();
+                        }}
+                      >
+                        <Image
+                          height={28}
+                          width={28}
+                          alt="Try on with camera"
+                          className="cursor-pointer"
+                          src={camera}
+                         style={{
+filter: "sepia(100%) saturate(400%) hue-rotate(240deg)"
+}}
+                        />
+                        <p>Virtual  Try On</p>
+                      </div>
+
+                </div>
+
 
                 {productDetails?.description && (
                   <div>
