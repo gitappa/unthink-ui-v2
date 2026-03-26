@@ -60,7 +60,7 @@ import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
-import camera from "../../components/singleCollection/images/Card/camera.svg";
+import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
@@ -289,6 +289,7 @@ const ProductDetails = ({ params, ...props }) => {
     // "size",
     // "sleeve",
     "fit",
+    "Product Tags",
   ];
 
   // scroll for tags
@@ -360,19 +361,19 @@ const ProductDetails = ({ params, ...props }) => {
 
     e.stopPropagation();
     const payload = {
-      amount: product?.price || product?.listprice || 0, // MANDATORY
+      amount: productDetails?.price || productDetails?.listprice || 0, // MANDATORY
       currency: "USD", // MANDATORY
-      thumbnail: product.image,
+      thumbnail: productDetails.image,
       user_id: authUserId || getTTid(),
       store_id: store_id,
-      service_id: `Product_${product.mfr_code}`,
+      service_id: `Product_${productDetails.mfr_code}`,
       emailId: authUser.emailId || null,
       successUrl: `${location}/successpayment`,
       failureUrl: `${location}/failedpayment`,
       additional_details: {
-        mfr_code: product.mfr_code,
+        mfr_code: productDetails.mfr_code,
       },
-      title: product.name,
+      title: productDetails.name,
     };
 
     try {
@@ -548,7 +549,8 @@ const ProductDetails = ({ params, ...props }) => {
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
               <div className="w-full  lg:w-full   mx-auto border border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
-                <div className="h-[300px] sm:h-[420px] lg:h-[500px] 2xl:h-[600px] rounded-2xl bg-white/70   overflow-hidden">
+                {/* <div className="h-[300px] sm:h-[420px] lg:h-[500px]  rounded-2xl bg-white/70   overflow-hidden"> */}
+                <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-96  lg:max-h-590">
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
@@ -784,100 +786,99 @@ const ProductDetails = ({ params, ...props }) => {
             ) : null}
 
             {productDetails && (
-              <div className="flex flex-col gap-4 md:gap-5 lg:gap-7 w-full   bg-white/95 ">
+              <div className="flex flex-col  w-full   bg-white/95 ">
                 <div>
-
-                <div className="flex justify-between items-start gap-4">
-                  <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight font-semibold  text-[#1f2c3b]">
-                    {productDetails?.name}
-                  </h1>
-                  <div className="flex justify-between items-center gap-3 shrink-0">
-                    <div className="flex gap-3 justify-end items-start">
-                      {productDetails?.user_id === authUser?.user_id ||
-                      productDetails?.brand === authUser?.user_name ? (
-                        <button
-                          className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
-                          title="Edit product details"
-                          onClick={() => handleOpenProductModal(true)}
-                        >
-                          <EditOutlined className="text-xl" />
-                        </button>
-                      ) : null}
-                    </div>
-                    <div className="relative flex justify-between w-10 h-10">
-                      {showShareProductDetails && (
-                        <ShareOptions
-                          url={sharePageUrl}
-                          setShow={setShowShareProductDetails}
-                          onClose={() => setShowShareProductDetails(false)}
-                          isOpen={showShareProductDetails}
-                          qrCodeGeneratorURL={qrCodeGeneratorURL}
-                          true
-                        />
-                      )}
-                      {sharePageUrl && (
-                        <button
-                          className="flex w-10 h-10 items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                          onClick={() =>
-                            setShowShareProductDetails(!showShareProductDetails)
-                          }
-                        >
-                          <Image
-                            width={28}
-                            height={28}
-                            className="cursor-pointer h-6 w-6"
-                            src={share_icon}
-                            preview={false}
+                  <div className="flex justify-between items-start gap-4">
+                    <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight font-semibold  text-[#1f2c3b]">
+                      {productDetails?.name}
+                    </h1>
+                    <div className="flex justify-between items-center gap-3 shrink-0">
+                      <div className="flex gap-3 justify-end items-start">
+                        {productDetails?.user_id === authUser?.user_id ||
+                        productDetails?.brand === authUser?.user_name ? (
+                          <button
+                            className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                            title="Edit product details"
+                            onClick={() => handleOpenProductModal(true)}
+                          >
+                            <EditOutlined className="text-xl" />
+                          </button>
+                        ) : null}
+                      </div>
+                      <div className="relative flex justify-between w-10 h-10">
+                        {showShareProductDetails && (
+                          <ShareOptions
+                            url={sharePageUrl}
+                            setShow={setShowShareProductDetails}
+                            onClose={() => setShowShareProductDetails(false)}
+                            isOpen={showShareProductDetails}
+                            qrCodeGeneratorURL={qrCodeGeneratorURL}
+                            true
                           />
-                        </button>
-                      )}
+                        )}
+                        {sharePageUrl && (
+                          <button
+                            className="flex w-10 h-10 items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                            onClick={() =>
+                              setShowShareProductDetails(
+                                !showShareProductDetails,
+                              )
+                            }
+                          >
+                            <Image
+                              width={28}
+                              height={28}
+                              className="cursor-pointer h-6 w-6"
+                              src={share_icon}
+                              preview={false}
+                            />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                   <div className="mt-3">
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
-                    {productDetails?.price || productDetails?.listprice ? (
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: `${currencySymbol}${
-                            productDetails.price || productDetails.listprice
-                          }`,
-                        }}
-                        className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
-                      />
-                    ) : null}
-                    {productDetails?.price &&
-                    +productDetails.listprice > +productDetails?.price ? (
-                      <span className="text-sm sm:text-base text-[#6b7280]">
-                        {/* MRP{" "} */}
+                  <div className="mt-6">
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
+                      {productDetails?.price || productDetails?.listprice ? (
                         <span
-                          className="line-through"
                           dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${productDetails.listprice}`,
+                            __html: `${currencySymbol}${
+                              productDetails.price || productDetails.listprice
+                            }`,
                           }}
+                          className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                         />
+                      ) : null}
+                      {productDetails?.price &&
+                      +productDetails.listprice > +productDetails?.price ? (
+                        <span className="text-sm sm:text-base text-[#6b7280]">
+                          {/* MRP{" "} */}
+                          <span
+                            className="line-through"
+                            dangerouslySetInnerHTML={{
+                              __html: `${currencySymbol}${productDetails.listprice}`,
+                            }}
+                          />
+                        </span>
+                      ) : null}
+                    </div>
+
+                    {productDetails?.availability ? (
+                      <span
+                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
+                          productDetails.availability === "out stock"
+                            ? "bg-red-100 text-white"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {productDetails.avlbl === 0
+                          ? "SOLD"
+                          : productDetails.availability}
                       </span>
                     ) : null}
                   </div>
-
-                  {productDetails?.availability ? (
-                    <span
-                      className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
-                        productDetails.availability === "out stock"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-green-100 text-green-700"
-                      }`}
-                    >
-                      {productDetails.avlbl === 0
-                        ? "SOLD"
-                        : productDetails.availability}
-                    </span>
-                  ) : null}
                 </div>
-                </div>
-
-               
 
                 {/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
                   <div className="">
@@ -891,7 +892,7 @@ const ProductDetails = ({ params, ...props }) => {
                 ) : null} */}
 
                 {!brandsDetails && productDetails?.brand ? (
-                  <div className=" ">
+                  <div className=" mt-5">
                     <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
                       Brand :
                     </span>
@@ -902,7 +903,7 @@ const ProductDetails = ({ params, ...props }) => {
                 ) : null}
 
                 {brandsDetails?.paymentMethod ? (
-                  <div className="">
+                  <div className="lg:mt-8 mt-4">
                     <div className="text-base sm:text-lg font-semibold leading-loose mb-2 text-[#182438]">
                       Payment Link
                     </div>
@@ -927,7 +928,7 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 ) : null}
 
-                <div className="">
+                <div className="mt-8 ">
                   <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                     {storeData?.pdp_settings?.is_add_to_cart_button && (
                       <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
@@ -992,7 +993,7 @@ const ProductDetails = ({ params, ...props }) => {
                     {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Product Description
                     </div> */}
-                    <div className="mt-2 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
+                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
                       {productDetails.description}
                     </div>
                   </div>
@@ -1000,44 +1001,51 @@ const ProductDetails = ({ params, ...props }) => {
                 {fieldsToDisplay.map((field) =>
                   productDetails?.[field]?.length > 0 ? (
                     <div className="mt-2 " key={field}>
-                      <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[#F4F4F5] pb-3">
-                        <p className="text-[#9F9FA9] text-base lg:text-xl font-semibold capitalize">
+                      <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                        <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase">
                           {field}
                         </p>
-                        <p className="font-normal">
+                        <p className="font-normal text-sm  md:text-base ">
                           {Array.isArray(productDetails?.[field])
-                            ? productDetails?.[field]?.join(", ")
+                            ? productDetails?.[field]?.join(",")
                             : productDetails?.[field]}
                         </p>
                       </div>
                     </div>
                   ) : null,
                 )}
+                {productDetails?.product_tag?.length > 0 && (
+                  <div className="flex items-center gap-4 justify-between ">
+                    <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase">
+                      Products Tag
+                    </p>
+                    <p>{productDetails?.product_tag.join(",")}</p>
+                  </div>
+                )}
                 <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition"
+                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 mb-8"
                   onClick={(e) => {
                     dispatch(vtoIconState(productDetails?.mfr_code || true));
                     e.stopPropagation();
                   }}
                 >
                   <div className="flex items-center gap-3  mb-4">
-
-                  <Image
-                    height={24}
-                    width={24}
-                    alt="Try on with camera"
-                    className="cursor-pointer"
-                    src={camera}
-                    style={{
-                      filter: "sepia(100%) saturate(400%) hue-rotate(240deg)",
-                    }}
+                    <Image
+                      height={24}
+                      width={24}
+                      alt="Try on with camera"
+                      className="cursor-pointer"
+                      src={camera}
                     />
-                  <p className="font-semibold text-xl-1">Virtual Try On</p>
-                    </div>
-                  <p>Scan the QR code with your phone to try this piece on virtually using augmented reality.</p>
+                    <p className="font-semibold text-xl-1">Virtual Try On</p>
+                  </div>
+                  <p>
+                    Scan the QR code with your phone to try this piece on
+                    virtually using augmented reality.
+                  </p>
                 </div>
 
-                <div className="">
+                {/* <div className="">
                   <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
                   </div>
@@ -1052,9 +1060,9 @@ const ProductDetails = ({ params, ...props }) => {
                           {tag}
                         </div>
                       ))}
-                  </div>
+                  </div> */}
 
-                  {/* <div className="relative w-full">
+                {/* <div className="relative w-full">
                     <Swiper
                       slidesPerView="auto"
                       spaceBetween={10}
@@ -1107,9 +1115,9 @@ const ProductDetails = ({ params, ...props }) => {
                       </>
                     )}
                   </div> */}
-                </div>
+                {/* </div> */}
 
-                <div className="">
+                <div className="mt-6">
                   {hasContactDetails && (
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Contact Details
@@ -1215,7 +1223,7 @@ const ProductDetails = ({ params, ...props }) => {
                 ) : null}
 
                 {brandsDetails?.paymentDetails && (
-                  <div className="">
+                  <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Payment Details
                     </div>
@@ -1226,7 +1234,7 @@ const ProductDetails = ({ params, ...props }) => {
                 )}
 
                 {brandsDetails?.shippingDetails && (
-                  <div className="">
+                  <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Shipping Details
                     </div>
