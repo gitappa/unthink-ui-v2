@@ -276,18 +276,18 @@ const ProductDetails = ({ params, ...props }) => {
   }, [productDetailsPagePath]);
 
   const fieldsToDisplay = [
-    "age_group",
-    "gemstone",
+    // "age_group",
+    // "gemstone",
     "color",
     "gender",
     "material",
-    "occasion",
+    // "occasion",
     "pattern",
-    "shape",
-    "style",
-    "room",
-    "size",
-    "sleeve",
+    // "shape",
+    // "style",
+    // "room",
+    // "size",
+    // "sleeve",
     "fit",
   ];
 
@@ -963,7 +963,7 @@ const ProductDetails = ({ params, ...props }) => {
 
                     {storeData?.pdp_settings?.is_buy_button && (
                       <button
-                        className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 px-8 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                        className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
                         disabled={
                           !productDetails?.price && !productDetails?.listprice
                         }
@@ -987,16 +987,16 @@ const ProductDetails = ({ params, ...props }) => {
                     {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Product Description
                     </div> */}
-                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
+                    <div className="mt-2 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
                       {productDetails.description}
                     </div>
                   </div>
                 )}
                 {fieldsToDisplay.map((field) =>
                   productDetails?.[field]?.length > 0 ? (
-                    <div className=" " key={field}>
-                      <div className="flex justify-between items-center gap-2 mb-7">
-                        <p className="text-[#9F9FA9] text-xl font-semibold capitalize">
+                    <div className="mt-2 " key={field}>
+                      <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[#F4F4F5] pb-3">
+                        <p className="text-[#9F9FA9]  text-xl font-semibold capitalize">
                           {field}
                         </p>
                         <p className="font-normal">
@@ -1033,7 +1033,7 @@ const ProductDetails = ({ params, ...props }) => {
                 </div>
 
                 <div className="">
-                  <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
+                  <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
                   </div>
                   <div className="flex flex-wrap gap-2 my-5">
