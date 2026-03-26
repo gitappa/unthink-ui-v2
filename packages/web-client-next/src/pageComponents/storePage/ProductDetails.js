@@ -1022,13 +1022,13 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 )}
                 <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-4 lg:mt-7 mb-8"
+                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
                   onClick={(e) => {
                     dispatch(vtoIconState(productDetails?.mfr_code || true));
                     e.stopPropagation();
                   }}
                 >
-                  <div className="flex items-center gap-3  mb-4">
+                  <div className="flex items-center gap-3 mb-3 lg:mb-4">
                     <Image
                       height={24}
                       width={24}
@@ -1036,7 +1036,7 @@ const ProductDetails = ({ params, ...props }) => {
                       className="cursor-pointer"
                       src={camera}
                     />
-                    <p className="font-semibold text-xl-1">Virtual Try On</p>
+                    <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
                   </div>
                   <p>
                     Scan the QR code with your phone to try this piece on
@@ -1116,83 +1116,100 @@ const ProductDetails = ({ params, ...props }) => {
                   </div> */}
                 {/* </div> */}
 
-                <div className="mt-6">
-                  {hasContactDetails && (
-                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Contact Details
-                    </div>
-                  )}
-                  {brandsDetails?.title && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Brand Name
+                {hasContactDetails && (
+                  <div className="mt-6 border-t border-[#e7edf5] pt-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-[#2b3d56]" />
+                        <p className="text-base sm:text-lg font-semibold text-[#182438]">
+                          Contact Details
+                        </p>
                       </div>
-                      <div className="text-[#55657a]">
-                        {brandsDetails.title}
-                      </div>
-                    </div>
-                  )}
-                  {brandsDetails?.email && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Brand Email
-                      </div>
-                      <a
-                        className="text-[#55657a] p-0 hover:underline break-all"
-                        href={`mailto:${brandsDetails.email}`}
-                      >
-                        {brandsDetails.email}
-                      </a>
-                    </div>
-                  )}
-                  {brandsDetails?.contact && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Contact
-                      </div>
-                      <a
-                        className="text-[#55657a] p-0 hover:underline"
-                        href={`tel:${brandsDetails.contact}`}
-                      >
-                        {brandsDetails.contact}
-                      </a>
-                    </div>
-                  )}
 
-                  {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
-                    <div className="flex my-3 gap-4">
-                      {brandsDetails?.instagramUrl && (
-                        <a
-                          width={28}
-                          height={28}
-                          href={brandsDetails?.instagramUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-0 rounded-full transition hover:scale-105"
-                        >
-                          <Image src={instagramIcon} width="28px" height={28} />
-                        </a>
+                      {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
+                        <div className="flex items-center gap-2">
+                          {brandsDetails?.instagramUrl && (
+                            <a
+                              href={brandsDetails.instagramUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
+                            >
+                              <Image
+                                src={instagramIcon}
+                                width={18}
+                                height={18}
+                                alt="Instagram"
+                              />
+                            </a>
+                          )}
+                          {brandsDetails?.facebookUrl && (
+                            <a
+                              href={brandsDetails.facebookUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
+                            >
+                              <Image
+                                src={facebookIcon}
+                                width={18}
+                                height={18}
+                                alt="Facebook"
+                              />
+                            </a>
+                          )}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-4 divide-y divide-[#edf2f7]">
+                      {brandsDetails?.title && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Brand Name
+                          </p>
+                          <p className="font-medium text-[#1f2c3b] break-words">
+                            {brandsDetails.title}
+                          </p>
+                        </div>
                       )}
-                      {brandsDetails?.facebookUrl && (
-                        <a
-                          width={28}
-                          height={28}
-                          href={brandsDetails?.facebookUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-0 rounded-full transition hover:scale-105"
-                        >
-                          <Image src={facebookIcon} width="28px" height={28} />
-                        </a>
+
+                      {brandsDetails?.email && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Brand Email
+                          </p>
+                          <a
+                            className="block p-0 font-medium text-[#334155] break-all hover:underline"
+                            href={`mailto:${brandsDetails.email}`}
+                          >
+                            {brandsDetails.email}
+                          </a>
+                        </div>
+                      )}
+
+                      {brandsDetails?.contact && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Contact
+                          </p>
+                          <a
+                            className="block p-0 font-medium text-[#334155] hover:underline"
+                            href={`tel:${brandsDetails.contact}`}
+                          >
+                            {brandsDetails.contact}
+                          </a>
+                        </div>
                       )}
                     </div>
-                  ) : null}
-                  {brandsDetails?.info ? (
-                    <p className="text-sm sm:text-base font-semibold mt-2 text-[#1f2c3b]">
-                      {brandsDetails.info}
-                    </p>
-                  ) : null}
-                </div>
+
+                    {brandsDetails?.info ? (
+                      <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
+                        {brandsDetails.info}
+                      </p>
+                    ) : null}
+                  </div>
+                )}
 
                 {brandsDetails?.couponCode ? (
                   <div className="">

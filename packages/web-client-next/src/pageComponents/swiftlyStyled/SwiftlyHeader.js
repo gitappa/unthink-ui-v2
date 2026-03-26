@@ -120,6 +120,7 @@ const SwiftlyHeader = ({
 			width: `${fixedLayout.width}px`,
 			zIndex: 60,
 			background: themeCodes.header.header_bg,
+			
 			// borderRadius:'12px'
 		};
 	}, [fixedLayout.left, fixedLayout.width, isHeaderFixed, themeCodes.header.header_bg]);
@@ -209,7 +210,7 @@ const SwiftlyHeader = ({
 							) : null}
 							{storeData?.pdp_settings?.is_add_to_cart_button && (
 								<Link href='/cart' className={styles.cartLink}>
-									<FiShoppingCart className={styles.cartIcon} />
+									<FiShoppingCart className={styles.cartIcon} style={{filter:'brightness(0) opacity(0.7)'}} />
 								</Link>
 							)}
 							<UserProfileMenu

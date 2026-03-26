@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { useNavigate } from "../../../helper/useNavigate";
 
 import guitar from "../../../images/swiftly-styled/Icons - SVG - SwiftlyStyled/SVG Icons/Guitar - Debut.svg";
@@ -46,89 +45,89 @@ const CollectionsGrid = () => {
 		navigate(getThemeCollectionsPagePath(theme)); // redirect on categories/[coll_theme] page
 	};
 	return (
-		<div id='eras-collections-grid' className='grid grid-cols-3'>
-			<div className='grid' style={{ gridRow: 8 }}>
+		<div id={styles['eras-collections-grid']}>
+			<div className={styles.grid} style={{ gridRow: 8 }}>
 				<div
-					className='item guitar'
+					className={`${styles.item} ${styles.guitar}`}
 					onClick={() => handleCollErasClick(THEME_TAYLOR_SWIFT)}>
-					<Image src={guitar} alt='taylor-swift' width={100} height={100} />
-					<Image className='hover-svg' src={hoverDebut} alt='DEBUT' width={100} height={100} />
+					<img src={guitar} alt='taylor-swift' />
+					<img className={styles['hover-svg']} src={hoverDebut} alt='DEBUT' />
 				</div>
 
 				<div
-					className='item heartGlasses'
+					className={`${styles.item} ${styles.heartGlasses}`}
 					onClick={() => handleCollErasClick(THEME_RED)}>
-					<Image src={heartGlasses} alt='red' width={100} height={100} />
-					<Image className='hover-svg' src={hoverRed} alt='RED' width={100} height={100} />
+					<img src={heartGlasses} alt='red' />
+					<img className={styles['hover-svg']} src={hoverRed} alt='RED' />
 				</div>
 
 				<div
-					className='item snake'
+					className={`${styles.item} ${styles.snake}`}
 					onClick={() => handleCollErasClick(THEME_REPUTATION)}>
-					<Image src={snake} alt='reputation' width={100} height={100} />
-					<Image className='hover-svg' src={hoverReputation} alt='REPUTATION' width={100} height={100} />
+					<img src={snake} alt='reputation' />
+					<img className={styles['hover-svg']} src={hoverReputation} alt='REPUTATION' />
 				</div>
 
 				<div
-					className='item cardigan'
+					className={`${styles.item} ${styles.cardigan}`}
 					onClick={() => handleCollErasClick(THEME_FOLKLORE)}>
-					<Image src={cardigan} alt='folklore' width={100} height={100} />
-					<Image className='hover-svg' src={hoverFolklore} alt='FOLKLORE' width={100} height={100} />
+					<img src={cardigan} alt='folklore' />
+					<img className={styles['hover-svg']} src={hoverFolklore} alt='FOLKLORE' />
 				</div>
 			</div>
 
-			<div className='grid' style={{ gridRow: 8 }}>
+			<div className={styles.grid} style={{ gridRow: 8 }}>
 				<div
-					className='item fearless'
+					className={`${styles.item} ${styles.fearless}`}
 					onClick={() => handleCollErasClick(THEME_FEARLESS)}>
-					<Image src={fearless} alt='fearless' width={100} height={100} />
-					<Image className='hover-svg' src={hoverFearless} alt='FEARLESS' width={100} height={100} />
+					<img src={fearless} alt='fearless' />
+					<img className={styles['hover-svg']} src={hoverFearless} alt='FEARLESS' />
 				</div>
 
 				<div
-					className='item moon'
+					className={`${styles.item} ${styles.moon}`}
 					onClick={() => handleCollErasClick(THEME_MIDNIGHTS)}>
 					<img src={moon} alt='moon' />
-					<img className='hover-svg' src={hoverMidnights} alt='MIDNIGHTS' />
+					<img className={styles['hover-svg']} src={hoverMidnights} alt='MIDNIGHTS' />
 				</div>
 
 				<div
-					className='item typewriter'
+					className={`${styles.item} ${styles.typewriter}`}
 					onClick={() =>
 						handleCollErasClick(THEME_THE_TORTURED_POETS_DEPARTMENT)
 					}>
 					<img src={typewriter} alt='the-tortured-poets-department' />
-					<img className='hover-svg' src={hoverTypewriter} alt='TYPEWRITER' />
+					<img className={styles['hover-svg']} src={hoverTypewriter} alt='TYPEWRITER' />
 				</div>
 			</div>
 
-			<div className='grid' style={{ gridRow: 8 }}>
+			<div className={styles.grid} style={{ gridRow: 8 }}>
 				<div
-					className='item fireworks'
+					className={`${styles.item} ${styles.fireworks}`}
 					onClick={() => handleCollErasClick(THEME_SPEAK_NOW)}>
 					<img src={fireworks} alt='speak-now' />
-					<img className='hover-svg' src={hoverSpeakNow} alt='FIREWORKS' />
+					<img className={styles['hover-svg']} src={hoverSpeakNow} alt='FIREWORKS' />
 				</div>
 
 				<div
-					className='item seagulls'
+					className={`${styles.item} ${styles.seagulls}`}
 					onClick={() => handleCollErasClick(THEME_1989)}>
 					<img src={seagulls} alt='1989' />
-					<img className='hover-svg' src={hoverSeagulls} alt='1989' />
+					<img className={styles['hover-svg']} src={hoverSeagulls} alt='1989' />
 				</div>
 
 				<div
-					className='item hearts'
+					className={`${styles.item} ${styles.hearts}`}
 					onClick={() => handleCollErasClick(THEME_LOVER)}>
 					<img src={hearts} alt='hearts' />
-					<img className='hover-svg' src={hoverLover} alt='LOVER' />
+					<img className={styles['hover-svg']} src={hoverLover} alt='LOVER' />
 				</div>
 
 				<div
-					className='item willow'
+					className={`${styles.item} ${styles.willow}`}
 					onClick={() => handleCollErasClick(THEME_EVERMORE)}>
 					<img src={willow} alt='evermore' />
-					<img className='hover-svg' src={hoverEvermore} alt='EVERMORE' />
+					<img className={styles['hover-svg']} src={hoverEvermore} alt='EVERMORE' />
 				</div>
 			</div>
 		</div>

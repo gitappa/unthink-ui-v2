@@ -55,7 +55,7 @@ const ProfileName = ({
 		cover_image: false,
 	});
 
- 
+
 
 	//to store previous image on image change so can show previous image on cancel
 	const [savedImages, setSavedImages] = useState({
@@ -143,7 +143,7 @@ const ProfileName = ({
 
 	const isAdminLoggedIn = AdminCheck(user, current_store_name, adminUserId, admin_list);
 
- 
+
 
 	const isStoreAdminLoggedIn = useMemo(
 		() => user.user_name && user.user_name === super_admin,
@@ -177,7 +177,7 @@ const ProfileName = ({
 					<Title className={styles.titleWhiteCenterMy7} level={4}>
 						Your Brand Details
 					</Title>
-							<Row gutter={[20, 20]} className={styles.mt6}>
+					<Row gutter={[20, 20]} className={styles.mt6}>
 						<Col xs={24} md={12}>
 							<Input
 								name='first_name'
@@ -219,6 +219,58 @@ const ProfileName = ({
 								</div>
 							)}
 						</Col>
+						<Col xs={24}>
+							<Input
+								name='contact'
+								type="number"
+								className={styles.inputBgTransparentMt1}
+								placeholder='Enter Contact Details'
+								value={sellerDetails.contact}
+								onChange={handleSellerDataChange}
+							/>
+							{/* {error.brand_name && (
+								<div className={styles.errorContainer}>
+									<span className={styles.errorText}>{error.brand_name}</span>
+								</div>
+							)} */}
+						</Col>
+						<Col xs={24}>
+							<Input
+								name='couponCode'								 
+								className={styles.inputBgTransparentMt1}
+								placeholder='Enter couponCode'
+								value={sellerDetails.couponCode}
+								onChange={handleSellerDataChange}
+							/>
+						</Col>
+						<Col xs={24}>
+							<Input
+								name='paymentMethod'								 
+								className={styles.inputBgTransparentMt1}
+								placeholder='Enter paymentMethod'
+								value={sellerDetails.paymentMethod}
+								onChange={handleSellerDataChange}
+							/>
+						</Col>
+							<Col xs={24}>
+							<Input
+								name='paymentDetails'								 
+								className={styles.inputBgTransparentMt1}
+								placeholder='Enter paymentDetails'
+								value={sellerDetails.paymentDetails}
+								onChange={handleSellerDataChange}
+							/>
+						</Col>
+							<Col xs={24}>
+							<Input
+								name='shippingDetails'								 
+								className={styles.inputBgTransparentMt1}
+								placeholder='Enter shippingDetails'
+								value={sellerDetails.shippingDetails}
+								onChange={handleSellerDataChange}
+							/>
+						</Col>
+
 						<Col span={24}>
 							<TextArea
 								name='description'
@@ -285,67 +337,67 @@ const ProfileName = ({
 
 			{/* for admin only cover image from edit profile and profile page */}
 			{/* {showCoverImage ? ( */}
-				<Row className={styles.blockMt6}>
-					<Col span={24}>
-						{isUploading.cover_image && (
-							<div className={styles.uploadingCoverContainer}>
-								<Spin
-									className={styles.spinnerFullWidth}
-									indicator={
-										<LoadingOutlined
-											style={{ fontSize: 30 }}
-											className={styles.spinnerBlue}
-											spin
-										/>
-									}
-									spinning={isUploading.cover_image}
-								/>
-							</div>
-						)}
-						{!isUploading.cover_image &&
-							(profileData.cover_image ? (
-								<div className={styles.imagePreviewContainer}>
-									<div className={styles.imagePreviewWrapper}>
-										<LazyLoadImage
-											src={profileData.cover_image}
-											height='100%'
-											width='100%'
-											className={styles.coverImage}
-											style={{ aspectRatio: "3.1/1" }}
-										/>
-									</div>
-									<div className={styles.removeChangeLink}>
-										<span onClick={() => handleChange("cover_image", "")}>
-											remove or change Cover
-										</span>
-									</div>
+			<Row className={styles.blockMt6}>
+				<Col span={24}>
+					{isUploading.cover_image && (
+						<div className={styles.uploadingCoverContainer}>
+							<Spin
+								className={styles.spinnerFullWidth}
+								indicator={
+									<LoadingOutlined
+										style={{ fontSize: 30 }}
+										className={styles.spinnerBlue}
+										spin
+									/>
+								}
+								spinning={isUploading.cover_image}
+							/>
+						</div>
+					)}
+					{!isUploading.cover_image &&
+						(profileData.cover_image ? (
+							<div className={styles.imagePreviewContainer}>
+								<div className={styles.imagePreviewWrapper}>
+									<LazyLoadImage
+										src={profileData.cover_image}
+										height='100%'
+										width='100%'
+										className={styles.coverImage}
+										style={{ aspectRatio: "3.1/1" }}
+									/>
 								</div>
-							) : (
-								<Dragger
-									className={styles.draggerBgTransparent}
-									{...uploadProps}
-									name='cover_image'
-									showUploadList={false}>
-									<p className={styles.uploadIconMb3}>
-										<PictureOutlined />
+								<div className={styles.removeChangeLink}>
+									<span onClick={() => handleChange("cover_image", "")}>
+										remove or change Cover
+									</span>
+								</div>
+							</div>
+						) : (
+							<Dragger
+								className={styles.draggerBgTransparent}
+								{...uploadProps}
+								name='cover_image'
+								showUploadList={false}>
+								<p className={styles.uploadIconMb3}>
+									<PictureOutlined />
+								</p>
+								<p className={styles.uploadTextWhite}>
+									Click or drag a cover image to this area
+								</p>
+								<p className={styles.uploadTextSmWhite}>
+									(Recommended size : 1240 * 400)
+								</p>
+								{savedImages?.cover_image && (
+									<p
+										className={styles.cancelLink}
+										onClick={onCoverImageCancel}>
+										Cancel
 									</p>
-									<p className={styles.uploadTextWhite}>
-										Click or drag a cover image to this area
-									</p>
-									<p className={styles.uploadTextSmWhite}>
-										(Recommended size : 1240 * 400)
-									</p>
-									{savedImages?.cover_image && (
-										<p
-											className={styles.cancelLink}
-											onClick={onCoverImageCancel}>
-											Cancel
-										</p>
-									)}
-								</Dragger>
-							))}
-					</Col>
-				</Row>
+								)}
+							</Dragger>
+						))}
+				</Col>
+			</Row>
 			{/* // ) : null} */}
 			<Row className={styles.mt6}>
 				<Col span={24}>

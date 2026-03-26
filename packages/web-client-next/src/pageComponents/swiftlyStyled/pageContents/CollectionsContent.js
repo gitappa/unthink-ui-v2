@@ -7,9 +7,9 @@ import CollectionsGrid from "./CollectionsGrid";
 
 export const CollectionsContent = ({}) => {
 	return (
-		<section className='collections-content' id={ERAS_COLLECTIONS_ID}>
-			<h2 className='headline'> Collections from the Eras!</h2>
-			<p className='sub-headline'>
+		<section className={styles['collections-content']} id={ERAS_COLLECTIONS_ID}>
+			<h2 className={styles.headline}> Collections from the Eras!</h2>
+			<p className={styles['sub-headline']}>
 				Browse through our Eras Tour inspired collections,
 				<br />
 				featuring fashion from leading ecommerce platforms.
