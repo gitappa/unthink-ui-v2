@@ -545,10 +545,10 @@ const ProductDetails = ({ params, ...props }) => {
             <span className="capitalize">Go back</span>
           </button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-5 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
               <div className="w-full  lg:w-full   mx-auto border border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
-                <div className="h-[300px] sm:h-[420px] lg:h-[500px] rounded-2xl bg-white/70   overflow-hidden">
+                <div className="h-[300px] sm:h-[420px] lg:h-[500px] 2xl:h-[600px] rounded-2xl bg-white/70   overflow-hidden">
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
@@ -785,8 +785,10 @@ const ProductDetails = ({ params, ...props }) => {
 
             {productDetails && (
               <div className="flex flex-col gap-4 md:gap-5 lg:gap-7 w-full   bg-white/95 ">
+                <div>
+
                 <div className="flex justify-between items-start gap-4">
-                  <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight  text-[#1f2c3b]">
+                  <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight font-semibold  text-[#1f2c3b]">
                     {productDetails?.name}
                   </h1>
                   <div className="flex justify-between items-center gap-3 shrink-0">
@@ -833,7 +835,7 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 </div>
 
-                <div className="">
+                   <div className="mt-3">
                   <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
                     {productDetails?.price || productDetails?.listprice ? (
                       <span
@@ -873,6 +875,9 @@ const ProductDetails = ({ params, ...props }) => {
                     </span>
                   ) : null}
                 </div>
+                </div>
+
+               
 
                 {/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
                   <div className="">
@@ -996,7 +1001,7 @@ const ProductDetails = ({ params, ...props }) => {
                   productDetails?.[field]?.length > 0 ? (
                     <div className="mt-2 " key={field}>
                       <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[#F4F4F5] pb-3">
-                        <p className="text-[#9F9FA9]  text-xl font-semibold capitalize">
+                        <p className="text-[#9F9FA9] text-base lg:text-xl font-semibold capitalize">
                           {field}
                         </p>
                         <p className="font-normal">
