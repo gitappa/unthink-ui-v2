@@ -23,8 +23,10 @@
 .headerWrapper {
     /* width: 100%; */
     margin: 0 0px;
-    /* border-radius: 12px; */
+    border-radius: 12px;
     margin-top: 12px;
+    margin: 12px 20px 0px;
+
 }
 
 .headerContent {
@@ -58,6 +60,7 @@
         /* lg:px-8 lg:py-2 -> py-2 is 8px */
         height: 80px;
         /* lg:h-20 -> 80px */
+        
     }
 } 
 
@@ -175,7 +178,7 @@
     /* text-white */
     cursor: pointer;
     /* cursor-pointer */
-    margin-left: 24px;
+    /* margin-left: 24px; */
     /* ml-6 */
     height: 24px;
     /* h-6 */

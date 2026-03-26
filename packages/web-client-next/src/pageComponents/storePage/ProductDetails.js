@@ -572,7 +572,7 @@ const ProductDetails = ({ params, ...props }) => {
                 </div>
 
                 {productDetails?.additional_image &&
-                productDetails?.additional_image.length > 0 ? (
+                  productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
                     <Swiper
                       modules={[FreeMode]}
@@ -598,11 +598,10 @@ const ProductDetails = ({ params, ...props }) => {
                               src={img}
                               height={50}
                               width={50}
-                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${
-                                additionalimg === img
+                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${additionalimg === img
                                   ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
                                   : "border-[#e8e2ff] hover:border-[#b8a9ff]"
-                              }`}
+                                }`}
                               onClick={() => setAdditionalImg(img)}
                               alt="product"
                             />
@@ -795,7 +794,7 @@ const ProductDetails = ({ params, ...props }) => {
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
                         {productDetails?.user_id === authUser?.user_id ||
-                        productDetails?.brand === authUser?.user_name ? (
+                          productDetails?.brand === authUser?.user_name ? (
                           <button
                             className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
@@ -843,15 +842,14 @@ const ProductDetails = ({ params, ...props }) => {
                       {productDetails?.price || productDetails?.listprice ? (
                         <span
                           dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${
-                              productDetails.price || productDetails.listprice
-                            }`,
+                            __html: `${currencySymbol}${productDetails.price || productDetails.listprice
+                              }`,
                           }}
                           className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                         />
                       ) : null}
                       {productDetails?.price &&
-                      +productDetails.listprice > +productDetails?.price ? (
+                        +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
                           {/* MRP{" "} */}
                           <span
@@ -866,11 +864,10 @@ const ProductDetails = ({ params, ...props }) => {
 
                     {productDetails?.availability ? (
                       <span
-                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
-                          productDetails.availability === "out stock"
+                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${productDetails.availability === "out stock"
                             ? "bg-red-100 text-white"
                             : "bg-green-100 text-green-700"
-                        }`}
+                          }`}
                       >
                         {productDetails.avlbl === 0
                           ? "SOLD"
@@ -915,78 +912,80 @@ const ProductDetails = ({ params, ...props }) => {
                           return (
                             <a
                               key={`${link}-${idx}`}
-                              className="flex items-center justify-center w-full py-2 border border-[#d9cdff] rounded-xl text-[#1f2c3b] bg-white hover:underline"
+                              style={{ background: '#7c75ec' }}
+                              className=" text-white flex justify-center items-center  py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg   "
                               target="_blank"
                               rel="noreferrer"
                               href={link}
                             >
-                              {link}
+                              Buy
                             </a>
                           );
                         })}
                     </div>
                   </div>
                 ) : null}
-
-                <div className="mt-8 ">
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    {storeData?.pdp_settings?.is_add_to_cart_button && (
-                      <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
-                        <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
-                          <button
-                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                            onClick={() => {
-                              updateCartQuantity(cardItem?.qty - 1);
-                            }}
-                          >
-                            -
-                          </button>
-                          <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
-                            {cardItem?.qty || 0}
-                          </button>
-                          <button
-                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                            onClick={() => {
-                              updateCartQuantity(cardItem?.qty + 1 || 1);
-                            }}
-                          >
-                            +
-                          </button>
+                {storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button &&
+                  <div className="mt-8 ">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                      {storeData?.pdp_settings?.is_add_to_cart_button && (
+                        <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
+                          <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
+                            <button
+                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                              onClick={() => {
+                                updateCartQuantity(cardItem?.qty - 1);
+                              }}
+                            >
+                              -
+                            </button>
+                            <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
+                              {cardItem?.qty || 0}
+                            </button>
+                            <button
+                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                              onClick={() => {
+                                updateCartQuantity(cardItem?.qty + 1 || 1);
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
+                            <button
+                              onClick={handleAddToCart}
+                              className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
+                              style={{
+                                backgroundColor: "#7c75ec",
+                              }}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
                         </div>
-                        <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
-                          <button
-                            onClick={handleAddToCart}
-                            className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
-                            style={{
-                              backgroundColor: "#7c75ec",
-                            }}
-                          >
-                            Add to Cart
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
-                    {storeData?.pdp_settings?.is_buy_button && (
-                      <button
-                        className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                        disabled={
-                          !productDetails?.price && !productDetails?.listprice
-                        }
-                        style={{
-                          background: "#7c75ec",
-                          cursor:
+                      {storeData?.pdp_settings?.is_buy_button && (
+                        <button
+                          className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                          disabled={
                             !productDetails?.price && !productDetails?.listprice
-                              ? "not-allowed"
-                              : "",
-                        }}
-                        onClick={checkoutPayment}
-                      >
-                        Buy
-                      </button>
-                    )}
+                          }
+                          style={{
+                            background: "#7c75ec",
+                            cursor:
+                              !productDetails?.price && !productDetails?.listprice
+                                ? "not-allowed"
+                                : "",
+                          }}
+                          onClick={checkoutPayment}
+                        >
+                          Buy
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                }
 
                 {productDetails?.description && (
                   <div className="">
@@ -1023,13 +1022,13 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 )}
                 <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 mb-8"
+                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
                   onClick={(e) => {
                     dispatch(vtoIconState(productDetails?.mfr_code || true));
                     e.stopPropagation();
                   }}
                 >
-                  <div className="flex items-center gap-3  mb-4">
+                  <div className="flex items-center gap-3 mb-3 lg:mb-4">
                     <Image
                       height={24}
                       width={24}
@@ -1037,7 +1036,7 @@ const ProductDetails = ({ params, ...props }) => {
                       className="cursor-pointer"
                       src={camera}
                     />
-                    <p className="font-semibold text-xl-1">Virtual Try On</p>
+                    <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
                   </div>
                   <p>
                     Scan the QR code with your phone to try this piece on
@@ -1117,83 +1116,100 @@ const ProductDetails = ({ params, ...props }) => {
                   </div> */}
                 {/* </div> */}
 
-                <div className="mt-6">
-                  {hasContactDetails && (
-                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Contact Details
-                    </div>
-                  )}
-                  {brandsDetails?.title && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Brand Name
+                {hasContactDetails && (
+                  <div className="mt-6 border-t border-[#e7edf5] pt-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-[#2b3d56]" />
+                        <p className="text-base sm:text-lg font-semibold text-[#182438]">
+                          Contact Details
+                        </p>
                       </div>
-                      <div className="text-[#55657a]">
-                        {brandsDetails.title}
-                      </div>
-                    </div>
-                  )}
-                  {brandsDetails?.email && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Brand Email
-                      </div>
-                      <a
-                        className="text-[#55657a] p-0 hover:underline break-all"
-                        href={`mailto:${brandsDetails.email}`}
-                      >
-                        {brandsDetails.email}
-                      </a>
-                    </div>
-                  )}
-                  {brandsDetails?.contact && (
-                    <div className="flex flex-col sm:flex-row sm:items-center my-2 gap-1 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-medium text-[#1f2c3b]">
-                        Contact
-                      </div>
-                      <a
-                        className="text-[#55657a] p-0 hover:underline"
-                        href={`tel:${brandsDetails.contact}`}
-                      >
-                        {brandsDetails.contact}
-                      </a>
-                    </div>
-                  )}
 
-                  {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
-                    <div className="flex my-3 gap-4">
-                      {brandsDetails?.instagramUrl && (
-                        <a
-                          width={28}
-                          height={28}
-                          href={brandsDetails?.instagramUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-0 rounded-full transition hover:scale-105"
-                        >
-                          <Image src={instagramIcon} width="28px" height={28} />
-                        </a>
+                      {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
+                        <div className="flex items-center gap-2">
+                          {brandsDetails?.instagramUrl && (
+                            <a
+                              href={brandsDetails.instagramUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
+                            >
+                              <Image
+                                src={instagramIcon}
+                                width={18}
+                                height={18}
+                                alt="Instagram"
+                              />
+                            </a>
+                          )}
+                          {brandsDetails?.facebookUrl && (
+                            <a
+                              href={brandsDetails.facebookUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
+                            >
+                              <Image
+                                src={facebookIcon}
+                                width={18}
+                                height={18}
+                                alt="Facebook"
+                              />
+                            </a>
+                          )}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-4 divide-y divide-[#edf2f7]">
+                      {brandsDetails?.title && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Brand Name
+                          </p>
+                          <p className="font-medium text-[#1f2c3b] break-words">
+                            {brandsDetails.title}
+                          </p>
+                        </div>
                       )}
-                      {brandsDetails?.facebookUrl && (
-                        <a
-                          width={28}
-                          height={28}
-                          href={brandsDetails?.facebookUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-0 rounded-full transition hover:scale-105"
-                        >
-                          <Image src={facebookIcon} width="28px" height={28} />
-                        </a>
+
+                      {brandsDetails?.email && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Brand Email
+                          </p>
+                          <a
+                            className="block p-0 font-medium text-[#334155] break-all hover:underline"
+                            href={`mailto:${brandsDetails.email}`}
+                          >
+                            {brandsDetails.email}
+                          </a>
+                        </div>
+                      )}
+
+                      {brandsDetails?.contact && (
+                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                            Contact
+                          </p>
+                          <a
+                            className="block p-0 font-medium text-[#334155] hover:underline"
+                            href={`tel:${brandsDetails.contact}`}
+                          >
+                            {brandsDetails.contact}
+                          </a>
+                        </div>
                       )}
                     </div>
-                  ) : null}
-                  {brandsDetails?.info ? (
-                    <p className="text-sm sm:text-base font-semibold mt-2 text-[#1f2c3b]">
-                      {brandsDetails.info}
-                    </p>
-                  ) : null}
-                </div>
+
+                    {brandsDetails?.info ? (
+                      <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
+                        {brandsDetails.info}
+                      </p>
+                    ) : null}
+                  </div>
+                )}
 
                 {brandsDetails?.couponCode ? (
                   <div className="">

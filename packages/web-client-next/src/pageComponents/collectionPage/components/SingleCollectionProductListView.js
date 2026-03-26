@@ -118,6 +118,7 @@ const SingleCollectionProductListView = ({
 
 }) => {
   // console.log('sharePageUrl');
+  // console.log('profile_image',profile_image);
   
    
 
