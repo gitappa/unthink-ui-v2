@@ -1023,7 +1023,7 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 )}
                 <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 mb-8"
+                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-4 lg:mt-7 mb-8"
                   onClick={(e) => {
                     dispatch(vtoIconState(productDetails?.mfr_code || true));
                     e.stopPropagation();
