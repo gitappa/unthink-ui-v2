@@ -572,7 +572,7 @@ const ProductDetails = ({ params, ...props }) => {
                 </div>
 
                 {productDetails?.additional_image &&
-                productDetails?.additional_image.length > 0 ? (
+                  productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
                     <Swiper
                       modules={[FreeMode]}
@@ -598,11 +598,10 @@ const ProductDetails = ({ params, ...props }) => {
                               src={img}
                               height={50}
                               width={50}
-                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${
-                                additionalimg === img
+                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${additionalimg === img
                                   ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
                                   : "border-[#e8e2ff] hover:border-[#b8a9ff]"
-                              }`}
+                                }`}
                               onClick={() => setAdditionalImg(img)}
                               alt="product"
                             />
@@ -795,7 +794,7 @@ const ProductDetails = ({ params, ...props }) => {
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
                         {productDetails?.user_id === authUser?.user_id ||
-                        productDetails?.brand === authUser?.user_name ? (
+                          productDetails?.brand === authUser?.user_name ? (
                           <button
                             className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
@@ -843,15 +842,14 @@ const ProductDetails = ({ params, ...props }) => {
                       {productDetails?.price || productDetails?.listprice ? (
                         <span
                           dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${
-                              productDetails.price || productDetails.listprice
-                            }`,
+                            __html: `${currencySymbol}${productDetails.price || productDetails.listprice
+                              }`,
                           }}
                           className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                         />
                       ) : null}
                       {productDetails?.price &&
-                      +productDetails.listprice > +productDetails?.price ? (
+                        +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
                           {/* MRP{" "} */}
                           <span
@@ -866,11 +864,10 @@ const ProductDetails = ({ params, ...props }) => {
 
                     {productDetails?.availability ? (
                       <span
-                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
-                          productDetails.availability === "out stock"
+                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${productDetails.availability === "out stock"
                             ? "bg-red-100 text-white"
                             : "bg-green-100 text-green-700"
-                        }`}
+                          }`}
                       >
                         {productDetails.avlbl === 0
                           ? "SOLD"
@@ -915,78 +912,80 @@ const ProductDetails = ({ params, ...props }) => {
                           return (
                             <a
                               key={`${link}-${idx}`}
-                              className="flex items-center justify-center w-full py-2 border border-[#d9cdff] rounded-xl text-[#1f2c3b] bg-white hover:underline"
+                              style={{ background: '#7c75ec' }}
+                              className=" text-white flex justify-center items-center  py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg   "
                               target="_blank"
                               rel="noreferrer"
                               href={link}
                             >
-                              {link}
+                              Buy
                             </a>
                           );
                         })}
                     </div>
                   </div>
                 ) : null}
-
-                <div className="mt-8 ">
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    {storeData?.pdp_settings?.is_add_to_cart_button && (
-                      <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
-                        <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
-                          <button
-                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                            onClick={() => {
-                              updateCartQuantity(cardItem?.qty - 1);
-                            }}
-                          >
-                            -
-                          </button>
-                          <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
-                            {cardItem?.qty || 0}
-                          </button>
-                          <button
-                            className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                            onClick={() => {
-                              updateCartQuantity(cardItem?.qty + 1 || 1);
-                            }}
-                          >
-                            +
-                          </button>
+                {storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button &&
+                  <div className="mt-8 ">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                      {storeData?.pdp_settings?.is_add_to_cart_button && (
+                        <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
+                          <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
+                            <button
+                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                              onClick={() => {
+                                updateCartQuantity(cardItem?.qty - 1);
+                              }}
+                            >
+                              -
+                            </button>
+                            <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
+                              {cardItem?.qty || 0}
+                            </button>
+                            <button
+                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
+                              onClick={() => {
+                                updateCartQuantity(cardItem?.qty + 1 || 1);
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
+                            <button
+                              onClick={handleAddToCart}
+                              className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
+                              style={{
+                                backgroundColor: "#7c75ec",
+                              }}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
                         </div>
-                        <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
-                          <button
-                            onClick={handleAddToCart}
-                            className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
-                            style={{
-                              backgroundColor: "#7c75ec",
-                            }}
-                          >
-                            Add to Cart
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
-                    {storeData?.pdp_settings?.is_buy_button && (
-                      <button
-                        className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                        disabled={
-                          !productDetails?.price && !productDetails?.listprice
-                        }
-                        style={{
-                          background: "#7c75ec",
-                          cursor:
+                      {storeData?.pdp_settings?.is_buy_button && (
+                        <button
+                          className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                          disabled={
                             !productDetails?.price && !productDetails?.listprice
-                              ? "not-allowed"
-                              : "",
-                        }}
-                        onClick={checkoutPayment}
-                      >
-                        Buy
-                      </button>
-                    )}
+                          }
+                          style={{
+                            background: "#7c75ec",
+                            cursor:
+                              !productDetails?.price && !productDetails?.listprice
+                                ? "not-allowed"
+                                : "",
+                          }}
+                          onClick={checkoutPayment}
+                        >
+                          Buy
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                }
 
                 {productDetails?.description && (
                   <div className="">
