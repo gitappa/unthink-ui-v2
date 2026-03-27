@@ -64,6 +64,8 @@ import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
+import { RiArrowDropDownLine } from "react-icons/ri";
+
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -83,6 +85,7 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductLoading,
     productDetail,
     ButtonClick,
+
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -92,12 +95,14 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
+
   ]);
 
   const [store_id] = useSelector((state) => [state.store.data.store_id]);
 
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
+  const [dropDown,setDropDown] = useState(false)
 
   //   useEffect(() => {
   //     return () => {
@@ -107,6 +112,8 @@ const ProductDetails = ({ params, ...props }) => {
 
   // console.log('customProductsData', customProductsData);
   const [storeData] = useSelector((state) => [state.store.data]);
+  const ProductTags = storeData?.catalog_attributes.find(att => att.key === "product_tag").is_display
+  // console.log('onMyDev',ProductTags);
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
@@ -159,7 +166,7 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-  console.log("productDetails", productDetails);
+  // console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {
     return collection?.product_lists?.find(
@@ -287,9 +294,10 @@ const ProductDetails = ({ params, ...props }) => {
     // "style",
     // "room",
     // "size",
-    // "sleeve",
+    "sleeve",
     "fit",
-    "Product Tags",
+    "category",
+    // 'product_tag'
   ];
 
   // scroll for tags
@@ -451,6 +459,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
   const [descriptionget, setDescriptionget] = useState("");
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [showAllFields, setShowAllFields] = useState(false);
   const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
     e.stopPropagation();
@@ -554,7 +563,7 @@ const ProductDetails = ({ params, ...props }) => {
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
-                        className="w-full h-full object-contain rounded-2xl"
+                        className="w-full h-full object-contain rounded-2xl max-h-590 max-w-640"
                         src={
                           additionalimg ||
                           productDetails?.image ||
@@ -901,9 +910,9 @@ const ProductDetails = ({ params, ...props }) => {
 
                 {brandsDetails?.paymentMethod ? (
                   <div className="lg:mt-8 mt-4">
-                    <div className="text-base sm:text-lg font-semibold leading-loose mb-2 text-[#182438]">
+                    {/* <div className="text-base sm:text-lg font-semibold leading-loose mb-2 text-[#182438]">
                       Payment Link
-                    </div>
+                    </div> */}
                     <div className="grid gap-2">
                       {brandsDetails.paymentMethod
                         .split(",")
@@ -918,7 +927,7 @@ const ProductDetails = ({ params, ...props }) => {
                               rel="noreferrer"
                               href={link}
                             >
-                              Buy
+                              Buy Now   
                             </a>
                           );
                         })}
@@ -997,30 +1006,49 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   </div>
                 )}
-                {fieldsToDisplay.map((field) =>
-                  productDetails?.[field]?.length > 0 ? (
-                    <div className="mt-2 " key={field}>
-                      <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
-                        <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase">
-                          {field}
-                        </p>
-                        <p className="font-normal text-sm  md:text-base ">
-                          {Array.isArray(productDetails?.[field])
-                            ? productDetails?.[field]?.join(",")
-                            : productDetails?.[field]}
-                        </p>
+                 {productDetails?.product_tag?.length > 0 && (
+                  <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
+                    <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
+                      Products Tag
+                    </p>
+                    <p>{productDetails?.product_tag.join(",")}</p>
+                  </div>
+                )}
+
+                {fieldsToDisplay.map((field, index) =>
+                  productDetails?.[field]?.length > 0 && ProductTags ? (
+                    (showAllFields || index < 4) && (
+                      <div className="mt-2 " key={field}>
+                        <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                          <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase">
+                            {field}
+                          </p>
+                          <p className="font-normal text-sm  md:text-base ">
+                            {Array.isArray(productDetails?.[field])
+                              ? productDetails?.[field]?.join(",")
+                              : productDetails?.[field]}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )
                   ) : null,
                 )}
-                {productDetails?.product_tag?.length > 0 && (
+                {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0).length > 4 && (
+                  <button
+                    onClick={() => setShowAllFields(!showAllFields)}
+                    className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
+                  >
+                    {showAllFields ? 'Show Less' : 'Show More'}
+                  </button>
+                )}
+                {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between ">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase">
                       Products Tag
                     </p>
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
-                )}
+                )} */}
                 <div
                   className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
                   onClick={(e) => {
@@ -1115,15 +1143,43 @@ const ProductDetails = ({ params, ...props }) => {
                     )}
                   </div> */}
                 {/* </div> */}
+                  {brandsDetails?.couponCode ? (
+                  <div className="">
+                    <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
+                      <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
+                        Coupon Code
+                      </div>
+                      <div className="flex items-center gap-2 rounded-lg border border-[#dccfff] px-3 py-1.5 bg-white">
+                        <p className="text-sm sm:text-base text-[#1f2c3b]">
+                          {brandsDetails.couponCode}
+                        </p>
+                        <CopyToClipboard
+                          text={brandsDetails.couponCode}
+                          onCopy={() => message.success("Copied", 1)}
+                        >
+                          <CopyOutlined
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            className="text-lg cursor-pointer"
+                          />
+                        </CopyToClipboard>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
 
                 {hasContactDetails && (
                   <div className="mt-6 border-t border-[#e7edf5] pt-4">
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
                       <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-[#2b3d56]" />
-                        <p className="text-base sm:text-lg font-semibold text-[#182438]">
+                        {/* <span className="h-2 w-2 rounded-full bg-[#2b3d56]" /> */}
+                        <p className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]" onClick={()=>setDropDown(!dropDown)}>
                           Contact Details
                         </p>
+                        {/* <p >kughbiuhb</p> */}
+                        <RiArrowDropDownLine onClick={()=>setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`}  />
                       </div>
 
                       {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
@@ -1161,11 +1217,11 @@ const ProductDetails = ({ params, ...props }) => {
                         </div>
                       ) : null}
                     </div>
-
+                      {dropDown && 
                     <div className="mt-4 divide-y divide-[#edf2f7]">
                       {brandsDetails?.title && (
                         <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
                             Brand Name
                           </p>
                           <p className="font-medium text-[#1f2c3b] break-words">
@@ -1176,7 +1232,7 @@ const ProductDetails = ({ params, ...props }) => {
 
                       {brandsDetails?.email && (
                         <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
                             Brand Email
                           </p>
                           <a
@@ -1190,7 +1246,7 @@ const ProductDetails = ({ params, ...props }) => {
 
                       {brandsDetails?.contact && (
                         <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-[#6f7f92]">
+                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
                             Contact
                           </p>
                           <a
@@ -1202,8 +1258,9 @@ const ProductDetails = ({ params, ...props }) => {
                         </div>
                       )}
                     </div>
-
-                    {brandsDetails?.info ? (
+                        }
+                       
+                    {brandsDetails?.info && dropDown ? (
                       <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
                         {brandsDetails.info}
                       </p>
@@ -1211,34 +1268,9 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 )}
 
-                {brandsDetails?.couponCode ? (
-                  <div className="">
-                    <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
-                        Coupon Code
-                      </div>
-                      <div className="flex items-center gap-2 rounded-lg border border-[#dccfff] px-3 py-1.5 bg-white">
-                        <p className="text-sm sm:text-base text-[#1f2c3b]">
-                          {brandsDetails.couponCode}
-                        </p>
-                        <CopyToClipboard
-                          text={brandsDetails.couponCode}
-                          onCopy={() => message.success("Copied", 1)}
-                        >
-                          <CopyOutlined
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                            className="text-lg cursor-pointer"
-                          />
-                        </CopyToClipboard>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
+              
 
-                {brandsDetails?.paymentDetails && (
+                {brandsDetails?.paymentDetails && dropDown &&(
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Payment Details
@@ -1249,7 +1281,7 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 )}
 
-                {brandsDetails?.shippingDetails && (
+                {brandsDetails?.shippingDetails && dropDown &&(
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Shipping Details

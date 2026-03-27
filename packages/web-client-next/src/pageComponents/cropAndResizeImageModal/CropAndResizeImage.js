@@ -44,10 +44,10 @@ const CropAndResizeImage = ({
 
 	return (
 		<div
-			className='flex justify-center items-center'
+			className='flex justify-center items-center  overflow-y-scroll'
 			style={{
-				height: "500px",
-				maxHeight: "500px",
+				// height: "500px",
+				// maxHeight: "500px",
 			}}>
 			<ReactCrop
 				crop={crop}

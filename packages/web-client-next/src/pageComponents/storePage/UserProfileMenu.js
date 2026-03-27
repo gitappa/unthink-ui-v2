@@ -8,7 +8,8 @@ import avatarImg from "../../images/avatar-black.svg";
 import Link from "next/link";
 import { ROUTES } from "../../constants/codes";
 import { is_store_instance } from "../../constants/config";
-
+import useTheme from "../../hooks/chat/useTheme";
+ 
 const { Text } = Typography;
 
 export const UserProfileMenu = ({
@@ -20,6 +21,9 @@ export const UserProfileMenu = ({
 	isMobileMenu = false,
 	onClose
 }) => {
+		const { themeCodes } = useTheme();
+	console.log('dfdffvzsc',themeCodes.header.fills);
+	
 	const items = headerProfileMenu?.items || [];
 
 	const dropdownMenuProps =
@@ -67,8 +71,8 @@ export const UserProfileMenu = ({
 								// 	{currentUser?.user_name}
 								// </Text>
 								<>
-									<p className="header-username">{currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0, 10) + '...' : currentUser?.user_name}</p>
-									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill: 'white', filter: 'brightness(0) opacity(0.7)' }} />
+									<p className="header-username" style={{color: themeCodes.header.textColor,}}>{currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0, 10) + '...' : currentUser?.user_name}</p>
+									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill:'white' , filter:themeCodes.header.fills ? themeCodes.header.fills : 'brightness(0) opacity(0.7)' }} />
 								</>
 							) : (
 								<Link href={is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE}>

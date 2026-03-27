@@ -42,7 +42,7 @@ import {
 const CollectionsGrid = () => {
 	const navigate = useNavigate();
 	const handleCollErasClick = (theme) => {
-		navigate(getThemeCollectionsPagePath(theme)); // redirect on categories/[coll_theme] page
+		navigate(`${getThemeCollectionsPagePath(theme)}?collection_theme=${theme}`); // redirect on categories/[coll_theme] page with theme as query param
 	};
 	return (
 		<div id={styles['eras-collections-grid']}>
