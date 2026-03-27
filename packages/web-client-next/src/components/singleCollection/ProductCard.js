@@ -84,7 +84,11 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
 import Modal from "../modal/Modal";
-import { customProductsAPIs, profileAPIs, TryOnVto,   } from "../../helper/serverAPIs";
+import {
+  customProductsAPIs,
+  profileAPIs,
+  TryOnVto,
+} from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
@@ -549,8 +553,6 @@ const ProductCard = ({
     const url = window.location.origin;
     // setButtonClick(true);
 
-
-    
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
@@ -560,7 +562,7 @@ const ProductCard = ({
     };
     try {
       setLoading(true);
-      const res = await TryOnVto(payload)
+      const res = await TryOnVto(payload);
       setVtoResultImageUrl(res.data.data.image_url);
       setLoading(false);
     } catch (error) {
@@ -1272,64 +1274,66 @@ const ProductCard = ({
             )}
           </div>
 
-          {(storeData.pdp_settings?.buy_card_attributes?.[0] &&
+          {(storeData.pdp_settings?.product_card_attributes?.[0] &&
             product?.size?.length > 0) ||
-          (storeData.pdp_settings?.buy_card_attributes?.[1] &&
+          (storeData.pdp_settings?.product_card_attributes?.[1] &&
             product?.sleeve?.length > 0) ||
-          (storeData.pdp_settings?.buy_card_attributes?.[2] &&
+          (storeData.pdp_settings?.product_card_attributes?.[2] &&
             product?.fit?.length > 0) ? (
-            <div className={`${styles.tagsContainerWrapper } ${
-    isOverflowing ? styles.isOverflowing : ""
-  }`}>
+            <div
+              className={`${styles.tagsContainerWrapper} ${
+                isOverflowing ? styles.isOverflowing : ""
+              }`}
+            >
               <Swiper
-              ref={containerRef}
-  spaceBetween={8}
-  slidesPerView={"auto"}
-    freeMode={true}
-  className={styles.tagscontainer}
->
-  {storeData.pdp_settings?.buy_card_attributes?.[0] &&
-    product?.size?.length > 0 && (
-      <SwiperSlide style={{ width: "auto" }}>
-        <span className={styles.smalltags}>
-          size:
-          {Array.isArray(product?.size)
-            ? product.size
-                .map((f) => f.replace(/,+$/, "").trim())
-                .join(", ")
-            : product?.size?.replace(/,+$/, "").trim()}
-        </span>
-      </SwiperSlide>
-    )}
+                ref={containerRef}
+                spaceBetween={8}
+                slidesPerView={"auto"}
+                freeMode={true}
+                className={styles.tagscontainer}
+              >
+                {storeData.pdp_settings?.product_card_attributes?.[0] &&
+                  product?.size?.length > 0 && (
+                    <SwiperSlide style={{ width: "auto" }}>
+                      <span className={styles.smalltags}>
+                        size:
+                        {Array.isArray(product?.size)
+                          ? product.size
+                              .map((f) => f.replace(/,+$/, "").trim())
+                              .join(", ")
+                          : product?.size?.replace(/,+$/, "").trim()}
+                      </span>
+                    </SwiperSlide>
+                  )}
 
-  {storeData.pdp_settings?.buy_card_attributes?.[1] &&
-    product?.sleeve?.length > 0 && (
-      <SwiperSlide style={{ width: "auto" }}>
-        <span className={styles.smalltags}>
-          sleeve :
-          {Array.isArray(product?.sleeve)
-            ? product.sleeve
-                .map((f) => f.replace(/,+$/, "").trim())
-                .join(", ")
-            : product?.sleeve?.replace(/,+$/, "").trim()}
-        </span>
-      </SwiperSlide>
-    )}
+                {storeData.pdp_settings?.product_card_attributes?.[1] &&
+                  product?.sleeve?.length > 0 && (
+                    <SwiperSlide style={{ width: "auto" }}>
+                      <span className={styles.smalltags}>
+                        sleeve :
+                        {Array.isArray(product?.sleeve)
+                          ? product.sleeve
+                              .map((f) => f.replace(/,+$/, "").trim())
+                              .join(", ")
+                          : product?.sleeve?.replace(/,+$/, "").trim()}
+                      </span>
+                    </SwiperSlide>
+                  )}
 
-  {storeData.pdp_settings?.buy_card_attributes?.[2] &&
-    product?.fit?.length > 0 && (
-      <SwiperSlide style={{ width: "auto" }}>
-        <span className={styles.smalltags}>
-          fit:
-          {Array.isArray(product?.fit)
-            ? product.fit
-                .map((f) => f.replace(/,+$/, "").trim())
-                .join(", ")
-            : product?.fit?.replace(/,+$/, "").trim()}
-        </span>
-      </SwiperSlide>
-    )}
-</Swiper>
+                {storeData.pdp_settings?.product_card_attributes?.[2] &&
+                  product?.fit?.length > 0 && (
+                    <SwiperSlide style={{ width: "auto" }}>
+                      <span className={styles.smalltags}>
+                        fit:
+                        {Array.isArray(product?.fit)
+                          ? product.fit
+                              .map((f) => f.replace(/,+$/, "").trim())
+                              .join(", ")
+                          : product?.fit?.replace(/,+$/, "").trim()}
+                      </span>
+                    </SwiperSlide>
+                  )}
+              </Swiper>
             </div>
           ) : (
             <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>

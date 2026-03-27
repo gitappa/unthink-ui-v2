@@ -75,7 +75,6 @@ const ProductDetails = ({ params, ...props }) => {
   const { collection, loading } = useSelector((state) => state.cart);
   // console.log('collectionsuii', collection);
   const [isloading, setIsLoading] = useState(true);
-
   const [
     sellerDetails,
     customProductsData,
@@ -282,23 +281,25 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [productDetailsPagePath]);
 
-  const fieldsToDisplay = [
-    // "age_group",
-    // "gemstone",
-    "color",
-    "gender",
-    "material",
-    // "occasion",
-    "pattern",
-    // "shape",
-    // "style",
-    // "room",
-    // "size",
-    "sleeve",
-    "fit",
-    "category",
-    // 'product_tag'
-  ];
+  // const fieldsToDisplay = [
+  //   // "age_group",
+  //   // "gemstone",
+  //   "color",
+  //   "gender",
+  //   "material",
+  //   // "occasion",
+  //   "pattern",
+  //   // "shape",
+  //   // "style",
+  //   // "room",
+  //   // "size",
+  //   "sleeve",
+  //   "fit",
+  //   "category",
+  //   // 'product_tag'
+  // ];
+const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
+// console.log('fieldsToDisplay',fieldsToDisplay);
 
   // scroll for tags
 
@@ -1006,24 +1007,24 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   </div>
                 )}
-                 {productDetails?.product_tag?.length > 0 && (
+                 {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
                       Products Tag
                     </p>
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
-                )}
+                )} */}
 
                 {fieldsToDisplay.map((field, index) =>
                   productDetails?.[field]?.length > 0 && ProductTags ? (
                     (showAllFields || index < 4) && (
                       <div className="mt-2 " key={field}>
-                        <div className="flex justify-between items-center gap-2 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
-                          <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase">
+                        <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                          <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
                             {field}
                           </p>
-                          <p className="font-normal text-sm  md:text-base ">
+                          <p className="font-normal text-sm  md:text-base text-end">
                             {Array.isArray(productDetails?.[field])
                               ? productDetails?.[field]?.join(",")
                               : productDetails?.[field]}
