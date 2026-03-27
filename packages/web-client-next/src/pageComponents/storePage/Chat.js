@@ -422,9 +422,7 @@ const Chat = ({
 				className={`${styles.header_chat_container} ${styles.gap_2} ${styles.w_full}`}>
 				<div
 					id={`chat_search_input_container_${chatTypeKey}`}
-					className={`${styles.chat_search_input_container} ${
-						aura_header_theme === "dark" ? styles.chat_search_input_container_dark : ""
-						} ${
+					className={`${styles.chat_search_input_container}  ${
 						!isBTInstance ? styles.chat_search_input_container_with_border : ""
 						}`}
 					onClick={() => {
