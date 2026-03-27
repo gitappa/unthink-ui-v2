@@ -141,7 +141,7 @@ const ChatContainer = ({
 		() =>
 			!isEmpty(selectedSearchOption)
 				? selectedSearchOption
-				: searchOptions.find((option) => option.default) || {},
+				: (searchOptions || []).find((option) => option.default) || {},
 		[searchOptions, selectedSearchOption]
 	);
 
