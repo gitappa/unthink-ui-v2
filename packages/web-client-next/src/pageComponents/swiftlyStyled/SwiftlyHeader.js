@@ -135,7 +135,7 @@ const SwiftlyHeader = ({
 					color: themeCodes.header.announcement_bar_text,
 					fontWeight: themeCodes.header.font_weight,
 				}}>
-				EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!
+				 {storeData?.website_tagline ? storeData?.website_tagline : 'EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!' }
 			</div>
 			<div
 				ref={headerWrapperRef}
