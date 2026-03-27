@@ -112,7 +112,7 @@ const ProductDetails = ({ params, ...props }) => {
 
   // console.log('customProductsData', customProductsData);
   const [storeData] = useSelector((state) => [state.store.data]);
-  const ProductTags = storeData?.catalog_attributes.find(att => att.key === "product_tag").is_display
+  const ProductTags = storeData?.catalog_attributes?.find(att => att.key === "product_tag")?.is_display
   // console.log('onMyDev',ProductTags);
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
