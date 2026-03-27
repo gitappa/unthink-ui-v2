@@ -38,6 +38,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(122, 46, 57)",
 			announcement_bar_text: "rgb(255, 250, 250)",
 			header_bg: "rgb(178, 34, 34)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(255, 250, 250)",
 	},
@@ -50,6 +52,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(36, 46, 71)",
 			announcement_bar_text: "rgb(234, 240, 255)",
 			header_bg: "rgb(17, 46, 118)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "#EAF0FF",
 	},
@@ -62,6 +66,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(210, 68, 125)",
 			announcement_bar_text: "rgb(255, 240, 245)",
 			header_bg: "#FFB0D6",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "#FFF1F5",
 	},
@@ -74,6 +80,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(165, 201, 166)",
 			announcement_bar_text: "rgb(0, 86, 63)",
 			header_bg: "rgb(0, 128, 128)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(253, 255, 254)",
 	},
@@ -86,6 +94,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(116, 111, 112)",
 			announcement_bar_text: "rgb(245, 245, 245)",
 			header_bg: "rgb(38, 38, 38)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(245, 245, 245)",
 	},
@@ -98,6 +108,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(205, 201, 193)",
 			announcement_bar_text: "rgb(105, 105, 105)",
 			header_bg: "rgb(105, 105, 105)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(245, 245, 245)",
 	},
@@ -110,6 +122,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(220, 198, 170)",
 			announcement_bar_text: "rgb(254, 255, 254)",
 			header_bg: "rgb(206, 143, 64)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(254, 252, 238)",
 	},
@@ -122,6 +136,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(94, 91, 88)",
 			announcement_bar_text: "rgb(237, 232, 229)",
 			header_bg: "rgb(43, 43, 43)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(237, 232, 229)",
 	},
@@ -134,6 +150,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(199, 168, 203)",
 			announcement_bar_text: "rgb(128, 0, 128)",
 			header_bg: "rgb(138, 2, 139)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(230, 230, 250)",
 	},
@@ -146,6 +164,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(231, 249, 255)",
 			announcement_bar_text: "rgb(71, 130, 180)",
 			header_bg: "rgb(71, 130, 180)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(231, 249, 255)",
 	},
@@ -158,6 +178,8 @@ export const THEME_CODES = {
 			announcement_bar_bg: "rgb(196, 173, 144)",
 			announcement_bar_text: "rgb(103, 35, 14)",
 			header_bg: "rgb(123, 63, 0)",
+			textColor:'rgba(255, 255, 255, 1)',
+			fills:'brightness(0) invert(1) opacity(0.7)'
 		},
 		page_container_bg: "rgb(255, 243, 231)",
 	},

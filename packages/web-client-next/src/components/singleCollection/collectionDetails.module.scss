@@ -1743,8 +1743,6 @@ svg{
   text-align: justify;
   line-height: normal;
   white-space: pre-line;
-
-  
 }
 
 .readMoreLink {
@@ -1753,7 +1751,7 @@ svg{
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  background-color: white;
+  // background-color: white;
  
   &:hover {
     text-decoration: underline;

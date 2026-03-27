@@ -355,6 +355,8 @@ const ReviewCollectionStepContent = ({
 							file: info.file,
 							// custom_size: COLLECTION_COVER_IMG_SIZES, // no need to crop image when we generate content from this
 						});
+						// console.log('dfdvbsdsdoinfkn');
+						
 						if (response?.data?.data && response.data.data[0]) {
 							handleUploadedDataChange(
 								info.filename,

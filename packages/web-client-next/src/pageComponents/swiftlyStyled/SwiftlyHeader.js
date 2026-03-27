@@ -152,8 +152,8 @@ const SwiftlyHeader = ({
 					className={styles.headerContent}
 					style={headerContentStyle}>
 					{/* set width only to keep content center aligned */}
-					<div className={styles.logoContainer}>
-						<div className={styles.logo} onClick={() => navigate(PATH_ROOT)}>
+					<div className={styles.logoContainer}>					
+						<div className={styles.logo} style={{color: themeCodes.header.textColor,}} onClick={() => navigate(PATH_ROOT)}>
 							{/* {isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"} */}
 							{is_store_instance && current_store_name}
 						</div>
@@ -197,13 +197,13 @@ const SwiftlyHeader = ({
 							<button className={styles.collectionButton}
 								onClick={() =>
 									navigate(getThemeCollectionsPagePath(THEME_ALL))
-								}>
+								} style={{color: themeCodes.header.textColor,}} >
 								Collections
 							</button>
 							
 
 							{currentUser?.emailId ? (
-								<FaRegHeart style={{filter:'brightness(0) opacity(0.7)'}}
+								<FaRegHeart style={{filter: themeCodes.header.fills ? themeCodes.header.fills :'brightness(0) opacity(0.7)'}}
 									onClick={onWishlistClick}
 									className={styles.wishlistIcon}
 								/>

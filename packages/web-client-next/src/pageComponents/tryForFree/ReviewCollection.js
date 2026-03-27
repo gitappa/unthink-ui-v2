@@ -1741,6 +1741,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 				_id: currentCollection._id,
 				[name]: value,
 				fetchUserCollection: true,
+				 get_other_dimensions:false
 			};
  
 	 

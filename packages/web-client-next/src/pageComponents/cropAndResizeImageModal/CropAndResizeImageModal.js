@@ -190,6 +190,19 @@ const CropAndResizeImageModal = ({
     [completedCrop, scale, rotate, selectedImg],
   );
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedImg) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedImg]);
+
   return (
     <div
       className={selectedImg ? modalStyles.modalBackdrop : ""}
@@ -200,6 +213,7 @@ const CropAndResizeImageModal = ({
         inset: selectedImg ? 0 : "auto",
         backgroundColor: selectedImg ? "rgba(17, 24, 39, 0.5)" : "transparent",
         backdropFilter: selectedImg ? "blur(3px)" : "none",
+        
       }}
     >
       {/* // <Modal
