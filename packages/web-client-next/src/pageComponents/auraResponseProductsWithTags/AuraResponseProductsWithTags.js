@@ -26,7 +26,8 @@ const AuraResponseProductsWithTags = ({
 	widgetImage,
 	isAuraChatPage,
 	handleLoadMore,
-	localChatMessage
+	localChatMessage,
+	showTitle = true
 
 }) => {
 	const [suggestionsWithProducts,suggestionsTags, recommendationsWithProducts, moreProducts] = useSelector((state) => [
@@ -174,7 +175,7 @@ const AuraResponseProductsWithTags = ({
 
 	return (
 		<div className={styles['aura-tags-container']} id='aura-response-products-with-tags-container'>
-			{title ? (
+			{showTitle && title ? (
 				<h1
 					id='_data_widget_text'
 					className={styles['aura-tags-title']}
