@@ -142,19 +142,25 @@ const ChatModal = ({
 		state.chatV2.socketId,
 		state.VtoIconReducer.ButtonClick
 	]);
-	 
-	console.log('upload_icon',upload_icon);
+	// console.log('auraServerImage',auraServerImage);
 	
+	 
 	const {
 		suggestions: { tags = [], title = "" },
 	} = suggestionsWithProducts;
 
 	const [showUploadImage, setShowUploadImage] = useState(true);
 	const [isUploadingImage, setIsUploadingImage] = useState(false);
+	const [isFigmaUploadPanelOpen, setIsFigmaUploadPanelOpen] = useState(false);
+	const [submittedPromptPreview, setSubmittedPromptPreview] = useState({
+		message: "",
+		imageUrl: "",
+	});
 
 	const dispatch = useDispatch();
 
 	const modalRef = useRef(null);
+	const figmaUploadPanelRef = useRef(null);
 
 	const { sendMessage } = useChat();
 
@@ -164,6 +170,7 @@ const ChatModal = ({
 		}
 		sessionStorage.removeItem("widgetHeader");
 		setLocalChatMessage("");
+		setSubmittedPromptPreview({ message: "", imageUrl: "" });
 		dispatch(setShowChatModal(false));
 		showSubmitImageTooltip && setShowSubmitImageTooltip(false);
 	};	
@@ -223,6 +230,7 @@ const ChatModal = ({
 	const handleSetSearchOption = useCallback(
 		(option) => {
 			setLocalChatMessage("");
+			setSubmittedPromptPreview({ message: "", imageUrl: "" });
 			sessionStorage.removeItem("widgetHeader");
 			if (option.id === CHAT_SEARCH_OPTION_ID.trending_collections) {
 				dispatch(setShowChatModal(false));
@@ -245,7 +253,6 @@ const ChatModal = ({
 		() => searchOptions.filter((v) => v?.is_display),
 		[searchOptions]
 	);
-console.log('displaySearchOptions',displaySearchOptions );
 
 	const isSuggestionsWithProductsAvailable = useMemo(
 		() =>
@@ -314,6 +321,49 @@ console.log('displaySearchOptions',displaySearchOptions );
 		[is_kiosk, isActiveSearchOptionAvailable]
 	);
 
+	const shouldCenterModalContent = useMemo(
+		() => ButtonClick && !isShowAuraResponse,
+		[ButtonClick, isShowAuraResponse]
+	);
+
+	const isShopALookOptionActive = useMemo(
+		() => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look,
+		[activeSearchOption?.id]
+	);
+
+	const shouldUseLegacyImageSearchLayout = useMemo(
+		() => activeSearchOption.allow_image_search && !isShopALookOptionActive,
+		[activeSearchOption.allow_image_search, isShopALookOptionActive]
+	);
+
+	const isShowSubmittedChatPreview = useMemo(
+		() =>
+			!isFigmaUploadPanelOpen &&
+			!shouldUseLegacyImageSearchLayout &&
+			!!submittedPromptPreview.imageUrl &&
+			showChatLoader,
+		[
+			isFigmaUploadPanelOpen,
+			shouldUseLegacyImageSearchLayout,
+			submittedPromptPreview.imageUrl,
+			showChatLoader,
+		]
+	);
+
+	const shouldMoveInputBelowResults = useMemo(
+		() =>
+			!isBTNormalUserLoggedIn &&
+			activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look &&
+			isShowAuraResponse &&
+			!shouldUseLegacyImageSearchLayout,
+		[
+			isBTNormalUserLoggedIn,
+			activeSearchOption?.id,
+			isShowAuraResponse,
+			shouldUseLegacyImageSearchLayout,
+		]
+	);
+
 	const searchOptionPreviewImages = useMemo(
 		() => ({
 			[CHAT_SEARCH_OPTION_ID.shop_a_look]: auraCardThree,
@@ -351,6 +401,8 @@ console.log('displaySearchOptions',displaySearchOptions );
 					});
 					if (response?.data?.data[0]) {
 						dispatch(setChatImageUrl(response?.data?.data[0].url, chatTypeKey));
+						// Close panel after upload - the pill will show in the main input
+						setIsFigmaUploadPanelOpen(false);
 					}
 				}
 			} catch (error) {
@@ -379,6 +431,16 @@ console.log('displaySearchOptions',displaySearchOptions );
 		setShowUploadImage((value) => !value);
 	};
 
+	const handleFigmaUploadButtonClick = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsFigmaUploadPanelOpen((value) => !value);
+	};
+
+	const handleFigmaImageUrlChange = (e) => {
+		dispatch(setChatImageUrl(e.target.value, chatTypeKey));
+	};
+
 	const [nextPage, setNextPage] = useState(true);
 	const [ipp, setIpp] = useState(15);
 	const [currentPage, setCurrentPage] = useState(0);
@@ -397,6 +459,11 @@ console.log('displaySearchOptions',displaySearchOptions );
  
 
 		if (localChatMessage || chatImageUrl) {
+			setSubmittedPromptPreview({
+				message: localChatMessage || "",
+				imageUrl: chatImageUrl || "",
+			});
+
 			// Condition 1 → smart_search follow-up image send
 			const sendImageSmartSearch =
 				chatImageUrl &&
@@ -425,6 +492,7 @@ console.log('displaySearchOptions',displaySearchOptions );
 			dispatch(setAuraHelperMessage(activeSearchOption?.search_message));
 			dispatch(setAuraSreverImage(""));
 			dispatch(setOverlayCoordinates([]));
+			setIsFigmaUploadPanelOpen(false);
 		}
 
 		if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -452,6 +520,24 @@ console.log('displaySearchOptions',displaySearchOptions );
 		e.stopPropagation();
 		inputRef?.current?.focus();
 	};
+
+	useEffect(() => {
+		if (!isFigmaUploadPanelOpen) return undefined;
+
+		const handleClickOutside = (event) => {
+			if (
+				figmaUploadPanelRef.current &&
+				!figmaUploadPanelRef.current.contains(event.target)
+			) {
+				// setIsFigmaUploadPanelOpen(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isFigmaUploadPanelOpen]);
 
 	const handleLoadMore = () => {
 		const moreSearch_next_page = false;
@@ -547,6 +633,7 @@ console.log('displaySearchOptions',displaySearchOptions );
 	const handleChangeImageConfirm = () => {
 		dispatch(setChatImageUrl("", chatTypeKey));
 		setLocalChatMessage("");
+		setSubmittedPromptPreview({ message: "", imageUrl: "" });
 		setRegenarateImage(false);
 		// Clear any other related state if needed
 		dispatch(resetAuraSearchResponse());
@@ -559,7 +646,7 @@ console.log('displaySearchOptions',displaySearchOptions );
 
 	return (
 		<div
-			className={` ${styles['chatmodal-modal-container']} ${ButtonClick ? 'justify-center overflow-hidden' : ''} `}
+			className={` ${styles['chatmodal-modal-container']} ${shouldCenterModalContent ? 'justify-center' : ''} `}
 			ref={modalRef}>
 			{/* hide close icon for AuraChatPage */}
 			{!isAuraChatPage ? (
@@ -575,14 +662,23 @@ console.log('displaySearchOptions',displaySearchOptions );
 			{!is_kiosk || isActiveSearchOptionAvailable ? (
 				<>
 					<div
-						className={`${styles['chatmodal-content-wrapper']} ${!showChatLoader ? styles['chatmodal-content-wrapper-border'] : ''
-							} `}>
+						className={`${styles['chatmodal-content-wrapper']} 
+					  `}>
 						<div className={styles['chatmodal-content-inner']}>
-							<div className={styles['chatmodal-content-max-width']}>
+							
+
+							<div className={styles[ isFigmaUploadPanelOpen  ||
+									(chatImageUrl &&
+										!isShowSubmittedChatPreview &&
+										!isShowAuraResponse ) || isUploadingImage  || isShowSubmittedChatPreview
+										?  'chatmodal-content-max-width2' : 'chatmodal-content-max-width']}>
+										
+											
 								{!isBTNormalUserLoggedIn ? (
 									<>
-											{!isShowAuraResponse ? (
+												{!isShowAuraResponse && !isFigmaUploadPanelOpen && !chatImageUrl ? (
 												<div className={styles['chatmodal-header-section']}>
+												
 													<div className={styles['chatmodal-header-row']}>
 															<img
 																src={getImageSrc(star_ai_icon)}
@@ -609,7 +705,8 @@ console.log('displaySearchOptions',displaySearchOptions );
 														</p>
 											</div>
 										) : null}
-										<div
+											{!isFigmaUploadPanelOpen && !chatImageUrl &&
+											<div
 												className={styles['chatmodal-search-options-grid']}
 												style={{ '--col-count': displaySearchOptions.length }}>
 												{displaySearchOptions?.map((searchOptions, index) => {
@@ -681,8 +778,98 @@ console.log('displaySearchOptions',displaySearchOptions );
 											);
 											})}
 										</div>
+									}
 									</>
 								) : null}
+									{isFigmaUploadPanelOpen ||
+									(chatImageUrl &&
+										!isShowSubmittedChatPreview &&
+										!isShowAuraResponse) ? (
+														<div 
+															className={styles['chatmodal-figma-upload-section']}
+															ref={figmaUploadPanelRef}
+															onClick={(e) => e.stopPropagation()}>
+																		<h2 className='text-[60px]  font-normal text-center mb-7 '>SHOP THE LOOK</h2>
+															<div className={styles[ chatImageUrl ? '' :'chatmodal-figma-upload-popover' ]}>
+																{chatImageUrl ? (
+																	<div className={styles['chatmodal-figma-image-preview-container']}>
+																		<img
+																			src={chatImageUrl}
+																			alt='Uploaded Image'
+																			className={styles['chatmodal-figma-image-preview']}
+																		/>
+																		<div className={styles['chatmodal-figma-change-image-btn']}>
+																			<button
+																				type='button'
+																				onClick={handleChangeImageConfirm}
+																				className={styles['chatmodal-figma-change-btn']}>
+																				Change Image
+																			</button>
+																		</div>
+																	</div>
+																) : isUploadingImage ? (
+																	<div className={styles['chatmodal-upload-spinner-container']}>
+																		<Spin
+																			className={styles['chatmodal-upload-spinner']}
+																			indicator={
+																				<LoadingOutlined
+																					style={{ fontSize: 26 }}
+																					className={styles['chatmodal-upload-spinner-icon']}
+																					spin
+																				/>
+																			}
+																			spinning={isUploadingImage}
+																		/>
+																	</div>
+																) : (
+																	<>
+																		<Dragger
+																			className={styles['chatmodal-figma-upload-dragger']}
+																			{...uploadImageProps}
+																			name='image_url'
+																			showUploadList={false}>
+																			<p className={styles['chatmodal-figma-upload-dragger-icon']}>
+																				<PictureOutlined />
+																			</p>
+																			<p className={styles['chatmodal-figma-upload-dragger-text']}>
+																				<span>Click to upload</span> or drag and drop
+																			</p>
+																			<p className={styles['chatmodal-figma-upload-dragger-hint']}>
+																				JPG, JPEG, PNG less than 1MB
+																			</p>
+																		</Dragger>
+																		<div className={styles['chatmodal-figma-upload-or']}>or</div>
+																		<div className={styles['chatmodal-figma-upload-url-section']}>
+																			<label className={styles['chatmodal-figma-upload-url-label']}>
+																				Image URL
+																			</label>
+																			<input
+																				className={styles['chatmodal-figma-upload-url-input']}
+																				placeholder='Or Enter Image URL'
+																				type='text'
+																				value={chatImageUrl}
+																				onChange={handleFigmaImageUrlChange}
+																			/>
+																		</div>
+																	</>
+																)}
+															</div>
+														</div>
+													) : null}
+									{isShowSubmittedChatPreview ? (	
+										<div className={styles['chatmodal-figma-sent-preview']}>
+											<img
+												src={submittedPromptPreview.imageUrl}
+												alt='Submitted look'
+												className={styles['chatmodal-figma-sent-preview-image']}
+											/>
+											{submittedPromptPreview.message ? (
+												<div className={styles['chatmodal-figma-sent-preview-bubble']}>
+													{submittedPromptPreview.message}
+												</div>
+											) : null}
+										</div>
+									) : null}
 
 								{isShowFollowUpQuery ? (
 									<div className={styles['chatmodal-followup-query-container']}>
@@ -693,11 +880,12 @@ console.log('displaySearchOptions',displaySearchOptions );
 									</div>
 								) : null}
 
-								{isBTNormalUserLoggedIn ||
-								isActiveSearchOptionAvailable ||
-								!isShowAuraResponse ? (
+									{(isBTNormalUserLoggedIn ||
+									isActiveSearchOptionAvailable ||
+									!isShowAuraResponse) &&
+									!shouldMoveInputBelowResults ? (
 									<div>
-										{activeSearchOption.allow_image_search ? (
+										{shouldUseLegacyImageSearchLayout ? (
 											<div
 												className={styles['chatmodal-image-search-grid']}
 												style={{ minHeight: "252px" }}>
@@ -849,11 +1037,40 @@ console.log('displaySearchOptions',displaySearchOptions );
 													</div>
 												</div>
 											</div>
-										) : (
-											<div className={styles['chatmodal-figma-input-card']}>
-												<input
-													id={`chat_search_input_${chatTypeKey}`}
-													type='text'
+											) : (
+												<div className={styles['chatmodal-figma-input-section']}>
+													{/* {chatImageUrl ? (
+														<div className={styles['chatmodal-figma-inline-preview-wrap']}>
+															<img
+																src={chatImageUrl}
+																alt='Uploaded preview'
+																className={styles['chatmodal-figma-inline-preview']}
+															/>
+														</div>
+													) : null} */}
+
+																{isShowSubmittedChatPreview && 
+																<div className="mb-11 w-full max-w-[900px] ">
+											<p className="text-start">sure! Give me a few moments. Now crafting related products.</p>
+											<h2 className={`text-center mt-6 w-full  text-[28px] ${styles["chatmodal-thinking-text"]}`}>
+												Thinking
+												<span className={styles["chatmodal-thinking-dots"]} aria-hidden='true'>
+													<span className={styles["chatmodal-thinking-dot"]}>.</span>
+													<span className={styles["chatmodal-thinking-dot"]}>.</span>
+													<span className={styles["chatmodal-thinking-dot"]}>.</span>
+												</span>
+											</h2>
+																</div>
+											}
+
+														<div
+															className={`${styles['chatmodal-figma-input-card']} ${chatImageUrl
+																? styles['chatmodal-figma-input-card-with-preview']
+																: ""
+																}`}>
+													<input
+														id={`chat_search_input_${chatTypeKey}`}
+														type='text'
 													ref={inputRef}
 													placeholder={
 														typeof activeSearchOption?.text_placeholder === "string"
@@ -870,46 +1087,51 @@ console.log('displaySearchOptions',displaySearchOptions );
 												<div className={styles['chatmodal-figma-input-divider']} />
 												<div className={styles['chatmodal-figma-input-actions']}>
 													<div className={styles['chatmodal-figma-input-actions-left']}>
-														<Upload
-															{...uploadImageProps}
-															showUploadList={false}
-															className={styles['']}>
+														<div
+															className={styles['chatmodal-upload-action-wrapper']}>
 															<button
 																type='button'
-																className={styles['chatmodal-figma-action-button chatmodal-upload-action-wrapper'  ]}
-																title='Upload image'>
-																<img src={upload_icon?.src} />
-															</button>
-														</Upload>
+																className={`${styles['chatmodal-figma-action-button']} ${styles['chatmodal-figma-image-action-button']} ${isFigmaUploadPanelOpen 
+																||chatImageUrl	? styles['chatmodal-figma-image-action-button-active']
+																	: ""
+																	}`}
+																	title='Upload image'
+																	onClick={handleFigmaUploadButtonClick}>
+																	<img src={upload_icon?.src} alt='Upload image' />
+																	{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
+																</button>
+														
+														</div>
 														<button
 															type='button'
 															className={styles['chatmodal-figma-action-button']}
 															title='Open assistant settings'
 															onClick={handlePromptUtilityClick}>
-															<img src={page_info?.src} />
+															<img src={page_info?.src} alt='Assistant settings' />
 														</button>
-														{chatImageUrl ? (
+														{chatImageUrl && !isShowSubmittedChatPreview ? (
 															<div className={styles['chatmodal-figma-upload-pill']}>
 																Image attached
 															</div>
-														) : null}
-													</div>
-													<button
+															) : null}
+														</div>
+														<button
 														type='button'
-														className={`${styles['chatmodal-figma-submit']} ${!localChatMessage && !chatImageUrl
+														className={`${styles['chatmodal-figma-submit']} ${(isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl)
 															? styles['chatmodal-figma-submit-disabled']
 															: ""
 															}`}
 														onClick={handleSubmitChatInput}
-														disabled={!localChatMessage && !chatImageUrl}>
-														<ArrowUpOutlined />
-													</button>
+														disabled={isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl}>
+															<ArrowUpOutlined />
+														</button>
+													</div>
 												</div>
-											</div>
-										)}
+												</div>
+											)}
 										{isShowFollowUpSearch || isShowTryAgain ? (
 											<div
-												className={`${activeSearchOption.allow_image_search
+												className={`${shouldUseLegacyImageSearchLayout
 													? styles['chatmodal-followup-controls-mt4']
 													: styles['chatmodal-followup-controls-mt1']
 													} ${styles['chatmodal-followup-controls-container']}`}>
@@ -971,7 +1193,7 @@ console.log('displaySearchOptions',displaySearchOptions );
 												) : null}
 											</div>
 										) : null}
-
+											
 										{auraServerImage &&
 											activeSearchOption.id === "smart_search" && (
 												<>
@@ -1040,15 +1262,16 @@ console.log('displaySearchOptions',displaySearchOptions );
 				)} */}
 									</div>
 								) : null}
-
+{/* 
 								{auraHelperMessage &&
 									!isFreshSearch &&
-									!isBTNormalUserLoggedIn ? (
+									!isBTNormalUserLoggedIn &&
+									!isShowSubmittedChatPreview ? (
 									<>
 										<div className={styles['chatmodal-helper-message-container']}>
 											<div className={styles['chatmodal-helper-message-icon-container']}>
 												<Image
-													src={star_ai_icon_logo}
+													// src={star_ai_icon_logo}
 													className={styles['chatmodal-helper-message-icon']}
 													preview={false}
 													width={30}
@@ -1063,15 +1286,15 @@ console.log('displaySearchOptions',displaySearchOptions );
 
 									</>
 
-								) : null}
+								) : null} */}
 							</div>
 						</div>
-						{showChatLoader && localChatMessage && 
+						{/* {showChatLoader && localChatMessage && 
 									(
 							<div className={styles['chatmodal-loading-bar-container']}>
 								<div className={styles['chatmodal-loading-bar']}></div>
 							</div>
-						)}
+						)} */}
 					</div>
 				</>
 			) : null}
@@ -1105,19 +1328,34 @@ console.log('displaySearchOptions',displaySearchOptions );
 				{isShowAuraResponse ? (
 					<>
 						<ChatProducts
-							// enableClickFetchRec={isSharedPage || isCollectionPage}
 							enableClickTracking
-							// enableClickTracking={isSharedPage || isCollectionPage}
-							// trackCollectionId={currentSingleCollection._id}
-							// trackCollectionName={currentSingleCollection.collection_name}
-							// trackCollectionCampCode={currentSingleCollection.campaign_code}
-							// trackCollectionICode={pageUser.influencer_code}
 							trackCollectionData={trackCollectionData}
 							chatTypeKey={CHAT_TYPE_CHAT}
 							isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
 							isAuraChatPage={isAuraChatPage}
 							handleLoadMore={handleLoadMore}
 							localChatMessage={localChatMessage}
+							shouldMoveInputBelowResults={shouldMoveInputBelowResults}
+							inputRef={inputRef}
+							handleInputChange={handleInputChange}
+							handlePromptKeyDown={handlePromptKeyDown}
+							chatImageUrl={chatImageUrl}
+							isFigmaUploadPanelOpen={isFigmaUploadPanelOpen}
+							handleFigmaUploadButtonClick={handleFigmaUploadButtonClick}
+							isShowSubmittedChatPreview={isShowSubmittedChatPreview}
+							handlePromptUtilityClick={handlePromptUtilityClick}
+							isShopALookOptionActive={isShopALookOptionActive}
+							handleSubmitChatInput={handleSubmitChatInput}
+							isShowFollowUpSearch={isShowFollowUpSearch}
+							isSidExpired={isSidExpired}
+							isFollowUpQuery={isFollowUpQuery}
+							handleFollowUpSearch={handleFollowUpSearch}
+							isShowTryAgain={isShowTryAgain}
+							showChatLoader={showChatLoader}
+							handleTryAgainClick={handleTryAgainClick}
+							activeSearchOption={activeSearchOption}
+							upload_icon={upload_icon}
+							page_info={page_info}
 						/>
 					</>
 				) : isShowKioskSearchOptions ? (
@@ -1180,12 +1418,126 @@ console.log('displaySearchOptions',displaySearchOptions );
 					</div>
 				) : null}
 
-				{enable_recommendations && (
-					<Recommendations trackCollectionData={trackCollectionData} />
-				)}
+					{enable_recommendations && (
+						<Recommendations trackCollectionData={trackCollectionData} />
+					)}
+
+					{/* {shouldMoveInputBelowResults ? (
+						<div className={styles['chatmodal-bottom-input-wrapper']}>
+							<div className={styles['chatmodal-figma-input-section']}>
+								<div
+									className={`${styles['chatmodal-figma-input-card']} ${styles['chatmodal-figma-input-card-bottom']} ${chatImageUrl
+										? styles['chatmodal-figma-input-card-with-preview']
+										: ""
+										}`}>
+									<input
+										id={`chat_search_input_bottom_${chatTypeKey}`}
+										type='text'
+										ref={inputRef}
+										placeholder={
+											typeof activeSearchOption?.text_placeholder === "string"
+												? activeSearchOption?.text_placeholder
+												: activeSearchOption?.text_placeholder?.[0] ||
+													"Describe your product idea"
+										}
+										name='chat_message'
+										value={localChatMessage}
+										onChange={handleInputChange}
+										onKeyDown={handlePromptKeyDown}
+										className={styles['chatmodal-figma-input']}
+									/>
+									<div className={styles['chatmodal-figma-input-divider']} />
+									<div className={styles['chatmodal-figma-input-actions']}>
+										<div className={styles['chatmodal-figma-input-actions-left']}>
+											<div
+												className={styles['chatmodal-upload-action-wrapper']}>
+												<button
+													type='button'
+													className={`${styles['chatmodal-figma-action-button']} ${styles['chatmodal-figma-image-action-button']} ${isFigmaUploadPanelOpen || chatImageUrl
+														? styles['chatmodal-figma-image-action-button-active']
+														: ""
+														}`}
+													title='Upload image'
+													onClick={handleFigmaUploadButtonClick}>
+													<img src={upload_icon?.src} alt='Upload image' />
+													{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
+												</button>
+											</div>
+											<button
+												type='button'
+												className={styles['chatmodal-figma-action-button']}
+												title='Open assistant settings'
+												onClick={handlePromptUtilityClick}>
+												<img src={page_info?.src} alt='Assistant settings' />
+											</button>
+											{chatImageUrl && !isShowSubmittedChatPreview ? (
+												<div className={styles['chatmodal-figma-upload-pill']}>
+													Image attached
+												</div>
+											) : null}
+										</div>
+										<button
+											type='button'
+											className={`${styles['chatmodal-figma-submit']} ${(isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl)
+												? styles['chatmodal-figma-submit-disabled']
+												: ""
+												}`}
+											onClick={handleSubmitChatInput}
+											disabled={isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl}>
+											<ArrowUpOutlined />
+										</button>
+									</div>
+								</div>
+
+								{isShowFollowUpSearch || isShowTryAgain ? (
+									<div
+										className={`${styles['chatmodal-followup-controls-mt1']} ${styles['chatmodal-followup-controls-container']}`}>
+										{isShowFollowUpSearch && isSidExpired ? (
+											<div className={styles['chatmodal-followup-checkbox-container']}>
+												<input
+													type='checkbox'
+													id='followUpQuery_bottom'
+													className={styles['chatmodal-followup-checkbox']}
+													checked={isFollowUpQuery}
+													disabled={showChatLoader}
+													onChange={handleFollowUpSearch}
+												/>
+												<label
+													htmlFor='followUpQuery_bottom'
+													className={`${showChatLoader
+														? styles['chatmodal-followup-label-disabled']
+														: styles['chatmodal-followup-label']
+														}`}>
+													Follow-Up search
+												</label>
+											</div>
+										) : null}
+										{isShowFollowUpSearch &&
+											isShowTryAgain &&
+											isSidExpired ? (
+											<div className={styles['chatmodal-divider-vertical']}></div>
+										) : null}
+										{isShowTryAgain ? (
+											<button
+												className={`${styles['chatmodal-try-again-button']} ${showChatLoader
+													? styles['chatmodal-try-again-button-disabled']
+													: ""
+													}`}
+												title='Regenerate the products with AI.'
+												onClick={handleTryAgainClick}
+												disabled={showChatLoader}>
+												<ReloadOutlined className={styles['chatmodal-reload-icon']} />
+												Try again
+											</button>
+										) : null}
+									</div>
+								) : null}
+							</div>
+						</div>
+					) : null} */}
+				</div>
 			</div>
-		</div>
-	);
+		);
 };
 
 export default ChatModal;

@@ -63,7 +63,7 @@ export const CustomFilter = ({
 
 	return (
 		<>
-			<div className='flex flex-col justify-center w-full'>
+			<div className='flex flex-col justify-center min-w-0 flex-1'>
 				<div className='flex flex-row gap-2'>
 					{showCustomFilterInput || isCustomFilterInputVisible ? (
 						<>
