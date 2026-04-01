@@ -57,6 +57,7 @@ import CarousalContainer from "../carousel/CarouselContainer";
 import CropAndResizeImageModal from "../../pageComponents/cropAndResizeImageModal/CropAndResizeImageModal";
 import { profileAPIs } from "../../helper/serverAPIs";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 
 const { Dragger } = Upload;
 
@@ -105,10 +106,10 @@ const CollectionDetails = ({
     isOpen: false,
     selectedImage: "",
   });
-    const Owner = authUser.user_name === collection.user_name
-    const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
+    const Owner = authUser?.user_name === collection?.user_name
+    const Adminlist = authUser?.user_name === super_admin
 
-  // console.log('checkdata',jmidfhn);
+  console.log('checkdata',Owner || Adminlist );
   // console.log(Owner || Adminlist);
 
   // State for overlay positioning
@@ -647,23 +648,26 @@ const CollectionDetails = ({
                         }
                       }}
                     />
-                    {Owner || Adminlist &&
+                    {(Owner || Adminlist) &&
                       <>
                         <p className="z-40 absolute top-3 right-4 ">
-
-
-
                           <Upload
                             {...uploadProps}
                             name='cover_image'
                             showUploadList={false}
                             onChange={handleCoverImageUpload}
                           >
-                            <MdOutlineFileUpload  
-                            title="Edit Collection"
-                            className={styles.editIconContainerowner}
-                             
-                          />
+                               <p className="bg-white rounded-full p-1">
+                        
+                                              <FiEdit
+                                              style={{
+                                                                          color: "#9a9b9b",
+                                                                          // backgroundColor: "#f8f6f4",
+                                                                        }}
+                                                title="Edit Collection"
+                                                className={styles.editIconContainerowner}
+                                              />
+                                                                      </p>
                           </Upload>
                         </p>
 

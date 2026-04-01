@@ -44,7 +44,7 @@ const CropAndResizeImage = ({
 
 	return (
 		<div
-			className='flex justify-center items-center  overflow-y-scroll'
+			className='flex justify-center items-center max-h-screen overflow-y-scroll'
 			style={{
 				// height: "500px",
 				// maxHeight: "500px",
@@ -62,7 +62,7 @@ const CropAndResizeImage = ({
 					ref={imgRef}
 					alt='Crop me'
 					src={selectedImg}
-					className='img-crop'
+					className='img-crop overflow-y-scroll'
 					// style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
 					onLoad={onImageLoad}
 				/>

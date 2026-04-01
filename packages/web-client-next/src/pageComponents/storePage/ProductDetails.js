@@ -202,7 +202,7 @@ const ProductDetails = ({ params, ...props }) => {
     () => sellerDetails[productDetails?.brand],
     [sellerDetails, productDetails?.brand],
   );
-
+ 
   const discountPer = useMemo(
     () =>
       productDetails?.price &&
@@ -560,11 +560,11 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
               <div className="w-full  lg:w-full   mx-auto border border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
                 {/* <div className="h-[300px] sm:h-[420px] lg:h-[500px]  rounded-2xl bg-white/70   overflow-hidden"> */}
-                <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-96  lg:max-h-590">
+                <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-590">
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
-                        className="w-full h-full object-contain rounded-2xl max-h-590 max-w-640"
+                        className="w-full h-full object-contain rounded-2xl max-h-590 max-w-640 min-h-[590px]"
                         src={
                           additionalimg ||
                           productDetails?.image ||
@@ -608,7 +608,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                               src={img}
                               height={50}
                               width={50}
-                              className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[120px] rounded-xl border transition ${additionalimg === img
+                              className={`  w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
                                   ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
                                   : "border-[#e8e2ff] hover:border-[#b8a9ff]"
                                 }`}
@@ -1018,7 +1018,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
 
                 {fieldsToDisplay.map((field, index) =>
                   productDetails?.[field]?.length > 0 && ProductTags ? (
-                    (showAllFields || index < 4) && (
+                    (showAllFields || index > 3) && (
                       <div className="mt-2 " key={field}>
                         <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
                           <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
@@ -1034,7 +1034,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     )
                   ) : null,
                 )}
-                {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0).length > 4 && (
+                {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0)?.length > 4 && (
                   <button
                     onClick={() => setShowAllFields(!showAllFields)}
                     className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
@@ -1180,7 +1180,9 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                           Contact Details
                         </p>
                         {/* <p >kughbiuhb</p> */}
+                        {  brandsDetails?.shippingDetails || brandsDetails?.paymentDetails || brandsDetails?.info || brandsDetails?.contact ||brandsDetails?.email || brandsDetails?.title &&
                         <RiArrowDropDownLine onClick={()=>setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`}  />
+                }
                       </div>
 
                       {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (

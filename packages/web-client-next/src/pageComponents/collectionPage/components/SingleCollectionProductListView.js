@@ -32,6 +32,7 @@ import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import { profileAPIs } from "../../../helper/serverAPIs";
 import { EditOutlined } from "@ant-design/icons";
+import { FiEdit } from "react-icons/fi";
 const { Option } = Select;
 SwiperCore.use([FreeMode]);
 
@@ -202,36 +203,12 @@ const SingleCollectionProductListView = ({
                     <div className={styles.videoOverlay} />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
-                  <>
                   <img
                     className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
                     }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
-                    />
-                        {Owner || Adminlist &&
-                      <>
-                        <p className="z-40 absolute top-3 right-4 " onClick={(e) =>e.stopPropagation()}>
-
-
-
-                          <Upload
-                            {...uploadProps}
-                            name='cover_image'
-                            showUploadList={false}
-                            onChange={handleCoverImageUpload}
-                          >
-                            <MdOutlineFileUpload
-                            title="Edit Collection"
-                            className={styles.editIconContainerowner}
-                             
-                          />
-                          </Upload>
-                        </p>
-
-                      </>
-                    }
-                    </>
+                  />
                 ) : (
                   blogCollectionPage?.video_url &&
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
@@ -250,6 +227,36 @@ const SingleCollectionProductListView = ({
                       <div className={styles.videoOverlay} />
                     </>
                   )
+                )}
+                {(Owner || Adminlist) && (
+                  <p
+                    className="z-40 absolute top-3 right-4   "
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Upload
+                      {...uploadProps}
+                      name="cover_image"
+                      showUploadList={false}
+                      onChange={handleCoverImageUpload}
+                    >
+                       {/* <
+                                                
+                                                className={styles["product-cart-icon-smalls"]}
+                                              /> */}
+                                              <p className="bg-white rounded-full p-1">
+
+                      <FiEdit
+                      style={{
+                                                  color: "#9a9b9b",
+                                                  // backgroundColor: "#f8f6f4",
+                                                }}
+                        title="Edit Collection"
+                        className={styles.editIconContainerowner}
+                      />
+                                              </p>
+
+                    </Upload>
+                  </p>
                 )}
               </div>
             )}
@@ -358,7 +365,7 @@ const SingleCollectionProductListView = ({
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
                     />
-                        {Owner || Adminlist &&
+                        {/* {Owner || Adminlist &&
                       <>
                         <p className="z-40 absolute top-3 right-4 ">
 
@@ -379,7 +386,7 @@ const SingleCollectionProductListView = ({
                         </p>
 
                       </>
-                    }
+                    } */}
                     </div>
                 ) : (
                   blogCollectionPage?.video_url &&
