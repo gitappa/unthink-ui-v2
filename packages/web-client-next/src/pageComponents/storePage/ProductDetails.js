@@ -1016,9 +1016,11 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )} */}
 
-                {fieldsToDisplay.map((field, index) =>
-                  productDetails?.[field]?.length > 0 && ProductTags ? (
-                    (showAllFields || index > 3) && (
+                {fieldsToDisplay.map((field, index) => {
+                  const fieldsWithData = fieldsToDisplay.filter(f => productDetails?.[f]?.length > 0 && ProductTags);
+                  const fieldIndexInFiltered = fieldsWithData.indexOf(field);
+                  return productDetails?.[field]?.length > 0 && ProductTags ? (
+                    (showAllFields || fieldIndexInFiltered < 4) && (
                       <div className="mt-2 " key={field}>
                         <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
                           <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
@@ -1032,8 +1034,8 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                         </div>
                       </div>
                     )
-                  ) : null,
-                )}
+                  ) : null;
+                })}
                 {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0)?.length > 4 && (
                   <button
                     onClick={() => setShowAllFields(!showAllFields)}
