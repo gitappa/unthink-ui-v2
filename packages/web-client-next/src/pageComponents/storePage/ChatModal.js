@@ -331,6 +331,11 @@ const ChatModal = ({
 		[activeSearchOption?.id]
 	);
 
+	const isShopByThemeOptionActive = useMemo(
+		() => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search,
+		[activeSearchOption?.id]
+	);
+
 	const shouldUseLegacyImageSearchLayout = useMemo(
 		() => activeSearchOption.allow_image_search && !isShopALookOptionActive,
 		[activeSearchOption.allow_image_search, isShopALookOptionActive]
@@ -1067,6 +1072,9 @@ const ChatModal = ({
 															className={`${styles['chatmodal-figma-input-card']} ${chatImageUrl
 																? styles['chatmodal-figma-input-card-with-preview']
 																: ""
+																} ${isShopByThemeOptionActive
+																? styles['chatmodal-figma-input-card-shop-theme']
+																: ""
 																}`}>
 													<input
 														id={`chat_search_input_${chatTypeKey}`}
@@ -1082,42 +1090,55 @@ const ChatModal = ({
 													value={localChatMessage}
 													onChange={handleInputChange}
 													onKeyDown={handlePromptKeyDown}
-													className={styles['chatmodal-figma-input']}
+													className={`${styles['chatmodal-figma-input']} ${isShopByThemeOptionActive
+														? styles['chatmodal-figma-input-shop-theme']
+														: ""
+														}`}
 												/>
-												<div className={styles['chatmodal-figma-input-divider']} />
-												<div className={styles['chatmodal-figma-input-actions']}>
-													<div className={styles['chatmodal-figma-input-actions-left']}>
-														<div
-															className={styles['chatmodal-upload-action-wrapper']}>
+												{!isShopByThemeOptionActive ? (
+													<div className={styles['chatmodal-figma-input-divider']} />
+												) : null}
+												<div
+													className={`${styles['chatmodal-figma-input-actions']} ${isShopByThemeOptionActive
+														? styles['chatmodal-figma-input-actions-shop-theme']
+														: ""
+														}`}>
+													{!isShopByThemeOptionActive ? (
+														<div className={styles['chatmodal-figma-input-actions-left']}>
+															<div
+																className={styles['chatmodal-upload-action-wrapper']}>
+																<button
+																	type='button'
+																	className={`${styles['chatmodal-figma-action-button']} ${styles['chatmodal-figma-image-action-button']} ${isFigmaUploadPanelOpen
+																	||chatImageUrl	? styles['chatmodal-figma-image-action-button-active']
+																		: ""
+																		}`}
+																		title='Upload image'
+																		onClick={handleFigmaUploadButtonClick}>
+																		<img src={upload_icon?.src} alt='Upload image' />
+																		{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
+																	</button>
+															</div>
 															<button
 																type='button'
-																className={`${styles['chatmodal-figma-action-button']} ${styles['chatmodal-figma-image-action-button']} ${isFigmaUploadPanelOpen 
-																||chatImageUrl	? styles['chatmodal-figma-image-action-button-active']
-																	: ""
-																	}`}
-																	title='Upload image'
-																	onClick={handleFigmaUploadButtonClick}>
-																	<img src={upload_icon?.src} alt='Upload image' />
-																	{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
-																</button>
-														
+																className={styles['chatmodal-figma-action-button']}
+																title='Open assistant settings'
+																onClick={handlePromptUtilityClick}>
+																<img src={page_info?.src} alt='Assistant settings' />
+															</button>
+															{/* {chatImageUrl && !isShowSubmittedChatPreview ? (
+																<div className={styles['chatmodal-figma-upload-pill']}>
+																	Image attached
+																</div>
+																) : null} */}
 														</div>
-														<button
-															type='button'
-															className={styles['chatmodal-figma-action-button']}
-															title='Open assistant settings'
-															onClick={handlePromptUtilityClick}>
-															<img src={page_info?.src} alt='Assistant settings' />
-														</button>
-														{chatImageUrl && !isShowSubmittedChatPreview ? (
-															<div className={styles['chatmodal-figma-upload-pill']}>
-																Image attached
-															</div>
-															) : null}
-														</div>
+													) : null}
 														<button
 														type='button'
-														className={`${styles['chatmodal-figma-submit']} ${(isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl)
+														className={`${styles['chatmodal-figma-submit']} ${isShopByThemeOptionActive
+															? styles['chatmodal-figma-submit-shop-theme']
+															: ""
+															} ${(isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl)
 															? styles['chatmodal-figma-submit-disabled']
 															: ""
 															}`}
