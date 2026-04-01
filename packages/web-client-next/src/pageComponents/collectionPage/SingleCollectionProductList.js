@@ -795,8 +795,8 @@ const url = window.location.pathname === '/my-profile/'
 
 
   const [admin_list ] = useSelector((state) => [ state.store.data.admin_list ]);
-        const Owner = authUser.user_name === singleCollection.user_name
-        const Adminlist = admin_list?.find(admin => admin === authUser.emailId) || authUser.user_name === super_admin
+        const Owner = authUser?.user_name === singleCollection?.user_name
+        const Adminlist =  authUser?.user_name === super_admin
         
   const handleUploadedDataChange = useCallback(
     (name, value) => {

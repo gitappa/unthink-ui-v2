@@ -65,6 +65,7 @@ const getExploreMenuOptions = () => {
 		</ul>
 	);
 };
+console.log('instance_logo',instance_logo);
 
 const BudgetTravelHeader = () => {
 	const navigate = useNavigate();

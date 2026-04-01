@@ -311,18 +311,24 @@
   }
  
 }
+// ant-upload ant-upload-select
 .editIconContainerowner {
   display: flex;
   align-items: center;
   font-size: 1.25rem; /* text-xl */
   cursor: pointer;
-    fill: white ;
+  // fill: white;
+  background: white;
+  // padding:5px;
+  // border-radius: 50%;
+  position: relative;
+  z-index: 50;
 
   @media (min-width: 1024px) {
-    font-size: 1.75rem; /* lg:text-xl-2 (28px) */
+    font-size: 20px; /* lg:text-xl-2 (28px) */
   }
 svg{
-  fill: white ;
+  // fill: white;
 }
 }
 .shareContainer {

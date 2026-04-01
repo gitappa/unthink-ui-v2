@@ -394,18 +394,17 @@ display: flex;
   width: auto !important;
 }
 .img-crop{
- 
      max-width: 360px !important;
-  max-height: 360px !important;
+  /* max-height: 360px !important; */
  
    @media (min-width:768px) {
      max-width: 770px !important;
-  max-height: 700px !important;
+  /* max-height: 700px !important; */
   }
 
   @media (min-width:1024px) {
      max-width: 1000px !important;
-  max-height: 1000px !important;
+  /* max-height: 1000px !important; */
   }
  
 }
