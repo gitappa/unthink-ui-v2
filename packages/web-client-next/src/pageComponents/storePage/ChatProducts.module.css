@@ -409,6 +409,14 @@ max-width: 56rem;
   padding: 0.7rem 0.75rem;
 }
 
+.chat-products-bottom-input-card-shop-theme {
+  border-color: #b8afff;
+  border-radius: 2.35rem;
+  background: #f8f7ff;
+  padding: 0.9rem 4rem 0.9rem 1.35rem;
+  position: relative;
+}
+
 .chat-products-bottom-input {
   width: 100%;
   border: none;
@@ -423,6 +431,14 @@ max-width: 56rem;
   color: #6b7288;
 }
 
+.chat-products-bottom-input-shop-theme {
+  color: #4f5f83;
+}
+
+.chat-products-bottom-input-shop-theme::placeholder {
+  color: #4f5f83;
+}
+
 .chat-products-bottom-input-divider {
   width: 100%;
   height: 1px;
@@ -435,6 +451,15 @@ max-width: 56rem;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+.chat-products-bottom-input-actions-shop-theme {
+  position: absolute;
+  top: 50%;
+  right: 0.95rem;
+  transform: translateY(-50%);
+  justify-content: flex-end;
+  gap: 0;
 }
 
 .chat-products-bottom-input-actions-left {
@@ -502,6 +527,17 @@ max-width: 56rem;
 .chat-products-bottom-submit-disabled {
   background: #b9b5ef;
   cursor: not-allowed;
+}
+
+.chat-products-bottom-submit-shop-theme {
+  width: 2.6rem;
+  height: 2.6rem;
+  background: #b1a7fb;
+  font-size: 1.08rem;
+}
+
+.chat-products-bottom-submit-shop-theme.chat-products-bottom-submit-disabled {
+  background: #cbc6f4;
 }
 
 .chat-products-bottom-followup-controls {

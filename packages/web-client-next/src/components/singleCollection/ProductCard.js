@@ -140,6 +140,8 @@ const ProductCard = ({
   collectionCards,
   onAddSelectedProductsToCollection,
   isSingleCollectionSharedPage,
+  auramodel,
+
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -710,7 +712,9 @@ const ProductCard = ({
         ? styles["product-wrapper-medium2"]
         : isSingleCollectionSharedPage
           ? styles["product-wrapper-medium-single"]
-          : styles["product-wrapper-medium-single"];
+          : auramodel
+            ? `${styles["product-wrapper-medium-single"]} ml-0`
+            : styles["product-wrapper-medium-single"]
 
   return (
     <div

@@ -301,7 +301,7 @@ grid-template-columns: repeat(3, 1fr);
   line-height: 1.2;
   color: #29324d;
   letter-spacing: -0.01em;
-  text-transform: none;
+  text-transform: uppercase;
   font-weight: 800;
 }
 
@@ -976,19 +976,37 @@ grid-template-columns: repeat(3, 1fr);
   margin-top: 0;
 }
 
+.chatmodal-figma-input-card-shop-theme {
+  border-color: #b8afff;
+  border-radius: 2.35rem;
+  background: #f8f7ff;
+  box-shadow: none;
+  padding: 1rem 4.2rem 1rem 1.35rem;
+  margin-top: 1.1rem;
+  position: relative;
+}
+
 .chatmodal-figma-input {
   width: 100%;
   border: none;
   outline: none;
   background: transparent;
   color: #575b65;
-  font-size: clamp(1rem, 1.4vw, 1.95rem);
+  font-size: 16px;
   line-height: 1.22;
   padding: 0;
 }
 
 .chatmodal-figma-input::placeholder {
-  color: #6a6f82;
+  color: #6a6f82; 
+}
+
+.chatmodal-figma-input-shop-theme {
+  color: #4f5f83;
+}
+
+.chatmodal-figma-input-shop-theme::placeholder {
+  color: #4f5f83;
 }
 
 .chatmodal-figma-input-divider {
@@ -1003,6 +1021,15 @@ grid-template-columns: repeat(3, 1fr);
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
+}
+
+.chatmodal-figma-input-actions-shop-theme {
+  position: absolute;
+  top: 50%;
+  right: 0.95rem;
+  transform: translateY(-50%);
+  justify-content: flex-end;
+  gap: 0;
 }
 
 .chatmodal-figma-input-actions-left {
@@ -1284,6 +1311,21 @@ grid-template-columns: repeat(3, 1fr);
   transform: none;
 }
 
+.chatmodal-figma-submit-shop-theme {
+  width: 2.6rem;
+  height: 2.6rem;
+  background: #b1a7fb;
+  font-size: 1.18rem;
+}
+
+.chatmodal-figma-submit-shop-theme:hover {
+  background: #9e93f4;
+}
+
+.chatmodal-figma-submit-shop-theme.chatmodal-figma-submit-disabled {
+  background: #cbc6f4;
+}
+
 @media (max-width: 767px) {
   .chatmodal-figma-inline-preview-wrap {
     width: min(9rem, 50vw);
@@ -1297,6 +1339,11 @@ grid-template-columns: repeat(3, 1fr);
     border-radius: 1.5rem;
     margin-top: 1rem;
     padding: 0.875rem 0.95rem 0.75rem;
+  }
+
+  .chatmodal-figma-input-card-shop-theme {
+    border-radius: 1.7rem;
+    padding: 0.75rem 3.65rem 0.75rem 1rem;
   }
 
   .chatmodal-figma-input {
@@ -1323,6 +1370,11 @@ grid-template-columns: repeat(3, 1fr);
     width: 2.5rem;
     height: 2.5rem;
     font-size: 1rem;
+  }
+
+  .chatmodal-figma-submit-shop-theme {
+    width: 2.35rem;
+    height: 2.35rem;
   }
 
   .chatmodal-figma-upload-popover {

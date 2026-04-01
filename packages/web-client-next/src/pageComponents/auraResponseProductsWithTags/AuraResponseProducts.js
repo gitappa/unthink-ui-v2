@@ -958,6 +958,7 @@ const AuraResponseProducts = ({
 									}
 									localChatMessage={localChatMessage}
 									onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+									auramodel
 								/>
 							))}
 						</div>

@@ -122,6 +122,11 @@ const ChatProducts = ({
 		[suggestionsWithProducts?.suggestions.tags]
 	);
 
+	const isShopByThemeOptionActive = useMemo(
+		() => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search,
+		[activeSearchOption?.id]
+	);
+
 	const shouldShowShopLookSplitLayout = useMemo(
 		() =>
 			!isBTNormalUserLoggedIn &&
@@ -338,6 +343,7 @@ const ChatProducts = ({
 										onSelectProductClick(product.mfr_code)
 									}
 									localChatMessage={localChatMessage}
+									auramodel={true}
 								/>
 							</React.Fragment>
 						))}
@@ -527,7 +533,11 @@ const ChatProducts = ({
 									</div>
 							{shouldMoveInputBelowResults ? (
 								<div className={styles['chat-products-bottom-input-wrapper']}>
-									<div className={styles['chat-products-bottom-input-card']}>
+									<div
+										className={`${styles['chat-products-bottom-input-card']} ${isShopByThemeOptionActive
+											? styles['chat-products-bottom-input-card-shop-theme']
+											: ""
+											}`}>
 										<input
 											id={`chat_search_input_bottom_${chatTypeKey}`}
 											type='text'
@@ -542,46 +552,60 @@ const ChatProducts = ({
 											value={localChatMessage}
 											onChange={handleInputChange}
 											onKeyDown={handlePromptKeyDown}
-											className={styles['chat-products-bottom-input']}
+											className={`${styles['chat-products-bottom-input']} ${isShopByThemeOptionActive
+												? styles['chat-products-bottom-input-shop-theme']
+												: ""
+												}`}
 										/>
-										<div className={styles['chat-products-bottom-input-divider']} />
-										<div className={styles['chat-products-bottom-input-actions']}>
-											<div className={styles['chat-products-bottom-input-actions-left']}>
-												<button
-													type='button'
-													className={`${styles['chat-products-bottom-icon-button']} ${styles['chat-products-bottom-image-button']} ${isFigmaUploadPanelOpen || chatImageUrl
-														? styles['chat-products-bottom-image-button-active']
-														: ""
-														}`}
-													title='Upload image'
-													onClick={handleFigmaUploadButtonClick}>
-													<img
-														src={upload_icon?.src || upload_icon}
-														alt='Upload image'
-														className={styles['chat-products-bottom-icon']}
-													/>
-													{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
-												</button>
-												<button
-													type='button'
-													className={styles['chat-products-bottom-icon-button']}
-													title='Open assistant settings'
-													onClick={handlePromptUtilityClick}>
-													<img
-														src={page_info?.src || page_info}
-														alt='Assistant settings'
-														className={styles['chat-products-bottom-icon']}
-													/>
-												</button>
-												{chatImageUrl && !isShowSubmittedChatPreview ? (
-													<div className={styles['chat-products-bottom-upload-pill']}>
-														Image attached
-													</div>
-												) : null}
-											</div>
+										{!isShopByThemeOptionActive ? (
+											<div className={styles['chat-products-bottom-input-divider']} />
+										) : null}
+										<div
+											className={`${styles['chat-products-bottom-input-actions']} ${isShopByThemeOptionActive
+												? styles['chat-products-bottom-input-actions-shop-theme']
+												: ""
+												}`}>
+											{!isShopByThemeOptionActive ? (
+												<div className={styles['chat-products-bottom-input-actions-left']}>
+													<button
+														type='button'
+														className={`${styles['chat-products-bottom-icon-button']} ${styles['chat-products-bottom-image-button']} ${isFigmaUploadPanelOpen || chatImageUrl
+															? styles['chat-products-bottom-image-button-active']
+															: ""
+															}`}
+														title='Upload image'
+														onClick={handleFigmaUploadButtonClick}>
+														<img
+															src={upload_icon?.src || upload_icon}
+															alt='Upload image'
+															className={styles['chat-products-bottom-icon']}
+														/>
+														{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
+													</button>
+													<button
+														type='button'
+														className={styles['chat-products-bottom-icon-button']}
+														title='Open assistant settings'
+														onClick={handlePromptUtilityClick}>
+														<img
+															src={page_info?.src || page_info}
+															alt='Assistant settings'
+															className={styles['chat-products-bottom-icon']}
+														/>
+													</button>
+													{/* {chatImageUrl && !isShowSubmittedChatPreview ? (
+														<div className={styles['chat-products-bottom-upload-pill']}>
+															Image attached 
+														</div>
+													) : null} */}
+												</div>
+											) : null}
 											<button
 												type='button'
-												className={`${styles['chat-products-bottom-submit']} ${(isShopALookOptionActive
+												className={`${styles['chat-products-bottom-submit']} ${isShopByThemeOptionActive
+													? styles['chat-products-bottom-submit-shop-theme']
+													: ""
+													} ${(isShopALookOptionActive
 													? !chatImageUrl
 													: !localChatMessage && !chatImageUrl)
 													? styles['chat-products-bottom-submit-disabled']
