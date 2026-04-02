@@ -324,7 +324,7 @@ const ProductFiltersTags = ({
 						spaceBetween={10}
 						freeMode={true}
 						onSwiper={(swiper) => (swiperRef.current = swiper)}
-						className="pb-1" /* swiper layout class */
+						className="pb-1 pr-10 mr-5" /* swiper layout class */
 					>
 						{selectedFiltersArr
 							.filter((f) => f.visible)

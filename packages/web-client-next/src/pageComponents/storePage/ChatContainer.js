@@ -211,20 +211,17 @@ const ChatContainer = ({
 		// dispatch(setShowChatModal(false));
 		// }
 
-		const normalizedMessage =
-			typeof message === "string" ? message.trim() : message;
-		const shouldSendMessageText =
-			normalizedMessage &&
-			normalizedMessage !== selectedSearchOption?.image_search_input;
 
-		if (shouldSendMessageText || chatImageUrl) {
-			if (normalizedMessage === auraSearchText) {
-				sendFinalMessage(normalizedMessage, metadata);
+		if (message || chatImageUrl) {
+			if (message === auraSearchText) {
+				sendFinalMessage(message, metadata);
 			} else {
 				// searchTextOnStoreV2(message, metadata);
-				setMessage(normalizedMessage || "");
+				setMessage(message);
 				sendMessage(
-					shouldSendMessageText ? normalizedMessage : undefined,
+					chatMessage !== selectedSearchOption.image_search_input
+						? message
+						: undefined,
 					chatImageUrl && isFollowUpQuery ? '': chatImageUrl,
 					metadata,
 					userMetadata,
