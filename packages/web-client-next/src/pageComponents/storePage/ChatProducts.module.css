@@ -245,6 +245,6 @@ padding-left: 2.5rem;
 
 @media (min-width: 1024px) {
   .chat-products-grid {
-    gap: 1rem;
+    gap: 1rem; 
   }
 } 
