@@ -72,8 +72,6 @@ const CollectionDetails = ({
   isPageOwner,
   isCollectionPage = true,
 }) => {
-
-
   const navigate = useNavigate();
   const [showShareCollection, setShowShareCollection] = useState(false);
   const [bannerModalOpen, setBannerModalOpen] = useState(false);
@@ -106,10 +104,10 @@ const CollectionDetails = ({
     isOpen: false,
     selectedImage: "",
   });
-    const Owner = authUser?.user_name === collection?.user_name
-    const Adminlist = authUser?.user_name === super_admin
+  const Owner = authUser?.user_name === collection?.user_name;
+  const Adminlist = authUser?.user_name === super_admin;
 
-  console.log('checkdata',Owner || Adminlist );
+  console.log("checkdata", Owner || Adminlist);
   // console.log(Owner || Adminlist);
 
   // State for overlay positioning
@@ -203,7 +201,6 @@ const CollectionDetails = ({
     ],
   );
 
-
   const showFeatureOnStore = useMemo(
     () =>
       (isSuperAdminLoggedIn || isStoreAdminLoggedIn) &&
@@ -282,8 +279,6 @@ const CollectionDetails = ({
 
   const handleFeatureCollectionOnStore = useCallback(
     (storeName) => {
-
-
       let hosted_stores = [...(collection.hosted_stores || [])];
 
       if (hosted_stores.includes(storeName)) {
@@ -383,8 +378,6 @@ const CollectionDetails = ({
     }
   }, []);
 
-
-
   // Fixed renderOverlay function for CollectionDetails
   const renderOverlay = (
     cover_image_coordinates,
@@ -462,19 +455,15 @@ const CollectionDetails = ({
         fetchUserCollection: true,
       };
 
-
-
-
       dispatch(updateWishlist(editPayload));
       // setUpdatedData({ ...updatedData, [name]: value });
     },
-    [collection._id]
+    [collection._id],
   );
   // Handle file upload for cover image
   const handleCoverImageUpload = (info) => {
     if (info.file.status === "done") {
       const file = info.file.originFileObj;
-
 
       handleUploadedDataChange("cover_image", URL.createObjectURL(file));
     }
@@ -522,7 +511,7 @@ const CollectionDetails = ({
   // close crop and resize modal
   const onCropAndResizeImageModalClose = useCallback((setCompletedCrop) => {
     setCropAndResizeImageData({});
-     setCompletedCrop(false);
+    setCompletedCrop(false);
   }, []);
 
   const onCropAndResizeImageModalSubmit = useCallback(
@@ -550,15 +539,14 @@ const CollectionDetails = ({
     },
     [handleUploadedDataChange],
   );
-    const [isDragAndDropVisible, setIsDragAndDropVisible] = useState(
-      !collection.cover_image && !collection.video_url,
-    );
+  const [isDragAndDropVisible, setIsDragAndDropVisible] = useState(
+    !collection.cover_image && !collection.video_url,
+  );
 
   return (
     <>
-
       {collection?.sponsor_details?.banner?.image &&
-        collection?.sponsor_details?.banner?.url ? (
+      collection?.sponsor_details?.banner?.url ? (
         <Link
           href={collection.sponsor_details.banner.url}
           className={styles.bannerLink}
@@ -584,20 +572,21 @@ const CollectionDetails = ({
       <div className={cssStyles.container}>
         <div
           ref={videoContainerRef}
-          className={`${cssStyles.imageContainer} CollectionDetails_Img collection_details_pointer ${current_store_name
-            ? current_store_name === "samskara"
-              ? "collection_details_sticky_samskara"
-              : current_store_name === "santhay"
-                ? "collection_details_sticky_santhay"
-                : current_store_name === "heroesvillains"
-                  ? "collection_details_sticky_heroesvillains"
-                  : current_store_name === "swiftlystyled"
-                    ? "collection_details_sticky_swiftlystyled"
-                    : current_store_name === "dothelook"
+          className={`${cssStyles.imageContainer} CollectionDetails_Img collection_details_pointer ${
+            current_store_name
+              ? current_store_name === "samskara"
+                ? "collection_details_sticky_samskara"
+                : current_store_name === "santhay"
+                  ? "collection_details_sticky_santhay"
+                  : current_store_name === "heroesvillains"
+                    ? "collection_details_sticky_heroesvillains"
+                    : current_store_name === "swiftlystyled"
                       ? "collection_details_sticky_swiftlystyled"
-                      : "collection_details_sticky_santhay"
-            : ""
-            }`}
+                      : current_store_name === "dothelook"
+                        ? "collection_details_sticky_swiftlystyled"
+                        : "collection_details_sticky_santhay"
+              : ""
+          }`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -615,8 +604,8 @@ const CollectionDetails = ({
               {/* Display cover image if present, otherwise show default avatar */}
               <div ref={imageContainerRef} className={cssStyles.relative}>
                 {collection.video_url &&
-                  !collection.cover_image &&
-                  !isSocialMediaVideo(collection.video_url) ? (
+                !collection.cover_image &&
+                !isSocialMediaVideo(collection.video_url) ? (
                   <ReactPlayer
                     url={collection.video_url}
                     playing={false} // Play the video when hovered or on mobile
@@ -640,6 +629,10 @@ const CollectionDetails = ({
                       width="100%"
                       height="100%"
                       className={`CollectionDetails_Img ${cssStyles.coverImage}`}
+                        style={{
+                        opacity: (isHovered || (isMobile && isVisible)) && collection.video_url && !isSocialMediaVideo(collection.video_url) ? 0 : 1,
+                        transition: "opacity 0.3s ease-in-out",
+                      }}
                       onLoad={() => {
                         if (imageContainerRef.current) {
                           const { width, height } =
@@ -648,31 +641,29 @@ const CollectionDetails = ({
                         }
                       }}
                     />
-                    {(Owner || Adminlist) &&
+                    {(Owner || Adminlist) && (
                       <>
                         <p className="z-40 absolute top-3 right-4 ">
                           <Upload
                             {...uploadProps}
-                            name='cover_image'
+                            name="cover_image"
                             showUploadList={false}
                             onChange={handleCoverImageUpload}
                           >
-                               <p className="bg-white rounded-full p-1">
-                        
-                                              <FiEdit
-                                              style={{
-                                                                          color: "#9a9b9b",
-                                                                          // backgroundColor: "#f8f6f4",
-                                                                        }}
-                                                title="Edit Collection"
-                                                className={styles.editIconContainerowner}
-                                              />
-                                                                      </p>
+                            <p className="bg-white rounded-full p-1">
+                              <FiEdit
+                                style={{
+                                  color: "#9a9b9b",
+                                  // backgroundColor: "#f8f6f4",
+                                }}
+                                title="Edit Collection"
+                                className={styles.editIconContainerowner}
+                              />
+                            </p>
                           </Upload>
                         </p>
-
                       </>
-                    }
+                    )}
                     <CropAndResizeImageModal
                       headerText="Crop and upload"
                       isOpen={cropAndResizeImageData?.isOpen}
@@ -716,16 +707,16 @@ const CollectionDetails = ({
                       style={{ zIndex: 10 }} // Ensure video is on top
                     />
                     {/* Transparent overlay to block interaction with the video */}
-                    <div
-                      className={cssStyles.videoOverlay}
-                    />
+                    <div className={cssStyles.videoOverlay} />
                   </>
                 )}
             </div>
           )}
         </div>
 
-        <div className={`${styles.detailsContainer} ${showMoreEnabled ? "" : styles.selfCenter}`}>
+        <div
+          className={`${styles.detailsContainer} ${showMoreEnabled ? "" : styles.selfCenter}`}
+        >
           <div className={styles.headerFlex}>
             <div className={styles.titleColumn}>
               {is_store_instance && (
@@ -741,14 +732,11 @@ const CollectionDetails = ({
                             user_name === super_admin
                               ? PATH_ROOT
                               : generateRoute(
-                                collectionOwner.user_id,
-                                user_name,
-                              );
+                                  collectionOwner.user_id,
+                                  user_name,
+                                );
                           return route ? (
-                            <Link
-                              href={route}
-                              className={styles.userInfoLink}
-                            >
+                            <Link href={route} className={styles.userInfoLink}>
                               {profile_image && (
                                 <img
                                   src={getFinalImageUrl(profile_image)}
@@ -803,11 +791,15 @@ const CollectionDetails = ({
                           )}
                           {sharePageUrl && collection.status === PUBLISHED && (
                             <img
-                              className={`${styles.shareImg} ${showShareCollection ? styles.pointerEventsNone : ""
-                                } ${collection.status === PUBLISHED
+                              className={`${styles.shareImg} ${
+                                showShareCollection
+                                  ? styles.pointerEventsNone
+                                  : ""
+                              } ${
+                                collection.status === PUBLISHED
                                   ? styles.cursorPointer
                                   : styles.cursorNotAllowed
-                                }`}
+                              }`}
                               src={share_icon}
                               title={
                                 collection.status !== PUBLISHED
@@ -825,9 +817,7 @@ const CollectionDetails = ({
                     </>
                   ) : (
                     <>
-                      <span className={styles.poweredByText}>
-                        powered by
-                      </span>
+                      <span className={styles.poweredByText}>powered by</span>
                       &nbsp;
                       <a
                         href="https://unthink.ai/"
@@ -845,10 +835,7 @@ const CollectionDetails = ({
                   )}
                 </div>
               )}
-              <div
-                className={styles.collectionName}
-                title={collection_name}
-              >
+              <div className={styles.collectionName} title={collection_name}>
                 {capitalFirstLetter(collection_name)}
               </div>
             </div>
@@ -915,13 +902,13 @@ const CollectionDetails = ({
 
           <div className={styles.tagsContainer}>
             {showFeatureOnBTOnNonStore &&
-              collection.hosted_stores?.includes(STORE_USER_NAME_BUDGETTRAVEL) ? (
+            collection.hosted_stores?.includes(STORE_USER_NAME_BUDGETTRAVEL) ? (
               <span className={styles.tagBadge}>
                 Featured on Budget Travel store
               </span>
             ) : null}
             {showFeatureOnStore &&
-              collection.hosted_stores?.includes(current_store_name) ? (
+            collection.hosted_stores?.includes(current_store_name) ? (
               <span className={styles.tagBadge}>
                 Featured on {storeDisplayName} store
               </span>
@@ -951,21 +938,25 @@ const CollectionDetails = ({
           <div className={styles.relativeContainer}>
             <p
               ref={descriptionRef}
-              className={`${isCollectionPage ? 'lg:text-xl text-sm md:text-lg text-gray-105 whitespace-pre-wrap' : styles.descriptionText} ${isShowMoreActive ? "" : styles.collection_description_ellipsis
-                }`}>
+              className={`${isCollectionPage ? "lg:text-xl text-sm md:text-lg text-gray-105 whitespace-pre-wrap" : styles.descriptionText} ${
+                isShowMoreActive ? "" : styles.collection_description_ellipsis
+              }`}
+            >
               {collection?.description}
             </p>
             {showMoreEnabled &&
               (isShowMoreActive ? (
                 <span
                   className={styles.readMoreText}
-                  onClick={() => dispatch(toggleShowMore(false))}>
+                  onClick={() => dispatch(toggleShowMore(false))}
+                >
                   Read less
                 </span>
               ) : (
                 <span
                   className={styles.readMoreText}
-                  onClick={() => dispatch(toggleShowMore(true))}>
+                  onClick={() => dispatch(toggleShowMore(true))}
+                >
                   Read more...
                 </span>
               ))}
@@ -1069,7 +1060,6 @@ const CollectionDetails = ({
           />
         )}
       </div>
-
 
       {collection?.sponsor_details?.collection_image_list?.length > 0 && (
         <CarousalContainer
