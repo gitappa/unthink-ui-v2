@@ -27,7 +27,7 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaMinus } from "react-icons/fa6";
+import { FaMinus, FaRegBookmark } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
   setRemoveFromFavorites,
@@ -1203,10 +1203,10 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    <Image
-                      alt="Add to wishlist"
+                    <FaRegBookmark
+                      // alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
-                      src={heart}
+                      // src={heart}
                       height={20}
                       width={20}
                     />

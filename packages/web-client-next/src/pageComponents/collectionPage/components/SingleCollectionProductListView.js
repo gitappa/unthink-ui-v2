@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button, Checkbox, Collapse, notification, Select, Upload } from "antd";
@@ -121,7 +121,13 @@ const SingleCollectionProductListView = ({
   // console.log('sharePageUrl');
   // console.log('profile_image',profile_image);
   
-   
+     const isStoreAdminLoggedIn = useMemo(
+    () =>
+      is_store_instance &&
+      authUser.user_name &&
+      authUser.user_name === super_admin,
+    [authUser.user_name],
+  );
 
   const renderProductsList = ({
     list,
@@ -228,9 +234,9 @@ const SingleCollectionProductListView = ({
                     </>
                   )
                 )}
-                {(Owner || Adminlist) && (
+                {isStoreAdminLoggedIn && (
                   <p
-                    className="z-40 absolute top-3 right-4   "
+                    className="z-40 absolute top-4 right-4   "
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Upload

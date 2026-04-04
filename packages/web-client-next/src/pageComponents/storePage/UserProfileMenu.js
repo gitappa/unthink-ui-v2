@@ -72,13 +72,13 @@ export const UserProfileMenu = ({
 								// </Text>
 								<>
 									<p className="header-username" style={{color: themeCodes.header.textColor,}}>{currentUser?.user_name.length > 10 ? currentUser?.user_name.slice(0, 10) + '...' : currentUser?.user_name}</p>
-									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill:'white' , filter:themeCodes.header.fills ? themeCodes.header.fills : 'brightness(0) opacity(0.7)' }} />
+									<Image src={userProfileIcon} alt='userIcon' width={24} height={24} style={{ fill:'white' , filter:themeCodes?.header?.fills ? themeCodes.header.fills : 'brightness(0) opacity(0.7)' }} />
 								</>
 							) : (
 								<Link href={is_store_instance ? ROUTES.SIGN_IN_PAGE : ROUTES.TRY_FOR_FREE_PAGE}>
 									<Text
 										ellipsis={true}
-										className='m-0 lg:text-base   font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{ color:themeCodes?.header?.textColor? themeCodes?.header?.textColor :  '#4F4F4F' }}>
+										className='m-0 lg:text-base   font-bold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2' style={{ color:themeCodes?.header?.textColor? themeCodes?.header?.textColor :  '#4F4F4F' }}>
 										Sign In
 									</Text>
 								</Link>
@@ -93,7 +93,7 @@ export const UserProfileMenu = ({
 								// <Image src={userIcon} alt='userIcon' width={24} height={24} />
 
 								<Tooltip title={currentUser?.user_name ? currentUser?.user_name : ""} placement="top" >
-									<Image src={userIcon} alt='userIcon' className="h-6" width={24} height={24} />
+									<Image src={userIcon} alt='userIcon' className="h-6" width={24} height={24} style={{  filter:themeCodes?.header?.fills ? themeCodes?.header?.fills : 'brightness(0) opacity(0.7)' }} />
 								</Tooltip>
 								// <Text
 								// 	title={currentUser?.user_name}

@@ -2064,14 +2064,14 @@ const isNewCollection = router.query.isNewCollection === "true";
 				return;
 			}
 
-			const descriptionLength = (updatedData?.description || "").trim().length;
-			if (view === STEPS.PRODUCTS && descriptionLength < 50) {
-				notification["error"]({
-					message: "Please type at least 50 characters in description",
-				});
-				return;
-			}
-			console.log('hello');
+			// const descriptionLength = (updatedData?.description || "").trim().length;
+			// if (view === STEPS.PRODUCTS && descriptionLength < 50) {
+			// 	notification["error"]({
+			// 		message: "Please type at least 50 characters in description",
+			// 	});
+			// 	return;
+			// }
+			// console.log('hello');
 			
 
 			await handleSaveCurrentView(metadata);

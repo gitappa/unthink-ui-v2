@@ -395,13 +395,19 @@ const WishListModal = ({
 		dispatch(deleteWishlist(payload));
 		setEnableSelectProduct(false)
 	};
-
+ const isStoreAdminLoggedIn = useMemo(
+	 () =>
+	   is_store_instance &&
+	   authUser.user_name &&
+	   authUser.user_name === super_admin,
+	 [authUser.user_name],
+   );
 	// call creator collection if admin true
 	useEffect(() => {
-		if (isAdminLoggedIn && showWishlistModal && activeCollection === "Creator") {
+		if (isStoreAdminLoggedIn && showWishlistModal && activeCollection === "Creator") {
 			dispatch(getCreatorCollection());
 		}
-	}, [isAdminLoggedIn, showWishlistModal, activeCollection]);
+	}, [isStoreAdminLoggedIn, showWishlistModal, activeCollection]);
 
 	const wishlistData =
 		activeCollection === "Feature"
@@ -409,6 +415,8 @@ const WishListModal = ({
 			: activeCollection === "Creator"
 				? creatorCollectionList
 				: collectionsList;
+
+
 
 	return (
 		<Drawer
@@ -493,7 +501,7 @@ const WishListModal = ({
 							)}
 
 							{
-							isAdminLoggedIn && (
+							isStoreAdminLoggedIn && (
 							<>
 							<div className={styles.tabsContainer}>
 								<button onClick={() => handleCollectionClick("Feature")}
