@@ -1230,13 +1230,20 @@ const ProductCard = ({
                 onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  <Image
+                  {/* <Image
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
                     width={20}
-                  />
+                  /> */}
+                      <FaRegBookmark
+                      // alt="Add to wishlist"
+                      className={styles["add_to_wishlist_icon"]}
+                      // src={heart}
+                      height={20}
+                      width={20}
+                    />
                 </button>
               </div>
               {/* )} */}
