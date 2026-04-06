@@ -631,11 +631,11 @@ const Header = ({
       ) : null}
 
       {/* swiftlyStyled mobile UI */}
-      {isSwiftlyStyledInstance || isDoTheLookInstance ? (
+      {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
-        >
+         >
           <SwiftlyMobileHeader
             showProfileIcon={showProfileIcon && isUserLogin}
             setShowMenu={setShowMenu}
@@ -643,7 +643,7 @@ const Header = ({
             setisDropDown={setisDropDown}
           />
         </div>
-      ) : null}
+      {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
 

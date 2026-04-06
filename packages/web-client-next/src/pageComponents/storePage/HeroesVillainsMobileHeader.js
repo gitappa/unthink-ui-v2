@@ -51,7 +51,7 @@ const HeroesVillainsMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 
 			<div className='flex w-14 sm:w-18.5'>
 				<Image
-					src={heroesVillainsLogo}
+					src={heroesVillainsLogo.src}
 					preview={false}
 					className='cursor-pointer'
 					onClick={() =>

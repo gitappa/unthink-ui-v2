@@ -21,6 +21,7 @@ import { getThemeCollectionsPagePath } from "../../helper/utils";
 import { THEME_ALL } from "../../constants/themeCodes";
 import { openWishlistModal } from "../wishlist/redux/actions";
 import { FaRegHeart } from "react-icons/fa6";
+import { BsBookmarkPlusFill } from "react-icons/bs";
 
 const SwiftlyMobileHeader = ({
   showProfileIcon,
@@ -60,6 +61,8 @@ const SwiftlyMobileHeader = ({
   const onWishlistClick = () => {
     dispatch(openWishlistModal());
   };
+  // console.log('storeData?.website_tagline',storeData?.website_tagline);
+  
   return (
     <>
       <div
@@ -69,8 +72,10 @@ const SwiftlyMobileHeader = ({
           color: themeCodes.header.announcement_bar_text,
         }}
       >
-        <span className={styles.announcementText}>
-          EVERY OUTFIT HAS A LOVE STORY – LET'S CREATE YOURS TOGETHER!
+        <span className={styles.announcementText} 
+        style={{display: storeData?.website_tagline === '' ? 'none' : ''}}
+        >
+           {storeData?.website_tagline ? storeData?.website_tagline : 'EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!' }
         </span>
       </div>
       <div
@@ -79,8 +84,8 @@ const SwiftlyMobileHeader = ({
       >
         <div className={styles.logoContainer}>
           <span className={styles.logoText} onClick={() => navigate(PATH_ROOT)}>
-            {isSwiftlyStyledInstance ? "SwiftlyStyled" : "DoTheLook"}
-          </span>
+            {is_store_instance && current_store_name}
+          </span> 
         </div>
         <div className="flex items-center gap-2.5">
           <button
@@ -119,7 +124,7 @@ const SwiftlyMobileHeader = ({
             />
           )} */}
 
-          <FaRegHeart
+          <BsBookmarkPlusFill
                                 onClick={onWishlistClick}
                                    style={{ filter: "brightness(0) opacity(0.7)" ,height:24,width:24}}
             

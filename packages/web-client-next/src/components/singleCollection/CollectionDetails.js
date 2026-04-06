@@ -141,6 +141,7 @@ const CollectionDetails = ({
     adminUserId,
     admin_list,
   );
+ 
 
   const showFeatureOnBTOnNonStore = useMemo(
     () => isSuperAdminLoggedIn && !is_store_instance,
@@ -154,6 +155,8 @@ const CollectionDetails = ({
       authUser.user_name === super_admin,
     [authUser.user_name],
   );
+ 
+  
 
   const collectionPagePath = useMemo(
     () =>
@@ -203,7 +206,7 @@ const CollectionDetails = ({
 
   const showFeatureOnStore = useMemo(
     () =>
-      (isSuperAdminLoggedIn || isStoreAdminLoggedIn) &&
+        isStoreAdminLoggedIn &&
       is_store_instance &&
       user_name !== super_admin,
     [isSuperAdminLoggedIn, user_name],
@@ -643,7 +646,7 @@ const CollectionDetails = ({
                     />
                     {(Owner || Adminlist) && (
                       <>
-                        <p className="z-40 absolute top-3 right-4 ">
+                        <p className="z-40 absolute top-3 lg:top-5 right-4 ">
                           <Upload
                             {...uploadProps}
                             name="cover_image"

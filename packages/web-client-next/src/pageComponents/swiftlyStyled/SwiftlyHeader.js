@@ -16,6 +16,7 @@ import walletIcon from "../../components/singleCollection/images/wallet_new.svg"
 import Image from "next/image";
 import styles from './SwiftlyHeader.module.css';
 import { current_store_name, is_store_instance } from "../../constants/config";
+import { BsBookmarkPlus, BsBookmarkPlusFill } from "react-icons/bs";
 
 const SwiftlyHeader = ({
 	disabledOutSideClick,
@@ -134,6 +135,7 @@ const SwiftlyHeader = ({
 					background: themeCodes.header.announcement_bar_bg,
 					color: themeCodes.header.announcement_bar_text,
 					fontWeight: themeCodes.header.font_weight,
+					display: storeData?.website_tagline === '' ? 'none' : ''
 				}}>
 				 {storeData?.website_tagline ? storeData?.website_tagline : 'EVERY OUTFIT HAS A LOVE STORY – LET’S CREATE YOURS TOGETHER!' }
 			</div>
@@ -203,7 +205,7 @@ const SwiftlyHeader = ({
 							
 
 							{currentUser?.emailId ? (
-								<FaRegHeart style={{filter: themeCodes.header.fills ? themeCodes.header.fills :'brightness(0) opacity(0.7)'}}
+								<BsBookmarkPlusFill style={{filter: themeCodes.header.fills ? themeCodes.header.fills :'brightness(0) opacity(0.7)'}}
 									onClick={onWishlistClick}
 									className={styles.wishlistIcon}
 								/>
