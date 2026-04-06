@@ -56,7 +56,7 @@ const AdditionalAttributes = ({
 		}
 	}, [collectionValue]);
 
-	console.log("productData?.additionalAttributes", attributesData);
+	// console.log("productData?.additionalAttributes", attributesData);
 
 	// ✅ Always use productData.additionalAttributes.custom_filter
 	const savedCustomFilter = useMemo(() => {
@@ -70,7 +70,7 @@ const AdditionalAttributes = ({
 		return [];
 	}, [productData?.additionalAttributes?.custom_filter, attributesData]);
 
-	console.log("savedCustomFilter", savedCustomFilter);
+	// console.log("savedCustomFilter", savedCustomFilter);
 
 	// useEffect(() => {
 	// 	if (productData) {

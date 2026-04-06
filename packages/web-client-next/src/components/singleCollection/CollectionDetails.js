@@ -105,7 +105,8 @@ const CollectionDetails = ({
     selectedImage: "",
   });
   const Owner = authUser?.user_name === collection?.user_name;
-  const Adminlist = authUser?.user_name === is_store_instance && super_admin;
+  const Adminlist = authUser?.user_name ===  super_admin;
+// console.log('helloWorld',Owner || Adminlist);
 
   // console.log("is_store_instance",is_store_instance);
   // console.log(Owner || Adminlist);

@@ -25,7 +25,7 @@ const CropAndResizeImageModal = ({
   const [completedCrop, setCompletedCrop] = useState();
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
-  console.log("completedCrop", completedCrop);
+  // console.log("completedCrop", completedCrop);
 
   const onUploadCropClick = useCallback(async () => {
     const image = imgRef.current;

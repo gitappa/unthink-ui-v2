@@ -65,7 +65,7 @@ const CollectionCarouselContainer = ({
 			user_id: authUser.user_id,
 		});
 
-		console.log("GTAG SHOP WIDGET CLICK", item);
+		// console.log("GTAG SHOP WIDGET CLICK", item);
 
 		// END
 

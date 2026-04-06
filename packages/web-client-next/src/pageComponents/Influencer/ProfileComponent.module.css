@@ -221,6 +221,9 @@ height:100px !important;
 .powered-by-link {
   display: flex;
   padding: 0;
+  @media (max-width:768px) {
+  margin-top: 10px;
+  }
 }
 
 .social-icons-container {

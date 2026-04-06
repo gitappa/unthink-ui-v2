@@ -51,7 +51,7 @@
         const pathParts = window.location.pathname.split("/");
         const collectionId = pathParts[pathParts.length - 1];
 
-        console.log("Collection ID from path:", collectionId);
+        // console.log("Collection ID from path:", collectionId);
 
         async function fetchCollection() {
             const store = "fashiondemo"; // you can also make this dynamic if needed
@@ -62,7 +62,7 @@
                 const json = await res.json();
                 const collection = json?.data[0];
 
-                console.log("collection", collection);
+                // console.log("collection", collection);
 
 
                 if (!collection) {

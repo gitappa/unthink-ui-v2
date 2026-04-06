@@ -39,7 +39,7 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
-	console.log('unthink_black_log',unthink_black_log);
+	// console.log('unthink_black_log',unthink_black_log);
 	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
