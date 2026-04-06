@@ -619,7 +619,7 @@ export const getCollectionsView = (
 
 	if (isStoreInstance && super_admin === user_name && user_name) return "admin";
 
-	if (user_name) return "influencer";
+	// if (user_name) return "influencer";
 
 	return "public";
 };
@@ -628,8 +628,9 @@ export const getCollectionPageView = (
 	isAuthUser, // match auth user id and influencerUser user_id, for check collection is auth user's or not
 	isStoreHomePage
 ) => {
-	if (isAuthUser && !isStoreHomePage) return "influencer";
-
+	if (isAuthUser && isStoreHomePage) return "influencer";
+	// console.log('isStoreHomePage',!isStoreHomePage);
+	
 	return "public";
 };
 
