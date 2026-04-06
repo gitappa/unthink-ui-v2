@@ -4,7 +4,10 @@ import Image from "next/image";
 import { Button, Checkbox, Collapse, notification, Select, Upload } from "antd";
 import ReactPlayer from "react-player/lazy";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { MdOutlineFileUpload, MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import {
+  MdOutlineFileUpload,
+  MdOutlineKeyboardArrowLeft,
+} from "react-icons/md";
 
 import ProductCard from "../../../components/singleCollection/ProductCard";
 import AskAuraCard from "../../../components/singleCollection/AskAuraCard";
@@ -115,13 +118,15 @@ const SingleCollectionProductListView = ({
   uploadProps,
   Owner,
   Adminlist,
-  handleCoverImageUpload
-
+  handleCoverImageUpload,
 }) => {
   // console.log('sharePageUrl');
   // console.log('profile_image',profile_image);
+  // console.log('Owner',Owner);
   
-     const isStoreAdminLoggedIn = useMemo(
+  // console.log('hellopw',Owner && (window.location.pathname === '/my-profile/' || window.location.pathname === `/influencer/${user_name}/`) );
+  
+  const isStoreAdminLoggedIn = useMemo(
     () =>
       is_store_instance &&
       authUser.user_name &&
@@ -179,17 +184,18 @@ const SingleCollectionProductListView = ({
               blogCollectionPage?.video_url) && (
               <div
                 ref={videoContainerRef}
-                className={`${styles.mobileCoverStickyBlock} ${isSocialMediaVideo(blogCollectionPage.video_url)
-                  ? styles.coverMediaHidden
-                  : styles.coverMediaContainer
-                  } ${showCollectionDetails ? styles.cursorPointer : ""}`}
+                className={`${styles.mobileCoverStickyBlock} ${
+                  isSocialMediaVideo(blogCollectionPage.video_url)
+                    ? styles.coverMediaHidden
+                    : styles.coverMediaContainer
+                } ${showCollectionDetails ? styles.cursorPointer : ""}`}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => showCollectionDetails && onSeeAllClick()}
               >
                 {blogCollectionPage?.video_url &&
-                  (isHovered || (isMobile && isVisible)) &&
-                  !isSocialMediaVideo(blogCollectionPage.video_url) ? (
+                (isHovered || (isMobile && isVisible)) &&
+                !isSocialMediaVideo(blogCollectionPage.video_url) ? (
                   <>
                     <ReactPlayer
                       className={
@@ -209,12 +215,63 @@ const SingleCollectionProductListView = ({
                     <div className={styles.videoOverlay} />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
+                  <div className="relative">
                   <img
-                    className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
+                    className={`${styles.coverImage} ${
+                      showCollectionDetails ? styles.cursorPointer : ""
                     }`}
                     src={getFinalImageUrl(blogCollectionPage.cover_image)}
                     alt="Cover"
                   />
+                        {  window.location?.pathname === '/my-profile/'   &&  (
+                  <p
+                    className="z-40 absolute top-4 right-4   "
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Upload
+                      {...uploadProps}
+                      name="cover_image"
+                      showUploadList={false}
+                      onChange={handleCoverImageUpload}
+                    >
+                      {/* <
+                                                
+                                                className={styles["product-cart-icon-smalls"]}
+                                              /> */}
+                      <p className="bg-white rounded-full p-1">
+                        <FiEdit
+                          style={{
+                            color: "#9a9b9b",
+                            // backgroundColor: "#f8f6f4",
+                          }}
+                          title="Edit Collection"
+                          className={styles.editIconContainerowner}
+                        />
+                      </p>
+                    </Upload>
+                  </p>
+                )}
+                        {/* {(Owner || Adminlist) &&
+                      <>
+                        <p className="z-40 absolute top-3 right-4 ">
+                          <Upload
+                            {...uploadProps}
+                            name='cover_image'
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <EditOutlined  
+                            title="Edit Collection"
+                            className={styles.editIconContainerowner}
+                             
+                          />
+                          </Upload>
+                        </p>
+
+                      </>
+                    }  */}
+                  </div>
+
                 ) : (
                   blogCollectionPage?.video_url &&
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
@@ -245,22 +302,20 @@ const SingleCollectionProductListView = ({
                       showUploadList={false}
                       onChange={handleCoverImageUpload}
                     >
-                       {/* <
+                      {/* <
                                                 
                                                 className={styles["product-cart-icon-smalls"]}
                                               /> */}
-                                              <p className="bg-white rounded-full p-1">
-
-                      <FiEdit
-                      style={{
-                                                  color: "#9a9b9b",
-                                                  // backgroundColor: "#f8f6f4",
-                                                }}
-                        title="Edit Collection"
-                        className={styles.editIconContainerowner}
-                      />
-                                              </p>
-
+                      <p className="bg-white rounded-full p-1">
+                        <FiEdit
+                          style={{
+                            color: "#9a9b9b",
+                            // backgroundColor: "#f8f6f4",
+                          }}
+                          title="Edit Collection"
+                          className={styles.editIconContainerowner}
+                        />
+                      </p>
                     </Upload>
                   </p>
                 )}
@@ -283,7 +338,12 @@ const SingleCollectionProductListView = ({
                   >
                     View Collection
                   </Button>
-                  <Image src={Rightarrow} alt="View more" height={16} width={16} />
+                  <Image
+                    src={Rightarrow}
+                    alt="View more"
+                    height={16}
+                    width={16}
+                  />
                 </div>
               </div>
             ) : null}
@@ -291,7 +351,9 @@ const SingleCollectionProductListView = ({
               <div className={styles.productItems}>
                 {list.length > 0 &&
                   list.map((product) => (
-                    <div key={product.mfr_code}>{renderCollectionCard(product)}</div>
+                    <div key={product.mfr_code}>
+                      {renderCollectionCard(product)}
+                    </div>
                   ))}
               </div>
             ) : (
@@ -334,17 +396,18 @@ const SingleCollectionProductListView = ({
               blogCollectionPage?.video_url) && (
               <div
                 ref={videoContainerRef}
-                className={`${isSocialMediaVideo(blogCollectionPage.video_url)
-                  ? styles.coverMediaHidden
-                  : styles.coverMediaContainer
-                  } ${showCollectionDetails ? styles.cursorPointer : ""}`}
+                className={`${
+                  isSocialMediaVideo(blogCollectionPage.video_url)
+                    ? styles.coverMediaHidden
+                    : styles.coverMediaContainer
+                } ${showCollectionDetails ? styles.cursorPointer : ""}`}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => showCollectionDetails && onSeeAllClick()}
               >
                 {blogCollectionPage?.video_url &&
-                  (isHovered || (isMobile && isVisible)) &&
-                  !isSocialMediaVideo(blogCollectionPage.video_url) ? (
+                (isHovered || (isMobile && isVisible)) &&
+                !isSocialMediaVideo(blogCollectionPage.video_url) ? (
                   <>
                     <ReactPlayer
                       className={
@@ -365,13 +428,14 @@ const SingleCollectionProductListView = ({
                   </>
                 ) : blogCollectionPage?.cover_image ? (
                   <div className="relative">
-                  <img
-                    className={`${styles.coverImage} ${showCollectionDetails ? styles.cursorPointer : ""
-                    }`}
-                    src={getFinalImageUrl(blogCollectionPage.cover_image)}
-                    alt="Cover"
+                    <img
+                      className={`${styles.coverImage} ${
+                        showCollectionDetails ? styles.cursorPointer : ""
+                      }`}
+                      src={getFinalImageUrl(blogCollectionPage.cover_image)}
+                      alt="Cover"
                     />
-                        {/* {Owner || Adminlist &&
+                    {/* {Owner || Adminlist &&
                       <>
                         <p className="z-40 absolute top-3 right-4 ">
 
@@ -393,7 +457,8 @@ const SingleCollectionProductListView = ({
 
                       </>
                     } */}
-                    </div>
+                   
+                  </div>
                 ) : (
                   blogCollectionPage?.video_url &&
                   !isSocialMediaVideo(blogCollectionPage.video_url) && (
@@ -450,7 +515,9 @@ const SingleCollectionProductListView = ({
                   collection_path={blogCollectionPage.path}
                   collection_status={blogCollectionPage.status}
                   blogCollectionPage={blogCollectionPage}
-                  onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+                  onAddSelectedProductsToCollection={
+                    onAddSelectedProductsToCollection
+                  }
                   isSingleCollectionSharedPage={isSingleCollectionSharedPage}
                 />
               </div>
@@ -481,10 +548,11 @@ const SingleCollectionProductListView = ({
             </p>
 
             <p
-              className={`${styles.tabButton} ${activeTab === "faq"
-                ? styles.tabButtonActive
-                : styles.tabButtonInactive
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "faq"
+                  ? styles.tabButtonActive
+                  : styles.tabButtonInactive
+              }`}
               onClick={() => setActiveTab("faq")}
             >
               FAQS{" "}
@@ -500,8 +568,8 @@ const SingleCollectionProductListView = ({
                   (userId || (publish && isSingleCollectionSharedPage)) && (
                     <div className={styles.tagsOuterContainer}>
                       {showTagsSelection &&
-                        tagsToShow?.length &&
-                        autoProductsData.length ? (
+                      tagsToShow?.length &&
+                      autoProductsData.length ? (
                         <div
                           className={`${styles.tagsPadding} colloction_details_tag`}
                         >
@@ -529,21 +597,24 @@ const SingleCollectionProductListView = ({
                                       style={{ width: "auto" }}
                                     >
                                       <div
-                                        className={`${styles.tagChip} ${selectedTags.includes(tag) ||
+                                        className={`${styles.tagChip} ${
+                                          selectedTags.includes(tag) ||
                                           (selectedTags.length === 0 &&
                                             tag === "All")
-                                          ? styles.tagChipSelected
-                                          : styles.tagChipDefault
-                                          } ${isDisabled
+                                            ? styles.tagChipSelected
+                                            : styles.tagChipDefault
+                                        } ${
+                                          isDisabled
                                             ? styles.tagChipDisabled
                                             : ""
-                                          }`}
+                                        }`}
                                       >
                                         <h3
-                                          className={`${styles.tagText} ${allowSelectTags && !isDisabled
-                                            ? styles.cursorPointer
-                                            : ""
-                                            }`}
+                                          className={`${styles.tagText} ${
+                                            allowSelectTags && !isDisabled
+                                              ? styles.cursorPointer
+                                              : ""
+                                          }`}
                                           onClick={
                                             allowSelectTags && !isDisabled
                                               ? () => handleTagClick(tag)
@@ -561,7 +632,9 @@ const SingleCollectionProductListView = ({
                             {isOverflowing && (
                               <>
                                 <div
-                                  className={"absolute right-0  lg:h-10 h-8 lg:w-10 -top-1 md:top-1 lg:top-2 hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center"}
+                                  className={
+                                    "absolute right-0  lg:h-10 h-8 lg:w-10 -top-1 md:top-1 lg:top-2 hover:shadow-xl  bg-gray-50  w-8 rounded-full flex justify-center items-center"
+                                  }
                                   style={{
                                     cursor: "pointer",
                                     zIndex: 10,
@@ -581,7 +654,9 @@ const SingleCollectionProductListView = ({
                                   />
                                 </div>
                                 <div
-                                  className={"absolute  lg:h-10 h-8 -top-1 md:top-1 lg:top-2 lg:w-10 bg-gray-50 ml-3 lg:ml-0  w-8 rounded-full flex hover:shadow-xl lg:-left-6 -left-5 justify-center items-center"}
+                                  className={
+                                    "absolute  lg:h-10 h-8 -top-1 md:top-1 lg:top-2 lg:w-10 bg-gray-50 ml-3 lg:ml-0  w-8 rounded-full flex hover:shadow-xl lg:-left-6 -left-5 justify-center items-center"
+                                  }
                                   style={{
                                     cursor: "pointer",
                                     zIndex: 10,
@@ -613,7 +688,9 @@ const SingleCollectionProductListView = ({
                             <div
                               className={`${styles.tagsFlexRow} tag_responsive_div`}
                             >
-                              <div className={`${styles.keywordScrollWrapper} `}>
+                              <div
+                                className={`${styles.keywordScrollWrapper} `}
+                              >
                                 <Swiper
                                   slidesPerView="auto"
                                   spaceBetween={10}
@@ -636,7 +713,9 @@ const SingleCollectionProductListView = ({
                                                 className={styles.keywordChip}
                                               >
                                                 <span
-                                                  className={styles.keywordChipText}
+                                                  className={
+                                                    styles.keywordChipText
+                                                  }
                                                 >
                                                   #{tag.trim()}
                                                 </span>
@@ -696,10 +775,11 @@ const SingleCollectionProductListView = ({
 
                       {isSingleCollectionSharedPage && productsData.length ? (
                         <div
-                          className={`${styles.selectBarRow} ${enableSelectProduct
-                            ? styles.selectBarRowWithCol
-                            : styles.selectBarRowDefault
-                            }`}
+                          className={`${styles.selectBarRow} ${
+                            enableSelectProduct
+                              ? styles.selectBarRowWithCol
+                              : styles.selectBarRowDefault
+                          }`}
                         >
                           <div className={styles.selectBarLeft}>
                             {enableSelectProduct ? (
@@ -721,13 +801,14 @@ const SingleCollectionProductListView = ({
                                   onClick={
                                     selectedProducts.length
                                       ? () =>
-                                        onAddSelectedProductsToCollection()
+                                          onAddSelectedProductsToCollection()
                                       : null
                                   }
-                                  className={`${selectedProducts.length
-                                    ? styles.addToTextActive
-                                    : styles.addToTextDisabled
-                                    } ${styles.addToText}`}
+                                  className={`${
+                                    selectedProducts.length
+                                      ? styles.addToTextActive
+                                      : styles.addToTextDisabled
+                                  } ${styles.addToText}`}
                                   title="Click to add selected products in collection"
                                   role="button"
                                 >
@@ -790,10 +871,10 @@ const SingleCollectionProductListView = ({
                 style={
                   showCollectionDetails && !isSingleCollectionSharedPage
                     ? {
-                      "--single-collection-sticky-top": `${mobileStickyTop}px`,
-                      "--single-collection-details-height": `${mobileDetailsHeight}px`,
-                      "--single-collection-cover-height": `${mobileCoverHeight}px`,
-                    }
+                        "--single-collection-sticky-top": `${mobileStickyTop}px`,
+                        "--single-collection-details-height": `${mobileDetailsHeight}px`,
+                        "--single-collection-cover-height": `${mobileCoverHeight}px`,
+                      }
                     : undefined
                 }
               >
@@ -889,11 +970,15 @@ const SingleCollectionProductListView = ({
                             }
                           >
                             <img
-                              className={`${styles.shareIcon} ${showShareCollection ? styles.shareIconEventsNone : ""
-                                } ${blogCollectionPage.status === PUBLISHED
+                              className={`${styles.shareIcon} ${
+                                showShareCollection
+                                  ? styles.shareIconEventsNone
+                                  : ""
+                              } ${
+                                blogCollectionPage.status === PUBLISHED
                                   ? styles.shareIconEnabled
                                   : styles.shareIconDisabled
-                                }`}
+                              }`}
                               src={share_icon}
                               alt="Share collection"
                               title={
@@ -902,7 +987,7 @@ const SingleCollectionProductListView = ({
                                   : ""
                               }
                             />
-                            <p  className="hidden md:block text-sm lg:text-base">
+                            <p className="hidden md:block text-sm lg:text-base">
                               Share
                             </p>
                           </div>
@@ -916,12 +1001,7 @@ const SingleCollectionProductListView = ({
                                 <p
                                   ref={textRef}
                                   className={` ${styles.descriptionText} 
-    ${expanded
-                                      ? ""
-                                      : productsData?.length === 0
-                                        ? "ellipsis_3"
-                                        : "ellipsis_2"
-                                    }
+    ${expanded ? "" : productsData?.length === 0 ? "ellipsis_3" : "ellipsis_2"}
   `}
                                 >
                                   {blogCollectionPage?.description}
@@ -953,7 +1033,7 @@ const SingleCollectionProductListView = ({
                 )}
 
                 {isSingleCollectionSharedPage &&
-                  !!showcasedProductsData.length ? (
+                !!showcasedProductsData.length ? (
                   <div>
                     {!!showcasedProductsData.length ? (
                       <div className={styles.toppicksContainer}>
@@ -961,8 +1041,9 @@ const SingleCollectionProductListView = ({
                         <div className={styles.flexColLgRow}>
                           {renderProductsList({
                             list: showcasedProductsData,
-                            showAuraTileFlag:
-                              autoProductsData.length ? false : showAuraTile,
+                            showAuraTileFlag: autoProductsData.length
+                              ? false
+                              : showAuraTile,
                             isSingleCollectionSharedPage,
                           })}
                         </div>
@@ -995,7 +1076,7 @@ const SingleCollectionProductListView = ({
                 )}
               </div>
             </div>
-            {isPopupShow && isGuestPopUpShow &&  (
+            {isPopupShow && isGuestPopUpShow && (
               <GuestPopUp
                 handleGuestSubmit={handleGuestSubmit}
                 errors={errors}

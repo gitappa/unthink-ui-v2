@@ -105,9 +105,9 @@ const CollectionDetails = ({
     selectedImage: "",
   });
   const Owner = authUser?.user_name === collection?.user_name;
-  const Adminlist = authUser?.user_name === super_admin;
+  const Adminlist = authUser?.user_name === is_store_instance && super_admin;
 
-  console.log("checkdata", Owner || Adminlist);
+  // console.log("is_store_instance",is_store_instance);
   // console.log(Owner || Adminlist);
 
   // State for overlay positioning
@@ -595,13 +595,39 @@ const CollectionDetails = ({
         >
           {/* Display default avatar if both video_url and cover_image are absent */}
           {!collection.video_url && !collection.cover_image ? (
+            <div className="relative">
+
             <img
               src={defaultAvatar}
               alt="Default Image"
               width="100%"
               height="100%"
               className={`CollectionDetails_Img ${cssStyles.defaultImage}`}
-            />
+              />
+               {(Owner || Adminlist) && (
+                      <>
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
+                          <Upload
+                            {...uploadProps}
+                            name="cover_image"
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <p className="bg-white rounded-full p-1">
+                              <FiEdit
+                                style={{
+                                  color: "#9a9b9b",
+                                  // backgroundColor: "#f8f6f4",
+                                }}
+                                title="Edit Collection"
+                                className={styles.editIconContainerowner}
+                              />
+                            </p>
+                          </Upload>
+                        </p>
+                      </>
+                    )}
+              </div>
           ) : (
             <div className={cssStyles.relative}>
               {/* Display cover image if present, otherwise show default avatar */}
@@ -646,7 +672,7 @@ const CollectionDetails = ({
                     />
                     {(Owner || Adminlist) && (
                       <>
-                        <p className="z-40 absolute top-3 lg:top-5 right-4 ">
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
                           <Upload
                             {...uploadProps}
                             name="cover_image"
@@ -706,7 +732,7 @@ const CollectionDetails = ({
                       width="100%"
                       height="100%"
                       playsinline
-                      className={`${cssStyles.videoOverlay} Video_player`}
+                      className={cssStyles.videoOverlay}
                       style={{ zIndex: 10 }} // Ensure video is on top
                     />
                     {/* Transparent overlay to block interaction with the video */}

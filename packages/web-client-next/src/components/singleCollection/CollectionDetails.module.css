@@ -58,15 +58,23 @@
 
 @media (min-width: 640px) {
   .defaultImage {
-    width: 200px;
+    width: 260px;
   }
 }
 
 @media (min-width: 1024px) {
   .defaultImage {
-    width: 260px;
+    width: 355px;
+    height: 355px;
   }
 }
+@media (min-width: 1328px) {
+  .defaultImage {
+    width: 385px;
+    height: 385px;
+  }
+}
+ 
 
 .coverImage {
   object-fit: contain;
@@ -114,6 +122,8 @@
 
 .relative {
   position: relative;
+  background-color: #F2F2F2;
+  border-radius: 16px;
 }
 
 .overlayPoint {

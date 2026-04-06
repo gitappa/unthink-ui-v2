@@ -92,12 +92,15 @@ const url = window.location.pathname === '/my-profile/'
   const dispatch = useDispatch();
   const navigate = useCallback((path) => router.push(path), [router]);
 
-  const [isGuestPopUpShow, singleCollection, influencerCollections] =
+  const [isGuestPopUpShow, singleCollection, influencerCollections,influencer] =
     useSelector((state) => [
       state.GuestPopUpReducer.isGuestPopUpShow,
       state.auth.user.singleCollections.data,
       state.auth.user.data,
+       state.influencer.collections.data,
     ]);
+    // console.log('influencer',influencerCollections);
+    
   const [showShareCollection, setShowShareCollection] = useState(false);
 
 
@@ -795,8 +798,9 @@ const url = window.location.pathname === '/my-profile/'
 
 
   const [admin_list ] = useSelector((state) => [ state.store.data.admin_list ]);
-        const Owner = authUser?.user_name === singleCollection?.user_name
+        const Owner = authUser?.user_name === singleCollection?.user_name  
         const Adminlist =  authUser?.user_name === super_admin
+        // console.log('singleCollectionusername', authUser?.role);
         
   const handleUploadedDataChange = useCallback(
     (name, value) => {
