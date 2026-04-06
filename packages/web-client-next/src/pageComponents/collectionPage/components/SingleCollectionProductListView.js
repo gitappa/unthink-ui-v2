@@ -215,7 +215,7 @@ const SingleCollectionProductListView = ({
                     <div className={styles.videoOverlay} />
                   </>
                 ) : blogCollectionPage?.cover_image ? (
-                  <div className="relative">
+                  <div className="relative h-full">
                   <img
                     className={`${styles.coverImage} ${
                       showCollectionDetails ? styles.cursorPointer : ""

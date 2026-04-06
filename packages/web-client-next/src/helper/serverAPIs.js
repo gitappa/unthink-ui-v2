@@ -65,7 +65,7 @@ const improveContentURL = "/user/collections/improve_content/";
 
 //profile API urls
 const uploadImgUrl = "/cs/img/";
-const uploadVideoUrl = "/cs/audio/";
+const uploadVideoUrl = "/cs/video/";
 const uploadSVGUrl = "/cs/json/";
 const fetchBrandsUrl = "/brand_handler/get_brand/";
 const updateFeedLinkUrl = "/brand_handler/update_feed_link/";
@@ -788,18 +788,21 @@ const uploadImage = ({
 	});
 };
 
-const uploadVideo = ({ file }) => {
+const uploadVideo = ({ file ,store}) => {
+	console.log('wstore',store);
+	
 	const url = `${auraYfretUserCollBaseUrl}${uploadVideoUrl}`;
 
 	const formData = new FormData();
-
+	
 	formData.append("file[]", file);
+	formData.append("store", store);
 	// formData.append("meta_data", file.name); //sending file name
 
 	return apiInstance({
 		url,
 		method: "post",
-		data: formData,
+		data: formData
 	});
 };
 export  const TryOnVto =(payload) =>{

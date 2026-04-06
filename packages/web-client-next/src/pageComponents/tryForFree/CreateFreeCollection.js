@@ -472,6 +472,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 				if (info?.file) {
 					const response = await profileAPIs.uploadVideo({
 						file: info.file,
+						store:current_store_name
 					});
 
 					if (response?.data?.data) {
