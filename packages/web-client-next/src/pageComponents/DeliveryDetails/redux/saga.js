@@ -81,7 +81,7 @@ function* removeProductsSaga(action) {
     const response = yield call(collectionAPIs.removeFromCollectionAPICall, payload);
     const data = response?.data?.data;
 
-    console.log("🔔 removeProductsSaga response data:", data);
+    // console.log("🔔 removeProductsSaga response data:", data);
 
     if (data?.collection_id) {
       localStorage.setItem("mycartcollectionid", data.collection_id);

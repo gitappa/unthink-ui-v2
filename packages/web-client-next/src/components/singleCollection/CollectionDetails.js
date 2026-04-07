@@ -105,9 +105,10 @@ const CollectionDetails = ({
     selectedImage: "",
   });
   const Owner = authUser?.user_name === collection?.user_name;
-  const Adminlist = authUser?.user_name === super_admin;
+  const Adminlist = authUser?.user_name ===  super_admin;
+// console.log('helloWorld',Owner || Adminlist);
 
-  console.log("checkdata", Owner || Adminlist);
+  // console.log("is_store_instance",is_store_instance);
   // console.log(Owner || Adminlist);
 
   // State for overlay positioning
@@ -569,6 +570,36 @@ const CollectionDetails = ({
             // }}
             src={getFinalImageUrl(collection.sponsor_details.banner.image)}
           />
+               {(isPageOwner  || Adminlist) && (
+                      <>
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
+                
+                            <p className="bg-white rounded-full p-1" onClick={(e) => {e.stopPropagation(),e.preventDefault(), setBannerModalOpen(true)}} >
+                              <FiEdit
+                                style={{
+                                  color: "#9a9b9b",
+                                  // backgroundColor: "#f8f6f4",
+                                }}
+                                title="Edit Collection"
+                                className={styles.editIconContainerowner}
+                              />
+                            </p>
+                        
+                        </p>
+                      </>
+                    )}
+
+                    {/* {isPageOwner  || Adminlist ? (
+              <button
+                onClick={() => setBannerModalOpen(true)}
+                className={styles.actionButton}
+              >
+                {collection?.sponsor_details?.banner?.image
+                  ? "Update Banner"
+                  : "Add Banner"}
+              </button>
+            ) : null} */}
+
         </Link>
       ) : null}
 
@@ -595,13 +626,39 @@ const CollectionDetails = ({
         >
           {/* Display default avatar if both video_url and cover_image are absent */}
           {!collection.video_url && !collection.cover_image ? (
+            <div className="relative">
+
             <img
               src={defaultAvatar}
               alt="Default Image"
               width="100%"
               height="100%"
               className={`CollectionDetails_Img ${cssStyles.defaultImage}`}
-            />
+              />
+               {(Owner || Adminlist) && (
+                      <>
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
+                          <Upload
+                            {...uploadProps}
+                            name="cover_image"
+                            showUploadList={false}
+                            onChange={handleCoverImageUpload}
+                          >
+                            <p className="bg-white rounded-full p-1">
+                              <FiEdit
+                                style={{
+                                  color: "#9a9b9b",
+                                  // backgroundColor: "#f8f6f4",
+                                }}
+                                title="Edit Collection"
+                                className={styles.editIconContainerowner}
+                              />
+                            </p>
+                          </Upload>
+                        </p>
+                      </>
+                    )}
+              </div>
           ) : (
             <div className={cssStyles.relative}>
               {/* Display cover image if present, otherwise show default avatar */}
@@ -646,7 +703,7 @@ const CollectionDetails = ({
                     />
                     {(Owner || Adminlist) && (
                       <>
-                        <p className="z-40 absolute top-3 lg:top-5 right-4 ">
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
                           <Upload
                             {...uploadProps}
                             name="cover_image"
@@ -706,7 +763,7 @@ const CollectionDetails = ({
                       width="100%"
                       height="100%"
                       playsinline
-                      className={`${cssStyles.videoOverlay} Video_player`}
+                      className={cssStyles.videoOverlay}
                       style={{ zIndex: 10 }} // Ensure video is on top
                     />
                     {/* Transparent overlay to block interaction with the video */}
@@ -969,7 +1026,7 @@ const CollectionDetails = ({
             {isPageOwner ? (
               <button
                 onClick={() => setBannerModalOpen(true)}
-                className={styles.actionButton}
+                className={collection?.sponsor_details?.banner?.image ? 'hidden' : styles.actionButton}
               >
                 {collection?.sponsor_details?.banner?.image
                   ? "Update Banner"
@@ -1006,9 +1063,7 @@ const CollectionDetails = ({
                   </button>
                 )
               ))}
-          </div>
 
-          <div className={styles.featureRow}>
             {showFeatureOnBTOnNonStore ? (
               <button
                 onClick={() =>
@@ -1029,7 +1084,8 @@ const CollectionDetails = ({
                   : "Feature on Budget Travel store"}
               </button>
             ) : null}
-            {showFeatureOnStore ? (
+
+                  {showFeatureOnStore ? (
               <button
                 onClick={() =>
                   handleFeatureCollectionOnStore(current_store_name)
@@ -1047,6 +1103,12 @@ const CollectionDetails = ({
                   : `Feature on ${storeDisplayName} store`}
               </button>
             ) : null}
+            
+          </div>
+
+          <div className={styles.featureRow}>
+       
+      
           </div>
         </div>
         {/* add banner with redirection modal UI */}

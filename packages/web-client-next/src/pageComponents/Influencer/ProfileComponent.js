@@ -39,7 +39,7 @@ const ProfileComponent = ({
 	isGuestUser,
 	isMyProfilePage,
 }) => {
-	console.log('unthink_black_log',unthink_black_log);
+	// console.log('unthink_black_log',unthink_black_log);
 	
 	const router = useRouter();
 	const navigate = (path) => router.push(path);
@@ -91,8 +91,8 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 												src={unthink_black_log.src}
 												preview={false}
 												height={unthink_black_log.height}
-												width={unthink_black_log.width}
-												className='cursor-pointer w-24 lg:w-36 h-10'
+												width={96}
+												className='cursor-pointer w-24 lg:w-36 h-8 lg:h-10'
 											/>
 										</a>
 									</div>

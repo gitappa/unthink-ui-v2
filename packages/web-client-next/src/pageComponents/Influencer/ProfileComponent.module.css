@@ -212,11 +212,18 @@ height:100px !important;
   font-size: 0.875rem;
   color: #ffffff;
   white-space: nowrap;
+  @media (max-width:768px) {
+    font-size: 12px;
+    
+  }
 }
 
 .powered-by-link {
   display: flex;
   padding: 0;
+  @media (max-width:768px) {
+  margin-top: 10px;
+  }
 }
 
 .social-icons-container {

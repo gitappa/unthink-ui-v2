@@ -531,7 +531,7 @@ const UploadMultiProductsModal = ({
 				if (res.data.status_code === 200) {
 					console.log(res.data);
 				} else {
-					console.log("GetMPCollections failed:", res.data.message);
+					// console.log("GetMPCollections failed:", res.data.message);
 				}
 			}
 		} catch (error) {

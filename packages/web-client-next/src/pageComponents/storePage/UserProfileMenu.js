@@ -22,7 +22,7 @@ export const UserProfileMenu = ({
 	onClose
 }) => {
 		const { themeCodes } = useTheme();
-	console.log('dfdffvzsc',themeCodes.header.fills);
+	// console.log('dfdffvzsc',themeCodes.header.fills);
 	
 	const items = headerProfileMenu?.items || [];
 

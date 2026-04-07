@@ -54,7 +54,8 @@ function* fetchCollections(action) {
 	} = action.payload;
 
 	const view = getCollectionPageView(user_id === authUserId, isStoreHomePage);
-
+	// console.log('collectionsstheme', user_id === authUserId);
+	
 	const params = {
 		user_id,
 		collection_id,
