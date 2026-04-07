@@ -570,6 +570,36 @@ const CollectionDetails = ({
             // }}
             src={getFinalImageUrl(collection.sponsor_details.banner.image)}
           />
+               {(isPageOwner  || Adminlist) && (
+                      <>
+                        <p className="z-30 absolute top-3 lg:top-5 right-4 ">
+                
+                            <p className="bg-white rounded-full p-1" onClick={(e) => {e.stopPropagation(),e.preventDefault(), setBannerModalOpen(true)}} >
+                              <FiEdit
+                                style={{
+                                  color: "#9a9b9b",
+                                  // backgroundColor: "#f8f6f4",
+                                }}
+                                title="Edit Collection"
+                                className={styles.editIconContainerowner}
+                              />
+                            </p>
+                        
+                        </p>
+                      </>
+                    )}
+
+                    {/* {isPageOwner  || Adminlist ? (
+              <button
+                onClick={() => setBannerModalOpen(true)}
+                className={styles.actionButton}
+              >
+                {collection?.sponsor_details?.banner?.image
+                  ? "Update Banner"
+                  : "Add Banner"}
+              </button>
+            ) : null} */}
+
         </Link>
       ) : null}
 
@@ -996,7 +1026,7 @@ const CollectionDetails = ({
             {isPageOwner ? (
               <button
                 onClick={() => setBannerModalOpen(true)}
-                className={styles.actionButton}
+                className={collection?.sponsor_details?.banner?.image ? 'hidden' : styles.actionButton}
               >
                 {collection?.sponsor_details?.banner?.image
                   ? "Update Banner"
@@ -1033,9 +1063,7 @@ const CollectionDetails = ({
                   </button>
                 )
               ))}
-          </div>
 
-          <div className={styles.featureRow}>
             {showFeatureOnBTOnNonStore ? (
               <button
                 onClick={() =>
@@ -1056,7 +1084,8 @@ const CollectionDetails = ({
                   : "Feature on Budget Travel store"}
               </button>
             ) : null}
-            {showFeatureOnStore ? (
+
+                  {showFeatureOnStore ? (
               <button
                 onClick={() =>
                   handleFeatureCollectionOnStore(current_store_name)
@@ -1074,6 +1103,12 @@ const CollectionDetails = ({
                   : `Feature on ${storeDisplayName} store`}
               </button>
             ) : null}
+            
+          </div>
+
+          <div className={styles.featureRow}>
+       
+      
           </div>
         </div>
         {/* add banner with redirection modal UI */}
