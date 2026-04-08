@@ -128,23 +128,8 @@ const ChatProducts = ({
 	);
 
 	const shouldShowShopLookSplitLayout = useMemo(
-		() =>
-			!isBTNormalUserLoggedIn &&
-			activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look &&
-			(!!widgetImage ||
-				!!chatImageUrl ||
-				!!widgetHeader ||
-				!isEmpty(suggestionsWithProducts?.suggestions) ||
-				!isEmpty(shopALookData)),
-		[
-			isBTNormalUserLoggedIn,
-			activeSearchOption?.id,
-			widgetImage,
-			chatImageUrl,
-			widgetHeader,
-			suggestionsWithProducts?.suggestions,
-			shopALookData,
-		]
+		() => false,
+		[]
 	);
 
 	const shopLookPreviewImage = useMemo(
