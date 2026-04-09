@@ -762,7 +762,7 @@ const ChatModal = ({
                             : displaySearchOptions?.length === 4
                             ? "grid-cols-4"
                             : "grid-cols-5"
-                        } lg:flex w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity py-2.5 px-2.5 lg:py-2.5 lg:px-0 -ms-overflow-none scrollbar-none`}
+                        }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity py-2.5 px-2.5 lg:py-2.5 lg:px-0 -ms-overflow-none scrollbar-none`}
                       >
                         {displaySearchOptions?.map((searchOptions, index) => {
                           const isOptionActive =
