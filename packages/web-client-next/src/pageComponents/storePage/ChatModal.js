@@ -752,8 +752,17 @@ const ChatModal = ({
                   <>
                     {/* {!isFigmaUploadPanelOpen && !chatImageUrl && ( */}
                       <div
-                        className={styles["chatmodal-search-options-grid"]}
-                        style={{ "--col-count": displaySearchOptions.length }}
+                        className={`grid ${
+                          displaySearchOptions?.length === 1
+                            ? "grid-cols-1"
+                            : displaySearchOptions?.length === 2
+                            ? "grid-cols-2"
+                            : displaySearchOptions?.length === 3
+                            ? "grid-cols-3"
+                            : displaySearchOptions?.length === 4
+                            ? "grid-cols-4"
+                            : "grid-cols-5"
+                        } lg:flex w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity py-2.5 px-2.5 lg:py-2.5 lg:px-0 -ms-overflow-none scrollbar-none`}
                       >
                         {displaySearchOptions?.map((searchOptions, index) => {
                           const isOptionActive =
