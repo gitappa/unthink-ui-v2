@@ -901,8 +901,13 @@
 .chatmodal-figma-input-section {
   display: flex;
   /* flex-direction: column; */
-  align-items: center;
+  align-items: end;
   gap: 0.9rem;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    
+  }
 }
 
 .chatmodal-thinking-text {
@@ -1498,7 +1503,7 @@
 
 @media (min-width: 768px) {
   .chatmodal-server-image {
-    width: 404px;
+    min-width: 404px;
     height: 400px;
   }
 }
