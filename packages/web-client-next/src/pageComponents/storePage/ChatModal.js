@@ -755,12 +755,12 @@ const ChatModal = ({
                         displaySearchOptions?.length === 1
                           ? "grid-cols-1"
                           : displaySearchOptions?.length === 2
-                            ? "grid-cols-2"
+                            ? "sm:grid-cols-2 grid-cols-1"
                             : displaySearchOptions?.length === 3
-                              ? "grid-cols-3"
+                              ? " md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
                               : displaySearchOptions?.length === 4
-                                ? "grid-cols-4"
-                                : "grid-cols-5"
+                                ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
+                                : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
                       }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity py-2.5 px-2.5 lg:py-2.5 lg:px-0 -ms-overflow-none scrollbar-none`}
                     >
                       {displaySearchOptions?.map((searchOptions, index) => {
@@ -921,8 +921,8 @@ const ChatModal = ({
 
                 {(isBTNormalUserLoggedIn ||
                   isActiveSearchOptionAvailable ||
-                  !isShowAuraResponse) &&
-                !shouldMoveInputBelowResults ? (
+                  !isShowAuraResponse) 
+                 ? (
                   <div>
                     {/* {shouldUseLegacyImageSearchLayout ? ( */}
                     {/* <div
@@ -1336,7 +1336,7 @@ const ChatModal = ({
                           </div>
                         )} */}
                       {activeSearchOption && (
-                        <div className="flex justify-between items-end w-full gap-5">
+                        <div className=" flex flex-col lg:flex-row justify-between lg:items-end w-full gap-0 lg:gap-5">
                           {activeSearchOption.allow_image_search && (
                             <div
                               className={
@@ -1552,9 +1552,9 @@ const ChatModal = ({
                                 onChange={handleInputChange}
                                 onKeyDown={handlePromptKeyDown}
                                 className={`${styles["chatmodal-figma-input"]} ${
-                                  isShopByThemeOptionActive
+                                  !localChatMessage
                                     ? styles["chatmodal-figma-input-shop-theme"]
-                                    : ""
+                                    : "text-black-200 font-medium"
                                 }`}
                               />
                             </div>
@@ -1860,6 +1860,11 @@ const ChatModal = ({
               <div className={styles["chatmodal-loading-bar-container"]}>
                 <div className={styles["chatmodal-loading-bar"]}></div>
               </div>
+            )}
+            {!showChatLoader  && (
+              // <div className={styles["chatmodal-loading-bar-container"]}>
+                <div className={styles["chatmodal-content-wrapper-border"]}></div>
+              // </div>
             )}
           </div>
         </>
