@@ -3,53 +3,37 @@ name: CI unthink shop stage
 on:
   push:
     branches: 
-      - stage
+      - master
   workflow_dispatch:
 
 jobs:
   build:
-    name: Cloud Run Deployment Prod
+    name: Cloud Run Deployment Stage
     runs-on: ubuntu-latest
+
     env:
       NODE_OPTIONS: "--max_old_space_size=4096"
 
-      NEXT_PUBLIC_BACKEND_URL: "https://unthink-stage-backend-834750050334.us-central1.run.app"
-      NEXT_PUBLIC_ACCESS_KEY: "efb3f14edb5b488bb4aed81a90a791e7"
-      NEXT_PUBLIC_GA_TRACKING_ID: "G-909K3N1VM0"
-
-      NEXT_PUBLIC_STAGING_ENV: "true"
+      NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
+      NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
+      NEXT_PUBLIC_GA_TRACKING_ID: "G-HJD3FDVT7F"
+      NEXT_PUBLIC_STAGING_ENV: "false"
       NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
-
-      NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "fashiondemo"
-
-      NEXT_PUBLIC_INSTANCE_LOGO: ""
-
-      NEXT_PUBLIC_AURA_HEADER_THEME: "light"
-      NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "fashiondemo"
-
-      NEXT_PUBLIC_CURRENT_STORE_NAME: "fashiondemo"
-
-      NEXT_PUBLIC_HOME_PAGE_URL: ""
-
-      NEXT_PUBLIC_CURRENT_STORE_ID: "87353109"
-
+      NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "budgettravel"
+      NEXT_PUBLIC_INSTANCE_LOGO: "https://www.budgettravel.com/assets/bt_logo_bg.svg"
+      NEXT_PUBLIC_AURA_HEADER_THEME: "dark"
+      NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "budgettravel"
+      NEXT_PUBLIC_CURRENT_STORE_NAME: "budgettravel"
+      NEXT_PUBLIC_CURRENT_STORE_ID: "88982440"
+      NEXT_PUBLIC_HOME_PAGE_URL: "https://www.budgettravel.com"
       NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS: "false"
       NEXT_PUBLIC_ENABLE_RECOMMENDATIONS: "false"
       NEXT_PUBLIC_IS_STORE_INSTANCE: "true"
-
-      NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL: "https://aurastage.unthink.ai"
-
+      NEXT_PUBLIC_ADMIN_USER_ID: "1655192443"
+      NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL: "https://auraprod.unthink.ai"
       NEXT_PUBLIC_ENABLE_VENLY: "false"
-      NEXT_PUBLIC_VENLY_ENVIRONMENT: "staging"
-
       NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL: ""
-
-      NEXT_PUBLIC_ENABLE_TRANSFER_NFT: "false"
-
-      NEXT_PUBLIC_ADMIN_USER_ID: "170445147951739"
-
-      NEXT_PUBLIC_PDP_PAGE_ENABLED: "true"
-
+      NEXT_PUBLIC_PDP_PAGE_ENABLED: "false"
       NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
 
     steps:
@@ -67,7 +51,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
         working-directory: "packages/web-client-next"
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --legacy-peer-deps
       - name: Setup and run build on app
         working-directory: "packages/web-client-next"
@@ -93,6 +77,7 @@ jobs:
           --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-stage-ui-v2 \
           --build-arg NEXT_PUBLIC_BACKEND_URL=${{ env.NEXT_PUBLIC_BACKEND_URL }} \
           --build-arg NEXT_PUBLIC_ACCESS_KEY=${{ env.NEXT_PUBLIC_ACCESS_KEY }} \
+          --build-arg NEXT_PUBLIC_GA_TRACKING_ID=${{ env.NEXT_PUBLIC_GA_TRACKING_ID }} \
           --build-arg NEXT_PUBLIC_STAGING_ENV=${{ env.NEXT_PUBLIC_STAGING_ENV }} \
           --build-arg NEXT_PUBLIC_IS_KIOSK_ENABLED=${{ env.NEXT_PUBLIC_IS_KIOSK_ENABLED }} \
           --build-arg NEXT_PUBLIC_SUPER_ADMIN_USER_NAME=${{ env.NEXT_PUBLIC_SUPER_ADMIN_USER_NAME }} \
@@ -109,6 +94,9 @@ jobs:
           --build-arg NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL=${{ env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL }} \
           --build-arg NEXT_PUBLIC_PDP_PAGE_ENABLED=${{ env.NEXT_PUBLIC_PDP_PAGE_ENABLED }} \
           --build-arg NEXT_PUBLIC_PAYMENT_URL=${{ env.NEXT_PUBLIC_PAYMENT_URL }} \
+          --build-arg NEXT_PUBLIC_INSTANCE_LOGO=${{ env.NEXT_PUBLIC_INSTANCE_LOGO }} \
+          --build-arg NEXT_PUBLIC_HOME_PAGE_URL=${{ env.NEXT_PUBLIC_HOME_PAGE_URL }} \
+          
           -f packages/web-client-next/Dockerfile .
       
       - name: Push

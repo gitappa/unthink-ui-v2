@@ -268,7 +268,7 @@
   font-weight: 600;
   cursor: pointer;
   background-color: #ffffff;
-  min-height: 8.75rem;
+  min-height: 11rem;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -310,7 +310,7 @@
   flex-direction: column;
   gap: 0.2rem;
   padding: 0 0 0.75rem;
-  width: 70%;
+  /* width: 70%; */
 }
 
 .chatmodal-search-option-text-content-active {
@@ -319,7 +319,7 @@
 
 .chatmodal-search-option-title {
   margin: 0;
-  font-size: clamp(1.05rem, 1.15vw, 1.45rem);
+  font-size: clamp(1.05rem, 1.04vw, 1.45rem);
   line-height: 1.2;
   color: #29324d;
   letter-spacing: -0.01em;
@@ -364,10 +364,15 @@
   margin: 0;
   color: #3f4a6a;
   font-size: clamp(0.82rem, 0.88vw, 1.1rem);
-  line-height: 1.32;
-  max-width: 12.8ch;
+  line-height: 1.12;
+  max-width: 100%;
   display: block;
   font-weight: 500;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .chatmodal-search-option-subtitle-active {
@@ -375,15 +380,15 @@
 }
 
 .chatmodal-search-option-image-wrapper {
-  width: 45%;
-  height: 5.75rem;
+  width: 100%;
+  height: 5.5rem;
   position: relative;
-  margin-right: -0.82rem;
-  margin-bottom: -0.04rem;
+  margin-right: 0;
+  margin-bottom: 0;
   transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   position: absolute;
-  right: 5px;
-  bottom: 4px;
+  right: 0;
+  bottom: 0;
 }
 
 .chatmodal-search-option-image-collage-default {
@@ -422,12 +427,13 @@
     filter 0.28s ease;
 }
 
+/* Original code for below 1024px - NO ANIMATION */
 .chatmodal-search-option-image-one {
   width: 90px;
   height: 90px;
-  left: -0.2rem;
+  left: 1rem;
   bottom: 0.5rem;
-  transform: translate3d(0, 0, 0) rotate(0deg);
+  transform: none;
 }
 
 .chatmodal-search-option-image-two {
@@ -435,8 +441,9 @@
   height: 90px;
   left: 50px;
   bottom: 10px;
-  transform: translate3d(0, 0, 0) rotate(0deg);
   z-index: 1;
+  display: none;
+  transform: none;
 }
 
 .chatmodal-search-option-image-three {
@@ -444,42 +451,101 @@
   height: 90px;
   right: -0.04rem;
   bottom: -28px;
-  transform: translate3d(0, 0, 0) rotate(0deg);
+  display: none;
+  transform: none;
 }
 
-.chatmodal-search-option-card-active .chatmodal-search-option-image {
-  /* box-shadow: 0 9px 16px rgba(22, 21, 53, 0.3); */
-}
-
+/* NO HOVER ANIMATIONS BELOW 1024px */
 .chatmodal-search-option-card:hover .chatmodal-search-option-image-one,
 .chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-one,
 .chatmodal-search-option-card-active .chatmodal-search-option-image-one {
-  transform: translate3d(-2.59rem, 0.66rem, 0) rotate(-20deg);
+  transform: none;
 }
 
 .chatmodal-search-option-card:hover .chatmodal-search-option-image-two,
 .chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-two,
 .chatmodal-search-option-card-active .chatmodal-search-option-image-two {
-  transform: translate3d(-0.28rem, 0.4rem, 0) rotate(5deg);
+  transform: none;
 }
 
 .chatmodal-search-option-card:hover .chatmodal-search-option-image-three,
-.chatmodal-search-option-card:focus-visible
-  .chatmodal-search-option-image-three,
+.chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-three,
 .chatmodal-search-option-card-active .chatmodal-search-option-image-three {
-  transform: translateY(-20px) rotate(-15deg);
+  transform: none;
 }
+
+.chatmodal-search-option-card-active .chatmodal-search-option-image {
+  box-shadow: 0 9px 16px rgba(22, 21, 53, 0.15);
+}
+
+/* NEW: Three images with animation at 1024px and above */
 @media (min-width: 1024px) {
-  .chatmodal-search-option-card {
-    /* width: 180px;
-    min-width: 190px; */
-    justify-content: center;
+  .chatmodal-search-option-image-one {
+    width: 75px;
+    height: 75px;
+    left: 5px;
+    bottom: 8px;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .chatmodal-search-option-image-two {
+    display: block;
+    width: 75px;
+    height: 75px;
+    right: 5px;
+    bottom: 8px;
+    left: auto;
+    z-index: 1;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .chatmodal-search-option-image-three {
+    display: block;
+    width: 75px;
+    height: 75px;
+    left: 50%;
+    bottom: -30px;
+    z-index: 2;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateX(-50%);
+  }
+
+  /* ANIMATIONS ONLY FOR 1024px and above */
+  .chatmodal-search-option-card:hover .chatmodal-search-option-image-one,
+  .chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-one,
+  .chatmodal-search-option-card-active .chatmodal-search-option-image-one {
+    transform: translate3d(-1.5rem, 0.5rem, 0) rotate(-15deg);
+  }
+
+  .chatmodal-search-option-card:hover .chatmodal-search-option-image-two,
+  .chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-two,
+  .chatmodal-search-option-card-active .chatmodal-search-option-image-two {
+    transform: translate3d(1.5rem, 0.5rem, 0) rotate(15deg);
+  }
+
+  .chatmodal-search-option-card:hover .chatmodal-search-option-image-three,
+  .chatmodal-search-option-card:focus-visible .chatmodal-search-option-image-three,
+  .chatmodal-search-option-card-active .chatmodal-search-option-image-three {
+    transform: translateX(-50%) translateY(-10px);
   }
 }
+
+/* Desktop - 1024px and above: Enhanced styling with animations */
+@media (min-width: 1024px) {
+  .chatmodal-search-option-card {
+    min-height: 11rem;
+    justify-content: center;
+  }
+
+  .chatmodal-search-option-image-wrapper {
+    height: 6rem;
+    width: 100%;
+  }
+}
+
 @media (min-width: 1204px) {
   .chatmodal-search-option-card {
-    /* width: 212px;
-    min-width: 212px; */
+    min-height: 11rem;
   }
 }
 
@@ -487,7 +553,7 @@
   .chatmodal-search-option-card {
     /* width: 14.5rem;
     min-width: 14.5rem; */
-    min-height: 8.5rem;
+    min-height: 10rem;
     padding-top: 0.875rem;
   }
 
@@ -502,25 +568,57 @@
   }
 
   .chatmodal-search-option-image-wrapper {
-    height: 4.9rem;
-    width: 46%;
+    height: 5rem;
+    width: 100%;
   }
 
   .chatmodal-search-option-image-one {
-    width: 3.5rem;
-    height: 3.25rem;
-    left: -0.05rem;
+    width: 60px;
+    height: 60px;
+    left: 10px;
+    bottom: 10px;
   }
 
   .chatmodal-search-option-image-two {
-    width: 2.9rem;
-    height: 2.25rem;
-    left: 2rem;
+    width: 60px;
+    height: 60px;
+    left: auto;
+    right: 10px;
+    bottom: 10px;
+    display: block;
   }
 
   .chatmodal-search-option-image-three {
-    width: 2.1rem;
-    height: 3.9rem;
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
+/* Optimize for 624px and below - show single image for better viewing */
+@media (max-width: 623px) {
+  .chatmodal-search-option-card {
+    min-height: 9.5rem;
+  }
+
+  .chatmodal-search-option-image-wrapper {
+    height: 4.5rem;
+  }
+
+  .chatmodal-search-option-image-one {
+    width: 80px;
+    height: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 8px;
+  }
+
+  .chatmodal-search-option-image-two {
+    display: none;
+  }
+
+  .chatmodal-search-option-image-three {
+    display: none;
   }
 }
 
@@ -901,8 +999,13 @@
 .chatmodal-figma-input-section {
   display: flex;
   /* flex-direction: column; */
-  align-items: center;
+  align-items: end;
   gap: 0.9rem;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    
+  }
 }
 
 .chatmodal-thinking-text {
@@ -1131,8 +1234,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  min-width: 400px;
+  
   margin: 0 auto;
+  @media (min-width: 1024px) {
+   min-width: 400px;
+    
+  }
 }
 
 .chatmodal-figma-upload-section {
@@ -1498,7 +1605,7 @@
 
 @media (min-width: 768px) {
   .chatmodal-server-image {
-    width: 404px;
+    min-width: 404px;
     height: 400px;
   }
 }

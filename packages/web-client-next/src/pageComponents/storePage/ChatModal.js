@@ -833,7 +833,7 @@ const ChatModal = ({
                                 </div>
                                 {isOptionActive &&
                                   searchOptions?.text_example && (
-                                    <div className="flex justify-center w-full pb-2">
+                                    <div className="flex w-full pb-2 justify-center">
                                       <button
                                         type="button"
                                         onClick={(e) => {
@@ -1336,6 +1336,72 @@ const ChatModal = ({
                           </div>
                         )} */}
                       {activeSearchOption && (
+                        <>
+                                {auraServerImage &&
+                      activeSearchOption.id === "smart_search" && (
+                        <>
+                          {!showChatLoader ? (
+                            <div
+                              style={{ width: "fit-content" ,position:'relative'}}
+                              className={
+                                styles["chatmodal-figma-upload-popover "]
+                              }
+                            >
+                              {/* Image */}
+                              <img
+                                className={styles["chatmodal-server-image"]}
+                                src={auraServerImage}
+                                alt="Aura Image"
+                              />
+                              {/* Overlay Points */}
+                              {Array.isArray(auraOverlayCoordinates) &&
+                                auraOverlayCoordinates.map((item, index) => {
+                                  const adjustedX =
+                                    (item.point[0] / originalWidth) * newWidth;
+                                  const adjustedY =
+                                    (item.point[1] / originalHeight) *
+                                    newHeight;
+
+                                  return (
+                                    <Tooltip
+                                      key={index}
+                                      title={item.attributes.label}
+                                      color="blue"
+                                    >
+                                      <div
+                                        onClick={() =>
+                                          handleSuggestionClick(
+                                            item.attributes.label,
+                                          )
+                                        }
+                                        className={
+                                          styles["chatmodal-overlay-point"]
+                                        }
+                                        style={{
+                                          left: `${adjustedX}px`,
+                                          top: `${adjustedY}px`,
+                                          boxShadow:
+                                            "0 0 10px rgba(0, 123, 255, 0.8)", // Blue shining glow effect
+                                        }}
+                                      />
+                                    </Tooltip>
+                                  );
+                                })}
+                            </div>
+                          ) : (
+                            <div
+                              className={
+                                styles[
+                                  "chatmodal-server-image-spinner-container"
+                                ]
+                              }
+                            >
+                              <Spin size="large" />
+                            </div>
+                          )}
+                        </>
+                      )}
+
                         <div className=" flex flex-col lg:flex-row justify-between lg:items-end w-full gap-0 lg:gap-5">
                           {activeSearchOption.allow_image_search && (
                             <div
@@ -1347,6 +1413,7 @@ const ChatModal = ({
                                 ]
                               }
                             >
+                          
                               {chatImageUrl ? (
                                 <div
                                   className={
@@ -1656,7 +1723,10 @@ const ChatModal = ({
                             </div>
                           </div>
                         </div>
-                      )}
+                        </>
+
+                      )
+                      }
                     </div>
                     {/* // )} */}
                     {isShowFollowUpSearch || isShowTryAgain ? (
@@ -1747,70 +1817,7 @@ const ChatModal = ({
                       </div>
                     ) : null}
 
-                    {auraServerImage &&
-                      activeSearchOption.id === "smart_search" && (
-                        <>
-                          {!showChatLoader ? (
-                            <div
-                              style={{ width: "fit-content" }}
-                              className={
-                                styles["chatmodal-server-image-container"]
-                              }
-                            >
-                              {/* Image */}
-                              <img
-                                className={styles["chatmodal-server-image"]}
-                                src={auraServerImage}
-                                alt="Aura Image"
-                              />
-                              {/* Overlay Points */}
-                              {Array.isArray(auraOverlayCoordinates) &&
-                                auraOverlayCoordinates.map((item, index) => {
-                                  const adjustedX =
-                                    (item.point[0] / originalWidth) * newWidth;
-                                  const adjustedY =
-                                    (item.point[1] / originalHeight) *
-                                    newHeight;
-
-                                  return (
-                                    <Tooltip
-                                      key={index}
-                                      title={item.attributes.label}
-                                      color="blue"
-                                    >
-                                      <div
-                                        onClick={() =>
-                                          handleSuggestionClick(
-                                            item.attributes.label,
-                                          )
-                                        }
-                                        className={
-                                          styles["chatmodal-overlay-point"]
-                                        }
-                                        style={{
-                                          left: `${adjustedX}px`,
-                                          top: `${adjustedY}px`,
-                                          boxShadow:
-                                            "0 0 10px rgba(0, 123, 255, 0.8)", // Blue shining glow effect
-                                        }}
-                                      />
-                                    </Tooltip>
-                                  );
-                                })}
-                            </div>
-                          ) : (
-                            <div
-                              className={
-                                styles[
-                                  "chatmodal-server-image-spinner-container"
-                                ]
-                              }
-                            >
-                              <Spin size="large" />
-                            </div>
-                          )}
-                        </>
-                      )}
+                
 
                     {/* // REMOVE */}
                     {/* <div className='my-4 px-8 w-full flex'>
