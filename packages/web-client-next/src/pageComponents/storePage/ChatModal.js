@@ -833,7 +833,7 @@ const ChatModal = ({
                                 </div>
                                 {isOptionActive &&
                                   searchOptions?.text_example && (
-                                    <div className="flex w-full pb-2">
+                                    <div className="flex w-full pb-2 justify-center">
                                       <button
                                         type="button"
                                         onClick={(e) => {
