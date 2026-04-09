@@ -230,8 +230,8 @@
   display: block;
   border: 1px solid #d2cafb;
   /* box-shadow: 0 8px 18px rgba(34, 48, 84, 0.05); */
-  width: 204px;
-  min-width: 204px;
+  /* width: 204px;
+  min-width: 204px; */
   border-radius: 1.5rem;
   padding: 1rem 0.88rem 0;
   text-align: left;
@@ -441,22 +441,22 @@
 }
 @media (min-width: 1024px) {
   .chatmodal-search-option-card {
-    width: 180px;
-    min-width: 190px;
+    /* width: 180px;
+    min-width: 190px; */
     justify-content: center;
   }
 }
 @media (min-width: 1204px) {
   .chatmodal-search-option-card {
-    width: 212px;
-    min-width: 212px;
+    /* width: 212px;
+    min-width: 212px; */
   }
 }
 
 @media (max-width: 767px) {
   .chatmodal-search-option-card {
-    width: 14.5rem;
-    min-width: 14.5rem;
+    /* width: 14.5rem;
+    min-width: 14.5rem; */
     min-height: 8.5rem;
     padding-top: 0.875rem;
   }
