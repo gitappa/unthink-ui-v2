@@ -11,7 +11,7 @@ jobs:
     name: Cloud Run Deployment Stage
     runs-on: ubuntu-latest
 
-    env:
+    env: 
       NODE_OPTIONS: "--max_old_space_size=4096"
 
       NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
