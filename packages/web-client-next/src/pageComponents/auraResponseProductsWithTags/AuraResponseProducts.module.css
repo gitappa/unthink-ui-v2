@@ -223,39 +223,8 @@
   color: #94A3B8;
 }
 
-/* Products Grid */
-.aura-products-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.625rem;
-}
-
-@media (min-width: 640px) {
-  .aura-products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .aura-products-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 1536px) {
-  .aura-products-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .aura-products-grid {
-    gap: 1rem;
-  }
-}
+/* Products Grid - Converted to Tailwind */
+/* .aura-products-grid uses Tailwind classes: grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[0.625rem] sm:gap-3 lg:gap-4 */
 
 /* Loading State */
 .aura-products-loading-container {
