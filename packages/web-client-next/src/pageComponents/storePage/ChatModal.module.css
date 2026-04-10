@@ -552,8 +552,8 @@
   .chatmodal-search-option-card {
     /* width: 14.5rem;
     min-width: 14.5rem; */
-    min-height: 10rem;
-    padding-top: 0.875rem;
+    /* min-height: 10rem; */
+    /* padding-top: 0.875rem; */
   }
 
   .chatmodal-search-option-title {
@@ -568,7 +568,7 @@
 
   .chatmodal-search-option-image-wrapper {
     height: 5rem;
-    width: 100%;
+    /* width: 100%; */
   }
 
   .chatmodal-search-option-image-one {
@@ -596,9 +596,9 @@
 
 /* Optimize for 624px and below - show single image for better viewing */
 @media (max-width: 623px) {
-  .chatmodal-search-option-card {
+  /* .chatmodal-search-option-card {
     min-height: 9.5rem;
-  }
+  } */
 
   .chatmodal-search-option-image-wrapper {
     height: 4.5rem;
