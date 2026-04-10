@@ -735,10 +735,10 @@ const ChatModal = ({
               <div
                 className={
                   styles[
-                    isFigmaUploadPanelOpen ||
-                      (chatImageUrl &&
-                        !isShowSubmittedChatPreview &&
-                        !isShowAuraResponse) ||
+                    // isFigmaUploadPanelOpen ||
+                    //   (chatImageUrl &&
+                    //     !isShowSubmittedChatPreview &&
+                    //     !isShowAuraResponse) ||
                       // isUploadingImage ||
 
                       "chatmodal-content-max-width"
@@ -786,7 +786,7 @@ const ChatModal = ({
                               isOptionActive
                                 ? styles["chatmodal-search-option-card-active"]
                                 : ""
-                            } relative`}
+                            } relative flex items-center gap-2`}
                             onClick={() => handleSetSearchOption(searchOptions)}
                             role="button"
                             tabIndex={0}
@@ -797,6 +797,15 @@ const ChatModal = ({
                               }
                             }}
                           >
+                            <div
+                              className={`${styles["chatmodal-search-option-image-wrapper"]} flex-shrink-0`}
+                            >
+                              <img
+                                src={previewImageSrc}
+                                className={styles["chatmodal-search-option-image"]}
+                                alt={searchOptions.title}
+                              />
+                            </div>
                             <div
                               className={
                                 styles["chatmodal-search-option-content"]
@@ -835,7 +844,7 @@ const ChatModal = ({
                                 </div>
                                 {isOptionActive &&
                                   searchOptions?.text_example && (
-                                    <div className="flex w-full pb-2 justify-center">
+                                    <div className="flex w-full pb-2 justify-start">
                                       <button
                                         type="button"
                                         onClick={(e) => {
@@ -849,25 +858,6 @@ const ChatModal = ({
                                       </button>
                                     </div>
                                   )}
-                              </div>
-                              <div
-                                className={`${styles["chatmodal-search-option-image-wrapper"]} ${collageVariantClass}`}
-                              >
-                                <img
-                                  src={previewImageSrc}
-                                  className={`${styles["chatmodal-search-option-image"]} ${styles["chatmodal-search-option-image-one"]}`}
-                                  alt={searchOptions.title}
-                                />
-                                <img
-                                  src={getImageSrc(auraCardTwo)}
-                                  className={`${styles["chatmodal-search-option-image"]} ${styles["chatmodal-search-option-image-two"]}`}
-                                  alt={searchOptions.title}
-                                />
-                                <img
-                                  src={getImageSrc(auraCardThree)}
-                                  className={`${styles["chatmodal-search-option-image"]} ${styles["chatmodal-search-option-image-three"]}`}
-                                  alt={searchOptions.title}
-                                />
                               </div>
                             </div>
                           </div>
