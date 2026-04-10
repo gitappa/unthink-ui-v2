@@ -702,6 +702,7 @@ const ChatModal = ({
               {/* {!isShowAuraResponse &&
               !isFigmaUploadPanelOpen &&
               !chatImageUrl ? ( */}
+              {!isSearchOptionManuallySelected &&
               <div className={styles["chatmodal-header-section"]}>
                 <div className={styles["chatmodal-header-row"]}>
                   <img
@@ -728,6 +729,7 @@ const ChatModal = ({
                   </div>
                 </div>
               </div>
+                }
               {/* ) : null} */}
 
               <div
