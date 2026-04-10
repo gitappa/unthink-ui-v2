@@ -1308,7 +1308,7 @@
 }
 
 .chatmodal-figma-image-preview {
-  width: 100%;
+  width: 375px;
   max-width: 375px;
   height: auto;
   max-height: 315px;
