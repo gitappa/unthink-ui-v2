@@ -745,10 +745,11 @@ const ChatModal = ({
                   ]
                 }
               >
-                <p className={styles["chatmodal-header-subtext"]}>
+                {!isSearchOptionManuallySelected &&
+                                <p className={styles["chatmodal-header-subtext"]}>
                   Choose one to get started
                 </p>
-
+                }
                 {!isBTNormalUserLoggedIn ? (
                   <>
                     {/* {!isFigmaUploadPanelOpen && !chatImageUrl && ( */}
@@ -763,7 +764,7 @@ const ChatModal = ({
                               : displaySearchOptions?.length === 4
                                 ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
                                 : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
-                      }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity py-2.5 px-2.5 lg:py-2.5 lg:px-0 -ms-overflow-none scrollbar-none`}
+                      }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity  -ms-overflow-none scrollbar-none`}
                     >
                       {displaySearchOptions?.map((searchOptions, index) => {
                         const isOptionActive =
