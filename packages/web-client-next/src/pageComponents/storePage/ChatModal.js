@@ -393,9 +393,9 @@ const ChatModal = ({
   const searchOptionPreviewImages = useMemo(
     () => ({
       [CHAT_SEARCH_OPTION_ID.shop_a_look]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.complete_the_look]: auraCardTwo,
-      [CHAT_SEARCH_OPTION_ID.smart_search]: auraCardOne,
-      [CHAT_SEARCH_OPTION_ID.product_search]: auraCardOne,
+      [CHAT_SEARCH_OPTION_ID.complete_the_look]: auraCardThree,
+      [CHAT_SEARCH_OPTION_ID.smart_search]: auraCardThree,
+      [CHAT_SEARCH_OPTION_ID.product_search]: auraCardThree,
     }),
     [],
   );
@@ -772,7 +772,7 @@ const ChatModal = ({
                           shouldHighlightActiveSearchOption;
                         const previewImage =
                           searchOptionPreviewImages[searchOptions.id] ||
-                          [auraCardOne, auraCardTwo, auraCardThree][index % 3];
+                          [auraCardOne, auraCardThree, auraCardThree][index % 3];
                         const previewImageSrc = getImageSrc(previewImage);
                         const collageVariantClass =
                           cardCollageVariants[searchOptions.id] ||
@@ -1856,7 +1856,7 @@ const ChatModal = ({
 								) : null} */}
               </div>
             </div>
-            {showChatLoader && localChatMessage && (
+            {showChatLoader && (localChatMessage || chatImageUrl) && (
               <div className={styles["chatmodal-loading-bar-container"]}>
                 <div className={styles["chatmodal-loading-bar"]}></div>
               </div>
