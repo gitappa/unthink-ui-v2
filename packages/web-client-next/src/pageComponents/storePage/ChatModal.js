@@ -1395,7 +1395,7 @@ const ChatModal = ({
                         </>
                       )}
 
-                        <div className=" flex flex-col lg:flex-row justify-between lg:items-end w-full gap-0 lg:gap-5">
+                        <div className=" flex flex-col lg:flex-row justify-between mt-2 lg:items-start w-full gap-0 lg:gap-5">
                           {activeSearchOption.allow_image_search && (
                             <div
                               className={
@@ -1579,6 +1579,7 @@ const ChatModal = ({
                               )}
                             </div>
                           )}
+                          <div className="w-full">
                           <div
                             className={`${styles["chatmodal-figma-input-card"]} ${
                               chatImageUrl
@@ -1715,6 +1716,24 @@ const ChatModal = ({
                               </button>
                             </div>
                           </div>
+                          {showChatLoader && (localChatMessage || chatImageUrl) && (
+                            <>
+                              <p className="mt-4 ml-1.25 ">sure! Give me a few moments. Now crafting related products.</p>
+                              <p className={styles["chatmodal-thinking-text"]}>
+                                Thinking
+                                <span
+                                  className={styles["chatmodal-thinking-dots"]}
+                                  aria-hidden="true"
+                                >
+                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                </span>
+                              </p>
+                            </>
+                         ) }
+                          </div>
+
                         </div>
                         </>
 
