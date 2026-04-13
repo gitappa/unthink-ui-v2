@@ -156,7 +156,7 @@ const ProductCard = ({
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
   const menuRef = useRef(null);
-  // console.log(menuIcon);
+  // console.log('collectionCards',product);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -180,6 +180,7 @@ const ProductCard = ({
     customProductsData,
     ButtonClick,
     isUserLogin,
+    collections
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -190,9 +191,10 @@ const ProductCard = ({
     state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick,
     state?.auth?.user?.isUserLogin,
+     state.auth.user.collections.data,
   ]);
 
-  // console.log('authUser', authUser);
+  // console.log('collectionsSSW', collections);
   const [storeData] = useSelector((state) => [state.store.data]);
   const { admin_list: admin_list } = storeData;
   // pdp_settings
@@ -560,7 +562,7 @@ const ProductCard = ({
       store: storeData.store_name,
       image_tryon_prompt: image_try || "",
       additional_prompt: descriptionget || "",
-      type: "tryon",
+      type: collections?.tryon_type || "tryon",
     };
     try {
       setLoading(true);

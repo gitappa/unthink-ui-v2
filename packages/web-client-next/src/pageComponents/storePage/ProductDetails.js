@@ -94,6 +94,7 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
+    
 
   ]);
 
@@ -472,7 +473,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
       store: storeData.store_name,
       image_tryon_prompt: storeData?.templates?.try_in_your_room || "",
       additional_prompt: descriptionget || "",
-      type: "tryon",
+      type: collection?.tryon_type || "tryon",
     };
     try {
       setLoading(true);
@@ -1072,7 +1073,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                   <p>
                     Scan the QR code with your phone to try this piece on
-                    virtually using augmented reality.
+                    virtually.
                   </p>
                 </div>
 }
