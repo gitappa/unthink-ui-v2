@@ -50,7 +50,7 @@ jobs:
 
       NEXT_PUBLIC_PDP_PAGE_ENABLED: "true"
 
-      NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
+      NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-stage-314035436999.us-central1.run.app"
 
     steps:
       - name: Checkout
