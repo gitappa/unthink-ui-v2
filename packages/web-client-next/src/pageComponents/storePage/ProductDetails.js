@@ -94,6 +94,7 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
+    
 
   ]);
 
@@ -470,9 +471,9 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
     const payload = {
       image_urls: [productDetails.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: image_try || "",
+      image_tryon_prompt: storeData?.templates?.try_in_your_room || "",
       additional_prompt: descriptionget || "",
-      type: "tryon",
+      type: collection?.tryon_type || "tryon",
     };
     try {
       setLoading(true);
@@ -935,7 +936,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     </div>
                   </div>
                 ) : null}
-                {storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button &&
+                {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) &&
                   <div className="mt-8 ">
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       {storeData?.pdp_settings?.is_add_to_cart_button && (
@@ -1052,6 +1053,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
                 )} */}
+                {storeData?.is_tryon_enabled &&
                 <div
                   className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
                   onClick={(e) => {
@@ -1071,10 +1073,10 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                   <p>
                     Scan the QR code with your phone to try this piece on
-                    virtually using augmented reality.
+                    virtually.
                   </p>
                 </div>
-
+}
                 {/* <div className="">
                   <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
