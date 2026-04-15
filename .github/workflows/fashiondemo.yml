@@ -47,11 +47,11 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
-        working-directory: "packages/web-client-next"
-        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: "web-client-next"
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --legacy-peer-deps
       - name: Setup and run build on app
-        working-directory: "packages/web-client-next"
+        working-directory: "web-client-next"
         run: npm run build
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
@@ -90,7 +90,7 @@ jobs:
           --build-arg NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL=${{ env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL }} \
           --build-arg NEXT_PUBLIC_PDP_PAGE_ENABLED=${{ env.NEXT_PUBLIC_PDP_PAGE_ENABLED }} \
           --build-arg NEXT_PUBLIC_PAYMENT_URL=${{ env.NEXT_PUBLIC_PAYMENT_URL }} \
-          -f packages/web-client-next/Dockerfile .
+          -f web-client-next/Dockerfile .
       
       - name: Push
         #working-directory: "packages/web-client-next"
