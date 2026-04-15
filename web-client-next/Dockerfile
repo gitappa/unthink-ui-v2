@@ -45,9 +45,9 @@ ENV NEXT_PUBLIC_PAYMENT_URL=$NEXT_PUBLIC_PAYMENT_URL
 ENV NEXT_PUBLIC_INSTANCE_LOGO=$NEXT_PUBLIC_INSTANCE_LOGO
 ENV NEXT_PUBLIC_HOME_PAGE_URL=$NEXT_PUBLIC_HOME_PAGE_URL
 
-COPY packages/web-client-next/package*.json ./
+COPY web-client-next/package*.json ./
 RUN npm ci --legacy-peer-deps
-COPY packages/web-client-next/ .
+COPY web-client-next/ .
 RUN npm run build
 
 #### Production server environment

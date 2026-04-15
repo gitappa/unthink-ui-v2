@@ -67,7 +67,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependency
         working-directory: "web-client-next"
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --legacy-peer-deps
       - name: Setup and run build on app
         working-directory: "web-client-next"
