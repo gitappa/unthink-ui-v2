@@ -326,7 +326,7 @@ const SingleCollectionProductListView = ({
           >
             {!isSingleCollectionSharedPage && productsData.length ? (
               <div
-                className={`${styles.seeFullRow} ${styles.mobileViewCollectionStickyRow}`}
+                className={`${styles.seeFullRow} ${blogCollectionPage?.cover_image ? styles.mobileViewCollectionStickyRow : styles.mobileViewCollectionStickyNocover}`}
               >
                 <div className="flex items-center gap-2" />
 

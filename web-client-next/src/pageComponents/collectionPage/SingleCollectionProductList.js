@@ -229,7 +229,7 @@ const url = window.location.pathname === '/my-profile/'
 
       setMobileCoverHeight(
         videoContainerRef.current
-          ? Math.ceil(videoContainerRef.current.getBoundingClientRect().height)
+          ? Math.ceil(videoContainerRef.current.getBoundingClientRect().height) - 2
           : 0,
       );
     };
