@@ -564,7 +564,7 @@ const ProductCard = ({
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.try_in_your_room || "",
+      image_tryon_prompt: storeData?.templates?.image_try_on || "",
       additional_prompt: descriptionget || "",
       type: singleCollections?.tryon_type || "tryon",
     };

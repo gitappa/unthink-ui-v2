@@ -2070,9 +2070,20 @@ color: #99A1AF;
     top: calc(
       var(--single-collection-sticky-top, 0px) +
       var(--single-collection-details-height, 0px) +
-      var(--single-collection-cover-height, 0px)
+      var(--single-collection-cover-height, 0px) 
     );
     z-index: 38;
+    background-color: #ffffff;
+    margin-bottom: 4px;
+  }
+  .mobileViewCollectionStickyNocover{
+    position: sticky;
+    top:calc(
+      var(--single-collection-sticky-top, 0px) +
+      var(--single-collection-details-height, 0px) 
+      var(--single-collection-cover-height, 0px) -2px
+    );    
+      z-index: 38;
     background-color: #ffffff;
     margin-bottom: 4px;
   }
