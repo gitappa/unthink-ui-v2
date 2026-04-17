@@ -1038,12 +1038,12 @@ const CollectionDetails = ({
               (updateWishlistInProgress ? (
                 <Spin className={styles.spinLeft} />
               ) : collection.status === DONE ? (
-                <CustomTooltip
-                  messageText="Publish your first collection and join the Unthink creator club!"
-                  onClose={() => setPublishButtonTooltipOpen(false)}
-                  visible={publishButtonTooltipOpen}
-                  overlayClassName="max-w-640"
-                >
+                // <CustomTooltip
+                //   messageText="Publish your first collection and join the Unthink creator club!"
+                //   onClose={() => setPublishButtonTooltipOpen(false)}
+                //   visible={publishButtonTooltipOpen}
+                //   overlayClassName="max-w-640"
+                // >
                   <button
                     className={styles.actionButton}
                     onClick={handlePublishCollection}
@@ -1051,7 +1051,7 @@ const CollectionDetails = ({
                   >
                     Publish
                   </button>
-                </CustomTooltip>
+                // </CustomTooltip>
               ) : (
                 collection.status === PUBLISHED && (
                   <button

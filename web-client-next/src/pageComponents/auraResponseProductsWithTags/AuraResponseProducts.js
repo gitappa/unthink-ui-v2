@@ -660,7 +660,7 @@ const AuraResponseProducts = ({
 	const handleGuestSkip = async () => {
 
 		if (guestActionRef.current === "share") {
-			onAddSelectedProductsToCollection({ isShare: true, isSkip: true });
+			onAddSelectedProductsToCollection(null,{ isShare: true, isSkip: true });
 		}
 		dispatch(GuestPopUpShow(false));
 	};
@@ -707,9 +707,9 @@ const AuraResponseProducts = ({
 							expires: SIGN_IN_EXPIRE_DAYS,
 						});
 						if (guestActionRef.current === "save") {
-							onAddSelectedProductsToCollection( { isSave: true });
+							onAddSelectedProductsToCollection(null, { isSave: true });
 						} else if (guestActionRef.current === "share") {
-							onAddSelectedProductsToCollection( { isShare: true });
+							onAddSelectedProductsToCollection(null, { isShare: true });
 						}
 					}
 				} catch (error) {
