@@ -68,7 +68,7 @@ const ContextWrapper = ({ children }) => {
 		state.chatV2.userDataSent,
 		state.chatV2.isFreshSearch,
 	]);
-	// console.log(user);
+	// console.log('socketId',socketId);
 	
 	const dispatch = useDispatch();
 	const { onTrackStream } = useAudio(isAuraSpeaking);
@@ -164,7 +164,11 @@ const ContextWrapper = ({ children }) => {
 			// if (user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length) {
 				// userInfo["filters"] = user.data.filters?.[current_store_name];
 			// }
-	if (user?.data.filters && user?.data.filters?.[current_store_name]?.strict?.brand?.length) {
+			// console.log(user?.data.filters);
+			// console.log('dfdfddgf',user?.data.filters?.[current_store_name]?.strict?.brand?.length);
+			
+			
+	if (user?.data.filters ) {
 				userInfo["filters"] = user.data.filters?.[current_store_name];
 			}
 
@@ -189,7 +193,7 @@ const ContextWrapper = ({ children }) => {
 			dispatch(setUserDataSent(true));
 			resendMessage(); //
 		}
-	}, [socketId]);
+	}, [socketId,user.data.filters]);
 
 	const handleSocketConnection = useCallback(() => {
 		// being called on socket reconnection
