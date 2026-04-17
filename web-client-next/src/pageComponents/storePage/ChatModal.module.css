@@ -998,7 +998,7 @@
 .chatmodal-figma-input-section {
   display: flex;
   /* flex-direction: column; */
-  align-items: end;
+  /* align-items: end; */
   gap: 0.9rem;
   @media (max-width: 1024px) {
     flex-direction: column;
