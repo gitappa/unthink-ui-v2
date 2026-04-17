@@ -90,7 +90,7 @@ const SwiftlyMobileHeader = ({
         <div className="flex items-center gap-2.5">
           <button
             className={styles.collectionButton}
-            style={{ color: "#4F4F4F" ,fontWeight:700,fontSize:14,fontFamily:''}}
+            style={{ color: "#4F4F4F" ,fontWeight:600,fontSize:14,fontFamily:''}}
             onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
           >
 

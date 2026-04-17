@@ -2803,14 +2803,14 @@ const isNewCollection = router.query.isNewCollection === "true";
 	const handlePreviewCollectionPage = useCallback(async () => {
 		await handleSaveCurrentView();
 
-		if (isNewCollection) {
-			await navigate("", {
-				replace: true, // replace the current page in history // avoid adding new visit in history
-				state: {
-					isNewCollection: false, // reset // to avoid considering it as new on refresh or coming back
-				},
-			});
-		}
+		// if (isNewCollection) {
+		// 	await navigate("", {
+		// 		replace: true, // replace the current page in history // avoid adding new visit in history
+		// 		state: {
+		// 			isNewCollection: false, // reset // to avoid considering it as new on refresh or coming back
+		// 		},
+		// 	});
+		// }
 
 		// await navigate(pageRedirectPath);
 		window.open(pageRedirectPath, "_blank"); // opening in new tab for now // can be changed
@@ -3617,6 +3617,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 				cancelText: "Cancel",
 				onOk: () => {
 					handleDeletePlistClick();
+					navigate(`${window.location.origin}/create-collection/`);
 				},
 			});
 		} else {
