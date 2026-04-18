@@ -462,7 +462,6 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
   const [descriptionget, setDescriptionget] = useState("");
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showAllFields, setShowAllFields] = useState(false);
-  const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -471,10 +470,10 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
     const payload = {
       image_urls: [productDetails.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.try_in_your_room || "",
+      image_tryon_prompt: storeData?.templates?.[collection?.tryon_type] || storeData?.templates?.image_try_on || "",
       additional_prompt: descriptionget || "",
       type: collection?.tryon_type || "tryon",
-    };
+    }; 
     try {
       setLoading(true);
       const res = await TryOnVto(payload);

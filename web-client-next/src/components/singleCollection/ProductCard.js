@@ -196,8 +196,11 @@ const ProductCard = ({
      state.auth.user.singleCollections.data,
   ]);
 
-  // console.log('collectionsSSW', collections);
+  // console.log('collectionsSSW', ButtonClick);
   const [storeData] = useSelector((state) => [state.store.data]);
+  const [Collection_tryonStatement, setCollectionTryonStatement] = useState(null);
+// console.log('Collection_tryonStatement',Collection_tryonStatement);
+
   const { admin_list: admin_list } = storeData;
   // pdp_settings
   const isAdminLoggedIn = AdminCheck(
@@ -552,7 +555,20 @@ const ProductCard = ({
       setTimeout(() => onSuccess("ok"), 0);
     },
   };
-  console.log('collections?.tryon_type',singleCollections);
+  useEffect(() => {
+    const currentCollection = singleCollections?._id === collection_id 
+      ? singleCollections 
+      : collections?.find(item => item._id === collection_id);
+
+    setCollectionTryonStatement(currentCollection?.tryon_statement ? currentCollection : null);
+  }, [singleCollections, collections, collection_id]);
+
+  const currentVtoCollection = singleCollections?._id === collection_id 
+    ? singleCollections 
+    : collections?.find(item => item._id === collection_id);
+
+  const Collection_vto = currentVtoCollection?.tryon_type ? currentVtoCollection : null;
+  // console.log('Collection_vto',Collection_vto );
   
   // const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
@@ -564,9 +580,9 @@ const ProductCard = ({
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.image_try_on || "",
+      image_tryon_prompt: storeData?.templates?.[Collection_vto?.tryon_type] || storeData?.templates?.image_try_on || "",
       additional_prompt: descriptionget || "",
-      type: singleCollections?.tryon_type || "tryon",
+      type: Collection_vto?.tryon_type || "tryon",
     };
     try {
       setLoading(true);
@@ -1454,7 +1470,7 @@ const ProductCard = ({
         <Modal
           isOpen={!!ButtonClick}
           headerText={"Virtual Try-On"}
-          subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+          subText={ Collection_tryonStatement?.tryon_statement ? Collection_tryonStatement?.tryon_statement :  "Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."}
           onClose={() => handleVTOCancel()}
           size="md"
         >
