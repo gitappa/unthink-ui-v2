@@ -1,4 +1,4 @@
-﻿import React, {
+import React, {
 	useCallback,
 	useEffect,
 	useMemo,
@@ -503,18 +503,23 @@ const AuraResponseProducts = ({
 
 	const onAddSelectedProductsToCollection = useCallback(
 		(e =null,options ={}) => {
-			      const { isSave = false, isShare = false, isSkip = false } = options;
+			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false } = options;
 
     if (e?.preventDefault) {
       e?.preventDefault();
       e?.stopPropagation();
     }
+	 
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
 			const isSkipPopUp = isSkip && guestActionRef.current === "share";
 
-			if (!isUserLogin && !isUserLoginCokkies && !isSkipPopUp) {
+			if ( isShare && !isSkipPopUp && !isGuestSubmit) {
+				dispatch(GuestPopUpShow(true));
+				return;
+			}
+			else if (isSave && !isUserLogin && !isUserLoginCokkies && !isGuestSubmit) {
 				dispatch(GuestPopUpShow(true));
 				return;
 			}
@@ -698,18 +703,37 @@ const AuraResponseProducts = ({
 
 					const { data } = res;
 					const user_id = data.data.user_id;
+console.log('dfdfdfdfd',guestActionRef.current);
 
 					if (res.data.status_code === 200) {
 						dispatch(GuestPopUpShow(false));
-						setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
+						if(guestActionRef.current === "share"){ 
+						try {
+  let { data, status } = await authAPIs.getUserInfoAPICall({ user_id });
+
+  if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
+    dispatch(getUserInfoSuccess(data.data));
+  }
+} catch (e) {
+  console.error(e);
+}
+						}
+					else if (guestActionRef.current === "save") {
+						dispatch(GuestPopUpShow(false));
+
+							setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
 						dispatch(getUserInfo());
-						Cookies.set("isGuestLoggedIn", true, {
-							expires: SIGN_IN_EXPIRE_DAYS,
-						});
+						} 
+
+// setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
+						// dispatch(getUserInfo());
+						// Cookies.set("isGuestLoggedIn", true, {
+						// 	expires: SIGN_IN_EXPIRE_DAYS,
+						// });
 						if (guestActionRef.current === "save") {
-							onAddSelectedProductsToCollection(null, { isSave: true });
+							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true });
 						} else if (guestActionRef.current === "share") {
-							onAddSelectedProductsToCollection(null, { isShare: true });
+							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true });
 						}
 					}
 				} catch (error) {
@@ -872,6 +896,7 @@ const AuraResponseProducts = ({
 												</button>
 											</div>
 										)}
+										{storeData?.share_settings ? storeData?.share_settings?.is_skip_enabled &&
 										<div className={styles['aura-products-button-share-container']}>
 											<button
 												className={styles['aura-products-action-button']}
@@ -882,6 +907,18 @@ const AuraResponseProducts = ({
 												Share
 											</button>
 										</div>
+										 : 
+										 <div className={styles['aura-products-button-share-container']}>
+											<button
+												className={styles['aura-products-action-button']}
+												onClick={(e) =>
+													onAddSelectedProductsToCollection(e,{ isShare: true })
+												}
+												title='Select products and share published collection'>
+												Share
+											</button>
+										</div>
+}
 									</div>
 								) : (
 									<div className={styles['aura-products-action-links']}>
