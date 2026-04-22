@@ -27,8 +27,8 @@
 
 @media (min-width: 640px) {
   .chat-products-content {
-max-width: 56rem;
-/* padding-left: 2.5rem;
+    max-width: 56rem;
+    /* padding-left: 2.5rem;
     padding-right: 2.5rem; */
     gap: 1.25rem;
   }
@@ -41,6 +41,7 @@ max-width: 56rem;
     padding-bottom: 1rem;
   }
 }
+
 @media (min-width: 1200px) {
   .chat-products-content {
     max-width: 1192px;
@@ -48,6 +49,7 @@ max-width: 56rem;
     padding-bottom: 1rem;
   }
 }
+
 @media (min-width: 1536px) {
   .chat-products-content {
     max-width: 1328px;
@@ -273,13 +275,15 @@ max-width: 56rem;
   box-sizing: border-box;
 }
 
-.chat-products-shop-look-title {
+.chatmodal-category-title {
   margin: 0 0 0.6rem;
   font-size: 1.3rem;
   line-height: 1.2;
   color: #2f3d61;
   font-weight: 400;
   letter-spacing: 0.01em;
+  text-align: center;
+
   @media (min-width: 768px) {
     font-size: 48px;
     margin-bottom: 27px;
@@ -304,6 +308,7 @@ max-width: 56rem;
   font-size: 1.05rem;
   color: #2f3d61;
   font-weight: 500;
+
   @media screen and (min-width: 768px) {
     font-size: 22px;
   }
@@ -355,9 +360,10 @@ max-width: 56rem;
   font-size: 2rem;
   line-height: 1.1;
   font-weight: 500;
+
   @media (min-width: 768px) {
     font-size: 45px;
-    
+
   }
 }
 

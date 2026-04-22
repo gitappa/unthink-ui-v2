@@ -19,6 +19,7 @@ import {
   ArrowUpOutlined,
   SlidersOutlined,
   PictureOutlined,
+  CaretDownFilled,
 } from "@ant-design/icons";
 import { useNavigate } from "../../helper/useNavigate";
 
@@ -156,6 +157,7 @@ const ChatModal = ({
     message: "",
     imageUrl: "",
   });
+  const [isSearchOptionsVisible, setIsSearchOptionsVisible] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -171,6 +173,9 @@ const ChatModal = ({
     sessionStorage.removeItem("widgetHeader");
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    setIsSearchOptionManuallySelected(false);
+    setIsSearchOptionsVisible(true);
+    dispatch(setActiveSearchOption({})); // Reset active search option
     dispatch(setShowChatModal(false));
     showSubmitImageTooltip && setShowSubmitImageTooltip(false);
   };
@@ -254,6 +259,7 @@ const ChatModal = ({
       } else {
         dispatch(setActiveSearchOption(option));
         dispatch(resetAuraSearchResponse()); // reset AURA response when change search option
+        setIsSearchOptionsVisible(false); // Collapse options when one is selected
       }
     },
     [searchOptions],
@@ -343,8 +349,8 @@ const ChatModal = ({
   );
 
   const shouldCenterModalContent = useMemo(
-    () => ButtonClick && !isShowAuraResponse,
-    [ButtonClick, isShowAuraResponse],
+    () => ButtonClick && !isShowAuraResponse && !isSearchOptionManuallySelected,
+    [ButtonClick, isShowAuraResponse, isSearchOptionManuallySelected],
   );
 
   const isShopALookOptionActive = useMemo(
@@ -695,179 +701,193 @@ const ChatModal = ({
       {!is_kiosk || isActiveSearchOptionAvailable ? (
         <>
           <div
-            className={`${styles["chatmodal-content-wrapper"]} 
-					  `}
+            className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : ""
+              } `}
           >
             <div className={styles["chatmodal-content-inner"]}>
               {/* {!isShowAuraResponse &&
               !isFigmaUploadPanelOpen &&
               !chatImageUrl ? ( */}
               {!isSearchOptionManuallySelected &&
-              <div className={styles["chatmodal-header-section"]}>
-                <div className={styles["chatmodal-header-row"]}>
-                  <img
-                    src={getImageSrc(star_ai_icon)}
-                    width={200}
-                    height={200}
-                    className={styles["chatmodal-header-icon"]}
-                    alt="AURA"
-                  />
-                  <div className={styles["chatmodal-header-text-block"]}>
-                    <h1 className={styles["chatmodal-header-title"]}>
-                      <span
-                        className={styles["chatmodal-header-title-primary"]}
-                      >
-                        I'm AURA,
-                      </span>
-                      <br />
-                      <span
-                        className={styles["chatmodal-header-title-secondary"]}
-                      >
-                        How can I help you?
-                      </span>
-                    </h1>
+                <div className={styles["chatmodal-header-section"]}>
+                  <div className={styles["chatmodal-header-row"]}>
+                    <img
+                      src={getImageSrc(star_ai_icon)}
+                      width={200}
+                      height={200}
+                      className={styles["chatmodal-header-icon"]}
+                      alt="AURA"
+                    />
+                    <div className={styles["chatmodal-header-text-block"]}>
+                      <h1 className={styles["chatmodal-header-title"]}>
+                        <span
+                          className={styles["chatmodal-header-title-primary"]}
+                        >
+                          I'm AURA,
+                        </span>
+                        <br />
+                        <span
+                          className={styles["chatmodal-header-title-secondary"]}
+                        >
+                          How can I help you?
+                        </span>
+                      </h1>
+                    </div>
                   </div>
                 </div>
-              </div>
-                }
+              }
               {/* ) : null} */}
 
               <div
                 className={
                   styles[
-                    // isFigmaUploadPanelOpen ||
-                    //   (chatImageUrl &&
-                    //     !isShowSubmittedChatPreview &&
-                    //     !isShowAuraResponse) ||
-                      // isUploadingImage ||
+                  // isFigmaUploadPanelOpen ||
+                  //   (chatImageUrl &&
+                  //     !isShowSubmittedChatPreview &&
+                  //     !isShowAuraResponse) ||
+                  // isUploadingImage ||
 
-                      "chatmodal-content-max-width"
+                  "chatmodal-content-max-width"
                   ]
                 }
               >
-                {!isSearchOptionManuallySelected &&
-                                <p className={styles["chatmodal-header-subtext"]}>
-                  Choose one to get started
-                </p>
-                }
-                {!isBTNormalUserLoggedIn ? (
-                  <>
-                    {/* {!isFigmaUploadPanelOpen && !chatImageUrl && ( */}
-                    <div
-                      className={`grid ${
-                        displaySearchOptions?.length === 1
-                          ? "grid-cols-1"
-                          : displaySearchOptions?.length === 2
-                            ? "sm:grid-cols-2 grid-cols-1"
-                            : displaySearchOptions?.length === 3
-                              ? " md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
-                              : displaySearchOptions?.length === 4
-                                ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
-                                : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
-                      }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity  -ms-overflow-none scrollbar-none`}
-                    >
-                      {displaySearchOptions?.map((searchOptions, index) => {
-                        const isOptionActive =
-                          searchOptions?.id === activeSearchOption?.id &&
-                          shouldHighlightActiveSearchOption;
-                        const previewImage =
-                          searchOptionPreviewImages[searchOptions.id] ||
-                          [auraCardOne, auraCardThree, auraCardThree][index % 3];
-                        const previewImageSrc = getImageSrc(previewImage);
-                        const collageVariantClass =
-                          cardCollageVariants[searchOptions.id] ||
-                          styles[
-                            "chatmodal-search-option-image-collage-default"
-                          ];
+                <div className={styles["chatmodal-options-collapsible"]}>
+                  {isSearchOptionManuallySelected && !isSearchOptionsVisible && (
+                    <div className={styles["chatmodal-options-toggle-btn-container"]}>
+                      <div
+                        className={styles["chatmodal-options-toggle-btn"]}
+                        onClick={() => setIsSearchOptionsVisible(!isSearchOptionsVisible)}
+                        title={isSearchOptionsVisible ? "Collapse search options" : "Expand search options"}
+                      >
+                        <CaretDownFilled
+                          className={`${styles["chatmodal-toggle-icon"]} ${!isSearchOptionsVisible ? "" : styles["chatmodal-toggle-icon-up"]
+                            }`}
+                        />
+                        {/* <p className={styles["chatmodal-toggle-text"]}>Show</p> */}
+                      </div>
+                    </div>
+                  )}
+                  <div
+                    className={`${styles["chatmodal-options-grid-container"]} ${!isSearchOptionsVisible ? styles["chatmodal-options-grid-hidden"] : ""
+                      }`}
+                  >
+                    {!isSearchOptionManuallySelected &&
+                      <p className={styles["chatmodal-header-subtext"]}>
+                        Choose one to get started
+                      </p>
+                    }
+                    {!isBTNormalUserLoggedIn ? (
+                      <>
+                        <div
+                          className={`grid ${displaySearchOptions?.length === 1
+                            ? "grid-cols-1"
+                            : displaySearchOptions?.length === 2
+                              ? "sm:grid-cols-2 grid-cols-1"
+                              : displaySearchOptions?.length === 3
+                                ? " md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+                                : displaySearchOptions?.length === 4
+                                  ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
+                                  : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+                            }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity  -ms-overflow-none scrollbar-none`}
+                        >
+                          {displaySearchOptions?.map((searchOptions, index) => {
+                            const isOptionActive =
+                              searchOptions?.id === activeSearchOption?.id &&
+                              shouldHighlightActiveSearchOption;
+                            const previewImage =
+                              searchOptionPreviewImages[searchOptions.id] ||
+                              [auraCardOne, auraCardThree, auraCardThree][index % 3];
+                            const previewImageSrc = getImageSrc(previewImage);
+                            const collageVariantClass =
+                              cardCollageVariants[searchOptions.id] ||
+                              styles[
+                              "chatmodal-search-option-image-collage-default"
+                              ];
 
-                        return (
-                          <div
-                            key={searchOptions.id}
-                            className={`${styles["chatmodal-search-option-card"]} ${
-                              isOptionActive
-                                ? styles["chatmodal-search-option-card-active"]
-                                : ""
-                            } relative flex items-center gap-2`}
-                            onClick={() => handleSetSearchOption(searchOptions)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                handleSetSearchOption(searchOptions);
-                              }
-                            }}
-                          >
-                            <div
-                              className={`${styles["chatmodal-search-option-image-wrapper"]} flex-shrink-0`}
-                            >
-                              <img
-                                src={previewImageSrc}
-                                className={styles["chatmodal-search-option-image"]}
-                                alt={searchOptions.title}
-                              />
-                            </div>
-                            <div
-                              className={
-                                styles["chatmodal-search-option-content"]
-                              }
-                            >
+                            return (
                               <div
-                                className={`${styles["chatmodal-search-option-text-content"]} ${
-                                  isOptionActive
-                                    ? styles[
-                                        "chatmodal-search-option-text-content-active"
-                                      ]
-                                    : ""
-                                }`}
+                                key={searchOptions.id}
+                                className={`${styles["chatmodal-search-option-card"]} ${isOptionActive
+                                  ? styles["chatmodal-search-option-card-active"]
+                                  : ""
+                                  } relative flex items-center gap-2`}
+                                onClick={() => handleSetSearchOption(searchOptions)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    handleSetSearchOption(searchOptions);
+                                  }
+                                }}
                               >
                                 <div
-                                  className={`${styles["chatmodal-search-option-title"]} ${
-                                    isOptionActive
-                                      ? styles[
-                                          "chatmodal-search-option-title-active"
-                                        ]
-                                      : ""
-                                  }`}
+                                  className={`${styles["chatmodal-search-option-image-wrapper"]} flex-shrink-0`}
                                 >
-                                  {searchOptions.title}
+                                  <img
+                                    src={previewImageSrc}
+                                    className={styles["chatmodal-search-option-image"]}
+                                    alt={searchOptions.title}
+                                  />
                                 </div>
                                 <div
-                                  className={`${styles["chatmodal-search-option-subtitle"]} ${
-                                    isOptionActive
-                                      ? styles[
-                                          "chatmodal-search-option-subtitle-active"
-                                        ]
-                                      : ""
-                                  } `}
+                                  className={
+                                    styles["chatmodal-search-option-content"]
+                                  }
                                 >
-                                  {searchOptions.subTitle}
-                                </div>
-                                {isOptionActive &&
-                                  searchOptions?.text_example && (
-                                    <div className="flex w-full pb-2 justify-start">
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleTryExampleClick();
-                                        }}
-                                        className="text-xs z-30 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 px-2 py-1 rounded transition-all hover:scale-105 font-medium"
-                                        title="Fill input with example text"
-                                      >
-                                        Try an Example
-                                      </button>
+                                  <div
+                                    className={`${styles["chatmodal-search-option-text-content"]} ${isOptionActive
+                                      ? styles[
+                                      "chatmodal-search-option-text-content-active"
+                                      ]
+                                      : ""
+                                      }`}
+                                  >
+                                    <div
+                                      className={`${styles["chatmodal-search-option-title"]} ${isOptionActive
+                                        ? styles[
+                                        "chatmodal-search-option-title-active"
+                                        ]
+                                        : ""
+                                        }`}
+                                    >
+                                      {searchOptions.title}
                                     </div>
-                                  )}
+                                    <div
+                                      className={`${styles["chatmodal-search-option-subtitle"]} ${isOptionActive
+                                        ? styles[
+                                        "chatmodal-search-option-subtitle-active"
+                                        ]
+                                        : ""
+                                        } `}
+                                    >
+                                      {searchOptions.subTitle}
+                                    </div>
+                                    {isOptionActive &&
+                                      searchOptions?.text_example && (
+                                        <div className="flex w-full pb-2 justify-start">
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleTryExampleClick();
+                                            }}
+                                            className="text-xs z-30 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 px-2 py-1 rounded transition-all hover:scale-105 font-medium"
+                                            title="Fill input with example text"
+                                          >
+                                            Try an Example
+                                          </button>
+                                        </div>
+                                      )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {/* // )} */}
-                  </>
-                ) : null}
+                            );
+                          })}
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
                 {/* {isFigmaUploadPanelOpen ||
                 (chatImageUrl &&
                   !isShowSubmittedChatPreview &&
@@ -914,11 +934,11 @@ const ChatModal = ({
 
                 {(isBTNormalUserLoggedIn ||
                   isActiveSearchOptionAvailable ||
-                  !isShowAuraResponse) 
-                 ? (
-                  <div>
-                    {/* {shouldUseLegacyImageSearchLayout ? ( */}
-                    {/* <div
+                  !isShowAuraResponse)
+                  ? (
+                    <div>
+                      {/* {shouldUseLegacyImageSearchLayout ? ( */}
+                      {/* <div
                         className={styles["chatmodal-image-search-grid"]}
                         style={{ minHeight: "252px" }}
                       >
@@ -1283,9 +1303,9 @@ const ChatModal = ({
                         </div>
                       </div> */}
 
-                    {/* // ) : ( */}
-                    <div className={styles["chatmodal-figma-input-section"]}>
-                      {/* {chatImageUrl ? (
+                      {/* // ) : ( */}
+                      <div className={styles["chatmodal-figma-input-section"]}>
+                        {/* {chatImageUrl ? (
 														<div className={styles['chatmodal-figma-inline-preview-wrap']}>
 															<img
 																src={chatImageUrl}
@@ -1295,7 +1315,7 @@ const ChatModal = ({
 														</div>
 													) : null} */}
 
-                      {/* {isShowSubmittedChatPreview && (
+                        {/* {isShowSubmittedChatPreview && (
                           <div className="mb-11 w-full max-w-[900px] ">
                             <p className="text-start">
                               sure! Give me a few moments. Now crafting related
@@ -1328,320 +1348,317 @@ const ChatModal = ({
                             </h2>
                           </div>
                         )} */}
-                      {activeSearchOption && (
-                        <>
-                                {auraServerImage &&
-                      activeSearchOption.id === "smart_search" && (
-                        <>
-                          {!showChatLoader ? (
-                            <div
-                              style={{ width: "fit-content" ,position:'relative'}}
-                              className={
-                                styles["chatmodal-figma-upload-popover "]
-                              }
-                            >
-                              {/* Image */}
-                              <img
-                                className={styles["chatmodal-server-image"]}
-                                src={auraServerImage}
-                                alt="Aura Image"
-                              />
-                              {/* Overlay Points */}
-                              {Array.isArray(auraOverlayCoordinates) &&
-                                auraOverlayCoordinates.map((item, index) => {
-                                  const adjustedX =
-                                    (item.point[0] / originalWidth) * newWidth;
-                                  const adjustedY =
-                                    (item.point[1] / originalHeight) *
-                                    newHeight;
-
-                                  return (
-                                    <Tooltip
-                                      key={index}
-                                      title={item.attributes.label}
-                                      color="blue"
-                                    >
-                                      <div
-                                        onClick={() =>
-                                          handleSuggestionClick(
-                                            item.attributes.label,
-                                          )
-                                        }
-                                        className={
-                                          styles["chatmodal-overlay-point"]
-                                        }
-                                        style={{
-                                          left: `${adjustedX}px`,
-                                          top: `${adjustedY}px`,
-                                          boxShadow:
-                                            "0 0 10px rgba(0, 123, 255, 0.8)", // Blue shining glow effect
-                                        }}
-                                      />
-                                    </Tooltip>
-                                  );
-                                })}
-                            </div>
-                          ) : (
-                            <div
-                              className={
-                                styles[
-                                  "chatmodal-server-image-spinner-container"
-                                ]
-                              }
-                            >
-                              <Spin size="large" />
-                            </div>
-                          )}
-                        </>
-                      )}
-
-                        <div className=" flex flex-col lg:flex-row justify-between mt-2 lg:items-start w-full gap-0 lg:gap-5">
-                          {activeSearchOption.allow_image_search && (
-                            <div
-                              className={
-                                styles[
-                                  chatImageUrl
-                                    ? ""
-                                    : "chatmodal-figma-upload-popover"
-                                ]
-                              }
-                            >
-                          
-                              {chatImageUrl ? (
-                                <div
-                                  className={
-                                    styles[
-                                      "chatmodal-figma-image-preview-container"
-                                    ]
-                                  }
-                                  style={{ position: "relative" }}
-                                >
-                                  <img
-                                    src={chatImageUrl}
-                                    alt="Uploaded Image"
-                                    className={
-                                      styles["chatmodal-figma-image-preview"]
-                                    }
-                                  />
-                                  {Array.isArray(auraOverlayCoordinates) &&
-                                    auraOverlayCoordinates.map(
-                                      (item, index) => {
-                                        const adjustedX =
-                                          (item.point[0] / originalWidth) *
-                                          newWidth;
-                                        const adjustedY =
-                                          (item.point[1] / originalHeight) *
-                                          newHeight;
-
-                                        return (
-                                          <Tooltip
-                                            key={index}
-                                            title={item.attributes.label}
-                                            color="blue"
-                                          >
-                                            <div
-                                              onClick={() =>
-                                                handleSuggestionClick(
-                                                  item.attributes.label,
-                                                )
-                                              }
-                                              className={
-                                                styles[
-                                                  "chatmodal-overlay-point"
-                                                ]
-                                              }
-                                              style={{
-                                                left: `${adjustedX}px`,
-                                                top: `${adjustedY}px`,
-                                                boxShadow:
-                                                  "0 0 10px rgba(0, 123, 255, 0.8)",
-                                              }}
-                                            />
-                                          </Tooltip>
-                                        );
-                                      },
-                                    )}
-                                  <div
-                                    className={
-                                      styles["chatmodal-figma-change-image-btn"]
-                                    }
-                                  >
-                                    <button
-                                      type="button"
-                                      onClick={handleChangeImageConfirm}
-                                      className={
-                                        styles["chatmodal-figma-change-btn"]
-                                      }
-                                    >
-                                      Change Image
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : isUploadingImage ? (
-                                <div
-                                  className={
-                                    styles["chatmodal-upload-spinner-container"]
-                                  }
-                                >
-                                  <Spin
-                                    className={
-                                      styles["chatmodal-upload-spinner"]
-                                    }
-                                    indicator={
-                                      <LoadingOutlined
-                                        style={{ fontSize: 26 }}
-                                        className={
-                                          styles[
-                                            "chatmodal-upload-spinner-icon"
-                                          ]
-                                        }
-                                        spin
-                                      />
-                                    }
-                                    spinning={isUploadingImage}
-                                  />
-                                </div>
-                              ) : (
+                        {activeSearchOption && (
+                          <>
+                            {auraServerImage &&
+                              activeSearchOption.id === "smart_search" && (
                                 <>
-                                  <Dragger
-                                    className={
-                                      styles["chatmodal-figma-upload-dragger"]
-                                    }
-                                    {...uploadImageProps}
-                                    name="image_url"
-                                    showUploadList={false}
-                                  >
-                                    <p
+                                  {!showChatLoader ? (
+                                    <div
+                                      style={{ width: "fit-content", position: 'relative' }}
+                                      className={
+                                        styles["chatmodal-figma-upload-popover "]
+                                      }
+                                    >
+                                      {/* Image */}
+                                      <img
+                                        className={styles["chatmodal-server-image"]}
+                                        src={auraServerImage}
+                                        alt="Aura Image"
+                                      />
+                                      {/* Overlay Points */}
+                                      {Array.isArray(auraOverlayCoordinates) &&
+                                        auraOverlayCoordinates.map((item, index) => {
+                                          const adjustedX =
+                                            (item.point[0] / originalWidth) * newWidth;
+                                          const adjustedY =
+                                            (item.point[1] / originalHeight) *
+                                            newHeight;
+
+                                          return (
+                                            <Tooltip
+                                              key={index}
+                                              title={item.attributes.label}
+                                              color="blue"
+                                            >
+                                              <div
+                                                onClick={() =>
+                                                  handleSuggestionClick(
+                                                    item.attributes.label,
+                                                  )
+                                                }
+                                                className={
+                                                  styles["chatmodal-overlay-point"]
+                                                }
+                                                style={{
+                                                  left: `${adjustedX}px`,
+                                                  top: `${adjustedY}px`,
+                                                  boxShadow:
+                                                    "0 0 10px rgba(0, 123, 255, 0.8)", // Blue shining glow effect
+                                                }}
+                                              />
+                                            </Tooltip>
+                                          );
+                                        })}
+                                    </div>
+                                  ) : (
+                                    <div
                                       className={
                                         styles[
-                                          "chatmodal-figma-upload-dragger-icon"
+                                        "chatmodal-server-image-spinner-container"
                                         ]
                                       }
                                     >
-                                      <PictureOutlined />
-                                    </p>
-                                    <p
-                                      className={
-                                        styles[
-                                          "chatmodal-figma-upload-dragger-text"
-                                        ]
-                                      }
-                                    >
-                                      <span>Click to upload</span> or drag and
-                                      drop
-                                    </p>
-                                    <p
-                                      className={
-                                        styles[
-                                          "chatmodal-figma-upload-dragger-hint"
-                                        ]
-                                      }
-                                    >
-                                      JPG, JPEG, PNG less than 1MB
-                                    </p>
-                                  </Dragger>
-                                  <div
-                                    className={
-                                      styles["chatmodal-figma-upload-or"]
-                                    }
-                                  >
-                                    or
-                                  </div>
-                                  <div
-                                    className={
-                                      styles[
-                                        "chatmodal-figma-upload-url-section"
-                                      ]
-                                    }
-                                  >
-                                    <label
-                                      className={
-                                        styles[
-                                          "chatmodal-figma-upload-url-label"
-                                        ]
-                                      }
-                                    >
-                                      Image URL
-                                    </label>
-                                    <input
-                                      className={
-                                        styles[
-                                          "chatmodal-figma-upload-url-input"
-                                        ]
-                                      }
-                                      placeholder="Or Enter Image URL"
-                                      type="text"
-                                      value={chatImageUrl}
-                                      onChange={handleFigmaImageUrlChange}
-                                    />
-                                  </div>
+                                      <Spin size="large" />
+                                    </div>
+                                  )}
                                 </>
                               )}
-                            </div>
-                          )}
-                          <div className="w-full">
-                          <div
-                            className={`${styles["chatmodal-figma-input-card"]} ${
-                              chatImageUrl
-                                ? styles[
-                                    "chatmodal-figma-input-card-with-preview"
-                                  ]
-                                : ""
-                            } ${
-                              isShopByThemeOptionActive
-                                ? styles[
-                                    "chatmodal-figma-input-card-shop-theme"
-                                  ]
-                                : ""
-                            }`}
-                          >
-                            <div className="relative w-full">
-                              <input
-                                id={`chat_search_input_${chatTypeKey}`}
-                                type="text"
-                                ref={inputRef}
-                                placeholder={
-                                  typeof activeSearchOption?.text_placeholder ===
-                                  "string"
-                                    ? activeSearchOption?.text_placeholder
-                                    : activeSearchOption
-                                        ?.text_placeholder?.[0] ||
-                                      "Describe your product idea"
-                                }
-                                name="chat_message"
-                                value={localChatMessage}
-                                onChange={handleInputChange}
-                                onKeyDown={handlePromptKeyDown}
-                                className={`${styles["chatmodal-figma-input"]} ${
-                                  !localChatMessage
-                                    ? styles["chatmodal-figma-input-shop-theme"]
-                                    : "text-black-200 font-medium"
-                                }`}
-                              />
-                            </div>
-                            {activeSearchOption.allow_image_search ? (
-                              <div
-                                className={
-                                  styles["chatmodal-figma-input-divider"]
-                                }
-                              />
-                            ) : null}
-                            <div
-                              className={`${styles["chatmodal-figma-input-actions"]} ${
-                                !activeSearchOption.allow_image_search
-                                  ? styles[
-                                      "chatmodal-figma-input-actions-shop-theme"
-                                    ]
-                                  : ""
-                              }`}
-                            >
+
+                            <div className=" flex flex-col justify-between items-center w-full gap-0 lg:gap-0">
+                              {isSearchOptionManuallySelected && (
+                                <h2 className={styles["chatmodal-category-title"]}>
+                                  {activeSearchOption?.title?.toUpperCase()}
+                                </h2>
+                              )}
+                              
                               {activeSearchOption.allow_image_search && (
                                 <div
                                   className={
-                                    styles["chatmodal-figma-input-actions-left"]
+                                    styles[
+                                    chatImageUrl
+                                      ? ""
+                                      : "chatmodal-figma-upload-popover"
+                                    ]
                                   }
                                 >
-                                  {/* <div
+
+                                  {chatImageUrl ? (
+                                    <div
+                                      className={
+                                        styles[
+                                        "chatmodal-figma-image-preview-container"
+                                        ]
+                                      }
+                                      style={{ position: "relative" }}
+                                    >
+                                      <img
+                                        src={chatImageUrl}
+                                        alt="Uploaded Image"
+                                        className={
+                                          styles["chatmodal-figma-image-preview"]
+                                        }
+                                      />
+                                      {Array.isArray(auraOverlayCoordinates) &&
+                                        auraOverlayCoordinates.map(
+                                          (item, index) => {
+                                            const adjustedX =
+                                              (item.point[0] / originalWidth) *
+                                              newWidth;
+                                            const adjustedY =
+                                              (item.point[1] / originalHeight) *
+                                              newHeight;
+
+                                            return (
+                                              <Tooltip
+                                                key={index}
+                                                title={item.attributes.label}
+                                                color="blue"
+                                              >
+                                                <div
+                                                  onClick={() =>
+                                                    handleSuggestionClick(
+                                                      item.attributes.label,
+                                                    )
+                                                  }
+                                                  className={
+                                                    styles[
+                                                    "chatmodal-overlay-point"
+                                                    ]
+                                                  }
+                                                  style={{
+                                                    left: `${adjustedX}px`,
+                                                    top: `${adjustedY}px`,
+                                                    boxShadow:
+                                                      "0 0 10px rgba(0, 123, 255, 0.8)",
+                                                  }}
+                                                />
+                                              </Tooltip>
+                                            );
+                                          },
+                                        )}
+                                      <div
+                                        className={
+                                          styles["chatmodal-figma-change-image-btn"]
+                                        }
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={handleChangeImageConfirm}
+                                          className={
+                                            styles["chatmodal-figma-change-btn"]
+                                          }
+                                        >
+                                          Change Image
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : isUploadingImage ? (
+                                    <div
+                                      className={
+                                        styles["chatmodal-upload-spinner-container"]
+                                      }
+                                    >
+                                      <Spin
+                                        className={
+                                          styles["chatmodal-upload-spinner"]
+                                        }
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{ fontSize: 26 }}
+                                            className={
+                                              styles[
+                                              "chatmodal-upload-spinner-icon"
+                                              ]
+                                            }
+                                            spin
+                                          />
+                                        }
+                                        spinning={isUploadingImage}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <Dragger
+                                        className={
+                                          styles["chatmodal-figma-upload-dragger"]
+                                        }
+                                        {...uploadImageProps}
+                                        name="image_url"
+                                        showUploadList={false}
+                                      >
+                                        <p
+                                          className={
+                                            styles[
+                                            "chatmodal-figma-upload-dragger-icon"
+                                            ]
+                                          }
+                                        >
+                                          <PictureOutlined />
+                                        </p>
+                                        <p
+                                          className={
+                                            styles[
+                                            "chatmodal-figma-upload-dragger-text"
+                                            ]
+                                          }
+                                        >
+                                          <span>Click to upload</span> or drag and
+                                          drop
+                                        </p>
+                                        <p
+                                          className={
+                                            styles[
+                                            "chatmodal-figma-upload-dragger-hint"
+                                            ]
+                                          }
+                                        >
+                                          JPG, JPEG, PNG less than 1MB
+                                        </p>
+                                      </Dragger>
+                                      <div
+                                        className={
+                                          styles["chatmodal-figma-upload-or"]
+                                        }
+                                      >
+                                        or
+                                      </div>
+                                      <div
+                                        className={
+                                          styles[
+                                          "chatmodal-figma-upload-url-section"
+                                          ]
+                                        }
+                                      >
+                                        <label
+                                          className={
+                                            styles[
+                                            "chatmodal-figma-upload-url-label"
+                                            ]
+                                          }
+                                        >
+                                          Image URL
+                                        </label>
+                                        <input
+                                          className={
+                                            styles[
+                                            "chatmodal-figma-upload-url-input"
+                                            ]
+                                          }
+                                          placeholder="Or Enter Image URL"
+                                          type="text"
+                                          value={chatImageUrl}
+                                          onChange={handleFigmaImageUrlChange}
+                                        />
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+
+                              {showChatLoader && (localChatMessage || chatImageUrl) && (
+                                  <>
+                                    <p className="mt-4 text-center">Sure! Give me a few moments. Now crafting related products.</p>
+                                    <p className={`${styles["chatmodal-thinking-text"]} text-center`}>
+                                      Thinking
+                                      <span
+                                        className={styles["chatmodal-thinking-dots"]}
+                                        aria-hidden="true"
+                                      >
+                                        <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                        <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                        <span className={styles["chatmodal-thinking-dot"]}>.</span>
+                                      </span>
+                                    </p>
+                                  </>
+                                )}
+                              
+                              <div className="w-full">
+                                <div
+                                  className={`${styles["chatmodal-figma-input-card"]} ${chatImageUrl
+                                      ? styles[
+                                      "chatmodal-figma-input-card-with-preview"
+                                      ]
+                                      : ""
+                                    } ${isShopByThemeOptionActive
+                                      ? styles[
+                                      "chatmodal-figma-input-card-shop-theme"
+                                      ]
+                                      : ""
+                                    }`}
+                                >
+                                  {/* {activeSearchOption.allow_image_search ? (
+                                    <div
+                                      className={
+                                        styles["chatmodal-figma-input-divider"]
+                                      }
+                                    />
+                                  ) : null} */}
+                                  <div
+                                    className={`${styles["chatmodal-figma-input-actions"]} ${!activeSearchOption.allow_image_search
+                                        ? styles[
+                                        "chatmodal-figma-input-actions-shop-theme"
+                                        ]
+                                        : ""
+                                      }`}
+                                  >
+                                    {activeSearchOption.allow_image_search && (
+                                      <div
+                                        className={
+                                          styles["chatmodal-figma-input-actions-left"]
+                                        }
+                                      >
+                                        {/* <div
                                       className={
                                         styles[
                                           "chatmodal-upload-action-wrapper"
@@ -1668,171 +1685,173 @@ const ChatModal = ({
                                           chatImageUrl) && <span>Image</span>}
                                       </button>
                                     </div> */}
-                                  <button
-                                    type="button"
-                                    className={
-                                      styles["chatmodal-figma-action-button"]
-                                    }
-                                    title="Open assistant settings"
-                                    onClick={handlePromptUtilityClick}
-                                  >
-                                    <img
-                                      src={page_info?.src}
-                                      alt="Assistant settings"
-                                    />
-                                  </button>
-                                  {/* {chatImageUrl && !isShowSubmittedChatPreview ? (
+                                        <button
+                                          type="button"
+                                          className={
+                                            styles["chatmodal-figma-action-button"]
+                                          }
+                                          title="Open assistant settings"
+                                          onClick={handlePromptUtilityClick}
+                                        >
+                                          <img
+                                            src={page_info?.src}
+                                            alt="Assistant settings"
+                                          />
+                                        </button>
+                                        {/* {chatImageUrl && !isShowSubmittedChatPreview ? (
 																<div className={styles['chatmodal-figma-upload-pill']}>
 																	Image attached
 																</div>
 																) : null} */}
+                                      </div>
+                                    )}
+
+                                    <div className="relative flex-1">
+                                      <input
+                                        id={`chat_search_input_${chatTypeKey}`}
+                                        type="text"
+                                        ref={inputRef}
+                                        placeholder={
+                                          typeof activeSearchOption?.text_placeholder === "string"
+                                            ? activeSearchOption?.text_placeholder
+                                            : activeSearchOption?.text_placeholder?.[0] ||
+                                            "Describe your product idea"
+                                        }
+                                        name="chat_message"
+                                        value={localChatMessage}
+                                        onChange={handleInputChange}
+                                        onKeyDown={handlePromptKeyDown}
+                                        className={`${styles["chatmodal-figma-input"]} ${!localChatMessage
+                                            ? styles["chatmodal-figma-input-shop-theme"]
+                                            : "text-black-200 font-medium"
+                                          }`}
+                                      />
+                                    </div>
+
+
+                                    <button
+                                      type="button"
+                                      className={`${styles["chatmodal-figma-submit"]} ${isShopByThemeOptionActive
+                                          ? styles[
+                                          "chatmodal-figma-submit-shop-theme"
+                                          ]
+                                          : ""
+                                        } ${(
+                                          isShopALookOptionActive
+                                            ? !chatImageUrl
+                                            : !localChatMessage && !chatImageUrl
+                                        )
+                                          ? styles["chatmodal-figma-submit-disabled"]
+                                          : ""
+                                        }`}
+                                      onClick={handleSubmitChatInput}
+                                      disabled={
+                                        isShopALookOptionActive
+                                          ? !chatImageUrl
+                                          : !localChatMessage && !chatImageUrl
+                                      }
+                                    >
+                                      <ArrowUpOutlined />
+                                    </button>
+                                  </div>
                                 </div>
-                              )}
-                              <button
-                                type="button"
-                                className={`${styles["chatmodal-figma-submit"]} ${
-                                  isShopByThemeOptionActive
-                                    ? styles[
-                                        "chatmodal-figma-submit-shop-theme"
-                                      ]
-                                    : ""
-                                } ${
-                                  (
-                                    isShopALookOptionActive
-                                      ? !chatImageUrl
-                                      : !localChatMessage && !chatImageUrl
-                                  )
-                                    ? styles["chatmodal-figma-submit-disabled"]
-                                    : ""
-                                }`}
-                                onClick={handleSubmitChatInput}
-                                disabled={
-                                  isShopALookOptionActive
-                                    ? !chatImageUrl
-                                    : !localChatMessage && !chatImageUrl
-                                }
-                              >
-                                <ArrowUpOutlined />
-                              </button>
+                              </div>
+
                             </div>
-                          </div>
-                          {showChatLoader && (localChatMessage || chatImageUrl) && (
-                            <>
-                              <p className="mt-4 ml-1.25 ">sure! Give me a few moments. Now crafting related products.</p>
-                              <p className={styles["chatmodal-thinking-text"]}>
-                                Thinking
-                                <span
-                                  className={styles["chatmodal-thinking-dots"]}
-                                  aria-hidden="true"
-                                >
-                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
-                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
-                                  <span className={styles["chatmodal-thinking-dot"]}>.</span>
-                                </span>
-                              </p>
-                            </>
-                         ) }
-                          </div>
+                          </>
 
-                        </div>
-                        </>
+                        )
+                        }
+                      </div>
+                      {/* // )} */}
+                      {isShowFollowUpSearch || isShowTryAgain ? (
+                        <div
+                          className={`${shouldUseLegacyImageSearchLayout
+                              ? styles["chatmodal-followup-controls-mt4"]
+                              : styles["chatmodal-followup-controls-mt1"]
+                            } ${styles["chatmodal-followup-controls-container"]}`}
+                        >
+                          {/* CLASS MATCH1 */}
 
-                      )
-                      }
-                    </div>
-                    {/* // )} */}
-                    {isShowFollowUpSearch || isShowTryAgain ? (
-                      <div
-                        className={`${
-                          shouldUseLegacyImageSearchLayout
-                            ? styles["chatmodal-followup-controls-mt4"]
-                            : styles["chatmodal-followup-controls-mt1"]
-                        } ${styles["chatmodal-followup-controls-container"]}`}
-                      >
-                        {/* CLASS MATCH1 */}
-
-                        {isShowFollowUpSearch && isSidExpired ? (
-                          <div
-                            className={
-                              styles["chatmodal-followup-checkbox-container"]
-                            }
-                          >
-                            <input
-                              type="checkbox"
-                              id="followUpQuery"
-                              className={styles["chatmodal-followup-checkbox"]}
-                              checked={isFollowUpQuery}
-                              disabled={showChatLoader}
-                              onChange={handleFollowUpSearch}
-                            />
-                            <label
-                              htmlFor="followUpQuery"
-                              className={`${
-                                showChatLoader
-                                  ? styles["chatmodal-followup-label-disabled"]
-                                  : styles["chatmodal-followup-label"]
-                              }`}
+                          {isShowFollowUpSearch && isSidExpired ? (
+                            <div
+                              className={
+                                styles["chatmodal-followup-checkbox-container"]
+                              }
                             >
-                              Follow-Up search
-                            </label>
-                          </div>
-                        ) : null}
-                        {isShowFollowUpSearch &&
-                        isShowTryAgain &&
-                        isSidExpired ? (
-                          <div
-                            className={styles["chatmodal-divider-vertical"]}
-                          ></div>
-                        ) : null}
-                        {isShowTryAgain ? (
-                          <button
-                            className={`${styles["chatmodal-try-again-button"]} ${
-                              showChatLoader
-                                ? styles["chatmodal-try-again-button-disabled"]
-                                : ""
-                            }`}
-                            title="Regenerate the products with AI."
-                            onClick={handleTryAgainClick}
-                            disabled={showChatLoader}
-                          >
-                            <ReloadOutlined
-                              className={styles["chatmodal-reload-icon"]}
-                            />
-                            Try again
-                          </button>
-                        ) : null}
-                        {isFollowUpQuery &&
-                        isShowFollowUpSearch &&
-                        regenarateImage ? (
-                          <>
+                              <input
+                                type="checkbox"
+                                id="followUpQuery"
+                                className={styles["chatmodal-followup-checkbox"]}
+                                checked={isFollowUpQuery}
+                                disabled={showChatLoader}
+                                onChange={handleFollowUpSearch}
+                              />
+                              <label
+                                htmlFor="followUpQuery"
+                                className={`${showChatLoader
+                                    ? styles["chatmodal-followup-label-disabled"]
+                                    : styles["chatmodal-followup-label"]
+                                  }`}
+                              >
+                                Follow-Up search
+                              </label>
+                            </div>
+                          ) : null}
+                          {isShowFollowUpSearch &&
+                            isShowTryAgain &&
+                            isSidExpired ? (
                             <div
                               className={styles["chatmodal-divider-vertical"]}
                             ></div>
+                          ) : null}
+                          {isShowTryAgain ? (
                             <button
-                              className={`${styles["chatmodal-try-again-button"]} ${
-                                showChatLoader
-                                  ? styles[
-                                      "chatmodal-try-again-button-disabled"
-                                    ]
+                              className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
+                                  ? styles["chatmodal-try-again-button-disabled"]
                                   : ""
-                              }`}
-                              title="Regenerate the Image."
-                              onClick={handleRegenrateImage}
+                                }`}
+                              title="Regenerate the products with AI."
+                              onClick={handleTryAgainClick}
+                              disabled={showChatLoader}
                             >
                               <ReloadOutlined
                                 className={styles["chatmodal-reload-icon"]}
                               />
-                              Regenerate Image
+                              Try again
                             </button>
-                          </>
-                        ) : null}
-                      </div>
-                    ) : null}
+                          ) : null}
+                          {isFollowUpQuery &&
+                            isShowFollowUpSearch &&
+                            regenarateImage ? (
+                            <>
+                              <div
+                                className={styles["chatmodal-divider-vertical"]}
+                              ></div>
+                              <button
+                                className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
+                                    ? styles[
+                                    "chatmodal-try-again-button-disabled"
+                                    ]
+                                    : ""
+                                  }`}
+                                title="Regenerate the Image."
+                                onClick={handleRegenrateImage}
+                              >
+                                <ReloadOutlined
+                                  className={styles["chatmodal-reload-icon"]}
+                                />
+                                Regenerate Image
+                              </button>
+                            </>
+                          ) : null}
+                        </div>
+                      ) : null}
 
-                
 
-                    {/* // REMOVE */}
-                    {/* <div className='my-4 px-8 w-full flex'>
+
+                      {/* // REMOVE */}
+                      {/* <div className='my-4 px-8 w-full flex'>
 					<input
 						name='url'
 						type='url'
@@ -1840,14 +1859,14 @@ const ChatModal = ({
 						className='h-10 rounded-lg w-full max-w-448 mx-auto px-2 placeholder-gray-500'
 					/>
 				</div> */}
-                    {/* {!is_store_instance && !isStagingEnv && (
+                      {/* {!is_store_instance && !isStagingEnv && (
 					<ChatSuggestionsV2
 						onSuggestionClick={submitChatInput}
 						wrapperClassName='pt-4 lg:pt-6 max-w-4xl'
 					/>
 				)} */}
-                  </div>
-                ) : null}
+                    </div>
+                  ) : null}
                 {/* 
 								{auraHelperMessage &&
 									!isFreshSearch &&
@@ -1880,9 +1899,9 @@ const ChatModal = ({
                 <div className={styles["chatmodal-loading-bar"]}></div>
               </div>
             )}
-            {!showChatLoader  && (
+            {!showChatLoader && (
               // <div className={styles["chatmodal-loading-bar-container"]}>
-                <div className={styles["chatmodal-content-wrapper-border"]}></div>
+              <div className={styles["chatmodal-content-wrapper-border"]}></div>
               // </div>
             )}
           </div>
@@ -1892,11 +1911,10 @@ const ChatModal = ({
       <div
         id="chat_products_container"
         // className={`w-full h-auto bg-white chat-product-data-container flex-auto flex flex-col`}>
-        className={`${styles["chatmodal-products-container"]} ${
-          isGuestPopUpShow
+        className={`${styles["chatmodal-products-container"]} ${isGuestPopUpShow
             ? styles["chatmodal-products-container-overflow"]
             : ""
-        }`}
+          }`}
       >
         {showChatLoader && (
           <div style={{ position: "absolute", width: "100%" }}>

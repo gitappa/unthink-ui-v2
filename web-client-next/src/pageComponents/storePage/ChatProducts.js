@@ -197,9 +197,9 @@ const ChatProducts = ({
   const productsResultsContent = (
     <>
       {!isEmpty(shopALookData) &&
-      isTagAvailable &&
-      !isBTNormalUserLoggedIn &&
-      !shouldShowShopLookSplitLayout ? (
+        isTagAvailable &&
+        !isBTNormalUserLoggedIn &&
+        !shouldShowShopLookSplitLayout ? (
         <div className={styles["chat-products-nav-container"]}>
           <div
             className={`${styles["chat-products-nav-item"]} ${styles["chat-products-nav-item-active"]}`}
@@ -276,11 +276,10 @@ const ChatProducts = ({
                         ? onAddSelectedProductsToCollection
                         : undefined
                     }
-                    className={`${styles["chat-products-action-text"]} ${
-                      selectedProducts.length
+                    className={`${styles["chat-products-action-text"]} ${selectedProducts.length
                         ? styles["chat-products-action-button"]
                         : styles["chat-products-action-button-disabled"]
-                    }`}
+                      }`}
                     title="Click to add selected products in collection"
                     role="button"
                   >
@@ -434,8 +433,8 @@ const ChatProducts = ({
         {shouldShowShopLookSplitLayout ? (
           <div className={styles["chat-products-shop-look-layout"]}>
             <div className={styles["chat-products-shop-look-sidebar"]}>
-              <h2 className={styles["chat-products-shop-look-title"]}>
-                SHOP THE LOOK
+              <h2 className={styles["chatmodal-category-title"]}>
+                {activeSearchOption?.title?.toUpperCase()}
               </h2>
               <div className="flex flex-col h-full justify-between min-h-[70vh] ">
                 <div>
@@ -506,7 +505,7 @@ const ChatProducts = ({
                         <div
                           className={
                             styles[
-                              "chat-products-bottom-followup-checkbox-wrap"
+                            "chat-products-bottom-followup-checkbox-wrap"
                             ]
                           }
                         >
@@ -525,8 +524,8 @@ const ChatProducts = ({
                             className={
                               showChatLoader
                                 ? styles[
-                                    "chat-products-bottom-followup-label-disabled"
-                                  ]
+                                "chat-products-bottom-followup-label-disabled"
+                                ]
                                 : styles["chat-products-bottom-followup-label"]
                             }
                           >
@@ -535,8 +534,8 @@ const ChatProducts = ({
                         </div>
                       ) : null}
                       {isShowFollowUpSearch &&
-                      isShowTryAgain &&
-                      isSidExpired ? (
+                        isShowTryAgain &&
+                        isSidExpired ? (
                         <div
                           className={
                             styles["chat-products-bottom-followup-divider"]
@@ -545,13 +544,12 @@ const ChatProducts = ({
                       ) : null}
                       {isShowTryAgain ? (
                         <button
-                          className={`${styles["chat-products-bottom-try-again-button"]} ${
-                            showChatLoader
+                          className={`${styles["chat-products-bottom-try-again-button"]} ${showChatLoader
                               ? styles[
-                                  "chat-products-bottom-try-again-button-disabled"
-                                ]
+                              "chat-products-bottom-try-again-button-disabled"
+                              ]
                               : ""
-                          }`}
+                            }`}
                           title="Regenerate the products with AI."
                           onClick={handleTryAgainClick}
                           disabled={showChatLoader}
@@ -570,11 +568,10 @@ const ChatProducts = ({
                 {shouldMoveInputBelowResults ? (
                   <div className={styles["chat-products-bottom-input-wrapper"]}>
                     <div
-                      className={`${styles["chat-products-bottom-input-card"]} ${
-                        isShopByThemeOptionActive
+                      className={`${styles["chat-products-bottom-input-card"]} ${isShopByThemeOptionActive
                           ? styles["chat-products-bottom-input-card-shop-theme"]
                           : ""
-                      }`}
+                        }`}
                     >
                       <input
                         id={`chat_search_input_bottom_${chatTypeKey}`}
@@ -582,20 +579,19 @@ const ChatProducts = ({
                         ref={inputRef}
                         placeholder={
                           typeof activeSearchOption?.text_placeholder ===
-                          "string"
+                            "string"
                             ? activeSearchOption?.text_placeholder
                             : activeSearchOption?.text_placeholder?.[0] ||
-                              "Describe your product idea"
+                            "Describe your product idea"
                         }
                         name="chat_message"
                         value={localChatMessage}
                         onChange={handleInputChange}
                         onKeyDown={handlePromptKeyDown}
-                        className={`${styles["chat-products-bottom-input"]} ${
-                          isShopByThemeOptionActive
+                        className={`${styles["chat-products-bottom-input"]} ${isShopByThemeOptionActive
                             ? styles["chat-products-bottom-input-shop-theme"]
                             : ""
-                        }`}
+                          }`}
                       />
                       {!isShopByThemeOptionActive ? (
                         <div
@@ -605,13 +601,12 @@ const ChatProducts = ({
                         />
                       ) : null}
                       <div
-                        className={`${styles["chat-products-bottom-input-actions"]} ${
-                          isShopByThemeOptionActive
+                        className={`${styles["chat-products-bottom-input-actions"]} ${isShopByThemeOptionActive
                             ? styles[
-                                "chat-products-bottom-input-actions-shop-theme"
-                              ]
+                            "chat-products-bottom-input-actions-shop-theme"
+                            ]
                             : ""
-                        }`}
+                          }`}
                       >
                         {!isShopByThemeOptionActive ? (
                           <div
@@ -621,13 +616,12 @@ const ChatProducts = ({
                           >
                             <button
                               type="button"
-                              className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${
-                                isFigmaUploadPanelOpen || chatImageUrl
+                              className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${isFigmaUploadPanelOpen || chatImageUrl
                                   ? styles[
-                                      "chat-products-bottom-image-button-active"
-                                    ]
+                                  "chat-products-bottom-image-button-active"
+                                  ]
                                   : ""
-                              }`}
+                                }`}
                               title="Upload image"
                               onClick={handleFigmaUploadButtonClick}
                             >
@@ -663,19 +657,17 @@ const ChatProducts = ({
                         ) : null}
                         <button
                           type="button"
-                          className={`${styles["chat-products-bottom-submit"]} ${
-                            isShopByThemeOptionActive
+                          className={`${styles["chat-products-bottom-submit"]} ${isShopByThemeOptionActive
                               ? styles["chat-products-bottom-submit-shop-theme"]
                               : ""
-                          } ${
-                            (
+                            } ${(
                               isShopALookOptionActive
                                 ? !chatImageUrl
                                 : !localChatMessage && !chatImageUrl
                             )
                               ? styles["chat-products-bottom-submit-disabled"]
                               : ""
-                          }`}
+                            }`}
                           onClick={handleSubmitChatInput}
                           disabled={
                             isShopALookOptionActive
