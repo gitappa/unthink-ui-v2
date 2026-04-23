@@ -701,7 +701,7 @@ const ChatModal = ({
       {!is_kiosk || isActiveSearchOptionAvailable ? (
         <>
           <div
-            className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : ""
+            className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
               } `}
           >
             <div className={styles["chatmodal-content-inner"]}>
