@@ -1,4 +1,4 @@
-﻿import React, {
+import React, {
 	useCallback,
 	useEffect,
 	useMemo,
@@ -927,8 +927,7 @@ const AuraResponseProducts = ({
 					<>
 						<div
 							id='chat_products_inner_content'
-							className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-[0.625rem] sm:gap-3 lg:gap-4'
-						// onChange={onSelectAllChange}
+							className={styles['aura-products-grid-custom']}
 						>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard

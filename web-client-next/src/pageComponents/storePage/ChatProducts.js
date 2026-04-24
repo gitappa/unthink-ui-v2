@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Checkbox } from "antd";
+import { Checkbox, Tooltip } from "antd";
 import { ReloadOutlined, ArrowUpOutlined } from "@ant-design/icons";
 
 import {
@@ -19,6 +19,7 @@ import {
   WISHLIST_TITLE,
 } from "../../constants/codes";
 import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALook";
+import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 import styles from "./ChatProducts.module.css";
 
 const ChatProducts = ({
@@ -68,6 +69,7 @@ const ChatProducts = ({
     products,
     shopALookData,
     activeSearchOption,
+    auraOverlayCoordinates,
   ] = useSelector((state) => [
     state.chatV2.chatProductsData || [],
     state.chatV2.widgetHeader,
@@ -79,12 +81,29 @@ const ChatProducts = ({
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].products],
     state.chatV2.shopALook,
     state.chatV2.activeSearchOption || {},
+    state.chatV2.auraOverlayCoordinates,
   ]);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const dispatch = useDispatch();
+
+  const handleSuggestionClick = (tag) => {
+    if (suggestionsWithProducts?.suggestions?.tags?.includes(tag)) {
+      dispatch(setSuggestionsSelectedTag(tag));
+    }
+    // Scroll to the tag div
+    const tagElement = document.getElementById(`tag-${tag}`);
+    if (tagElement) {
+      tagElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  const originalWidth = 1024;
+  const originalHeight = 1027;
+  const newWidth = 404;
+  const newHeight = 400;
 
   // const { sendMessage } = useChat();
 
@@ -127,7 +146,12 @@ const ChatProducts = ({
     [activeSearchOption?.id],
   );
 
-  const shouldShowShopLookSplitLayout = useMemo(() => false, []);
+  const shouldShowShopLookSplitLayout = useMemo(
+    () =>
+      activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look &&
+      (widgetHeader || !isEmpty(shopALookData) || (showChatLoader && chatImageUrl)),
+    [activeSearchOption?.id, widgetHeader, shopALookData, showChatLoader, chatImageUrl],
+  );
 
   const shopLookPreviewImage = useMemo(
     () => widgetImage || chatImageUrl || products?.image_url || "",
@@ -277,8 +301,8 @@ const ChatProducts = ({
                         : undefined
                     }
                     className={`${styles["chat-products-action-text"]} ${selectedProducts.length
-                        ? styles["chat-products-action-button"]
-                        : styles["chat-products-action-button-disabled"]
+                      ? styles["chat-products-action-button"]
+                      : styles["chat-products-action-button-disabled"]
                       }`}
                     title="Click to add selected products in collection"
                     role="button"
@@ -436,15 +460,43 @@ const ChatProducts = ({
               <h2 className={styles["chatmodal-category-title"]}>
                 {activeSearchOption?.title?.toUpperCase()}
               </h2>
-              <div className="flex flex-col h-full justify-between min-h-[70vh] ">
+              <div className="flex flex-col gap-3">
                 <div>
                   <div className="flex justify-between gap-3">
                     {shopLookPreviewImage ? (
-                      <img
-                        src={shopLookPreviewImage}
-                        alt="Shop the look"
-                        className={styles["chat-products-shop-look-image"]}
-                      />
+                      <div className={styles["chat-products-shop-look-image-wrapper"]}>
+                        <img
+                          src={shopLookPreviewImage}
+                          alt="Shop the look"
+                          className={styles["chat-products-shop-look-image"]}
+                        />
+                        {Array.isArray(auraOverlayCoordinates) &&
+                          auraOverlayCoordinates.map((item, index) => {
+                            const adjustedX =
+                              (item.point[0] / originalWidth) * newWidth;
+                            const adjustedY =
+                              (item.point[1] / originalHeight) * newHeight;
+
+                            return (
+                              <Tooltip
+                                key={index}
+                                title={item.attributes.label}
+                                color="blue"
+                              >
+                                <div
+                                  onClick={() =>
+                                    handleSuggestionClick(item.attributes.label)
+                                  }
+                                  className={styles["chat-products-overlay-point"]}
+                                  style={{
+                                    left: `${adjustedX}px`,
+                                    top: `${adjustedY}px`,
+                                  }}
+                                />
+                              </Tooltip>
+                            );
+                          })}
+                      </div>
                     ) : null}
                     <div>
                       <div
@@ -545,10 +597,10 @@ const ChatProducts = ({
                       {isShowTryAgain ? (
                         <button
                           className={`${styles["chat-products-bottom-try-again-button"]} ${showChatLoader
-                              ? styles[
-                              "chat-products-bottom-try-again-button-disabled"
-                              ]
-                              : ""
+                            ? styles[
+                            "chat-products-bottom-try-again-button-disabled"
+                            ]
+                            : ""
                             }`}
                           title="Regenerate the products with AI."
                           onClick={handleTryAgainClick}
@@ -569,8 +621,8 @@ const ChatProducts = ({
                   <div className={styles["chat-products-bottom-input-wrapper"]}>
                     <div
                       className={`${styles["chat-products-bottom-input-card"]} ${isShopByThemeOptionActive
-                          ? styles["chat-products-bottom-input-card-shop-theme"]
-                          : ""
+                        ? styles["chat-products-bottom-input-card-shop-theme"]
+                        : ""
                         }`}
                     >
                       <input
@@ -589,8 +641,8 @@ const ChatProducts = ({
                         onChange={handleInputChange}
                         onKeyDown={handlePromptKeyDown}
                         className={`${styles["chat-products-bottom-input"]} ${isShopByThemeOptionActive
-                            ? styles["chat-products-bottom-input-shop-theme"]
-                            : ""
+                          ? styles["chat-products-bottom-input-shop-theme"]
+                          : ""
                           }`}
                       />
                       {!isShopByThemeOptionActive ? (
@@ -602,10 +654,10 @@ const ChatProducts = ({
                       ) : null}
                       <div
                         className={`${styles["chat-products-bottom-input-actions"]} ${isShopByThemeOptionActive
-                            ? styles[
-                            "chat-products-bottom-input-actions-shop-theme"
-                            ]
-                            : ""
+                          ? styles[
+                          "chat-products-bottom-input-actions-shop-theme"
+                          ]
+                          : ""
                           }`}
                       >
                         {!isShopByThemeOptionActive ? (
@@ -617,10 +669,10 @@ const ChatProducts = ({
                             <button
                               type="button"
                               className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${isFigmaUploadPanelOpen || chatImageUrl
-                                  ? styles[
-                                  "chat-products-bottom-image-button-active"
-                                  ]
-                                  : ""
+                                ? styles[
+                                "chat-products-bottom-image-button-active"
+                                ]
+                                : ""
                                 }`}
                               title="Upload image"
                               onClick={handleFigmaUploadButtonClick}
@@ -658,8 +710,8 @@ const ChatProducts = ({
                         <button
                           type="button"
                           className={`${styles["chat-products-bottom-submit"]} ${isShopByThemeOptionActive
-                              ? styles["chat-products-bottom-submit-shop-theme"]
-                              : ""
+                            ? styles["chat-products-bottom-submit-shop-theme"]
+                            : ""
                             } ${(
                               isShopALookOptionActive
                                 ? !chatImageUrl
