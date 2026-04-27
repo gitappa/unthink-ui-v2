@@ -19,6 +19,7 @@ const AdditionalAttributes = ({
 	productData,
 	collectionValue,
 	isModalOpen,
+	gridClassName,
 }) => {
 	const handlePriceChange = (name, value) => {
 		if (isValidNumber(value) || value === "") {
@@ -84,7 +85,7 @@ const AdditionalAttributes = ({
 
 	return (
 		<>
-			<div className='grid grid-cols-1 tablet:grid-cols-2 2xl:grid-cols-3 gap-3'>
+			<div className={`grid gap-3 ${gridClassName || 'grid-cols-1 tablet:grid-cols-2 2xl:grid-cols-3'}`}>
 				{additionalAttributesToShow.map((attr) => {
 					return (
 						<React.Fragment key={attr.key}>
@@ -92,7 +93,7 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
@@ -131,7 +132,7 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
@@ -173,7 +174,7 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
@@ -230,7 +231,7 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
@@ -264,7 +265,7 @@ const AdditionalAttributes = ({
 							{attr.input_type === "price_range" ? (
 								<div>
 									<div className='flex justify-between'>
-										<label className={`text-base block ${fontColorTheme}`}>
+										<label className={`${fontSizeTheme} block ${fontColorTheme} mb-1`}>
 											Price range
 										</label>
 										<div className='flex items-center'>
@@ -282,19 +283,19 @@ const AdditionalAttributes = ({
 									<div className='flex flex-row'>
 										<Input
 											type='text'
-											className='outline-none px-3 h-10 rounded-xl w-full'
+											className='outline-none px-3 h-8 rounded-xl w-full text-sm'
 											placeholder='Minimum'
 											value={attributesData?.price?.min || ""}
 											onChange={(e) => handlePriceChange("min", e.target.value)}
 											name='priceRange-min'
 										/>
 										<span
-											className={`flex justify-center items-center text-base mx-5 ${fontColorTheme}`}>
+											className={`flex justify-center items-center text-sm mx-2 ${fontColorTheme}`}>
 											to
 										</span>
 										<Input
 											type='text'
-											className='outline-none px-3 h-10 rounded-xl w-full'
+											className='outline-none px-3 h-8 rounded-xl w-full text-sm'
 											placeholder='Maximum'
 											value={attributesData?.price?.max || ""}
 											onChange={(e) => handlePriceChange("max", e.target.value)}

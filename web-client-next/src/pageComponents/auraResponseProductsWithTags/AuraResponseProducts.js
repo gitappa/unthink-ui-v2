@@ -737,7 +737,8 @@ const AuraResponseProducts = ({
 	return (
 		<>
 			<div id={elementId}>
-				{!isLoading ? (
+				<div className={styles['aura-products-main-content']}>
+					{!isLoading ? (
 					<>
 						{enableCustomFilter || enableFilters ? (
 							<div className={styles['aura-products-filter-header']}>
@@ -788,44 +789,6 @@ const AuraResponseProducts = ({
 							</div>
 						) : null}
 
-						{enableFilters && filterOptionsVisible ? (
-							<>
-								<div className={styles['aura-products-filter-panel']}>
-									<div className={styles['aura-products-filter-panel-header']}>
-										<h4 className={styles['aura-products-filter-panel-title']}>Filter Products</h4>
-										<div className={styles['aura-products-filter-panel-controls']}>
-											{isFiltersAvailable ? (
-												<p
-													className={styles['aura-products-filter-clear-all']}
-													role='button'
-													onClick={handleClearFiltersClick}>
-													Clear All
-												</p>
-											) : null}
-											<button
-												className={styles['aura-products-filter-go-button']}
-												onClick={() => handleFiltersSubmit(filters, false)}
-												role='button'>
-												Go
-											</button>
-											<CloseOutlined
-												className={styles['aura-products-filter-close']}
-												role='button'
-												title='close filters'
-												onClick={() => setFilterOptionsVisible(false)}
-											/>
-										</div>
-									</div>
-
-									<AdditionalAttributes
-										additionalAttributesToShow={filtersToShow}
-										attributesData={filters}
-										handleAdditionalAttributesChange={onFiltersChange}
-										handleFiltersOptionalChange={handleFiltersOptionalChange}
-									/>
-								</div>
-							</>
-						) : null}
 
 						{chatProductsDataToShow.length ? (
 							<div className={styles['aura-products-selection-controls']}>
@@ -1126,6 +1089,51 @@ const AuraResponseProducts = ({
 							</div>
 						)}
 					</>
+				)}
+				</div>
+
+				{enableFilters && (
+					<Modal
+						title={
+							<div className={styles['aura-products-filter-modal-header']}>
+								<h4 className={styles['aura-products-filter-panel-title']}>Filter Products</h4>
+								{isFiltersAvailable ? (
+									<p
+										className={styles['aura-products-filter-clear-all']}
+										role='button'
+										onClick={handleClearFiltersClick}>
+										Clear All
+									</p>
+								) : null}
+							</div>
+						}
+						open={filterOptionsVisible}
+						onCancel={() => setFilterOptionsVisible(false)}
+						footer={[
+							<button
+								key="submit"
+								className={styles['aura-products-filter-go-button']}
+								onClick={() => handleFiltersSubmit(filters, false)}>
+								Apply Filters
+							</button>
+						]}
+						width={550}
+						centered
+						className={styles['aura-products-filter-modal']}
+						destroyOnClose
+					>
+						<div className={styles['aura-products-filter-modal-content']}>
+							<AdditionalAttributes
+								additionalAttributesToShow={filtersToShow}
+								attributesData={filters}
+								handleAdditionalAttributesChange={onFiltersChange}
+								handleFiltersOptionalChange={handleFiltersOptionalChange}
+								gridClassName="grid-cols-1 tablet:grid-cols-2 gap-4"
+								fontSizeTheme="text-sm"
+								selectBoxSize="default"
+							/>
+						</div>
+					</Modal>
 				)}
 			</div>
 			{isGuestPopUpShow ? (

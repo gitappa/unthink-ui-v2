@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Checkbox, Tooltip } from "antd";
-import { ReloadOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { Checkbox, Tooltip, Upload } from "antd";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -50,6 +50,8 @@ const ChatProducts = ({
   handleTryAgainClick,
   upload_icon,
   page_info,
+  uploadImageProps,
+  handleGoBack,
 }) => {
   const {
     trackCollectionCampCode,
@@ -86,6 +88,7 @@ const ChatProducts = ({
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
 
   const dispatch = useDispatch();
 
@@ -455,14 +458,46 @@ const ChatProducts = ({
           ))}
 
         {shouldShowShopLookSplitLayout ? (
-          <div className={styles["chat-products-shop-look-layout"]}>
+          <div className={styles["chat-products-shop-look-wrapper"]}>
+            <div className={styles["chat-products-layout-switcher-container"]}>
+              <div className={styles["chat-products-layout-switcher"]}>
+                <button
+                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "left" ? styles["chat-products-layout-btn-active"] : ""}`}
+                  onClick={() => setLayoutMode("left")}
+                  title="Sidebar only"
+                >
+                  <div className={styles["layout-icon-left"]} />
+                </button>
+                <button
+                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "both" ? styles["chat-products-layout-btn-active"] : ""}`}
+                  onClick={() => setLayoutMode("both")}
+                  title="Split view"
+                >
+                  <div className={styles["layout-icon-both"]} />
+                </button>
+                <button
+                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "right" ? styles["chat-products-layout-btn-active"] : ""}`}
+                  onClick={() => setLayoutMode("right")}
+                  title="Products only"
+                >
+                  <div className={styles["layout-icon-right"]} />
+                </button>
+              </div>
+            </div>
+            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]}`}>
             <div className={styles["chat-products-shop-look-sidebar"]}>
-              <h2 className={styles["chatmodal-category-title"]}>
-                {activeSearchOption?.title?.toUpperCase()}
-              </h2>
+              <div className="flex items-center">
+                <ArrowLeftOutlined
+                  className="cursor-pointer text-2xl pr-2"
+                  onClick={handleGoBack}
+                />
+                <h2 className={styles["chatmodal-category-title"]}>
+                  {activeSearchOption?.title?.toUpperCase()}
+                </h2>
+              </div>
               <div className="flex flex-col gap-3">
                 <div>
-                  <div className="flex justify-between gap-3">
+                  <div className={styles["chat-products-shop-look-sidebar-content"]}>
                     {shopLookPreviewImage ? (
                       <div className={styles["chat-products-shop-look-image-wrapper"]}>
                         <img
@@ -536,15 +571,17 @@ const ChatProducts = ({
                           ))}
                         </div>
                       ) : null}
-                      <button
-                        type="button"
-                        className={
-                          styles["chat-products-shop-look-smart-search"]
-                        }
-                        onClick={scrollToProductsContainer}
-                      >
-                        Smart search
-                      </button>
+                      <Upload {...uploadImageProps} showUploadList={false} style={{ width: '100%' }}>
+                        <button
+                          type="button"
+                          className={
+                            styles["chat-products-shop-look-smart-search"]
+                          }
+                          style={{ width: '100%' }}
+                        >
+                          Re-upload Image
+                        </button>
+                      </Upload>
                     </div>
                   </div>
                   {isShowFollowUpSearch || isShowTryAgain ? (
@@ -743,6 +780,7 @@ const ChatProducts = ({
               {productsResultsContent}
             </div>
           </div>
+        </div>
         ) : (
           productsResultsContent
         )}

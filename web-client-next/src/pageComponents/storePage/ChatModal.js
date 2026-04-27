@@ -180,6 +180,16 @@ const ChatModal = ({
     showSubmitImageTooltip && setShowSubmitImageTooltip(false);
   };
 
+  const handleGoBack = () => {
+    setIsSearchOptionManuallySelected(false);
+    setIsSearchOptionsVisible(true);
+    dispatch(setActiveSearchOption({})); // Reset active search option
+    dispatch(resetAuraSearchResponse());
+    dispatch(setChatImageUrl("", chatTypeKey));
+    setLocalChatMessage("");
+    setSubmittedPromptPreview({ message: "", imageUrl: "" });
+  };
+
   const {
     text: followUpQuery, //requestedText
     metadata: requestedMetaData,
@@ -1999,6 +2009,8 @@ const ChatModal = ({
               activeSearchOption={activeSearchOption}
               upload_icon={upload_icon}
               page_info={page_info}
+              uploadImageProps={uploadImageProps}
+              handleGoBack={handleGoBack}
             />
           </>
         ) : isShowKioskSearchOptions ? (
