@@ -127,12 +127,16 @@
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+.aura-products-filter-modal-content::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  background: #7268ec;
+  border-radius: 4px;
 }
 
 @media (min-width: 640px) {
@@ -442,7 +446,18 @@
 
 @media (min-width: 1024px) {
   .aura-products-grid-custom {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 16px !important;
   }
 }
+
+.aura-products-grid-split {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+@media (min-width: 768px) {
+  .aura-products-grid-split {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+

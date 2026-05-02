@@ -103,6 +103,7 @@ const AuraResponseProducts = ({
 	allProductList,
 	isAuraChatPage,
 	localChatMessage,
+	layoutMode
 }) => {
 	const [
 		authUser,
@@ -890,7 +891,7 @@ const AuraResponseProducts = ({
 					<>
 						<div
 							id='chat_products_inner_content'
-							className={styles['aura-products-grid-custom']}
+							className={`${styles['aura-products-grid-custom']} ${layoutMode === "both" ? styles["aura-products-grid-split"] : ""}`}
 						>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard

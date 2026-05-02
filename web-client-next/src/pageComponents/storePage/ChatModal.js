@@ -20,6 +20,7 @@ import {
   SlidersOutlined,
   PictureOutlined,
   CaretDownFilled,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "../../helper/useNavigate";
 
@@ -122,6 +123,7 @@ const ChatModal = ({
     auraOverlayCoordinates,
     socketId,
     ButtonClick,
+    chatProductsData,
   ] = useSelector((state) => [
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatMessage],
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
@@ -141,6 +143,7 @@ const ChatModal = ({
     state.chatV2.auraOverlayCoordinates,
     state.chatV2.socketId,
     state.VtoIconReducer.ButtonClick,
+    state.chatV2.chatProductsData || [],
   ]);
   //   console.log("auraServerImage", activeSearchOption);
 
@@ -159,6 +162,7 @@ const ChatModal = ({
   });
   const [isSearchOptionsVisible, setIsSearchOptionsVisible] = useState(true);
   const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
+  const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -298,11 +302,13 @@ const ChatModal = ({
       widgetHeader ||
       widgetImage ||
       !isEmpty(shopALookData) ||
+      !isEmpty(chatProductsData) ||
       isSuggestionsWithProductsAvailable,
     [
       widgetHeader,
       widgetImage,
       shopALookData,
+      chatProductsData,
       isSuggestionsWithProductsAvailable,
     ],
   );
@@ -374,11 +380,22 @@ const ChatModal = ({
     [activeSearchOption?.id],
   );
 
+  const isCompleteTheLookOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.complete_the_look,
+    [activeSearchOption?.id],
+  );
+
+  const isProductSearchOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search,
+    [activeSearchOption?.id],
+  );
+
   const isAllowedSplitLayout = useMemo(
     () =>
       [
         CHAT_SEARCH_OPTION_ID.smart_search,
         CHAT_SEARCH_OPTION_ID.product_search,
+        CHAT_SEARCH_OPTION_ID.complete_the_look,
       ].includes(activeSearchOption?.id),
     [activeSearchOption?.id],
   );
@@ -405,9 +422,13 @@ const ChatModal = ({
   const shouldMoveInputBelowResults = useMemo(
     () =>
       !isBTNormalUserLoggedIn &&
-      activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look &&
+      [
+        CHAT_SEARCH_OPTION_ID.shop_a_look,
+        CHAT_SEARCH_OPTION_ID.smart_search,
+        CHAT_SEARCH_OPTION_ID.complete_the_look,
+      ].includes(activeSearchOption?.id) &&
       isShowAuraResponse &&
-      !shouldUseLegacyImageSearchLayout,
+      (!shouldUseLegacyImageSearchLayout || activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.complete_the_look),
     [
       isBTNormalUserLoggedIn,
       activeSearchOption?.id,
@@ -418,9 +439,21 @@ const ChatModal = ({
 
   const isShowShopLookSplitLayout = useMemo(
     () =>
-      isShopALookOptionActive &&
-      (widgetHeader || !isEmpty(shopALookData) || (showChatLoader && chatImageUrl)),
-    [isShopALookOptionActive, widgetHeader, shopALookData, showChatLoader, chatImageUrl],
+      (isShopALookOptionActive ||
+        isShopByThemeOptionActive ||
+        isCompleteTheLookOptionActive ||
+        isProductSearchOptionActive) &&
+      (widgetHeader || !isEmpty(shopALookData) || !isEmpty(products) || !isEmpty(chatProductsData)),
+    [
+      isShopALookOptionActive,
+      isShopByThemeOptionActive,
+      isCompleteTheLookOptionActive,
+      isProductSearchOptionActive,
+      widgetHeader,
+      shopALookData,
+      products,
+      chatProductsData,
+    ],
   );
 
   const searchOptionPreviewImages = useMemo(
@@ -561,6 +594,7 @@ const ChatModal = ({
       dispatch(setAuraSreverImage(""));
       dispatch(setOverlayCoordinates([]));
       setIsFigmaUploadPanelOpen(false);
+      setIsSearchPopupOpen(false);
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -743,6 +777,13 @@ const ChatModal = ({
               </button>
             </div>
           )}
+          {isShowAuraResponse && isProductSearchOptionActive && (
+            <SearchOutlined
+              className={styles["chatmodal-search-icon-toggle"]}
+              onClick={() => setIsSearchPopupOpen(true)}
+              title="Open Search"
+            />
+          )}
           <CloseOutlined
             id="chat_modal_close_icon"
             onClick={closeChatModal}
@@ -753,11 +794,25 @@ const ChatModal = ({
 
       {!is_kiosk || isActiveSearchOptionAvailable ? (
         <>
-          {!isShowShopLookSplitLayout && (
-            <div
-              className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
-                } `}
+          {(isProductSearchOptionActive ? (isSearchPopupOpen || !isShowAuraResponse) : !isShowShopLookSplitLayout) && (
+            <div 
+              className={isSearchPopupOpen ? styles["chatmodal-search-popup-overlay"] : ""}
+              onClick={() => isSearchPopupOpen && setIsSearchPopupOpen(false)}
             >
+              <div 
+                className={isSearchPopupOpen ? styles["chatmodal-search-popup-content"] : ""}
+                onClick={(e) => isSearchPopupOpen && e.stopPropagation()}
+              >
+                {isSearchPopupOpen && (
+                  <CloseOutlined
+                    className={styles["chatmodal-search-popup-close"]}
+                    onClick={() => setIsSearchPopupOpen(false)}
+                  />
+                )}
+                <div
+                  className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
+                    } `}
+                >
               <div className={styles["chatmodal-content-inner"]}>
                 {/* {!isShowAuraResponse &&
               !isFigmaUploadPanelOpen &&
@@ -842,7 +897,7 @@ const ChatModal = ({
                                   : displaySearchOptions?.length === 4
                                     ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
                                     : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
-                              }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity  -ms-overflow-none scrollbar-none`}
+                              }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity `}
                           >
                             {displaySearchOptions?.map((searchOptions, index) => {
                               const isOptionActive =
@@ -917,7 +972,9 @@ const ChatModal = ({
                                         {searchOptions.subTitle}
                                       </div>
                                       {isOptionActive &&
-                                        searchOptions?.text_example && (
+                                        searchOptions?.text_example &&
+                                        searchOptions?.id !==
+                                        CHAT_SEARCH_OPTION_ID.complete_the_look && (
                                           <div className="flex w-full pb-2 justify-start">
                                             <button
                                               type="button"
@@ -1475,7 +1532,10 @@ const ChatModal = ({
                                     <h2 className={styles["chatmodal-category-title"]}>
                                       {activeSearchOption?.title?.toUpperCase()}
                                     </h2>
-                                    {isAllowedSplitLayout && activeSearchOption?.text_example && (
+                                    {isAllowedSplitLayout &&
+                                  activeSearchOption?.text_example &&
+                                  activeSearchOption?.id !==
+                                  CHAT_SEARCH_OPTION_ID.complete_the_look && (
                                       <button
                                         type="button"
                                         className={styles["chatmodal-try-example-centered"]}
@@ -1695,7 +1755,7 @@ const ChatModal = ({
                                       "chatmodal-figma-input-card-with-preview"
                                       ]
                                       : ""
-                                      } ${isShopByThemeOptionActive
+                                      } ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
                                         ? styles[
                                         "chatmodal-figma-input-card-shop-theme"
                                         ]
@@ -1717,7 +1777,7 @@ const ChatModal = ({
                                         : ""
                                         }`}
                                     >
-                                      {activeSearchOption.allow_image_search && (
+                                      {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
                                         <div
                                           className={
                                             styles["chatmodal-figma-input-actions-left"]
@@ -1786,9 +1846,12 @@ const ChatModal = ({
                                           value={localChatMessage}
                                           onChange={handleInputChange}
                                           onKeyDown={handlePromptKeyDown}
-                                          className={`${styles["chatmodal-figma-input"]} ${!localChatMessage
-                                            ? styles["chatmodal-figma-input-shop-theme"]
-                                            : "text-black-200 font-medium"
+                                          className={`${styles["chatmodal-figma-input"]} ${!(isShopByThemeOptionActive || isCompleteTheLookOptionActive)
+                                            ? ""
+                                            : styles["chatmodal-figma-input-shop-theme"]
+                                            } ${!localChatMessage
+                                              ? styles["chatmodal-figma-input-shop-theme"]
+                                              : "text-black-200 font-medium"
                                             }`}
                                         />
                                       </div>
@@ -1796,7 +1859,7 @@ const ChatModal = ({
 
                                       <button
                                         type="button"
-                                        className={`${styles["chatmodal-figma-submit"]} ${isShopByThemeOptionActive
+                                        className={`${styles["chatmodal-figma-submit"]} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
                                           ? styles[
                                           "chatmodal-figma-submit-shop-theme"
                                           ]
@@ -1969,6 +2032,8 @@ const ChatModal = ({
                 <div className={styles["chatmodal-content-wrapper-border"]}></div>
                 // </div>
               )}
+                </div>
+              </div>
             </div>
           )}
         </>

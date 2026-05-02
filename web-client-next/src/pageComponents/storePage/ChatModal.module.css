@@ -14,6 +14,20 @@
   overflow-y: auto;
 }
 
+.chatmodal-modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatmodal-modal-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatmodal-modal-container::-webkit-scrollbar-thumb {
+  background: #7268ec;
+  border-radius: 4px;
+}
+
+
 @media (min-width: 1024px) {
   .chatmodal-modal-container-fixed {
     height: 100vh;
@@ -318,13 +332,26 @@
   overflow-x: auto;
   padding: 0.65rem 0 0.4rem;
   scroll-snap-type: x proximity;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: auto;
+  scrollbar-width: auto;
 }
 
 .chatmodal-search-options-grid::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+  height: 8px;
+  display: block;
 }
+
+.chatmodal-search-options-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatmodal-search-options-grid::-webkit-scrollbar-thumb {
+  background: #7268ec;
+  border-radius: 4px;
+}
+
+/* Grid scrollbar styling handled above */
 
 @media (min-width: 1100px) {
   .chatmodal-search-options-grid {
@@ -1002,6 +1029,20 @@
   resize: none;
   overflow-y: auto;
 }
+
+.chatmodal-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatmodal-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatmodal-textarea::-webkit-scrollbar-thumb {
+  background: #7268ec;
+  border-radius: 4px;
+}
+
 
 @media (min-width: 1024px) {
   .chatmodal-textarea {
@@ -1741,8 +1782,22 @@
   overflow-y: auto;
 }
 
+.chatmodal-products-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatmodal-products-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatmodal-products-container::-webkit-scrollbar-thumb {
+  background: #7268ec;
+  border-radius: 4px;
+}
+
+
 @media (min-width: 1024px) {
-  .chatmodal-products-container {
+  .chatmodal-modal-container-fixed .chatmodal-products-container {
     overflow: hidden;
   }
 }
@@ -2060,6 +2115,73 @@
 
 .chatmodal-toggle-icon-up {
   transform: rotate(180deg);
+}
+
+.chatmodal-search-icon-toggle {
+  font-size: 1.25rem;
+  color: #7268ec;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  background: rgba(114, 104, 236, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatmodal-search-icon-toggle:hover {
+  background: rgba(114, 104, 236, 0.2);
+  transform: scale(1.1);
+}
+
+/* Search Popup Styles */
+.chatmodal-search-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.chatmodal-search-popup-content {
+  background: white;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  animation: slideInUp 0.3s ease;
+}
+
+.chatmodal-search-popup-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: #7268ec;
+  cursor: pointer;
+  z-index: 10;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideUpDown {

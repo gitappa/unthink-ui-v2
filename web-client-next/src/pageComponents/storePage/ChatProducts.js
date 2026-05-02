@@ -149,11 +149,32 @@ const ChatProducts = ({
     [activeSearchOption?.id],
   );
 
+  const isCompleteTheLookOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.complete_the_look,
+    [activeSearchOption?.id],
+  );
+
+  const isProductSearchOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search,
+    [activeSearchOption?.id],
+  );
+
   const shouldShowShopLookSplitLayout = useMemo(
     () =>
-      activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look &&
-      (widgetHeader || !isEmpty(shopALookData) || (showChatLoader && chatImageUrl)),
-    [activeSearchOption?.id, widgetHeader, shopALookData, showChatLoader, chatImageUrl],
+      (activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look ||
+        isShopByThemeOptionActive ||
+        isCompleteTheLookOptionActive ||
+        isProductSearchOptionActive) &&
+      (widgetHeader || !isEmpty(shopALookData) || !isEmpty(chatProductsData)),
+    [
+      activeSearchOption?.id,
+      isShopByThemeOptionActive,
+      isCompleteTheLookOptionActive,
+      isProductSearchOptionActive,
+      widgetHeader,
+      shopALookData,
+      chatProductsData,
+    ],
   );
 
   const shopLookPreviewImage = useMemo(
@@ -259,6 +280,7 @@ const ChatProducts = ({
             isAuraChatPage={isAuraChatPage}
             localChatMessage={localChatMessage}
             showTitle={!shouldShowShopLookSplitLayout}
+            layoutMode={shouldShowShopLookSplitLayout ? layoutMode : "full"}
           />
         </>
       ) : null}
@@ -336,7 +358,7 @@ const ChatProducts = ({
 
           <div
             id="chat_products_inner_content"
-            className={styles["chat-products-grid"]}
+            className={`${styles["chat-products-grid"]} ${shouldShowShopLookSplitLayout && layoutMode === "both" ? styles["chat-products-grid-split"] : ""}`}
           >
             {chatProductsDataToShow.map((product) => (
               <React.Fragment key={product.mfr_code}>
@@ -632,7 +654,8 @@ const ChatProducts = ({
                 {shouldMoveInputBelowResults ? (
                   <div className={styles["chat-products-bottom-input-wrapper"]}>
                     <div
-                      className={`${styles["chat-products-bottom-input-card"]} ${isShopByThemeOptionActive
+                      className={`${styles["chat-products-bottom-input-card"]} ${
+                        isShopByThemeOptionActive || isCompleteTheLookOptionActive
                         ? styles["chat-products-bottom-input-card-shop-theme"]
                         : ""
                         }`}
@@ -652,12 +675,13 @@ const ChatProducts = ({
                         value={localChatMessage}
                         onChange={handleInputChange}
                         onKeyDown={handlePromptKeyDown}
-                        className={`${styles["chat-products-bottom-input"]} ${isShopByThemeOptionActive
+                        className={`${styles["chat-products-bottom-input"]} ${
+                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
                           ? styles["chat-products-bottom-input-shop-theme"]
                           : ""
                           }`}
                       />
-                      {!isShopByThemeOptionActive ? (
+                      {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
                         <div
                           className={
                             styles["chat-products-bottom-input-divider"]
@@ -665,14 +689,15 @@ const ChatProducts = ({
                         />
                       ) : null}
                       <div
-                        className={`${styles["chat-products-bottom-input-actions"]} ${isShopByThemeOptionActive
+                        className={`${styles["chat-products-bottom-input-actions"]} ${
+                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
                           ? styles[
                           "chat-products-bottom-input-actions-shop-theme"
                           ]
                           : ""
                           }`}
                       >
-                        {!isShopByThemeOptionActive ? (
+                        {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
                           <div
                             className={
                               styles["chat-products-bottom-input-actions-left"]
@@ -721,7 +746,8 @@ const ChatProducts = ({
                         ) : null}
                         <button
                           type="button"
-                          className={`${styles["chat-products-bottom-submit"]} ${isShopByThemeOptionActive
+                          className={`${styles["chat-products-bottom-submit"]} ${
+                            isShopByThemeOptionActive || isCompleteTheLookOptionActive
                             ? styles["chat-products-bottom-submit-shop-theme"]
                             : ""
                             } ${(
