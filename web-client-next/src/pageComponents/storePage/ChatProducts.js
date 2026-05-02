@@ -52,6 +52,7 @@ const ChatProducts = ({
   page_info,
   uploadImageProps,
   handleGoBack,
+  layoutMode,
 }) => {
   const {
     trackCollectionCampCode,
@@ -88,7 +89,6 @@ const ChatProducts = ({
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
 
   const dispatch = useDispatch();
 
@@ -459,31 +459,6 @@ const ChatProducts = ({
 
         {shouldShowShopLookSplitLayout ? (
           <div className={styles["chat-products-shop-look-wrapper"]}>
-            <div className={styles["chat-products-layout-switcher-container"]}>
-              <div className={styles["chat-products-layout-switcher"]}>
-                <button
-                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "left" ? styles["chat-products-layout-btn-active"] : ""}`}
-                  onClick={() => setLayoutMode("left")}
-                  title="Sidebar only"
-                >
-                  <div className={styles["layout-icon-left"]} />
-                </button>
-                <button
-                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "both" ? styles["chat-products-layout-btn-active"] : ""}`}
-                  onClick={() => setLayoutMode("both")}
-                  title="Split view"
-                >
-                  <div className={styles["layout-icon-both"]} />
-                </button>
-                <button
-                  className={`${styles["chat-products-layout-btn"]} ${layoutMode === "right" ? styles["chat-products-layout-btn-active"] : ""}`}
-                  onClick={() => setLayoutMode("right")}
-                  title="Products only"
-                >
-                  <div className={styles["layout-icon-right"]} />
-                </button>
-              </div>
-            </div>
             <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]}`}>
             <div className={styles["chat-products-shop-look-sidebar"]}>
               <div className="flex items-center">

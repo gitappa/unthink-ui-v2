@@ -158,6 +158,7 @@ const ChatModal = ({
     imageUrl: "",
   });
   const [isSearchOptionsVisible, setIsSearchOptionsVisible] = useState(true);
+  const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
 
   const dispatch = useDispatch();
 
@@ -418,8 +419,8 @@ const ChatModal = ({
   const isShowShopLookSplitLayout = useMemo(
     () =>
       isShopALookOptionActive &&
-      (widgetHeader || !isEmpty(shopALookData)),
-    [isShopALookOptionActive, widgetHeader, shopALookData],
+      (widgetHeader || !isEmpty(shopALookData) || (showChatLoader && chatImageUrl)),
+    [isShopALookOptionActive, widgetHeader, shopALookData, showChatLoader, chatImageUrl],
   );
 
   const searchOptionPreviewImages = useMemo(
@@ -717,6 +718,31 @@ const ChatModal = ({
       {/* hide close icon for AuraChatPage */}
       {!isAuraChatPage ? (
         <div className={styles["chatmodal-close-icon-container"]}>
+          {isShowShopLookSplitLayout && (
+            <div className={styles["chatmodal-layout-switcher"]}>
+              <button
+                className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "left" ? styles["chatmodal-layout-btn-active"] : ""}`}
+                onClick={() => setLayoutMode("left")}
+                title="Sidebar only"
+              >
+                <div className={styles["layout-icon-left"]} />
+              </button>
+              <button
+                className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "both" ? styles["chatmodal-layout-btn-active"] : ""}`}
+                onClick={() => setLayoutMode("both")}
+                title="Split view"
+              >
+                <div className={styles["layout-icon-both"]} />
+              </button>
+              <button
+                className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "right" ? styles["chatmodal-layout-btn-active"] : ""}`}
+                onClick={() => setLayoutMode("right")}
+                title="Products only"
+              >
+                <div className={styles["layout-icon-right"]} />
+              </button>
+            </div>
+          )}
           <CloseOutlined
             id="chat_modal_close_icon"
             onClick={closeChatModal}
@@ -2011,6 +2037,7 @@ const ChatModal = ({
               page_info={page_info}
               uploadImageProps={uploadImageProps}
               handleGoBack={handleGoBack}
+              layoutMode={layoutMode}
             />
           </>
         ) : isShowKioskSearchOptions ? (

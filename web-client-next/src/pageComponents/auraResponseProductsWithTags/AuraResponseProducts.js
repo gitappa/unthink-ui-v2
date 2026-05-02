@@ -1130,6 +1130,7 @@ const AuraResponseProducts = ({
 								handleFiltersOptionalChange={handleFiltersOptionalChange}
 								gridClassName="grid-cols-1 tablet:grid-cols-2 gap-4"
 								fontSizeTheme="text-sm"
+								fontColorTheme="text-[#4c5672] font-medium"
 								selectBoxSize="default"
 							/>
 						</div>
