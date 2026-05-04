@@ -556,7 +556,7 @@ const AuraResponseProducts = ({
 					? COLLECTION_GENERATED_BY_IMAGE_BASED
 					: COLLECTION_GENERATED_BY_SEARCH_BASED,
 				...data,
-				user_id:userId || userData?.user_id
+				user_id:userId || userData?.user_id || authUser?.user_id
 			};
 
 			if (isSave) {
