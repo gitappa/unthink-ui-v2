@@ -58,6 +58,7 @@ import { authAPIs } from "../../helper/serverAPIs";
 import {
 	getUserCollections,
 	getUserInfo,
+	getUserInfoSuccess,
 	GuestPopUpShow,
 } from "../Auth/redux/actions";
 import GuestPopUp from "../Auth/GuestPopUp";
@@ -71,6 +72,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import WishListModal from "../wishlist/WishListModal";
+import { useUserData } from "../../context/UserDataContext";
 
 SwiperCore.use([FreeMode, Navigation]);
 
@@ -127,7 +129,9 @@ const AuraResponseProducts = ({
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
 	]);
-
+  const {setUserData} = useUserData()
+  	const {userData } = useUserData()
+  
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -503,7 +507,7 @@ const AuraResponseProducts = ({
 
 	const onAddSelectedProductsToCollection = useCallback(
 		(e =null,options ={}) => {
-			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false } = options;
+			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null } = options;
 
     if (e?.preventDefault) {
       e?.preventDefault();
@@ -552,6 +556,7 @@ const AuraResponseProducts = ({
 					? COLLECTION_GENERATED_BY_IMAGE_BASED
 					: COLLECTION_GENERATED_BY_SEARCH_BASED,
 				...data,
+				user_id:userId || userData?.user_id
 			};
 
 			if (isSave) {
@@ -703,7 +708,6 @@ const AuraResponseProducts = ({
 
 					const { data } = res;
 					const user_id = data.data.user_id;
-console.log('dfdfdfdfd',guestActionRef.current);
 
 					if (res.data.status_code === 200) {
 						dispatch(GuestPopUpShow(false));
@@ -712,7 +716,8 @@ console.log('dfdfdfdfd',guestActionRef.current);
   let { data, status } = await authAPIs.getUserInfoAPICall({ user_id });
 
   if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
-    dispatch(getUserInfoSuccess(data.data));
+    // dispatch(getUserInfoSuccess(data.data));
+	setUserData(data?.data)
   }
 } catch (e) {
   console.error(e);
@@ -733,7 +738,7 @@ console.log('dfdfdfdfd',guestActionRef.current);
 						if (guestActionRef.current === "save") {
 							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true });
 						} else if (guestActionRef.current === "share") {
-							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true });
+							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true ,userId:data?.data?.user_id});
 						}
 					}
 				} catch (error) {

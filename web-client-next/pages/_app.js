@@ -45,6 +45,7 @@ import {
   is_store_instance,
   current_store_name,
 } from '../src/constants/config';
+import { UserDataProvider } from '../src/context/UserDataContext';
 
 function MyApp({ Component, pageProps }) {
   const [mounted, setMounted] = useState(false);
@@ -88,6 +89,7 @@ function MyApp({ Component, pageProps }) {
           <ReduxWrapper>
             <ActionWrapper>
               <ContextWrapper>
+                <UserDataProvider>
                 {mounted ? (
                   <>
                     <AppLoaderComponent />
@@ -101,6 +103,7 @@ function MyApp({ Component, pageProps }) {
                   </>
                 ) : null}
                 <Component {...pageProps} />
+                </UserDataProvider>
               </ContextWrapper>
             </ActionWrapper>
           </ReduxWrapper>
