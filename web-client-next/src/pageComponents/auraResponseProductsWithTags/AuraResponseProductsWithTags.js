@@ -26,7 +26,8 @@ const AuraResponseProductsWithTags = ({
 	widgetImage,
 	isAuraChatPage,
 	handleLoadMore,
-	localChatMessage
+	localChatMessage,
+	layoutMode
 
 }) => {
 	const [suggestionsWithProducts,suggestionsTags, recommendationsWithProducts, moreProducts] = useSelector((state) => [
@@ -272,6 +273,7 @@ const AuraResponseProductsWithTags = ({
 				allProductList={allProductList}
 				isAuraChatPage={isAuraChatPage}
 				localChatMessage={localChatMessage}
+				layoutMode={layoutMode}
 			/>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Checkbox } from "antd";
-import { ReloadOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { Checkbox, Tooltip, Upload } from "antd";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -19,6 +19,7 @@ import {
   WISHLIST_TITLE,
 } from "../../constants/codes";
 import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALook";
+import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 import styles from "./ChatProducts.module.css";
 
 const ChatProducts = ({
@@ -49,6 +50,9 @@ const ChatProducts = ({
   handleTryAgainClick,
   upload_icon,
   page_info,
+  uploadImageProps,
+  handleGoBack,
+  layoutMode,
 }) => {
   const {
     trackCollectionCampCode,
@@ -68,6 +72,7 @@ const ChatProducts = ({
     products,
     shopALookData,
     activeSearchOption,
+    auraOverlayCoordinates,
   ] = useSelector((state) => [
     state.chatV2.chatProductsData || [],
     state.chatV2.widgetHeader,
@@ -79,12 +84,29 @@ const ChatProducts = ({
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].products],
     state.chatV2.shopALook,
     state.chatV2.activeSearchOption || {},
+    state.chatV2.auraOverlayCoordinates,
   ]);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const dispatch = useDispatch();
+
+  const handleSuggestionClick = (tag) => {
+    if (suggestionsWithProducts?.suggestions?.tags?.includes(tag)) {
+      dispatch(setSuggestionsSelectedTag(tag));
+    }
+    // Scroll to the tag div
+    const tagElement = document.getElementById(`tag-${tag}`);
+    if (tagElement) {
+      tagElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  const originalWidth = 1024;
+  const originalHeight = 1027;
+  const newWidth = 404;
+  const newHeight = 400;
 
   // const { sendMessage } = useChat();
 
@@ -127,7 +149,33 @@ const ChatProducts = ({
     [activeSearchOption?.id],
   );
 
-  const shouldShowShopLookSplitLayout = useMemo(() => false, []);
+  const isCompleteTheLookOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.complete_the_look,
+    [activeSearchOption?.id],
+  );
+
+  const isProductSearchOptionActive = useMemo(
+    () => activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search,
+    [activeSearchOption?.id],
+  );
+
+  const shouldShowShopLookSplitLayout = useMemo(
+    () =>
+      (activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.shop_a_look ||
+        isShopByThemeOptionActive ||
+        isCompleteTheLookOptionActive ||
+        isProductSearchOptionActive) &&
+      (widgetHeader || !isEmpty(shopALookData) || !isEmpty(chatProductsData)),
+    [
+      activeSearchOption?.id,
+      isShopByThemeOptionActive,
+      isCompleteTheLookOptionActive,
+      isProductSearchOptionActive,
+      widgetHeader,
+      shopALookData,
+      chatProductsData,
+    ],
+  );
 
   const shopLookPreviewImage = useMemo(
     () => widgetImage || chatImageUrl || products?.image_url || "",
@@ -197,9 +245,9 @@ const ChatProducts = ({
   const productsResultsContent = (
     <>
       {!isEmpty(shopALookData) &&
-      isTagAvailable &&
-      !isBTNormalUserLoggedIn &&
-      !shouldShowShopLookSplitLayout ? (
+        isTagAvailable &&
+        !isBTNormalUserLoggedIn &&
+        !shouldShowShopLookSplitLayout ? (
         <div className={styles["chat-products-nav-container"]}>
           <div
             className={`${styles["chat-products-nav-item"]} ${styles["chat-products-nav-item-active"]}`}
@@ -232,6 +280,7 @@ const ChatProducts = ({
             isAuraChatPage={isAuraChatPage}
             localChatMessage={localChatMessage}
             showTitle={!shouldShowShopLookSplitLayout}
+            layoutMode={shouldShowShopLookSplitLayout ? layoutMode : "full"}
           />
         </>
       ) : null}
@@ -276,11 +325,10 @@ const ChatProducts = ({
                         ? onAddSelectedProductsToCollection
                         : undefined
                     }
-                    className={`${styles["chat-products-action-text"]} ${
-                      selectedProducts.length
-                        ? styles["chat-products-action-button"]
-                        : styles["chat-products-action-button-disabled"]
-                    }`}
+                    className={`${styles["chat-products-action-text"]} ${selectedProducts.length
+                      ? styles["chat-products-action-button"]
+                      : styles["chat-products-action-button-disabled"]
+                      }`}
                     title="Click to add selected products in collection"
                     role="button"
                   >
@@ -310,7 +358,7 @@ const ChatProducts = ({
 
           <div
             id="chat_products_inner_content"
-            className={styles["chat-products-grid"]}
+            className={`${styles["chat-products-grid"]} ${shouldShowShopLookSplitLayout && layoutMode === "both" ? styles["chat-products-grid-split"] : ""}`}
           >
             {chatProductsDataToShow.map((product) => (
               <React.Fragment key={product.mfr_code}>
@@ -432,20 +480,55 @@ const ChatProducts = ({
           ))}
 
         {shouldShowShopLookSplitLayout ? (
-          <div className={styles["chat-products-shop-look-layout"]}>
+          <div className={styles["chat-products-shop-look-wrapper"]}>
+            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]}`}>
             <div className={styles["chat-products-shop-look-sidebar"]}>
-              <h2 className={styles["chat-products-shop-look-title"]}>
-                SHOP THE LOOK
-              </h2>
-              <div className="flex flex-col h-full justify-between min-h-[70vh] ">
+              <div className="flex items-center">
+                <ArrowLeftOutlined
+                  className="cursor-pointer text-2xl pr-2"
+                  onClick={handleGoBack}
+                />
+                <h2 className={styles["chatmodal-category-title"]}>
+                  {activeSearchOption?.title?.toUpperCase()}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-3">
                 <div>
-                  <div className="flex justify-between gap-3">
+                  <div className={styles["chat-products-shop-look-sidebar-content"]}>
                     {shopLookPreviewImage ? (
-                      <img
-                        src={shopLookPreviewImage}
-                        alt="Shop the look"
-                        className={styles["chat-products-shop-look-image"]}
-                      />
+                      <div className={styles["chat-products-shop-look-image-wrapper"]}>
+                        <img
+                          src={shopLookPreviewImage}
+                          alt="Shop the look"
+                          className={styles["chat-products-shop-look-image"]}
+                        />
+                        {Array.isArray(auraOverlayCoordinates) &&
+                          auraOverlayCoordinates.map((item, index) => {
+                            const adjustedX =
+                              (item.point[0] / originalWidth) * newWidth;
+                            const adjustedY =
+                              (item.point[1] / originalHeight) * newHeight;
+
+                            return (
+                              <Tooltip
+                                key={index}
+                                title={item.attributes.label}
+                                color="blue"
+                              >
+                                <div
+                                  onClick={() =>
+                                    handleSuggestionClick(item.attributes.label)
+                                  }
+                                  className={styles["chat-products-overlay-point"]}
+                                  style={{
+                                    left: `${adjustedX}px`,
+                                    top: `${adjustedY}px`,
+                                  }}
+                                />
+                              </Tooltip>
+                            );
+                          })}
+                      </div>
                     ) : null}
                     <div>
                       <div
@@ -485,15 +568,17 @@ const ChatProducts = ({
                           ))}
                         </div>
                       ) : null}
-                      <button
-                        type="button"
-                        className={
-                          styles["chat-products-shop-look-smart-search"]
-                        }
-                        onClick={scrollToProductsContainer}
-                      >
-                        Smart search
-                      </button>
+                      <Upload {...uploadImageProps} showUploadList={false} style={{ width: '100%' }}>
+                        <button
+                          type="button"
+                          className={
+                            styles["chat-products-shop-look-smart-search"]
+                          }
+                          style={{ width: '100%' }}
+                        >
+                          Re-upload Image
+                        </button>
+                      </Upload>
                     </div>
                   </div>
                   {isShowFollowUpSearch || isShowTryAgain ? (
@@ -506,7 +591,7 @@ const ChatProducts = ({
                         <div
                           className={
                             styles[
-                              "chat-products-bottom-followup-checkbox-wrap"
+                            "chat-products-bottom-followup-checkbox-wrap"
                             ]
                           }
                         >
@@ -525,8 +610,8 @@ const ChatProducts = ({
                             className={
                               showChatLoader
                                 ? styles[
-                                    "chat-products-bottom-followup-label-disabled"
-                                  ]
+                                "chat-products-bottom-followup-label-disabled"
+                                ]
                                 : styles["chat-products-bottom-followup-label"]
                             }
                           >
@@ -535,8 +620,8 @@ const ChatProducts = ({
                         </div>
                       ) : null}
                       {isShowFollowUpSearch &&
-                      isShowTryAgain &&
-                      isSidExpired ? (
+                        isShowTryAgain &&
+                        isSidExpired ? (
                         <div
                           className={
                             styles["chat-products-bottom-followup-divider"]
@@ -545,13 +630,12 @@ const ChatProducts = ({
                       ) : null}
                       {isShowTryAgain ? (
                         <button
-                          className={`${styles["chat-products-bottom-try-again-button"]} ${
-                            showChatLoader
-                              ? styles[
-                                  "chat-products-bottom-try-again-button-disabled"
-                                ]
-                              : ""
-                          }`}
+                          className={`${styles["chat-products-bottom-try-again-button"]} ${showChatLoader
+                            ? styles[
+                            "chat-products-bottom-try-again-button-disabled"
+                            ]
+                            : ""
+                            }`}
                           title="Regenerate the products with AI."
                           onClick={handleTryAgainClick}
                           disabled={showChatLoader}
@@ -571,10 +655,10 @@ const ChatProducts = ({
                   <div className={styles["chat-products-bottom-input-wrapper"]}>
                     <div
                       className={`${styles["chat-products-bottom-input-card"]} ${
-                        isShopByThemeOptionActive
-                          ? styles["chat-products-bottom-input-card-shop-theme"]
-                          : ""
-                      }`}
+                        isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                        ? styles["chat-products-bottom-input-card-shop-theme"]
+                        : ""
+                        }`}
                     >
                       <input
                         id={`chat_search_input_bottom_${chatTypeKey}`}
@@ -582,22 +666,22 @@ const ChatProducts = ({
                         ref={inputRef}
                         placeholder={
                           typeof activeSearchOption?.text_placeholder ===
-                          "string"
+                            "string"
                             ? activeSearchOption?.text_placeholder
                             : activeSearchOption?.text_placeholder?.[0] ||
-                              "Describe your product idea"
+                            "Describe your product idea"
                         }
                         name="chat_message"
                         value={localChatMessage}
                         onChange={handleInputChange}
                         onKeyDown={handlePromptKeyDown}
                         className={`${styles["chat-products-bottom-input"]} ${
-                          isShopByThemeOptionActive
-                            ? styles["chat-products-bottom-input-shop-theme"]
-                            : ""
-                        }`}
+                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                          ? styles["chat-products-bottom-input-shop-theme"]
+                          : ""
+                          }`}
                       />
-                      {!isShopByThemeOptionActive ? (
+                      {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
                         <div
                           className={
                             styles["chat-products-bottom-input-divider"]
@@ -606,14 +690,14 @@ const ChatProducts = ({
                       ) : null}
                       <div
                         className={`${styles["chat-products-bottom-input-actions"]} ${
-                          isShopByThemeOptionActive
-                            ? styles[
-                                "chat-products-bottom-input-actions-shop-theme"
-                              ]
-                            : ""
-                        }`}
+                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                          ? styles[
+                          "chat-products-bottom-input-actions-shop-theme"
+                          ]
+                          : ""
+                          }`}
                       >
-                        {!isShopByThemeOptionActive ? (
+                        {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
                           <div
                             className={
                               styles["chat-products-bottom-input-actions-left"]
@@ -621,13 +705,12 @@ const ChatProducts = ({
                           >
                             <button
                               type="button"
-                              className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${
-                                isFigmaUploadPanelOpen || chatImageUrl
-                                  ? styles[
-                                      "chat-products-bottom-image-button-active"
-                                    ]
-                                  : ""
-                              }`}
+                              className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${isFigmaUploadPanelOpen || chatImageUrl
+                                ? styles[
+                                "chat-products-bottom-image-button-active"
+                                ]
+                                : ""
+                                }`}
                               title="Upload image"
                               onClick={handleFigmaUploadButtonClick}
                             >
@@ -664,18 +747,17 @@ const ChatProducts = ({
                         <button
                           type="button"
                           className={`${styles["chat-products-bottom-submit"]} ${
-                            isShopByThemeOptionActive
-                              ? styles["chat-products-bottom-submit-shop-theme"]
-                              : ""
-                          } ${
-                            (
+                            isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                            ? styles["chat-products-bottom-submit-shop-theme"]
+                            : ""
+                            } ${(
                               isShopALookOptionActive
                                 ? !chatImageUrl
                                 : !localChatMessage && !chatImageUrl
                             )
                               ? styles["chat-products-bottom-submit-disabled"]
                               : ""
-                          }`}
+                            }`}
                           onClick={handleSubmitChatInput}
                           disabled={
                             isShopALookOptionActive
@@ -699,6 +781,7 @@ const ChatProducts = ({
               {productsResultsContent}
             </div>
           </div>
+        </div>
         ) : (
           productsResultsContent
         )}
