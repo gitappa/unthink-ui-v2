@@ -1755,7 +1755,7 @@ const ChatModal = ({
                                       "chatmodal-figma-input-card-with-preview"
                                       ]
                                       : ""
-                                      } ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                                      } ${isShopByThemeOptionActive
                                         ? styles[
                                         "chatmodal-figma-input-card-shop-theme"
                                         ]
@@ -1777,7 +1777,7 @@ const ChatModal = ({
                                         : ""
                                         }`}
                                     >
-                                      {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
+                                      {!isShopByThemeOptionActive && (
                                         <div
                                           className={
                                             styles["chatmodal-figma-input-actions-left"]
@@ -1846,7 +1846,7 @@ const ChatModal = ({
                                           value={localChatMessage}
                                           onChange={handleInputChange}
                                           onKeyDown={handlePromptKeyDown}
-                                          className={`${styles["chatmodal-figma-input"]} ${!(isShopByThemeOptionActive || isCompleteTheLookOptionActive)
+                                          className={`${styles["chatmodal-figma-input"]} ${!isShopByThemeOptionActive
                                             ? ""
                                             : styles["chatmodal-figma-input-shop-theme"]
                                             } ${!localChatMessage
@@ -1859,7 +1859,7 @@ const ChatModal = ({
 
                                       <button
                                         type="button"
-                                        className={`${styles["chatmodal-figma-submit"]} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                                        className={`${styles["chatmodal-figma-submit"]} ${isShopByThemeOptionActive
                                           ? styles[
                                           "chatmodal-figma-submit-shop-theme"
                                           ]
