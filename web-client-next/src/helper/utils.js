@@ -622,7 +622,7 @@ export const getCollectionsView = (
 	// if (user_name) return "influencer";
 if (user_name  &&  window.location.pathname?.startsWith('/my-profile/')) return "influencer";
 	// console.log('isStoreHomePage',user_name != super_admin &&  window.location.pathname?.startsWith('/my-profile/') );
-
+if (user_name) return "influencer";
 	return "public";
 };
 

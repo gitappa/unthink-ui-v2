@@ -41,7 +41,7 @@ const CollectionShareModal = ({
 		() =>
 			collectionDetails._id &&
 			getBlogCollectionPagePath(
-				collectionOwner.user_name,
+				userData?.user_name  || collectionOwner.user_name,
 				collectionDetails.path,
 				collectionDetails._id,
 				collectionOwner.user_id,
