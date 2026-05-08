@@ -130,8 +130,7 @@ const AuraResponseProducts = ({
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
 	]);
-  const {setUserData} = useUserData()
-  	const {userData } = useUserData()
+  const {setUserData ,userData } = useUserData()
   
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
