@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 
 import { closeCollectionShareModal } from "./redux/actions";
+import { useUserData } from "../../context/UserDataContext";
 
 const CollectionShareModal = dynamic(
 	() => import("../../components/CollectionShareModal"),
@@ -23,7 +24,7 @@ const CollectionShareModalComponent = () => {
 		state.collectionShareModal.collectionOwner,
 		state.collectionShareModal.isAutoCreateCollection,
 	]);
-
+const {setUserData  } = useUserData()
 	// load modal on DOM only when required
 	useEffect(() => {
 		if (isModalOpen && !enabledModal) {
@@ -33,6 +34,7 @@ const CollectionShareModalComponent = () => {
 
 	const handleCollectionShareModalClose = () => {
 		dispatch(closeCollectionShareModal());
+		setUserData(null)
 	};
 
 	return (

@@ -12,4 +12,4 @@ export const UserDataProvider = ({children}) =>{
     )
 }
 
-export const useUserData =()=>   useContext (UserDataContext)
+export const useUserData =()=> useContext (UserDataContext)
