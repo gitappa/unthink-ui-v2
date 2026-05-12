@@ -85,7 +85,7 @@ const AdditionalAttributes = ({
 
 	return (
 		<>
-			<div className={`grid gap-3 ${gridClassName || 'grid-cols-1 tablet:grid-cols-2 2xl:grid-cols-3'}`}>
+			<div className={`grid gap-3 ${gridClassName || 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3'}`}>
 				{additionalAttributesToShow.map((attr) => {
 					return (
 						<React.Fragment key={attr.key}>
@@ -249,7 +249,7 @@ const AdditionalAttributes = ({
 										) : null}
 									</div>
 									<input
-										className='text-left placeholder-gray-101 outline-none px-3 h-8 rounded-xl w-full border border-solid border-gray-107'
+										className='text-left placeholder-gray-101 outline-none px-3 h-8 rounded-xl bg-white border-none w-full    '
 										placeholder={`Enter ${attr.key}`}
 										name={attr.key}
 										type='text'
