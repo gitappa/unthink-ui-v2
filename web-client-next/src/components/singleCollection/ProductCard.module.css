@@ -1,3 +1,4 @@
+@reference "tailwindcss";
 .product-wrapper {
   box-sizing: content-box;
   overflow-y: hidden;

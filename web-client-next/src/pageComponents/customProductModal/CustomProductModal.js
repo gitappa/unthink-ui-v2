@@ -773,7 +773,7 @@ const CustomProductModal = ({
 												<div className='h-full product_card_image'>
 													<img
 														src={productData.image}
-														className='h-180 desktop:h-340'
+														className='h-[180px] w-[180px]   '
 														// loading='lazy'
 														width='100%'
 													/>
@@ -1136,7 +1136,7 @@ const CustomProductModal = ({
 									</div>
 								</div>
 								<hr />
-								<div className='grid grid-cols-1 tablet:grid-cols-2 gap-4 tablet:gap-8 mt-4'>
+								<div className='grid grid-cols-1 md:grid-cols-2 gap-4 tablet:gap-8 mt-4'>
 									<div className='flex flex-col gap-4'>
 										<div>
 											{isUploading ? (
@@ -1155,13 +1155,13 @@ const CustomProductModal = ({
 												</div>
 											) : productData.image ? (
 												<div className='flex flex-col items-center justify-center'>
-													<div className='box-content theme-unthink w-40 sm:w-180 desktop:w-80'>
+													<div className='box-content theme-unthink '>
 														<div className='overflow-hidden relative cursor-pointer product_card_container shadow-3xl rounded-xl'>
 															<div className='product-card h-full'>
 																<div className='h-full product_card_image'>
 																	<img
 																		src={productData.image}
-																		className='h-180 desktop:h-340'
+																		className='h-[180px] w-[180px] '
 																		// loading='lazy'
 																		width='100%'
 																	/>
@@ -1169,7 +1169,7 @@ const CustomProductModal = ({
 															</div>
 														</div>
 													</div>
-													<div className='text-center text-primary underline tablet:text-lg text-sm cursor-pointer '>
+													<div className='text-center text-blue-700 underline md:text-lg text-sm cursor-pointer '>
 														<span onClick={() => handleUploadImageChange("")}>
 															remove or change Image
 														</span>
@@ -1197,7 +1197,7 @@ const CustomProductModal = ({
 
 									<div className='flex flex-col gap-4'>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full bg-white'
 											placeholder='Enter product title / name'
 											name='name'
 											type='text'
@@ -1206,7 +1206,7 @@ const CustomProductModal = ({
 										/>
 
 										<textarea
-											className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 h-32 desktop:h-60'
+											className='text-left placeholder-gray-101 bg-white outline-none rounded-xl w-full px-3 py-2 h-32 desktop:h-60'
 											placeholder='Enter description...'
 											name='description'
 											type='text'

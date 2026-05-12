@@ -1,11 +1,30 @@
+@reference "tailwindcss";
 .chat_search_input_container_ .ant-input-affix-wrapper,
 .chat_search_input_container_ .ant-input-affix-wrapper-focused,
 .chat_search_input_container_ .ant-input-affix-wrapper input {
-    @apply bg-transparent border-transparent lg:text-xl shadow-none cursor-pointer placeholder-current text-current
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    color: currentColor;
+}
+
+.chat_search_input_container_ .ant-input-affix-wrapper input::placeholder {
+    color: currentColor;
+}
+
+@media (min-width: 1024px) {
+    .chat_search_input_container_ .ant-input-affix-wrapper,
+    .chat_search_input_container_ .ant-input-affix-wrapper-focused,
+    .chat_search_input_container_ .ant-input-affix-wrapper input {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
 }
 
 .chat_search_input_container_ .ant-input-affix-wrapper {
-    @apply pr-1 pl-0
+    padding-right: 0.25rem;
+    padding-left: 0;
 }
 
 .chat_search_input_container_ .ant-input-affix-wrapper input:focus {
@@ -56,11 +75,11 @@
 
 .chat-header-container {
     .ant-switch-handle::before {
-        @apply bg-lightgray-101
+        background-color: #f5f5f5;
     }
 
     .ant-switch-checked .ant-switch-handle::before {
-        @apply bg-black-103
+        background-color: #212020;
     }
 }
 

@@ -185,7 +185,7 @@ function pdf(){
 							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || props.true)  ? (
 								<div className='flex items-center justify-center mt-4 md:mt-0'>
 									<img
-										className='w-full max-w-208 object-cover'
+										className='w-full max-w-[208px] max-h-[208px] object-cover'
 										src={qrCodeGeneratorURL}
 									/>
 								</div>

@@ -2,9 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" important ;
+
+@theme {
+  --color-primary-purple: #7C74EC;
+}
+
 
 /* Remove border from Ant Design select components */
 .ant-select {
