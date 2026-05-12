@@ -507,7 +507,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 				{isPageLoading ? (
 					<div className='w-full max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto'>
 						<div className='w-full self-center my-12'>
-							<div className='h-180 lg:h-340 grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-2'>
+							<div className='h-180 lg:h-[340px] grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-2.5 lg:gap-4 pt-2'>
 								<Skeleton.Input active className='w-full h-full rounded-xl' />
 								<Skeleton.Input active className='w-full h-full rounded-xl' />
 								<Skeleton.Input
