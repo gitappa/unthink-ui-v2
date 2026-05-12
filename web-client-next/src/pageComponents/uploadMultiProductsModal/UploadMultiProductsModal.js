@@ -678,7 +678,7 @@ const UploadMultiProductsModal = ({
 										<span>Enter some guidelines for your descriptions.</span>
 									</div>
 									<textarea
-										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 bg-white resize-none'
 										placeholder='For example: Describe the print and material in detail.'
 										name='guidelines'
 										type='text'

@@ -1091,7 +1091,7 @@ const CustomProductModal = ({
 										<span>Enter some guidelines for your descriptions.</span>
 									</div>
 									<textarea
-										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										className='text-left placeholder-gray-101 outline-none rounded-xl bg-white w-full px-3 py-2 resize-none'
 										placeholder='For example: Describe the print and material in detail.'
 										name='guidelines'
 										type='text'
@@ -1111,7 +1111,7 @@ const CustomProductModal = ({
 										<span>Edit as needed.</span>
 									</div>
 									<textarea
-										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										className='text-left placeholder-gray-101 bg-white outline-none rounded-xl w-full px-3 py-2 resize-none'
 										placeholder='For example: Our products are animal cruelty free.'
 										name='brand_description'
 										type='text'
@@ -1280,7 +1280,7 @@ const CustomProductModal = ({
 									<div>
 										<label className='text-sm'>List price</label>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left bg-white placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
 											placeholder='Enter product list price'
 											name='listprice'
 											type='number'
@@ -1300,7 +1300,7 @@ const CustomProductModal = ({
 											Selling price (discounted)
 										</label>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left bg-white placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
 											placeholder='Enter product final price'
 											name='price'
 											type='number'
