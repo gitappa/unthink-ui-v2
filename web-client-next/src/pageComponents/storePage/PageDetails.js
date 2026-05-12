@@ -130,10 +130,10 @@ const publish = singleCollections.status === 'published'
 				<div className='max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto'>
 					<Skeleton.Input active={true} className='w-full h-32 lg:h-80' />
 					<div className='ml-4 lg:ml-12 flex items-end'>
-						<div className='-mt-16 md:-mt-28 max-w-s-1 h-120 md:h-200'>
+						<div className='-mt-16 md:-mt-28 max-w-s-1 h-[120px] md:h-[200px]'>
 							<Skeleton.Input
 								active={true}
-								className='w-120 md:w-200 h-120 md:h-200'
+								className='w-120 md:w-[200px] h-[120px] md:h-[200px]'
 							/>
 						</div>
 						<div className='lg:pb-4 pl-4 w-full'>
