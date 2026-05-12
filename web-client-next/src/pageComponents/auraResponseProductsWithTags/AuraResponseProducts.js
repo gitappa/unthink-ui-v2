@@ -116,6 +116,7 @@ const AuraResponseProducts = ({
 		isGuestPopUpShow,
 		showWishlistModal,
 		suggestionsTags,
+		showChatLoader,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.auth.user.isUserLogin,
@@ -127,6 +128,7 @@ const AuraResponseProducts = ({
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
 	]);
 
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
@@ -336,7 +338,7 @@ const AuraResponseProducts = ({
 			(chatProductsDataToShow.length > 0 || !isEmpty(filters)) &&
 			availableFilters &&
 			!products.selectedAdditionalTag &&
-			isTagEnabled && suggestionsTags,
+			isTagEnabled,
 		[
 			chatProductsDataToShow.length,
 			filters,
@@ -762,15 +764,8 @@ const AuraResponseProducts = ({
 										onClick={() =>
 											setFilterOptionsVisible(!filterOptionsVisible)
 										}>
-										<Image
-											src={filterIcon}
-											alt='Filters'
-											width={28}
-											height={28}
-											className={styles['aura-products-filter-icon']}
-										/>
 										<p className={styles['aura-products-filter-text']}>
-											Filters
+											FILTERS
 										</p>
 									</div>
 								) : null}
@@ -876,16 +871,19 @@ const AuraResponseProducts = ({
 						) : null}
 					</>
 				) : null}
-				{isLoading ? (
-					<div className={styles['aura-products-loading-container']}>
+				{isLoading || showChatLoader ? (
+					<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
 						<Spin
 							indicator={
 								<Loading3QuartersOutlined
-									className={styles['aura-products-loading-icon']}
+									style={{ fontSize: 36, color: '#7268ec' }}
 									spin
 								/>
 							}
 						/>
+						<span className="text-[#7268ec] font-semibold text-sm tracking-wide">
+							Searching products...
+						</span>
 					</div>
 				) : (
 					<>
@@ -1070,7 +1068,7 @@ const AuraResponseProducts = ({
 							""
 						)}
 
-						{chatProductsDataToShow.length >= 15 && !isEmpty(tag) && (
+						{chatProductsDataToShow.length >= 15 && (
 							<div className={styles['aura-products-load-more-container']}>
 								<button
 									className={styles['aura-products-load-more-button']}
