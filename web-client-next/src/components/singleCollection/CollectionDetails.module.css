@@ -46,6 +46,7 @@
 @media (min-width: 1024px) {
   .imageContainer {
     width: 100%;
+    min-width: 355px;
   }
 }
 

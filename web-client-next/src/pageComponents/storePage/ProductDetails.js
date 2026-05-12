@@ -1041,7 +1041,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     onClick={() => setShowAllFields(!showAllFields)}
                     className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
                   >
-                    {showAllFields ? 'Show Less' : 'Show More'}
+                    {showAllFields ? 'Show Less' : 'Show More'} 
                   </button>
                 )}
                 {/* {productDetails?.product_tag?.length > 0 && (

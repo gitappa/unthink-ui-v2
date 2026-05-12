@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 .auraResponseShopALookContainer {
 	width: 100%;
 }

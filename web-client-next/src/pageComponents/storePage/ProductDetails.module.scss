@@ -1,4 +1,5 @@
 /* global.css */
+@reference "tailwindcss";
 .skeleton {
   @apply bg-gray-100 rounded relative overflow-hidden;
 }
