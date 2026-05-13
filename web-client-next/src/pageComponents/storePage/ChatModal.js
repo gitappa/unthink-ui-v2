@@ -771,6 +771,7 @@ const ChatModal = ({
               {isShowShopLookSplitLayout && (
                 <div className={styles["chatmodal-layout-switcher"]}>
                   <button
+                    type="button"
                     className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "left" ? styles["chatmodal-layout-btn-active"] : ""}`}
                     onClick={() => setLayoutMode("left")}
                     title="Sidebar only"
@@ -778,6 +779,7 @@ const ChatModal = ({
                     <div className={styles["layout-icon-left"]} />
                   </button>
                   <button
+                    type="button"
                     className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "both" ? styles["chatmodal-layout-btn-active"] : ""}`}
                     onClick={() => setLayoutMode("both")}
                     title="Split view"
@@ -785,6 +787,7 @@ const ChatModal = ({
                     <div className={styles["layout-icon-both"]} />
                   </button>
                   <button
+                    type="button"
                     className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "right" ? styles["chatmodal-layout-btn-active"] : ""}`}
                     onClick={() => setLayoutMode("right")}
                     title="Products only"

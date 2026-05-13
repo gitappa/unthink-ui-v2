@@ -1,20 +1,31 @@
 /* Main Container */
 .chat-products-container {
   max-width: 100%;
-  padding: 0;
+  padding: 0 16px;
   background-color: white;
+  box-sizing: border-box;
+}
+
+.chat-products-container-single {
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 1024px) {
   .chat-products-container {
-    padding-right: 16px !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
   }
 }
 
 
 @media (min-width: 640px) {
   .chat-products-container {
-    padding: 0 1.25rem 1.25rem 0.75rem;
+    padding: 0 1.5rem 1.25rem 1.5rem;
+    box-sizing: border-box;
+  }
+  .chat-products-container-single {
+    padding: 0 2rem 2rem 2rem !important;
   }
 }
 
@@ -301,7 +312,7 @@
 }
 
 .chat-products-sidebar-body::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .chat-products-sidebar-body::-webkit-scrollbar-track {
@@ -309,12 +320,12 @@
 }
 
 .chat-products-sidebar-body::-webkit-scrollbar-thumb {
-  background: rgba(114, 104, 236, 0.35);
-  border-radius: 6px;
+  background: #7268ec;
+  border-radius: 4px;
 }
 
 .chat-products-sidebar-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(114, 104, 236, 0.65);
+  background: #5a4af4;
 }
 
 @media (max-width: 1024px) {
@@ -770,7 +781,7 @@
     height: 100%;
     overflow-y: auto;
     min-height: 0;
-    padding-left: 0;
+    padding-left: 1.5rem;
     padding-right: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -778,7 +789,7 @@
 
 
   .chat-products-shop-look-main::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-track {
@@ -787,12 +798,12 @@
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-thumb {
-    background: rgba(114, 104, 236, 0.35);
-    border-radius: 6px;
+    background: #7268ec;
+    border-radius: 4px;
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-thumb:hover {
-    background: rgba(114, 104, 236, 0.65);
+    background: #5a4af4;
   }
 
 
@@ -865,7 +876,7 @@
 
   .chat-products-shop-look-main {
     width: auto;
-    padding-left: 0.2rem;
+    padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 
@@ -1221,7 +1232,7 @@
   content: '';
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
@@ -1242,7 +1253,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 5px;
+  left: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;

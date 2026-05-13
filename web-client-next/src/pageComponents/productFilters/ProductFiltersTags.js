@@ -37,7 +37,8 @@ const ProductFiltersTags = ({
 	selectedTag = "",
 	handleFilterOptionsVisibleChange,
 	filterOptionsVisible = false,
-	isproductSection
+	isproductSection,
+	onOpenFiltersModal,
 }) => {
 	const [catalog_attributes] = useSelector((state) => [
 		state.store.data.catalog_attributes,
@@ -362,6 +363,24 @@ const ProductFiltersTags = ({
 									</div>
 								</SwiperSlide>
 							))}
+						{typeof onOpenFiltersModal === "function" ? (
+							<SwiperSlide style={{ width: "auto" }}>
+								<div
+									className="flex items-center justify-center rounded-full text-white cursor-pointer transition-all hover:scale-105 my-auto shrink-0"
+									style={{
+										width: "30px",
+										height: "30px",
+										background: "linear-gradient(90deg, #7268ec 0%, #5a4af4 100%)",
+										boxShadow: "0 2px 8px rgba(114, 104, 236, 0.3)",
+										marginTop: "1px"
+									}}
+									onClick={onOpenFiltersModal}
+									title="Add Filters"
+								>
+									<PlusOutlined style={{ fontSize: "12px", strokeWidth: "2", stroke: "currentColor" }} />
+								</div>
+							</SwiperSlide>
+						) : null}
 					</Swiper>
 					{isOverflowing && (
 						<div
