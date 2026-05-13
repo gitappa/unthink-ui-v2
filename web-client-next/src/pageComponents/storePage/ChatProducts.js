@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Checkbox, Tooltip, Upload } from "antd";
-import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Checkbox, Tooltip, Upload, Spin } from "antd";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -53,6 +53,11 @@ const ChatProducts = ({
   uploadImageProps,
   handleGoBack,
   layoutMode,
+  setLayoutMode,
+  closeChatModal,
+  onOpenSearchPopup,
+  isMobile,
+  mobileTab,
 }) => {
   const {
     trackCollectionCampCode,
@@ -89,6 +94,55 @@ const ChatProducts = ({
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [pastChats, setPastChats] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("unthink_aura_past_chats");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+    }
+    return [
+      { id: "1", text: "Minimalist modular velvet sofa", timestamp: "10 mins ago" },
+      { id: "2", text: "Scandinavian oak dining table with chairs", timestamp: "2 hours ago" },
+      { id: "3", text: "Abstract ceramic accent vases", timestamp: "1 day ago" },
+      { id: "4", text: "Boho woven hanging light fixtures", timestamp: "3 days ago" },
+    ];
+  });
+
+  const handleSelectPastChat = (chatText) => {
+    if (handleInputChange) {
+      handleInputChange({ target: { name: "chat_message", value: chatText } });
+    }
+    setIsHistoryOpen(false);
+  };
+
+  useEffect(() => {
+    if (showChatLoader && localChatMessage && typeof localChatMessage === "string") {
+      const trimmed = localChatMessage.trim();
+      if (trimmed) {
+        setPastChats((prev) => {
+          if (prev.some((c) => c.text.toLowerCase() === trimmed.toLowerCase())) {
+            return prev;
+          }
+          const updated = [
+            { id: Date.now().toString(), text: trimmed, timestamp: "Just now" },
+            ...prev,
+          ].slice(0, 15);
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("unthink_aura_past_chats", JSON.stringify(updated));
+            } catch (e) {}
+          }
+          return updated;
+        });
+      }
+    }
+  }, [showChatLoader, localChatMessage]);
 
   const dispatch = useDispatch();
 
@@ -481,311 +535,343 @@ const ChatProducts = ({
 
         {shouldShowShopLookSplitLayout ? (
           <div className={styles["chat-products-shop-look-wrapper"]}>
-            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]}`}>
-            <div className={styles["chat-products-shop-look-sidebar"]}>
-              <div className="flex items-center">
-                <ArrowLeftOutlined
-                  className="cursor-pointer text-2xl pr-2"
-                  onClick={handleGoBack}
-                />
-                <h2 className={styles["chatmodal-category-title"]}>
-                  {activeSearchOption?.title?.toUpperCase()}
-                </h2>
-              </div>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <div className={styles["chat-products-shop-look-sidebar-content"]}>
-                    {shopLookPreviewImage ? (
-                      <div className={styles["chat-products-shop-look-image-wrapper"]}>
-                        <img
-                          src={shopLookPreviewImage}
-                          alt="Shop the look"
-                          className={styles["chat-products-shop-look-image"]}
-                        />
-                        {Array.isArray(auraOverlayCoordinates) &&
-                          auraOverlayCoordinates.map((item, index) => {
-                            const adjustedX =
-                              (item.point[0] / originalWidth) * newWidth;
-                            const adjustedY =
-                              (item.point[1] / originalHeight) * newHeight;
+            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
+              {(!isMobile || mobileTab === "description") && (
+                <div className={styles["chat-products-shop-look-sidebar"]}>
+                  <div className={styles["chat-products-sidebar-header"]}>
+                    <ArrowLeftOutlined
+                      className="cursor-pointer text-2xl pr-2"
+                      onClick={handleGoBack}
+                    />
+                    <h2 className={styles["chatmodal-category-title"]}>
+                      {activeSearchOption?.title?.toUpperCase()}
+                    </h2>
+                  </div>
+                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-3`}>
+                    <div>
+                      <div className={styles["chat-products-shop-look-sidebar-content"]}>
+                        {showChatLoader || !shopLookPreviewImage ? (
+                          <div className={styles["chat-products-shop-look-image-wrapper"]}>
+                            <div className={styles["chat-products-image-loading-box"]}>
+                              <span>Loading image...</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className={styles["chat-products-shop-look-image-wrapper"]}>
+                            <div className={styles["chat-products-shop-look-image-inner"]}>
+                              <img
+                                src={shopLookPreviewImage}
+                                alt="Shop the look"
+                                className={styles["chat-products-shop-look-image"]}
+                              />
+                              {Array.isArray(auraOverlayCoordinates) &&
+                                auraOverlayCoordinates.map((item, index) => {
+                                  const leftPercent =
+                                    (item.point[0] / originalWidth) * 100;
+                                  const topPercent =
+                                    (item.point[1] / originalHeight) * 100;
 
-                            return (
-                              <Tooltip
-                                key={index}
-                                title={item.attributes.label}
-                                color="blue"
+                                  return (
+                                    <Tooltip
+                                      key={index}
+                                      title={item.attributes.label}
+                                      color="blue"
+                                    >
+                                      <div
+                                        onClick={() =>
+                                          handleSuggestionClick(item.attributes.label)
+                                        }
+                                        className={styles["chat-products-overlay-point"]}
+                                        style={{
+                                          left: `${leftPercent}%`,
+                                          top: `${topPercent}%`,
+                                        }}
+                                      />
+                                    </Tooltip>
+                                  );
+                                })}
+                            </div>
+                          </div>
+                        )}
+                        {(widgetHeader || shopLookKeywords.length > 0) ? (
+                          <div>
+                            {widgetHeader ? (
+                              <div
+                                className={
+                                  styles["chat-products-shop-look-description-block"]
+                                }
                               >
                                 <div
-                                  onClick={() =>
-                                    handleSuggestionClick(item.attributes.label)
-                                  }
-                                  className={styles["chat-products-overlay-point"]}
-                                  style={{
-                                    left: `${adjustedX}px`,
-                                    top: `${adjustedY}px`,
-                                  }}
+                                  className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
+                                  dangerouslySetInnerHTML={{ __html: widgetHeader }}
                                 />
-                              </Tooltip>
-                            );
-                          })}
-                      </div>
-                    ) : null}
-                    <div>
-                      <div
-                        className={
-                          styles["chat-products-shop-look-description-block"]
-                        }
-                      >
-                        <h3
-                          className={
-                            styles["chat-products-shop-look-description-title"]
-                          }
-                        >
-                          Image Description
-                        </h3>
-                        {widgetHeader ? (
-                          <div
-                            className={
-                              styles["chat-products-shop-look-description-text"]
-                            }
-                            dangerouslySetInnerHTML={{ __html: widgetHeader }}
-                          />
-                        ) : null}
-                      </div>
-                      {shopLookKeywords.length ? (
-                        <div
-                          className={styles["chat-products-shop-look-keywords"]}
-                        >
-                          {shopLookKeywords.map((keyword) => (
-                            <span
-                              key={keyword}
-                              className={
-                                styles["chat-products-shop-look-keyword-chip"]
-                              }
-                            >
-                              {keyword}
-                            </span>
-                          ))}
-                        </div>
-                      ) : null}
-                      <Upload {...uploadImageProps} showUploadList={false} style={{ width: '100%' }}>
-                        <button
-                          type="button"
-                          className={
-                            styles["chat-products-shop-look-smart-search"]
-                          }
-                          style={{ width: '100%' }}
-                        >
-                          Re-upload Image
-                        </button>
-                      </Upload>
-                    </div>
-                  </div>
-                  {isShowFollowUpSearch || isShowTryAgain ? (
-                    <div
-                      className={
-                        styles["chat-products-bottom-followup-controls"]
-                      }
-                    >
-                      {isShowFollowUpSearch && isSidExpired ? (
-                        <div
-                          className={
-                            styles[
-                            "chat-products-bottom-followup-checkbox-wrap"
-                            ]
-                          }
-                        >
-                          <input
-                            type="checkbox"
-                            id="followUpQuery_bottom"
-                            className={
-                              styles["chat-products-bottom-followup-checkbox"]
-                            }
-                            checked={isFollowUpQuery}
-                            disabled={showChatLoader}
-                            onChange={handleFollowUpSearch}
-                          />
-                          <label
-                            htmlFor="followUpQuery_bottom"
-                            className={
-                              showChatLoader
-                                ? styles[
-                                "chat-products-bottom-followup-label-disabled"
-                                ]
-                                : styles["chat-products-bottom-followup-label"]
-                            }
-                          >
-                            Follow-Up search
-                          </label>
-                        </div>
-                      ) : null}
-                      {isShowFollowUpSearch &&
-                        isShowTryAgain &&
-                        isSidExpired ? (
-                        <div
-                          className={
-                            styles["chat-products-bottom-followup-divider"]
-                          }
-                        ></div>
-                      ) : null}
-                      {isShowTryAgain ? (
-                        <button
-                          className={`${styles["chat-products-bottom-try-again-button"]} ${showChatLoader
-                            ? styles[
-                            "chat-products-bottom-try-again-button-disabled"
-                            ]
-                            : ""
-                            }`}
-                          title="Regenerate the products with AI."
-                          onClick={handleTryAgainClick}
-                          disabled={showChatLoader}
-                        >
-                          <ReloadOutlined
-                            className={
-                              styles["chat-products-bottom-reload-icon"]
-                            }
-                          />
-                          Try again
-                        </button>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-                {shouldMoveInputBelowResults ? (
-                  <div className={styles["chat-products-bottom-input-wrapper"]}>
-                    <div
-                      className={`${styles["chat-products-bottom-input-card"]} ${
-                        isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                        ? styles["chat-products-bottom-input-card-shop-theme"]
-                        : ""
-                        }`}
-                    >
-                      <input
-                        id={`chat_search_input_bottom_${chatTypeKey}`}
-                        type="text"
-                        ref={inputRef}
-                        placeholder={
-                          typeof activeSearchOption?.text_placeholder ===
-                            "string"
-                            ? activeSearchOption?.text_placeholder
-                            : activeSearchOption?.text_placeholder?.[0] ||
-                            "Describe your product idea"
-                        }
-                        name="chat_message"
-                        value={localChatMessage}
-                        onChange={handleInputChange}
-                        onKeyDown={handlePromptKeyDown}
-                        className={`${styles["chat-products-bottom-input"]} ${
-                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                          ? styles["chat-products-bottom-input-shop-theme"]
-                          : ""
-                          }`}
-                      />
-                      {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
-                        <div
-                          className={
-                            styles["chat-products-bottom-input-divider"]
-                          }
-                        />
-                      ) : null}
-                      <div
-                        className={`${styles["chat-products-bottom-input-actions"]} ${
-                          isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                          ? styles[
-                          "chat-products-bottom-input-actions-shop-theme"
-                          ]
-                          : ""
-                          }`}
-                      >
-                        {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) ? (
-                          <div
-                            className={
-                              styles["chat-products-bottom-input-actions-left"]
-                            }
-                          >
-                            <button
-                              type="button"
-                              className={`${styles["chat-products-bottom-icon-button"]} ${styles["chat-products-bottom-image-button"]} ${isFigmaUploadPanelOpen || chatImageUrl
-                                ? styles[
-                                "chat-products-bottom-image-button-active"
-                                ]
-                                : ""
-                                }`}
-                              title="Upload image"
-                              onClick={handleFigmaUploadButtonClick}
-                            >
-                              <img
-                                src={upload_icon?.src || upload_icon}
-                                alt="Upload image"
-                                className={styles["chat-products-bottom-icon"]}
-                              />
-                              {(isFigmaUploadPanelOpen || chatImageUrl) && (
-                                <span>Image</span>
-                              )}
-                            </button>
-                            <button
-                              type="button"
-                              className={
-                                styles["chat-products-bottom-icon-button"]
-                              }
-                              title="Open assistant settings"
-                              onClick={handlePromptUtilityClick}
-                            >
-                              <img
-                                src={page_info?.src || page_info}
-                                alt="Assistant settings"
-                                className={styles["chat-products-bottom-icon"]}
-                              />
-                            </button>
-                            {/* {chatImageUrl && !isShowSubmittedChatPreview ? (
-														<div className={styles['chat-products-bottom-upload-pill']}>
-															Image attached 
-														</div>
-													) : null} */}
+                                {widgetHeader?.length > 100 && (
+                                  <button 
+                                    className={styles["chat-products-read-more-btn"]}
+                                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                                  >
+                                    {isDescriptionExpanded ? "Read Less" : "Read More"}
+                                  </button>
+                                )}
+                              </div>
+                            ) : null}
+                            {shopLookKeywords.length ? (
+                              <div
+                                className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
+                              >
+                                {shopLookKeywords.map((keyword) => (
+                                  <span
+                                    key={keyword}
+                                    className={
+                                      styles["chat-products-shop-look-keyword-chip"]
+                                    }
+                                  >
+                                    {keyword}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : null}
                           </div>
                         ) : null}
-                        <button
-                          type="button"
-                          className={`${styles["chat-products-bottom-submit"]} ${
-                            isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                            ? styles["chat-products-bottom-submit-shop-theme"]
-                            : ""
-                            } ${(
-                              isShopALookOptionActive
-                                ? !chatImageUrl
-                                : !localChatMessage && !chatImageUrl
-                            )
-                              ? styles["chat-products-bottom-submit-disabled"]
-                              : ""
-                            }`}
-                          onClick={handleSubmitChatInput}
-                          disabled={
-                            isShopALookOptionActive
-                              ? !chatImageUrl
-                              : !localChatMessage && !chatImageUrl
-                          }
-                        >
-                          <ArrowUpOutlined />
-                        </button>
                       </div>
                     </div>
                   </div>
-                ) : null}
-              </div>
-            </div>
+                  {shouldMoveInputBelowResults ? (
+                      <div className={styles["chat-products-bottom-input-wrapper"]}>
+                        <div className={styles["chat-products-above-input-actions"]}>
+                          <div className={styles["chat-products-icon-buttons-group"]}>
+                            {isShowTryAgain && (
+                              <Tooltip title="Redo">
+                                <button
+                                  type="button"
+                                  className={styles["chat-products-icon-action-btn"]}
+                                  onClick={handleTryAgainClick}
+                                  disabled={showChatLoader}
+                                >
+                                  <ReloadOutlined />
+                                </button>
+                              </Tooltip>
+                            )}
+                            <Tooltip title="New chat">
+                              <button
+                                type="button"
+                                className={styles["chat-products-icon-action-btn"]}
+                                onClick={handleGoBack}
+                                disabled={showChatLoader}
+                              >
+                                <FormOutlined />
+                              </button>
+                            </Tooltip>
+                            <Tooltip title="Past chats">
+                              <button
+                                type="button"
+                                className={styles["chat-products-icon-action-btn"]}
+                                onClick={() => setIsHistoryOpen(true)}
+                                disabled={showChatLoader}
+                              >
+                                <HistoryOutlined />
+                              </button>
+                            </Tooltip>
+                          </div>
+                          {showChatLoader && (
+                            <div className={styles["chat-products-inline-loader"]}>
+                              <Spin size="small" />
+                              <span>Searching...</span>
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className={`${styles["chat-products-bottom-input-card"]} ${
+                            isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                            ? styles["chat-products-bottom-input-card-shop-theme"]
+                            : ""
+                            }`}
+                        >
+                          <div className={styles["chat-products-bottom-input-row-wrapper"]}>
+                            <div className={styles["chat-products-bottom-plus-upload-container"]}>
+                              <Upload {...uploadImageProps} showUploadList={false}>
+                                <button
+                                  type="button"
+                                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? "bg-[#7268ec] text-white" : ""}`}
+                                  title="Upload image"
+                                >
+                                  <PlusOutlined />
+                                </button>
+                              </Upload>
+                            </div>
+                            <input
+                              id={`chat_search_input_bottom_${chatTypeKey}`}
+                              type="text"
+                              ref={inputRef}
+                              placeholder={
+                                typeof activeSearchOption?.text_placeholder ===
+                                  "string"
+                                  ? activeSearchOption?.text_placeholder
+                                  : activeSearchOption?.text_placeholder?.[0] ||
+                                  "Describe your product idea"
+                              }
+                              name="chat_message"
+                              value={localChatMessage}
+                              onChange={handleInputChange}
+                              onKeyDown={handlePromptKeyDown}
+                              className={`${styles["chat-products-bottom-input"]} ${
+                                isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                                ? styles["chat-products-bottom-input-shop-theme"]
+                                : ""
+                                }`}
+                              style={{ paddingRight: '5rem' }}
+                            />
+                            <div className="absolute right-0 flex items-center gap-1.5">
+                              {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
+                                <button
+                                  type="button"
+                                  className="bg-transparent border-none p-1 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                  title="Open assistant settings"
+                                  onClick={handlePromptUtilityClick}
+                                >
+                                  <img
+                                    src={page_info?.src || page_info}
+                                    alt="Assistant settings"
+                                    className="w-4 h-4 object-contain"
+                                  />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                className={`${styles["chat-products-bottom-submit"]} shrink-0 ${
+                                  isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                                  ? styles["chat-products-bottom-submit-shop-theme"]
+                                  : ""
+                                  } ${(
+                                    isShopALookOptionActive
+                                      ? !chatImageUrl
+                                      : !localChatMessage && !chatImageUrl
+                                  )
+                                    ? styles["chat-products-bottom-submit-disabled"]
+                                    : ""
+                                  }`}
+                                onClick={handleSubmitChatInput}
+                                disabled={
+                                  isShopALookOptionActive
+                                    ? !chatImageUrl
+                                    : !localChatMessage && !chatImageUrl
+                                }
+                              >
+                                <ArrowUpOutlined />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                </div>
+              )}
 
-            <div className={styles["chat-products-shop-look-main"]}>
-              <h2 className={styles["chat-products-shop-look-main-title"]}>
-                Products
-              </h2>
-              {productsResultsContent}
+              {(!isMobile || mobileTab === "products") && (
+                <div className={styles["chat-products-shop-look-main"]}>
+                  <div className={`${styles["chat-products-main-navbar"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
+                    <h2 className={styles["chat-products-navbar-title"]}>
+                      Products
+                    </h2>
+                    <div className={styles["chat-products-navbar-controls"]}>
+                      {setLayoutMode && (
+                        <div className={styles["chat-products-layout-switcher"]}>
+                          <button
+                            type="button"
+                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "left" ? styles["chat-products-layout-btn-active"] : ""}`}
+                            onClick={() => setLayoutMode("left")}
+                            title="Sidebar only"
+                          >
+                            <div className={styles["layout-icon-left"]} />
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "both" ? styles["chat-products-layout-btn-active"] : ""}`}
+                            onClick={() => setLayoutMode("both")}
+                            title="Split view"
+                          >
+                            <div className={styles["layout-icon-both"]} />
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "right" ? styles["chat-products-layout-btn-active"] : ""}`}
+                            onClick={() => setLayoutMode("right")}
+                            title="Products only"
+                          >
+                            <div className={styles["layout-icon-right"]} />
+                          </button>
+                        </div>
+                      )}
+                      {isProductSearchOptionActive && onOpenSearchPopup && (
+                        <SearchOutlined
+                          className={styles["chat-products-search-icon"]}
+                          onClick={onOpenSearchPopup}
+                          title="Open Search"
+                        />
+                      )}
+                      {closeChatModal && (
+                        <CloseOutlined
+                          onClick={closeChatModal}
+                          className={styles["chat-products-close-icon"]}
+                          title="Close"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {productsResultsContent}
+                </div>
+              )}
             </div>
           </div>
-        </div>
         ) : (
           productsResultsContent
         )}
       </div>
+
+      {isHistoryOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200] flex items-center justify-center p-4 transition-all"
+          onClick={() => setIsHistoryOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-solid border-[#e8e4fb] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 py-4 bg-[#fbfafe] border-b border-solid border-[#e8e4fb] flex items-center justify-between">
+              <h3 className="text-[#7268ec] font-bold text-base m-0 flex items-center gap-2">
+                <HistoryOutlined /> Past Chats
+              </h3>
+              <CloseOutlined
+                className="text-gray-400 hover:text-gray-600 cursor-pointer text-sm p-1 transition-all"
+                onClick={() => setIsHistoryOpen(false)}
+                title="Close"
+              />
+            </div>
+            <div className="p-4 flex flex-col gap-2.5 max-h-[60vh] overflow-y-auto">
+              {pastChats.length > 0 ? (
+                pastChats.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => handleSelectPastChat(item.text)}
+                    className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-[#7268ec]/5 hover:border-[#7268ec]/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
+                  >
+                    <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
+                      {item.text}
+                    </span>
+                    <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
+                      {item.timestamp}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-400 text-sm font-medium">
+                  No past chats found
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

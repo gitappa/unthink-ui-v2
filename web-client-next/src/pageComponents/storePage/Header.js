@@ -605,7 +605,7 @@ const Header = ({
       ) : null}
 
       {/* samskara mobile UI */}
-      {isSamskaraInstance ? (
+      {isSamskaraInstance && !showChatModal ? (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -618,7 +618,7 @@ const Header = ({
       ) : null}
 
       {/* heroesVillains mobile UI */}
-      {isHeroesVillainsInstance ? (
+      {isHeroesVillainsInstance && !showChatModal ? (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -632,6 +632,7 @@ const Header = ({
 
       {/* swiftlyStyled mobile UI */}
       {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
+      {!showChatModal && (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -643,6 +644,7 @@ const Header = ({
             setisDropDown={setisDropDown}
           />
         </div>
+      )}
       {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
