@@ -38,6 +38,8 @@
   align-items: flex-start;
   flex-wrap: wrap;
   min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
   gap: 0.5rem;
   justify-content: flex-start;
 }
