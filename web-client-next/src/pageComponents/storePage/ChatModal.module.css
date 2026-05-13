@@ -77,11 +77,11 @@
 /* Layout Switcher Styles */
 .chatmodal-layout-switcher {
   display: flex;
-  background: rgba(192, 192, 235, 0.7);
+  background: rgba(240, 240, 247, 0.7);
   backdrop-filter: blur(8px);
-  padding: 1px;
+  padding: 4px;
   border-radius: 10px;
-  gap: 1px;
+  gap: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
@@ -123,7 +123,7 @@
   content: '';
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
@@ -144,7 +144,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 5px;
+  left: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
