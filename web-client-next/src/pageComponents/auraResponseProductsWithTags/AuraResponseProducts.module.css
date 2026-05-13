@@ -128,7 +128,7 @@
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar-track {
@@ -136,12 +136,12 @@
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar-thumb {
-  background: rgba(114, 104, 236, 0.35);
-  border-radius: 6px;
+  background: #7268ec;
+  border-radius: 4px;
 }
 
 .aura-products-filter-modal-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(114, 104, 236, 0.65);
+  background: #5a4af4;
 }
 
 @media (min-width: 640px) {
@@ -216,7 +216,8 @@
 .aura-products-selection-controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 1rem;
   align-items: center;
   padding: 0.625rem 1.25rem;
   background: rgba(255, 255, 255, 0.85);

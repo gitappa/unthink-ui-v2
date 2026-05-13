@@ -234,7 +234,8 @@ const AuraResponseProducts = ({
 	};
 
 	const handleSaveEditCustomFilter = (hashTags) => {
-		const customFilterArrayToString = hashTags.toString();
+		const actualHashTags = hashTags && hashTags.custom_filter !== undefined ? hashTags.custom_filter : hashTags;
+		const customFilterArrayToString = actualHashTags ? actualHashTags.toString() : "";
 		dispatch(setSuggestionsProductsIsLoading(tag, true));
 		handleChangeFilters({
 			...filters,
@@ -764,11 +765,13 @@ const AuraResponseProducts = ({
 		}
 	}, [showWishlistModal, isAuraChatPage]);
 
+	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || isLoading || showChatLoader;
+
 	return (
 		<>
 			<div id={elementId}>
 				<div className={styles['aura-products-main-content']}>
-					{!isLoading ? (
+					{!isCurrentTagLoading ? (
 					<>
 						{enableFilters ? (
 							<div className={styles['aura-products-filters-tags-container']}>
@@ -777,6 +780,8 @@ const AuraResponseProducts = ({
 									handleFiltersInputClear={handleFiltersInputClear}
 									handleClearFiltersClick={handleClearFiltersClick}
 									displayFilters={filtersToShow}
+									isShowCustomFilter={true}
+									handleSaveEditCustomFilter={handleSaveEditCustomFilter}
 									tagThemeClassName={filterStyles.tagPillAura}
 									clearFiltersThemeClassName={filterStyles.clearFiltersAura}
 									onOpenFiltersModal={
@@ -846,7 +851,7 @@ const AuraResponseProducts = ({
 						) : null}
 					</>
 				) : null}
-				{isLoading || showChatLoader ? (
+				{isCurrentTagLoading ? (
 					<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
 						<Spin
 							indicator={

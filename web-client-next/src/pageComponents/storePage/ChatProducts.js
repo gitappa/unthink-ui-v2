@@ -445,7 +445,7 @@ const ChatProducts = ({
   return (
     <div
       id="chat_products_inner_container"
-      className={styles["chat-products-container"]}
+      className={`${styles["chat-products-container"]} ${!shouldShowShopLookSplitLayout ? styles["chat-products-container-single"] : ""}`}
     >
       <div
         id="chat_products_content"
