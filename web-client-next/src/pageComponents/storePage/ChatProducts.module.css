@@ -1232,7 +1232,7 @@
   content: '';
   position: absolute;
   top: 0;
-  right: 4.5px;
+  right: 5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
@@ -1253,7 +1253,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 4.5px;
+  left: 5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
