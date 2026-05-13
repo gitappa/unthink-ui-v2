@@ -916,7 +916,7 @@
   border-color: #b8afff;
   border-radius: 2.35rem;
   background: #f8f7ff;
-  padding: 0.75rem 3.5rem 0.75rem 1.15rem;
+  padding:10px;
   position: relative;
 }
 
@@ -936,8 +936,8 @@
 }
 
 .chat-products-bottom-plus-btn {
-  width: 2rem;
-  height: 2rem;
+  width: 28px;
+  height: 28px;
   border-radius: 9999px;
   background-color: #ece8fb;
   color: #7268ec;
@@ -1075,8 +1075,8 @@
 }
 
 .chat-products-bottom-submit-shop-theme {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 28px;
+  height: 28px;
   background: #b1a7fb;
   font-size: 1rem;
 }

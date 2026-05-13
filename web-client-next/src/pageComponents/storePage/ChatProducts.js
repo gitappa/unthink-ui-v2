@@ -21,6 +21,7 @@ import {
 import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALook";
 import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 import styles from "./ChatProducts.module.css";
+import AuraInputBox from "./AuraInputBox";
 
 const ChatProducts = ({
   enableClickFetchRec,
@@ -58,6 +59,8 @@ const ChatProducts = ({
   onOpenSearchPopup,
   isMobile,
   mobileTab,
+  followUpQuery,
+
 }) => {
   const {
     trackCollectionCampCode,
@@ -615,7 +618,7 @@ const ChatProducts = ({
                                 )}
                               </div>
                             ) : null}
-                            {shopLookKeywords.length ? (
+                            {/* {shopLookKeywords.length ? (
                               <div
                                 className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
                               >
@@ -630,140 +633,36 @@ const ChatProducts = ({
                                   </span>
                                 ))}
                               </div>
-                            ) : null}
+                            ) : null} */}
                           </div>
                         ) : null}
                       </div>
-                    </div>
+                    </div> 
                   </div>
                   {shouldMoveInputBelowResults ? (
-                      <div className={styles["chat-products-bottom-input-wrapper"]}>
-                        <div className={styles["chat-products-above-input-actions"]}>
-                          <div className={styles["chat-products-icon-buttons-group"]}>
-                            {isShowTryAgain && (
-                              <Tooltip title="Redo">
-                                <button
-                                  type="button"
-                                  className={styles["chat-products-icon-action-btn"]}
-                                  onClick={handleTryAgainClick}
-                                  disabled={showChatLoader}
-                                >
-                                  <ReloadOutlined />
-                                </button>
-                              </Tooltip>
-                            )}
-                            <Tooltip title="New chat">
-                              <button
-                                type="button"
-                                className={styles["chat-products-icon-action-btn"]}
-                                onClick={handleGoBack}
-                                disabled={showChatLoader}
-                              >
-                                <FormOutlined />
-                              </button>
-                            </Tooltip>
-                            <Tooltip title="Past chats">
-                              <button
-                                type="button"
-                                className={styles["chat-products-icon-action-btn"]}
-                                onClick={() => setIsHistoryOpen(true)}
-                                disabled={showChatLoader}
-                              >
-                                <HistoryOutlined />
-                              </button>
-                            </Tooltip>
-                          </div>
-                          {showChatLoader && (
-                            <div className={styles["chat-products-inline-loader"]}>
-                              <Spin size="small" />
-                              <span>Searching...</span>
-                            </div>
-                          )}
-                        </div>
-                        <div
-                          className={`${styles["chat-products-bottom-input-card"]} ${
-                            isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                            ? styles["chat-products-bottom-input-card-shop-theme"]
-                            : ""
-                            }`}
-                        >
-                          <div className={styles["chat-products-bottom-input-row-wrapper"]}>
-                            <div className={styles["chat-products-bottom-plus-upload-container"]}>
-                              <Upload {...uploadImageProps} showUploadList={false}>
-                                <button
-                                  type="button"
-                                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? "bg-[#7268ec] text-white" : ""}`}
-                                  title="Upload image"
-                                >
-                                  <PlusOutlined />
-                                </button>
-                              </Upload>
-                            </div>
-                            <input
-                              id={`chat_search_input_bottom_${chatTypeKey}`}
-                              type="text"
-                              ref={inputRef}
-                              placeholder={
-                                typeof activeSearchOption?.text_placeholder ===
-                                  "string"
-                                  ? activeSearchOption?.text_placeholder
-                                  : activeSearchOption?.text_placeholder?.[0] ||
-                                  "Describe your product idea"
-                              }
-                              name="chat_message"
-                              value={localChatMessage}
-                              onChange={handleInputChange}
-                              onKeyDown={handlePromptKeyDown}
-                              className={`${styles["chat-products-bottom-input"]} ${
-                                isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                                ? styles["chat-products-bottom-input-shop-theme"]
-                                : ""
-                                }`}
-                              style={{ paddingRight: '5rem' }}
-                            />
-                            <div className="absolute right-0 flex items-center gap-1.5">
-                              {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
-                                <button
-                                  type="button"
-                                  className="bg-transparent border-none p-1 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-                                  title="Open assistant settings"
-                                  onClick={handlePromptUtilityClick}
-                                >
-                                  <img
-                                    src={page_info?.src || page_info}
-                                    alt="Assistant settings"
-                                    className="w-4 h-4 object-contain"
-                                  />
-                                </button>
-                              )}
-                              <button
-                                type="button"
-                                className={`${styles["chat-products-bottom-submit"]} shrink-0 ${
-                                  isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                                  ? styles["chat-products-bottom-submit-shop-theme"]
-                                  : ""
-                                  } ${(
-                                    isShopALookOptionActive
-                                      ? !chatImageUrl
-                                      : !localChatMessage && !chatImageUrl
-                                  )
-                                    ? styles["chat-products-bottom-submit-disabled"]
-                                    : ""
-                                  }`}
-                                onClick={handleSubmitChatInput}
-                                disabled={
-                                  isShopALookOptionActive
-                                    ? !chatImageUrl
-                                    : !localChatMessage && !chatImageUrl
-                                }
-                              >
-                                <ArrowUpOutlined />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
+                    <AuraInputBox
+                      isShowTryAgain={isShowTryAgain}
+                      showChatLoader={showChatLoader}
+                      handleTryAgainClick={handleTryAgainClick}
+                      handleGoBack={handleGoBack}
+                      isShopByThemeOptionActive={isShopByThemeOptionActive}
+                      isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                      uploadImageProps={uploadImageProps}
+                      chatImageUrl={chatImageUrl}
+                      activeSearchOption={activeSearchOption}
+                      chatTypeKey={chatTypeKey}
+                      inputRef={inputRef}
+                      localChatMessage={localChatMessage}
+                      handleInputChange={handleInputChange}
+                      handlePromptKeyDown={handlePromptKeyDown}
+                      handlePromptUtilityClick={handlePromptUtilityClick}
+                      page_info={page_info}
+                      isShopALookOptionActive={isShopALookOptionActive}
+                      handleSubmitChatInput={handleSubmitChatInput}
+                      setIsHistoryOpen={setIsHistoryOpen}
+                      followUpQuery={followUpQuery}
+                    />
+                  ) : null}
                 </div>
               )}
 

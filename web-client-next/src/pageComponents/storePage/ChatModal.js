@@ -202,6 +202,7 @@ const ChatModal = ({
     metadata: requestedMetaData,
     image_url: requestedImageUrl,
   } = widgetHeaderRequest;
+  console.log('followUpQuery',followUpQuery);
 
   // Set default option on first load to Shop by Theme (smart_search).
   useEffect(() => {
@@ -1626,6 +1627,7 @@ const ChatModal = ({
               onOpenSearchPopup={() => setIsSearchPopupOpen(true)}
               isMobile={isMobile}
               mobileTab={mobileTab}
+              followUpQuery={followUpQuery}
             />
           </>
         ) : isShowKioskSearchOptions ? (
