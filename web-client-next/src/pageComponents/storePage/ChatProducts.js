@@ -81,6 +81,7 @@ const ChatProducts = ({
     shopALookData,
     activeSearchOption,
     auraOverlayCoordinates,
+    storeData,
   ] = useSelector((state) => [
     state.chatV2.chatProductsData || [],
     state.chatV2.widgetHeader,
@@ -93,6 +94,7 @@ const ChatProducts = ({
     state.chatV2.shopALook,
     state.chatV2.activeSearchOption || {},
     state.chatV2.auraOverlayCoordinates,
+    state.store.data
   ]);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
@@ -553,7 +555,7 @@ const ChatProducts = ({
                   <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-3`}>
                     <div>
                       <div className={styles["chat-products-shop-look-sidebar-content"]}>
-                        {showChatLoader || !shopLookPreviewImage ? (
+                        {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-image-loading-box"]}>
                               <span>Loading image...</span>
@@ -618,7 +620,7 @@ const ChatProducts = ({
                                 )}
                               </div>
                             ) : null}
-                            {/* {shopLookKeywords.length ? (
+                            {shopLookKeywords.length && layoutMode === 'left' ? (
                               <div
                                 className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
                               >
@@ -633,7 +635,7 @@ const ChatProducts = ({
                                   </span>
                                 ))}
                               </div>
-                            ) : null} */}
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
