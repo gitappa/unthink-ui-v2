@@ -599,7 +599,34 @@ const ChatProducts = ({
                       {activeSearchOption?.title?.toUpperCase()}
                     </h2>
                   </div>
-                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-3`}>
+                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-2`}>
+                    {shouldMoveInputBelowResults ? (
+                      <div className="mb-2">
+                        <AuraInputBox
+                          isShowTryAgain={isShowTryAgain}
+                          showChatLoader={showChatLoader}
+                          handleTryAgainClick={handleTryAgainClick}
+                          handleGoBack={handleGoBack}
+                          isShopByThemeOptionActive={isShopByThemeOptionActive}
+                          isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                          uploadImageProps={uploadImageProps}
+                          chatImageUrl={chatImageUrl}
+                          activeSearchOption={activeSearchOption}
+                          chatTypeKey={chatTypeKey}
+                          inputRef={inputRef}
+                          localChatMessage={localChatMessage}
+                          handleInputChange={handleInputChange}
+                          handlePromptKeyDown={handlePromptKeyDown}
+                          handlePromptUtilityClick={handlePromptUtilityClick}
+                          page_info={page_info}
+                          isShopALookOptionActive={isShopALookOptionActive}
+                          handleSubmitChatInput={handleSubmitChatInput}
+                          setIsHistoryOpen={setIsHistoryOpen}
+                          followUpQuery={followUpQuery}
+                          hideActions={shouldShowShopLookSplitLayout}
+                        />
+                      </div>
+                    ) : null}
                     <div>
                       <div className={styles["chat-products-shop-look-sidebar-content"]}>
                         {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
@@ -613,7 +640,7 @@ const ChatProducts = ({
                             <div className={styles["chat-products-shop-look-image-inner"]}>
                               <img
                                 src={shopLookPreviewImage}
-                                alt="Shop the look"
+                                alt="Image"
                                 className={styles["chat-products-shop-look-image"]}
                               />
                               {Array.isArray(auraOverlayCoordinates) &&
@@ -657,14 +684,27 @@ const ChatProducts = ({
                                   className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
                                   dangerouslySetInnerHTML={{ __html: widgetHeader }}
                                 />
-                                {widgetHeader?.length > 100 && (
-                                  <button 
-                                    className={styles["chat-products-read-more-btn"]}
-                                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                                  >
-                                    {isDescriptionExpanded ? "Read Less" : "Read More"}
-                                  </button>
-                                )}
+                                <div className="flex flex-col items-start gap-1">
+                                  {widgetHeader?.length > 100 && (
+                                    <button 
+                                      className={styles["chat-products-read-more-btn"]}
+                                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                                    >
+                                      {isDescriptionExpanded ? "Read Less" : "Read More"}
+                                    </button>
+                                  )}
+                                  {isShowTryAgain && (
+                                    <Tooltip title="Redo">
+                                      <button
+                                        className="mt-1 flex h-8 w-8 items-center justify-center rounded-full border border-[#7268ec]/20 bg-[#f3f0ff] text-[1rem] font-semibold text-[#7268ec] transition-all duration-200 hover:rotate-[30deg] hover:scale-110 hover:bg-[#7268ec] hover:text-white hover:shadow-[0_2px_8px_rgba(114,104,236,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+                                        onClick={handleTryAgainClick}
+                                        disabled={showChatLoader}
+                                      >
+                                        <ReloadOutlined />
+                                      </button>
+                                    </Tooltip>
+                                  )}
+                                </div>
                               </div>
                             ) : null}
                             {shopLookKeywords.length && layoutMode === 'left' ? (
@@ -688,31 +728,6 @@ const ChatProducts = ({
                       </div>
                     </div> 
                   </div>
-                  {shouldMoveInputBelowResults ? (
-                    <AuraInputBox
-                      isShowTryAgain={isShowTryAgain}
-                      showChatLoader={showChatLoader}
-                      handleTryAgainClick={handleTryAgainClick}
-                      handleGoBack={handleGoBack}
-                      isShopByThemeOptionActive={isShopByThemeOptionActive}
-                      isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
-                      uploadImageProps={uploadImageProps}
-                      chatImageUrl={chatImageUrl}
-                      activeSearchOption={activeSearchOption}
-                      chatTypeKey={chatTypeKey}
-                      inputRef={inputRef}
-                      localChatMessage={localChatMessage}
-                      handleInputChange={handleInputChange}
-                      handlePromptKeyDown={handlePromptKeyDown}
-                      handlePromptUtilityClick={handlePromptUtilityClick}
-                      page_info={page_info}
-                      isShopALookOptionActive={isShopALookOptionActive}
-                      handleSubmitChatInput={handleSubmitChatInput}
-                      setIsHistoryOpen={setIsHistoryOpen}
-                      followUpQuery={followUpQuery}
-                      hideActions={shouldShowShopLookSplitLayout}
-                    />
-                  ) : null}
                 </div>
               )}
 

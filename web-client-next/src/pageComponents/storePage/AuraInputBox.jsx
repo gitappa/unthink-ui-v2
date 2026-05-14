@@ -163,9 +163,9 @@ const AuraInputBox = ({
                 ? styles["chat-products-bottom-input-shop-theme"]
                 : ""
             }`}
-            style={{ paddingRight: "40px", resize: "none", overflow: "hidden" }}
+            style={{ paddingRight: "85px", resize: "none", overflow: "hidden" }}
           />
-          <div className="absolute right-0 flex items-center gap-1.5">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
               <button
                 type="button"
@@ -176,7 +176,7 @@ const AuraInputBox = ({
                 <img
                   src={page_info?.src || page_info}
                   alt="Assistant settings"
-                  className="w-4 h-4 object-contain"
+                  className="w-5 h-5 object-contain"
                 />
               </button>
             )}
