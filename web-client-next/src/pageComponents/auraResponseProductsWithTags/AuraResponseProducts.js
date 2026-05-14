@@ -13,6 +13,7 @@ import {
 	Loading3QuartersOutlined,
 	CloseOutlined,
 	CloseCircleOutlined,
+	SearchOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -105,7 +106,8 @@ const AuraResponseProducts = ({
 	allProductList,
 	isAuraChatPage,
 	localChatMessage,
-	layoutMode
+	layoutMode,
+	showChatLoader: showChatLoaderProp,
 }) => {
 	const [
 		authUser,
@@ -118,20 +120,23 @@ const AuraResponseProducts = ({
 		isGuestPopUpShow,
 		showWishlistModal,
 		suggestionsTags,
-		showChatLoader,
+		showChatLoaderState,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.auth.user.isUserLogin,
 		state.chatV2.chatMessage,
-		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey || CHAT_TYPE_CHAT].chatImageUrl],
 		state.store.data,
 		state.chatV2.widgetHeaderRequest,
 		state.chatV2.activeSearchOption || {},
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
-		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey || CHAT_TYPE_CHAT].showChatLoader],
 	]);
+
+	const showChatLoader = showChatLoaderProp !== undefined ? showChatLoaderProp : showChatLoaderState;
+
   const {setUserData ,userData } = useUserData()
   
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
@@ -917,7 +922,7 @@ const AuraResponseProducts = ({
 						) : null}
 					</>
 				) : null}
-				{isCurrentTagLoading ? (
+				{isLoading || !isTagEnabled || (showChatLoader && chatProductsDataToShow.length === 0) ? (
 					<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
 						<Spin
 							indicator={
@@ -930,6 +935,12 @@ const AuraResponseProducts = ({
 						<span className="text-[#7268ec] font-semibold text-sm tracking-wide">
 							Searching products...
 						</span>
+					</div>
+				) : (isEmpty(chatProductsDataToShow) && isEmpty(RecomChatProductsDataToShow) && isEmpty(moreProductsDataToShow) && !showChatLoader && !isLoading && isTagEnabled) ? (
+					<div className="flex flex-col items-center justify-center w-full py-20 text-center gap-2">
+						<SearchOutlined style={{ fontSize: 48, color: '#d1d5db' }} />
+						<span className="text-gray-500 font-medium">No products found for this search.</span>
+						<span className="text-gray-400 text-sm">Try adjusting your query or filters.</span>
 					</div>
 				) : (
 					<>

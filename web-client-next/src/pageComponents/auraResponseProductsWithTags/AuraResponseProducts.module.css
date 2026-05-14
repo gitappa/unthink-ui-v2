@@ -225,6 +225,8 @@
   border-radius: 12px;
   margin-bottom: 1.5rem;
   width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
 .aura-products-selected-items {
