@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox, Tooltip, Upload, Spin } from "antd";
-import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined } from "@ant-design/icons";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -298,6 +298,22 @@ const ChatProducts = ({
 
   const productsResultsContent = (
     <>
+      {showChatLoader && chatProductsDataToShow.length === 0 && isEmpty(suggestionsWithProducts.suggestions) && (
+        <div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
+          <Spin
+            indicator={
+              <Loading3QuartersOutlined
+                style={{ fontSize: 36, color: "#7268ec" }}
+                spin
+              />
+            }
+          />
+          <span className="text-[#7268ec] font-semibold text-sm tracking-wide">
+            Searching products...
+          </span>
+        </div>
+      )}
+
       {!isEmpty(shopALookData) &&
         isTagAvailable &&
         !isBTNormalUserLoggedIn &&
@@ -335,6 +351,7 @@ const ChatProducts = ({
             localChatMessage={localChatMessage}
             showTitle={!shouldShowShopLookSplitLayout}
             layoutMode={shouldShowShopLookSplitLayout ? layoutMode : "full"}
+            showChatLoader={showChatLoader}
           />
         </>
       ) : null}
@@ -673,12 +690,6 @@ const ChatProducts = ({
                               </button>
                             </Tooltip>
                           </div>
-                          {showChatLoader && (
-                            <div className={styles["chat-products-inline-loader"]}>
-                              <Spin size="small" />
-                              <span>Searching...</span>
-                            </div>
-                          )}
                         </div>
                         <div
                           className={`${styles["chat-products-bottom-input-card"]} ${

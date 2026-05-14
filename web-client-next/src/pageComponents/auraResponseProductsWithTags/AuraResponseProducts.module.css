@@ -226,6 +226,7 @@
   box-shadow: 0 4px 16px rgba(114, 104, 236, 0.08);
   margin-bottom: 1.5rem;
   width: 100%;
+  box-sizing: border-box;
   transition: all 0.3s ease;
 }
 

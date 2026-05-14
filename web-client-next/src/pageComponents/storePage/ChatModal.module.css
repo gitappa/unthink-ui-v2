@@ -455,6 +455,25 @@
   font-weight: 800;
 }
 
+.chatmodal-navbar-title {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #2f3d61 0%, #7268ec 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .chatmodal-navbar-title {
+    font-size: 1.4rem;
+  }
+}
+
 .chat_aura_products_search_skeleton {
   animation-duration: 1.75s !important;
   animation-fill-mode: forwards !important;
