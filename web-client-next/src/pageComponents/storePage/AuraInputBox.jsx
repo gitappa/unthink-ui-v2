@@ -30,6 +30,7 @@ const AuraInputBox = ({
   handleSubmitChatInput = () => {},
   setIsHistoryOpen,
   followUpQuery,
+  hideActions = false,
 
 }) => {
     console.log('followUpQueryd',followUpQuery);
@@ -75,49 +76,51 @@ const AuraInputBox = ({
   return (
     <div className={styles["chat-products-bottom-input-wrapper"]}>
        
-      <div className={styles["chat-products-above-input-actions"]}>
-        <div className={styles["chat-products-icon-buttons-group"]}>
-           
-          {isShowTryAgain && (
-            <Tooltip title="Redo">
+      {!hideActions && (
+        <div className={styles["chat-products-above-input-actions"]}>
+          <div className={styles["chat-products-icon-buttons-group"]}>
+            
+            {isShowTryAgain && (
+              <Tooltip title="Redo">
+                <button
+                  type="button"
+                  className={styles["chat-products-icon-action-btn"]}
+                  onClick={handleTryAgainClick}
+                  disabled={showChatLoader}
+                >
+                  <ReloadOutlined />
+                </button>
+              </Tooltip>
+            )}
+            <Tooltip title="New chat">
               <button
                 type="button"
                 className={styles["chat-products-icon-action-btn"]}
-                onClick={handleTryAgainClick}
+                onClick={handleGoBack}
                 disabled={showChatLoader}
               >
-                <ReloadOutlined />
+                <FormOutlined />
               </button>
             </Tooltip>
-          )}
-          <Tooltip title="New chat">
-            <button
-              type="button"
-              className={styles["chat-products-icon-action-btn"]}
-              onClick={handleGoBack}
-              disabled={showChatLoader}
-            >
-              <FormOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title="Past chats">
-            <button
-              type="button"
-              className={styles["chat-products-icon-action-btn"]}
-              onClick={() => setIsHistoryOpen(true)}
-              disabled={showChatLoader}
-            >
-              <HistoryOutlined />
-            </button>
-          </Tooltip>
-        </div>
-        {showChatLoader && (
-          <div className={styles["chat-products-inline-loader"]}>
-            <Spin size="small" />
-            <span>Searching...</span>
+            <Tooltip title="Past chats">
+              <button
+                type="button"
+                className={styles["chat-products-icon-action-btn"]}
+                onClick={() => setIsHistoryOpen(true)}
+                disabled={showChatLoader}
+              >
+                <HistoryOutlined />
+              </button>
+            </Tooltip>
           </div>
-        )}
-      </div>
+          {showChatLoader && (
+            <div className={styles["chat-products-inline-loader"]}>
+              <Spin size="small" />
+              <span>Searching...</span>
+            </div>
+          )}
+        </div>
+      )}
       <div
         className={`${styles["chat-products-bottom-input-card"]} ${
           isShopByThemeOptionActive || isCompleteTheLookOptionActive
