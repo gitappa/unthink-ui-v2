@@ -82,6 +82,7 @@ const ChatProducts = ({
     activeSearchOption,
     auraOverlayCoordinates,
     storeData,
+    chatHistory,
   ] = useSelector((state) => [
     state.chatV2.chatProductsData || [],
     state.chatV2.widgetHeader,
@@ -94,7 +95,8 @@ const ChatProducts = ({
     state.chatV2.shopALook,
     state.chatV2.activeSearchOption || {},
     state.chatV2.auraOverlayCoordinates,
-    state.store.data
+    state.store.data,
+    state.chatV2.chatHistory,
   ]);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
@@ -679,7 +681,7 @@ const ChatProducts = ({
                       isShopALookOptionActive={isShopALookOptionActive}
                       handleSubmitChatInput={handleSubmitChatInput}
                       setIsHistoryOpen={setIsHistoryOpen}
-                      followUpQuery={followUpQuery}
+                      chatHistory={chatHistory}
                     />
                   ) : null}
                 </div>
