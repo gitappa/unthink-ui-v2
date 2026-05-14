@@ -37,7 +37,8 @@ const ProductFiltersTags = ({
 	selectedTag = "",
 	handleFilterOptionsVisibleChange,
 	filterOptionsVisible = false,
-	isproductSection
+	isproductSection,
+	isShowHashtagButton = true,
 }) => {
 	const [catalog_attributes] = useSelector((state) => [
 		state.store.data.catalog_attributes,
@@ -48,14 +49,14 @@ const ProductFiltersTags = ({
 
 	const tagInputRef = useRef(null);
 
-	// convert custom filter string to array
-	const savedCustomFilter = useMemo(
-		() =>
-			productFilters.custom_filter
-				? productFilters.custom_filter?.split(",")
-				: [],
-		[productFilters.custom_filter]
-	);
+	const savedCustomFilter = useMemo(() => {
+		const customFilter = productFilters.custom_filter;
+		if (Array.isArray(customFilter)) return customFilter;
+		if (typeof customFilter === "string") {
+			return customFilter.split(",").map((s) => s.trim());
+		}
+		return [];
+	}, [productFilters.custom_filter]);
 
 	useEffect(() => {
 		if (showCustomFilterInput) {
@@ -127,11 +128,13 @@ const ProductFiltersTags = ({
 		() =>
 			customFilterStoreData?.is_display &&
 			isShowCustomFilter &&
-			!showCustomFilterInput,
+			!showCustomFilterInput &&
+			isShowHashtagButton,
 		[
 			customFilterStoreData?.is_display,
 			isShowCustomFilter,
 			showCustomFilterInput,
+			isShowHashtagButton,
 		]
 	);
 
@@ -362,6 +365,18 @@ const ProductFiltersTags = ({
 									</div>
 								</SwiperSlide>
 							))}
+
+						{typeof handleFilterOptionsVisibleChange === "function" && (
+							<SwiperSlide style={{ width: "auto" }}>
+								<div
+									className={styles.filterCircleButton}
+									onClick={() =>
+										handleFilterOptionsVisibleChange(!filterOptionsVisible)
+									}>
+									<PlusOutlined className={styles.plusIconSmall} />
+								</div>
+							</SwiperSlide>
+						)}
 					</Swiper>
 					{isOverflowing && (
 						<div
@@ -407,24 +422,7 @@ const ProductFiltersTags = ({
 				</div>
 
 			</div>
-			{typeof handleFilterOptionsVisibleChange === "function" ? (
-				<div className={styles.filterOptionsRow}>
-					<div
-						className={styles.filterButton}
-						onClick={() =>
-							handleFilterOptionsVisibleChange(!filterOptionsVisible)
-						}>
-						<Image
-							src={filterIcon}
-							alt='Filters'
-							width={24}
-							height={24}
-							className={styles.filterIconImg}
-						/>
-						<span className={styles.filterText}>Filters</span>
-					</div>
-				</div>
-			) : null}
+
 			{showCustomFilterInput ? (
 				<div className={styles.customFilterWrapper}>
 					<div className={styles.selectWrapper}>
