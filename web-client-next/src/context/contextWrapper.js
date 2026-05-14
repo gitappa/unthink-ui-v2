@@ -262,10 +262,42 @@ const ContextWrapper = ({ children }) => {
 				dispatch(handleRecProductClick());
 			}
 			if ("current_data_widgetHeader" in data) {
+				// store previous value and persist request history in sessionStorage
+				try {
+					const HISTORY_KEY = "widgetHeaderRequestHistory";
+					if (data.request) {
+						const raw = sessionStorage.getItem(HISTORY_KEY);
+						console.log('raw',raw);
+						
+						let history = [];
+						if (raw) {
+							try {
+								history = JSON.parse(raw) || [];
+							} catch (err) {
+								history = [];
+							}
+						}
+
+						const entry =   data.request.text ;
+						const last = history[history.length - 1];
+						const isSameAsLast =
+							last && JSON.stringify(last) === JSON.stringify(entry);
+						if (!isSameAsLast) {
+							history.push(entry);
+							// keep history bounded to 20 entries
+							if (history.length > 20) history.shift();
+							sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+						}
+					}
+				} catch (e) {
+					// ignore sessionStorage errors (e.g. disabled storage or quota)
+					console.warn("Failed to persist widget header request history in sessionStorage", e);
+				}
+
 				dispatch(
 					setWidgetHeader(
 						data.current_data_widgetHeader || sessionStorage.getItem("widgetHeader") || "",
-						data.request || {}
+						data.request || {},JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory')) || ''
 					)
 				);
 				dispatch(setWidgetImage(data.image_url || ""));
