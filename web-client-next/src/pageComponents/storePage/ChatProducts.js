@@ -652,7 +652,7 @@ const ChatProducts = ({
                                   </span>
                                 ))}
                               </div>
-                            ) : null} */}
+                            ) : null} 
                           </div>
                         ) : null}
                       </div>
