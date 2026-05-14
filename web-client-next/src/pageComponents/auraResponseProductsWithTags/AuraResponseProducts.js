@@ -13,6 +13,7 @@ import {
 	Loading3QuartersOutlined,
 	CloseOutlined,
 	CloseCircleOutlined,
+	SearchOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -105,7 +106,8 @@ const AuraResponseProducts = ({
 	allProductList,
 	isAuraChatPage,
 	localChatMessage,
-	layoutMode
+	layoutMode,
+	showChatLoader: showChatLoaderProp,
 }) => {
 	const [
 		authUser,
@@ -118,20 +120,23 @@ const AuraResponseProducts = ({
 		isGuestPopUpShow,
 		showWishlistModal,
 		suggestionsTags,
-		showChatLoader,
+		showChatLoaderState,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.auth.user.isUserLogin,
 		state.chatV2.chatMessage,
-		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey || CHAT_TYPE_CHAT].chatImageUrl],
 		state.store.data,
 		state.chatV2.widgetHeaderRequest,
 		state.chatV2.activeSearchOption || {},
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
-		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey || CHAT_TYPE_CHAT].showChatLoader],
 	]);
+
+	const showChatLoader = showChatLoaderProp !== undefined ? showChatLoaderProp : showChatLoaderState;
+
   const {setUserData ,userData } = useUserData()
   
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
@@ -374,7 +379,6 @@ const AuraResponseProducts = ({
 	}, [chatProductsDataToShow, selectedProducts]);
 
 	const handleResetSelectProduct = useCallback(() => {
-		setEnableSelectProduct(false);
 		setSelectedProducts([]);
 	}, []);
 
@@ -771,36 +775,7 @@ const AuraResponseProducts = ({
 				<div className={styles['aura-products-main-content']}>
 					{!isLoading ? (
 					<>
-						{enableCustomFilter || enableFilters ? (
-							<div className={styles['aura-products-filter-header']}>
-								{enableCustomFilter ? (
-									<CustomFilter
-										customFilterStringData={filters.custom_filter}
-										handleSaveEditCustomFilter={handleSaveEditCustomFilter}
-										hashtagsThemeClassName='text-black-102'
-										customFilter={customFilter}
-										setCustomFilter={setCustomFilter}
-										handleCustomFilterChange={handleCustomFilterChange}
-										showCustomFilterInput={showCustomFilterInput}
-										setShowCustomFilterInput={setShowCustomFilterInput}
-										checkAndShowContainer={checkAndShowContainer}
-									/>
-								) : null}
-								{enableFilters ? (
-									<div
-										className={styles['aura-products-filter-toggle']}
-										onClick={() =>
-											setFilterOptionsVisible(!filterOptionsVisible)
-										}>
-										<p className={styles['aura-products-filter-text']}>
-											FILTERS
-										</p>
-									</div>
-								) : null}
-							</div>
-						) : null}
-
-						{isFiltersAvailable ? (
+						{enableFilters ? (
 							<div className={styles['aura-products-filters-tags-container']}>
 								<ProductFiltersTags
 									productFilters={filters}
@@ -809,6 +784,9 @@ const AuraResponseProducts = ({
 									displayFilters={filtersToShow}
 									tagThemeClassName={filterStyles.tagPillAura}
 									clearFiltersThemeClassName={filterStyles.clearFiltersAura}
+									onOpenFiltersModal={
+										tag ? () => setFilterOptionsVisible(!filterOptionsVisible) : null
+									}
 								/>
 							</div>
 						) : null}
@@ -816,103 +794,64 @@ const AuraResponseProducts = ({
 
 						{chatProductsDataToShow.length ? (
 							<div className={styles['aura-products-selection-controls']}>
-								{enableSelectProduct ? (
-									<div className={styles['aura-products-selected-items']}>
-										<div className={styles['aura-products-checkbox-group']}>
-											<Checkbox
-												className={styles['aura-products-checkbox-text-xs']}
-												indeterminate={
-													isTagProductSelected && !isTagProductsAllSelected
+								<div className={styles['aura-products-selected-items']}>
+									<div className={styles['aura-products-checkbox-group']}>
+										<Checkbox
+											className={styles['aura-products-checkbox-text-xs']}
+											onChange={(e) => {
+												const checked = e.target.checked;
+												setEnableSelectProduct(checked);
+												if (!checked) {
+													setSelectedProducts([]);
 												}
-												onChange={onSelectAllChange}
-												checked={isTagProductsAllSelected}>
-												{selectedProducts.length} Selected
-											</Checkbox>
-										</div>
-										<p
-											onClick={() => handleResetSelectProduct()}
-											className={styles['aura-products-action-link']}
-											role='button'>
-											Cancel
-										</p>
+											}}
+											checked={enableSelectProduct}>
+											{selectedProducts.length} Selected
+										</Checkbox>
 									</div>
-								) : (
-									<p
-										className={styles['aura-products-select-prompt']}
-										role='link'
-										onClick={() => setEnableSelectProduct(true)}
-										title='Click and select multiple products to build your own collection'>
-										Select products to build your own collection
-									</p>
-								)}
-								{enableSelectProduct ? (
-									<div className={styles['aura-products-action-buttons-container']}>
-										{is_store_instance && (
-											<div className={styles['aura-products-button-save-container']}>
-												<button
-													className={styles['aura-products-action-button']}
-													onClick={(e) =>
-														onAddSelectedProductsToCollection(e,{ isSave: true })
-													}
-													title='Select and add products to collection'>
-													Save
-												</button>
-											</div>
-										)}
-										{storeData?.share_settings ? storeData?.share_settings?.is_skip_enabled &&
-										<div className={styles['aura-products-button-share-container']}>
+								</div>
+								<div className={styles['aura-products-action-buttons-container']}>
+									{is_store_instance && (
+										<div className={styles['aura-products-button-save-container']}>
 											<button
 												className={styles['aura-products-action-button']}
 												onClick={(e) =>
-													onAddSelectedProductsToCollection(e,{ isShare: true })
+													onAddSelectedProductsToCollection(e,{ isSave: true })
 												}
-												title='Select products and share published collection'>
-												Share
+												title='Select and add products to collection'>
+												Save
 											</button>
 										</div>
-										 : 
-										 <div className={styles['aura-products-button-share-container']}>
-											<button
-												className={styles['aura-products-action-button']}
-												onClick={(e) =>
-													onAddSelectedProductsToCollection(e,{ isShare: true })
-												}
-												title='Select products and share published collection'>
-												Share
-											</button>
-										</div>
-}
-									</div>
-								) : (
-									<div className={styles['aura-products-action-links']}>
-										{is_store_instance && (
-											<>
-												<p
-													className={styles['aura-products-action-text-link']}
-													role='link'
-													onClick={handleSaveOrShareClick}
-													title='Click and select multiple products to save to collection'>
-													Save
-												</p>
-												<span className={styles['aura-products-action-divider']}>
-													|
-												</span>
-											</>
-										)}
-										<p
-											className={styles['aura-products-action-text-link']}
-											role='link'
-											onClick={handleSaveOrShareClick}
-											title='Click and select multiple products to share'>
+									)}
+									{storeData?.share_settings ? storeData?.share_settings?.is_skip_enabled &&
+									<div className={styles['aura-products-button-share-container']}>
+										<button
+											className={styles['aura-products-action-button']}
+											onClick={(e) =>
+												onAddSelectedProductsToCollection(e,{ isShare: true })
+											}
+											title='Select products and share published collection'>
 											Share
-										</p>
+										</button>
 									</div>
-								)}
+									 : 
+									 <div className={styles['aura-products-button-share-container']}>
+										<button
+											className={styles['aura-products-action-button']}
+											onClick={(e) =>
+												onAddSelectedProductsToCollection(e,{ isShare: true })
+											}
+											title='Select products and share published collection'>
+											Share
+										</button>
+									</div>
+									}
+								</div>
 							</div>
 						) : null}
 					</>
 				) : null}
-				{isLoading || showChatLoader ? (
+				{isLoading || !isTagEnabled || (showChatLoader && chatProductsDataToShow.length === 0) ? (
 					<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
 						<Spin
 							indicator={
@@ -925,6 +864,12 @@ const AuraResponseProducts = ({
 						<span className="text-[#7268ec] font-semibold text-sm tracking-wide">
 							Searching products...
 						</span>
+					</div>
+				) : (isEmpty(chatProductsDataToShow) && isEmpty(RecomChatProductsDataToShow) && isEmpty(moreProductsDataToShow) && !showChatLoader && !isLoading && isTagEnabled) ? (
+					<div className="flex flex-col items-center justify-center w-full py-20 text-center gap-2">
+						<SearchOutlined style={{ fontSize: 48, color: '#d1d5db' }} />
+						<span className="text-gray-500 font-medium">No products found for this search.</span>
+						<span className="text-gray-400 text-sm">Try adjusting your query or filters.</span>
 					</div>
 				) : (
 					<>
@@ -1163,6 +1108,26 @@ const AuraResponseProducts = ({
 						destroyOnClose
 					>
 						<div className={styles['aura-products-filter-modal-content']}>
+							{enableCustomFilter ? (
+								<div className="mb-4">
+									<CustomFilter
+										customFilterStringData={filters.custom_filter}
+										handleSaveEditCustomFilter={handleSaveEditCustomFilter}
+										hashtagsThemeClassName='text-black-102'
+										customFilter={customFilter}
+										setCustomFilter={setCustomFilter}
+										handleCustomFilterChange={(val) => {
+											const removedHash = val.map((item) => item.replaceAll("#", ""));
+											setCustomFilter(removedHash);
+											onFiltersChange("custom_filter", removedHash.toString() || undefined);
+										}}
+										variant="modal"
+										showCustomFilterInput={showCustomFilterInput}
+										setShowCustomFilterInput={setShowCustomFilterInput}
+										checkAndShowContainer={checkAndShowContainer}
+									/>
+								</div>
+							) : null}
 							<AdditionalAttributes
 								additionalAttributesToShow={filtersToShow}
 								attributesData={filters}

@@ -77,11 +77,11 @@
 /* Layout Switcher Styles */
 .chatmodal-layout-switcher {
   display: flex;
-  background: rgba(192, 192, 235, 0.7);
+  background: rgba(240, 240, 247, 0.7);
   backdrop-filter: blur(8px);
-  padding: 1px;
+  padding: 4px;
   border-radius: 10px;
-  gap: 1px;
+  gap: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
@@ -123,7 +123,7 @@
   content: '';
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
@@ -144,7 +144,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 5px;
+  left: 4.5px;
   bottom: 0;
   width: 1.5px;
   background: currentColor;
@@ -453,6 +453,25 @@
   /* letter-spacing: 0.01em; */
   text-transform: uppercase;
   font-weight: 800;
+}
+
+.chatmodal-navbar-title {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #2f3d61 0%, #7268ec 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .chatmodal-navbar-title {
+    font-size: 1.4rem;
+  }
 }
 
 .chat_aura_products_search_skeleton {
