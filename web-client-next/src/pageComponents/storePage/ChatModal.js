@@ -765,163 +765,70 @@ const ChatModal = ({
       {/* hide close icon for AuraChatPage */}
       {!isAuraChatPage ? (
         <>
-          {isShowAuraResponse && isProductSearchOptionActive ? (
-            <div className="sticky top-0 left-0 right-0 z-[1000] bg-[#f8f7ff] border-b border-[#e9e4ff] px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
-              {/* Left side: Arrow mark and Search written */}
-              <div className="flex items-center gap-2 md:gap-3 shrink-0">
-                <ArrowLeftOutlined 
-                  className="text-lg md:text-xl text-[#111827] cursor-pointer hover:opacity-80 transition-opacity pr-1 md:pr-2" 
-                  onClick={handleGoBack} 
+          {/* Desktop Close/Layout Header */}
+          {!(isShowShopLookSplitLayout && layoutMode !== "left" && !isMobile) && (
+            <div className={`${styles["chatmodal-close-icon-container"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
+              {isShowAuraResponse && isProductSearchOptionActive && (
+                <SearchOutlined
+                  className={styles["chatmodal-search-icon-toggle"]}
+                  onClick={() => setIsSearchPopupOpen(true)}
+                  title="Open Search"
                 />
-                <span className={styles["chatmodal-navbar-title"]}>
-                  {activeSearchOption?.title?.toUpperCase() || "SEARCH"}
-                </span>
+              )}
+              <CloseOutlined
+                id="chat_modal_close_icon"
+                onClick={closeChatModal}
+                className={styles["chatmodal-close-icon"]}
+              />
+            </div>
+          )}
+
+          {/* Mobile Sticky Navbar - Only show when results are present */}
+          {isMobile && (isShowShopLookSplitLayout || isShowAuraResponse) && (
+            <div className={styles["chatmodal-mobile-navbar-sticky"]}>
+              <div className={styles["chatmodal-mobile-navbar-top"]}>
+                <div className={styles["chatmodal-mobile-navbar-left"]}>
+                  <ArrowLeftOutlined 
+                    className={styles["chatmodal-mobile-back-icon"]} 
+                    onClick={handleGoBack} 
+                  />
+                  <span className={styles["chatmodal-mobile-navbar-heading"]}>
+                    {activeSearchOption?.title?.toUpperCase()}
+                  </span>
+                </div>
+                <CloseOutlined
+                  onClick={closeChatModal}
+                  className={styles["chatmodal-mobile-close-icon"]}
+                />
               </div>
 
-              {/* Center side: Embedded Search Bar */}
-              <div className="flex-1 max-w-2xl mx-1 md:mx-6 relative">
-                <div
-                  className="w-full border-[1.5px] border-[#cfc7ff] bg-white rounded-full flex items-center px-3 md:px-4 py-1.5 md:py-2 shadow-2xs"
-                >
-                  {!isShopByThemeOptionActive && (
-                    <button
-                      type="button"
-                      className="bg-transparent border-none p-0 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity mr-2 md:mr-3 shrink-0"
-                      title="Open assistant settings"
-                      onClick={handlePromptUtilityClick}
-                    >
-                      <img src={page_info?.src} alt="Assistant settings" className="w-4 h-4 md:w-5 md:h-5 object-contain" />
-                    </button>
-                  )}
-
-                  <input
-                    id={`chat_navbar_search_input_${chatTypeKey}`}
-                    type="text"
-                    ref={inputRef}
-                    placeholder={
-                      typeof activeSearchOption?.text_placeholder === "string"
-                        ? activeSearchOption?.text_placeholder
-                        : activeSearchOption?.text_placeholder?.[0] ||
-                        "Describe your product idea"
-                    }
-                    name="chat_message"
-                    value={localChatMessage}
-                    onChange={handleInputChange}
-                    onKeyDown={handlePromptKeyDown}
-                    className="flex-1 bg-transparent border-none outline-none text-[#384467] placeholder-[#8f96a8] text-sm md:text-base min-w-0"
-                  />
-
+              {isShowShopLookSplitLayout && (
+                <div className={styles["chatmodal-mobile-tabs"]}>
                   <button
-                    type="button"
-                    className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#7268ec] text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
-                    onClick={handleSubmitChatInput}
-                    disabled={
-                      isShopALookOptionActive
-                        ? !chatImageUrl
-                        : !localChatMessage && !chatImageUrl
-                    }
+                    className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "description" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
+                    onClick={() => setMobileTab("description")}
                   >
-                    <ArrowUpOutlined className="text-xs md:text-sm" />
+                    Image Description
+                  </button>
+                  <button
+                    className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "products" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
+                    onClick={() => setMobileTab("products")}
+                  >
+                    Products
                   </button>
                 </div>
-              </div>
-
-              {/* Right side: Close Icon */}
-              <div className="shrink-0 flex items-center">
-                <CloseOutlined
-                  id="chat_modal_close_icon"
-                  onClick={closeChatModal}
-                  className="text-lg md:text-xl text-[#111827] cursor-pointer hover:opacity-80 transition-opacity p-1"
-                />
-              </div>
+              )}
             </div>
-          ) : (
-            <>
-              {/* Desktop Close/Layout Header */}
-              {!(isShowShopLookSplitLayout && layoutMode !== "left" && !isMobile) && (
-                <div className={`${styles["chatmodal-close-icon-container"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
-                  {isShowShopLookSplitLayout && (
-                    <div className={styles["chatmodal-layout-switcher"]}>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "left" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("left")}
-                        title="Sidebar only"
-                      >
-                        <div className={styles["layout-icon-left"]} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "both" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("both")}
-                        title="Split view"
-                      >
-                        <div className={styles["layout-icon-both"]} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "right" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("right")}
-                        title="Products only"
-                      >
-                        <div className={styles["layout-icon-right"]} />
-                      </button>
-                    </div>
-                  )}
-                  <CloseOutlined
-                    id="chat_modal_close_icon"
-                    onClick={closeChatModal}
-                    className={styles["chatmodal-close-icon"]}
-                  />
-                </div>
-              )}
+          )}
 
-              {/* Mobile Sticky Navbar - Only show when results are present */}
-              {isMobile && isShowShopLookSplitLayout && (
-                <div className={styles["chatmodal-mobile-navbar-sticky"]}>
-                  <div className={styles["chatmodal-mobile-navbar-top"]}>
-                    <div className={styles["chatmodal-mobile-navbar-left"]}>
-                      <ArrowLeftOutlined 
-                        className={styles["chatmodal-mobile-back-icon"]} 
-                        onClick={handleGoBack} 
-                      />
-                      <span className={styles["chatmodal-mobile-navbar-heading"]}>
-                        {activeSearchOption?.title?.toUpperCase()}
-                      </span>
-                    </div>
-                    <CloseOutlined
-                      onClick={closeChatModal}
-                      className={styles["chatmodal-mobile-close-icon"]}
-                    />
-                  </div>
-
-                  <div className={styles["chatmodal-mobile-tabs"]}>
-                    <button
-                      className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "description" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
-                      onClick={() => setMobileTab("description")}
-                    >
-                      Image Description
-                    </button>
-                    <button
-                      className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "products" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
-                      onClick={() => setMobileTab("products")}
-                    >
-                      Products
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Standalone Mobile Close Icon when navbar is hidden */}
-              {isMobile && !isShowShopLookSplitLayout && (
-                <div className={styles["chatmodal-mobile-standalone-close"]}>
-                   <CloseOutlined
-                      onClick={closeChatModal}
-                      className={styles["chatmodal-mobile-close-icon"]}
-                    />
-                </div>
-              )}
-            </>
+          {/* Standalone Mobile Close Icon when navbar is hidden */}
+          {isMobile && !(isShowShopLookSplitLayout || isShowAuraResponse) && (
+            <div className={styles["chatmodal-mobile-standalone-close"]}>
+               <CloseOutlined
+                  onClick={closeChatModal}
+                  className={styles["chatmodal-mobile-close-icon"]}
+                />
+            </div>
           )}
         </>
       ) : null}

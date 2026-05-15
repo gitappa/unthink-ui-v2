@@ -30,6 +30,7 @@ const AuraInputBox = ({
   handleSubmitChatInput = () => {},
   setIsHistoryOpen,
   chatHistory,
+  hideActions = false,
 
 }) => {
      
@@ -75,54 +76,52 @@ const AuraInputBox = ({
 
   return (
     <div className={styles["chat-products-bottom-input-wrapper"]}>
-       {/* <ul>
-        {chatHistory.map(data=>(
-          <li>{data}</li>
-        ))}
-       </ul> */}
-      <div className={styles["chat-products-above-input-actions"]}>
-        <div className={styles["chat-products-icon-buttons-group"]}>
-           
-          {isShowTryAgain && (
-            <Tooltip title="Redo">
+       
+      {!hideActions && (
+        <div className={styles["chat-products-above-input-actions"]}>
+          <div className={styles["chat-products-icon-buttons-group"]}>
+            
+            {isShowTryAgain && (
+              <Tooltip title="Redo">
+                <button
+                  type="button"
+                  className={styles["chat-products-icon-action-btn"]}
+                  onClick={handleTryAgainClick}
+                  disabled={showChatLoader}
+                >
+                  <ReloadOutlined />
+                </button>
+              </Tooltip>
+            )}
+            <Tooltip title="New chat">
               <button
                 type="button"
                 className={styles["chat-products-icon-action-btn"]}
-                onClick={handleTryAgainClick}
+                onClick={handleGoBack}
                 disabled={showChatLoader}
               >
-                <ReloadOutlined />
+                <FormOutlined />
               </button>
             </Tooltip>
-          )}
-          <Tooltip title="New chat">
-            <button
-              type="button"
-              className={styles["chat-products-icon-action-btn"]}
-              onClick={handleGoBack}
-              disabled={showChatLoader}
-            >
-              <FormOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title="Past chats">
-            <button
-              type="button"
-              className={styles["chat-products-icon-action-btn"]}
-              onClick={() => setIsHistoryOpen(true)}
-              disabled={showChatLoader}
-            >
-              <HistoryOutlined />
-            </button>
-          </Tooltip>
-        </div>
-        {showChatLoader && (
-          <div className={styles["chat-products-inline-loader"]}>
-            <Spin size="small" />
-            <span>Searching...</span>
+            <Tooltip title="Past chats">
+              <button
+                type="button"
+                className={styles["chat-products-icon-action-btn"]}
+                onClick={() => setIsHistoryOpen(true)}
+                disabled={showChatLoader}
+              >
+                <HistoryOutlined />
+              </button>
+            </Tooltip>
           </div>
-        )}
-      </div>
+          {showChatLoader && (
+            <div className={styles["chat-products-inline-loader"]}>
+              <Spin size="small" />
+              <span>Searching...</span>
+            </div>
+          )}
+        </div>
+      )}
       <div
         className={`${styles["chat-products-bottom-input-card"]} ${
           isShopByThemeOptionActive || isCompleteTheLookOptionActive
@@ -165,9 +164,9 @@ const AuraInputBox = ({
                 ? styles["chat-products-bottom-input-shop-theme"]
                 : ""
             }`}
-            style={{ paddingRight: "40px", resize: "none", overflow: "hidden" }}
+            style={{ paddingRight: "85px", resize: "none", overflow: "hidden" }}
           />
-          <div className="absolute right-0 flex items-center gap-1.5">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
               <button
                 type="button"
@@ -178,7 +177,7 @@ const AuraInputBox = ({
                 <img
                   src={page_info?.src || page_info}
                   alt="Assistant settings"
-                  className="w-4 h-4 object-contain"
+                  className="w-5 h-5 object-contain"
                 />
               </button>
             )}

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox, Tooltip, Upload, Spin } from "antd";
-import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, MenuOutlined, FolderOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -303,24 +303,58 @@ const ChatProducts = ({
     }
   };
 
+  const AuraSideNav = () => (
+    <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
+      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-[#7268ec]">
+        <ArrowLeftOutlined
+          className="cursor-pointer text-2xl"
+          onClick={handleGoBack}
+        />
+      </div>
+      <div className="flex-1 flex flex-col gap-8 items-center w-full justify-center">
+        <div 
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          onClick={handleGoBack}
+          title="New Chat"
+        >
+          <FormOutlined className="text-[20px]" />
+          <span className="text-[10px] font-semibold text-center capitalize">New Chat</span>
+        </div>
+        <div 
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          onClick={() => {
+            const modes = ["left", "both", "right"];
+            const nextMode = modes[(modes.indexOf(layoutMode) + 1) % modes.length];
+            setLayoutMode(nextMode);
+          }}
+          title="Switch Layout"
+        >
+          <div className={styles["layout-icon-both"]} style={{ fontSize: '20px' }} />
+          <span className="text-[10px] font-semibold text-center capitalize">Split</span>
+        </div>
+        <div 
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          onClick={scrollToCollectionsContainer}
+          title="Collections"
+        >
+          <FolderOutlined className="text-[20px]" />
+          <span className="text-[10px] font-semibold text-center capitalize">Collections</span>
+        </div>
+        <div 
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          onClick={() => setIsHistoryOpen(true)}
+          title="History"
+        >
+          <HistoryOutlined className="text-[20px]" />
+          <span className="text-[10px] font-semibold text-center capitalize">History</span>
+        </div>
+      </div>
+      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672]" />
+    </div>
+  );
+
   const productsResultsContent = (
     <>
-      {showChatLoader && chatProductsDataToShow.length === 0 && isEmpty(suggestionsWithProducts.suggestions) && (
-        <div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
-          <Spin
-            indicator={
-              <Loading3QuartersOutlined
-                style={{ fontSize: 36, color: "#7268ec" }}
-                spin
-              />
-            }
-          />
-          <span className="text-[#7268ec] font-semibold text-sm tracking-wide">
-            Searching products...
-          </span>
-        </div>
-      )}
-
       {!isEmpty(shopALookData) &&
         isTagAvailable &&
         !isBTNormalUserLoggedIn &&
@@ -358,7 +392,6 @@ const ChatProducts = ({
             localChatMessage={localChatMessage}
             showTitle={!shouldShowShopLookSplitLayout}
             layoutMode={shouldShowShopLookSplitLayout ? layoutMode : "full"}
-            showChatLoader={showChatLoader}
           />
         </>
       ) : null}
@@ -558,20 +591,44 @@ const ChatProducts = ({
           ))}
 
         {shouldShowShopLookSplitLayout ? (
-          <div className={styles["chat-products-shop-look-wrapper"]}>
+          <div className={`${styles["chat-products-shop-look-wrapper"]} flex flex-col lg:flex-row`}>
+            <AuraSideNav />
             <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
               {(!isMobile || mobileTab === "description") && (
                 <div className={styles["chat-products-shop-look-sidebar"]}>
                   <div className={styles["chat-products-sidebar-header"]}>
-                    <ArrowLeftOutlined
-                      className="cursor-pointer text-2xl pr-2"
-                      onClick={handleGoBack}
-                    />
                     <h2 className={styles["chatmodal-category-title"]}>
                       {activeSearchOption?.title?.toUpperCase()}
                     </h2>
                   </div>
-                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-3`}>
+                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-2`}>
+                    {shouldMoveInputBelowResults ? (
+                      <div className="mb-2">
+                        <AuraInputBox
+                          isShowTryAgain={isShowTryAgain}
+                          showChatLoader={showChatLoader}
+                          handleTryAgainClick={handleTryAgainClick}
+                          handleGoBack={handleGoBack}
+                          isShopByThemeOptionActive={isShopByThemeOptionActive}
+                          isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                          uploadImageProps={uploadImageProps}
+                          chatImageUrl={chatImageUrl}
+                          activeSearchOption={activeSearchOption}
+                          chatTypeKey={chatTypeKey}
+                          inputRef={inputRef}
+                          localChatMessage={localChatMessage}
+                          handleInputChange={handleInputChange}
+                          handlePromptKeyDown={handlePromptKeyDown}
+                          handlePromptUtilityClick={handlePromptUtilityClick}
+                          page_info={page_info}
+                          isShopALookOptionActive={isShopALookOptionActive}
+                          handleSubmitChatInput={handleSubmitChatInput}
+                          setIsHistoryOpen={setIsHistoryOpen}
+                          followUpQuery={followUpQuery}
+                          hideActions={shouldShowShopLookSplitLayout}
+                        />
+                      </div>
+                    ) : null}
                     <div>
                       <div className={styles["chat-products-shop-look-sidebar-content"]}>
                         {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
@@ -585,7 +642,7 @@ const ChatProducts = ({
                             <div className={styles["chat-products-shop-look-image-inner"]}>
                               <img
                                 src={shopLookPreviewImage}
-                                alt="Shop the look"
+                                alt="Image"
                                 className={styles["chat-products-shop-look-image"]}
                               />
                               {Array.isArray(auraOverlayCoordinates) &&
@@ -629,14 +686,27 @@ const ChatProducts = ({
                                   className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
                                   dangerouslySetInnerHTML={{ __html: widgetHeader }}
                                 />
-                                {widgetHeader?.length > 100 && (
-                                  <button 
-                                    className={styles["chat-products-read-more-btn"]}
-                                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                                  >
-                                    {isDescriptionExpanded ? "Read Less" : "Read More"}
-                                  </button>
-                                )}
+                                <div className="flex flex-col items-start gap-1">
+                                  {widgetHeader?.length > 100 && (
+                                    <button 
+                                      className={styles["chat-products-read-more-btn"]}
+                                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                                    >
+                                      {isDescriptionExpanded ? "Read Less" : "Read More"}
+                                    </button>
+                                  )}
+                                  {isShowTryAgain && (
+                                    <Tooltip title="Redo">
+                                      <button
+                                        className="mt-1 flex h-8 w-8 items-center justify-center rounded-full border border-[#7268ec]/20 bg-[#f3f0ff] text-[1rem] font-semibold text-[#7268ec] transition-all duration-200 hover:rotate-[30deg] hover:scale-110 hover:bg-[#7268ec] hover:text-white hover:shadow-[0_2px_8px_rgba(114,104,236,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+                                        onClick={handleTryAgainClick}
+                                        disabled={showChatLoader}
+                                      >
+                                        <ReloadOutlined />
+                                      </button>
+                                    </Tooltip>
+                                  )}
+                                </div>
                               </div>
                             ) : null}
                             {shopLookKeywords.length && layoutMode === 'left' ? (
@@ -694,34 +764,6 @@ const ChatProducts = ({
                       Products
                     </h2>
                     <div className={styles["chat-products-navbar-controls"]}>
-                      {setLayoutMode && (
-                        <div className={styles["chat-products-layout-switcher"]}>
-                          <button
-                            type="button"
-                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "left" ? styles["chat-products-layout-btn-active"] : ""}`}
-                            onClick={() => setLayoutMode("left")}
-                            title="Sidebar only"
-                          >
-                            <div className={styles["layout-icon-left"]} />
-                          </button>
-                          <button
-                            type="button"
-                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "both" ? styles["chat-products-layout-btn-active"] : ""}`}
-                            onClick={() => setLayoutMode("both")}
-                            title="Split view"
-                          >
-                            <div className={styles["layout-icon-both"]} />
-                          </button>
-                          <button
-                            type="button"
-                            className={`${styles["chat-products-layout-btn"]} ${layoutMode === "right" ? styles["chat-products-layout-btn-active"] : ""}`}
-                            onClick={() => setLayoutMode("right")}
-                            title="Products only"
-                          >
-                            <div className={styles["layout-icon-right"]} />
-                          </button>
-                        </div>
-                      )}
                       {isProductSearchOptionActive && onOpenSearchPopup && (
                         <SearchOutlined
                           className={styles["chat-products-search-icon"]}
