@@ -191,7 +191,7 @@ const AuraResponseProductsWithTags = ({
 						<div
 							key='All'
 							className={`${styles['aura-tag-item']} ${!selectedTag && isAllEnabled
-								? styles['aura-tag-selected']
+								? 'bg-secondary text-white '
 								: isAllEnabled
 									? styles['aura-tag-enabled']
 									: styles['aura-tag-disabled']
@@ -216,7 +216,7 @@ const AuraResponseProductsWithTags = ({
 						id={`tag-${suggestion}`}
 						key={suggestion}
 						className={`${styles['aura-tag-item']} ${suggestion === selectedTag
-							? styles['aura-tag-selected']
+							? 'bg-secondary text-white font-medium'
 							: checkIsTagEnabled(suggestion)
 								? styles['aura-tag-enabled']
 								: styles['aura-tag-disabled']
