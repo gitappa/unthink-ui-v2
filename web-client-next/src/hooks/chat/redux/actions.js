@@ -230,10 +230,11 @@ export const setChatProductsData = (payload) => ({
 	payload,
 });
 
-export const setWidgetHeader = (payload, widgetHeaderRequest) => ({
+export const setWidgetHeader = (payload, widgetHeaderRequest,chatHistory) => ({
 	type: SET_WIDGET_HEADER,
 	payload,
 	widgetHeaderRequest,
+	chatHistory
 });
 
 export const setWidgetImage = (payload) => ({

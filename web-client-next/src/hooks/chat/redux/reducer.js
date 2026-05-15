@@ -136,6 +136,7 @@ const initialState = {
 	chatProductsData: [],
 	widgetHeader: "",
 	widgetHeaderRequest: {},
+	chatHistory:[],
 	widgetImage: "",
 	userAction: "",
 	showException: false,
@@ -618,6 +619,7 @@ const chatReducerV2 = (state = initialState, action) => {
 		case SET_WIDGET_HEADER:
 			newState.widgetHeader = payload ?? "";
 			newState.widgetHeaderRequest = action.widgetHeaderRequest ?? {};
+			newState.chatHistory = action.chatHistory ?? [];
 			return newState;
 		case SET_WIDGET_IMAGE:
 			newState.widgetImage = payload ?? "";

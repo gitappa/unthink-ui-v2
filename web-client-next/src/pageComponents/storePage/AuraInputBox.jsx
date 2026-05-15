@@ -29,11 +29,12 @@ const AuraInputBox = ({
   isShopALookOptionActive = false,
   handleSubmitChatInput = () => {},
   setIsHistoryOpen,
-  followUpQuery,
+  chatHistory,
   hideActions = false,
 
 }) => {
-    console.log('followUpQueryd',followUpQuery);
+     
+    // console.log('chatHistory',chatHistory);
     
   //   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   //    console.log('activeSearchOption',activeSearchOption?.allow_image_search);

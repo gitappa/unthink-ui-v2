@@ -82,6 +82,7 @@ const ChatProducts = ({
     activeSearchOption,
     auraOverlayCoordinates,
     storeData,
+    chatHistory,
   ] = useSelector((state) => [
     state.chatV2.chatProductsData || [],
     state.chatV2.widgetHeader,
@@ -94,7 +95,8 @@ const ChatProducts = ({
     state.chatV2.shopALook,
     state.chatV2.activeSearchOption || {},
     state.chatV2.auraOverlayCoordinates,
-    state.store.data
+    state.store.data,
+    state.chatV2.chatHistory,
   ]);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
@@ -745,6 +747,30 @@ const ChatProducts = ({
                       </div>
                     </div> 
                   </div>
+                  {shouldMoveInputBelowResults ? (
+                    <AuraInputBox
+                      isShowTryAgain={isShowTryAgain}
+                      showChatLoader={showChatLoader}
+                      handleTryAgainClick={handleTryAgainClick}
+                      handleGoBack={handleGoBack}
+                      isShopByThemeOptionActive={isShopByThemeOptionActive}
+                      isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                      uploadImageProps={uploadImageProps}
+                      chatImageUrl={chatImageUrl}
+                      activeSearchOption={activeSearchOption}
+                      chatTypeKey={chatTypeKey}
+                      inputRef={inputRef}
+                      localChatMessage={localChatMessage}
+                      handleInputChange={handleInputChange}
+                      handlePromptKeyDown={handlePromptKeyDown}
+                      handlePromptUtilityClick={handlePromptUtilityClick}
+                      page_info={page_info}
+                      isShopALookOptionActive={isShopALookOptionActive}
+                      handleSubmitChatInput={handleSubmitChatInput}
+                      setIsHistoryOpen={setIsHistoryOpen}
+                      chatHistory={chatHistory}
+                    />
+                  ) : null}
                 </div>
               )}
 
