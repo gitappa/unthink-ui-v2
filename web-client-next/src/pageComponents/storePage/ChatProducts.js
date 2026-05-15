@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox, Tooltip, Upload, Spin } from "antd";
-import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined, MenuOutlined, FolderOutlined } from "@ant-design/icons";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined, Loading3QuartersOutlined, MenuOutlined, FolderOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
