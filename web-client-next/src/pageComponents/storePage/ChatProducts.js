@@ -289,11 +289,8 @@ const ChatProducts = ({
     handleResetSelectProduct();
   };
 
-  const scrollToCollectionsContainer = () => {
-    const collection = document.getElementById("chat_shop_a_look_container");
-    if (collection) {
-      collection.scrollIntoView({ behavior: "smooth" });
-    }
+  const scrollToCollectionsContainer = () => {     
+        dispatch(openWishlistModal());
   };
 
   const scrollToProductsContainer = () => {
@@ -612,7 +609,7 @@ const ChatProducts = ({
         {shouldShowShopLookSplitLayout ? (
           <div className={`${styles["chat-products-shop-look-wrapper"]} flex flex-col lg:flex-row`}>
             <AuraSideNav />
-            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
+            <div className={`${styles["chat-products-shop-look-layout"]} bg-white ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
               {(!isMobile || mobileTab === "description") && (
                 <div className={styles["chat-products-shop-look-sidebar"]}>
                   <div className={styles["chat-products-sidebar-header"]}>
@@ -839,9 +836,9 @@ const ChatProducts = ({
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
                       {item}
                     </span>
-                    <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
+                    {/* <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
                       {item}
-                    </span>
+                    </span> */}
                   </div>
                 ))
               ) : (

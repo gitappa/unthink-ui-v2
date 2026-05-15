@@ -81,9 +81,10 @@ const ChatContainer = ({
 	const auraSearchText = getParams(PARAM_SEARCH_TEXT);
 
 	const [settingModalOpen, setSettingModalOpen] = useState(false);
-	const [isFollowUpQuery, setIsFollowUpQuery] = useState(false);
+	const [isFollowUpQuery, setIsFollowUpQuery] = useState(true);
 	const [showSubmitImageTooltip, setShowSubmitImageTooltip] = useState(false);
 	const [portalTarget, setPortalTarget] = useState(null);
+	console.log('isFollowUpQuery',isFollowUpQuery);
 
 	const closeChatModal = () => {
 		dispatch(setShowChatModal(false));
@@ -277,12 +278,13 @@ const ChatContainer = ({
 	// 	() => user.data?.filters?.strict?.brand || [],
 	// 	[user.data?.filters]
 	// );
-
+console.log(isFollowUpQuery)
 	const chatInputMetadata = useMemo(
 		() => ({
 			searchOptionId: activeSearchOption?.id,
 			follow_qn: isFollowUpQuery || undefined,
-
+			
+			
 			// aura_stl_desc:
 			// 	isSendSTLTemplates && !isEmpty(auraChatSetting.aura_stl_desc)
 			// 		? auraChatSetting.aura_stl_desc
