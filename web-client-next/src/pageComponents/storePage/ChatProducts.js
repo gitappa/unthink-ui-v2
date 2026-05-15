@@ -98,28 +98,30 @@ const ChatProducts = ({
     state.store.data,
     state.chatV2.chatHistory,
   ]);
+  // console.log('chatHistory',chatHistory);
+  
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [pastChats, setPastChats] = useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem("unthink_aura_past_chats");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-      } catch (e) {}
-    }
-    return [
-      { id: "1", text: "Minimalist modular velvet sofa", timestamp: "10 mins ago" },
-      { id: "2", text: "Scandinavian oak dining table with chairs", timestamp: "2 hours ago" },
-      { id: "3", text: "Abstract ceramic accent vases", timestamp: "1 day ago" },
-      { id: "4", text: "Boho woven hanging light fixtures", timestamp: "3 days ago" },
-    ];
-  });
+  // const [pastChats, setPastChats] = useState(() => {
+  //   if (typeof window !== "undefined") {
+  //     try {
+  //       const stored = localStorage.getItem("unthink_aura_past_chats");
+  //       if (stored) {
+  //         const parsed = JSON.parse(stored);
+  //         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  //       }
+  //     } catch (e) {}
+  //   }
+  //   return [
+  //     { id: "1", text: "Minimalist modular velvet sofa", timestamp: "10 mins ago" },
+  //     { id: "2", text: "Scandinavian oak dining table with chairs", timestamp: "2 hours ago" },
+  //     { id: "3", text: "Abstract ceramic accent vases", timestamp: "1 day ago" },
+  //     { id: "4", text: "Boho woven hanging light fixtures", timestamp: "3 days ago" },
+  //   ];
+  // });
 
   const handleSelectPastChat = (chatText) => {
     if (handleInputChange) {
@@ -827,18 +829,18 @@ const ChatProducts = ({
               />
             </div>
             <div className="p-4 flex flex-col gap-2.5 max-h-[60vh] overflow-y-auto">
-              {pastChats.length > 0 ? (
-                pastChats.map((item) => (
+              {chatHistory.length > 0 ? (
+                chatHistory.map((item) => (
                   <div
-                    key={item.id}
-                    onClick={() => handleSelectPastChat(item.text)}
+                    key={item}
+                    onClick={() => handleSelectPastChat(item)}
                     className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-[#7268ec]/5 hover:border-[#7268ec]/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
                   >
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
-                      {item.text}
+                      {item}
                     </span>
                     <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
-                      {item.timestamp}
+                      {item}
                     </span>
                   </div>
                 ))
