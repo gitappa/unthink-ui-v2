@@ -267,7 +267,7 @@ const ContextWrapper = ({ children }) => {
 					const HISTORY_KEY = "widgetHeaderRequestHistory";
 					if (data.request) {
 						const raw = sessionStorage.getItem(HISTORY_KEY);
-						console.log('raw',raw);
+						// console.log('raw',raw);
 						
 						let history = [];
 						if (raw) {

@@ -1,20 +1,21 @@
 /* Main Container */
 .chat-products-container {
   max-width: 100%;
-  padding: 0;
+  padding: 0 1rem;
   background-color: white;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .chat-products-container {
-    padding-right: 16px !important;
+    padding: 0 1rem !important;
   }
 }
 
 
 @media (min-width: 640px) {
   .chat-products-container {
-    padding: 0 1.25rem 1.25rem 0.75rem;
+    padding: 0 1.5rem 1.25rem 1.5rem !important;
   }
 }
 
@@ -704,7 +705,7 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   margin: 0 0 1rem 0;
-  padding: 0.75rem 0;
+  padding: 0.75rem 1.5rem;
   height: 60px;
   border-bottom: 1px solid rgba(226, 221, 248, 0.85);
   width: 100%;
@@ -780,10 +781,10 @@
     height: 100%;
     overflow-y: auto;
     min-height: 0;
-    padding-left: 0;
-    padding-right: 1.5rem;
+    padding: 0 1.5rem 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
   }
 
 
@@ -902,8 +903,8 @@
 
   .chat-products-shop-look-main {
     width: auto;
-    padding-left: 0.2rem;
-    padding-right: 1.5rem;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    box-sizing: border-box;
   }
 
   .chat-products-container {
@@ -1315,9 +1316,10 @@
 
   .layout-left .chat-products-shop-look-sidebar {
     border-right: none !important;
-    padding-right: 0 !important;
+    padding: 0 2rem 2rem 2rem !important;
     max-width: 1000px;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .layout-left .chat-products-shop-look-image {
