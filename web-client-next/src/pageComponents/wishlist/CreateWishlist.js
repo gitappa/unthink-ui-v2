@@ -751,7 +751,7 @@ const CreateWishlist = ({
 							name='fetchProducts'
 							id='fetchProducts'
 							checked={isFetchProductsChecked}
-							className='text-left placeholder-gray-101 outline-none p-3 rounded-md w-5 mr-2'
+							className='text-left placeholder-gray-101 outline-none p-3 rounded-md w-5 mr-2 accent-secondary'
 							onChange={handleAutoCollectionCheckboxChange}
 						/>
 						<label htmlFor='fetchProducts'>

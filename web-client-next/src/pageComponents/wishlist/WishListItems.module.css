@@ -41,19 +41,7 @@
 	color: #9e9e9e;
 }
 
-/* Checkbox Styles */
-.checkboxInput {
-	height: 10px;
-	/* width: 0.25rem; */
-	margin-right: 10px;
-	cursor: pointer;
-}
-
-@media (min-width: 1024px) {
-	.checkboxInput {
-		height: 1rem;
-	}
-}
+ 
 
 /* Title Styles */
 .wishlistTitle {

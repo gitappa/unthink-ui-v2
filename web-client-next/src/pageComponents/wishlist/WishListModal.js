@@ -493,8 +493,8 @@ const WishListModal = ({
 								<button
 									className={styles.createWishlistButton}
 									onClick={onCreateWishlist}>
-									<PlusOutlined className={styles.createWishlistIcon} />
-									<Text className={styles.createWishlistText}>
+									<PlusOutlined className='text-secondary text-lg' />
+									<Text className='pl-4 text-secondary font-semibold text-base '>
 										Create New {WISHLIST_TITLE}
 									</Text>
 								</button>
@@ -505,9 +505,9 @@ const WishListModal = ({
 							<>
 							<div className={styles.tabsContainer}>
 								<button onClick={() => handleCollectionClick("Feature")}
-									className={`${styles.tabButtonBase} ${styles.tabButtonLeft} ${activeCollection === "Feature" ? styles.tabButtonActive : styles.tabButtonInactive}`}>Featured Collections</button>
+									className={`${styles.tabButtonBase} ${styles.tabButtonLeft} ${activeCollection === "Feature" ? ' bg-secondary text-white rounded-l-[10px]' :' border-secondary border-2 text-secondary bg-transparent rounded-l-[10px]  '}`}>Featured Collections</button>
 								<button onClick={() => handleCollectionClick("Creator")}
-									className={`${styles.tabButtonBase} ${styles.tabButtonRight} ${activeCollection === "Creator" ? styles.tabButtonActive : styles.tabButtonInactive}`}>Creator Collections</button>
+									className={`${styles.tabButtonBase} ${styles.tabButtonRight} ${activeCollection === "Creator" ? ' bg-secondary text-white rounded-r-[10px]' : 'border-secondary border-2 text-secondary bg-transparent rounded-r[10px]' }`}>Creator Collections</button>
 							</div>
 
 							{
@@ -516,22 +516,23 @@ const WishListModal = ({
 									{enableSelectProduct ?
 										<>
 											<div className={styles.selectionControls}>
-												<div className={styles.checkboxContainer}>
-													<Checkbox
-														className={styles.checkboxText}
-														indeterminate={
-															selectedProducts.length > 0 &&
-															selectedProducts.length < collectionsList.length
-														}
-														onChange={onSelectAllChange}
-														checked={selectedProducts.length === collectionsList.length}>
-															{selectedProducts.length} Selected
-													</Checkbox>
-												</div>
+											<div className="flex border border-[#9E9E9E] rounded px-2 py-2">
+  <Checkbox
+    className="customCheckbox"
+    indeterminate={
+      selectedProducts.length > 0 &&
+      selectedProducts.length < collectionsList.length
+    }
+    onChange={onSelectAllChange}
+    checked={selectedProducts.length === collectionsList.length}
+  >
+    {selectedProducts.length} Selected
+  </Checkbox>
+</div>
 												<p
 													onClick={onDeleteSelectedProducts}
 													className={`${styles.actionButton} ${selectedProducts.length
-														? styles.deleteButtonEnabled
+														? 'text-secondary cursor-pointer'
 														: styles.deleteButton
 													}`}
 													title='Click to delete selected products'
@@ -540,7 +541,7 @@ const WishListModal = ({
 												</p>
 												<p
 													onClick={() => handleResetSelectProduct()}
-													className={`${styles.actionButton} ${styles.cancelButton}`}
+													className={`${styles.actionButton} text-secondary cursor-pointer`}
 													role='button'>
 													Cancel
 												</p>
@@ -549,7 +550,7 @@ const WishListModal = ({
 										:
 										(
 											<Tooltip title='Click and select multiple products to delete'>
-											<p className={styles.selectableButton} onClick={() => setEnableSelectProduct(true)} >
+											<p className='lg:text-lg text-base text-secondary cursor-pointer' onClick={() => setEnableSelectProduct(true)} >
 												Select multiple products
 											</p>
 										</Tooltip>
