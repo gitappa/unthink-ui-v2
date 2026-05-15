@@ -136,6 +136,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
+  border: 1px solid white;
   margin-left: 2px;
   margin-right: 6px;
   /* transition: all 0.2s ease; */
