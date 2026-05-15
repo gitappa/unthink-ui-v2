@@ -21,14 +21,6 @@ const AdditionalAttributes = ({
 	isModalOpen,
 	gridClassName,
 }) => {
-	const hashtagAttr = useMemo(() => {
-		return additionalAttributesToShow?.find((attr) => attr.key === "custom_filter");
-	}, [additionalAttributesToShow]);
-
-	const otherAttributes = useMemo(() => {
-		return additionalAttributesToShow?.filter((attr) => attr.key !== "custom_filter");
-	}, [additionalAttributesToShow]);
-
 	const handlePriceChange = (name, value) => {
 		if (isValidNumber(value) || value === "") {
 			handleAdditionalAttributesChange("price", {
@@ -93,38 +85,8 @@ const AdditionalAttributes = ({
 
 	return (
 		<>
-			{hashtagAttr && (
-				<div className="w-full mb-4">
-					<div className='flex justify-between'>
-						<label
-							className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
-							{hashtagAttr.label}
-						</label>
-					</div>
-					<div className="relative">
-						<Select
-							mode="tags"
-							open={false}
-							suffixIcon={null}
-							showSearch
-							className={`w-full product-filters-select-input ${fontSizeTheme}`}
-							placeholder={`Enter ${hashtagAttr.key}`}
-							value={savedCustomFilter}
-							size={selectBoxSize}
-							onChange={(values) =>
-								handleAdditionalAttributesChange(hashtagAttr.key, values)
-							}
-						/>
-						<Button
-							type="text"
-							className="no-effect-btn absolute top-1/2 -translate-y-1/2 right-0 opacity-35 text-black"
-							icon={<PlusOutlined />}
-						/>
-					</div>
-				</div>
-			)}
 			<div className={`grid gap-3 ${gridClassName || 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3'}`}>
-				{otherAttributes.map((attr) => {
+				{additionalAttributesToShow.map((attr) => {
 					return (
 						<React.Fragment key={attr.key}>
 							{attr.input_type === "single_select" ? (
@@ -137,12 +99,12 @@ const AdditionalAttributes = ({
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Mandatory
+													Optional
 												</label>
 												<Checkbox
 													className='text-gray-103'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={!attributesData?.optional_filters?.includes(
+													checked={attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -176,12 +138,12 @@ const AdditionalAttributes = ({
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Mandatory
+													Optional
 												</label>
 												<Checkbox
 													className='text-gray-103'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={!attributesData?.optional_filters?.includes(
+													checked={attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -206,7 +168,8 @@ const AdditionalAttributes = ({
 								</div>
 							) : null}
 
-							{attr.input_type === "multi_custom_input" ? (
+							{attr.input_type === "multi_custom_input" ||
+								attr.key === "custom_filter" ? (
 
 								<div>
 									<div className='flex justify-between'>
@@ -217,12 +180,12 @@ const AdditionalAttributes = ({
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Mandatory
+													Optional
 												</label>
 												<Checkbox
 													className='text-gray-103'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={!attributesData?.optional_filters?.includes(
+													checked={attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -238,13 +201,21 @@ const AdditionalAttributes = ({
 										className={`w-full product-filters-select-input ${fontSizeTheme}`}
 										placeholder={`Enter ${attr.key}`}
 										value={
-											(attributesData && attributesData[attr.key]) ?? []
+											attr.key === "custom_filter"
+												? savedCustomFilter
+												: (attributesData && attributesData[attr.key]) ?? []
 										}
 										size={selectBoxSize}
 										onChange={(values) =>
 											handleAdditionalAttributesChange(attr.key, values)
 										}
 									/>
+									  {/* <button className=" bg-red-400 plusbutedit bg-transparent border-none right-0 opacity-35 text-black hover:!text-black focus:!text-black active:!text-black"
+    type=""
+    icon={<PlusOutlined className="hover:text-black focus:text-black active:text-black" />}
+    // onClick={handleAdd}
+    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+  /> */}
   <Button
   type="text"
   className="no-effect-btn absolute top-1/2 -translate-y-1/2 right-0 opacity-35 text-black"
@@ -266,12 +237,12 @@ const AdditionalAttributes = ({
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Mandatory
+													Optional
 												</label>
 												<Checkbox
 													className='text-gray-103'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={!attributesData?.optional_filters?.includes(
+													checked={attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -299,12 +270,12 @@ const AdditionalAttributes = ({
 										</label>
 										<div className='flex items-center'>
 											<label className={`mr-1 block ${fontColorTheme}`}>
-												Mandatory
+												Optional
 											</label>
 											<Checkbox
 												className='text-gray-103'
 												onChange={() => handleFiltersOptionalChange("price")}
-												checked={!attributesData?.optional_filters?.includes(
+												checked={attributesData?.optional_filters?.includes(
 													"price"
 												)}></Checkbox>
 										</div>
