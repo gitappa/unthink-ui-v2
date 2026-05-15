@@ -38,10 +38,7 @@
   cursor: pointer;
 }
 
-.createWishlistIcon {
-  color: #0EA5E9;
-  font-size: 1.125rem;
-}
+
 
 .createWishlistText {
   padding-left: 1rem;
@@ -115,15 +112,7 @@
   line-height: 44px;
 }
 
-.checkboxContainer {
-  display: flex;
-  border: 1px solid;
-  border-color: #9e9e9e;
-  border-radius: 0.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 0.5rem;
-}
+ 
 
 .checkboxText {
   font-size: 1rem;
@@ -159,10 +148,7 @@
   cursor: pointer;
 }
 
-.cancelButton {
-  color: #0EA5E9;
-  cursor: pointer;
-}
+ 
 
 .selectableButton {
   color: #0EA5E9;
