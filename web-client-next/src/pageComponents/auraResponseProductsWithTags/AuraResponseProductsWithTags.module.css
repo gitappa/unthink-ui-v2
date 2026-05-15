@@ -60,7 +60,7 @@
 }
 
 .aura-tag-enabled {
-  background-color: #f3f0ff;
+  /* background-color: #f3f0ff; */
   border: 1px solid #e2dcfa;
   cursor: pointer;
 }
@@ -72,13 +72,14 @@
 }
 
 .aura-tag-enabled .aura-tag-close-icon {
-  background-color: rgba(114, 104, 236, 0.12);
-  color: #7268ec;
+  /* background-color: rgba(114, 104, 236, 0.12); */
+  /* color: #7268ec; */
+  border: 1px solid black;
   cursor: pointer;
 }
 
 .aura-tag-disabled {
-  background-color: #f3f0ff;
+  /* background-color: #f3f0ff; */
   border: 1px solid #e2dcfa;
   cursor: pointer;
 }
@@ -131,20 +132,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size:10px ;
   width: 18px;
   height: 18px;
   border-radius: 50%;
   margin-left: 2px;
   margin-right: 6px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
 }
 
-.aura-tag-close-icon:hover {
+/* .aura-tag-close-icon:hover {
   background-color: rgba(255, 77, 79, 0.15);
   color: #ff4d4f;
   transform: scale(1.1);
-}
+} */
 
 /* Loading Skeleton */
 .aura-tag-loading-skeleton {

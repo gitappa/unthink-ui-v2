@@ -195,6 +195,7 @@ const ChatModal = ({
     dispatch(setChatImageUrl("", chatTypeKey));
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    setIsFollowUpQuery(false)
   };
 
   const {
@@ -564,7 +565,7 @@ const ChatModal = ({
 
   const handleSubmitChatInput = () => {
     const metadata = { ...chatInputMetadata };
-
+    setIsFollowUpQuery(true)
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
@@ -986,7 +987,7 @@ const ChatModal = ({
                     {isSearchOptionManuallySelected && !isSearchOptionsVisible && (
                       <div className={styles["chatmodal-options-toggle-btn-container"]}>
                         <div
-                          className={styles["chatmodal-options-toggle-btn"]}
+                          className={styles["chatmodal-options-toggle-btn"]  }
                           onClick={() => setIsSearchOptionsVisible(!isSearchOptionsVisible)}
                           title={isSearchOptionsVisible ? "Collapse search options" : "Expand search options"}
                         >
