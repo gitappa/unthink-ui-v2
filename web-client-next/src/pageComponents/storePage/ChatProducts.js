@@ -747,7 +747,7 @@ const ChatProducts = ({
                       </div>
                     </div> 
                   </div>
-                  {shouldMoveInputBelowResults ? (
+                  {/* {shouldMoveInputBelowResults ? (
                     <AuraInputBox
                       isShowTryAgain={isShowTryAgain}
                       showChatLoader={showChatLoader}
@@ -770,7 +770,7 @@ const ChatProducts = ({
                       setIsHistoryOpen={setIsHistoryOpen}
                       chatHistory={chatHistory}
                     />
-                  ) : null}
+                  ) : null} */}
                 </div>
               )}
 
