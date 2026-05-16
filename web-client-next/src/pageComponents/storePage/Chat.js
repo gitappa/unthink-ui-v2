@@ -295,7 +295,7 @@ const Chat = ({
 
           {inputControls?.length && !showChatModal ? (
             <div className="flex items-center gap-2 pl-0">
-              <div className={`h-7 ${aura_header_theme === "dark" ? "border-l-2 border-white" : "border-l-2 border-black"}`} />
+              <div className={`h-7 ${aura_header_theme === "dark" ? "border-l-2 border-white" : ""}`} />
               {inputControls}
             </div>
           ) : null}

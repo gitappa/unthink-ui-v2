@@ -76,7 +76,10 @@ const AuraInputBox = ({
 
   return (
     <div className={styles["chat-products-bottom-input-wrapper"]}>
-       
+      <div className="flex items-center gap-1 mb-3 ml-2  ">
+      <HistoryOutlined />
+       <p>{chatHistory[chatHistory.length-1]}</p>
+      </div>
       {!hideActions && (
         <div className={styles["chat-products-above-input-actions"]}>
           <div className={styles["chat-products-icon-buttons-group"]}>
