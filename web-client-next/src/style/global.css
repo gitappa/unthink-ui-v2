@@ -5,9 +5,10 @@
 @import "tailwindcss" important ;
 
 @theme {
-  --color-primary-purple: #7C74EC;
+  --color-brand: #7C74EC;
   --color-secondary:#9690F0;
   --color-tertiary:#E9E5FD;
+  --color-support :#F2F2F2;
 }
 
 

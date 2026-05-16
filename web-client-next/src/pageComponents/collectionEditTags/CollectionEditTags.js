@@ -78,7 +78,7 @@ const CollectionEditTags = ({
 							handleAddKeywords && (
 								<div className="flex md:hidden w-full justify-end mb-5">
 									<div
-										className='gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-primary-purple text-white px-3 py-2 Add_to_keyword'
+										className='gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-brand text-white px-3 py-2 Add_to_keyword'
 										title={`Click to edit ${TAGS_TITLE}, You can update the ${TAGS_TITLE} and get the products`}
 										onClick={handleEditTagsBtnClick}>
 										{/* <PlusOutlined className='stroke-current stroke-13' /> */}
@@ -102,7 +102,7 @@ const CollectionEditTags = ({
 												<SwiperSlide style={{ width: "auto" }}>
 													<div
 														key="All"
-														className={`flex items-center rounded-3xl border border-violet-400 text-slat-104 shadow px-2 py-0.75 sm:px-4 w-max  ${selectedTags.length === 0 ? "bg-primary-purple text-white" : "bg-transparent"
+														className={`flex items-center rounded-3xl border border-violet-400 text-slat-104 shadow px-2 py-0.75 sm:px-4 w-max  ${selectedTags.length === 0 ? "bg-brand text-white" : "bg-transparent"
 															}`}
 														onClick={() => onClearSelectedTagsClick()}
 														role="button"
@@ -170,7 +170,7 @@ const CollectionEditTags = ({
 							{
 								handleAddKeywords && (
 									<div
-										className='md:flex hidden items-center gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-primary-purple text-white px-3 py-2 Add_to_keyword'
+										className='md:flex hidden items-center gap-0.5 text-xs rounded-2xl lead cursor-pointer bg-brand text-white px-3 py-2 Add_to_keyword'
 										title={`Click to edit ${TAGS_TITLE}, You can update the ${TAGS_TITLE} and get the products`}
 										onClick={handleEditTagsBtnClick}>
 										{/* <PlusOutlined className='stroke-current stroke-13' /> */}
