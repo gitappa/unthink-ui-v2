@@ -48,7 +48,7 @@ import ReviewCollectionPlist from "./ReviewCollectionPlist";
 import ReviewCollectionStepsUI from "./ReviewCollectionStepsUI";
 import { ProductFilters } from "../productFilters/ProductFilters";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
-import filterStyles from "../productFilters/productFilters.module.scss";
+// productFilters.module.scss removed; theme passed as Tailwind classes
 import AskQuestionComponent from "../../components/AskQuestionComponent/AskQuestionComponent";
 import {
 	getSingleUserCollection,
@@ -4411,8 +4411,8 @@ const isNewCollection = router.query.isNewCollection === "true";
 													selectedTag={selectedTags}
 													handleFilterOptionsVisibleChange={handleFilterOptionsVisibleChange}
 													filterOptionsVisible={filterOptionsVisible}
-													clearFiltersThemeClassName={filterStyles.clearFiltersBlack}
-													buttonThemeClassName={filterStyles.buttonThemeIndigo}
+													clearFiltersThemeClassName="text-[#232524]"
+													buttonThemeClassName="bg-brand"
 												/>
 											</div>
 										</div>

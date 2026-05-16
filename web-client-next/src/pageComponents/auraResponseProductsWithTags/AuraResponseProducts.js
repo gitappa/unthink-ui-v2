@@ -30,7 +30,6 @@ import { openAutoCreateCollectionModal } from "../autoCreateCollectionModal/redu
 import { useChat } from "../../hooks/chat/useChat";
 import ProductCard from "../../components/singleCollection/ProductCard";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
-import filterStyles from "../productFilters/productFilters.module.scss";
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import {
@@ -779,8 +778,8 @@ const AuraResponseProducts = ({
 									isShowCustomFilter={true}
 									isShowHashtagButton={false}
 									handleSaveEditCustomFilter={handleSaveEditCustomFilter}
-									tagThemeClassName={filterStyles.tagPillAura}
-									clearFiltersThemeClassName={filterStyles.clearFiltersAura}
+									tagThemeClassName={"border border-[#334155] text-[#334155] text-base py-0.5 px-3 rounded-full shadow-sm"}
+									clearFiltersThemeClassName={"text-[#334155]"}
 									handleFilterOptionsVisibleChange={currentTag === 'all' ? undefined : setFilterOptionsVisible}
 									filterOptionsVisible={filterOptionsVisible}
 								/>

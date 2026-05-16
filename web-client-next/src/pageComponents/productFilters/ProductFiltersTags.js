@@ -12,7 +12,6 @@ import Image from "next/image";
 
 import { isEmpty } from "../../helper/utils";
 import filterIcon from "../../images/filter_outline.svg";
-import styles from "./productFilters.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -27,8 +26,8 @@ const ProductFiltersTags = ({
 	handleFiltersInputClear,
 	handleClearFiltersClick,
 	displayFilters = [],
-	tagThemeClassName = "bg-white text-slat-104 py-0.5 px-2",
-	clearFiltersThemeClassName = "text-gray-103",
+	tagThemeClassName = "bg-white text-brand py-0.5 px-2 rounded-full shadow-sm",
+	clearFiltersThemeClassName = "text-brand",
 	buttonThemeClassName = "bg-indigo-600",
 	isShowClearFilters = true,
 	isShowPriceRange = true,
@@ -320,8 +319,8 @@ const ProductFiltersTags = ({
 
 	return (
 		<div>
-			<div className={`${styles.filterTagsRow} hashtag_scroll_div`}>
-				<div className={styles.swiperContainer}>
+			<div className={`flex items-start flex-wrap min-w-0 max-w-full overflow-x-hidden gap-2 justify-start hashtag_scroll_div`}>
+				<div className="relative w-auto flex-1 min-w-0">
 					<Swiper
 						slidesPerView="auto"
 						spaceBetween={10}
@@ -333,14 +332,13 @@ const ProductFiltersTags = ({
 							.filter((f) => f.visible)
 							.map((f) => (
 								<SwiperSlide key={f.name} style={{ width: "auto" }}>
-									<div
-										className={`${styles.tagPill} ${tagThemeClassName}`}
+									<div className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`}
 										title={f.tooltipTitle}
 									>
 										{f.title}: {f.value}
 										{f.showClose && (
 											<CloseOutlined
-												className={styles.closeIcon}
+												className="ml-2 cursor-pointer"
 												role="button"
 												onClick={() => handleFiltersInputClear(f.name)}
 											/>
@@ -352,13 +350,10 @@ const ProductFiltersTags = ({
 						{!isEmpty(savedCustomFilter) && isShowCustomFilter &&
 							savedCustomFilter.map((hashtag) => (
 								<SwiperSlide key={hashtag} style={{ width: "auto" }}>
-									<div
-										className={`${styles.tagPill} ${tagThemeClassName}`}
-										role="button"
-									>
+									<div className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`} role="button">
 										#{hashtag}
 										<CloseOutlined
-											className={styles.closeIcon}
+											className="ml-2 cursor-pointer"
 											role="button"
 											onClick={(e) => onDeleteCustomFilter(e, [hashtag])}
 										/>
@@ -369,18 +364,18 @@ const ProductFiltersTags = ({
 						{typeof handleFilterOptionsVisibleChange === "function" && (
 							<SwiperSlide style={{ width: "auto" }}>
 								<div
-									className={styles.filterCircleButton}
+									className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-[#334155] cursor-pointer border border-[#e2e8f0] shadow-sm hover:bg-[#e2e8f0]"
 									onClick={() =>
-										handleFilterOptionsVisibleChange(!filterOptionsVisible)
-									}>
-									<PlusOutlined className={styles.plusIconSmall} />
+									handleFilterOptionsVisibleChange(!filterOptionsVisible)
+								}>
+									<PlusOutlined className="text-sm" />
 								</div>
 							</SwiperSlide>
 						)}
 					</Swiper>
 					{isOverflowing && (
 						<div
-							className={`${styles.scrollArrow} addmore_image_edit`}
+							className={`absolute right-0 top-0 addmore_image_edit`}
 							style={{ cursor: "pointer", zIndex: 10 }}
 							onClick={() => {
 								if (swiperRef.current) {
@@ -395,24 +390,24 @@ const ProductFiltersTags = ({
 
 
 
-				<div className={styles.actionsRow}>
+				<div className="flex items-center flex-wrap gap-2 ml-auto justify-end min-w-0">
 					{showHashTags ? (
 						<div
-							className={`${styles.hashtagButton} ${clearFiltersThemeClassName}`}
+							className={`flex items-center gap-1 text-sm md:text-base leading-5 cursor-pointer ${clearFiltersThemeClassName}`}
 							title='Add or remove hashtags'
 							onClick={() => setShowCustomFilterInput(true)}>
-							<PlusOutlined className={styles.plusIcon} />
+							<PlusOutlined className="mr-1" />
 							<span>Hashtags</span>
 						</div>
 					) : null}
 
 					{showHashTags && showClearAll ? (
-						<div className={styles.divider}></div>
+						<div className="border-l-2 border-[#232524] h-5 mx-2" />
 					) : null}
 
 					{showClearAll ? (
 						<p
-							className={`${styles.clearAllText} ${clearFiltersThemeClassName}`}
+							className={`text-sm md:text-base cursor-pointer ${clearFiltersThemeClassName}`}
 							role='button'
 							onClick={handleClearFiltersClick}>
 							Clear All
@@ -424,11 +419,11 @@ const ProductFiltersTags = ({
 			</div>
 
 			{showCustomFilterInput ? (
-				<div className={styles.customFilterWrapper}>
-					<div className={styles.selectWrapper}>
+				<div className="w-full lg:flex lg:justify-between">
+					<div className="mt-2 w-full">
 						<Select
 							mode='tags'
-							className={`${styles.selectInput} tag-select-input`}
+							className={`w-full text-base tag-select-input`}
 							placeholder='Enter hashtags'
 							value={editCustomFilterValue}
 							onChange={onCustomFilterChange}
@@ -437,16 +432,16 @@ const ProductFiltersTags = ({
 							dropdownStyle={{ display: "none" }}
 						/>
 					</div>
-					<div className={styles.buttonsArea}>
-						<div className={styles.buttonsGrid}>
+					<div className="text-right pt-2 lg:pl-2">
+						<div className="grid grid-cols-2 lg:grid-cols-1 gap-2 w-max ml-auto">
 							<button
 								onClick={onSaveCustomFilter}
-								className={`${styles.actionButton} ${buttonThemeClassName}`}>
+								className={`py-0 px-3 text-white rounded-lg h-6 ${buttonThemeClassName}`}>
 								Save
 							</button>
 							<button
 								onClick={onCancelCustomFilter}
-								className={`${styles.actionButton} ${buttonThemeClassName}`}>
+								className={`py-0 px-3 text-white rounded-lg h-6 ${buttonThemeClassName}`}>
 								Cancel
 							</button>
 						</div>
