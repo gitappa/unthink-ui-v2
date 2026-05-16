@@ -98,30 +98,28 @@ const ChatProducts = ({
     state.store.data,
     state.chatV2.chatHistory,
   ]);
-  // console.log('chatHistory',chatHistory);
-  
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  // const [pastChats, setPastChats] = useState(() => {
-  //   if (typeof window !== "undefined") {
-  //     try {
-  //       const stored = localStorage.getItem("unthink_aura_past_chats");
-  //       if (stored) {
-  //         const parsed = JSON.parse(stored);
-  //         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-  //       }
-  //     } catch (e) {}
-  //   }
-  //   return [
-  //     { id: "1", text: "Minimalist modular velvet sofa", timestamp: "10 mins ago" },
-  //     { id: "2", text: "Scandinavian oak dining table with chairs", timestamp: "2 hours ago" },
-  //     { id: "3", text: "Abstract ceramic accent vases", timestamp: "1 day ago" },
-  //     { id: "4", text: "Boho woven hanging light fixtures", timestamp: "3 days ago" },
-  //   ];
-  // });
+  const [pastChats, setPastChats] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("unthink_aura_past_chats");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+    }
+    return [
+      { id: "1", text: "Minimalist modular velvet sofa", timestamp: "10 mins ago" },
+      { id: "2", text: "Scandinavian oak dining table with chairs", timestamp: "2 hours ago" },
+      { id: "3", text: "Abstract ceramic accent vases", timestamp: "1 day ago" },
+      { id: "4", text: "Boho woven hanging light fixtures", timestamp: "3 days ago" },
+    ];
+  });
 
   const handleSelectPastChat = (chatText) => {
     if (handleInputChange) {
@@ -289,8 +287,11 @@ const ChatProducts = ({
     handleResetSelectProduct();
   };
 
-  const scrollToCollectionsContainer = () => {     
-        dispatch(openWishlistModal());
+  const scrollToCollectionsContainer = () => {
+    const collection = document.getElementById("chat_shop_a_look_container");
+    if (collection) {
+      collection.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const scrollToProductsContainer = () => {
@@ -609,7 +610,7 @@ const ChatProducts = ({
         {shouldShowShopLookSplitLayout ? (
           <div className={`${styles["chat-products-shop-look-wrapper"]} flex flex-col lg:flex-row`}>
             <AuraSideNav />
-            <div className={`${styles["chat-products-shop-look-layout"]} bg-white ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
+            <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
               {(!isMobile || mobileTab === "description") && (
                 <div className={styles["chat-products-shop-look-sidebar"]}>
                   <div className={styles["chat-products-sidebar-header"]}>
@@ -618,33 +619,7 @@ const ChatProducts = ({
                     </h2>
                   </div>
                   <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-2`}>
-                    {shouldMoveInputBelowResults ? (
-                      <div className="mb-2">
-                        <AuraInputBox
-                          isShowTryAgain={isShowTryAgain}
-                          showChatLoader={showChatLoader}
-                          handleTryAgainClick={handleTryAgainClick}
-                          handleGoBack={handleGoBack}
-                          isShopByThemeOptionActive={isShopByThemeOptionActive}
-                          isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
-                          uploadImageProps={uploadImageProps}
-                          chatImageUrl={chatImageUrl}
-                          activeSearchOption={activeSearchOption}
-                          chatTypeKey={chatTypeKey}
-                          inputRef={inputRef}
-                          localChatMessage={localChatMessage}
-                          handleInputChange={handleInputChange}
-                          handlePromptKeyDown={handlePromptKeyDown}
-                          handlePromptUtilityClick={handlePromptUtilityClick}
-                          page_info={page_info}
-                          isShopALookOptionActive={isShopALookOptionActive}
-                          handleSubmitChatInput={handleSubmitChatInput}
-                          setIsHistoryOpen={setIsHistoryOpen}
-                          followUpQuery={followUpQuery}
-                          hideActions={shouldShowShopLookSplitLayout}
-                        />
-                      </div>
-                    ) : null}
+
                     <div>
                       <div className={styles["chat-products-shop-look-sidebar-content"]}>
                         {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
@@ -702,8 +677,8 @@ const ChatProducts = ({
                                   className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
                                   dangerouslySetInnerHTML={{ __html: widgetHeader }}
                                 />
-                                <div className="flex flex-col items-start gap-1">
-                                  {widgetHeader?.length > 100 && (
+                                <div className="flex flex-col items-start gap-0">
+                                  {widgetHeader?.length > 80 && (
                                     <button 
                                       className={styles["chat-products-read-more-btn"]}
                                       onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
@@ -711,10 +686,26 @@ const ChatProducts = ({
                                       {isDescriptionExpanded ? "Read Less" : "Read More"}
                                     </button>
                                   )}
+                                  {shopLookKeywords.length && layoutMode === 'left' ? (
+                                    <div
+                                      className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
+                                    >
+                                      {shopLookKeywords.map((keyword) => (
+                                        <span
+                                          key={keyword}
+                                          className={
+                                            styles["chat-products-shop-look-keyword-chip"]
+                                          }
+                                        >
+                                          {keyword}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  ) : null} 
                                   {isShowTryAgain && (
                                     <Tooltip title="Redo">
                                       <button
-                                        className="mt-1 flex h-8 w-8 items-center justify-center rounded-full border border-[#7268ec]/20 bg-[#f3f0ff] text-[1rem] font-semibold text-[#7268ec] transition-all duration-200 hover:rotate-[30deg] hover:scale-110 hover:bg-[#7268ec] hover:text-white hover:shadow-[0_2px_8px_rgba(114,104,236,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="mt-1 ml-2 flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white text-[1rem] font-bold text-black transition-all duration-200 hover:scale-110 hover:bg-black hover:text-white hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)] disabled:cursor-not-allowed disabled:opacity-50"
                                         onClick={handleTryAgainClick}
                                         disabled={showChatLoader}
                                       >
@@ -725,22 +716,33 @@ const ChatProducts = ({
                                 </div>
                               </div>
                             ) : null}
-                            {shopLookKeywords.length && layoutMode === 'left' ? (
-                              <div
-                                className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
-                              >
-                                {shopLookKeywords.map((keyword) => (
-                                  <span
-                                    key={keyword}
-                                    className={
-                                      styles["chat-products-shop-look-keyword-chip"]
-                                    }
-                                  >
-                                    {keyword}
-                                  </span>
-                                ))}
+                            {shouldMoveInputBelowResults ? (
+                              <div className="mt-4 mb-2">
+                                <AuraInputBox
+                                  isShowTryAgain={isShowTryAgain}
+                                  showChatLoader={showChatLoader}
+                                  handleTryAgainClick={handleTryAgainClick}
+                                  handleGoBack={handleGoBack}
+                                  isShopByThemeOptionActive={isShopByThemeOptionActive}
+                                  isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                                  uploadImageProps={uploadImageProps}
+                                  chatImageUrl={chatImageUrl}
+                                  activeSearchOption={activeSearchOption}
+                                  chatTypeKey={chatTypeKey}
+                                  inputRef={inputRef}
+                                  localChatMessage={localChatMessage}
+                                  handleInputChange={handleInputChange}
+                                  handlePromptKeyDown={handlePromptKeyDown}
+                                  handlePromptUtilityClick={handlePromptUtilityClick}
+                                  page_info={page_info}
+                                  isShopALookOptionActive={isShopALookOptionActive}
+                                  handleSubmitChatInput={handleSubmitChatInput}
+                                  setIsHistoryOpen={setIsHistoryOpen}
+                                  followUpQuery={followUpQuery}
+                                  hideActions={shouldShowShopLookSplitLayout}
+                                />
                               </div>
-                            ) : null} 
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
@@ -826,19 +828,19 @@ const ChatProducts = ({
               />
             </div>
             <div className="p-4 flex flex-col gap-2.5 max-h-[60vh] overflow-y-auto">
-              {chatHistory.length > 0 ? (
-                chatHistory.map((item) => (
+              {pastChats.length > 0 ? (
+                pastChats.map((item) => (
                   <div
-                    key={item}
-                    onClick={() => handleSelectPastChat(item)}
+                    key={item.id}
+                    onClick={() => handleSelectPastChat(item.text)}
                     className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-[#7268ec]/5 hover:border-[#7268ec]/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
                   >
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
-                      {item}
+                      {item.text}
                     </span>
-                    {/* <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
-                      {item}
-                    </span> */}
+                    <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
+                      {item.timestamp}
+                    </span>
                   </div>
                 ))
               ) : (
