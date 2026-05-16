@@ -841,34 +841,7 @@ const ChatModal = ({
               {/* Desktop Close/Layout Header */}
               {!(isShowShopLookSplitLayout && layoutMode !== "left" && !isMobile) && (
                 <div className={`${styles["chatmodal-close-icon-container"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
-                  {isShowShopLookSplitLayout && (
-                    <div className={styles["chatmodal-layout-switcher"]}>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "left" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("left")}
-                        title="Sidebar only"
-                      >
-                        <div className={styles["layout-icon-left"]} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "both" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("both")}
-                        title="Split view"
-                      >
-                        <div className={styles["layout-icon-both"]} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles["chatmodal-layout-btn"]} ${layoutMode === "right" ? styles["chatmodal-layout-btn-active"] : ""}`}
-                        onClick={() => setLayoutMode("right")}
-                        title="Products only"
-                      >
-                        <div className={styles["layout-icon-right"]} />
-                      </button>
-                    </div>
-                  )}
+
                   <CloseOutlined
                     id="chat_modal_close_icon"
                     onClick={closeChatModal}
