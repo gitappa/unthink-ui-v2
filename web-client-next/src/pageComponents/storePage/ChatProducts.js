@@ -742,6 +742,7 @@ const ChatProducts = ({
                                   setIsHistoryOpen={setIsHistoryOpen}
                                   followUpQuery={followUpQuery}
                                   hideActions={shouldShowShopLookSplitLayout}
+                                  chatHistory={chatHistory}
                                 />
                               </div>
                             ) : null}
