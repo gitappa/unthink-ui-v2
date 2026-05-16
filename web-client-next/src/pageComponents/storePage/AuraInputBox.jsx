@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tooltip, Upload, Spin } from "antd";
 import {
+  CloseCircleFilled,
   ReloadOutlined,
   FormOutlined,
   HistoryOutlined,
@@ -164,9 +165,15 @@ const AuraInputBox = ({
                 ? styles["chat-products-bottom-input-shop-theme"]
                 : ""
             }`}
-            style={{ paddingRight: "85px", resize: "none", overflow: "hidden" }}
+            style={{ paddingRight: "105px", resize: "none", overflow: "hidden" }}
           />
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pr-2">
+            {localChatMessage && (
+              <CloseCircleFilled
+                className="text-gray-400 hover:text-[#7268ec] cursor-pointer text-sm mx-1 transition-colors z-10"
+                onClick={() => handleInputChange({ target: { value: "" } })}
+              />
+            )}
             {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
               <button
                 type="button"
@@ -198,9 +205,10 @@ const AuraInputBox = ({
               }`}
               onClick={handleSubmitChatInput}
               disabled={
-                isShopALookOptionActive
+                showChatLoader ||
+                (isShopALookOptionActive
                   ? !chatImageUrl
-                  : !localChatMessage && !chatImageUrl
+                  : !localChatMessage && !chatImageUrl)
               }
             >
               <ArrowUpOutlined />

@@ -1106,7 +1106,7 @@
   align-items: baseline;
   justify-content: center;
   color: #384467;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 20px;
   margin-top: 5px;
   margin-left: 5px;
@@ -1220,7 +1220,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: #575b65;
+  color: #17181a;
   font-size: 16px;
   line-height: 1.22;
   padding: 0;
@@ -1231,7 +1231,8 @@
 }
 
 .chatmodal-figma-input-shop-theme {
-  color: #4f5f83;
+  color: #17181a;
+  font-weight: 600;
 }
 
 .chatmodal-figma-input-shop-theme::placeholder {
