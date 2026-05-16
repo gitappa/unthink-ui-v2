@@ -834,7 +834,7 @@ const ChatProducts = ({
                 chatHistory.map((item) => (
                   <div
                     key={item}
-                    onClick={() => handleSelectPastChat(item.text)}
+                    onClick={() => handleSelectPastChat(item)}
                     className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-[#7268ec]/5 hover:border-[#7268ec]/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
                   >
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
