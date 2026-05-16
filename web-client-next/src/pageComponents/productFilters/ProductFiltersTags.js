@@ -6,20 +6,9 @@ import React, {
 	useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { isEmpty } from "../../helper/utils";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { Select, Tooltip } from "antd";
-import Image from "next/image";
-
-import { isEmpty } from "../../helper/utils";
-import filterIcon from "../../images/filter_outline.svg";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import Addmore from "../../images/addmore2.svg";
-import SwiperCore, { FreeMode } from "swiper";
-
-// Initialize Swiper modules
-SwiperCore.use([FreeMode]);
 
 const ProductFiltersTags = ({
 	productFilters = {},
@@ -295,125 +284,76 @@ const ProductFiltersTags = ({
 
 	// scroll for tags
 
-	const swiperRef = useRef(null); // To store Swiper instance
-	const [isOverflowing, setIsOverflowing] = useState(false);
 
-	const checkOverflow = () => {
-		if (swiperRef.current && swiperRef.current.wrapperEl) {
-			const { scrollWidth, clientWidth } = swiperRef.current.wrapperEl;
-			setIsOverflowing(scrollWidth > clientWidth);
-		}
-	};
-
-	useEffect(() => {
-		// Initial check
-		checkOverflow();
-
-		// Recheck on resize
-		window.addEventListener("resize", checkOverflow);
-		return () => {
-			window.removeEventListener("resize", checkOverflow);
-		};
-	}, [savedCustomFilter]);
 
 
 	return (
 		<div>
 			<div className={`flex items-start flex-wrap min-w-0 max-w-full overflow-x-hidden gap-2 justify-start hashtag_scroll_div`}>
-				<div className="relative w-auto flex-1 min-w-0">
-					<Swiper
-						slidesPerView="auto"
-						spaceBetween={10}
-						freeMode={true}
-						onSwiper={(swiper) => (swiperRef.current = swiper)}
-						className="pb-1" /* swiper layout class */
-					>
-						{selectedFiltersArr
-							.filter((f) => f.visible)
-							.map((f) => (
-								<SwiperSlide key={f.name} style={{ width: "auto" }}>
-									<div className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`}
-										title={f.tooltipTitle}
-									>
-										{f.title}: {f.value}
-										{f.showClose && (
-											<CloseOutlined
-												className="ml-2 cursor-pointer"
-												role="button"
-												onClick={() => handleFiltersInputClear(f.name)}
-											/>
-										)}
-									</div>
-								</SwiperSlide>
-							))}
+				<div className="flex flex-wrap gap-2 flex-1 min-w-0">
+					{selectedFiltersArr
+						.filter((f) => f.visible)
+						.map((f) => (
+							<div key={f.name} className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`}
+								title={f.tooltipTitle}
+							>
+								{f.title}: {f.value}
+								{f.showClose && (
+									<CloseOutlined
+										className="ml-2 cursor-pointer"
+										role="button"
+										onClick={() => handleFiltersInputClear(f.name)}
+									/>
+								)}
+							</div>
+						))}
 
-						{!isEmpty(savedCustomFilter) && isShowCustomFilter &&
-							savedCustomFilter.map((hashtag) => (
-								<SwiperSlide key={hashtag} style={{ width: "auto" }}>
-									<div className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`} role="button">
-										#{hashtag}
-										<CloseOutlined
-											className="ml-2 cursor-pointer"
-											role="button"
-											onClick={(e) => onDeleteCustomFilter(e, [hashtag])}
-										/>
-									</div>
-								</SwiperSlide>
-							))}
+					{!isEmpty(savedCustomFilter) && isShowCustomFilter &&
+						savedCustomFilter.map((hashtag) => (
+							<div key={hashtag} className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`} role="button">
+								#{hashtag}
+								<CloseOutlined
+									className="ml-2 cursor-pointer"
+									role="button"
+									onClick={(e) => onDeleteCustomFilter(e, [hashtag])}
+								/>
+							</div>
+						))}
 
-						{typeof handleFilterOptionsVisibleChange === "function" && (
-							<SwiperSlide style={{ width: "auto" }}>
-								<div
-									className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-[#334155] cursor-pointer border border-[#e2e8f0] shadow-sm hover:bg-[#e2e8f0]"
-									onClick={() =>
-									handleFilterOptionsVisibleChange(!filterOptionsVisible)
-								}>
-									<PlusOutlined className="text-sm" />
-								</div>
-							</SwiperSlide>
-						)}
-					</Swiper>
-					{isOverflowing && (
+					{typeof handleFilterOptionsVisibleChange === "function" && (
 						<div
-							className={`absolute right-0 top-0 addmore_image_edit`}
-							style={{ cursor: "pointer", zIndex: 10 }}
-							onClick={() => {
-								if (swiperRef.current) {
-									swiperRef.current.slideNext();
-								}
-							}}
-						>
-							<img src={Addmore} alt="Scroll Right" />
+							className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-[#334155] cursor-pointer border border-[#e2e8f0] shadow-sm hover:bg-[#e2e8f0]"
+							onClick={() =>
+								handleFilterOptionsVisibleChange(!filterOptionsVisible)
+							}>
+							<PlusOutlined className="text-sm" />
 						</div>
 					)}
-				</div>
 
+					<div className="ml-auto flex items-center gap-2">
+						{showHashTags ? (
+							<div
+								className={`flex items-center gap-1 text-sm md:text-base leading-5 cursor-pointer ${clearFiltersThemeClassName}`}
+								title='Add or remove hashtags'
+								onClick={() => setShowCustomFilterInput(true)}>
+								<PlusOutlined className="mr-1" />
+								<span>Hashtags</span>
+							</div>
+						) : null}
 
+						{showHashTags && showClearAll ? (
+							<div className="border-l-2 border-[#232524] h-5 mx-1" />
+						) : null}
 
-				<div className="flex items-center flex-wrap gap-2 ml-auto justify-end min-w-0">
-					{showHashTags ? (
-						<div
-							className={`flex items-center gap-1 text-sm md:text-base leading-5 cursor-pointer ${clearFiltersThemeClassName}`}
-							title='Add or remove hashtags'
-							onClick={() => setShowCustomFilterInput(true)}>
-							<PlusOutlined className="mr-1" />
-							<span>Hashtags</span>
-						</div>
-					) : null}
-
-					{showHashTags && showClearAll ? (
-						<div className="border-l-2 border-[#232524] h-5 mx-2" />
-					) : null}
-
-					{showClearAll ? (
-						<p
-							className={`text-sm md:text-base cursor-pointer ${clearFiltersThemeClassName}`}
-							role='button'
-							onClick={handleClearFiltersClick}>
-							Clear All
-						</p>
-					) : null}
-
+						{showClearAll ? (
+							<p
+								className={`text-sm md:text-base cursor-pointer ${clearFiltersThemeClassName}`}
+								role='button'
+								onClick={handleClearFiltersClick}>
+								Clear All
+							</p>
+						) : null}
+					</div>
 				</div>
 
 			</div>
