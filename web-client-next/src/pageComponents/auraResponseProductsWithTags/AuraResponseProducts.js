@@ -490,10 +490,12 @@ const AuraResponseProducts = ({
 	};
 
 	const onSelectAllChange = () => {
-		if (enableSelectProduct) {
-			handleResetSelectProduct();
-		} else {
+		if (selectedProducts.length < chatProductsDataToShow.length) {
+			setSelectedProducts(chatProductsDataToShow.map((i) => i.mfr_code));
 			setEnableSelectProduct(true);
+		} else {
+			setSelectedProducts([]);
+			setEnableSelectProduct(false);
 		}
 	};
 
@@ -790,13 +792,45 @@ const AuraResponseProducts = ({
 						{chatProductsDataToShow.length ? (
 							<div className="flex flex-row items-center gap-4 p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg mb-6 w-full box-border transition-all">
 								<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
-									<div className="border border-gray-400 rounded-md pl-2 py-1">
-										<Checkbox
-											className="text-xs md:text-base"
-											onChange={onSelectAllChange}
-											checked={enableSelectProduct}>
-											{selectedProducts.length} Selected
-										</Checkbox>
+									<div className="flex items-center gap-2">
+										<div className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2">
+											<span
+												className="text-xs md:text-base cursor-pointer"
+												onClick={() => {
+													if (enableSelectProduct) handleResetSelectProduct();
+													else setEnableSelectProduct(true);
+												}}
+											>
+												Select {selectedProducts.length > 0 ? `(${selectedProducts.length})` : ""}
+											</span>
+											<Checkbox
+												className="text-xs md:text-base"
+												onChange={() => {
+													if (enableSelectProduct) handleResetSelectProduct();
+													else setEnableSelectProduct(true);
+												}}
+												checked={
+													selectedProducts.length > 0 &&
+													selectedProducts.length === chatProductsDataToShow.length
+												}
+											/>
+										</div>
+										<div className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2">
+											<span
+												className="text-xs md:text-base cursor-pointer"
+												onClick={onSelectAllChange}
+											>
+												Select All
+											</span>
+											<Checkbox
+												className="text-xs md:text-base"
+												onChange={onSelectAllChange}
+												checked={
+													selectedProducts.length > 0 &&
+													selectedProducts.length === chatProductsDataToShow.length
+												}
+											/>
+										</div>
 									</div>
 									{selectedProducts.length > 0 && (
 										<p
