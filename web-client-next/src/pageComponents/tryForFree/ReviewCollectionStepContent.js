@@ -54,7 +54,6 @@ import {
 
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
-import filterStyles from "../productFilters/productFilters.module.scss";
 import { CustomFilter } from "../customFilter/CustomFilter";
 import ReviewCollectionContainerWrapper from "./ReviewCollectionContainerWrapper";
 
@@ -1415,8 +1414,8 @@ const ReviewCollectionStepContent = ({
 								isShowCustomFilter={true}
 								handleSaveEditCustomFilter={handleSaveEditCustomFilter}
 								selectedTag={selectedTags}
-								clearFiltersThemeClassName={filterStyles.clearFiltersBlack}
-								buttonThemeClassName={filterStyles.buttonThemeIndigo}
+								clearFiltersThemeClassName="text-[#232524]"
+								buttonThemeClassName="bg-brand"
 							/>
 						</div>
 					) : null}

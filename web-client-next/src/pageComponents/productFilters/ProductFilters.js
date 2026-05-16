@@ -7,7 +7,7 @@ import { current_store_name } from "../../constants/config";
 import { STORE_USER_NAME_HOMECENTRE } from "../../constants/codes";
 import { isEmpty, isValidNumber } from "../../helper/utils";
 
-import styles from './productFilters.module.scss';
+// styles moved to Tailwind; removed productFilters.module.scss import
 
 const { Option } = Select;
 
