@@ -146,7 +146,7 @@ const Chat = ({
     <Tooltip title="Ask for an idea" placement="bottomLeft">
       <div
         className={`rounded-full cursor-pointer h-7 w-7 lg:h-9 lg:w-9 flex items-center justify-center transition-all duration-200 ${
-          activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search ? "p-1" : "border border-chat p-0.5"
+              activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.smart_search ? "p-1" : "border border-gray-300 p-1"
         }`}
         role="button"
         onClick={() => {
@@ -162,7 +162,7 @@ const Chat = ({
     <Tooltip title="Ask for a product" placement="bottomLeft">
       <div
         className={`rounded-full cursor-pointer h-7 w-7 lg:h-9 lg:w-9 flex items-center justify-center transition-all duration-200 ${
-          activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search ? "bg-search-active" : "border border-chat"
+          activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search ? "bg-orange-500" : "border border-gray-300"
         }`}
         role="button"
         onClick={() => {
@@ -174,7 +174,7 @@ const Chat = ({
           width={18}
           alt="Search"
           className={`h-4 w-4 lg:h-5 lg:w-5 ${
-            activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search ? "text-white" : "text-search-icon-inactive"
+            activeSearchOption?.id === CHAT_SEARCH_OPTION_ID.product_search ? "text-white" : "text-indigo-600"
           }`}
         />
       </div>
@@ -221,7 +221,7 @@ const Chat = ({
   const cameraIcon =
     activeSearchOption.allow_image_search && showChatModal && !isFollowUpQuery ? (
       <div
-        className={`relative flex justify-center items-center rounded-full ${chatImageUrl ? "bg-camera" : ""} ${
+        className={`relative flex justify-center items-center rounded-full ${chatImageUrl ? "bg-indigo-600" : ""} ${
           chatImageUrl || auraCameraSpinLoader ? "w-9 h-9" : ""
         }`}>
         <Upload
@@ -276,7 +276,7 @@ const Chat = ({
         <div
           id={`chat_search_input_container_${chatTypeKey}`}
           className={`flex items-center justify-center rounded-full bg-white px-2 w-full shadow-sm relative h-12 md:h-14 ${
-            !isBTInstance ? "border border-chat" : ""
+            !isBTInstance ? "border border-gray-300" : ""
           }`}
           onClick={() => {
             showAuraIntro && dispatch(setShowAuraIntro(false));
@@ -284,8 +284,8 @@ const Chat = ({
           }}>
           {isBTNormalUserLoggedIn ? (
             <div className="h-10">
-              <div className={`flex items-center border border-button rounded-full gap-1 p-1 ${
-                aura_header_theme === "dark" ? "bg-lightgray-101 border-lightgray-101" : ""
+              <div className={`flex items-center border border-brand rounded-full gap-1 p-1 ${
+                aura_header_theme === "dark" ? "bg-gray-100 border-gray-100" : ""
               }`}>
                 <TypeAuraUIRender />
                 <TypeSearchUIRender />
@@ -334,7 +334,7 @@ const Chat = ({
           ) : null}
 
           {showSubmitImageTooltip ? (
-            <div className="bg-tooltip p-4 rounded-md text-white opacity-80" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-black/80 p-4 rounded-md text-white opacity-80" onClick={(e) => e.stopPropagation()}>
               <div className="rounded-full float-right">
                 <Image
                   className="cursor-pointer"
