@@ -1012,7 +1012,7 @@
   outline: none;
   background: transparent;
   color: #1a1a1a;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.95rem;
   line-height: 1.5;
   padding-left: 3.2rem;
@@ -1026,7 +1026,7 @@
 }
 
 .chat-products-bottom-input-shop-theme {
-  color: #2f3d61;
+  color: black;
 }
 
 .chat-products-bottom-input-shop-theme::placeholder {

@@ -62,7 +62,9 @@ const ChatProducts = ({
   followUpQuery,
 regenarateImage,
 handleRegenrateImage,
-handleChangeImageConfirm
+handleChangeImageConfirm,
+auraServerImage,
+
 }) => {
   const {
     trackCollectionCampCode,
@@ -100,7 +102,7 @@ handleChangeImageConfirm
     state.store.data,
     state.chatV2.chatHistory,
   ]);
-// console.log('activeSearchOption',activeSearchOption);
+// console.log('activeSearchOption',auraServerImage);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -673,7 +675,7 @@ handleChangeImageConfirm
                                <p>{chatHistory[chatHistory.length-1]}</p>
                               </div>
                               }
-                        {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
+                        {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable   ? (
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-image-loading-box"]}>
                               <span>Loading image...</span>
@@ -683,8 +685,8 @@ handleChangeImageConfirm
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-shop-look-image-inner"]}>
                               <img
-                                src={shopLookPreviewImage}
-                                alt="Image"
+                                src={shopLookPreviewImage || auraServerImage}
+                                alt="shopLookPreviewImage"
                                 className={styles["chat-products-shop-look-image"]}
                               />
                               {Array.isArray(auraOverlayCoordinates) &&
@@ -737,6 +739,7 @@ handleChangeImageConfirm
                                       {isDescriptionExpanded ? "Read Less" : "Read More..."}
                                     </button>
                                   )}
+                                  
                                   {shopLookKeywords.length && layoutMode === 'left' ? (
                                     <div
                                       className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
@@ -753,6 +756,8 @@ handleChangeImageConfirm
                                       ))}
                                     </div>
                                   ) : null} 
+                                  <div className="flex items-center gap-2"> 
+
                                   {isShowTryAgain && (
                                     <Tooltip title ='Regenerate the products with AI.'>
 
@@ -771,17 +776,14 @@ handleChangeImageConfirm
                                     </Tooltip>
 
                                   )}
-                                </div>
-                              </div>
-                            ) : null}
-                               {isFollowUpQuery &&
-                                                          // isShowFollowUpSearch &&
+                                 
+                                   {isFollowUpQuery &&
+                                                          isShowFollowUpSearch && chatHistory.length >=2 &&
                                                           regenarateImage ? (
                                                           <>
-                                                            <div
-                                                               
-                                                            ></div>
-                                                            <button
+                                                           |
+                                                             
+                                                            <button className="flex items-center gap-1"
                                                               
                                                               title="Regenerate the Image."
                                                               onClick={handleRegenrateImage}
@@ -792,6 +794,12 @@ handleChangeImageConfirm
                                                             </button>
                                                           </>
                                                         ) : null} 
+                                  </div>
+
+                                </div>
+                              </div>
+                            ) : null}
+                              
                             {shouldMoveInputBelowResults ? (
                               <div className="mt-4 mb-2">
                                 <AuraInputBox
