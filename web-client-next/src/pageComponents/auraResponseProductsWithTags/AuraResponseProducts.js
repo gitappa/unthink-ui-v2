@@ -7,11 +7,12 @@ import React, {
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, Spin, Input, Checkbox, Button, Modal } from "antd";
+import { Select, Spin, Input, Checkbox, Button, Modal, message, Tooltip } from "antd";
 import {
 	Loading3QuartersOutlined,
 	CloseOutlined,
 	CloseCircleOutlined,
+	PlusOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -179,6 +180,38 @@ const AuraResponseProducts = ({
 		});
 		return obj;
 	}, [productsFilters, displayableFilter]);
+
+	useEffect(() => {
+		if (Object.keys(productsFilters).length === 0) return;
+		let hasChanges = false;
+		let newOptionalFilters = [...(productsFilters.optional_filters || [])];
+
+		displayableFilter.forEach((key) => {
+			const value = productsFilters[key];
+			const isNowEmpty = key === "price"
+				? (!value || (!value.min && !value.max))
+				: (!value || value.length === 0 || value === "");
+
+			if (isNowEmpty) {
+				if (!newOptionalFilters.includes(key)) {
+					newOptionalFilters.push(key);
+					hasChanges = true;
+				}
+			} else {
+				if (newOptionalFilters.includes(key)) {
+					newOptionalFilters = newOptionalFilters.filter((n) => n !== key);
+					hasChanges = true;
+				}
+			}
+		});
+
+		if (hasChanges) {
+			dispatch(setSuggestionsProductsFilters(tag, {
+				...productsFilters,
+				optional_filters: newOptionalFilters,
+			}));
+		}
+	}, [productsFilters, displayableFilter, dispatch, tag]);
  
 	const isFiltersAvailable = useMemo(() => {
 		const finalFilters = removeEmptyItems(filters);
@@ -189,6 +222,11 @@ const AuraResponseProducts = ({
 		}
 		return false;
 	}, [filters]);
+
+	const hasVisibleFilters = useMemo(() => {
+		const hasCustomFilter = !!filters.custom_filter;
+		return currentTag !== 'all' || isFiltersAvailable || hasCustomFilter;
+	}, [currentTag, isFiltersAvailable, filters.custom_filter]);
 
 	const customFilterStoreData = useMemo(
 		() => catalog_attributes.find((c) => c.key === "custom_filter"),
@@ -495,7 +533,6 @@ const AuraResponseProducts = ({
 			setEnableSelectProduct(true);
 		} else {
 			setSelectedProducts([]);
-			setEnableSelectProduct(false);
 		}
 	};
 
@@ -594,7 +631,24 @@ const AuraResponseProducts = ({
 	);
 
 	const onFiltersChange = (name, value) => {
-		handleChangeFilters({ ...filters, [name]: value });
+		const newFilters = { ...filters, [name]: value };
+		let newOptionalFilters = newFilters.optional_filters || [];
+		const isNowEmpty = name === "price"
+			? (!value || (!value.min && !value.max))
+			: (!value || value.length === 0 || value === "");
+
+		if (isNowEmpty) {
+			if (!newOptionalFilters.includes(name)) {
+				newOptionalFilters = [...newOptionalFilters, name];
+			}
+		} else {
+			if (newOptionalFilters.includes(name)) {
+				newOptionalFilters = newOptionalFilters.filter((n) => n !== name);
+			}
+		}
+
+		newFilters.optional_filters = newOptionalFilters;
+		handleChangeFilters(newFilters);
 	};
 
 	const handleFiltersSubmit = (
@@ -771,7 +825,7 @@ const AuraResponseProducts = ({
 					{!isCurrentTagLoading ? (
 					<>
 						{enableFilters ? (
-							<div className="mb-1 md:mb-2">
+							<div className={hasVisibleFilters ? "mb-4 md:mb-5" : ""}>
 								<ProductFiltersTags
 									productFilters={filters}
 									handleFiltersInputClear={handleFiltersInputClear}
@@ -790,41 +844,28 @@ const AuraResponseProducts = ({
 
 
 						{chatProductsDataToShow.length ? (
-							<div className="flex flex-row items-center gap-4 p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg mb-6 w-full box-border transition-all">
+							<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
 								<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
 									<div className="flex items-center gap-2">
-										<div className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2">
-											<span
-												className="text-xs md:text-base cursor-pointer"
-												onClick={() => {
-													if (enableSelectProduct) handleResetSelectProduct();
-													else setEnableSelectProduct(true);
-												}}
-											>
-												Select {selectedProducts.length > 0 ? `(${selectedProducts.length})` : ""}
+										<div
+											className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2 cursor-pointer select-none"
+											onClick={() => {
+												if (enableSelectProduct) handleResetSelectProduct();
+												else setEnableSelectProduct(true);
+											}}
+										>
+											<span className="text-xs md:text-base">
+												{enableSelectProduct ? `${selectedProducts.length} selected` : "Select"}
 											</span>
 											<Checkbox
 												className="text-xs md:text-base"
-												onChange={() => {
-													if (enableSelectProduct) handleResetSelectProduct();
-													else setEnableSelectProduct(true);
+												onChange={(e) => {
+													e.stopPropagation();
+													onSelectAllChange();
 												}}
-												checked={
-													selectedProducts.length > 0 &&
-													selectedProducts.length === chatProductsDataToShow.length
-												}
-											/>
-										</div>
-										<div className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2">
-											<span
-												className="text-xs md:text-base cursor-pointer"
-												onClick={onSelectAllChange}
-											>
-												Select All
-											</span>
-											<Checkbox
-												className="text-xs md:text-base"
-												onChange={onSelectAllChange}
+												onClick={(e) => {
+													e.stopPropagation();
+												}}
 												checked={
 													selectedProducts.length > 0 &&
 													selectedProducts.length === chatProductsDataToShow.length
@@ -832,7 +873,7 @@ const AuraResponseProducts = ({
 											/>
 										</div>
 									</div>
-									{selectedProducts.length > 0 && (
+									{enableSelectProduct && (
 										<p
 											onClick={() => handleResetSelectProduct()}
 											className="text-brand font-medium ml-2 underline cursor-pointer"
@@ -1080,6 +1121,7 @@ const AuraResponseProducts = ({
 
 				{enableFilters && (
 					<Modal
+						className="[&_.ant-modal-content]:!bg-[#f1f5f9] [&_.ant-modal-header]:!bg-transparent [&_.ant-modal-footer]:!bg-transparent"
 						title={
 							<div className="flex justify-between items-center w-full pr-8">
 								<h4 className="text-gray-800 text-lg font-bold">Filter Products</h4>

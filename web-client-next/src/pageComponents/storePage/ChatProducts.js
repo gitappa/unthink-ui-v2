@@ -328,16 +328,54 @@ handleChangeImageConfirm
           <span className="text-[10px] font-semibold text-center capitalize">New Chat</span>
         </div>
         <div 
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
-          onClick={() => {
-            const modes = ["left", "both", "right"];
-            const nextMode = modes[(modes.indexOf(layoutMode) + 1) % modes.length];
-            setLayoutMode(nextMode);
-          }}
+          className="flex flex-col items-center gap-2 py-2 w-full relative select-none"
           title="Switch Layout"
         >
-          <div className={styles["layout-icon-both"]} style={{ fontSize: '20px' }} />
-          <span className="text-[10px] font-semibold text-center capitalize">Split</span>
+          <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-sm gap-[2px] w-[58px] h-[28px] justify-between">
+            <button
+              onClick={() => setLayoutMode("left")}
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
+                layoutMode === "left"
+                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                  : "bg-transparent hover:bg-slate-200/60"
+              }`}
+              title="Left Heavy View"
+            >
+              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
+                <div className="w-[6.5px] h-full border-r border-black" />
+                <div className="flex-1 h-full" />
+              </div>
+            </button>
+            <button
+              onClick={() => setLayoutMode("both")}
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
+                layoutMode === "both"
+                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                  : "bg-transparent hover:bg-slate-200/60"
+              }`}
+              title="Split View"
+            >
+              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
+                <div className="w-[4.5px] h-full border-r border-black" />
+                <div className="flex-1 h-full" />
+              </div>
+            </button>
+            <button
+              onClick={() => setLayoutMode("right")}
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
+                layoutMode === "right"
+                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                  : "bg-transparent hover:bg-slate-200/60"
+              }`}
+              title="Right Heavy View"
+            >
+              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
+                <div className="w-[2.5px] h-full border-r border-black" />
+                <div className="flex-1 h-full" />
+              </div>
+            </button>
+          </div>
+          <span className="text-[10px] font-semibold text-center capitalize text-[#1a1a1a]">Split</span>
         </div>
         <div 
           className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
