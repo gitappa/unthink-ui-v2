@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  useContext,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
@@ -79,7 +80,7 @@ import { useChat } from "../../hooks/chat/useChat";
 import ChatProducts from "./ChatProducts";
 import Recommendations from "../recommendations/Recommendations";
 import { KioskSearchOptions } from "../kioskSearchOptions/KioskSearchOptions";
-import { socket } from "../../context/socketV2";
+import { socket, SocketContext } from "../../context/socketV2";
 import upload_icon from "./Images/upload_icon.png";
 import page_info from "./Images/page_info.png";
 
@@ -130,6 +131,8 @@ const ChatModal = ({
     socketId,
     ButtonClick,
     chatProductsData,
+    chatHistory,
+
   ] = useSelector((state) => [
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatMessage],
     state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
@@ -150,6 +153,7 @@ const ChatModal = ({
     state.chatV2.socketId,
     state.VtoIconReducer.ButtonClick,
     state.chatV2.chatProductsData || [],
+    state.chatV2.chatHistory,
   ]);
   //   console.log("auraServerImage", activeSearchOption);
 
@@ -694,8 +698,10 @@ const ChatModal = ({
       dispatch(setAuraHelperMessage(activeSearchOption?.search_message));
     }
   };
-
+const { sendSocketClientMessage } = useContext(SocketContext);
   const handleRegenrateImage = () => {
+    // console.log('hii');
+    
     const keyWord_tagMap = suggestionsWithProducts?.suggestions?.tag_map;
 
     const imageGenerate = {
@@ -710,6 +716,14 @@ const ChatModal = ({
       description: widgetHeader || "",
       generate_overlay_enable: true,
     };
+    sendSocketClientMessage({
+      message: chatHistory[chatHistory.length-1],
+      chatImageUrl,
+      metadata,
+      userMetadata : null,
+      mute: true,
+      imageGenerate
+    });
 
     if (localChatMessage || chatImageUrl) {
       submitChatInput(localChatMessage, null, metadata, null, imageGenerate);
@@ -1580,30 +1594,7 @@ const ChatModal = ({
                                 Redo
                               </button>
                             ) : null}
-                            {/* {isFollowUpQuery &&
-                              // isShowFollowUpSearch &&
-                              regenarateImage ? (
-                              <>
-                                <div
-                                  className={styles["chatmodal-divider-vertical"]}
-                                ></div>
-                                <button
-                                  className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
-                                    ? styles[
-                                    "chatmodal-try-again-button-disaled"
-                                    ]
-                                    : ""
-                                    }`}
-                                  title="Regenerate the Image."
-                                  onClick={handleRegenrateImage}
-                                >
-                                  <ReloadOutlined
-                                    className={styles["chatmodal-reload-icon"]}
-                                  />
-                                  Regenerate Image
-                                </button>
-                              </>
-                            ) : null} */}
+                         
                           </div>
                         ) : null}
                       </div>
@@ -1697,6 +1688,7 @@ const ChatModal = ({
               handleRegenrateImage={handleRegenrateImage}
               regenarateImage={regenarateImage}
               handleChangeImageConfirm={handleChangeImageConfirm}
+              auraServerImage={auraServerImage}
             />
           </>
         ) : isShowKioskSearchOptions ? (
