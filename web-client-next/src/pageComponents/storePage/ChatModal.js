@@ -31,6 +31,11 @@ import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
 import auraCardOne from "./Images/aura.png";
 import auraCardTwo from "./Images/aura2.png";
 import auraCardThree from "./Images/aura3.png";
+import iconShopByTheme from "./Images/icon_shop_by_theme.png";
+import iconShopTheLook from "./Images/icon_shop_the_look.png";
+import iconCompleteTheLook from "./Images/icon_complete_the_look.png";
+import iconSearch from "./Images/icon_search.png";
+import iconTrendingCollections from "./Images/icon_trending_collections.png";
 import styles from "./ChatModal.module.css";
 import {
   setActiveSearchOption,
@@ -197,6 +202,7 @@ const ChatModal = ({
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
+    sessionStorage.removeItem('widgetHeaderRequestHistory')
   };
 
   const {
@@ -280,6 +286,7 @@ const ChatModal = ({
     (option) => {
       setIsSearchOptionManuallySelected(true);
       setLocalChatMessage("");
+      sessionStorage.removeItem('widgetHeaderRequestHistory')
       setSubmittedPromptPreview({ message: "", imageUrl: "" });
       sessionStorage.removeItem("widgetHeader");
       if (option.id === CHAT_SEARCH_OPTION_ID.trending_collections) {
@@ -473,10 +480,11 @@ const ChatModal = ({
 
   const searchOptionPreviewImages = useMemo(
     () => ({
-      [CHAT_SEARCH_OPTION_ID.shop_a_look]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.complete_the_look]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.smart_search]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.product_search]: auraCardThree,
+      [CHAT_SEARCH_OPTION_ID.smart_search]: iconShopByTheme,
+      [CHAT_SEARCH_OPTION_ID.shop_a_look]: iconShopTheLook,
+      [CHAT_SEARCH_OPTION_ID.complete_the_look]: iconCompleteTheLook,
+      [CHAT_SEARCH_OPTION_ID.product_search]: iconSearch,
+      [CHAT_SEARCH_OPTION_ID.trending_collections]: iconTrendingCollections,
     }),
     [],
   );
@@ -610,6 +618,7 @@ const ChatModal = ({
       dispatch(setOverlayCoordinates([]));
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
+      setLocalChatMessage('')
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -1457,10 +1466,10 @@ const ChatModal = ({
                                           type="text"
                                           ref={inputRef}
                                           placeholder={
-                                            typeof activeSearchOption?.text_placeholder === "string"
+                                            typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
                                               ? activeSearchOption?.text_placeholder
-                                              : activeSearchOption?.text_placeholder?.[0] ||
-                                              "Describe your product idea"
+                                              : ''
+                                              
                                           }
                                           name="chat_message"
                                           value={localChatMessage}
@@ -1474,12 +1483,12 @@ const ChatModal = ({
                                               : "text-black-200 font-medium"
                                             }`}
                                         />
-                                        {localChatMessage && (
+                                        {/* {localChatMessage && (
                                           <CloseCircleFilled
                                             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7268ec] cursor-pointer text-base transition-colors z-10"
                                             onClick={() => setLocalChatMessage("")}
                                           />
-                                        )}
+                                        )} */}
                                       </div>
 
 
@@ -1571,8 +1580,8 @@ const ChatModal = ({
                                 Redo
                               </button>
                             ) : null}
-                            {isFollowUpQuery &&
-                              isShowFollowUpSearch &&
+                            {/* {isFollowUpQuery &&
+                              // isShowFollowUpSearch &&
                               regenarateImage ? (
                               <>
                                 <div
@@ -1581,7 +1590,7 @@ const ChatModal = ({
                                 <button
                                   className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
                                     ? styles[
-                                    "chatmodal-try-again-button-disabled"
+                                    "chatmodal-try-again-button-disaled"
                                     ]
                                     : ""
                                     }`}
@@ -1594,7 +1603,7 @@ const ChatModal = ({
                                   Regenerate Image
                                 </button>
                               </>
-                            ) : null}
+                            ) : null} */}
                           </div>
                         ) : null}
                       </div>
@@ -1685,6 +1694,9 @@ const ChatModal = ({
               isMobile={isMobile}
               mobileTab={mobileTab}
               followUpQuery={followUpQuery}
+              handleRegenrateImage={handleRegenrateImage}
+              regenarateImage={regenarateImage}
+              handleChangeImageConfirm={handleChangeImageConfirm}
             />
           </>
         ) : isShowKioskSearchOptions ? (
