@@ -31,6 +31,11 @@ import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
 import auraCardOne from "./Images/aura.png";
 import auraCardTwo from "./Images/aura2.png";
 import auraCardThree from "./Images/aura3.png";
+import iconShopByTheme from "./Images/icon_shop_by_theme.png";
+import iconShopTheLook from "./Images/icon_shop_the_look.png";
+import iconCompleteTheLook from "./Images/icon_complete_the_look.png";
+import iconSearch from "./Images/icon_search.png";
+import iconTrendingCollections from "./Images/icon_trending_collections.png";
 import styles from "./ChatModal.module.css";
 import {
   setActiveSearchOption,
@@ -473,10 +478,11 @@ const ChatModal = ({
 
   const searchOptionPreviewImages = useMemo(
     () => ({
-      [CHAT_SEARCH_OPTION_ID.shop_a_look]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.complete_the_look]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.smart_search]: auraCardThree,
-      [CHAT_SEARCH_OPTION_ID.product_search]: auraCardThree,
+      [CHAT_SEARCH_OPTION_ID.smart_search]: iconShopByTheme,
+      [CHAT_SEARCH_OPTION_ID.shop_a_look]: iconShopTheLook,
+      [CHAT_SEARCH_OPTION_ID.complete_the_look]: iconCompleteTheLook,
+      [CHAT_SEARCH_OPTION_ID.product_search]: iconSearch,
+      [CHAT_SEARCH_OPTION_ID.trending_collections]: iconTrendingCollections,
     }),
     [],
   );

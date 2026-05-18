@@ -323,6 +323,7 @@ const ProductFiltersTags = ({
 					{typeof handleFilterOptionsVisibleChange === "function" && (
 						<div
 							className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-[#334155] cursor-pointer border border-[#e2e8f0] shadow-sm hover:bg-[#e2e8f0]"
+							title="More filter"
 							onClick={() =>
 								handleFilterOptionsVisibleChange(!filterOptionsVisible)
 							}>
