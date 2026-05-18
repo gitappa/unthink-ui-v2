@@ -1571,8 +1571,8 @@ const ChatModal = ({
                                 Redo
                               </button>
                             ) : null}
-                            {isFollowUpQuery &&
-                              isShowFollowUpSearch &&
+                            {/* {isFollowUpQuery &&
+                              // isShowFollowUpSearch &&
                               regenarateImage ? (
                               <>
                                 <div
@@ -1581,7 +1581,7 @@ const ChatModal = ({
                                 <button
                                   className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
                                     ? styles[
-                                    "chatmodal-try-again-button-disabled"
+                                    "chatmodal-try-again-button-disaled"
                                     ]
                                     : ""
                                     }`}
@@ -1594,7 +1594,7 @@ const ChatModal = ({
                                   Regenerate Image
                                 </button>
                               </>
-                            ) : null}
+                            ) : null} */}
                           </div>
                         ) : null}
                       </div>
@@ -1685,6 +1685,8 @@ const ChatModal = ({
               isMobile={isMobile}
               mobileTab={mobileTab}
               followUpQuery={followUpQuery}
+              handleRegenrateImage={handleRegenrateImage}
+              regenarateImage={regenarateImage}
             />
           </>
         ) : isShowKioskSearchOptions ? (

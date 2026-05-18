@@ -60,6 +60,8 @@ const ChatProducts = ({
   isMobile,
   mobileTab,
   followUpQuery,
+regenarateImage,
+handleRegenrateImage,
 
 }) => {
   const {
@@ -718,6 +720,25 @@ const ChatProducts = ({
                                 </div>
                               </div>
                             ) : null}
+                               {isFollowUpQuery &&
+                                                          // isShowFollowUpSearch &&
+                                                          regenarateImage ? (
+                                                          <>
+                                                            <div
+                                                               
+                                                            ></div>
+                                                            <button
+                                                              
+                                                              title="Regenerate the Image."
+                                                              onClick={handleRegenrateImage}
+                                                            >
+                                                              <ReloadOutlined
+                                                                 
+                                                              />
+                                                              Regenerate Image
+                                                            </button>
+                                                          </>
+                                                        ) : null}
                             {shouldMoveInputBelowResults ? (
                               <div className="mt-4 mb-2">
                                 <AuraInputBox
