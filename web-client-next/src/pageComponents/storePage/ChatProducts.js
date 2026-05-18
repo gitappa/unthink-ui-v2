@@ -62,7 +62,7 @@ const ChatProducts = ({
   followUpQuery,
 regenarateImage,
 handleRegenrateImage,
-
+handleChangeImageConfirm
 }) => {
   const {
     trackCollectionCampCode,
@@ -100,6 +100,7 @@ handleRegenrateImage,
     state.store.data,
     state.chatV2.chatHistory,
   ]);
+// console.log('activeSearchOption',activeSearchOption);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -239,6 +240,8 @@ handleRegenrateImage,
       chatProductsData,
     ],
   );
+  // console.log('shouldShowShopLookSplitLayout',shouldShowShopLookSplitLayout);
+  
 
   const shopLookPreviewImage = useMemo(
     () => widgetImage || chatImageUrl || products?.image_url || "",
@@ -318,7 +321,7 @@ handleRegenrateImage,
       <div className="flex-1 flex flex-col gap-8 items-center w-full justify-center">
         <div 
           className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
-          onClick={handleGoBack}
+          onClick={handleChangeImageConfirm}
           title="New Chat"
         >
           <FormOutlined className="text-[20px]" />
@@ -626,6 +629,12 @@ handleRegenrateImage,
 
                     <div>
                       <div className={styles["chat-products-shop-look-sidebar-content"]}>
+                        {chatHistory.length >= 2 &&
+                              <div className="flex items-center gap-1 mb-3 ml-2  ">
+                              <HistoryOutlined />
+                               <p>{chatHistory[chatHistory.length-1]}</p>
+                              </div>
+                              }
                         {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable  ? (
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-image-loading-box"]}>
@@ -687,7 +696,7 @@ handleRegenrateImage,
                                       className={styles["chat-products-read-more-btn"]}
                                       onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                                     >
-                                      {isDescriptionExpanded ? "Read Less" : "Read More"}
+                                      {isDescriptionExpanded ? "Read Less" : "Read More..."}
                                     </button>
                                   )}
                                   {shopLookKeywords.length && layoutMode === 'left' ? (
@@ -707,15 +716,22 @@ handleRegenrateImage,
                                     </div>
                                   ) : null} 
                                   {isShowTryAgain && (
-                                    <Tooltip title="Redo">
+                                    <Tooltip title ='Regenerate the products with AI.'>
+
+                                    <div className="flex items-center cursor-pointer">
                                       <button
-                                        className="mt-1 ml-2 flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white text-[1rem] font-bold text-black transition-all duration-200 hover:scale-110 hover:bg-black hover:text-white hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
                                         onClick={handleTryAgainClick}
                                         disabled={showChatLoader}
                                       >
-                                        <ReloadOutlined />
+                                        <ReloadOutlined className="cursor-pointer" />
                                       </button>
+                                      <p>
+                                       Redo
+                                      </p>                                     
+                                    </div>
                                     </Tooltip>
+
                                   )}
                                 </div>
                               </div>
@@ -732,13 +748,12 @@ handleRegenrateImage,
                                                               title="Regenerate the Image."
                                                               onClick={handleRegenrateImage}
                                                             >
-                                                              <ReloadOutlined
-                                                                 
+                                                              <ReloadOutlined                                                                  
                                                               />
                                                               Regenerate Image
                                                             </button>
                                                           </>
-                                                        ) : null}
+                                                        ) : null} 
                             {shouldMoveInputBelowResults ? (
                               <div className="mt-4 mb-2">
                                 <AuraInputBox
@@ -764,6 +779,7 @@ handleRegenrateImage,
                                   followUpQuery={followUpQuery}
                                   hideActions={shouldShowShopLookSplitLayout}
                                   chatHistory={chatHistory}
+                                  isFollowUpQuery ={isFollowUpQuery}
                                 />
                               </div>
                             ) : null}
@@ -772,30 +788,7 @@ handleRegenrateImage,
                       </div>
                     </div> 
                   </div>
-                  {/* {shouldMoveInputBelowResults ? (
-                    <AuraInputBox
-                      isShowTryAgain={isShowTryAgain}
-                      showChatLoader={showChatLoader}
-                      handleTryAgainClick={handleTryAgainClick}
-                      handleGoBack={handleGoBack}
-                      isShopByThemeOptionActive={isShopByThemeOptionActive}
-                      isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
-                      uploadImageProps={uploadImageProps}
-                      chatImageUrl={chatImageUrl}
-                      activeSearchOption={activeSearchOption}
-                      chatTypeKey={chatTypeKey}
-                      inputRef={inputRef}
-                      localChatMessage={localChatMessage}
-                      handleInputChange={handleInputChange}
-                      handlePromptKeyDown={handlePromptKeyDown}
-                      handlePromptUtilityClick={handlePromptUtilityClick}
-                      page_info={page_info}
-                      isShopALookOptionActive={isShopALookOptionActive}
-                      handleSubmitChatInput={handleSubmitChatInput}
-                      setIsHistoryOpen={setIsHistoryOpen}
-                      chatHistory={chatHistory}
-                    />
-                  ) : null} */}
+                 
                 </div>
               )}
 

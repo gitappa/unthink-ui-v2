@@ -197,6 +197,7 @@ const ChatModal = ({
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
+    sessionStorage.removeItem('widgetHeaderRequestHistory')
   };
 
   const {
@@ -280,6 +281,7 @@ const ChatModal = ({
     (option) => {
       setIsSearchOptionManuallySelected(true);
       setLocalChatMessage("");
+      sessionStorage.removeItem('widgetHeaderRequestHistory')
       setSubmittedPromptPreview({ message: "", imageUrl: "" });
       sessionStorage.removeItem("widgetHeader");
       if (option.id === CHAT_SEARCH_OPTION_ID.trending_collections) {
@@ -610,6 +612,7 @@ const ChatModal = ({
       dispatch(setOverlayCoordinates([]));
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
+      setLocalChatMessage('')
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -1457,10 +1460,10 @@ const ChatModal = ({
                                           type="text"
                                           ref={inputRef}
                                           placeholder={
-                                            typeof activeSearchOption?.text_placeholder === "string"
+                                            typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
                                               ? activeSearchOption?.text_placeholder
-                                              : activeSearchOption?.text_placeholder?.[0] ||
-                                              "Describe your product idea"
+                                              : ''
+                                              
                                           }
                                           name="chat_message"
                                           value={localChatMessage}
@@ -1474,12 +1477,12 @@ const ChatModal = ({
                                               : "text-black-200 font-medium"
                                             }`}
                                         />
-                                        {localChatMessage && (
+                                        {/* {localChatMessage && (
                                           <CloseCircleFilled
                                             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7268ec] cursor-pointer text-base transition-colors z-10"
                                             onClick={() => setLocalChatMessage("")}
                                           />
-                                        )}
+                                        )} */}
                                       </div>
 
 
@@ -1687,6 +1690,7 @@ const ChatModal = ({
               followUpQuery={followUpQuery}
               handleRegenrateImage={handleRegenrateImage}
               regenarateImage={regenarateImage}
+              handleChangeImageConfirm={handleChangeImageConfirm}
             />
           </>
         ) : isShowKioskSearchOptions ? (

@@ -154,12 +154,12 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     }
   }, [auraSearchText, user?.data?.user_id, userDataSent]);
 
-  console.log(isFollowUpQuery);
+  // console.log();
 
   const chatInputMetadata = useMemo(
     () => ({
       searchOptionId: activeSearchOption?.id,
-      follow_qn: isFollowUpQuery || undefined,
+      follow_qn:activeSearchOption.follow_up_search_enable  ?  isFollowUpQuery : false,
       aura_text_ss: isSendSSTemplates && !isEmpty(auraChatSetting.aura_text_ss) ? auraChatSetting.aura_text_ss : undefined,
       aura_text_stl: isSendSTLTemplates && !isEmpty(auraChatSetting.aura_text_stl) ? auraChatSetting.aura_text_stl : undefined,
       aura_text_ctl: isSendCTLTemplates && !isEmpty(auraChatSetting.aura_text_ctl) ? auraChatSetting.aura_text_ctl : undefined,
@@ -201,6 +201,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     if (activeSearchOption.id === CHAT_SEARCH_OPTION_ID.complete_the_look) return AuraChatSettingModalModes.COMPLETE_THE_LOOK;
     if (activeSearchOption.id === CHAT_SEARCH_OPTION_ID.smart_search) return AuraChatSettingModalModes.SMART_SEARCH;
   }, [activeSearchOption.id]);
+  
 
   const isSwiftlyStyledInstance = is_store_instance && current_store_name === STORE_USER_NAME_SWIFTLYSTYLED;
   const isDoTheLookInstance = is_store_instance && current_store_name === STORE_USER_NAME_DOTHELOOK;

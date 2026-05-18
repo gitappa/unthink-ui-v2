@@ -32,10 +32,11 @@ const AuraInputBox = ({
   setIsHistoryOpen,
   chatHistory,
   hideActions = false,
+  isFollowUpQuery,
 
 }) => {
      
-    // console.log('chatHistory',chatHistory);
+    // console.log('chatHistory',chatHistory.length >2);
     
   //   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   //    console.log('activeSearchOption',activeSearchOption?.allow_image_search);
@@ -77,16 +78,13 @@ const AuraInputBox = ({
 
   return (
     <div className={styles["chat-products-bottom-input-wrapper"]}>
-      <div className="flex items-center gap-1 mb-3 ml-2  ">
-      <HistoryOutlined />
-       <p>{chatHistory[chatHistory.length-1]}</p>
-      </div>
       {!hideActions && (
         <div className={styles["chat-products-above-input-actions"]}>
           <div className={styles["chat-products-icon-buttons-group"]}>
-            
             {isShowTryAgain && (
-              <Tooltip title="Redo">
+              // <Tooltip title="Redo">
+              <div>
+
                 <button
                   type="button"
                   className={styles["chat-products-icon-action-btn"]}
@@ -95,7 +93,9 @@ const AuraInputBox = ({
                 >
                   <ReloadOutlined />
                 </button>
-              </Tooltip>
+            
+              <p>Redo</p>
+              </div>
             )}
             <Tooltip title="New chat">
               <button
@@ -154,10 +154,9 @@ const AuraInputBox = ({
             ref={inputRef}
             rows={1}
             placeholder={
-              typeof activeSearchOption?.text_placeholder === "string"
+              typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
                 ? activeSearchOption?.text_placeholder
-                : activeSearchOption?.text_placeholder?.[0] ||
-                  "Describe your product idea"
+                : 'Enter the Keywords' 
             }
             name="chat_message"
             value={localChatMessage}
@@ -171,12 +170,12 @@ const AuraInputBox = ({
             style={{ paddingRight: "105px", resize: "none", overflow: "hidden" }}
           />
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pr-2">
-            {localChatMessage && (
+            {/* {localChatMessage && (
               <CloseCircleFilled
                 className="text-gray-400 hover:text-[#7268ec] cursor-pointer text-sm mx-1 transition-colors z-10"
                 onClick={() => handleInputChange({ target: { value: "" } })}
               />
-            )}
+            )} */}
             {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
               <button
                 type="button"

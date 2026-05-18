@@ -91,6 +91,8 @@ const Chat = ({
     state.store.data.searchOptions || [],
     state.auth.user.data,
   ]);
+  // console.log('_activeChatSearchType',_activeChatSearchType);
+  
 
   const [auraCameraSpinLoader, setAuraCameraSpinLoader] = useState(false);
 
