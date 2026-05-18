@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { Tooltip, Image, Upload, Spin } from "antd";
 import {
+  CloseCircleFilled,
   CloseOutlined,
   ReloadOutlined,
   CaretRightOutlined,
@@ -368,6 +369,7 @@ const ChatModal = ({
     [showChatResponse, isActiveSearchOptionAvailable],
   );
 
+
   const shouldHighlightActiveSearchOption = useMemo(
     () => isSearchOptionManuallySelected || isShowAuraResponse,
     [isSearchOptionManuallySelected, isShowAuraResponse],
@@ -608,7 +610,6 @@ const ChatModal = ({
       dispatch(setOverlayCoordinates([]));
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
-      setLocalChatMessage("");
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -809,17 +810,24 @@ const ChatModal = ({
                     value={localChatMessage}
                     onChange={handleInputChange}
                     onKeyDown={handlePromptKeyDown}
-                    className="flex-1 bg-transparent border-none outline-none text-[#384467] placeholder-[#8f96a8] text-sm md:text-base min-w-0"
+                    className="flex-1 bg-transparent border-none outline-none text-[#384467] placeholder-[#8f96a8] text-sm md:text-base font-medium min-w-0"
                   />
+                  {localChatMessage && (
+                    <CloseCircleFilled
+                      className="text-[#8f96a8] hover:text-[#7268ec] cursor-pointer text-xs md:text-sm mx-1.5 transition-colors"
+                      onClick={() => setLocalChatMessage("")}
+                    />
+                  )}
 
                   <button
                     type="button"
                     className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#7268ec] text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
                     onClick={handleSubmitChatInput}
                     disabled={
-                      isShopALookOptionActive
+                      showChatLoader ||
+                      (isShopALookOptionActive
                         ? !chatImageUrl
-                        : !localChatMessage && !chatImageUrl
+                        : !localChatMessage && !chatImageUrl)
                     }
                   >
                     <ArrowUpOutlined className="text-xs md:text-sm" />
@@ -1466,6 +1474,12 @@ const ChatModal = ({
                                               : "text-black-200 font-medium"
                                             }`}
                                         />
+                                        {localChatMessage && (
+                                          <CloseCircleFilled
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7268ec] cursor-pointer text-base transition-colors z-10"
+                                            onClick={() => setLocalChatMessage("")}
+                                          />
+                                        )}
                                       </div>
 
 
@@ -1486,9 +1500,10 @@ const ChatModal = ({
                                           }`}
                                         onClick={handleSubmitChatInput}
                                         disabled={
-                                          isShopALookOptionActive
+                                          showChatLoader ||
+                                          (isShopALookOptionActive
                                             ? !chatImageUrl
-                                            : !localChatMessage && !chatImageUrl
+                                            : !localChatMessage && !chatImageUrl)
                                         }
                                       >
                                         <ArrowUpOutlined />
