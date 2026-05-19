@@ -579,6 +579,8 @@ const ChatModal = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleSubmitChatInput = () => {
+
+     setIsImageLoading(true);
     const metadata = { ...chatInputMetadata };
     setIsFollowUpQuery(true)
     const userMetadata = {
@@ -624,6 +626,7 @@ const ChatModal = ({
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
       setLocalChatMessage('')
+      //  setIsImageLoading(false);
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -703,6 +706,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
   const handleRegenrateImage = () => {
     // flip regenerate flag off and enable image loading UI
     setRegenarateImage(false);
+dispatch(setAuraSreverImage(''));
     setIsImageLoading(true);
     // const chatTypeKey = CHAT_TYPE_CHAT;
     // dispatch(setShowChatLoader(true,chatTypeKey));
@@ -723,7 +727,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
       generate_overlay_enable: true,
     };
     sendSocketClientMessage({
-      message: chatHistory[chatHistory.length-1],
+      message:localChatMessage || chatHistory[chatHistory.length-1],
       chatImageUrl,
       metadata,
       userMetadata : null,
@@ -743,7 +747,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
     // When server or widget image arrives, stop image loading and reset regenerate flag
     if (auraServerImage || widgetImage) {
       const imageToUse = auraServerImage || widgetImage;
-      dispatch(setChatImageUrl(imageToUse));
+      // dispatch(setChatImageUrl(imageToUse));
       setIsImageLoading(false);
       setRegenarateImage(true);
     } else {

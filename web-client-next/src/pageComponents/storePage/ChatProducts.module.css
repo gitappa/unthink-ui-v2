@@ -949,7 +949,7 @@
 .chat-products-bottom-input-card {
   width: 100%;
   border: 1px solid rgba(114, 104, 236, 0.15);
-  border-radius: 1.5rem;
+  border-radius: 25px;
   background: #ffffff;
   padding: 0.6rem 1rem;
   box-shadow: 0 10px 25px -5px rgba(114, 104, 236, 0.08), 0 8px 10px -6px rgba(114, 104, 236, 0.05);
@@ -964,7 +964,7 @@
 
 .chat-products-bottom-input-card-shop-theme {
   border-color: #b8afff;
-  border-radius: 2.35rem;
+  /* border-radius: 2.35rem; */
   /* background: #f8f7ff; */
   padding:10px;
   position: relative;
@@ -973,15 +973,15 @@
 .chat-products-bottom-input-row-wrapper {
   position: relative;
   width: 100%;
-  display: flex;
+  /* display: flex; */
   align-items: center;
 }
 
 .chat-products-bottom-plus-upload-container {
-  position: absolute;
+  /* position: absolute;
   left: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%); */
   z-index: 10;
 }
 
@@ -1011,19 +1011,7 @@
   box-shadow: 0 4px 12px rgba(114, 104, 236, 0.25);
 }
 
-.chat-products-bottom-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #1a1a1a;
-  font-weight: 500;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  padding-left: 3.2rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-}
+
 
 .chat-products-bottom-input::placeholder {
   color: #6b7288;

@@ -250,6 +250,8 @@ auraServerImage,
     () => widgetImage || chatImageUrl || products?.image_url || "",
     [widgetImage, chatImageUrl, products?.image_url],
   );
+  // console.log(shopLookPreviewImage);
+  
 
   const shopLookKeywords = useMemo(
     () => (suggestionsWithProducts?.suggestions?.tags || []).slice(0, 6),
@@ -564,7 +566,10 @@ auraServerImage,
       ) : null}
     </>
   );
-  // console.log(storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && showChatLoader ? 'loadiung' : 'not load '   );
+  // useEffect(()=>{
+     
+  // },[auraServerImage])
+  // console.log(storeData?.plan_settings?.image_generate?.is_enable && (auraServerImage === '' || auraServerImage === null)  && isImageLoading && !regenarateImage   );
   // debugger  
 
   return (
@@ -679,7 +684,7 @@ auraServerImage,
                                <p>{chatHistory[chatHistory.length-2]}</p>
                               </div>
                               }
-                        { storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && ( isImageLoading || !regenarateImage)  ? (
+                        { storeData?.plan_settings?.image_generate?.is_enable && (auraServerImage === '' || auraServerImage === null)  && isImageLoading && !regenarateImage  ? (
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-image-loading-box"]}>
                               <span>Loading image...</span>
@@ -690,13 +695,13 @@ auraServerImage,
                             className={`${styles["chat-products-shop-look-image-wrapper"]} `}
                                     >
 <div
-  className={`${styles["chat-products-shop-look-image-inner"]} ${ regenarateImage && !shopLookPreviewImage && !auraServerImage
+  className={`${styles["chat-products-shop-look-image-inner"]} ${ regenarateImage  && !auraServerImage
       ? "hidden"
       : "block"
   }`}
 >                              <img
-                                src={shopLookPreviewImage || auraServerImage}
-                                alt="PreviewImage"
+                                src={auraServerImage}
+                                alt="PreviewImage"  
                                className={`${styles["chat-products-shop-look-image"]}`}
                               />
                               {Array.isArray(auraOverlayCoordinates) &&
@@ -746,10 +751,9 @@ auraServerImage,
                         )                    
                       }
                        {isFollowUpQuery &&
-                                 isShowFollowUpSearch && chatHistory.length >=2 && shopLookPreviewImage && auraServerImage &&
+                                 isShowFollowUpSearch && chatHistory.length >=2 && (shopLookPreviewImage || auraServerImage ) &&
                                    regenarateImage ? (
-                                                          <>
-                                                           
+                                                          <>                                                        
                                                              
                                                             <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
                                                               
