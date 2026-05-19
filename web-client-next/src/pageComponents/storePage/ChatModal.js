@@ -576,6 +576,7 @@ const ChatModal = ({
   const [ipp, setIpp] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
   const [regenarateImage, setRegenarateImage] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleSubmitChatInput = () => {
     const metadata = { ...chatInputMetadata };
@@ -700,6 +701,11 @@ const ChatModal = ({
   };
 const { sendSocketClientMessage } = useContext(SocketContext);
   const handleRegenrateImage = () => {
+    // flip regenerate flag off and enable image loading UI
+    setRegenarateImage(false);
+    setIsImageLoading(true);
+    // const chatTypeKey = CHAT_TYPE_CHAT;
+    // dispatch(setShowChatLoader(true,chatTypeKey));
     // console.log('hii');
     
     const keyWord_tagMap = suggestionsWithProducts?.suggestions?.tag_map;
@@ -729,11 +735,21 @@ const { sendSocketClientMessage } = useContext(SocketContext);
       submitChatInput(localChatMessage, null, metadata, null, imageGenerate);
       dispatch(setAuraHelperMessage(activeSearchOption?.search_message));
     }
+    // keep isImageLoading true until auraServerImage/widgetImage arrives
+    //  dispatch(setShowChatLoader(false,chatTypeKey));
   };
 
   useEffect(() => {
-    dispatch(setChatImageUrl(auraServerImage));
-  }, [auraServerImage]);
+    // When server or widget image arrives, stop image loading and reset regenerate flag
+    if (auraServerImage || widgetImage) {
+      const imageToUse = auraServerImage || widgetImage;
+      dispatch(setChatImageUrl(imageToUse));
+      setIsImageLoading(false);
+      setRegenarateImage(true);
+    } else {
+      dispatch(setChatImageUrl(auraServerImage));
+    }
+  }, [auraServerImage, widgetImage]);
 
   // Original image size (1024x1024)
   const originalWidth = 1024;
@@ -1685,6 +1701,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
               isMobile={isMobile}
               mobileTab={mobileTab}
               followUpQuery={followUpQuery}
+              isImageLoading={isImageLoading}
               handleRegenrateImage={handleRegenrateImage}
               regenarateImage={regenarateImage}
               handleChangeImageConfirm={handleChangeImageConfirm}
