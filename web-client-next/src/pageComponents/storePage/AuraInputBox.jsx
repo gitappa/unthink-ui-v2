@@ -148,13 +148,41 @@ const AuraInputBox = ({
             value={localChatMessage}
             onChange={handleInputChange}
             onKeyDown={handlePromptKeyDown}
-            className={`${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6  pt-1 pb-1 ${activeSearchOption?.allow_image_search ? "" : "  pl-12 "}  ${
+            className={`${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6  pt-1 pb-1 ${activeSearchOption?.allow_image_search ? "" : "  "}  ${
               isShopByThemeOptionActive || isCompleteTheLookOptionActive
                 ? styles["chat-products-bottom-input-shop-theme"] 
                 : ""
             }`}
             style={{   resize: "none", overflow: "hidden" }}
           />
+          { !( isCompleteTheLookOptionActive || activeSearchOption?.allow_image_search) && 
+              <button
+              type="button"
+              className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5  ${styles["chat-products-bottom-submit"]} shrink-0 ${
+                isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                  ? styles["chat-products-bottom-submit-shop-theme"]
+                  : ""
+              } ${
+                (
+                  isShopALookOptionActive
+                    ? !chatImageUrl
+                    : !localChatMessage && !chatImageUrl
+                )
+                  ? styles["chat-products-bottom-submit-disabled"]
+                  : ""
+              }`}
+              onClick={handleSubmitChatInput}
+              disabled={
+                showChatLoader ||
+                (isShopALookOptionActive
+                  ? !chatImageUrl
+                  : !localChatMessage && !chatImageUrl)
+              }
+            >
+              <ArrowUpOutlined />
+            </button>
+          }
+          {( activeSearchOption?.allow_image_search || isCompleteTheLookOptionActive ) &&
           <div className="flex justify-between items-center border-t border-gray-500 pt-1.5">
               <div className="flex gap-3 items-center">
 
@@ -225,6 +253,7 @@ const AuraInputBox = ({
             </button>
           </div>
           </div>
+}
 
         </div>
       </div>
