@@ -1243,7 +1243,8 @@
 }
 
 .chatmodal-figma-input-shop-theme::placeholder {
-  color: #4f5f83;
+  color: gray;
+  font-weight: 300;
 }
 
 .chatmodal-figma-input-divider {

@@ -226,7 +226,7 @@ const ContextWrapper = ({ children }) => {
 
 	const onServer = async (data) => {
 
-	 console.log('setWidgetHeader',data);
+	//  console.log('setWidgetHeader',data);
 	 
 
 

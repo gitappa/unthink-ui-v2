@@ -63,6 +63,7 @@ const ChatProducts = ({
 regenarateImage,
 handleRegenrateImage,
 handleChangeImageConfirm,
+isImageLoading,
 auraServerImage,
 
 }) => {
@@ -102,7 +103,7 @@ auraServerImage,
     state.store.data,
     state.chatV2.chatHistory,
   ]);
-// console.log('activeSearchOption',auraServerImage);
+// console.log('chatHistory',chatHistory);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -311,6 +312,7 @@ auraServerImage,
       products.scrollIntoView({ behavior: "smooth" });
     }
   };
+// console.log('showChatLoader',showChatLoader);
 
   const AuraSideNav = () => (
     <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
@@ -562,6 +564,8 @@ auraServerImage,
       ) : null}
     </>
   );
+  // console.log(storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && showChatLoader ? 'loadiung' : 'not load '   );
+  // debugger  
 
   return (
     <div
@@ -672,22 +676,28 @@ auraServerImage,
                         {chatHistory.length >= 2 &&
                               <div className="flex items-center gap-1 mb-3 ml-2  ">
                               <HistoryOutlined />
-                               <p>{chatHistory[chatHistory.length-1]}</p>
+                               <p>{chatHistory[chatHistory.length-2]}</p>
                               </div>
                               }
-                        {(showChatLoader || !shopLookPreviewImage) && storeData?.image_generate?.is_enable   ? (
+                        { storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && ( isImageLoading || !regenarateImage)  ? (
                           <div className={styles["chat-products-shop-look-image-wrapper"]}>
                             <div className={styles["chat-products-image-loading-box"]}>
                               <span>Loading image...</span>
                             </div>
                           </div>
-                        ) : (
-                          <div className={styles["chat-products-shop-look-image-wrapper"]}>
-                            <div className={styles["chat-products-shop-look-image-inner"]}>
-                              <img
+                        ) :  (
+                         <div
+                            className={`${styles["chat-products-shop-look-image-wrapper"]} `}
+                                    >
+<div
+  className={`${styles["chat-products-shop-look-image-inner"]} ${ regenarateImage && !shopLookPreviewImage && !auraServerImage
+      ? "hidden"
+      : "block"
+  }`}
+>                              <img
                                 src={shopLookPreviewImage || auraServerImage}
-                                alt="shopLookPreviewImage"
-                                className={styles["chat-products-shop-look-image"]}
+                                alt="PreviewImage"
+                               className={`${styles["chat-products-shop-look-image"]}`}
                               />
                               {Array.isArray(auraOverlayCoordinates) &&
                                 auraOverlayCoordinates.map((item, index) => {
@@ -695,7 +705,6 @@ auraServerImage,
                                     (item.point[0] / originalWidth) * 100;
                                   const topPercent =
                                     (item.point[1] / originalHeight) * 100;
-
                                   return (
                                     <Tooltip
                                       key={index}
@@ -716,8 +725,43 @@ auraServerImage,
                                   );
                                 })}
                             </div>
+                              {isFollowUpQuery &&
+                                 isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
+                                   regenarateImage ? (
+                                                          <>
+                                                           
+                                                             
+                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                              
+                                                              title="Regenerate the Image."
+                                                              onClick={handleRegenrateImage}
+                                                            >
+                                                              <ReloadOutlined                                                                  
+                                                              />
+                                                              Regenerate Image
+                                                            </button>
+                                                          </>
+                                                        ) : null} 
                           </div>
-                        )}
+                        )                    
+                      }
+                       {isFollowUpQuery &&
+                                 isShowFollowUpSearch && chatHistory.length >=2 && shopLookPreviewImage && auraServerImage &&
+                                   regenarateImage ? (
+                                                          <>
+                                                           
+                                                             
+                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                              
+                                                              title="Regenerate the Image."
+                                                              onClick={handleRegenrateImage}
+                                                            >
+                                                              <ReloadOutlined                                                                  
+                                                              />
+                                                              Regenerate Image
+                                                            </button>
+                                                          </>
+                                                        ) : null} 
                         {(widgetHeader || shopLookKeywords.length > 0) ? (
                           <div>
                             {widgetHeader ? (
@@ -774,26 +818,7 @@ auraServerImage,
                                       </p>                                     
                                     </div>
                                     </Tooltip>
-
-                                  )}
-                                 
-                                   {isFollowUpQuery &&
-                                                          isShowFollowUpSearch && chatHistory.length >=2 &&
-                                                          regenarateImage ? (
-                                                          <>
-                                                           |
-                                                             
-                                                            <button className="flex items-center gap-1"
-                                                              
-                                                              title="Regenerate the Image."
-                                                              onClick={handleRegenrateImage}
-                                                            >
-                                                              <ReloadOutlined                                                                  
-                                                              />
-                                                              Regenerate Image
-                                                            </button>
-                                                          </>
-                                                        ) : null} 
+                                  )}                             
                                   </div>
 
                                 </div>
@@ -892,7 +917,7 @@ auraServerImage,
             </div>
             <div className="p-4 flex flex-col gap-2.5 max-h-[60vh] overflow-y-auto">
               {chatHistory.length > 0 ? (
-                chatHistory.map((item) => (
+                [...chatHistory].reverse().map((item) => (
                   <div
                     key={item}
                     onClick={() => handleSelectPastChat(item)}
@@ -901,9 +926,7 @@ auraServerImage,
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
                       {item}
                     </span>
-                    {/* <span className="text-[10px] text-gray-400 shrink-0 pt-0.5 font-normal">
-                      {item.timestamp}
-                    </span> */}
+                    
                   </div>
                 ))
               ) : (

@@ -156,7 +156,7 @@ const AuraInputBox = ({
             placeholder={
               typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
                 ? activeSearchOption?.text_placeholder
-                : 'Enter the Keywords' 
+                : chatHistory[chatHistory.length-1] 
             }
             name="chat_message"
             value={localChatMessage}
