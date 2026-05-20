@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox, Tooltip, Upload, Spin } from "antd";
 import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined, MenuOutlined, FolderOutlined } from "@ant-design/icons";
@@ -65,6 +65,7 @@ handleRegenrateImage,
 handleChangeImageConfirm,
 isImageLoading,
 auraServerImage,
+onOpenMobileSidebar,
 
 }) => {
   const {
@@ -109,6 +110,78 @@ auraServerImage,
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const containerRef = useRef(null);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+
+  // Expose setIsMobileSidebarOpen via the onOpenMobileSidebar prop reference
+  useEffect(() => {
+    if (onOpenMobileSidebar) {
+      onOpenMobileSidebar.current = () => setIsMobileSidebarOpen(true);
+    }
+  }, [onOpenMobileSidebar]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleScroll = () => {
+      const descElement = document.getElementById("aura-description-section");
+      if (descElement) {
+        const descRect = descElement.getBoundingClientRect();
+        if (descRect.bottom < 100) {
+          setShowScrollBtn(true);
+        } else {
+          setShowScrollBtn(false);
+        }
+      }
+    };
+
+    const scrollContainers = [];
+    let parent = containerRef.current;
+    while (parent) {
+      const overflowY = window.getComputedStyle(parent).overflowY;
+      if (overflowY === "auto" || overflowY === "scroll") {
+        scrollContainers.push(parent);
+      }
+      parent = parent.parentElement;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    scrollContainers.forEach((container) => {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+    });
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      scrollContainers.forEach((container) => {
+        container.removeEventListener("scroll", handleScroll);
+      });
+    };
+  }, [isMobile]);
+
+  const handleScrollToDescription = () => {
+    const descElement = document.getElementById("aura-description-section");
+    if (descElement) {
+      let scrollContainer = null;
+      let parent = descElement.parentElement;
+      while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        if (overflowY === "auto" || overflowY === "scroll") {
+          scrollContainer = parent;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        descElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
   // const [pastChats, setPastChats] = useState(() => {
   //   if (typeof window !== "undefined") {
   //     try {
@@ -402,6 +475,59 @@ auraServerImage,
     </div>
   );
 
+  // Mobile sidebar drawer - shown on mobile/tablet when hamburger is tapped
+  const MobileSideDrawer = () => (
+    <>
+      {/* Backdrop */}
+      {isMobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[300]"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
+      {/* Drawer */}
+      <div
+        className={`fixed top-0 left-0 h-full z-[301] bg-white flex flex-col transition-transform duration-300 ease-in-out ${
+          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{ width: "200px", boxShadow: "4px 0 24px rgba(114,104,236,0.12)" }}
+      >
+        {/* Drawer Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#f0eeff]">
+          <span className="text-[#7268ec] font-bold text-base tracking-wide">Menu</span>
+          <CloseOutlined
+            className="text-gray-400 cursor-pointer text-base"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+        </div>
+        {/* Drawer Items */}
+        <div className="flex flex-col gap-1 py-4 flex-1">
+          <div
+            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            onClick={() => { handleChangeImageConfirm(); setIsMobileSidebarOpen(false); }}
+          >
+            <FormOutlined style={{ fontSize: "18px" }} />
+            <span className="text-sm font-semibold">New Chat</span>
+          </div>
+          <div
+            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            onClick={() => { onWishlistClick(); setIsMobileSidebarOpen(false); }}
+          >
+            <FolderOutlined style={{ fontSize: "18px" }} />
+            <span className="text-sm font-semibold">Collections</span>
+          </div>
+          <div
+            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            onClick={() => { setIsHistoryOpen(true); setIsMobileSidebarOpen(false); }}
+          >
+            <HistoryOutlined style={{ fontSize: "18px" }} />
+            <span className="text-sm font-semibold">History</span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
   const productsResultsContent = (
     <>
       {showChatLoader && chatProductsDataToShow.length === 0 && isEmpty(suggestionsWithProducts.suggestions) && (
@@ -569,9 +695,12 @@ auraServerImage,
 
   return (
     <div
+      ref={containerRef}
       id="chat_products_inner_container"
       className={`${styles["chat-products-container"]} ${!shouldShowShopLookSplitLayout ? styles["chat-products-container-single"] : ""}`}
     >
+      {/* Mobile slide-in sidebar drawer */}
+      {isMobile && <MobileSideDrawer />}
       <div
         id="chat_products_content"
         className={styles["chat-products-content"]}
@@ -662,233 +791,235 @@ auraServerImage,
           <div className={`${styles["chat-products-shop-look-wrapper"]} flex flex-col lg:flex-row`}>
             <AuraSideNav />
             <div className={`${styles["chat-products-shop-look-layout"]} ${styles[`layout-${layoutMode}`]} ${isMobile ? styles["chat-products-mobile-layout"] : ""}`}>
-              {(!isMobile || mobileTab === "description") && (
-                <div className={styles["chat-products-shop-look-sidebar"]}>
+              <div
+                id="aura-description-section"
+                className={styles["chat-products-shop-look-sidebar"]}
+              >
+                {!isMobile && (
                   <div className={styles["chat-products-sidebar-header"]}>
                     <h2 className={styles["chatmodal-category-title"]}>
                       {activeSearchOption?.title?.toUpperCase()}
                     </h2>
                   </div>
-                  <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-2`}>
+                )}
+                <div className={`${styles["chat-products-sidebar-body"]} flex flex-col gap-2`}>
 
-                    <div>
-                      <div className={styles["chat-products-shop-look-sidebar-content"]}>
-                        {chatHistory.length >= 2 &&
-                              <div className="flex items-center gap-1 mb-3 ml-2  ">
-                              <HistoryOutlined />
-                               <p>{chatHistory[chatHistory.length-2]}</p>
-                              </div>
-                              }
-                        { storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && ( isImageLoading || !regenarateImage)  ? (
-                          <div className={styles["chat-products-shop-look-image-wrapper"]}>
-                            <div className={styles["chat-products-image-loading-box"]}>
-                              <span>Loading image...</span>
+                  <div>
+                    <div className={styles["chat-products-shop-look-sidebar-content"]}>
+                      {chatHistory.length >= 2 &&
+                            <div className="flex items-center gap-1 mb-3 ml-2  ">
+                            <HistoryOutlined />
+                             <p>{chatHistory[chatHistory.length-2]}</p>
                             </div>
+                            }
+                      { storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && ( isImageLoading || !regenarateImage)  ? (
+                        <div className={styles["chat-products-shop-look-image-wrapper"]}>
+                          <div className={styles["chat-products-image-loading-box"]}>
+                            <span>Loading image...</span>
                           </div>
-                        ) :  (
-                         <div
-                            className={`${styles["chat-products-shop-look-image-wrapper"]} `}
-                                    >
+                        </div>
+                      ) :  (
+                       <div
+                          className={`${styles["chat-products-shop-look-image-wrapper"]} `}
+                                  >
 <div
   className={`${styles["chat-products-shop-look-image-inner"]} ${ regenarateImage && !shopLookPreviewImage && !auraServerImage
       ? "hidden"
       : "block"
-  }`}
+}`}
 >                              <img
-                                src={shopLookPreviewImage || auraServerImage}
-                                alt="PreviewImage"
-                               className={`${styles["chat-products-shop-look-image"]}`}
-                              />
-                              {Array.isArray(auraOverlayCoordinates) &&
-                                auraOverlayCoordinates.map((item, index) => {
-                                  const leftPercent =
-                                    (item.point[0] / originalWidth) * 100;
-                                  const topPercent =
-                                    (item.point[1] / originalHeight) * 100;
-                                  return (
-                                    <Tooltip
-                                      key={index}
-                                      title={item.attributes.label}
-                                      color="blue"
-                                    >
-                                      <div
-                                        onClick={() =>
-                                          handleSuggestionClick(item.attributes.label)
-                                        }
-                                        className={styles["chat-products-overlay-point"]}
-                                        style={{
-                                          left: `${leftPercent}%`,
-                                          top: `${topPercent}%`,
-                                        }}
-                                      />
-                                    </Tooltip>
-                                  );
-                                })}
-                            </div>
-                              {isFollowUpQuery &&
-                                 isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
-                                   regenarateImage ? (
-                                                          <>
-                                                           
-                                                             
-                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                                                              
-                                                              title="Regenerate the Image."
-                                                              onClick={handleRegenrateImage}
-                                                            >
-                                                              <ReloadOutlined                                                                  
-                                                              />
-                                                              Regenerate Image
-                                                            </button>
-                                                          </>
-                                                        ) : null} 
-                          </div>
-                        )                    
-                      }
-                       {isFollowUpQuery &&
-                                 isShowFollowUpSearch && chatHistory.length >=2 && shopLookPreviewImage && auraServerImage &&
-                                   regenarateImage ? (
-                                                          <>
-                                                           
-                                                             
-                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                                                              
-                                                              title="Regenerate the Image."
-                                                              onClick={handleRegenrateImage}
-                                                            >
-                                                              <ReloadOutlined                                                                  
-                                                              />
-                                                              Regenerate Image
-                                                            </button>
-                                                          </>
-                                                        ) : null} 
-                        {(widgetHeader || shopLookKeywords.length > 0) ? (
-                          <div>
-                            {widgetHeader ? (
-                              <div
-                                className={
-                                  styles["chat-products-shop-look-description-block"]
-                                }
-                              >
-                                <div
-                                  className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
-                                  dangerouslySetInnerHTML={{ __html: widgetHeader }}
-                                />
-                                <div className="flex flex-col items-start gap-0">
-                                  {widgetHeader?.length > 80 && (
-                                    <button 
-                                      className={styles["chat-products-read-more-btn"]}
-                                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                                    >
-                                      {isDescriptionExpanded ? "Read Less" : "Read More..."}
-                                    </button>
-                                  )}
-                                  
-                                  {shopLookKeywords.length && layoutMode === 'left' ? (
+                              src={shopLookPreviewImage || auraServerImage}
+                              alt="PreviewImage"
+                             className={`${styles["chat-products-shop-look-image"]}`}
+                            />
+                            {Array.isArray(auraOverlayCoordinates) &&
+                              auraOverlayCoordinates.map((item, index) => {
+                                const leftPercent =
+                                  (item.point[0] / originalWidth) * 100;
+                                const topPercent =
+                                  (item.point[1] / originalHeight) * 100;
+                                return (
+                                  <Tooltip
+                                    key={index}
+                                    title={item.attributes.label}
+                                    color="blue"
+                                  >
                                     <div
-                                      className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
-                                    >
-                                      {shopLookKeywords.map((keyword) => (
-                                        <span
-                                          key={keyword}
-                                          className={
-                                            styles["chat-products-shop-look-keyword-chip"]
-                                          }
-                                        >
-                                          {keyword}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  ) : null} 
-                                  <div className="flex items-center gap-2"> 
-
-                                  {isShowTryAgain && (
-                                    <Tooltip title ='Regenerate the products with AI.'>
-
-                                    <div className="flex items-center cursor-pointer">
-                                      <button
-                                        className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
-                                        onClick={handleTryAgainClick}
-                                        disabled={showChatLoader}
-                                      >
-                                        <ReloadOutlined className="cursor-pointer" />
-                                      </button>
-                                      <p>
-                                       Redo
-                                      </p>                                     
-                                    </div>
-                                    </Tooltip>
-                                  )}                             
-                                  </div>
-
-                                </div>
-                              </div>
-                            ) : null}
-                              
-                            {shouldMoveInputBelowResults ? (
-                              <div className="mt-4 mb-2">
-                                <AuraInputBox
-                                  isShowTryAgain={isShowTryAgain}
-                                  showChatLoader={showChatLoader}
-                                  handleTryAgainClick={handleTryAgainClick}
-                                  handleGoBack={handleGoBack}
-                                  isShopByThemeOptionActive={isShopByThemeOptionActive}
-                                  isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
-                                  uploadImageProps={uploadImageProps}
-                                  chatImageUrl={chatImageUrl}
-                                  activeSearchOption={activeSearchOption}
-                                  chatTypeKey={chatTypeKey}
-                                  inputRef={inputRef}
-                                  localChatMessage={localChatMessage}
-                                  handleInputChange={handleInputChange}
-                                  handlePromptKeyDown={handlePromptKeyDown}
-                                  handlePromptUtilityClick={handlePromptUtilityClick}
-                                  page_info={page_info}
-                                  isShopALookOptionActive={isShopALookOptionActive}
-                                  handleSubmitChatInput={handleSubmitChatInput}
-                                  setIsHistoryOpen={setIsHistoryOpen}
-                                  followUpQuery={followUpQuery}
-                                  hideActions={shouldShowShopLookSplitLayout}
-                                  chatHistory={chatHistory}
-                                  isFollowUpQuery ={isFollowUpQuery}
-                                />
-                              </div>
-                            ) : null}
+                                      onClick={() =>
+                                        handleSuggestionClick(item.attributes.label)
+                                      }
+                                      className={styles["chat-products-overlay-point"]}
+                                      style={{
+                                        left: `${leftPercent}%`,
+                                        top: `${topPercent}%`,
+                                      }}
+                                    />
+                                  </Tooltip>
+                                );
+                              })}
                           </div>
-                        ) : null}
-                      </div>
-                    </div> 
-                  </div>
-                 
-                </div>
-              )}
+                            {isFollowUpQuery &&
+                               isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
+                                 regenarateImage ? (
+                                                        <>
+                                                         
+                                                           
+                                                          <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                            
+                                                            title="Regenerate the Image."
+                                                            onClick={handleRegenrateImage}
+                                                          >
+                                                            <ReloadOutlined                                                                  
+                                                            />
+                                                            Regenerate Image
+                                                          </button>
+                                                        </>
+                                                      ) : null} 
+                        </div>
+                      )                    
+                    }
+                     {isFollowUpQuery &&
+                               isShowFollowUpSearch && chatHistory.length >=2 && shopLookPreviewImage && auraServerImage &&
+                                 regenarateImage ? (
+                                                        <>
+                                                         
+                                                           
+                                                          <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                            
+                                                            title="Regenerate the Image."
+                                                            onClick={handleRegenrateImage}
+                                                          >
+                                                            <ReloadOutlined                                                                  
+                                                            />
+                                                            Regenerate Image
+                                                          </button>
+                                                        </>
+                                                      ) : null} 
+                      {(widgetHeader || shopLookKeywords.length > 0) ? (
+                        <div>
+                          {widgetHeader ? (
+                            <div
+                              className={
+                                styles["chat-products-shop-look-description-block"]
+                              }
+                            >
+                              <div
+                                className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
+                                dangerouslySetInnerHTML={{ __html: widgetHeader }}
+                              />
+                              <div className="flex flex-col items-start gap-0">
+                                {widgetHeader?.length > 80 && (
+                                  <button 
+                                    className={styles["chat-products-read-more-btn"]}
+                                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                                  >
+                                    {isDescriptionExpanded ? "Read Less" : "Read More..."}
+                                  </button>
+                                )}
+                                
+                                {shopLookKeywords.length && layoutMode === 'left' ? (
+                                  <div
+                                    className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
+                                  >
+                                    {shopLookKeywords.map((keyword) => (
+                                      <span
+                                        key={keyword}
+                                        className={
+                                          styles["chat-products-shop-look-keyword-chip"]
+                                        }
+                                      >
+                                        {keyword}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : null} 
+                                <div className="flex items-center gap-2"> 
 
-              {(!isMobile || mobileTab === "products") && (
-                <div className={styles["chat-products-shop-look-main"]}>
-                  <div className={`${styles["chat-products-main-navbar"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
-                    <h2 className={styles["chat-products-navbar-title"]}>
-                      Products
-                    </h2>
-                    <div className={styles["chat-products-navbar-controls"]}>
-                      {isProductSearchOptionActive && onOpenSearchPopup && (
-                        <SearchOutlined
-                          className={styles["chat-products-search-icon"]}
-                          onClick={onOpenSearchPopup}
-                          title="Open Search"
-                        />
-                      )}
-                      {closeChatModal && (
-                        <CloseOutlined
-                          onClick={closeChatModal}
-                          className={styles["chat-products-close-icon"]}
-                          title="Close"
-                        />
-                      )}
+                                {isShowTryAgain && (
+                                  <Tooltip title ='Regenerate the products with AI.'>
+
+                                  <div className="flex items-center cursor-pointer">
+                                    <button
+                                      className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
+                                      onClick={handleTryAgainClick}
+                                      disabled={showChatLoader}
+                                    >
+                                      <ReloadOutlined className="cursor-pointer" />
+                                    </button>
+                                    <p>
+                                     Redo
+                                    </p>                                     
+                                  </div>
+                                  </Tooltip>
+                                )}                             
+                                </div>
+
+                              </div>
+                            </div>
+                          ) : null}
+                            
+                          {shouldMoveInputBelowResults ? (
+                            <div className="mt-4 mb-2">
+                              <AuraInputBox
+                                isShowTryAgain={isShowTryAgain}
+                                showChatLoader={showChatLoader}
+                                handleTryAgainClick={handleTryAgainClick}
+                                handleGoBack={handleGoBack}
+                                isShopByThemeOptionActive={isShopByThemeOptionActive}
+                                isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
+                                uploadImageProps={uploadImageProps}
+                                chatImageUrl={chatImageUrl}
+                                activeSearchOption={activeSearchOption}
+                                chatTypeKey={chatTypeKey}
+                                inputRef={inputRef}
+                                localChatMessage={localChatMessage}
+                                handleInputChange={handleInputChange}
+                                handlePromptKeyDown={handlePromptKeyDown}
+                                handlePromptUtilityClick={handlePromptUtilityClick}
+                                page_info={page_info}
+                                isShopALookOptionActive={isShopALookOptionActive}
+                                handleSubmitChatInput={handleSubmitChatInput}
+                                setIsHistoryOpen={setIsHistoryOpen}
+                                followUpQuery={followUpQuery}
+                                hideActions={!isMobile && shouldShowShopLookSplitLayout}
+                                chatHistory={chatHistory}
+                                isFollowUpQuery ={isFollowUpQuery}
+                                isMobile={isMobile}
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </div>
-                  </div>
-                  {productsResultsContent}
+                  </div> 
                 </div>
-              )}
+               
+              </div>
+
+              <div className={styles["chat-products-shop-look-main"]}>
+                <div className={`${styles["chat-products-main-navbar"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
+                  <h2 className={styles["chat-products-navbar-title"]}>
+                    Products
+                  </h2>
+                  <div className={styles["chat-products-navbar-controls"]}>
+                    {isProductSearchOptionActive && onOpenSearchPopup && (
+                      <SearchOutlined
+                        className={styles["chat-products-search-icon"]}
+                        onClick={onOpenSearchPopup}
+                        title="Open Search"
+                      />
+                    )}
+                    {closeChatModal && (
+                      <CloseOutlined
+                        onClick={closeChatModal}
+                        className={styles["chat-products-close-icon"]}
+                        title="Close"
+                      />
+                    )}
+                  </div>
+                </div>
+                {productsResultsContent}
+              </div>
             </div>
           </div>
         ) : (
@@ -937,6 +1068,18 @@ auraServerImage,
             </div>
           </div>
         </div>
+      )}
+
+      {isMobile && (
+        <button
+          className={`${styles["chat-products-scroll-top-btn"]} ${showScrollBtn ? styles["chat-products-scroll-top-btn-visible"] : ""}`}
+          onClick={handleScrollToDescription}
+          title="Go to Description"
+          type="button"
+        >
+          <ArrowUpOutlined style={{ marginRight: '6px' }} />
+          <span>Go to Description</span>
+        </button>
       )}
     </div>
   );

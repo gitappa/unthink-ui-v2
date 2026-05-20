@@ -33,6 +33,7 @@ const AuraInputBox = ({
   chatHistory,
   hideActions = false,
   isFollowUpQuery,
+  isMobile = false,
 
 }) => {
      
@@ -81,42 +82,58 @@ const AuraInputBox = ({
       {!hideActions && (
         <div className={styles["chat-products-above-input-actions"]}>
           <div className={styles["chat-products-icon-buttons-group"]}>
-            {isShowTryAgain && (
-              // <Tooltip title="Redo">
-              <div>
-
-                <button
-                  type="button"
-                  className={styles["chat-products-icon-action-btn"]}
-                  onClick={handleTryAgainClick}
-                  disabled={showChatLoader}
-                >
-                  <ReloadOutlined />
-                </button>
-            
-              <p>Redo</p>
-              </div>
+            {isMobile ? (
+              isShowTryAgain && (
+                <div className="flex items-center gap-1.5 cursor-pointer animate-in fade-in duration-200" onClick={handleTryAgainClick}>
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    disabled={showChatLoader}
+                    title="Redo"
+                  >
+                    <ReloadOutlined style={{ fontSize: "15px", color: "#1a1a1a" }} />
+                  </button>
+                  <span className="text-sm font-semibold text-[#1a1a1a]">Redo</span>
+                </div>
+              )
+            ) : (
+              <>
+                {isShowTryAgain && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      className={styles["chat-products-icon-action-btn"]}
+                      onClick={handleTryAgainClick}
+                      disabled={showChatLoader}
+                      title="Redo"
+                    >
+                      <ReloadOutlined />
+                    </button>
+                    <span className="text-xs font-semibold text-[#555d74] cursor-pointer" onClick={handleTryAgainClick}>Redo</span>
+                  </div>
+                )}
+                <Tooltip title="New chat">
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    onClick={handleGoBack}
+                    disabled={showChatLoader}
+                  >
+                    <FormOutlined />
+                  </button>
+                </Tooltip>
+                <Tooltip title="Past chats">
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    onClick={() => setIsHistoryOpen(true)}
+                    disabled={showChatLoader}
+                  >
+                    <HistoryOutlined />
+                  </button>
+                </Tooltip>
+              </>
             )}
-            <Tooltip title="New chat">
-              <button
-                type="button"
-                className={styles["chat-products-icon-action-btn"]}
-                onClick={handleGoBack}
-                disabled={showChatLoader}
-              >
-                <FormOutlined />
-              </button>
-            </Tooltip>
-            <Tooltip title="Past chats">
-              <button
-                type="button"
-                className={styles["chat-products-icon-action-btn"]}
-                onClick={() => setIsHistoryOpen(true)}
-                disabled={showChatLoader}
-              >
-                <HistoryOutlined />
-              </button>
-            </Tooltip>
           </div>
           {showChatLoader && (
             <div className={styles["chat-products-inline-loader"]}>

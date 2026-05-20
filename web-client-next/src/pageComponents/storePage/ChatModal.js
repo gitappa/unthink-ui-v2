@@ -23,6 +23,7 @@ import {
   PictureOutlined,
   CaretDownFilled,
   SearchOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "../../helper/useNavigate";
 
@@ -180,6 +181,7 @@ const ChatModal = ({
 
   const modalRef = useRef(null);
   const figmaUploadPanelRef = useRef(null);
+  const openMobileSidebarRef = useRef(null);
 
   const { sendMessage } = useChat();
 
@@ -207,6 +209,22 @@ const ChatModal = ({
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
     sessionStorage.removeItem('widgetHeaderRequestHistory')
+  };
+
+  const handleHomeClick = () => {
+    closeChatModal();
+    navigate("/");
+  };
+
+  const handleBackToSelectedOption = () => {
+    setIsSearchOptionManuallySelected(true);
+    setIsSearchOptionsVisible(false);
+    dispatch(resetAuraSearchResponse());
+    dispatch(setChatImageUrl("", chatTypeKey));
+    setLocalChatMessage("");
+    setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    setIsFollowUpQuery(false);
+    sessionStorage.removeItem('widgetHeaderRequestHistory');
   };
 
   const {
@@ -243,7 +261,7 @@ const ChatModal = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -902,13 +920,35 @@ const { sendSocketClientMessage } = useContext(SocketContext);
                 <div className={styles["chatmodal-mobile-navbar-sticky"]}>
                   <div className={styles["chatmodal-mobile-navbar-top"]}>
                     <div className={styles["chatmodal-mobile-navbar-left"]}>
-                      <ArrowLeftOutlined 
-                        className={styles["chatmodal-mobile-back-icon"]} 
-                        onClick={handleGoBack} 
-                      />
-                      <span className={styles["chatmodal-mobile-navbar-heading"]}>
-                        {activeSearchOption?.title?.toUpperCase()}
-                      </span>
+                      {/* Hamburger button - opens mobile side drawer */}
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-8 h-8 cursor-pointer bg-transparent border-none p-0 shrink-0"
+                        onClick={() => openMobileSidebarRef.current && openMobileSidebarRef.current()}
+                        title="Menu"
+                        aria-label="Open sidebar menu"
+                      >
+                        <MenuOutlined className="text-[#111827] text-[18px]" />
+                      </button>
+                      <div className="flex items-center gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
+                        <span 
+                          onClick={handleHomeClick}
+                          className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                        >
+                          Home
+                        </span>
+                        <span className="text-gray-300">/</span>
+                        <span 
+                          onClick={handleBackToSelectedOption}
+                          className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                        >
+                          Aura Search
+                        </span>
+                        <span className="text-gray-300">/</span>
+                        <span className="text-[#1a1a1a] font-semibold truncate max-w-[110px] md:max-w-none">
+                          {activeSearchOption?.title}
+                        </span>
+                      </div>
                     </div>
                     <CloseOutlined
                       onClick={closeChatModal}
@@ -916,20 +956,6 @@ const { sendSocketClientMessage } = useContext(SocketContext);
                     />
                   </div>
 
-                  <div className={styles["chatmodal-mobile-tabs"]}>
-                    <button
-                      className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "description" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
-                      onClick={() => setMobileTab("description")}
-                    >
-                      Image Description
-                    </button>
-                    <button
-                      className={`${styles["chatmodal-mobile-tab-btn"]} ${mobileTab === "products" ? styles["chatmodal-mobile-tab-btn-active"] : ""}`}
-                      onClick={() => setMobileTab("products")}
-                    >
-                      Products
-                    </button>
-                  </div>
                 </div>
               )}
 
@@ -1005,18 +1031,45 @@ const { sendSocketClientMessage } = useContext(SocketContext);
                 >
                   <div className={styles["chatmodal-options-collapsible"]}>
                     {isSearchOptionManuallySelected && !isSearchOptionsVisible && (
-                      <div className={styles["chatmodal-options-toggle-btn-container"]}>
-                        <div
-                          className={styles["chatmodal-options-toggle-btn"]  }
-                          onClick={() => setIsSearchOptionsVisible(!isSearchOptionsVisible)}
-                          title={isSearchOptionsVisible ? "Collapse search options" : "Expand search options"}
-                        >
-                          <CaretDownFilled
-                            className={`${styles["chatmodal-toggle-icon"]} ${!isSearchOptionsVisible ? "" : styles["chatmodal-toggle-icon-up"]
-                              }`}
-                          />
+                      <>
+                        <div className={`${styles["chatmodal-options-toggle-btn-container"]} ${styles["chatmodal-toggle-desktop-only"]}`}>
+                          <div
+                            className={styles["chatmodal-options-toggle-btn"]  }
+                            onClick={() => setIsSearchOptionsVisible(!isSearchOptionsVisible)}
+                            title={isSearchOptionsVisible ? "Collapse search options" : "Expand search options"}
+                          >
+                            <CaretDownFilled
+                              className={`${styles["chatmodal-toggle-icon"]} ${!isSearchOptionsVisible ? "" : styles["chatmodal-toggle-icon-up"]
+                                }`}
+                            />
+                          </div>
                         </div>
-                      </div>
+                        <div className={`${styles["chatmodal-mini-tabs"]} ${styles["chatmodal-toggle-mobile-only"]} w-full gap-2 overflow-x-auto justify-center py-2 px-1 mb-2`}>
+                          {displaySearchOptions?.map((searchOptions, index) => {
+                            const isOptionActive = searchOptions?.id === activeSearchOption?.id;
+                            const previewImage = searchOptionPreviewImages[searchOptions.id] || [auraCardOne, auraCardThree, auraCardThree][index % 3];
+                            return (
+                              <div
+                                key={`mini-${searchOptions.id}`}
+                                className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-[#f8f7ff]' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
+                                style={{ height: '80px' }}
+                                onClick={() => handleSetSearchOption(searchOptions)}
+                              >
+                                <div className="w-8 h-8 rounded bg-[#e8e4ff] flex items-center justify-center mb-1.5">
+                                  <img
+                                    src={getImageSrc(previewImage)}
+                                    className="w-5 h-5 object-contain"
+                                    alt={searchOptions.title}
+                                  />
+                                </div>
+                                <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-[#7268ec]' : 'text-[#4c5672]'}`}>
+                                  {searchOptions.title}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
                     )}
                     <div
                       className={`${styles["chatmodal-options-grid-container"]} ${!isSearchOptionsVisible ? styles["chatmodal-options-grid-hidden"] : ""
@@ -1033,12 +1086,12 @@ const { sendSocketClientMessage } = useContext(SocketContext);
                             className={`grid ${displaySearchOptions?.length === 1
                               ? "grid-cols-1"
                               : displaySearchOptions?.length === 2
-                                ? "sm:grid-cols-2 grid-cols-1"
+                                ? "lg:grid-cols-2 grid-cols-1"
                                 : displaySearchOptions?.length === 3
-                                  ? " md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+                                  ? "lg:grid-cols-3 grid-cols-1"
                                   : displaySearchOptions?.length === 4
-                                    ? "lg:grid-cols-4 sm:grid-cols-2 grid-cols-1"
-                                    : "lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+                                    ? "lg:grid-cols-4 grid-cols-1"
+                                    : "lg:grid-cols-5 grid-cols-1"
                               }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity `}
                           >
                             {displaySearchOptions?.map((searchOptions, index) => {
@@ -1706,6 +1759,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
               regenarateImage={regenarateImage}
               handleChangeImageConfirm={handleChangeImageConfirm}
               auraServerImage={auraServerImage}
+              onOpenMobileSidebar={openMobileSidebarRef}
             />
           </>
         ) : isShowKioskSearchOptions ? (
