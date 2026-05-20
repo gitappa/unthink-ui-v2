@@ -736,9 +736,9 @@ auraServerImage,
                                                           <>
                                                            
                                                              
-                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                            <button className="chatmodal-figma-change-btn  "
                                                               
-                                                              title="Regenerate the Image."
+                                                              
                                                               onClick={handleRegenrateImage}
                                                             >
                                                               <ReloadOutlined                                                                  
@@ -755,9 +755,9 @@ auraServerImage,
                                    regenarateImage ? (
                                                           <>                                                        
                                                              
-                                                            <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                                            <button className="chatmodal-figma-change-btn"
                                                               
-                                                              title="Regenerate the Image."
+                                                             
                                                               onClick={handleRegenrateImage}
                                                             >
                                                               <ReloadOutlined                                                                  

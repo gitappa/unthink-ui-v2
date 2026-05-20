@@ -44,6 +44,7 @@ import {
 	SET_MORESEARCH_SELECTED_TAG,
 	SET_AURA_SERVER_IMAGE,
 	SET_OVERLAY_COORDINATES,
+	SET_WIDGET_CHATHISTORY,
 } from "./constants";
 
 const getDefaultSuggestions = () => ({
@@ -619,7 +620,9 @@ const chatReducerV2 = (state = initialState, action) => {
 		case SET_WIDGET_HEADER:
 			newState.widgetHeader = payload ?? "";
 			newState.widgetHeaderRequest = action.widgetHeaderRequest ?? {};
-			newState.chatHistory = action.chatHistory ?? [];
+			return newState;
+		case SET_WIDGET_CHATHISTORY:
+			newState.chatHistory =  payload ?? "";
 			return newState;
 		case SET_WIDGET_IMAGE:
 			newState.widgetImage = payload ?? "";

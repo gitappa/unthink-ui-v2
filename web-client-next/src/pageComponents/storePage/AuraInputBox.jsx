@@ -193,7 +193,7 @@ const AuraInputBox = ({
               <Upload {...uploadImageProps} showUploadList={false}>
                 <button
                   type="button"
-                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? "bg-[#7268ec] text-white" : ""}`}
+                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? " text-black" : ""}`}
                   title="Upload image"
                 >
                   <PlusOutlined />
