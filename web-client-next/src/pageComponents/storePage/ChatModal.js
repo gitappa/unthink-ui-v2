@@ -587,7 +587,7 @@ const ChatModal = ({
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
-    	try {
+    	
 					const HISTORY_KEY = "widgetHeaderRequestHistory";
 					if (localChatMessage) {
 						const raw = sessionStorage.getItem(HISTORY_KEY);
@@ -613,10 +613,7 @@ const ChatModal = ({
 							sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 						}
 					}
-				} catch (e) {
-					// ignore sessionStorage errors (e.g. disabled storage or quota)
-					console.warn("Failed to persist widget header request history in sessionStorage", e);
-				}
+				
        dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
