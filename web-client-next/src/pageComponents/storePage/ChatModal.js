@@ -181,6 +181,7 @@ const ChatModal = ({
   const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMobileOnly, setIsMobileOnly] = useState(false);
   const [mobileTab, setMobileTab] = useState("description"); // "description" or "products"
   const [selectActions, setSelectActions] = useState(null);
 
@@ -269,6 +270,7 @@ const ChatModal = ({
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1024);
+      setIsMobileOnly(window.innerWidth < 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -960,7 +962,7 @@ const ChatModal = ({
               )}
 
               {/* Mobile Sticky Navbar */}
-              {isMobile && isActiveSearchOptionAvailable && isShowAuraResponse && (
+              {isMobile && isActiveSearchOptionAvailable && shouldHighlightActiveSearchOption && (
                 <div className={styles["chatmodal-mobile-navbar-sticky"]}>
                   <div className={styles["chatmodal-mobile-navbar-top"]}>
                     {selectActions && selectActions.enableSelectProduct ? (
@@ -1031,25 +1033,31 @@ const ChatModal = ({
                           >
                             <MenuOutlined className="text-[#111827] text-[18px]" />
                           </button>
-                          <div className="flex items-center gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
-                            <span
-                              onClick={handleHomeClick}
-                              className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
-                            >
-                              Home
-                            </span>
-                            <span className="text-gray-300">/</span>
-                            <span
-                              onClick={handleBackToSelectedOption}
-                              className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
-                            >
-                              Aura Search
-                            </span>
-                            <span className="text-gray-300">/</span>
-                            <span className="text-[#1a1a1a] font-semibold truncate max-w-[110px] md:max-w-none">
+                          {isMobileOnly ? (
+                            <span className="text-base font-semibold text-[#111827] select-none ml-3 truncate max-w-[180px] md:max-w-none">
                               {activeSearchOption?.title}
                             </span>
-                          </div>
+                          ) : (
+                            <div className="flex items-center gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
+                              <span
+                                onClick={handleHomeClick}
+                                className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                              >
+                                Home
+                              </span>
+                              <span className="text-gray-300">/</span>
+                              <span
+                                onClick={handleBackToSelectedOption}
+                                className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                              >
+                                Aura Search
+                              </span>
+                              <span className="text-gray-300">/</span>
+                              <span className="text-[#1a1a1a] font-semibold truncate max-w-[110px] md:max-w-none">
+                                {activeSearchOption?.title}
+                              </span>
+                            </div>
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           {selectActions && selectActions.chatProductsDataToShow && selectActions.chatProductsDataToShow.length > 0 && (
@@ -1088,7 +1096,7 @@ const ChatModal = ({
               )}
 
               {/* Standalone Mobile Close Icon when navbar is hidden */}
-              {isMobile && (!isActiveSearchOptionAvailable || !isShowAuraResponse) && (
+              {isMobile && (!isActiveSearchOptionAvailable || !shouldHighlightActiveSearchOption) && (
                 <div className={styles["chatmodal-mobile-standalone-close"]}>
                   <CloseOutlined
                     onClick={closeChatModal}
