@@ -808,7 +808,6 @@ auraServerImage,
 
                                   {isShowTryAgain && (
                                     <Tooltip title ='Regenerate the products with AI.'>
-
                                     <div className="flex items-center cursor-pointer">
                                       <button
                                         className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
@@ -830,7 +829,7 @@ auraServerImage,
                             ) : null}
                               
                             {shouldMoveInputBelowResults ? (
-                              <div className="mt-4 mb-2">
+                              <div className="">
                                 <AuraInputBox
                                   isShowTryAgain={isShowTryAgain}
                                   showChatLoader={showChatLoader}
