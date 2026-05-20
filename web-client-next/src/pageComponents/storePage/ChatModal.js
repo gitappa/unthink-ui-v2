@@ -176,7 +176,8 @@ const ChatModal = ({
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileTab, setMobileTab] = useState("description"); // "description" or "products"
-
+  console.log('isSearchOptionManuallySelected',isSearchOptionManuallySelected);
+  
   const dispatch = useDispatch();
 
   const modalRef = useRef(null);
@@ -828,6 +829,9 @@ dispatch(setAuraSreverImage(''));
     dispatch(setChatProducts([]));
     dispatch(setChatProductsData([]));
     dispatch(setChatShopALook([]));
+    setIsSearchOptionManuallySelected(true)
+    sessionStorage.removeItem('widgetHeaderRequestHistory')
+    sessionStorage.removeItem("widgetHeader");
   };
 
   return (
