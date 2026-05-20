@@ -37,6 +37,9 @@ body::-webkit-scrollbar-thumb:hover {
     align-items: center;
     justify-content: center;
 }
+button {
+  cursor: pointer;
+}
 
 /* Abstract Background Pattern mimic */
 /* body::before {

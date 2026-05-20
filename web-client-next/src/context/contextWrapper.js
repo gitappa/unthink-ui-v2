@@ -297,8 +297,7 @@ const ContextWrapper = ({ children }) => {
 				dispatch(
 					setWidgetHeader(
 						data.current_data_widgetHeader || sessionStorage.getItem("widgetHeader") || "",
-						data.request || {},JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory')) || ''
-					)
+						data.request || {})
 				);
 				dispatch(setWidgetImage(data.image_url || ""));
 				if (data.current_data_widgetHeader) {
