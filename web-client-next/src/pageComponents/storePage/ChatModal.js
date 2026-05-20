@@ -56,6 +56,7 @@ import {
   setSuggestionsSelectedTag,
   setOverlayCoordinates,
   setAuraSreverImage,
+  chatHistoryAction,
 } from "../../hooks/chat/redux/actions";
 import { isEmpty, getRandomArrayElements, getCurrentTheme } from "../../helper/utils";
 import { profileAPIs } from "../../helper/serverAPIs";
@@ -597,11 +598,44 @@ const ChatModal = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleSubmitChatInput = () => {
+
+     setIsImageLoading(true);
     const metadata = { ...chatInputMetadata };
     setIsFollowUpQuery(true)
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
+    	try {
+					const HISTORY_KEY = "widgetHeaderRequestHistory";
+					if (localChatMessage) {
+						const raw = sessionStorage.getItem(HISTORY_KEY);
+						// console.log('raw',raw);
+						
+						let history = [];
+						if (raw) {
+							try {
+								history = JSON.parse(raw) || [];
+							} catch (err) {
+								history = [];
+							}
+						}
+
+						const entry = localChatMessage ;
+						const last = history[history.length - 1];
+						const isSameAsLast =
+							last && JSON.stringify(last) === JSON.stringify(entry);
+						if (!isSameAsLast) {
+							history.push(entry);
+							// keep history bounded to 20 entries
+							if (history.length > 20) history.shift();
+							sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+						}
+					}
+				} catch (e) {
+					// ignore sessionStorage errors (e.g. disabled storage or quota)
+					console.warn("Failed to persist widget header request history in sessionStorage", e);
+				}
+       dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
       setSubmittedPromptPreview({
@@ -642,6 +676,7 @@ const ChatModal = ({
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
       setLocalChatMessage('')
+      //  setIsImageLoading(false);
     }
 
     if (isFollowUpQuery && isShowFollowUpSearch) {
@@ -721,6 +756,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
   const handleRegenrateImage = () => {
     // flip regenerate flag off and enable image loading UI
     setRegenarateImage(false);
+dispatch(setAuraSreverImage(''));
     setIsImageLoading(true);
     // const chatTypeKey = CHAT_TYPE_CHAT;
     // dispatch(setShowChatLoader(true,chatTypeKey));
@@ -741,7 +777,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
       generate_overlay_enable: true,
     };
     sendSocketClientMessage({
-      message: chatHistory[chatHistory.length-1],
+      message:localChatMessage || chatHistory[chatHistory.length-1],
       chatImageUrl,
       metadata,
       userMetadata : null,
@@ -761,7 +797,7 @@ const { sendSocketClientMessage } = useContext(SocketContext);
     // When server or widget image arrives, stop image loading and reset regenerate flag
     if (auraServerImage || widgetImage) {
       const imageToUse = auraServerImage || widgetImage;
-      dispatch(setChatImageUrl(imageToUse));
+      // dispatch(setChatImageUrl(imageToUse));
       setIsImageLoading(false);
       setRegenarateImage(true);
     } else {

@@ -151,21 +151,7 @@ const AuraInputBox = ({
         }`}
       >
         <div className={styles["chat-products-bottom-input-row-wrapper"]}>
-          {activeSearchOption?.allow_image_search && (
-            <div
-              className={styles["chat-products-bottom-plus-upload-container"]}
-            >
-              <Upload {...uploadImageProps} showUploadList={false}>
-                <button
-                  type="button"
-                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? "bg-[#7268ec] text-white" : ""}`}
-                  title="Upload image"
-                >
-                  <PlusOutlined />
-                </button>
-              </Upload>
-            </div>
-          )}
+    
           <textarea
             id={`chat_search_input_bottom_${chatTypeKey}`}
             ref={inputRef}
@@ -179,34 +165,84 @@ const AuraInputBox = ({
             value={localChatMessage}
             onChange={handleInputChange}
             onKeyDown={handlePromptKeyDown}
-            className={`${styles["chat-products-bottom-input"]} ${activeSearchOption?.allow_image_search ? "" : " pl-1 "}  ${
+            className={`${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6  pt-1 pb-1 ${activeSearchOption?.allow_image_search ? "" : "  "}  ${
               isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                ? styles["chat-products-bottom-input-shop-theme"]
+                ? styles["chat-products-bottom-input-shop-theme"] 
                 : ""
             }`}
-            style={{ paddingRight: "105px", resize: "none", overflow: "hidden" }}
+            style={{   resize: "none", overflow: "hidden" }}
           />
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pr-2">
-            {/* {localChatMessage && (
-              <CloseCircleFilled
-                className="text-gray-400 hover:text-[#7268ec] cursor-pointer text-sm mx-1 transition-colors z-10"
-                onClick={() => handleInputChange({ target: { value: "" } })}
-              />
-            )} */}
-            {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
+          { !( isCompleteTheLookOptionActive || activeSearchOption?.allow_image_search) && 
+              <button
+              type="button"
+              className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5  ${styles["chat-products-bottom-submit"]} shrink-0 ${
+                isShopByThemeOptionActive || isCompleteTheLookOptionActive
+                  ? styles["chat-products-bottom-submit-shop-theme"]
+                  : ""
+              } ${
+                (
+                  isShopALookOptionActive
+                    ? !chatImageUrl
+                    : !localChatMessage && !chatImageUrl
+                )
+                  ? styles["chat-products-bottom-submit-disabled"]
+                  : ""
+              }`}
+              onClick={handleSubmitChatInput}
+              disabled={
+                showChatLoader ||
+                (isShopALookOptionActive
+                  ? !chatImageUrl
+                  : !localChatMessage && !chatImageUrl)
+              }
+            >
+              <ArrowUpOutlined />
+            </button>
+          }
+          {( activeSearchOption?.allow_image_search || isCompleteTheLookOptionActive ) &&
+          <div className="flex justify-between items-center border-t border-gray-500 pt-1.5">
+              <div className="flex gap-3 items-center">
+
+                {activeSearchOption?.allow_image_search && (
+            <div
+              className={styles["chat-products-bottom-plus-upload-container"]}
+            >
+              <Upload {...uploadImageProps} showUploadList={false}>
+                <button
+                  type="button"
+                  className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? " text-black" : ""}`}
+                  title="Upload image"
+                >
+                  <PlusOutlined />
+                </button>
+              </Upload>
+            </div>
+            
+          )}
+              {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
               <button
                 type="button"
-                className="bg-transparent border-none p-1 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                className="bg-transparent border-none p-1 flex items-center justify-center cursor-pointer hover:opacity-80"
                 title="Open assistant settings"
                 onClick={handlePromptUtilityClick}
               >
                 <img
                   src={page_info?.src || page_info}
                   alt="Assistant settings"
-                  className="w-5 h-5 object-contain"
+                  className=" object-contain h-8 w-8 "
                 />
               </button>
             )}
+              </div>
+
+          <div className="    flex items-center gap-1.5 pr-2">
+            {/* {localChatMessage && (
+              <CloseCircleFilled
+                className="text-gray-400 hover:text-[#7268ec] cursor-pointer text-sm mx-1 transition-colors z-10"
+                onClick={() => handleInputChange({ target: { value: "" } })}
+              />
+            )} */}
+        
             <button
               type="button"
               className={`${styles["chat-products-bottom-submit"]} shrink-0 ${
@@ -233,6 +269,9 @@ const AuraInputBox = ({
               <ArrowUpOutlined />
             </button>
           </div>
+          </div>
+}
+
         </div>
       </div>
     </div>

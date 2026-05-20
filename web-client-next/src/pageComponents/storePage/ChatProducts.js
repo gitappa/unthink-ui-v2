@@ -323,6 +323,8 @@ onOpenMobileSidebar,
     () => widgetImage || chatImageUrl || products?.image_url || "",
     [widgetImage, chatImageUrl, products?.image_url],
   );
+  // console.log(shopLookPreviewImage);
+  
 
   const shopLookKeywords = useMemo(
     () => (suggestionsWithProducts?.suggestions?.tags || []).slice(0, 6),
@@ -690,7 +692,10 @@ onOpenMobileSidebar,
       ) : null}
     </>
   );
-  // console.log(storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && showChatLoader ? 'loadiung' : 'not load '   );
+  // useEffect(()=>{
+     
+  // },[auraServerImage])
+  // console.log(storeData?.plan_settings?.image_generate?.is_enable && (auraServerImage === '' || auraServerImage === null)  && isImageLoading && !regenarateImage   );
   // debugger  
 
   return (
@@ -806,31 +811,34 @@ onOpenMobileSidebar,
 
                   <div>
                     <div className={styles["chat-products-shop-look-sidebar-content"]}>
-                      {chatHistory.length >= 2 &&
-                            <div className="flex items-center gap-1 mb-3 ml-2  ">
-                            <HistoryOutlined />
-                             <p>{chatHistory[chatHistory.length-2]}</p>
-                            </div>
-                            }
-                      { storeData?.plan_settings?.image_generate?.is_enable && !auraServerImage && !shopLookPreviewImage && ( isImageLoading || !regenarateImage)  ? (
+                      {chatHistory.length >= 2 && (
+                        <div className="flex items-center gap-1 mb-3 ml-2  ">
+                          <HistoryOutlined />
+                          <p>{chatHistory[chatHistory.length - 2]}</p>
+                        </div>
+                      )}
+                      {storeData?.plan_settings?.image_generate?.is_enable &&
+                      !auraServerImage &&
+                      !shopLookPreviewImage &&
+                      (isImageLoading || !regenarateImage) ? (
                         <div className={styles["chat-products-shop-look-image-wrapper"]}>
                           <div className={styles["chat-products-image-loading-box"]}>
                             <span>Loading image...</span>
                           </div>
                         </div>
-                      ) :  (
-                       <div
-                          className={`${styles["chat-products-shop-look-image-wrapper"]} `}
-                                  >
-<div
-  className={`${styles["chat-products-shop-look-image-inner"]} ${ regenarateImage && !shopLookPreviewImage && !auraServerImage
-      ? "hidden"
-      : "block"
-}`}
->                              <img
+                      ) : (
+                        <div className={`${styles["chat-products-shop-look-image-wrapper"]} `}>
+                          <div
+                            className={`${styles["chat-products-shop-look-image-inner"]} ${
+                              regenarateImage && !shopLookPreviewImage && !auraServerImage
+                                ? "hidden"
+                                : "block"
+                            }`}
+                          >
+                            <img
                               src={shopLookPreviewImage || auraServerImage}
                               alt="PreviewImage"
-                             className={`${styles["chat-products-shop-look-image"]}`}
+                              className={`${styles["chat-products-shop-look-image"]}`}
                             />
                             {Array.isArray(auraOverlayCoordinates) &&
                               auraOverlayCoordinates.map((item, index) => {
@@ -858,43 +866,40 @@ onOpenMobileSidebar,
                                 );
                               })}
                           </div>
-                            {isFollowUpQuery &&
-                               isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
-                                 regenarateImage ? (
-                                                        <>
-                                                         
-                                                           
-                                                          <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                                                            
-                                                            title="Regenerate the Image."
-                                                            onClick={handleRegenrateImage}
-                                                          >
-                                                            <ReloadOutlined                                                                  
-                                                            />
-                                                            Regenerate Image
-                                                          </button>
-                                                        </>
-                                                      ) : null} 
+                          {isFollowUpQuery &&
+                          isShowFollowUpSearch &&
+                          !shopLookPreviewImage &&
+                          !auraServerImage &&
+                          regenarateImage ? (
+                            <>
+                              <button
+                                className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                                title="Regenerate the Image."
+                                onClick={handleRegenrateImage}
+                              >
+                                <ReloadOutlined />
+                                Regenerate Image
+                              </button>
+                            </>
+                          ) : null}
                         </div>
-                      )                    
-                    }
-                     {isFollowUpQuery &&
-                               isShowFollowUpSearch && chatHistory.length >=2 && shopLookPreviewImage && auraServerImage &&
-                                 regenarateImage ? (
-                                                        <>
-                                                         
-                                                           
-                                                          <button className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                                                            
-                                                            title="Regenerate the Image."
-                                                            onClick={handleRegenrateImage}
-                                                          >
-                                                            <ReloadOutlined                                                                  
-                                                            />
-                                                            Regenerate Image
-                                                          </button>
-                                                        </>
-                                                      ) : null} 
+                      )}
+                      {isFollowUpQuery &&
+                      isShowFollowUpSearch &&
+                      chatHistory.length >= 2 &&
+                      (shopLookPreviewImage || auraServerImage) &&
+                      regenarateImage ? (
+                        <>
+                          <button
+                            className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
+                            title="Regenerate the Image."
+                            onClick={handleRegenrateImage}
+                          >
+                            <ReloadOutlined />
+                            Regenerate Image
+                          </button>
+                        </>
+                      ) : null}
                       {(widgetHeader || shopLookKeywords.length > 0) ? (
                         <div>
                           {widgetHeader ? (

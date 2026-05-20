@@ -1449,28 +1449,7 @@
   width: 100%;
 }
 
-.chatmodal-figma-change-btn {
-  padding: 7px 14px;
-  border: 1.5px solid #d4d0eb;
-  background: transparent;
-  border-radius: 0.8rem;
-  color: #595f6f;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 10px;
-}
 
-.chatmodal-figma-change-btn:hover {
-  border-color: #b9b3db;
-  background: #fdfcff;
-  color: #3f4a66;
-}
-
-.chatmodal-figma-change-btn:active {
-  background: #f5f0ff;
-}
 
 .chatmodal-figma-upload-dragger-icon {
   color: #9b94d4;
