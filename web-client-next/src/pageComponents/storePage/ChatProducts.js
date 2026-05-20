@@ -22,6 +22,7 @@ import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALoo
 import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 import styles from "./ChatProducts.module.css";
 import AuraInputBox from "./AuraInputBox";
+import { FiRefreshCw } from 'react-icons/fi';
 
 const ChatProducts = ({
   enableClickFetchRec,
@@ -804,24 +805,29 @@ auraServerImage,
                                       ))}
                                     </div>
                                   ) : null} 
-                                  <div className="flex items-center gap-2"> 
+                                  <div className=" w-full"> 
 
-                                  {isShowTryAgain && (
-                                    <Tooltip title ='Regenerate the products with AI.'>
-                                    <div className="flex items-center cursor-pointer">
-                                      <button
-                                        className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
-                                        onClick={handleTryAgainClick}
-                                        disabled={showChatLoader}
-                                      >
-                                        <ReloadOutlined className="cursor-pointer" />
-                                      </button>
-                                      <p>
-                                       Redo
-                                      </p>                                     
-                                    </div>
-                                    </Tooltip>
-                                  )}                             
+                                 {isShowTryAgain && (
+  <div className="w-full md:w-72 m-auto">
+    <div className="bg-purple-50 rounded-2xl border border-purple-200 p-6 flex flex-col items-center text-center">
+      <p className="text-slate-700 font-medium text-base">
+        Need different suggestions?
+      </p>
+      
+      {/* <Tooltip title="Regenerate the products with AI."> */}
+        <button
+          type="button"
+          onClick={handleTryAgainClick}
+          disabled={showChatLoader}
+          className="mt-4 bg-secondary hover:bg-brand text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FiRefreshCw className="w-5 h-5" />
+          <span>Regenerate with AI</span>
+        </button>
+      {/* </Tooltip> */}
+    </div>
+  </div>
+)}
                                   </div>
 
                                 </div>
