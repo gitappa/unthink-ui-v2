@@ -103,7 +103,9 @@ const AuraResponseProducts = ({
 	allProductList,
 	isAuraChatPage,
 	localChatMessage,
-	layoutMode
+	layoutMode,
+	isMobile,
+	registerSelectActions
 }) => {
 	const [
 		authUser,
@@ -816,6 +818,35 @@ const AuraResponseProducts = ({
 		}
 	}, [showWishlistModal, isAuraChatPage]);
 
+	useEffect(() => {
+		if (registerSelectActions) {
+			registerSelectActions({
+				enableSelectProduct,
+				selectedProducts,
+				chatProductsDataToShow,
+				is_store_instance,
+				handleResetSelectProduct,
+				setEnableSelectProduct,
+				onSelectAllChange,
+				onAddSelectedProductsToCollection,
+			});
+		}
+		return () => {
+			if (registerSelectActions) {
+				registerSelectActions(null);
+			}
+		};
+	}, [
+		enableSelectProduct,
+		selectedProducts,
+		chatProductsDataToShow,
+		is_store_instance,
+		handleResetSelectProduct,
+		onSelectAllChange,
+		onAddSelectedProductsToCollection,
+		registerSelectActions,
+	]);
+
 	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || isLoading || showChatLoader;
 
 	return (
@@ -843,7 +874,7 @@ const AuraResponseProducts = ({
 						) : null}
 
 
-						{chatProductsDataToShow.length ? (
+						{chatProductsDataToShow.length && !isMobile ? (
 							<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
 								<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
 									<div className="flex items-center gap-2">
@@ -928,7 +959,13 @@ const AuraResponseProducts = ({
 					<>
 						<div
 							id='chat_products_inner_content'
-							className={`grid grid-cols-2 gap-2 sm:gap-3 ${layoutMode === "both" ? 'md:grid-cols-3' : 'lg:grid-cols-4'}`}>
+							className={`grid grid-cols-2 gap-2 sm:gap-3 ${
+								selectedSearchOption?.id === "product_search"
+									? "md:grid-cols-3 lg:grid-cols-4"
+									: layoutMode === "both"
+										? 'md:grid-cols-3'
+										: 'lg:grid-cols-4'
+							}`}>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard
 									key={product.mfr_code}

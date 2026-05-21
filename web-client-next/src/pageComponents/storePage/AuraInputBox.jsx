@@ -33,7 +33,8 @@ const AuraInputBox = ({
   chatHistory,
   hideActions = false,
   isFollowUpQuery,
-
+  isMobile = false,
+  isDrawer = false,
 }) => {
      
     // console.log('chatHistory',chatHistory.length >2);
@@ -45,10 +46,10 @@ const AuraInputBox = ({
   useEffect(() => {
     if (typeof window === "undefined") return;
     let el = null;
-    if (inputRef?.current && inputRef.current.tagName === "TEXTAREA") {
+    if (inputRef?.current && inputRef.current.tagName === "TEXTAREA" && !isDrawer) {
       el = inputRef.current;
     } else {
-      el = document.getElementById(`chat_search_input_bottom_${chatTypeKey}`);
+      el = document.getElementById(isDrawer ? `chat_search_input_bottom_${chatTypeKey}_drawer` : `chat_search_input_bottom_${chatTypeKey}`);
     }
     if (el && el.style) {
       try {
@@ -58,7 +59,7 @@ const AuraInputBox = ({
         // element might not support style/scrollHeight; ignore safely
       }
     }
-  }, [localChatMessage, inputRef, chatTypeKey]);
+  }, [localChatMessage, inputRef, chatTypeKey, isDrawer]);
 
   const onTextareaKeyDown = (e) => {
     // Handle Enter: send on Enter (no Shift), newline on Shift+Enter
@@ -81,42 +82,58 @@ const AuraInputBox = ({
       {!hideActions && (
         <div className={styles["chat-products-above-input-actions"]}>
           <div className={styles["chat-products-icon-buttons-group"]}>
-            {isShowTryAgain && (
-              // <Tooltip title="Redo">
-              <div>
-
-                <button
-                  type="button"
-                  className={styles["chat-products-icon-action-btn"]}
-                  onClick={handleTryAgainClick}
-                  disabled={showChatLoader}
-                >
-                  <ReloadOutlined />
-                </button>
-            
-              <p>Redo</p>
-              </div>
+            {isMobile || isDrawer ? (
+              isShowTryAgain && (
+                <div className="flex items-center gap-1.5 cursor-pointer animate-in fade-in duration-200" onClick={handleTryAgainClick}>
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    disabled={showChatLoader}
+                    title="Redo"
+                  >
+                    <ReloadOutlined style={{ fontSize: "15px", color: "#1a1a1a" }} />
+                  </button>
+                  <span className="text-sm font-semibold text-[#1a1a1a]">Redo</span>
+                </div>
+              )
+            ) : (
+              <>
+                {isShowTryAgain && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      className={styles["chat-products-icon-action-btn"]}
+                      onClick={handleTryAgainClick}
+                      disabled={showChatLoader}
+                      title="Redo"
+                    >
+                      <ReloadOutlined />
+                    </button>
+                    <span className="text-xs font-semibold text-[#555d74] cursor-pointer" onClick={handleTryAgainClick}>Redo</span>
+                  </div>
+                )}
+                <Tooltip title="New chat">
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    onClick={handleGoBack}
+                    disabled={showChatLoader}
+                  >
+                    <FormOutlined />
+                  </button>
+                </Tooltip>
+                <Tooltip title="Past chats">
+                  <button
+                    type="button"
+                    className={styles["chat-products-icon-action-btn"]}
+                    onClick={() => setIsHistoryOpen(true)}
+                    disabled={showChatLoader}
+                  >
+                    <HistoryOutlined />
+                  </button>
+                </Tooltip>
+              </>
             )}
-            <Tooltip title="New chat">
-              <button
-                type="button"
-                className={styles["chat-products-icon-action-btn"]}
-                onClick={handleGoBack}
-                disabled={showChatLoader}
-              >
-                <FormOutlined />
-              </button>
-            </Tooltip>
-            <Tooltip title="Past chats">
-              <button
-                type="button"
-                className={styles["chat-products-icon-action-btn"]}
-                onClick={() => setIsHistoryOpen(true)}
-                disabled={showChatLoader}
-              >
-                <HistoryOutlined />
-              </button>
-            </Tooltip>
           </div>
           {showChatLoader && (
             <div className={styles["chat-products-inline-loader"]}>
@@ -127,7 +144,7 @@ const AuraInputBox = ({
         </div>
       )}
       <div
-        className={`${styles["chat-products-bottom-input-card"]} ${
+        className={`${isDrawer ? "w-full !border !border-[#7268ec]/25 !rounded-[18px] !bg-white !py-2 !px-3 !shadow-[0_4px_12px_rgba(114,104,236,0.06)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] box-border focus-within:!border-[#7268ec] focus-within:!shadow-[0_4px_16px_rgba(114,104,236,0.15)]" : styles["chat-products-bottom-input-card"]} ${
           isShopByThemeOptionActive || isCompleteTheLookOptionActive
             ? styles["chat-products-bottom-input-card-shop-theme"]
             : ""
@@ -136,8 +153,8 @@ const AuraInputBox = ({
         <div className={styles["chat-products-bottom-input-row-wrapper"]}>
     
           <textarea
-            id={`chat_search_input_bottom_${chatTypeKey}`}
-            ref={inputRef}
+            id={isDrawer ? `chat_search_input_bottom_${chatTypeKey}_drawer` : `chat_search_input_bottom_${chatTypeKey}`}
+            ref={isDrawer ? null : inputRef}
             rows={1}
             placeholder={
               typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
@@ -148,12 +165,12 @@ const AuraInputBox = ({
             value={localChatMessage}
             onChange={handleInputChange}
             onKeyDown={handlePromptKeyDown}
-            className={`${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6  pt-1 pb-1 ${activeSearchOption?.allow_image_search ? "" : "  "}  ${
+            className={`${isDrawer ? "w-full !min-h-[38px] !max-h-[120px] !text-sm !font-medium !leading-relaxed !py-1 !px-0 !text-[#1a1a1a] !bg-transparent !border-none !outline-none !resize-none placeholder:!text-[#8a8fa3] placeholder:!text-[13px] placeholder:!font-normal" : `${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6 pt-1 pb-1`} ${activeSearchOption?.allow_image_search ? "" : "  "} ${
               isShopByThemeOptionActive || isCompleteTheLookOptionActive
                 ? styles["chat-products-bottom-input-shop-theme"] 
                 : ""
             }`}
-            style={{   resize: "none", overflow: "hidden" }}
+            style={{ resize: "none", overflow: "hidden" }}
           />
           { !( isCompleteTheLookOptionActive || activeSearchOption?.allow_image_search) && 
               <button
@@ -183,7 +200,7 @@ const AuraInputBox = ({
             </button>
           }
           {( activeSearchOption?.allow_image_search || isCompleteTheLookOptionActive ) &&
-          <div className="flex justify-between items-center border-t border-gray-500 pt-1.5">
+          <div className={`flex justify-between items-center border-t ${isDrawer ? "border-gray-200" : "border-gray-500"} pt-1.5`}>
               <div className="flex gap-3 items-center">
 
                 {activeSearchOption?.allow_image_search && (
