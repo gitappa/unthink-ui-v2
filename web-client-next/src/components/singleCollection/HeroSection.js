@@ -6,34 +6,20 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import Image from "next/image";
 const HeroSection = ({ im, collectionData }) => {
+  const collectiondata = collectionData?.find(data=>data?.collection_name === 'Brand JWELX')
+  console.log('collectiondatas',collectiondata);
+
   const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
-  let videoUrl = typeof videoUrlRaw === "string" ? videoUrlRaw : "";
-  const thumbnailImage = collectionData?.thumbnail_image || collectionData?.image;
-  const [isClient, setIsClient] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const thumbnailImage = collectiondata?.thumbnail_image || collectiondata?.image;
+  const [isClient, setIsClient] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const videoContainerRef = useRef(null);
   const handlePlayClick = () => setIsPlaying(true);
   const handlePauseClick = () => setIsPlaying(false);
-
-  if (videoUrl.includes("dpholvw.net/click") && videoUrl.includes("url=")) {
-    try {
-      const urlParams = new URLSearchParams(videoUrl.split("?")[1]);
-      const actualVideoUrl = urlParams.get("url");
-      if (actualVideoUrl) {
-        videoUrl = decodeURIComponent(actualVideoUrl);
-      }
-    } catch (error) {
-      console.error("Error parsing video URL:", error);
-    }
-  }
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
+  
   useEffect(() => {
     if (!isClient) return;
     const checkMobile = () => {
@@ -46,19 +32,25 @@ const HeroSection = ({ im, collectionData }) => {
 
   useEffect(() => {
     if (!isClient) return;
-    const handleScroll = () => {
-      if (videoContainerRef.current) {
-        const rect = videoContainerRef.current.getBoundingClientRect();
-        setIsVisible(rect.top >= 0 && rect.bottom <= window.innerHeight);
-      }
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const node = videoContainerRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const visible = entry.intersectionRatio >= 0.5;
+        setIsVisible(visible);
+        setIsPlaying(visible);
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [isClient]);
 
   return (
-    <div className="relative mt-7">
+    <div className="relative mt-7 mb-28">
       <div
         className="relative cursor-pointer"
         style={{ minHeight: "68vh", height: "700px" }}
@@ -66,9 +58,9 @@ const HeroSection = ({ im, collectionData }) => {
         ref={videoContainerRef}
       >
         {isClient ? (
-          videoUrlRaw ? (
+           collectiondata?.video_url ? (
             <ReactPlayer
-              url={videoUrlRaw}
+              url={ collectiondata?.video_url}
               playing={isPlaying}
               onPlay={handlePlayClick}
               onPause={handlePauseClick}
@@ -78,7 +70,16 @@ const HeroSection = ({ im, collectionData }) => {
               height="100%"
               playsinline
               controls={true}
-              light={thumbnailImage || true}
+              // config={{
+              //   youtube: {
+              //     playerVars: {
+              //       autoplay: 1,
+              //       mute: 1,
+              //       playsinline: 1,
+              //     },
+              //   },
+              // }}
+              light={isPlaying ? false : (thumbnailImage || false)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-lightgray-102">
@@ -120,7 +121,7 @@ const HeroSection = ({ im, collectionData }) => {
                 },
               }}
             >
-              {collectionData.product_lists?.map((collection, id) => (
+              {collectiondata?.product_lists?.map((collection, id) => (
                 <SwiperSlide key={id}>
                   <Image
                     src={collection.image}
