@@ -317,6 +317,11 @@
 @media (max-width: 1024px) {
   .chat-products-shop-look-sidebar {
     padding: 0.5rem !important;
+    overflow: visible !important;
+  }
+
+  .chat-products-sidebar-body {
+    overflow-y: visible !important;
   }
 }
 
@@ -460,10 +465,13 @@
 
 @media (max-width: 1024px) {
   .chat-products-shop-look-image-wrapper {
-    width: 80px !important;
-    height: 80px !important;
-    margin: 0 auto 0.5rem !important;
-    border-radius: 0.5rem;
+    width: 100% !important;
+    max-width: 380px !important;
+    height: auto !important;
+    aspect-ratio: 1.1 / 1 !important;
+    margin: 0.5rem auto 1.25rem !important;
+    border-radius: 0.8rem !important;
+    box-shadow: 0 8px 24px rgba(44, 54, 90, 0.08) !important;
     overflow: hidden;
     display: flex !important;
     align-items: center !important;
@@ -477,7 +485,7 @@
     width: 100% !important;
     margin: 0 !important;
     object-fit: contain;
-    border-radius: 0.3rem !important;
+    border-radius: 0.8rem !important;
   }
 
   .chat-products-no-image-box {
@@ -938,7 +946,7 @@
   width: 100%;
   border-top: none;
   box-sizing: border-box;
-  padding:0 4px;
+  padding: 0 4px calc(12px + env(safe-area-inset-bottom, 0px));
   background: white;
 }
 
@@ -1443,4 +1451,79 @@
 .chat-products-icon-action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.chat-products-scroll-top-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 19px;
+  background: #7268ec;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(114, 104, 236, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateY(15px) scale(0.9);
+  pointer-events: none;
+}
+
+.chat-products-scroll-top-btn-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.chat-products-scroll-top-btn:hover {
+  background: rgba(90, 74, 244, 0.95);
+  transform: scale(1.08);
+}
+
+.chat-products-scroll-top-btn:active {
+  transform: scale(0.92);
+}
+
+@media (min-width: 1025px) {
+  .chat-products-scroll-top-btn {
+    display: none !important;
+  }
+}
+
+/* Custom Keyframe Animations for Glowing Floating Button and Star Sparkle */
+@keyframes auraGradientShift {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+@keyframes auraGlowPulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 24px rgba(114, 104, 236, 0.75), 0 0 10px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes auraSparkleRotate {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
