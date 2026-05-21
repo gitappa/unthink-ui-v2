@@ -22,6 +22,7 @@ import AuraResponseShopALook from "../auraResponseShopALook/AuraResponseShopALoo
 import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 import styles from "./ChatProducts.module.css";
 import AuraInputBox from "./AuraInputBox";
+import { FiRefreshCw } from 'react-icons/fi';
 
 const ChatProducts = ({
   enableClickFetchRec,
@@ -104,7 +105,7 @@ const ChatProducts = ({
     state.store.data,
     state.chatV2.chatHistory,
   ]);
-// console.log('chatHistory',chatHistory);
+  // console.log('chatHistory',chatHistory);
 
   const [enableSelectProduct, setEnableSelectProduct] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -173,7 +174,7 @@ const ChatProducts = ({
 
     const handleScroll = () => {
       const descElement = document.getElementById("aura-description-section");
-      
+
       let scrollTop = 0;
       if (descElement) {
         let parent = descElement.parentElement;
@@ -411,14 +412,14 @@ const ChatProducts = ({
     ],
   );
   // console.log('shouldShowShopLookSplitLayout',shouldShowShopLookSplitLayout);
-  
+
 
   const shopLookPreviewImage = useMemo(
     () => widgetImage || chatImageUrl || products?.image_url || "",
     [widgetImage, chatImageUrl, products?.image_url],
   );
   // console.log(shopLookPreviewImage);
-  
+
 
   const shopLookKeywords = useMemo(
     () => (suggestionsWithProducts?.suggestions?.tags || []).slice(0, 6),
@@ -499,7 +500,7 @@ const ChatProducts = ({
       collection.scrollIntoView({ behavior: "smooth" });
     }
   };
- const onWishlistClick = () => {
+  const onWishlistClick = () => {
     dispatch(openWishlistModal());
   };
   const scrollToProductsContainer = () => {
@@ -510,7 +511,7 @@ const ChatProducts = ({
       products.scrollIntoView({ behavior: "smooth" });
     }
   };
-// console.log('showChatLoader',showChatLoader);
+  // console.log('showChatLoader',showChatLoader);
 
   const AuraSideNav = () => (
     <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
@@ -521,7 +522,7 @@ const ChatProducts = ({
         />
       </div>
       <div className="flex-1 flex flex-col gap-8 items-center w-full justify-center">
-        <div 
+        <div
           className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
           onClick={handleChangeImageConfirm}
           title="New Chat"
@@ -529,18 +530,17 @@ const ChatProducts = ({
           <FormOutlined className="text-[20px]" />
           <span className="text-[10px] font-semibold text-center capitalize">New Chat</span>
         </div>
-        <div 
+        <div
           className="flex flex-col items-center gap-2 py-2 w-full relative select-none"
           title="Switch Layout"
         >
           <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-sm gap-[2px] w-[58px] h-[28px] justify-between">
             <button
               onClick={() => setLayoutMode("left")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
-                layoutMode === "left"
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "left"
                   ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
                   : "bg-transparent hover:bg-slate-200/60"
-              }`}
+                }`}
               title="Left Heavy View"
             >
               <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
@@ -550,11 +550,10 @@ const ChatProducts = ({
             </button>
             <button
               onClick={() => setLayoutMode("both")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
-                layoutMode === "both"
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "both"
                   ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
                   : "bg-transparent hover:bg-slate-200/60"
-              }`}
+                }`}
               title="Split View"
             >
               <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
@@ -564,11 +563,10 @@ const ChatProducts = ({
             </button>
             <button
               onClick={() => setLayoutMode("right")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${
-                layoutMode === "right"
+              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "right"
                   ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
                   : "bg-transparent hover:bg-slate-200/60"
-              }`}
+                }`}
               title="Right Heavy View"
             >
               <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
@@ -579,7 +577,7 @@ const ChatProducts = ({
           </div>
           <span className="text-[10px] font-semibold text-center capitalize text-[#1a1a1a]">Split</span>
         </div>
-        <div 
+        <div
           className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
           onClick={onWishlistClick}
           title="Collections"
@@ -587,7 +585,7 @@ const ChatProducts = ({
           <FolderOutlined className="text-[20px]" />
           <span className="text-[10px] font-semibold text-center capitalize">Collections</span>
         </div>
-        <div 
+        <div
           className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
           onClick={() => setIsHistoryOpen(true)}
           title="History"
@@ -612,9 +610,8 @@ const ChatProducts = ({
       )}
       {/* Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full z-[301] bg-white flex flex-col transition-transform duration-300 ease-in-out ${
-          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full z-[301] bg-white flex flex-col transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         style={{ width: "200px", boxShadow: "4px 0 24px rgba(114,104,236,0.12)" }}
       >
         {/* Drawer Header */}
@@ -818,7 +815,7 @@ const ChatProducts = ({
     </>
   );
   // useEffect(()=>{
-     
+
   // },[auraServerImage])
   // console.log(storeData?.plan_settings?.image_generate?.is_enable && (auraServerImage === '' || auraServerImage === null)  && isImageLoading && !regenarateImage   );
   // debugger  
@@ -936,32 +933,29 @@ const ChatProducts = ({
 
                   <div>
                     <div className={styles["chat-products-shop-look-sidebar-content"]}>
-                      {chatHistory.length >= 2 && (
+                      {chatHistory.length >= 2 &&
                         <div className="flex items-center gap-1 mb-3 ml-2  ">
                           <HistoryOutlined />
                           <p>{chatHistory[chatHistory.length - 2]}</p>
                         </div>
-                      )}
-                      {storeData?.plan_settings?.image_generate?.is_enable &&
-                      !auraServerImage &&
-                      !shopLookPreviewImage &&
-                      (isImageLoading || !regenarateImage) ? (
+                      }
+                      {storeData?.plan_settings?.image_generate?.is_enable && (auraServerImage === '' || auraServerImage === null) && isImageLoading && !regenarateImage ? (
                         <div className={styles["chat-products-shop-look-image-wrapper"]}>
                           <div className={styles["chat-products-image-loading-box"]}>
                             <span>Loading image...</span>
                           </div>
                         </div>
                       ) : (
-                        <div className={`${styles["chat-products-shop-look-image-wrapper"]} `}>
+                        <div
+                          className={`${styles["chat-products-shop-look-image-wrapper"]} `}
+                        >
                           <div
-                            className={`${styles["chat-products-shop-look-image-inner"]} ${
-                              regenarateImage && !shopLookPreviewImage && !auraServerImage
-                                ? "hidden"
-                                : "block"
-                            }`}
-                          >
-                            <img
-                              src={shopLookPreviewImage || auraServerImage}
+                            className={`${styles["chat-products-shop-look-image-inner"]} ${regenarateImage && !auraServerImage
+                              ? "hidden"
+                              : "block"
+                              }`}
+                          >                              <img
+                              src={auraServerImage}
                               alt="PreviewImage"
                               className={`${styles["chat-products-shop-look-image"]}`}
                             />
@@ -992,35 +986,37 @@ const ChatProducts = ({
                               })}
                           </div>
                           {isFollowUpQuery &&
-                          isShowFollowUpSearch &&
-                          !shopLookPreviewImage &&
-                          !auraServerImage &&
-                          regenarateImage ? (
+                            isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
+                            regenarateImage ? (
                             <>
-                              <button
-                                className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                                title="Regenerate the Image."
+
+
+                              <button className="chatmodal-figma-change-btn  "
+
+
                                 onClick={handleRegenrateImage}
                               >
-                                <ReloadOutlined />
+                                <ReloadOutlined
+                                />
                                 Regenerate Image
                               </button>
                             </>
                           ) : null}
                         </div>
-                      )}
+                      )
+                      }
                       {isFollowUpQuery &&
-                      isShowFollowUpSearch &&
-                      chatHistory.length >= 2 &&
-                      (shopLookPreviewImage || auraServerImage) &&
-                      regenarateImage ? (
+                        isShowFollowUpSearch && chatHistory.length >= 2 && (shopLookPreviewImage || auraServerImage) &&
+                        regenarateImage ? (
                         <>
-                          <button
-                            className="flex items-center gap-1 bg-white border text-black p-2 w-fit  rounded-xl cursor-pointer"
-                            title="Regenerate the Image."
+
+                          <button className="chatmodal-figma-change-btn"
+
+
                             onClick={handleRegenrateImage}
                           >
-                            <ReloadOutlined />
+                            <ReloadOutlined
+                            />
                             Regenerate Image
                           </button>
                         </>
@@ -1039,14 +1035,14 @@ const ChatProducts = ({
                               />
                               <div className="flex flex-col items-start gap-0">
                                 {widgetHeader?.length > 80 && (
-                                  <button 
+                                  <button
                                     className={styles["chat-products-read-more-btn"]}
                                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                                   >
                                     {isDescriptionExpanded ? "Read Less" : "Read More..."}
                                   </button>
                                 )}
-                                
+
                                 {shopLookKeywords.length && layoutMode === 'left' ? (
                                   <div
                                     className={`${styles["chat-products-shop-look-keywords"]} mt-1 mb-2`}
@@ -1062,32 +1058,36 @@ const ChatProducts = ({
                                       </span>
                                     ))}
                                   </div>
-                                ) : null} 
-                                <div className="flex items-center gap-2"> 
+                                ) : null}
+                                <div className=" w-full">
 
-                                {isShowTryAgain && (
-                                  <Tooltip title ='Regenerate the products with AI.'>
+                                  {isShowTryAgain && (
+                                    <div className="w-full md:w-72 m-auto">
+                                      <div className="bg-purple-50 rounded-2xl border border-purple-200 p-6 flex flex-col items-center text-center">
+                                        <p className="text-slate-700 font-medium text-base">
+                                          Need different suggestions?
+                                        </p>
 
-                                  <div className="flex items-center cursor-pointer">
-                                    <button
-                                      className="mt-1 h-8 w-8 rounded-full   bg-white text-[1rem] font-bold text-black   disabled:cursor-not-allowed disabled:opacity-50"
-                                      onClick={handleTryAgainClick}
-                                      disabled={showChatLoader}
-                                    >
-                                      <ReloadOutlined className="cursor-pointer" />
-                                    </button>
-                                    <p>
-                                     Redo
-                                    </p>                                     
-                                  </div>
-                                  </Tooltip>
-                                )}                             
+                                        {/* <Tooltip title="Regenerate the products with AI."> */}
+                                        <button
+                                          type="button"
+                                          onClick={handleTryAgainClick}
+                                          disabled={showChatLoader}
+                                          className="mt-4 bg-secondary hover:bg-brand text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                          <FiRefreshCw className="w-5 h-5" />
+                                          <span>Regenerate with AI</span>
+                                        </button>
+                                        {/* </Tooltip> */}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
 
                               </div>
                             </div>
                           ) : null}
-                            
+
                           {shouldMoveInputBelowResults ? (
                             <div className="mt-4 mb-2">
                               <AuraInputBox
@@ -1113,7 +1113,7 @@ const ChatProducts = ({
                                 followUpQuery={followUpQuery}
                                 hideActions={!isMobile && shouldShowShopLookSplitLayout}
                                 chatHistory={chatHistory}
-                                isFollowUpQuery ={isFollowUpQuery}
+                                isFollowUpQuery={isFollowUpQuery}
                                 isMobile={isMobile}
                               />
                             </div>
@@ -1121,9 +1121,9 @@ const ChatProducts = ({
                         </div>
                       ) : null}
                     </div>
-                  </div> 
+                  </div>
                 </div>
-               
+
               </div>
 
               <div className={styles["chat-products-shop-look-main"]}>
@@ -1187,7 +1187,7 @@ const ChatProducts = ({
                     <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
                       {item}
                     </span>
-                    
+
                   </div>
                 ))
               ) : (

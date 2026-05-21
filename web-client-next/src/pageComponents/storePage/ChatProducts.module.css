@@ -525,7 +525,7 @@
 
 .chat-products-shop-look-description-block {
   margin-top: 0.35rem;
-  margin-bottom: 53px;
+  margin-bottom: 104px;
 }
 
 .chat-products-shop-look-description-title {
@@ -545,6 +545,7 @@
   line-height: 1.6;
   font-weight: 400;
   letter-spacing: -0.01em;
+  white-space: pre-wrap;
 }
 
 .chat-products-description-collapsed {
@@ -957,7 +958,7 @@
 
 .chat-products-bottom-input-card {
   width: 100%;
-  border: 1px solid rgba(114, 104, 236, 0.15);
+  border:1px solid rgb(129, 128, 128);
   border-radius: 25px;
   background: #ffffff;
   padding: 0.6rem 1rem;

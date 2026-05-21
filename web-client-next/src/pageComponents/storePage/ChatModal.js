@@ -615,36 +615,33 @@ const ChatModal = ({
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
-    try {
-      const HISTORY_KEY = "widgetHeaderRequestHistory";
-      if (localChatMessage) {
-        const raw = sessionStorage.getItem(HISTORY_KEY);
-        // console.log('raw',raw);
 
-        let history = [];
-        if (raw) {
-          try {
-            history = JSON.parse(raw) || [];
-          } catch (err) {
-            history = [];
-          }
-        }
+    const HISTORY_KEY = "widgetHeaderRequestHistory";
+    if (localChatMessage) {
+      const raw = sessionStorage.getItem(HISTORY_KEY);
+      // console.log('raw',raw);
 
-        const entry = localChatMessage;
-        const last = history[history.length - 1];
-        const isSameAsLast =
-          last && JSON.stringify(last) === JSON.stringify(entry);
-        if (!isSameAsLast) {
-          history.push(entry);
-          // keep history bounded to 20 entries
-          if (history.length > 20) history.shift();
-          sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      let history = [];
+      if (raw) {
+        try {
+          history = JSON.parse(raw) || [];
+        } catch (err) {
+          history = [];
         }
       }
-    } catch (e) {
-      // ignore sessionStorage errors (e.g. disabled storage or quota)
-      console.warn("Failed to persist widget header request history in sessionStorage", e);
+
+      const entry = localChatMessage;
+      const last = history[history.length - 1];
+      const isSameAsLast =
+        last && JSON.stringify(last) === JSON.stringify(entry);
+      if (!isSameAsLast) {
+        history.push(entry);
+        // keep history bounded to 20 entries
+        if (history.length > 20) history.shift();
+        sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      }
     }
+
     dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
@@ -859,6 +856,9 @@ const ChatModal = ({
     dispatch(setChatProducts([]));
     dispatch(setChatProductsData([]));
     dispatch(setChatShopALook([]));
+    setIsSearchOptionManuallySelected(true)
+    sessionStorage.removeItem('widgetHeaderRequestHistory')
+    sessionStorage.removeItem("widgetHeader");
   };
 
   return (
