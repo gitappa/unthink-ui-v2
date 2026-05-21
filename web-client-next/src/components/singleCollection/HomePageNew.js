@@ -24,11 +24,14 @@ import "swiper/css/scrollbar";
 import HeroSection from "./HeroSection";
 import DealsAndTrends from "./DealsAndTrends";
 import SplitDiscoverySection from "./SplitDiscoverySection";
+import BannerKisok from "../kiosk/BannerKisok";
 
 const HomePageNew = ({ blogCollectionPage }) => {
   const [collectiosn] = useSelector((state) => [
     state.influencer.collections.data,
   ]);
+  console.log(collectiosn);
+  
   const authUserCollections = useSelector(
     (state) => state.auth.user.collections.data,
   );
@@ -1178,7 +1181,8 @@ const HomePageNew = ({ blogCollectionPage }) => {
 
   return (
     <div className="max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto     px-14">
-      <HeroSection im={im} collectionData={collection} />
+      <HeroSection im={im} collectionData={collectiosn} />
+      <BannerKisok  />
 
       <DealsAndTrends />
 
