@@ -11,4 +11,4 @@ const BannerKisok = () => {
   )
 }
 
-export default BannerKisok
+export default BannerKisok 
