@@ -9,7 +9,7 @@ const HeroSection = ({ im, collectionData }) => {
   const collectiondata = collectionData?.find(data=>data?.collection_name === 'Brand JWELX')
   console.log('collectiondatas',collectiondata);
 
-  const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
+  // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage = collectiondata?.thumbnail_image || collectiondata?.image;
   const [isClient, setIsClient] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
