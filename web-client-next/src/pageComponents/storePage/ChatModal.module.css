@@ -392,12 +392,10 @@
   margin: 0;
   font-size: 1.1rem;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  background: linear-gradient(90deg, #2f3d61 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #1a1a1a;
   display: inline-block;
 }
 

@@ -1356,40 +1356,11 @@
 /* Layout Modes */
 @media (min-width: 1025px) {
   .layout-left {
-    grid-template-columns: 1fr !important;
-  }
-
-  .layout-left .chat-products-shop-look-main {
-    display: none !important;
-  }
-
-  .layout-left .chat-products-shop-look-sidebar {
-    border-right: none !important;
-    padding: 0 2rem 2rem 2rem !important;
-    max-width: 1000px;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
-
-  .layout-left .chat-products-shop-look-image {
-    width: 100% !important;
-    max-width: 800px;
-    margin: 0 auto;
-    height: auto !important;
-  }
-
-  .layout-left .chat-products-shop-look-sidebar-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    grid-template-columns: minmax(450px, 55%) minmax(0, 1fr) !important;
   }
 
   .layout-right {
-    grid-template-columns: 1fr !important;
-  }
-
-  .layout-right .chat-products-shop-look-sidebar {
-    display: none !important;
+    grid-template-columns: minmax(280px, 25%) minmax(0, 1fr) !important;
   }
 }
 

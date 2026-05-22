@@ -872,7 +872,7 @@ const ChatModal = ({
       {!isAuraChatPage ? (
         <>
           {isShowAuraResponse && isProductSearchOptionActive && !isMobile ? (
-            <div className="sticky top-0 left-0 right-0 z-[1000] bg-aura-purple-50 border-b border-[#e9e4ff] px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
+            <div className="sticky top-0 left-0 right-0 z-[1000] bg-white border-b border-[#e9e4ff] px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
               {/* Left side: Arrow mark and Search written */}
               <div className="flex items-center gap-2 md:gap-3 shrink-0">
                 <ArrowLeftOutlined

@@ -731,7 +731,7 @@ const ChatProducts = ({
             <div className={styles["chat-products-selection-controls"]}>
               {enableSelectProduct ? (
                 <div className={styles["chat-products-selected-items"]}>
-                  <div className={styles["chat-products-checkbox-group"]}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <Checkbox
                       indeterminate={
                         selectedProducts.length > 0 &&
@@ -742,9 +742,14 @@ const ChatProducts = ({
                         selectedProducts.length ===
                         chatProductsDataToShow.length
                       }
+                    />
+                    <div 
+                      className={styles["chat-products-checkbox-group"]}
+                      style={{ padding: "0.25rem 0.75rem", cursor: "pointer", border: "1px solid #9e9e9e", borderRadius: "0.375rem" }}
+                      onClick={onSelectAllChange}
                     >
-                      {selectedProducts.length} Selected
-                    </Checkbox>
+                      <span style={{ fontSize: "1rem", fontWeight: "500" }}>{selectedProducts.length} Selected</span>
+                    </div>
                   </div>
                   <p
                     onClick={
@@ -785,7 +790,7 @@ const ChatProducts = ({
 
           <div
             id="chat_products_inner_content"
-            className={`${styles["chat-products-grid"]} ${shouldShowShopLookSplitLayout && layoutMode === "both" ? styles["chat-products-grid-split"] : ""}`}
+            className={`${styles["chat-products-grid"]} ${shouldShowShopLookSplitLayout ? styles["chat-products-grid-split"] : ""}`}
           >
             {chatProductsDataToShow.map((product) => (
               <React.Fragment key={product.mfr_code}>
