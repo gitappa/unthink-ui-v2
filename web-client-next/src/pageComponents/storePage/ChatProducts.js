@@ -515,7 +515,7 @@ const ChatProducts = ({
 
   const AuraSideNav = () => (
     <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
-      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-[#7268ec]">
+      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-aura-purple">
         <ArrowLeftOutlined
           className="cursor-pointer text-2xl"
           onClick={handleGoBack}
@@ -523,7 +523,7 @@ const ChatProducts = ({
       </div>
       <div className="flex-1 flex flex-col gap-8 items-center w-full justify-center">
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
           onClick={handleChangeImageConfirm}
           title="New Chat"
         >
@@ -578,7 +578,7 @@ const ChatProducts = ({
           <span className="text-[10px] font-semibold text-center capitalize text-[#1a1a1a]">Split</span>
         </div>
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
           onClick={onWishlistClick}
           title="Collections"
         >
@@ -586,7 +586,7 @@ const ChatProducts = ({
           <span className="text-[10px] font-semibold text-center capitalize">Collections</span>
         </div>
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-[#7268ec]"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
           onClick={() => setIsHistoryOpen(true)}
           title="History"
         >
@@ -604,46 +604,46 @@ const ChatProducts = ({
       {/* Backdrop */}
       {isMobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[300]"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1000]"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
       {/* Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full z-[301] bg-white flex flex-col transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full z-[1001] bg-white flex flex-col transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
-        style={{ width: "200px", boxShadow: "4px 0 24px rgba(114,104,236,0.12)" }}
+        style={{ width: "260px", boxShadow: "4px 0 24px rgba(114,104,236,0.12)" }}
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#f0eeff]">
-          <span className="text-[#7268ec] font-bold text-base tracking-wide">Menu</span>
+        <div className="flex items-center justify-between px-5 py-5 border-b border-[#f0eeff]">
+          <span className="text-aura-purple font-bold text-lg tracking-wide">Menu</span>
           <CloseOutlined
-            className="text-gray-400 cursor-pointer text-base"
+            className="text-gray-400 cursor-pointer text-lg"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
         </div>
         {/* Drawer Items */}
-        <div className="flex flex-col gap-1 py-4 flex-1">
+        <div className="flex flex-col gap-2 py-4 flex-1">
           <div
-            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
             onClick={() => { handleChangeImageConfirm(); setIsMobileSidebarOpen(false); }}
           >
-            <FormOutlined style={{ fontSize: "18px" }} />
-            <span className="text-sm font-semibold">New Chat</span>
+            <FormOutlined style={{ fontSize: "20px" }} />
+            <span className="text-base font-semibold">New Chat</span>
           </div>
           <div
-            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
             onClick={() => { onWishlistClick(); setIsMobileSidebarOpen(false); }}
           >
-            <FolderOutlined style={{ fontSize: "18px" }} />
-            <span className="text-sm font-semibold">Collections</span>
+            <FolderOutlined style={{ fontSize: "20px" }} />
+            <span className="text-base font-semibold">Collections</span>
           </div>
           <div
-            className="flex items-center gap-3 px-5 py-3.5 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-[#7268ec] transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
             onClick={() => { setIsHistoryOpen(true); setIsMobileSidebarOpen(false); }}
           >
-            <HistoryOutlined style={{ fontSize: "18px" }} />
-            <span className="text-sm font-semibold">History</span>
+            <HistoryOutlined style={{ fontSize: "20px" }} />
+            <span className="text-base font-semibold">History</span>
           </div>
         </div>
       </div>
@@ -657,12 +657,12 @@ const ChatProducts = ({
           <Spin
             indicator={
               <Loading3QuartersOutlined
-                style={{ fontSize: 36, color: "#7268ec" }}
+                style={{ fontSize: 36, color: "var(--color-aura-purple)" }}
                 spin
               />
             }
           />
-          <span className="text-[#7268ec] font-semibold text-sm tracking-wide">
+          <span className="text-aura-purple font-semibold text-sm tracking-wide">
             Searching products...
           </span>
         </div>
@@ -1167,7 +1167,7 @@ const ChatProducts = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-5 py-4 bg-[#fbfafe] border-b border-solid border-[#e8e4fb] flex items-center justify-between">
-              <h3 className="text-[#7268ec] font-bold text-base m-0 flex items-center gap-2">
+              <h3 className="text-aura-purple font-bold text-base m-0 flex items-center gap-2">
                 <HistoryOutlined /> Past Chats
               </h3>
               <CloseOutlined
@@ -1182,9 +1182,9 @@ const ChatProducts = ({
                   <div
                     key={item}
                     onClick={() => handleSelectPastChat(item)}
-                    className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-[#7268ec]/5 hover:border-[#7268ec]/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
+                    className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-aura-purple/5 hover:border-aura-purple/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
                   >
-                    <span className="line-clamp-2 pr-2 group-hover:text-[#7268ec] transition-colors">
+                    <span className="line-clamp-2 pr-2 group-hover:text-aura-purple transition-colors">
                       {item}
                     </span>
 
@@ -1206,7 +1206,7 @@ const ChatProducts = ({
             {/* Floating glowing button below the close cross */}
             {showScrollBtn && !isSwipeDrawerOpen && (
               <div
-                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-[#7268ec] via-[#8c82ff] to-[#7268ec] bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
+                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-aura-purple via-[#8c82ff] to-aura-purple bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
                 onClick={() => setIsSwipeDrawerOpen(true)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -1218,7 +1218,7 @@ const ChatProducts = ({
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '4px' }} className="inline-block text-[#ffd84d] animate-[auraSparkleRotate_3s_infinite_ease-in-out]">
                     <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10 0-5.523-4.477-10-10-10 5.523 0 10-4.477 10-10z" />
                   </svg>
-                  <span className="text-[11px] tracking-wider uppercase font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]">Info & Search</span>
+                  <span className="text-[11px] tracking-wider uppercase font-bold drop-shadow-[0_1px_2px_color-aura-purple]">Info & Search</span>
                 </div>
               </div>
             )}
@@ -1238,14 +1238,14 @@ const ChatProducts = ({
                   onTouchMove={handleDrawerTouchMove}
                   onTouchEnd={handleDrawerTouchEnd}
                 >
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-[60px] bg-[#7268ec]/20 rounded-r" />
-                  <div className="flex items-center justify-between mb-4 border-b border-[#7268ec]/10 pb-3">
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-[60px] bg-aura-purple/20 rounded-r" />
+                  <div className="flex items-center justify-between mb-4 border-b border-aura-purple/10 pb-3">
                     <h3 className="text-base font-bold text-[#1a2035] m-0 uppercase tracking-wider">
                       {activeSearchOption?.title || "Aura Info"}
                     </h3>
                     <button
                       type="button"
-                      className="bg-transparent border-none cursor-pointer text-[#384467] text-lg flex items-center justify-center p-1 rounded-full transition-colors duration-200 hover:bg-[#7268ec]/10 hover:text-[#7268ec]"
+                      className="bg-transparent border-none cursor-pointer text-[#384467] text-lg flex items-center justify-center p-1 rounded-full transition-colors duration-200 hover:bg-aura-purple/10 hover:text-aura-purple"
                       onClick={() => setIsSwipeDrawerOpen(false)}
                     >
                       <CloseOutlined />

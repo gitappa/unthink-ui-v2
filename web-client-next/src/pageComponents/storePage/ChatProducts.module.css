@@ -220,7 +220,7 @@
 }
 
 .chat-products-action-button {
-  color: #7268ec;
+  color: var(--color-aura-purple);
   font-weight: 500;
   cursor: pointer;
 }
@@ -231,7 +231,7 @@
 }
 
 .chat-products-select-prompt {
-  color: #7268ec;
+  color: var(--color-aura-purple);
   font-weight: 500;
   line-height: 2.75rem;
   cursor: pointer;
@@ -424,7 +424,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7268ec;
+  color: var(--color-aura-purple);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -440,7 +440,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: #7268ec;
+  color: var(--color-aura-purple);
   font-weight: 600;
   font-size: 0.95rem;
   box-shadow: inset 0 2px 10px rgba(114, 104, 236, 0.05);
@@ -452,7 +452,7 @@
   width: 24px;
   height: 24px;
   border: 2.5px solid #e2dcfa;
-  border-top-color: #7268ec;
+  border-top-color: var(--color-aura-purple);
   border-radius: 50%;
   animation: chatProductsImageSpin 0.8s linear infinite;
 }
@@ -466,7 +466,7 @@
 @media (max-width: 1024px) {
   .chat-products-shop-look-image-wrapper {
     width: 100% !important;
-    max-width: 380px !important;
+    max-width: 300px !important;
     height: auto !important;
     aspect-ratio: 1.1 / 1 !important;
     margin: 0.5rem auto 1.25rem !important;
@@ -523,9 +523,15 @@
   gap: 0.75rem;
 }
 
+@media (max-width: 1024px) {
+  .chat-products-shop-look-sidebar-content {
+    padding-bottom: 65px;
+  }
+}
+
 .chat-products-shop-look-description-block {
   margin-top: 0.35rem;
-  margin-bottom: 104px;
+  margin-bottom: 53px;
 }
 
 .chat-products-shop-look-description-title {
@@ -541,11 +547,22 @@
 
 .chat-products-shop-look-description-text {
   color: #374151;
-  font-size:16px;
+  font-size: 12px;
   line-height: 1.6;
   font-weight: 400;
   letter-spacing: -0.01em;
-  white-space: pre-wrap;
+}
+
+@media (min-width: 768px) {
+  .chat-products-shop-look-description-text {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .chat-products-shop-look-description-text {
+    font-size: 16px;
+  }
 }
 
 .chat-products-description-collapsed {
@@ -553,12 +570,24 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 16px;
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+  .chat-products-description-collapsed {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .chat-products-description-collapsed {
+    font-size: 16px;
+  }
 }
 
 .chat-products-read-more-btn {
-  color: #7268ec;
-  font-size: 14px;
+  color: var(--color-aura-purple);
+  font-size: 11px; /* mobile */
   font-weight: 600;
   cursor: pointer;
   margin-top: 2px;
@@ -576,6 +605,18 @@
   color: #5a4af4;
   text-decoration: underline;
   transform: translateX(2px);
+}
+
+@media (min-width: 768px) {
+  .chat-products-read-more-btn {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .chat-products-read-more-btn {
+    font-size: 14px;
+  }
 }
 
 .chat-products-shop-look-keywords {
@@ -598,7 +639,7 @@
   width: 100%;
   border: none;
   border-radius: 9999px;
-  background: #7268ec;
+  background: var(--color-aura-purple);
   color: #ffffff;
   font-size: 0.78rem;
   font-weight: 600;
@@ -633,9 +674,9 @@
 
 .chat-products-mobile-action-btn:hover,
 .chat-products-mobile-action-btn:active {
-  background: #7268ec;
+  background: var(--color-aura-purple);
   color: white;
-  border-color: #7268ec;
+  border-color: var(--color-aura-purple);
 }
 
 .chat-products-mobile-action-icon {
@@ -649,9 +690,9 @@
 }
 
 .chat-products-mobile-action-btn-active {
-  background: #7268ec !important;
+  background: var(--color-aura-purple) !important;
   color: white !important;
-  border-color: #7268ec !important;
+  border-color: var(--color-aura-purple) !important;
 }
 
 .chat-products-mobile-upload-wrapper {
@@ -683,7 +724,7 @@
 .chat-products-mobile-loader-text {
   font-size: 11px;
   font-weight: 600;
-  color: #7268ec;
+  color: var(--color-aura-purple);
 }
 
 .chat-products-shop-look-main {
@@ -760,7 +801,7 @@
 .chat-products-close-icon:hover,
 .chat-products-search-icon:hover {
   background-color: rgba(123, 128, 158, 0.14);
-  color: #7268ec;
+  color: var(--color-aura-purple);
 }
 
 @media (min-width: 1025px) {
@@ -810,7 +851,7 @@
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-thumb {
-    background: #7268ec;
+    background: var(--color-aura-purple);
     border-radius: 4px;
   }
 
@@ -885,7 +926,7 @@
     width: 14px;
     height: 14px;
     border: 2px solid #ffffff;
-    background-color: #7268ec;
+    background-color: var(--color-aura-purple);
     border-radius: 9999px;
     cursor: pointer;
     z-index: 20;
@@ -904,9 +945,11 @@
     0% {
       box-shadow: 0 0 0 0 rgba(114, 104, 236, 0.6);
     }
+
     70% {
       box-shadow: 0 0 0 12px rgba(114, 104, 236, 0);
     }
+
     100% {
       box-shadow: 0 0 0 0 rgba(114, 104, 236, 0);
     }
@@ -958,7 +1001,7 @@
 
 .chat-products-bottom-input-card {
   width: 100%;
-  border:1px solid rgb(129, 128, 128);
+  border: 1px solid rgba(114, 104, 236, 0.15);
   border-radius: 25px;
   background: #ffffff;
   padding: 0.6rem 1rem;
@@ -967,7 +1010,7 @@
 }
 
 .chat-products-bottom-input-card:focus-within {
-  border-color: #7268ec;
+  border-color: var(--color-aura-purple);
   box-shadow: 0 4px 20px rgba(114, 104, 236, 0.15);
   background: #ffffff;
 }
@@ -976,7 +1019,7 @@
   border-color: #b8afff;
   /* border-radius: 2.35rem; */
   /* background: #f8f7ff; */
-  padding:8px 10px;
+  padding: 8px 10px;
   position: relative;
 }
 
@@ -1000,7 +1043,7 @@
   height: 32px;
   border-radius: 50%;
   background-color: white;
-  border: 1px solid  #111415;
+  border: 1px solid #111415;
   color: black;
   display: flex;
   align-items: center;
@@ -1016,7 +1059,7 @@
 }
 
 .chat-products-bottom-plus-btn:hover {
-   
+
   transform: scale(1.1) rotate(90deg);
   box-shadow: 0 4px 12px rgba(114, 104, 236, 0.25);
 }
@@ -1112,7 +1155,7 @@
   height: 34px;
   border-radius: 50%;
   border: none;
-  background: #7268ec;
+  background: var(--color-aura-purple);
   color: #ffffff;
   display: inline-flex;
   align-items: center;
@@ -1253,7 +1296,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: #7268ec;
+  color: var(--color-aura-purple);
 }
 
 .chat-products-layout-btn-active {
@@ -1419,7 +1462,7 @@
   gap: 6px;
   font-size: 11px;
   font-weight: 600;
-  color: #7268ec;
+  color: var(--color-aura-purple);
   padding-left: 4px;
 }
 
@@ -1444,7 +1487,7 @@
 }
 
 .chat-products-icon-action-btn:hover:not(:disabled) {
-  color: #7268ec;
+  color: var(--color-aura-purple);
   transform: translateY(-2px);
 }
 
@@ -1452,6 +1495,7 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 .chat-products-scroll-top-btn {
   position: fixed;
   bottom: 100px;
@@ -1459,7 +1503,7 @@
   padding: 0 16px;
   height: 38px;
   border-radius: 19px;
-  background: #7268ec;
+  background: var(--color-aura-purple);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 24px rgba(114, 104, 236, 0.4);
@@ -1499,18 +1543,28 @@
 
 /* Custom Keyframe Animations for Glowing Floating Button and Star Sparkle */
 @keyframes auraGradientShift {
-  0% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-  100% { background-position: 0% center; }
+  0% {
+    background-position: 0% center;
+  }
+
+  50% {
+    background-position: 100% center;
+  }
+
+  100% {
+    background-position: 0% center;
+  }
 }
 
 @keyframes auraGlowPulse {
   0% {
     box-shadow: 0 4px 12px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
+
   50% {
     box-shadow: 0 4px 24px rgba(114, 104, 236, 0.75), 0 0 10px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
+
   100% {
     box-shadow: 0 4px 12px rgba(114, 104, 236, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
@@ -1520,9 +1574,11 @@
   0% {
     transform: scale(1) rotate(0deg);
   }
+
   50% {
     transform: scale(1.2) rotate(15deg);
   }
+
   100% {
     transform: scale(1) rotate(0deg);
   }

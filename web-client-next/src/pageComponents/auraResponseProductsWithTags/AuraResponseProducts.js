@@ -946,12 +946,12 @@ const AuraResponseProducts = ({
 						<Spin
 							indicator={
 								<Loading3QuartersOutlined
-									style={{ fontSize: 36, color: '#7268ec' }}
+									style={{ fontSize: 36, color: 'var(--color-aura-purple)' }}
 									spin
 								/>
 							}
 						/>
-						<span className="text-[#7268ec] font-semibold text-sm tracking-wide">
+						<span className="text-aura-purple font-semibold text-sm tracking-wide">
 							Searching products...
 						</span>
 					</div>
@@ -964,7 +964,7 @@ const AuraResponseProducts = ({
 									? "md:grid-cols-3 lg:grid-cols-4"
 									: layoutMode === "both"
 										? 'md:grid-cols-3'
-										: 'lg:grid-cols-4'
+										: 'md:grid-cols-3 lg:grid-cols-4'
 							}`}>
 							{productsCache[currentTag]?.map((product) => (
 								<ProductCard

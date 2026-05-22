@@ -82,36 +82,9 @@ const AuraInputBox = ({
       {!hideActions && (
         <div className={styles["chat-products-above-input-actions"]}>
           <div className={styles["chat-products-icon-buttons-group"]}>
-            {isMobile || isDrawer ? (
-              isShowTryAgain && (
-                <div className="flex items-center gap-1.5 cursor-pointer animate-in fade-in duration-200" onClick={handleTryAgainClick}>
-                  <button
-                    type="button"
-                    className={styles["chat-products-icon-action-btn"]}
-                    disabled={showChatLoader}
-                    title="Redo"
-                  >
-                    <ReloadOutlined style={{ fontSize: "15px", color: "#1a1a1a" }} />
-                  </button>
-                  <span className="text-sm font-semibold text-[#1a1a1a]">Redo</span>
-                </div>
-              )
-            ) : (
+            {isMobile || isDrawer ? null : (
               <>
-                {isShowTryAgain && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      className={styles["chat-products-icon-action-btn"]}
-                      onClick={handleTryAgainClick}
-                      disabled={showChatLoader}
-                      title="Redo"
-                    >
-                      <ReloadOutlined />
-                    </button>
-                    <span className="text-xs font-semibold text-[#555d74] cursor-pointer" onClick={handleTryAgainClick}>Redo</span>
-                  </div>
-                )}
+
                 <Tooltip title="New chat">
                   <button
                     type="button"
@@ -144,7 +117,7 @@ const AuraInputBox = ({
         </div>
       )}
       <div
-        className={`${isDrawer ? "w-full !border !border-[#7268ec]/25 !rounded-[18px] !bg-white !py-2 !px-3 !shadow-[0_4px_12px_rgba(114,104,236,0.06)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] box-border focus-within:!border-[#7268ec] focus-within:!shadow-[0_4px_16px_rgba(114,104,236,0.15)]" : styles["chat-products-bottom-input-card"]} ${
+        className={`${isDrawer ? "w-full !border !border-aura-purple/25 !rounded-[18px] !bg-white !py-2 !px-3 !shadow-[0_4px_12px_rgba(var(--color-aura-purple-rgb),0.06)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] box-border focus-within:!border-aura-purple focus-within:!shadow-[0_4px_16px_rgba(var(--color-aura-purple-rgb),0.15)]" : styles["chat-products-bottom-input-card"]} ${
           isShopByThemeOptionActive || isCompleteTheLookOptionActive
             ? styles["chat-products-bottom-input-card-shop-theme"]
             : ""
@@ -238,7 +211,7 @@ const AuraInputBox = ({
           <div className="    flex items-center gap-1.5 pr-2">
             {/* {localChatMessage && (
               <CloseCircleFilled
-                className="text-gray-400 hover:text-[#7268ec] cursor-pointer text-sm mx-1 transition-colors z-10"
+                className="text-gray-400 hover:text-aura-purple cursor-pointer text-sm mx-1 transition-colors z-10"
                 onClick={() => handleInputChange({ target: { value: "" } })}
               />
             )} */}
@@ -279,3 +252,6 @@ const AuraInputBox = ({
 };
 
 export default AuraInputBox;
+
+
+
