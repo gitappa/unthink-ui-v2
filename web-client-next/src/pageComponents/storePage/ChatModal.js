@@ -184,7 +184,6 @@ const ChatModal = ({
   const [isMobileOnly, setIsMobileOnly] = useState(false);
   const [mobileTab, setMobileTab] = useState("description"); // "description" or "products"
   const [selectActions, setSelectActions] = useState(null);
-
   const dispatch = useDispatch();
 
   const modalRef = useRef(null);
