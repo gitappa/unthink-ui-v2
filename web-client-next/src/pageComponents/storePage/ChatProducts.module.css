@@ -220,7 +220,7 @@
 }
 
 .chat-products-action-button {
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   font-weight: 500;
   cursor: pointer;
 }
@@ -231,7 +231,7 @@
 }
 
 .chat-products-select-prompt {
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   font-weight: 500;
   line-height: 2.75rem;
   cursor: pointer;
@@ -424,7 +424,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -440,7 +440,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   font-weight: 600;
   font-size: 0.95rem;
   box-shadow: inset 0 2px 10px rgba(114, 104, 236, 0.05);
@@ -452,7 +452,7 @@
   width: 24px;
   height: 24px;
   border: 2.5px solid #e2dcfa;
-  border-top-color: var(--color-aura-purple);
+  border-top-color: var(--color-secondary);
   border-radius: 50%;
   animation: chatProductsImageSpin 0.8s linear infinite;
 }
@@ -586,8 +586,9 @@
 }
 
 .chat-products-read-more-btn {
-  color: var(--color-aura-purple);
-  font-size: 11px; /* mobile */
+  color: var(--color-secondary);
+  font-size: 11px;
+  /* mobile */
   font-weight: 600;
   cursor: pointer;
   margin-top: 2px;
@@ -639,7 +640,7 @@
   width: 100%;
   border: none;
   border-radius: 9999px;
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   color: #ffffff;
   font-size: 0.78rem;
   font-weight: 600;
@@ -674,9 +675,9 @@
 
 .chat-products-mobile-action-btn:hover,
 .chat-products-mobile-action-btn:active {
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   color: white;
-  border-color: var(--color-aura-purple);
+  border-color: var(--color-secondary);
 }
 
 .chat-products-mobile-action-icon {
@@ -690,9 +691,9 @@
 }
 
 .chat-products-mobile-action-btn-active {
-  background: var(--color-aura-purple) !important;
+  background: var(--color-secondary) !important;
   color: white !important;
-  border-color: var(--color-aura-purple) !important;
+  border-color: var(--color-secondary) !important;
 }
 
 .chat-products-mobile-upload-wrapper {
@@ -724,7 +725,7 @@
 .chat-products-mobile-loader-text {
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
 }
 
 .chat-products-shop-look-main {
@@ -801,7 +802,7 @@
 .chat-products-close-icon:hover,
 .chat-products-search-icon:hover {
   background-color: rgba(123, 128, 158, 0.14);
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
 }
 
 @media (min-width: 1025px) {
@@ -851,7 +852,7 @@
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-thumb {
-    background: var(--color-aura-purple);
+    background: var(--color-secondary);
     border-radius: 4px;
   }
 
@@ -926,7 +927,7 @@
     width: 14px;
     height: 14px;
     border: 2px solid #ffffff;
-    background-color: var(--color-aura-purple);
+    background-color: var(--color-secondary);
     border-radius: 9999px;
     cursor: pointer;
     z-index: 20;
@@ -1010,7 +1011,7 @@
 }
 
 .chat-products-bottom-input-card:focus-within {
-  border-color: var(--color-aura-purple);
+  border-color: var(--color-secondary);
   box-shadow: 0 4px 20px rgba(114, 104, 236, 0.15);
   background: #ffffff;
 }
@@ -1155,7 +1156,7 @@
   height: 34px;
   border-radius: 50%;
   border: none;
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   color: #ffffff;
   display: inline-flex;
   align-items: center;
@@ -1296,7 +1297,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
 }
 
 .chat-products-layout-btn-active {
@@ -1462,7 +1463,7 @@
   gap: 6px;
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   padding-left: 4px;
 }
 
@@ -1487,7 +1488,7 @@
 }
 
 .chat-products-icon-action-btn:hover:not(:disabled) {
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   transform: translateY(-2px);
 }
 
@@ -1503,7 +1504,7 @@
   padding: 0 16px;
   height: 38px;
   border-radius: 19px;
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 24px rgba(114, 104, 236, 0.4);

@@ -31,7 +31,7 @@
 }
 
 .chatmodal-modal-container::-webkit-scrollbar-thumb {
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   border-radius: 4px;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .chatmodal-search-options-grid::-webkit-scrollbar-thumb {
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   border-radius: 4px;
 }
 
@@ -395,7 +395,7 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  background: linear-gradient(90deg, #2f3d61 0%, var(--color-aura-purple) 100%);
+  background: linear-gradient(90deg, #2f3d61 0%, var(--color-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
@@ -1043,7 +1043,7 @@
 }
 
 .chatmodal-textarea::-webkit-scrollbar-thumb {
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   border-radius: 4px;
 }
 
@@ -1798,7 +1798,7 @@
 }
 
 .chatmodal-products-container::-webkit-scrollbar-thumb {
-  background: var(--color-aura-purple);
+  background: var(--color-secondary);
   border-radius: 4px;
 }
 
@@ -2170,7 +2170,7 @@
 
 .chatmodal-search-icon-toggle {
   font-size: 1.25rem;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
@@ -2220,7 +2220,7 @@
   top: 1.5rem;
   right: 1.5rem;
   font-size: 1.5rem;
-  color: var(--color-aura-purple);
+  color: var(--color-secondary);
   cursor: pointer;
   z-index: 10;
 }
@@ -2344,8 +2344,8 @@
   }
 
   .chatmodal-mobile-tab-btn-active {
-    color: var(--color-aura-purple);
-    border-bottom: 2px solid var(--color-aura-purple);
+    color: var(--color-secondary);
+    border-bottom: 2px solid var(--color-secondary);
   }
 
   .chatmodal-mobile-content-offset {

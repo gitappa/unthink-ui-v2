@@ -514,7 +514,7 @@ const ChatProducts = ({
   // console.log('showChatLoader',showChatLoader);
 
   const AuraSideNav = () => (
-    <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
+    <div className="hidden xl:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
       <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-aura-purple">
         <ArrowLeftOutlined
           className="cursor-pointer text-2xl"
@@ -538,8 +538,8 @@ const ChatProducts = ({
             <button
               onClick={() => setLayoutMode("left")}
               className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "left"
-                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                  : "bg-transparent hover:bg-slate-200/60"
+                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                : "bg-transparent hover:bg-slate-200/60"
                 }`}
               title="Left Heavy View"
             >
@@ -551,8 +551,8 @@ const ChatProducts = ({
             <button
               onClick={() => setLayoutMode("both")}
               className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "both"
-                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                  : "bg-transparent hover:bg-slate-200/60"
+                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                : "bg-transparent hover:bg-slate-200/60"
                 }`}
               title="Split View"
             >
@@ -564,8 +564,8 @@ const ChatProducts = ({
             <button
               onClick={() => setLayoutMode("right")}
               className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "right"
-                  ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                  : "bg-transparent hover:bg-slate-200/60"
+                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
+                : "bg-transparent hover:bg-slate-200/60"
                 }`}
               title="Right Heavy View"
             >
@@ -657,7 +657,7 @@ const ChatProducts = ({
           <Spin
             indicator={
               <Loading3QuartersOutlined
-                style={{ fontSize: 36, color: "var(--color-aura-purple)" }}
+                style={{ fontSize: 36, color: "var(--color-secondary)" }}
                 spin
               />
             }
