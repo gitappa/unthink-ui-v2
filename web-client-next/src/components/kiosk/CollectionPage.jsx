@@ -1,49 +1,96 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getInfluencerCollection } from "../../pageComponents/Influencer/redux/actions";
+import ProductCard from "../singleCollection/ProductCard";
 
-const CollectionPage = ({params}) => {
-    // console.log(params);
+const CollectionPage = ({ params }) => {
+  // console.log(params);
+  const dispatch = useDispatch();
+  const [isTagsShowMoreActive, setIsTagsShowMoreActive] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedTags, setSelectedTags] = useState([]);
+  const singleCollectionKiosk = useSelector(
+    (state) => state.auth.user.singleCollections.data,
+  ); // Update based on your Redux store structure
+  const handleTagClick = useCallback((value) => {
+    setActiveCategory(value);
+    setSelectedTags(value === "All" ? [] : [value]);
+  }, []);
 
-  const categories = ['All', 'Rings', 'Necklaces', 'Earrings', 'Bracelets', 'Watches']
-  const [activeCategory, setActiveCategory] = useState('All')
-//   console.log('colleztctionData',collectionData);
-  
+  console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
+  const tagsToShow = useMemo(() => {
+    const allTag = ["All"];
+    const allTags = singleCollectionKiosk.tags
+      ? allTag.concat(singleCollectionKiosk.tags)
+      : allTag;
+    return isTagsShowMoreActive ? allTags : allTags;
+  }, [singleCollectionKiosk.tags, isTagsShowMoreActive]);
+
+  useEffect(() => {
+    if (params?.collection_name) {
+      dispatch(
+        getInfluencerCollection({
+          collection_id: params.collection_name,
+          path: params.collection_name,
+          isStoreHomePage: false,
+          product_sort_by: undefined,
+          product_sort_order: undefined,
+        }),
+      );
+    }
+  }, [params?.collection_name, dispatch]);
+  //   console.log('colleztctionData',singleCollectionKiosk);
+  const productCardKiosk = (productdata) => {
+    // console.log(productdata);
+    return <ProductCard product={productdata} />
+  }
 
   return (
-    <div className='p-8 md:p-12 bg-white min-h-screen'>
+    <div className="p-8 md:p-12 bg-white min-h-screen">
       {/* Header */}
-      <div className='mb-8'>
-        <p className='text-gray-400 text-sm font-semibold tracking-widest mb-3'>JEWEL GENIE</p>
-        <h1 className='text-4xl md:text-5xl font-serif font-bold text-black mb-2'>Our Collection</h1>
-        <p className='text-gray-500 text-base'>16 pieces</p>
+      <div className="mb-8">
+        <p className="text-gray-400 text-sm font-semibold tracking-widest mb-3">
+          JEWEL GENIE
+        </p>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-black mb-2">
+          {singleCollectionKiosk.collection_name}
+        </h1>
+        <p className="text-gray-500 text-base">
+          {singleCollectionKiosk?.product_lists?.length}
+        </p>
       </div>
 
       {/* Category Filters */}
-      <div className='flex items-center gap-3 mb-12 flex-wrap'>
-        {categories.map((category, i) => (
+      <div className="flex items-center gap-3 mb-12 flex-wrap">
+        {tagsToShow.map((tag, i) => (
           <button
             key={i}
-            onClick={() => setActiveCategory(category)}
+            onClick={() => handleTagClick(tag)}
             className={`${
-              activeCategory === category
+              activeCategory === tag
                 ? 'bg-black text-white'
                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
             } px-5 py-3 rounded-full font-semibold text-sm transition duration-200`}
           >
-            {category}
+            {tag}
           </button>
         ))}
       </div>
 
       {/* Product Grid Placeholder */}
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-          <div key={item} className='bg-gray-100 rounded-lg h-48 md:h-56 flex items-center justify-center'>
-            <span className='text-gray-400 font-semibold'>Product {item}</span>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+       {singleCollectionKiosk?.product_lists?.map((item) => (
+          <div
+            key={item}
+            className="bg-gray-100 rounded-lg  flex items-center justify-center"
+          >
+            {productCardKiosk(item)}
           </div>
         ))}
       </div>
+     
     </div>
-  )
-}
+  );
+};
 
-export default CollectionPage
+export default CollectionPage;
