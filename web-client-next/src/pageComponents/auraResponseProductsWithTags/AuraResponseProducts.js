@@ -529,14 +529,14 @@ const AuraResponseProducts = ({
 		});
 	};
 
-	const onSelectAllChange = () => {
+	const onSelectAllChange = useCallback(() => {
 		if (selectedProducts.length < chatProductsDataToShow.length) {
 			setSelectedProducts(chatProductsDataToShow.map((i) => i.mfr_code));
 			setEnableSelectProduct(true);
 		} else {
 			setSelectedProducts([]);
 		}
-	};
+	}, [selectedProducts.length, chatProductsDataToShow]);
 
 	const handleSaveOrShareClick = () => {
 		onSelectAllChange();
@@ -818,34 +818,34 @@ const AuraResponseProducts = ({
 		}
 	}, [showWishlistModal, isAuraChatPage]);
 
-	// useEffect(() => {
-	// 	if (registerSelectActions) {
-	// 		registerSelectActions({
-	// 			enableSelectProduct,
-	// 			selectedProducts,
-	// 			chatProductsDataToShow,
-	// 			is_store_instance,
-	// 			handleResetSelectProduct,
-	// 			setEnableSelectProduct,
-	// 			onSelectAllChange,
-	// 			onAddSelectedProductsToCollection,
-	// 		});
-	// 	}
-	// 	return () => {
-	// 		if (registerSelectActions) {
-	// 			registerSelectActions(null);
-	// 		}
-	// 	};
-	// }, [
-	// 	enableSelectProduct,
-	// 	selectedProducts,
-	// 	chatProductsDataToShow,
-	// 	is_store_instance,
-	// 	handleResetSelectProduct,
-	// 	onSelectAllChange,
-	// 	onAddSelectedProductsToCollection,
-	// 	registerSelectActions,
-	// ]);
+	useEffect(() => {
+		if (registerSelectActions) {
+			registerSelectActions({
+				enableSelectProduct,
+				selectedProducts,
+				chatProductsDataToShow,
+				is_store_instance,
+				handleResetSelectProduct,
+				setEnableSelectProduct,
+				onSelectAllChange,
+				onAddSelectedProductsToCollection,
+			});
+		}
+		return () => {
+			if (registerSelectActions) {
+				registerSelectActions(null);
+			}
+		};
+	}, [
+		enableSelectProduct,
+		selectedProducts,
+		chatProductsDataToShow,
+		is_store_instance,
+		handleResetSelectProduct,
+		onSelectAllChange,
+		onAddSelectedProductsToCollection,
+		registerSelectActions,
+	]);
 
 	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || isLoading || showChatLoader;
 

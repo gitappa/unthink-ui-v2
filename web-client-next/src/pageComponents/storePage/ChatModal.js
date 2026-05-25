@@ -185,6 +185,27 @@ const ChatModal = ({
   const [mobileTab, setMobileTab] = useState("description"); // "description" or "products"
   const [selectActions, setSelectActions] = useState(null);
 
+  // as parent component is ChatModal.js so to prevent re-render of parent component, useCallback is added
+  const handleRegisterSelectActions = useCallback((actions) => {
+    setSelectActions((prev) => {
+      if (!actions) return null;
+      if (!prev) return actions;
+      
+      const isSame = 
+        prev.enableSelectProduct === actions.enableSelectProduct &&
+        prev.selectedProducts?.length === actions.selectedProducts?.length &&
+        prev.chatProductsDataToShow?.length === actions.chatProductsDataToShow?.length;
+        
+      if (isSame) {
+        // Prevent infinite loop by returning the same reference if UI state hasn't changed.
+        // We mutate prev with the new functions to avoid stale closures.
+        Object.assign(prev, actions);
+        return prev;
+      }
+      return actions;
+    });
+  }, []);
+
   const dispatch = useDispatch();
 
   const modalRef = useRef(null);
@@ -1874,7 +1895,7 @@ const ChatModal = ({
               handleChangeImageConfirm={handleChangeImageConfirm}
               auraServerImage={auraServerImage}
               onOpenMobileSidebar={openMobileSidebarRef}
-              registerSelectActions={setSelectActions}
+              registerSelectActions={handleRegisterSelectActions}
             />
           </>
         ) : isShowKioskSearchOptions ? (
