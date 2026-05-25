@@ -918,14 +918,14 @@ const ChatModal = ({
                   />
                   {localChatMessage && (
                     <CloseCircleFilled
-                      className="text-[#8f96a8] hover:text-aura-purple cursor-pointer text-xs md:text-sm mx-1.5 transition-colors"
+                      className="text-[#8f96a8] hover:text-secondary cursor-pointer text-xs md:text-sm mx-1.5 transition-colors"
                       onClick={() => setLocalChatMessage("")}
                     />
                   )}
 
                   <button
                     type="button"
-                    className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-aura-purple text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
+                    className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-secondary text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
                     onClick={handleSubmitChatInput}
                     disabled={
                       showChatLoader ||
@@ -991,7 +991,7 @@ const ChatModal = ({
                           {selectActions.is_store_instance && (
                             <button
                               type="button"
-                              className="rounded-full px-2.5 py-1 text-white font-bold bg-aura-purple text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                              className="rounded-full px-2.5 py-1 text-white font-bold bg-secondary text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                               onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isSave: true })}
                               disabled={selectActions.selectedProducts.length === 0}
                               title="Save to collection"
@@ -1002,7 +1002,7 @@ const ChatModal = ({
                           )}
                           <button
                             type="button"
-                            className="rounded-full px-2.5 py-1 text-white font-bold bg-aura-purple text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                            className="rounded-full px-2.5 py-1 text-white font-bold bg-secondary text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                             onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isShare: true })}
                             disabled={selectActions.selectedProducts.length === 0}
                             title="Share collection"
@@ -1042,14 +1042,14 @@ const ChatModal = ({
                             <div className="flex items-center gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
                               <span
                                 onClick={handleHomeClick}
-                                className="hover:underline hover:text-aura-purple cursor-pointer transition-colors"
+                                className="hover:underline hover:text-secondary cursor-pointer transition-colors"
                               >
                                 Home
                               </span>
                               <span className="text-gray-300">/</span>
                               <span
                                 onClick={handleBackToSelectedOption}
-                                className="hover:underline hover:text-aura-purple cursor-pointer transition-colors"
+                                className="hover:underline hover:text-secondary cursor-pointer transition-colors"
                               >
                                 Aura Search
                               </span>
@@ -1066,7 +1066,7 @@ const ChatModal = ({
                               {selectActions.is_store_instance && (
                                 <button
                                   type="button"
-                                  className="rounded-full px-2.5 py-1 text-aura-purple font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-aura-purple hover:text-white transition-colors"
+                                  className="rounded-full px-2.5 py-1 text-secondary font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-secondary hover:text-white transition-colors"
                                   onClick={() => selectActions.setEnableSelectProduct(true)}
                                   title="Save products"
                                 >
@@ -1076,7 +1076,7 @@ const ChatModal = ({
                               )}
                               <button
                                 type="button"
-                                className="rounded-full px-2.5 py-1 text-aura-purple font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-aura-purple hover:text-white transition-colors"
+                                className="rounded-full px-2.5 py-1 text-secondary font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-secondary hover:text-white transition-colors"
                                 onClick={() => selectActions.setEnableSelectProduct(true)}
                                 title="Share products"
                               >
@@ -1188,7 +1188,7 @@ const ChatModal = ({
                                 return (
                                   <div
                                     key={`mini-${searchOptions.id}`}
-                                    className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-aura-purple-50' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
+                                    className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-secondary-50' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
                                     style={{ height: '80px' }}
                                     onClick={() => handleSetSearchOption(searchOptions)}
                                   >
@@ -1199,7 +1199,7 @@ const ChatModal = ({
                                         alt={searchOptions.title}
                                       />
                                     </div>
-                                    <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-aura-purple' : 'text-[#4c5672]'}`}>
+                                    <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-secondary' : 'text-[#4c5672]'}`}>
                                       {searchOptions.title}
                                     </span>
                                   </div>
@@ -1705,7 +1705,7 @@ const ChatModal = ({
                                             />
                                             {/* {localChatMessage && (
                                           <CloseCircleFilled
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-aura-purple cursor-pointer text-base transition-colors z-10"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-secondary cursor-pointer text-base transition-colors z-10"
                                             onClick={() => setLocalChatMessage("")}
                                           />
                                         )} */}
