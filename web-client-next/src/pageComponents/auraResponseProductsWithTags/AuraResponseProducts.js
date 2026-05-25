@@ -951,7 +951,7 @@ const AuraResponseProducts = ({
 									/>
 								}
 							/>
-							<span className="text-aura-purple font-semibold text-sm tracking-wide">
+							<span className="text-secondary font-semibold text-sm tracking-wide">
 								Searching products...
 							</span>
 						</div>

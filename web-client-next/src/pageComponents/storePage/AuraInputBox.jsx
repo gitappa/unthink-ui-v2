@@ -117,9 +117,9 @@ const AuraInputBox = ({
         </div>
       )}
       <div
-        className={`${isDrawer ? "w-full !border !border-aura-purple/25 !rounded-[18px] !bg-white !py-2 !px-3 !shadow-[0_4px_12px_rgba(var(--color-secondary-rgb),0.06)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] box-border focus-within:!border-aura-purple focus-within:!shadow-[0_4px_16px_rgba(var(--color-secondary-rgb),0.15)]" : styles["chat-products-bottom-input-card"]} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
-            ? styles["chat-products-bottom-input-card-shop-theme"]
-            : ""
+        className={`${isDrawer ? "w-full !border !border-secondary/25 !rounded-[18px] !bg-white !py-2 !px-3 !shadow-[0_4px_12px_rgba(var(--color-secondary-rgb),0.06)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] box-border focus-within:!border-secondary focus-within:!shadow-[0_4px_16px_rgba(var(--color-secondary-rgb),0.15)]" : styles["chat-products-bottom-input-card"]} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
+          ? styles["chat-products-bottom-input-card-shop-theme"]
+          : ""
           }`}
       >
         <div className={styles["chat-products-bottom-input-row-wrapper"]}>
@@ -138,8 +138,8 @@ const AuraInputBox = ({
             onChange={handleInputChange}
             onKeyDown={handlePromptKeyDown}
             className={`${isDrawer ? "w-full !min-h-[38px] !max-h-[120px] !text-sm !font-medium !leading-relaxed !py-1 !px-0 !text-[#1a1a1a] !bg-transparent !border-none !outline-none !resize-none placeholder:!text-[#8a8fa3] placeholder:!text-[13px] placeholder:!font-normal" : `${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6 pt-1 pb-1`} ${activeSearchOption?.allow_image_search ? "" : "  "} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                ? styles["chat-products-bottom-input-shop-theme"]
-                : ""
+              ? styles["chat-products-bottom-input-shop-theme"]
+              : ""
               }`}
             style={{ resize: "none", overflow: "hidden" }}
           />
@@ -147,8 +147,8 @@ const AuraInputBox = ({
             <button
               type="button"
               className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5  ${styles["chat-products-bottom-submit"]} shrink-0 ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                  ? styles["chat-products-bottom-submit-shop-theme"]
-                  : ""
+                ? styles["chat-products-bottom-submit-shop-theme"]
+                : ""
                 } ${(
                   isShopALookOptionActive
                     ? !chatImageUrl
@@ -207,7 +207,7 @@ const AuraInputBox = ({
               <div className="    flex items-center gap-1.5 pr-2">
                 {/* {localChatMessage && (
               <CloseCircleFilled
-                className="text-gray-400 hover:text-aura-purple cursor-pointer text-sm mx-1 transition-colors z-10"
+                className="text-gray-400 hover:text-secondary cursor-pointer text-sm mx-1 transition-colors z-10"
                 onClick={() => handleInputChange({ target: { value: "" } })}
               />
             )} */}
@@ -215,8 +215,8 @@ const AuraInputBox = ({
                 <button
                   type="button"
                   className={`${styles["chat-products-bottom-submit"]} shrink-0 ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
-                      ? styles["chat-products-bottom-submit-shop-theme"]
-                      : ""
+                    ? styles["chat-products-bottom-submit-shop-theme"]
+                    : ""
                     } ${(
                       isShopALookOptionActive
                         ? !chatImageUrl

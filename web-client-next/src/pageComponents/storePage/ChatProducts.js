@@ -515,7 +515,7 @@ const ChatProducts = ({
 
   const AuraSideNav = () => (
     <div className="hidden xl:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
-      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-aura-purple">
+      <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-secondary">
         <ArrowLeftOutlined
           className="cursor-pointer text-2xl"
           onClick={handleGoBack}
@@ -523,7 +523,7 @@ const ChatProducts = ({
       </div>
       <div className="flex-1 flex flex-col gap-8 items-center w-full justify-center">
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-secondary"
           onClick={handleChangeImageConfirm}
           title="New Chat"
         >
@@ -534,51 +534,51 @@ const ChatProducts = ({
           className="flex flex-col items-center gap-2 py-2 w-full relative select-none"
           title="Switch Layout"
         >
-          <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-sm gap-[2px] w-[58px] h-[28px] justify-between">
+          <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-inner gap-[2px] w-[64px] h-[32px] justify-between">
             <button
               onClick={() => setLayoutMode("left")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "left"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "left"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
-              title="Left Heavy View"
+              title="Left View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[6.5px] h-full border-r border-black" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className={`w-[7px] h-full border-r-[1.5px] border-current ${layoutMode === "left" ? "bg-current opacity-20" : ""}`} />
                 <div className="flex-1 h-full" />
               </div>
             </button>
             <button
               onClick={() => setLayoutMode("both")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "both"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "both"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
               title="Split View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[4.5px] h-full border-r border-black" />
-                <div className="flex-1 h-full" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className={`w-[5.5px] h-full border-r-[1.5px] border-current ${layoutMode === "both" ? "bg-current opacity-20" : ""}`} />
+                <div className={`flex-1 h-full ${layoutMode === "both" ? "bg-current opacity-20" : ""}`} />
               </div>
             </button>
             <button
               onClick={() => setLayoutMode("right")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "right"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "right"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
-              title="Right Heavy View"
+              title="Right View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[2.5px] h-full border-r border-black" />
-                <div className="flex-1 h-full" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className="w-[4.5px] h-full border-r-[1.5px] border-current" />
+                <div className={`flex-1 h-full ${layoutMode === "right" ? "bg-current opacity-20" : ""}`} />
               </div>
             </button>
           </div>
           <span className="text-[10px] font-semibold text-center capitalize text-[#1a1a1a]">Split</span>
         </div>
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-secondary"
           onClick={onWishlistClick}
           title="Collections"
         >
@@ -586,7 +586,7 @@ const ChatProducts = ({
           <span className="text-[10px] font-semibold text-center capitalize">Collections</span>
         </div>
         <div
-          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-aura-purple"
+          className="flex flex-col items-center gap-1.5 cursor-pointer text-[#1a1a1a] transition-all duration-200 ease-in-out py-2 w-full relative hover:bg-[#f8f7ff] hover:text-secondary"
           onClick={() => setIsHistoryOpen(true)}
           title="History"
         >
@@ -616,7 +616,7 @@ const ChatProducts = ({
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-[#f0eeff]">
-          <span className="text-aura-purple font-bold text-lg tracking-wide">Menu</span>
+          <span className="text-secondary font-bold text-lg tracking-wide">Menu</span>
           <CloseOutlined
             className="text-gray-400 cursor-pointer text-lg"
             onClick={() => setIsMobileSidebarOpen(false)}
@@ -625,21 +625,21 @@ const ChatProducts = ({
         {/* Drawer Items */}
         <div className="flex flex-col gap-2 py-4 flex-1">
           <div
-            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-secondary transition-all"
             onClick={() => { handleChangeImageConfirm(); setIsMobileSidebarOpen(false); }}
           >
             <FormOutlined style={{ fontSize: "20px" }} />
             <span className="text-base font-semibold">New Chat</span>
           </div>
           <div
-            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-secondary transition-all"
             onClick={() => { onWishlistClick(); setIsMobileSidebarOpen(false); }}
           >
             <FolderOutlined style={{ fontSize: "20px" }} />
             <span className="text-base font-semibold">Collections</span>
           </div>
           <div
-            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-aura-purple transition-all"
+            className="flex items-center gap-4 px-5 py-4 cursor-pointer text-[#1a1a1a] hover:bg-[#f8f7ff] hover:text-secondary transition-all"
             onClick={() => { setIsHistoryOpen(true); setIsMobileSidebarOpen(false); }}
           >
             <HistoryOutlined style={{ fontSize: "20px" }} />
@@ -662,7 +662,7 @@ const ChatProducts = ({
               />
             }
           />
-          <span className="text-aura-purple font-semibold text-sm tracking-wide">
+          <span className="text-secondary font-semibold text-sm tracking-wide">
             Searching products...
           </span>
         </div>
@@ -743,7 +743,7 @@ const ChatProducts = ({
                         chatProductsDataToShow.length
                       }
                     />
-                    <div 
+                    <div
                       className={styles["chat-products-checkbox-group"]}
                       style={{ padding: "0.25rem 0.75rem", cursor: "pointer", border: "1px solid #9e9e9e", borderRadius: "0.375rem" }}
                       onClick={onSelectAllChange}
@@ -1172,7 +1172,7 @@ const ChatProducts = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-5 py-4 bg-[#fbfafe] border-b border-solid border-[#e8e4fb] flex items-center justify-between">
-              <h3 className="text-aura-purple font-bold text-base m-0 flex items-center gap-2">
+              <h3 className="text-secondary font-bold text-base m-0 flex items-center gap-2">
                 <HistoryOutlined /> Past Chats
               </h3>
               <CloseOutlined
@@ -1187,9 +1187,9 @@ const ChatProducts = ({
                   <div
                     key={item}
                     onClick={() => handleSelectPastChat(item)}
-                    className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-aura-purple/5 hover:border-aura-purple/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
+                    className="flex items-start justify-between p-3 rounded-xl bg-[#fbfafe]/60 border border-solid border-[#e8e4fb] hover:bg-secondary/5 hover:border-secondary/30 cursor-pointer transition-all text-left text-sm font-medium text-gray-700 group"
                   >
-                    <span className="line-clamp-2 pr-2 group-hover:text-aura-purple transition-colors">
+                    <span className="line-clamp-2 pr-2 group-hover:text-secondary transition-colors">
                       {item}
                     </span>
 
@@ -1211,7 +1211,7 @@ const ChatProducts = ({
             {/* Floating glowing button below the close cross */}
             {showScrollBtn && !isSwipeDrawerOpen && (
               <div
-                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-aura-purple via-[#8c82ff] to-aura-purple bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
+                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-secondary via-[#8c82ff] to-secondary bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
                 onClick={() => setIsSwipeDrawerOpen(true)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -1223,7 +1223,7 @@ const ChatProducts = ({
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '4px' }} className="inline-block text-[#ffd84d] animate-[auraSparkleRotate_3s_infinite_ease-in-out]">
                     <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10 0-5.523-4.477-10-10-10 5.523 0 10-4.477 10-10z" />
                   </svg>
-                  <span className="text-[11px] tracking-wider uppercase font-bold drop-shadow-[0_1px_2px_color-aura-purple]">Info & Search</span>
+                  <span className="text-[11px] tracking-wider uppercase font-bold drop-shadow-[0_1px_2px_color-secondary]">Info & Search</span>
                 </div>
               </div>
             )}
@@ -1243,14 +1243,14 @@ const ChatProducts = ({
                   onTouchMove={handleDrawerTouchMove}
                   onTouchEnd={handleDrawerTouchEnd}
                 >
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-[60px] bg-aura-purple/20 rounded-r" />
-                  <div className="flex items-center justify-between mb-4 border-b border-aura-purple/10 pb-3">
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-[60px] bg-secondary/20 rounded-r" />
+                  <div className="flex items-center justify-between mb-4 border-b border-secondary/10 pb-3">
                     <h3 className="text-base font-bold text-[#1a2035] m-0 uppercase tracking-wider">
                       {activeSearchOption?.title || "Aura Info"}
                     </h3>
                     <button
                       type="button"
-                      className="bg-transparent border-none cursor-pointer text-[#384467] text-lg flex items-center justify-center p-1 rounded-full transition-colors duration-200 hover:bg-aura-purple/10 hover:text-aura-purple"
+                      className="bg-transparent border-none cursor-pointer text-[#384467] text-lg flex items-center justify-center p-1 rounded-full transition-colors duration-200 hover:bg-secondary/10 hover:text-secondary"
                       onClick={() => setIsSwipeDrawerOpen(false)}
                     >
                       <CloseOutlined />

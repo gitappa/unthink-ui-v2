@@ -1356,11 +1356,17 @@
 /* Layout Modes */
 @media (min-width: 1025px) {
   .layout-left {
-    grid-template-columns: minmax(450px, 55%) minmax(0, 1fr) !important;
+    grid-template-columns: 1fr !important;
+  }
+  .layout-left .chat-products-shop-look-main {
+    display: none !important;
   }
 
   .layout-right {
-    grid-template-columns: minmax(280px, 25%) minmax(0, 1fr) !important;
+    grid-template-columns: 1fr !important;
+  }
+  .layout-right .chat-products-shop-look-sidebar {
+    display: none !important;
   }
 }
 
