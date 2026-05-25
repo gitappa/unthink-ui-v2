@@ -1181,25 +1181,25 @@ const ChatModal = ({
                                 />
                               </div>
                             </div>
-                            <div className={`${styles["chatmodal-mini-tabs"]} ${styles["chatmodal-toggle-mobile-only"]} w-full gap-2 overflow-x-auto justify-center py-2 px-1 mb-2`}>
+                            <div className={`${styles["chatmodal-mini-tabs"]} ${styles["chatmodal-toggle-mobile-only"]} w-full gap-1 overflow-x-auto justify-center py-2 px-1 mb-2`}>
                               {displaySearchOptions?.map((searchOptions, index) => {
                                 const isOptionActive = searchOptions?.id === activeSearchOption?.id;
                                 const previewImage = searchOptionPreviewImages[searchOptions.id] || [auraCardOne, auraCardThree, auraCardThree][index % 3];
                                 return (
                                   <div
                                     key={`mini-${searchOptions.id}`}
-                                    className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-secondary-50' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
-                                    style={{ height: '80px' }}
+                                    className={`flex-1 min-w-[58px] max-w-[130px] flex flex-col items-center justify-center p-1 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-secondary-50' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
+                                    style={{ height: '70px' }}
                                     onClick={() => handleSetSearchOption(searchOptions)}
                                   >
-                                    <div className="w-8 h-8 rounded bg-[#e8e4ff] flex items-center justify-center mb-1.5">
+                                    <div className="w-6 h-6 rounded bg-[#e8e4ff] flex items-center justify-center mb-1">
                                       <img
                                         src={getImageSrc(previewImage)}
-                                        className="w-5 h-5 object-contain"
+                                        className="w-4 h-4 object-contain"
                                         alt={searchOptions.title}
                                       />
                                     </div>
-                                    <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-secondary' : 'text-[#4c5672]'}`}>
+                                    <span className={`text-[9px] sm:text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-secondary' : 'text-[#4c5672]'}`}>
                                       {searchOptions.title}
                                     </span>
                                   </div>
@@ -1229,7 +1229,7 @@ const ChatModal = ({
                                       : displaySearchOptions?.length === 4
                                         ? "lg:grid-cols-4 grid-cols-1"
                                         : "lg:grid-cols-5 grid-cols-1"
-                                  }  w-full gap-4.5 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity `}
+                                  }  w-full gap-2 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity `}
                               >
                                 {displaySearchOptions?.map((searchOptions, index) => {
                                   const isOptionActive =
