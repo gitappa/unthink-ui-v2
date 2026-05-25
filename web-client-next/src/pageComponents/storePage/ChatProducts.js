@@ -534,44 +534,44 @@ const ChatProducts = ({
           className="flex flex-col items-center gap-2 py-2 w-full relative select-none"
           title="Switch Layout"
         >
-          <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-sm gap-[2px] w-[58px] h-[28px] justify-between">
+          <div className="flex items-center bg-[#f1f5f9] p-[3px] rounded-xl border border-slate-200 shadow-inner gap-[2px] w-[64px] h-[32px] justify-between">
             <button
               onClick={() => setLayoutMode("left")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "left"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "left"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
-              title="Left Heavy View"
+              title="Left View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[6.5px] h-full border-r border-black" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className={`w-[7px] h-full border-r-[1.5px] border-current ${layoutMode === "left" ? "bg-current opacity-20" : ""}`} />
                 <div className="flex-1 h-full" />
               </div>
             </button>
             <button
               onClick={() => setLayoutMode("both")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "both"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "both"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
               title="Split View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[4.5px] h-full border-r border-black" />
-                <div className="flex-1 h-full" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className={`w-[5.5px] h-full border-r-[1.5px] border-current ${layoutMode === "both" ? "bg-current opacity-20" : ""}`} />
+                <div className={`flex-1 h-full ${layoutMode === "both" ? "bg-current opacity-20" : ""}`} />
               </div>
             </button>
             <button
               onClick={() => setLayoutMode("right")}
-              className={`w-[16px] h-[22px] rounded-[5px] transition-all duration-200 flex items-center justify-center ${layoutMode === "right"
-                ? "bg-white shadow-[0_1.5px_4px_rgba(0,0,0,0.12)]"
-                : "bg-transparent hover:bg-slate-200/60"
+              className={`w-[18px] h-[26px] rounded-[8px] transition-all duration-200 flex items-center justify-center cursor-pointer ${layoutMode === "right"
+                ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] text-[#4F46E5]"
+                : "bg-transparent hover:bg-slate-200/60 text-slate-400 hover:text-slate-600"
                 }`}
-              title="Right Heavy View"
+              title="Right View"
             >
-              <div className="w-[11px] h-[8px] border border-black rounded-[0.5px] flex overflow-hidden">
-                <div className="w-[2.5px] h-full border-r border-black" />
-                <div className="flex-1 h-full" />
+              <div className="w-[13px] h-[10px] border-[1.5px] border-current rounded-[2px] flex overflow-hidden">
+                <div className="w-[4.5px] h-full border-r-[1.5px] border-current" />
+                <div className={`flex-1 h-full ${layoutMode === "right" ? "bg-current opacity-20" : ""}`} />
               </div>
             </button>
           </div>
