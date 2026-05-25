@@ -181,7 +181,7 @@ const ChatModal = ({
   const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  // const [isMobileOnly, setIsMobileOnly] = useState(false);
+  const [isMobileOnly, setIsMobileOnly] = useState(false);
   const [mobileTab, setMobileTab] = useState("description"); // "description" or "products"
   const [selectActions, setSelectActions] = useState(null);
 
@@ -288,15 +288,15 @@ const ChatModal = ({
     }
   }, [searchOptions, is_kiosk, activeSearchOption, dispatch]);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsMobile(window.innerWidth <= 1024);
-  //     // setIsMobileOnly(window.innerWidth < 768);
-  //   };
-  //   handleResize();
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+      // setIsMobileOnly(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // useEffect(() => {
   // 	if (activeSearchOption?.description) {
@@ -1063,12 +1063,12 @@ const ChatModal = ({
                           >
                             <MenuOutlined className="text-[#111827] text-[18px]" />
                           </button>
-                          {/* {isMobileOnly ? ( */}
-                            <span className="text-base md:hidden block font-semibold text-[#111827] select-none ml-3 truncate max-w-[180px] md:max-w-none">
+                          { isMobileOnly ? ( 
+                            <span className="text-base  font-semibold text-[#111827] select-none ml-3 truncate max-w-[180px] md:max-w-none">
                               {activeSearchOption?.title}
                             </span>
-                          {/* ) : ( */}
-                            <div className="md:flex items-center  hidden  gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
+                           ) : ( 
+                            <div className="flex items-center    gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
                               <span
                                 onClick={handleHomeClick}
                                 className="hover:underline hover:text-secondary cursor-pointer transition-colors"
@@ -1087,7 +1087,7 @@ const ChatModal = ({
                                 {activeSearchOption?.title}
                               </span>
                             </div>
-                          {/* )} */}
+                           )} 
                         </div>
                         <div className="flex items-center gap-2">
                           {selectActions && selectActions.chatProductsDataToShow && selectActions.chatProductsDataToShow.length > 0 && (
