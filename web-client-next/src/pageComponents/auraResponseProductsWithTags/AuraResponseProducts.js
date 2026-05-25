@@ -135,7 +135,7 @@ const AuraResponseProducts = ({
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
 	]);
   const {setUserData ,userData } = useUserData()
-  
+
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -214,7 +214,7 @@ const AuraResponseProducts = ({
 			}));
 		}
 	}, [productsFilters, displayableFilter, dispatch, tag]);
- 
+
 	const isFiltersAvailable = useMemo(() => {
 		const finalFilters = removeEmptyItems(filters);
 		for (const key in finalFilters) {
@@ -386,7 +386,7 @@ const AuraResponseProducts = ({
 		moreProducts.selectedAdditionalTag,
 		authUser.user_name,
 	]);
- 
+
 
 	const enableFilters = useMemo(
 		() =>
@@ -402,7 +402,7 @@ const AuraResponseProducts = ({
 			isTagEnabled,
 		]
 	);
- 
+
 	const enableCustomFilter = useMemo(
 		() => customFilterStoreData?.is_display && enableFilters,
 		[customFilterStoreData?.is_display, enableFilters]
@@ -547,11 +547,11 @@ const AuraResponseProducts = ({
 		(e =null,options ={}) => {
 			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null } = options;
 
-    if (e?.preventDefault) {
-      e?.preventDefault();
-      e?.stopPropagation();
-    }
-	 
+			if (e?.preventDefault) {
+				e?.preventDefault();
+				e?.stopPropagation();
+			}
+
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
@@ -608,7 +608,7 @@ const AuraResponseProducts = ({
 				// 	dispatch(setIsCreateWishlist(true));
 				// }
 			} else if (isShare) {
-				
+
 				dispatch(
 					openAutoCreateCollectionModal({
 						...createWishlistData,
@@ -767,25 +767,25 @@ const AuraResponseProducts = ({
 					if (res.data.status_code === 200) {
 						dispatch(GuestPopUpShow(false));
 						if(guestActionRef.current === "share"){ 
-						try {
-  let { data, status } = await authAPIs.getUserInfoAPICall({ user_id });
+							try {
+								let { data, status } = await authAPIs.getUserInfoAPICall({ user_id });
 
-  if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
-    // dispatch(getUserInfoSuccess(data.data));
-	setUserData(data?.data)
-  }
-} catch (e) {
-  console.error(e);
-}
+								if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
+									// dispatch(getUserInfoSuccess(data.data));
+									setUserData(data?.data)
+								}
+							} catch (e) {
+								console.error(e);
+							}
 						}
-					else if (guestActionRef.current === "save") {
-						dispatch(GuestPopUpShow(false));
+						else if (guestActionRef.current === "save") {
+							dispatch(GuestPopUpShow(false));
 
 							setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
-						dispatch(getUserInfo());
-						} 
+							dispatch(getUserInfo());
+						}
 
-// setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
+						// setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
 						// dispatch(getUserInfo());
 						// Cookies.set("isGuestLoggedIn", true, {
 						// 	expires: SIGN_IN_EXPIRE_DAYS,
@@ -854,306 +854,305 @@ const AuraResponseProducts = ({
 			<div id={elementId}>
 				<div className="flex-1 min-w-0">
 					{!isCurrentTagLoading ? (
-					<>
-						{enableFilters ? (
-							<div className={hasVisibleFilters ? "mb-4 md:mb-5" : ""}>
-								<ProductFiltersTags
-									productFilters={filters}
-									handleFiltersInputClear={handleFiltersInputClear}
-									handleClearFiltersClick={handleClearFiltersClick}
-									displayFilters={filtersToShow.filter(f => f.key !== 'custom_filter')}
-									isShowCustomFilter={true}
-									isShowHashtagButton={false}
-									handleSaveEditCustomFilter={handleSaveEditCustomFilter}
-									tagThemeClassName={"border border-[#334155] text-[#334155] text-base py-0.5 px-3 rounded-full shadow-sm"}
-									clearFiltersThemeClassName={"text-[#334155]"}
-									handleFilterOptionsVisibleChange={currentTag === 'all' ? undefined : setFilterOptionsVisible}
-									filterOptionsVisible={filterOptionsVisible}
-								/>
-							</div>
-						) : null}
-
-
-						{chatProductsDataToShow.length && !isMobile ? (
-							<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
-								<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
-									<div className="flex items-center gap-2">
-										<div
-											className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2 cursor-pointer select-none"
-											onClick={() => {
-												if (enableSelectProduct) handleResetSelectProduct();
-												else setEnableSelectProduct(true);
-											}}
-										>
-											<span className="text-xs md:text-base">
-												{enableSelectProduct ? `${selectedProducts.length} selected` : "Select"}
-											</span>
-											<Checkbox
-												className="text-xs md:text-base"
-												onChange={(e) => {
-													e.stopPropagation();
-													onSelectAllChange();
-												}}
-												onClick={(e) => {
-													e.stopPropagation();
-												}}
-												checked={
-													selectedProducts.length > 0 &&
-													selectedProducts.length === chatProductsDataToShow.length
-												}
-											/>
-										</div>
-									</div>
-									{enableSelectProduct && (
-										<p
-											onClick={() => handleResetSelectProduct()}
-											className="text-brand font-medium ml-2 underline cursor-pointer"
-											role='button'>
-											Clear
-										</p>
-									)}
+						<>
+							{enableFilters ? (
+								<div className={hasVisibleFilters ? "mb-4 md:mb-5" : ""}>
+									<ProductFiltersTags
+										productFilters={filters}
+										handleFiltersInputClear={handleFiltersInputClear}
+										handleClearFiltersClick={handleClearFiltersClick}
+										displayFilters={filtersToShow.filter(f => f.key !== 'custom_filter')}
+										isShowCustomFilter={true}
+										isShowHashtagButton={false}
+										handleSaveEditCustomFilter={handleSaveEditCustomFilter}
+										tagThemeClassName={"border border-[#334155] text-[#334155] text-base py-0.5 px-3 rounded-full shadow-sm"}
+										clearFiltersThemeClassName={"text-[#334155]"}
+										handleFilterOptionsVisibleChange={currentTag === 'all' ? undefined : setFilterOptionsVisible}
+										filterOptionsVisible={filterOptionsVisible}
+									/>
 								</div>
-								<div className="flex flex-wrap gap-2">
-									{is_store_instance && (
-										<div className="flex items-center justify-center">
+							) : null}
+
+
+							{chatProductsDataToShow.length && !isMobile ? (
+								<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
+									<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
+										<div className="flex items-center gap-2">
+											<div
+												className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2 cursor-pointer select-none"
+												onClick={() => {
+													if (enableSelectProduct) handleResetSelectProduct();
+													else setEnableSelectProduct(true);
+												}}
+											>
+												<span className="text-xs md:text-base">
+													{enableSelectProduct ? `${selectedProducts.length} selected` : "Select"}
+												</span>
+												<Checkbox
+													className="text-xs md:text-base"
+													onChange={(e) => {
+														e.stopPropagation();
+														onSelectAllChange();
+													}}
+													onClick={(e) => {
+														e.stopPropagation();
+													}}
+													checked={
+														selectedProducts.length > 0 &&
+														selectedProducts.length === chatProductsDataToShow.length
+													}
+												/>
+											</div>
+										</div>
+										{enableSelectProduct && (
+											<p
+												onClick={() => handleResetSelectProduct()}
+												className="text-brand font-medium ml-2 underline cursor-pointer"
+												role='button'>
+												Clear
+											</p>
+										)}
+									</div>
+									<div className="flex flex-wrap gap-2">
+										{is_store_instance && (
+											<div className="flex items-center justify-center">
+												<button
+													className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
+													onClick={(e) =>
+														onAddSelectedProductsToCollection(e, { isSave: true })
+													}
+													title='Select and add products to collection'>
+													Save
+												</button>
+											</div>
+										)}
+										<div className="flex items-center justify-between">
 											<button
 												className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
 												onClick={(e) =>
-													onAddSelectedProductsToCollection(e, { isSave: true })
+													onAddSelectedProductsToCollection(e, { isShare: true })
 												}
-												title='Select and add products to collection'>
-												Save
+												title='Select products and share published collection'>
+												Share
 											</button>
 										</div>
-									)}
-									<div className="flex items-center justify-between">
-										<button
-											className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
-											onClick={(e) =>
-												onAddSelectedProductsToCollection(e, { isShare: true })
-											}
-											title='Select products and share published collection'>
-											Share
-										</button>
 									</div>
 								</div>
-							</div>
-						) : null}
-					</>
-				) : null}
-				{isLoading || showChatLoader ? (
-					<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
-						<Spin
-							indicator={
-								<Loading3QuartersOutlined
-									style={{ fontSize: 36, color: '#7268ec' }}
-									spin
-								/>
-							}
-						/>
-						<span className="text-[#7268ec] font-semibold text-sm tracking-wide">
-							Searching products...
-						</span>
-					</div>
-				) : (
-					<>
-						<div
-							id='chat_products_inner_content'
-							className={`grid grid-cols-2 gap-2 sm:gap-3 ${
-								selectedSearchOption?.id === "product_search"
-									? "md:grid-cols-3 lg:grid-cols-4"
-									: layoutMode === "both"
-										? 'md:grid-cols-3'
-										: 'lg:grid-cols-4'
-							}`}>
-							{productsCache[currentTag]?.map((product) => (
-								<ProductCard
-									key={product.mfr_code}
-									product={product}
-									onProductClick={onProductClick}
-									selectedSearchOption={selectedSearchOption}
-									enableClickTracking={enableClickTracking}
-									productClickParam={{
-										iCode: authUser.influencer_code,
-										campCode: trackCollectionCampCode,
-										collectionId: trackCollectionId,
-										collectionName: trackCollectionName,
-										collectionICode: trackCollectionICode,
-									}}
-									// hideAddToWishlist={
-									// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-									// }
-									hideAddToWishlist={is_store_instance && !isUserLogin}
-									enableSelect={enableSelectProduct}
-									isSelected={selectedProducts.includes(product.mfr_code)}
-									setSelectValue={() => onSelectProductClick(product.mfr_code)}
-									wishlistGeneratedBy={
-										widgetImage
-											? COLLECTION_GENERATED_BY_IMAGE_BASED
-											: COLLECTION_GENERATED_BY_SEARCH_BASED
-									}
-									localChatMessage={localChatMessage}
-									onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-								/>
-							))}
+							) : null}
+						</>
+					) : null}
+					{isLoading || showChatLoader ? (
+						<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
+							<Spin
+								indicator={
+									<Loading3QuartersOutlined
+										style={{ fontSize: 36, color: 'var(--color-secondary)' }}
+										spin
+									/>
+								}
+							/>
+							<span className="text-aura-purple font-semibold text-sm tracking-wide">
+								Searching products...
+							</span>
 						</div>
-
-						{RecomChatProductsDataToShow.length ? (
-							<>
-								<div className="flex justify-between items-center mt-8 mb-8">
-									<div className="font-bold text-xl md:text-2xl leading-8">
-										Recommendations
-									</div>
-									<div className="flex gap-2">
-										<button id='custom-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
-											<FaRegArrowAltCircleLeft />
-										</button>
-										<button id='custom-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
-											<FaRegArrowAltCircleRight />
-										</button>
-									</div>
-								</div>
-
-								<Swiper
-									slidesPerView={"auto"}
-									spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
-									freeMode={true}
-									modules={[FreeMode, Navigation]}
-									navigation={{
-										nextEl: "#custom-next",
-										prevEl: "#custom-prev",
-									}}
-									className='mySwiper' style={{ padding: 0 }}>
-									{RecomChatProductsDataToShow.map((product) => (
-										<SwiperSlide
-											key={product.mfr_code}
-											style={{ width: "auto" }}>
-											<ProductCard
-												key={product.mfr_code}
-												product={product}
-												onProductClick={onProductClick}
-												selectedSearchOption={selectedSearchOption}
-												enableClickTracking={enableClickTracking}
-												productClickParam={{
-													iCode: authUser.influencer_code,
-													campCode: trackCollectionCampCode,
-													collectionId: trackCollectionId,
-													collectionName: trackCollectionName,
-													collectionICode: trackCollectionICode,
-												}}
-												// hideAddToWishlist={
-												// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-												// }
-												hideAddToWishlist={is_store_instance && !isUserLogin}
-												enableSelect={enableSelectProduct}
-												isSelected={selectedProducts.includes(product.mfr_code)}
-												setSelectValue={() =>
-													onSelectProductClick(product.mfr_code)
-												}
-												wishlistGeneratedBy={
-													widgetImage
-														? COLLECTION_GENERATED_BY_IMAGE_BASED
-														: COLLECTION_GENERATED_BY_SEARCH_BASED
-												}
-												localChatMessage={localChatMessage}
-												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-											/>
-										</SwiperSlide>
-									))}
-								</Swiper>
-							</>
-						) : (
-							""
-						)}
-
-						{moreProductsDataToShow.length ? (
-							<>
-								<div className="flex justify-between items-center mt-8 mb-8">
-									<div className="font-bold text-xl md:text-2xl leading-8">More Results</div>
-									<div className="flex gap-2">
-										<button id='more-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
-											<FaRegArrowAltCircleLeft />
-										</button>
-										<button id='more-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
-											<FaRegArrowAltCircleRight />
-										</button>
-									</div>
-								</div>
-
-								<Swiper
-									slidesPerView={"auto"}
-									spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
-									freeMode={true}
-									modules={[FreeMode, Navigation]}
-									navigation={{
-										nextEl: "#more-next",
-										prevEl: "#more-prev",
-									}}
-									className='mySwiper' style={{ padding: 0 }}>
-									{moreProductsDataToShow.map((product) => (
-										<SwiperSlide
-											key={product.mfr_code}
-											style={{ width: "auto" }}>
-											<ProductCard
-												key={product.mfr_code}
-												product={product}
-												onProductClick={onProductClick}
-												selectedSearchOption={selectedSearchOption}
-												enableClickTracking={enableClickTracking}
-												productClickParam={{
-													iCode: authUser.influencer_code,
-													campCode: trackCollectionCampCode,
-													collectionId: trackCollectionId,
-													collectionName: trackCollectionName,
-													collectionICode: trackCollectionICode,
-												}}
-												// hideAddToWishlist={
-												// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-												// }
-												hideAddToWishlist={is_store_instance && !isUserLogin}
-												enableSelect={enableSelectProduct}
-												isSelected={selectedProducts.includes(product.mfr_code)}
-												setSelectValue={() =>
-													onSelectProductClick(product.mfr_code)
-												}
-												wishlistGeneratedBy={
-													widgetImage
-														? COLLECTION_GENERATED_BY_IMAGE_BASED
-														: COLLECTION_GENERATED_BY_SEARCH_BASED
-												}
-												localChatMessage={localChatMessage}
-												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-												
-											/>
-										</SwiperSlide>
-									))}
-								</Swiper>
-							</>
-						) : (
-							""
-						)}
-
-						{chatProductsDataToShow.length >= 15 && (
-							<div className="flex justify-center mt-8">
-								<button
-									className="bg-gradient-to-r from-brand to-secondary text-white px-5 py-2 rounded-md shadow-md font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-									onClick={() => {
-										setLoadingStates((prev) => ({
-											...prev,
-											loadingMore: true,
-										}));
-
-										setTimeout(() => {
-											handleLoadMoreSubmit(filters); // Actual data fetch
-										}, 1000);
-									}}
-									disabled={loadingStates.loadingMore}>
-									{loadingStates.loadingMore ? "Loading..." : "Load More"}
-								</button>
+					) : (
+						<>
+							<div
+								id='chat_products_inner_content'
+								className={`grid grid-cols-2 gap-2 sm:gap-3 ${selectedSearchOption?.id === "product_search"
+										? "md:grid-cols-3 lg:grid-cols-4"
+										: layoutMode === "both"
+											? 'md:grid-cols-3'
+											: 'md:grid-cols-3 lg:grid-cols-4'
+									}`}>
+								{productsCache[currentTag]?.map((product) => (
+									<ProductCard
+										key={product.mfr_code}
+										product={product}
+										onProductClick={onProductClick}
+										selectedSearchOption={selectedSearchOption}
+										enableClickTracking={enableClickTracking}
+										productClickParam={{
+											iCode: authUser.influencer_code,
+											campCode: trackCollectionCampCode,
+											collectionId: trackCollectionId,
+											collectionName: trackCollectionName,
+											collectionICode: trackCollectionICode,
+										}}
+										// hideAddToWishlist={
+										// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+										// }
+										hideAddToWishlist={is_store_instance && !isUserLogin}
+										enableSelect={enableSelectProduct}
+										isSelected={selectedProducts.includes(product.mfr_code)}
+										setSelectValue={() => onSelectProductClick(product.mfr_code)}
+										wishlistGeneratedBy={
+											widgetImage
+												? COLLECTION_GENERATED_BY_IMAGE_BASED
+												: COLLECTION_GENERATED_BY_SEARCH_BASED
+										}
+										localChatMessage={localChatMessage}
+										onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+									/>
+								))}
 							</div>
-						)}
-					</>
-				)}
+
+							{RecomChatProductsDataToShow.length ? (
+								<>
+									<div className="flex justify-between items-center mt-8 mb-8">
+										<div className="font-bold text-xl md:text-2xl leading-8">
+											Recommendations
+										</div>
+										<div className="flex gap-2">
+											<button id='custom-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleLeft />
+											</button>
+											<button id='custom-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleRight />
+											</button>
+										</div>
+									</div>
+
+									<Swiper
+										slidesPerView={"auto"}
+										spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
+										freeMode={true}
+										modules={[FreeMode, Navigation]}
+										navigation={{
+											nextEl: "#custom-next",
+											prevEl: "#custom-prev",
+										}}
+										className='mySwiper' style={{ padding: 0 }}>
+										{RecomChatProductsDataToShow.map((product) => (
+											<SwiperSlide
+												key={product.mfr_code}
+												style={{ width: "auto" }}>
+												<ProductCard
+													key={product.mfr_code}
+													product={product}
+													onProductClick={onProductClick}
+													selectedSearchOption={selectedSearchOption}
+													enableClickTracking={enableClickTracking}
+													productClickParam={{
+														iCode: authUser.influencer_code,
+														campCode: trackCollectionCampCode,
+														collectionId: trackCollectionId,
+														collectionName: trackCollectionName,
+														collectionICode: trackCollectionICode,
+													}}
+													// hideAddToWishlist={
+													// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+													// }
+													hideAddToWishlist={is_store_instance && !isUserLogin}
+													enableSelect={enableSelectProduct}
+													isSelected={selectedProducts.includes(product.mfr_code)}
+													setSelectValue={() =>
+														onSelectProductClick(product.mfr_code)
+													}
+													wishlistGeneratedBy={
+														widgetImage
+															? COLLECTION_GENERATED_BY_IMAGE_BASED
+															: COLLECTION_GENERATED_BY_SEARCH_BASED
+													}
+													localChatMessage={localChatMessage}
+													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+												/>
+											</SwiperSlide>
+										))}
+									</Swiper>
+								</>
+							) : (
+								""
+							)}
+
+							{moreProductsDataToShow.length ? (
+								<>
+									<div className="flex justify-between items-center mt-8 mb-8">
+										<div className="font-bold text-xl md:text-2xl leading-8">More Results</div>
+										<div className="flex gap-2">
+											<button id='more-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleLeft />
+											</button>
+											<button id='more-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleRight />
+											</button>
+										</div>
+									</div>
+
+									<Swiper
+										slidesPerView={"auto"}
+										spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
+										freeMode={true}
+										modules={[FreeMode, Navigation]}
+										navigation={{
+											nextEl: "#more-next",
+											prevEl: "#more-prev",
+										}}
+										className='mySwiper' style={{ padding: 0 }}>
+										{moreProductsDataToShow.map((product) => (
+											<SwiperSlide
+												key={product.mfr_code}
+												style={{ width: "auto" }}>
+												<ProductCard
+													key={product.mfr_code}
+													product={product}
+													onProductClick={onProductClick}
+													selectedSearchOption={selectedSearchOption}
+													enableClickTracking={enableClickTracking}
+													productClickParam={{
+														iCode: authUser.influencer_code,
+														campCode: trackCollectionCampCode,
+														collectionId: trackCollectionId,
+														collectionName: trackCollectionName,
+														collectionICode: trackCollectionICode,
+													}}
+													// hideAddToWishlist={
+													// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+													// }
+													hideAddToWishlist={is_store_instance && !isUserLogin}
+													enableSelect={enableSelectProduct}
+													isSelected={selectedProducts.includes(product.mfr_code)}
+													setSelectValue={() =>
+														onSelectProductClick(product.mfr_code)
+													}
+													wishlistGeneratedBy={
+														widgetImage
+															? COLLECTION_GENERATED_BY_IMAGE_BASED
+															: COLLECTION_GENERATED_BY_SEARCH_BASED
+													}
+													localChatMessage={localChatMessage}
+													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+
+												/>
+											</SwiperSlide>
+										))}
+									</Swiper>
+								</>
+							) : (
+								""
+							)}
+
+							{chatProductsDataToShow.length >= 15 && (
+								<div className="flex justify-center mt-8">
+									<button
+										className="bg-gradient-to-r from-brand to-secondary text-white px-5 py-2 rounded-md shadow-md font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+										onClick={() => {
+											setLoadingStates((prev) => ({
+												...prev,
+												loadingMore: true,
+											}));
+
+											setTimeout(() => {
+												handleLoadMoreSubmit(filters); // Actual data fetch
+											}, 1000);
+										}}
+										disabled={loadingStates.loadingMore}>
+										{loadingStates.loadingMore ? "Loading..." : "Load More"}
+									</button>
+								</div>
+							)}
+						</>
+					)}
 				</div>
 
 				{enableFilters && (

@@ -448,6 +448,7 @@ const ChatModal = ({
         CHAT_SEARCH_OPTION_ID.smart_search,
         CHAT_SEARCH_OPTION_ID.product_search,
         CHAT_SEARCH_OPTION_ID.complete_the_look,
+        CHAT_SEARCH_OPTION_ID.shop_a_look,
       ].includes(activeSearchOption?.id),
     [activeSearchOption?.id],
   );
@@ -614,34 +615,34 @@ const ChatModal = ({
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
-    	
-					const HISTORY_KEY = "widgetHeaderRequestHistory";
-					if (localChatMessage) {
-						const raw = sessionStorage.getItem(HISTORY_KEY);
-						// console.log('raw',raw);
-						
-						let history = [];
-						if (raw) {
-							try {
-								history = JSON.parse(raw) || [];
-							} catch (err) {
-								history = [];
-							}
-						}
 
-						const entry = localChatMessage ;
-						const last = history[history.length - 1];
-						const isSameAsLast =
-							last && JSON.stringify(last) === JSON.stringify(entry);
-						if (!isSameAsLast) {
-							history.push(entry);
-							// keep history bounded to 20 entries
-							if (history.length > 20) history.shift();
-							sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-						}
-					}
-				
-       dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
+    const HISTORY_KEY = "widgetHeaderRequestHistory";
+    if (localChatMessage) {
+      const raw = sessionStorage.getItem(HISTORY_KEY);
+      // console.log('raw',raw);
+
+      let history = [];
+      if (raw) {
+        try {
+          history = JSON.parse(raw) || [];
+        } catch (err) {
+          history = [];
+        }
+      }
+
+      const entry = localChatMessage;
+      const last = history[history.length - 1];
+      const isSameAsLast =
+        last && JSON.stringify(last) === JSON.stringify(entry);
+      if (!isSameAsLast) {
+        history.push(entry);
+        // keep history bounded to 20 entries
+        if (history.length > 20) history.shift();
+        sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      }
+    }
+
+    dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
       setSubmittedPromptPreview({
@@ -870,7 +871,7 @@ const ChatModal = ({
       {!isAuraChatPage ? (
         <>
           {isShowAuraResponse && isProductSearchOptionActive && !isMobile ? (
-            <div className="sticky top-0 left-0 right-0 z-[1000] bg-[#f8f7ff] border-b border-[#e9e4ff] px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
+            <div className="sticky top-0 left-0 right-0 z-[1000] bg-white border-b border-[#e9e4ff] px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
               {/* Left side: Arrow mark and Search written */}
               <div className="flex items-center gap-2 md:gap-3 shrink-0">
                 <ArrowLeftOutlined
@@ -916,14 +917,14 @@ const ChatModal = ({
                   />
                   {localChatMessage && (
                     <CloseCircleFilled
-                      className="text-[#8f96a8] hover:text-[#7268ec] cursor-pointer text-xs md:text-sm mx-1.5 transition-colors"
+                      className="text-[#8f96a8] hover:text-aura-purple cursor-pointer text-xs md:text-sm mx-1.5 transition-colors"
                       onClick={() => setLocalChatMessage("")}
                     />
                   )}
 
                   <button
                     type="button"
-                    className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#7268ec] text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
+                    className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-aura-purple text-white flex items-center justify-center border-none cursor-pointer hover:bg-[#6660de] transition-colors ml-1.5 shrink-0 disabled:bg-[#dcd9f8] disabled:cursor-not-allowed"
                     onClick={handleSubmitChatInput}
                     disabled={
                       showChatLoader ||
@@ -961,7 +962,7 @@ const ChatModal = ({
               )}
 
               {/* Mobile Sticky Navbar */}
-              {isMobile && isActiveSearchOptionAvailable && shouldHighlightActiveSearchOption && (
+              {isMobile && isActiveSearchOptionAvailable && isShowAuraResponse && (
                 <div className={styles["chatmodal-mobile-navbar-sticky"]}>
                   <div className={styles["chatmodal-mobile-navbar-top"]}>
                     {selectActions && selectActions.enableSelectProduct ? (
@@ -989,7 +990,7 @@ const ChatModal = ({
                           {selectActions.is_store_instance && (
                             <button
                               type="button"
-                              className="rounded-full px-2.5 py-1 text-white font-bold bg-[#7268ec] text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                              className="rounded-full px-2.5 py-1 text-white font-bold bg-aura-purple text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                               onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isSave: true })}
                               disabled={selectActions.selectedProducts.length === 0}
                               title="Save to collection"
@@ -1000,7 +1001,7 @@ const ChatModal = ({
                           )}
                           <button
                             type="button"
-                            className="rounded-full px-2.5 py-1 text-white font-bold bg-[#7268ec] text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                            className="rounded-full px-2.5 py-1 text-white font-bold bg-aura-purple text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                             onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isShare: true })}
                             disabled={selectActions.selectedProducts.length === 0}
                             title="Share collection"
@@ -1040,14 +1041,14 @@ const ChatModal = ({
                             <div className="md:flex items-center  hidden  gap-1.5 ml-2 text-sm font-medium text-[#4c5672] select-none">
                               <span
                                 onClick={handleHomeClick}
-                                className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                                className="hover:underline hover:text-aura-purple cursor-pointer transition-colors"
                               >
                                 Home
                               </span>
                               <span className="text-gray-300">/</span>
                               <span
                                 onClick={handleBackToSelectedOption}
-                                className="hover:underline hover:text-[#7268ec] cursor-pointer transition-colors"
+                                className="hover:underline hover:text-aura-purple cursor-pointer transition-colors"
                               >
                                 Aura Search
                               </span>
@@ -1064,7 +1065,7 @@ const ChatModal = ({
                               {selectActions.is_store_instance && (
                                 <button
                                   type="button"
-                                  className="rounded-full px-2.5 py-1 text-[#7268ec] font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-[#7268ec] hover:text-white transition-colors"
+                                  className="rounded-full px-2.5 py-1 text-aura-purple font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-aura-purple hover:text-white transition-colors"
                                   onClick={() => selectActions.setEnableSelectProduct(true)}
                                   title="Save products"
                                 >
@@ -1074,7 +1075,7 @@ const ChatModal = ({
                               )}
                               <button
                                 type="button"
-                                className="rounded-full px-2.5 py-1 text-[#7268ec] font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-[#7268ec] hover:text-white transition-colors"
+                                className="rounded-full px-2.5 py-1 text-aura-purple font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-aura-purple hover:text-white transition-colors"
                                 onClick={() => selectActions.setEnableSelectProduct(true)}
                                 title="Share products"
                               >
@@ -1095,7 +1096,7 @@ const ChatModal = ({
               )}
 
               {/* Standalone Mobile Close Icon when navbar is hidden */}
-              {isMobile && (!isActiveSearchOptionAvailable || !shouldHighlightActiveSearchOption) && (
+              {isMobile && (!isActiveSearchOptionAvailable || !isShowAuraResponse) && (
                 <div className={styles["chatmodal-mobile-standalone-close"]}>
                   <CloseOutlined
                     onClick={closeChatModal}
@@ -1186,7 +1187,7 @@ const ChatModal = ({
                                 return (
                                   <div
                                     key={`mini-${searchOptions.id}`}
-                                    className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-[#f8f7ff]' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
+                                    className={`flex-1 min-w-[72px] max-w-[130px] flex flex-col items-center justify-center p-1.5 rounded-xl cursor-pointer transition-all border ${isOptionActive ? 'border-[#857cf0] bg-aura-purple-50' : 'border-[#e2e8f0] bg-white hover:bg-gray-50'}`}
                                     style={{ height: '80px' }}
                                     onClick={() => handleSetSearchOption(searchOptions)}
                                   >
@@ -1197,7 +1198,7 @@ const ChatModal = ({
                                         alt={searchOptions.title}
                                       />
                                     </div>
-                                    <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-[#7268ec]' : 'text-[#4c5672]'}`}>
+                                    <span className={`text-[10px] text-center leading-tight font-medium ${isOptionActive ? 'text-aura-purple' : 'text-[#4c5672]'}`}>
                                       {searchOptions.title}
                                     </span>
                                   </div>
@@ -1420,8 +1421,8 @@ const ChatModal = ({
                                         </h2>
                                         {isAllowedSplitLayout &&
                                           activeSearchOption?.text_example &&
-                                          activeSearchOption?.id !==
-                                          CHAT_SEARCH_OPTION_ID.complete_the_look && (
+                                          activeSearchOption?.id !== CHAT_SEARCH_OPTION_ID.complete_the_look &&
+                                          activeSearchOption?.id !== CHAT_SEARCH_OPTION_ID.shop_a_look && (
                                             <button
                                               type="button"
                                               className={styles["chatmodal-try-example-centered"]}
@@ -1634,7 +1635,7 @@ const ChatModal = ({
                                       </>
                                     )}
 
-                                    <div className="w-full">
+                                    <div className="w-full chatmodal-input-container">
                                       <div
                                         className={`${styles["chatmodal-figma-input-card"]} ${chatImageUrl
                                           ? styles[
@@ -1703,7 +1704,7 @@ const ChatModal = ({
                                             />
                                             {/* {localChatMessage && (
                                           <CloseCircleFilled
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7268ec] cursor-pointer text-base transition-colors z-10"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-aura-purple cursor-pointer text-base transition-colors z-10"
                                             onClick={() => setLocalChatMessage("")}
                                           />
                                         )} */}
@@ -1743,7 +1744,7 @@ const ChatModal = ({
                                 </>
                               )}
                             </div>
-                            {isShowFollowUpSearch || isShowTryAgain ? (
+                            {isShowFollowUpSearch ? (
                               <div
                                 className={`${shouldUseLegacyImageSearchLayout
                                   ? styles["chatmodal-followup-controls-mt4"]
@@ -1774,29 +1775,6 @@ const ChatModal = ({
                                       Follow-Up search
                                     </label>
                                   </div>
-                                ) : null}
-                                {isShowFollowUpSearch &&
-                                  isShowTryAgain &&
-                                  isSidExpired ? (
-                                  <div
-                                    className={styles["chatmodal-divider-vertical"]}
-                                  ></div>
-                                ) : null}
-                                {isShowTryAgain ? (
-                                  <button
-                                    className={`${styles["chatmodal-try-again-button"]} ${showChatLoader
-                                      ? styles["chatmodal-try-again-button-disabled"]
-                                      : ""
-                                      }`}
-                                    title="Regenerate the products with AI."
-                                    onClick={handleTryAgainClick}
-                                    disabled={showChatLoader}
-                                  >
-                                    <ReloadOutlined
-                                      className={styles["chatmodal-reload-icon"]}
-                                    />
-                                    Redo
-                                  </button>
                                 ) : null}
 
                               </div>
@@ -2120,3 +2098,6 @@ const ChatModal = ({
 };
 
 export default ChatModal;
+
+
+

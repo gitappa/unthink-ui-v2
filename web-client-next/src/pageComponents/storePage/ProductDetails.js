@@ -94,7 +94,7 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
-    
+
 
   ]);
 
@@ -102,7 +102,7 @@ const ProductDetails = ({ params, ...props }) => {
 
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
-  const [dropDown,setDropDown] = useState(false)
+  const [dropDown, setDropDown] = useState(false)
 
   //   useEffect(() => {
   //     return () => {
@@ -203,7 +203,7 @@ const ProductDetails = ({ params, ...props }) => {
     () => sellerDetails[productDetails?.brand],
     [sellerDetails, productDetails?.brand],
   );
- 
+
   const discountPer = useMemo(
     () =>
       productDetails?.price &&
@@ -299,8 +299,8 @@ const ProductDetails = ({ params, ...props }) => {
   //   "category",
   //   // 'product_tag'
   // ];
-const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
-// console.log('fieldsToDisplay',fieldsToDisplay);
+  const fieldsToDisplay = storeData?.pdp_settings?.product_page_attributes
+  // console.log('fieldsToDisplay',fieldsToDisplay);
 
   // scroll for tags
 
@@ -473,7 +473,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
       image_tryon_prompt: storeData?.templates?.[collection?.tryon_type] || storeData?.templates?.image_try_on || "",
       additional_prompt: descriptionget || "",
       type: collection?.tryon_type || "tryon",
-    }; 
+    };
     try {
       setLoading(true);
       const res = await TryOnVto(payload);
@@ -609,8 +609,8 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                               height={50}
                               width={50}
                               className={`  w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
-                                  ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
-                                  : "border-[#e8e2ff] hover:border-[#b8a9ff]"
+                                ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
+                                : "border-[#e8e2ff] hover:border-[#b8a9ff]"
                                 }`}
                               onClick={() => setAdditionalImg(img)}
                               alt="product"
@@ -875,8 +875,8 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     {productDetails?.availability ? (
                       <span
                         className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${productDetails.availability === "out stock"
-                            ? "bg-red-100 text-white"
-                            : "bg-green-100 text-green-700"
+                          ? "bg-red-100 text-white"
+                          : "bg-green-100 text-green-700"
                           }`}
                       >
                         {productDetails.avlbl === 0
@@ -928,7 +928,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                               rel="noreferrer"
                               href={link}
                             >
-                              Buy Now   
+                              Buy Now
                             </a>
                           );
                         })}
@@ -1007,7 +1007,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     </div>
                   </div>
                 )}
-                 {/* {productDetails?.product_tag?.length > 0 && (
+                {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
                       Products Tag
@@ -1041,7 +1041,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     onClick={() => setShowAllFields(!showAllFields)}
                     className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
                   >
-                    {showAllFields ? 'Show Less' : 'Show More'} 
+                    {showAllFields ? 'Show Less' : 'Show More'}
                   </button>
                 )}
                 {/* {productDetails?.product_tag?.length > 0 && (
@@ -1053,29 +1053,29 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )} */}
                 {storeData?.is_tryon_enabled &&
-                <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
-                  onClick={(e) => {
-                    dispatch(vtoIconState(productDetails?.mfr_code || true));
-                    e.stopPropagation();
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3 lg:mb-4">
-                    <Image
-                      height={24}
-                      width={24}
-                      alt="Try on with camera"
-                      className="cursor-pointer"
-                      src={camera}
-                    />
-                    <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                  <div
+                    className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
+                    onClick={(e) => {
+                      dispatch(vtoIconState(productDetails?.mfr_code || true));
+                      e.stopPropagation();
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                      <Image
+                        height={24}
+                        width={24}
+                        alt="Try on with camera"
+                        className="cursor-pointer"
+                        src={camera}
+                      />
+                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                    </div>
+                    <p>
+                      Scan the QR code with your phone to try this piece on
+                      virtually.
+                    </p>
                   </div>
-                  <p>
-                    Scan the QR code with your phone to try this piece on
-                    virtually.
-                  </p>
-                </div>
-}
+                }
                 {/* <div className="">
                   <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
@@ -1147,7 +1147,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     )}
                   </div> */}
                 {/* </div> */}
-                  {brandsDetails?.couponCode ? (
+                {brandsDetails?.couponCode ? (
                   <div className="">
                     <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
                       <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
@@ -1179,13 +1179,13 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
                       <div className="flex items-center gap-2">
                         {/* <span className="h-2 w-2 rounded-full bg-[#2b3d56]" /> */}
-                        <p className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]" onClick={()=>setDropDown(!dropDown)}>
+                        <p className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]" onClick={() => setDropDown(!dropDown)}>
                           Contact Details
                         </p>
                         {/* <p >kughbiuhb</p> */}
-                        {  brandsDetails?.shippingDetails || brandsDetails?.paymentDetails || brandsDetails?.info || brandsDetails?.contact ||brandsDetails?.email || brandsDetails?.title &&
-                        <RiArrowDropDownLine onClick={()=>setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`}  />
-                }
+                        {brandsDetails?.shippingDetails || brandsDetails?.paymentDetails || brandsDetails?.info || brandsDetails?.contact || brandsDetails?.email || brandsDetails?.title &&
+                          <RiArrowDropDownLine onClick={() => setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`} />
+                        }
                       </div>
 
                       {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
@@ -1223,49 +1223,49 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                         </div>
                       ) : null}
                     </div>
-                      {dropDown && 
-                    <div className="mt-4 divide-y divide-[#edf2f7]">
-                      {brandsDetails?.title && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Brand Name
-                          </p>
-                          <p className="font-medium text-[#1f2c3b] break-words">
-                            {brandsDetails.title}
-                          </p>
-                        </div>
-                      )}
+                    {dropDown &&
+                      <div className="mt-4 divide-y divide-[#edf2f7]">
+                        {brandsDetails?.title && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Brand Name
+                            </p>
+                            <p className="font-medium text-[#1f2c3b] break-words">
+                              {brandsDetails.title}
+                            </p>
+                          </div>
+                        )}
 
-                      {brandsDetails?.email && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Brand Email
-                          </p>
-                          <a
-                            className="block p-0 font-medium text-[#334155] break-all hover:underline"
-                            href={`mailto:${brandsDetails.email}`}
-                          >
-                            {brandsDetails.email}
-                          </a>
-                        </div>
-                      )}
+                        {brandsDetails?.email && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Brand Email
+                            </p>
+                            <a
+                              className="block p-0 font-medium text-[#334155] break-all hover:underline"
+                              href={`mailto:${brandsDetails.email}`}
+                            >
+                              {brandsDetails.email}
+                            </a>
+                          </div>
+                        )}
 
-                      {brandsDetails?.contact && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Contact
-                          </p>
-                          <a
-                            className="block p-0 font-medium text-[#334155] hover:underline"
-                            href={`tel:${brandsDetails.contact}`}
-                          >
-                            {brandsDetails.contact}
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                        }
-                       
+                        {brandsDetails?.contact && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Contact
+                            </p>
+                            <a
+                              className="block p-0 font-medium text-[#334155] hover:underline"
+                              href={`tel:${brandsDetails.contact}`}
+                            >
+                              {brandsDetails.contact}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    }
+
                     {brandsDetails?.info && dropDown ? (
                       <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
                         {brandsDetails.info}
@@ -1274,9 +1274,9 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )}
 
-              
 
-                {brandsDetails?.paymentDetails && dropDown &&(
+
+                {brandsDetails?.paymentDetails && dropDown && (
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Payment Details
@@ -1287,7 +1287,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )}
 
-                {brandsDetails?.shippingDetails && dropDown &&(
+                {brandsDetails?.shippingDetails && dropDown && (
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Shipping Details

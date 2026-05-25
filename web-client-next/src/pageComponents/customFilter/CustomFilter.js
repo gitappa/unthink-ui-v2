@@ -68,7 +68,7 @@ export const CustomFilter = ({
 					{showCustomFilterInput || isCustomFilterInputVisible ? (
 						<>
 							<label
-								className='font-bold text-sm text-[#7268ec] tracking-[0.05em] uppercase underline antialiased self-center shrink-0 whitespace-nowrap'>
+								className='font-bold text-sm text-aura-purple tracking-[0.05em] uppercase underline antialiased self-center shrink-0 whitespace-nowrap'>
 								{customFilterStoreData.label}
 							</label>
 							<div className='flex items-center gap-2 w-full'>
@@ -88,7 +88,7 @@ export const CustomFilter = ({
 										<button
 											onClick={handleGoClick}
 											className='flex items-center justify-center text-white rounded-full w-9 h-9 cursor-pointer border-none transition-all hover:scale-105'
-											style={{ background: "linear-gradient(90deg, #7268ec 0%, #5a4af4 100%)", boxShadow: "0 2px 8px rgba(114, 104, 236, 0.3)" }}
+											style={{ background: "linear-gradient(90deg, var(--color-secondary) 0%, #5a4af4 100%)", boxShadow: "0 2px 8px rgba(114, 104, 236, 0.3)" }}
 											title='Apply hashtags'>
 											<CheckOutlined className='text-sm' />
 										</button>
@@ -105,7 +105,7 @@ export const CustomFilter = ({
 					) : (
 						<div className='flex items-center flex-wrap gap-2 overflow-auto w-full py-0.5'>
 							<label
-								className='font-bold text-sm text-[#7268ec] tracking-[0.05em] uppercase underline antialiased self-center shrink-0 whitespace-nowrap mr-1'>
+								className='font-bold text-sm text-aura-purple tracking-[0.05em] uppercase underline antialiased self-center shrink-0 whitespace-nowrap mr-1'>
 								{customFilterStoreData.label}
 							</label>
 							{!isEmpty(customFilter) ? (
@@ -113,14 +113,14 @@ export const CustomFilter = ({
 									{customFilter.map((hashtag) => (
 										<div
 											key={hashtag}
-											className='flex items-center rounded-full bg-[#f3f0ff] border border-solid border-[#e2dcfa] px-3 py-1 text-xs font-semibold text-[#7268ec] shadow-sm transition-all hover:bg-[#ece8fb]'
+											className='flex items-center rounded-full bg-[#f3f0ff] border border-solid border-[#e2dcfa] px-3 py-1 text-xs font-semibold text-aura-purple shadow-sm transition-all hover:bg-[#ece8fb]'
 											role='button'>
 											<span className='m-0 text-xs font-semibold text-[#2f3d61]'>
 												#{hashtag}
 											</span>
 											<button
 												type='button'
-												className='border-none bg-transparent p-0 ml-1.5 flex items-center justify-center text-[#7268ec] cursor-pointer hover:text-red-500 transition-colors'
+												className='border-none bg-transparent p-0 ml-1.5 flex items-center justify-center text-aura-purple cursor-pointer hover:text-red-500 transition-colors'
 												onClick={(e) =>
 													handleDeleteCustomFilterClick(e, [hashtag])
 												}>
@@ -131,7 +131,7 @@ export const CustomFilter = ({
 								</>
 							) : null}
 							<div
-								className='flex items-center justify-center w-7 h-7 rounded-full bg-[#f3f0ff] hover:bg-[#7268ec] text-[#7268ec] hover:text-white border border-dashed border-[#7268ec] transition-all cursor-pointer ml-1'
+								className='flex items-center justify-center w-7 h-7 rounded-full bg-[#f3f0ff] hover:bg-aura-purple text-aura-purple hover:text-white border border-dashed border-aura-purple transition-all cursor-pointer ml-1'
 								title='Add or edit hashtags'
 								onClick={() => {
 									checkAndShowContainer({ isShowCustomFilterInput: true });
@@ -145,3 +145,5 @@ export const CustomFilter = ({
 		</>
 	);
 };
+
+
