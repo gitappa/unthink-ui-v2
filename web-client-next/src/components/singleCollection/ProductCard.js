@@ -1353,7 +1353,7 @@ const ProductCard = ({
                     </SwiperSlide>
                   )}
 
-                {storeData.pdp_settings?.product_card_attributes?.[2] &&
+                {/* {storeData.pdp_settings?.product_card_attributes?.[2] &&
                   product?.fit?.length > 0 && (
                     <SwiperSlide style={{ width: "auto" }}>
                       <span className={styles.smalltags}>
@@ -1365,7 +1365,7 @@ const ProductCard = ({
                           : product?.fit?.replace(/,+$/, "").trim()}
                       </span>
                     </SwiperSlide>
-                  )}
+                  )} */}
               </Swiper>
             </div>
           ) : (
