@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInfluencerCollection } from "../../pageComponents/Influencer/redux/actions";
 import ProductCard from "../singleCollection/ProductCard";
+import { filterAvailableProductList, filterProductListBySelectedTags } from "../../helper/utils";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -17,7 +18,29 @@ const CollectionPage = ({ params }) => {
     setSelectedTags(value === "All" ? [] : [value]);
   }, []);
 
-  console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
+    const productsData = useMemo(() => {
+      let list = filterAvailableProductList(singleCollectionKiosk.product_lists);
+  
+      if (selectedTags.length) {
+        list = filterProductListBySelectedTags(
+          list,
+          selectedTags,
+          singleCollectionKiosk.tag_map,
+        );
+      }
+      // list = sponsorProductList.concat(list);
+  
+      return  list;
+    }, [
+      singleCollectionKiosk.product_lists,
+      singleCollectionKiosk.tag_map,
+      selectedTags,
+      
+    ]);
+    // console.log('productsData',productsData);
+    
+
+  // console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
   const tagsToShow = useMemo(() => {
     const allTag = ["All"];
     const allTags = singleCollectionKiosk.tags
@@ -52,11 +75,11 @@ const CollectionPage = ({ params }) => {
         <p className="text-gray-400 text-sm font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-black mb-2">
+        <h1 className="text-4xl md:text-5xl  font-bold text-black mb-2">
           {singleCollectionKiosk.collection_name}
         </h1>
         <p className="text-gray-500 text-base">
-          {singleCollectionKiosk?.product_lists?.length}
+          {singleCollectionKiosk?.product_lists?.length} pieces
         </p>
       </div>
 
@@ -78,11 +101,11 @@ const CollectionPage = ({ params }) => {
       </div>
 
       {/* Product Grid Placeholder */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-       {singleCollectionKiosk?.product_lists?.map((item) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
+       {productsData?.map((item) => (
           <div
             key={item}
-            className="bg-gray-100 rounded-lg  flex items-center justify-center"
+            className=" rounded-lg  flex items-center justify-center"
           >
             {productCardKiosk(item)}
           </div>
