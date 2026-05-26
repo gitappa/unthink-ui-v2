@@ -9,9 +9,7 @@ const BannerKisok = ({products}) => {
     
     const dummyProducts = products.filter(x=>x.cover_image)
     const handleNavCollection =(Singlecollectiondata)=>{
-      router.push(`/kioskcollections/${Singlecollectiondata.path}`)
-    
-      
+      router.push(`/kioskcollections/${Singlecollectiondata.path}`) 
     }
     return (
         <div className='mt-5'>
