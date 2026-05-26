@@ -1,17 +1,13 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const BannerKisok = ({collectionData}) => {
+const BannerKisok = ({products}) => {
     const Tags = ['#Look Book', '#Social Media', '#Trending Collections']
     const [showTags, setShowTags] = useState(Tags[0])
     const router = useRouter();
-    // const dummyProducts = [
-    //     { id: 1, image: '/images/product1.jpg', color: 'bg-red-900' },
-    //     { id: 2, image: '/images/product2.jpg', color: 'bg-gray-700' },
-    //     { id: 3, image: '/images/product3.jpg', color: 'bg-amber-100' },
-    // ]
-    const dummyProducts = collectionData.slice(4,7) 
+    
+    const dummyProducts = products.filter(x=>x.cover_image)
     const handleNavCollection =(Singlecollectiondata)=>{
       router.push(`/kioskcollections/${Singlecollectiondata.path}`)
     
