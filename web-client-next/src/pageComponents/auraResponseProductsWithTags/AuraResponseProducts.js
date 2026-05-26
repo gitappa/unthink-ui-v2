@@ -199,11 +199,6 @@ const AuraResponseProducts = ({
 					newOptionalFilters.push(key);
 					hasChanges = true;
 				}
-			} else {
-				if (newOptionalFilters.includes(key)) {
-					newOptionalFilters = newOptionalFilters.filter((n) => n !== key);
-					hasChanges = true;
-				}
 			}
 		});
 
@@ -237,6 +232,14 @@ const AuraResponseProducts = ({
 
 	const sendSocketMessage = (newFilters = {}, page = currentPage) => {
 		const filtersToSubmit = { ...newFilters };
+
+		// manual override because when state change from productFilters optional_filters is not updated in filtersit
+		if (Array.isArray(filtersToSubmit.optional_filters)) {
+			filtersToSubmit.optional_filters.forEach((key) => {
+				delete filtersToSubmit[key];
+			});
+		}
+
 		if (Array.isArray(filtersToSubmit.custom_filter)) {
 			filtersToSubmit.custom_filter = filtersToSubmit.custom_filter.join(",");
 		}
@@ -858,7 +861,16 @@ const AuraResponseProducts = ({
 							{enableFilters ? (
 								<div className={hasVisibleFilters ? "mb-4 md:mb-5" : ""}>
 									<ProductFiltersTags
-										productFilters={filters}
+										//to hide the optional filters from meta filtersTags
+										productFilters={(() => {
+											const active = { ...filters };
+											if (Array.isArray(active.optional_filters)) {
+												active.optional_filters.forEach((key) => {
+													delete active[key];
+												});
+											}
+											return active;
+										})()}
 										handleFiltersInputClear={handleFiltersInputClear}
 										handleClearFiltersClick={handleClearFiltersClick}
 										displayFilters={filtersToShow.filter(f => f.key !== 'custom_filter')}

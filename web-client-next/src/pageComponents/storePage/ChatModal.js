@@ -584,6 +584,14 @@ const ChatModal = ({
   };
 
   const [localChatMessage, setLocalChatMessage] = useState("");
+  const [prevShowChatLoader, setPrevShowChatLoader] = useState(showChatLoader);
+
+  if (showChatLoader !== prevShowChatLoader) {
+    setPrevShowChatLoader(showChatLoader);
+    if (!showChatLoader && prevShowChatLoader) {
+      setLocalChatMessage("");
+    }
+  }
 
   const handleInputChange = (e) => {
     const { value } = e.target;
@@ -704,7 +712,7 @@ const ChatModal = ({
       dispatch(setOverlayCoordinates([]));
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
-      setLocalChatMessage('')
+      // setLocalChatMessage('')
       //  setIsImageLoading(false);
     }
 

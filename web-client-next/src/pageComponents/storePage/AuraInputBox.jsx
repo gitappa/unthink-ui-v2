@@ -131,7 +131,7 @@ const AuraInputBox = ({
             placeholder={
               typeof activeSearchOption?.text_placeholder === "string" && !isFollowUpQuery
                 ? activeSearchOption?.text_placeholder
-                : chatHistory[chatHistory.length - 1]
+                : "Ask a follow up..."
             }
             name="chat_message"
             value={localChatMessage}
