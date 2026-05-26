@@ -15,26 +15,26 @@ const HomePageNew = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
     state.influencer.collections.data,
   ]);
-  console.log("collectionDataz", collectionData);
+//   console.log("collectionDataz", collectionData);
 
   const authUserCollections = useSelector(
     (state) => state.auth.user.collections.data,
   );
 
   const [products, setProducts] = useState([]);
-  console.log("products", products);
+//   console.log("products", products);
 
   const fetchData = async () => {
     try {
       const res = await fetch(
-        "https://auraprod.unthink.ai/user/collections/fetch_collections/?user_id=173081113277330&store=dothelook&product_limits=12&view=public&ipp=10&current_page=0",
+        "https://auraprod.unthink.ai/user/collections/fetch_collections/?user_id=173081113277330&store=dothelook&product_limits=12&view=admin&ipp=15&current_page=0",
       );
 
       const json = await res.json();
       // store in state
       setProducts(json.data);
 
-      console.log(json.data);
+    //   console.log(json.data);
     } catch (err) {
       console.log(err);
     }
@@ -45,7 +45,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
   }, []);
 
   return (
-    <div className="max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto     px-14">
+    <div className=" mx-auto w-full  px-14">
       <HeroSection im={im} products={products} />
       <BannerKisok products={products} />
     </div>
@@ -53,3 +53,4 @@ const HomePageNew = ({ blogCollectionPage }) => {
 };
 
 export default HomePageNew;
+ 
