@@ -568,7 +568,8 @@ const StorePageWrapper = (props) => {
 			authUserCollections.length,
 			currentSingleCollection._id,
 			showWishlistModal,
-			collection_path
+			collection_path,
+			collection_id,
 		]
 	);
 	// const isFirstRender = useRef(true);
@@ -672,10 +673,21 @@ const StorePageWrapper = (props) => {
 	]);
 
 	useEffect(() => {
-		if (!currentSingleCollection.detailed) {
+		// Ensure we fetch the shared single collection when the route/query
+		// parameters become available (e.g. on first refresh). Also avoid
+		// fetching while wishlist modal is open.
+		if (
+			isSingleCollectionSharedPage &&
+			!showWishlistModal &&
+			!currentSingleCollection.detailed
+		) {
 			fetchCollection();
 		}
-	}, [currentSingleCollection.detailed, currentSingleCollection._id, collection_path]);
+	}, [
+		isSingleCollectionSharedPage,
+		showWishlistModal,
+		collection_id,	
+	]);
 
 
 

@@ -8,7 +8,7 @@
 
 @media (max-width: 1024px) {
   .chat-products-container {
-    padding: 0 1rem !important;
+    padding: 0 0.5rem !important;
   }
 }
 

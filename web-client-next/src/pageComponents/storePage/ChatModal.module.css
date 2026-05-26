@@ -18,7 +18,7 @@
 
 @media (max-width: 1024px) {
   .chatmodal-modal-container {
-    padding: 16px 0 16px 16px !important;
+    padding: 10px 0 10px 0px !important;
   }
 }
 
@@ -111,7 +111,7 @@
 
 @media (max-width: 1024px) {
   .chatmodal-content-wrapper {
-    padding: 1rem 0 1rem;
+    padding: 0.5rem 0;
   }
 }
 
@@ -144,7 +144,7 @@
 
 @media (max-width: 1024px) {
   .chatmodal-content-max-width {
-    padding: 16px !important;
+    padding: 10px !important;
     max-width: 550px !important;
     margin: 0 auto !important;
   }
@@ -192,12 +192,12 @@
 
 @media (max-width: 1024px) {
   .chatmodal-header-section {
-    padding-top: 1rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
     max-width: 550px !important;
     margin: 0 auto !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 }
 
@@ -627,8 +627,8 @@
     width: 100% !important;
     max-width: 550px !important;
     margin: 0 auto !important;
-    padding: 6px 10px !important;
-    gap: 0.5rem !important;
+    padding: 4px 8px !important;
+    gap: 0.25rem !important;
     min-height: unset !important;
   }
 
@@ -643,18 +643,18 @@
   }
 
   .chatmodal-search-option-image-wrapper {
-    height: 4rem !important;
+    height: 3rem !important;
     /* width: 100%; */
   }
 
   .chatmodal-search-option-image {
-    width: 44px !important;
-    height: 44px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
 
   .chatmodal-search-option-image-wrapper {
-    height: 44px !important;
-    width: 44px !important;
+    height: 32px !important;
+    width: 32px !important;
   }
 
   .chatmodal-search-option-image-one {
@@ -687,12 +687,12 @@
   } */
 
   .chatmodal-search-option-image-wrapper {
-    height: 4.5rem;
+    height: 3rem;
   }
 
   .chatmodal-search-option-image-one {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     left: 50%;
     transform: translateX(-50%);
     bottom: 8px;
@@ -1201,6 +1201,12 @@
   /* padding: 1.05rem 1.35rem 0.95rem; */
   padding: 0.5rem 0.5rem 0.5rem;
   position: relative;
+}
+
+@media (max-width: 1024px) {
+  .chatmodal-figma-input-card {
+    margin: 15px auto 0;
+  }
 }
 
 .chatmodal-figma-input-card-bottom {
