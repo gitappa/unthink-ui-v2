@@ -652,7 +652,7 @@ const ChatProducts = ({
 
   const productsResultsContent = (
     <>
-      {showChatLoader && chatProductsDataToShow.length === 0 && isEmpty(suggestionsWithProducts.suggestions) && (
+      {showChatLoader && chatProductsDataToShow.length === 0 && isEmpty(suggestionsWithProducts.suggestions) && !NEW_AURA_PRODUCTS_UI_ENABLED && (
         <div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
           <Spin
             indicator={
@@ -907,12 +907,29 @@ const ChatProducts = ({
 							) : null} */}
                 {widgetHeader ? (
                   <div id="current_data_widgetHeader">
-                    <span
-                      className={styles["chat-products-widget-header"]}
-                      dangerouslySetInnerHTML={{
-                        __html: widgetHeader,
-                      }}
-                    />
+                    {/* Description Loading - SINGLE LAYOUT VIEW */}
+                    {showChatLoader ? (
+                      <div className="flex flex-col items-center justify-center py-4 gap-2 animate-pulse w-full">
+                        <Spin
+                          indicator={
+                            <Loading3QuartersOutlined
+                              style={{ fontSize: 20, color: "var(--color-secondary)" }}
+                              spin
+                            />
+                          }
+                        />
+                        <span className="text-secondary font-medium text-xs tracking-wide">
+                          Loading new description...
+                        </span>
+                      </div>
+                    ) : (
+                      <span
+                        className={styles["chat-products-widget-header"]}
+                        dangerouslySetInnerHTML={{
+                          __html: widgetHeader,
+                        }}
+                      />
+                    )}
                   </div>
                 ) : null}
               </div>
@@ -1034,12 +1051,29 @@ const ChatProducts = ({
                                 styles["chat-products-shop-look-description-block"]
                               }
                             >
-                              <div
-                                className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
-                                dangerouslySetInnerHTML={{ __html: widgetHeader }}
-                              />
+                              {/* Description Loading - SPLIT VIEW LAYOUT (Desktop/Tablet Side-by-Side) */}
+                              {showChatLoader ? (
+                                <div className="flex flex-col items-center justify-center py-6 gap-3 animate-pulse w-full">
+                                  <Spin
+                                    indicator={
+                                      <Loading3QuartersOutlined
+                                        style={{ fontSize: 24, color: "var(--color-secondary)" }}
+                                        spin
+                                      />
+                                    }
+                                  />
+                                  <span className="text-secondary font-medium text-sm tracking-wide">
+                                    Loading new description...
+                                  </span>
+                                </div>
+                              ) : (
+                                <div
+                                  className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
+                                  dangerouslySetInnerHTML={{ __html: widgetHeader }}
+                                />
+                              )}
                               <div className="flex flex-col items-start gap-0">
-                                {widgetHeader?.length > 80 && (
+                                {!showChatLoader && widgetHeader?.length > 80 && (
                                   <button
                                     className={styles["chat-products-read-more-btn"]}
                                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
@@ -1295,10 +1329,27 @@ const ChatProducts = ({
                     {/* Description text */}
                     {widgetHeader && (
                       <div className={styles["chat-products-shop-look-description-block"]} style={{ margin: "0.25rem 0" }}>
-                        <div
-                          className={styles["chat-products-shop-look-description-text"]}
-                          dangerouslySetInnerHTML={{ __html: widgetHeader }}
-                        />
+                        {/* Description Loading - MOBILE SWIPE DRAWER VIEW */}
+                        {showChatLoader ? (
+                          <div className="flex flex-col items-center justify-center py-4 gap-2 animate-pulse w-full">
+                            <Spin
+                              indicator={
+                                <Loading3QuartersOutlined
+                                  style={{ fontSize: 20, color: "var(--color-secondary)" }}
+                                  spin
+                                />
+                              }
+                            />
+                            <span className="text-secondary font-medium text-xs tracking-wide">
+                              Loading new description...
+                            </span>
+                          </div>
+                        ) : (
+                          <div
+                            className={styles["chat-products-shop-look-description-text"]}
+                            dangerouslySetInnerHTML={{ __html: widgetHeader }}
+                          />
+                        )}
                       </div>
                     )}
 
