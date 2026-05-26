@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import ReactPlayer from 'react-player'
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar } from "swiper";
 import "swiper/css";
-import "swiper/css/scrollbar";
 import Image from "next/image";
-const HeroSection = ({ im, collectionData }) => {
-  const collectiondata = collectionData?.find(data=>data?.collection_name === 'Brand JWELX')
-  console.log('collectiondatas',collectiondata);
+const HeroSection = ({ im, products }) => {
+  const router = useRouter();
+  const collectiondata = products?.find(data => data?.collection_name === 'Brand JWELX')
+  // console.log('collectiondatas', collectiondata);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage = collectiondata?.thumbnail_image || collectiondata?.image;
@@ -60,7 +60,7 @@ const HeroSection = ({ im, collectionData }) => {
         {isClient ? (
            collectiondata?.video_url ? (
             <ReactPlayer
-              url={ collectiondata?.video_url}
+              url={collectiondata?.video_url}
               playing={isPlaying}
               onPlay={handlePlayClick}
               onPause={handlePauseClick}
@@ -69,16 +69,19 @@ const HeroSection = ({ im, collectionData }) => {
               width="100%"
               height="100%"
               playsinline
-              controls={true}
-              // config={{
-              //   youtube: {
-              //     playerVars: {
-              //       autoplay: 1,
-              //       mute: 1,
-              //       playsinline: 1,
-              //     },
-              //   },
-              // }}
+              controls={false}
+              config={{
+                youtube: {
+                  playerVars: {
+                    controls: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    iv_load_policy: 3,
+                    playsinline: 1,
+                    disablekb: 1
+                  }
+                }
+              }}
               light={isPlaying ? false : (thumbnailImage || false)}
             />
           ) : (
@@ -93,46 +96,88 @@ const HeroSection = ({ im, collectionData }) => {
         )}
 
         <div className="absolute -bottom-14 w-full">
-          <div className="pb-2">
-            <Swiper
-              scrollbar={{
-                hide: false,
+          <div className="relative pb-2">
+            {/* subtle ash gradient behind the swiper cards */}
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-1  mx-auto rounded-xl pointer-events-none"
+              style={{
+                height: 180,
+                zIndex: 0,
+                background: 'linear-gradient(90deg, rgba(245,246,247,0.95) 0%, rgba(234,236,238,0.95) 50%, rgba(245,246,247,0.95) 100%)',
+                filter: 'blur(18px)'
               }}
-              modules={[Scrollbar]}
-              spaceBetween={10}
-              slidesPerView={6}
-              className="mySwipers"
-              style={{ width: "100%" }}
-              breakpoints={{
-                0: {
-                  slidesPerView: 2,
-                },
-                640: {
-                  slidesPerView: 3,
-                },
-                768: {
-                  slidesPerView: 4,
-                },
-                1024: {
-                  slidesPerView: 5,
-                },
-                1380: {
-                  slidesPerView: 6,
-                },
-              }}
-            >
-              {collectiondata?.product_lists?.map((collection, id) => (
-                <SwiperSlide key={id}>
-                  <Image
-                    src={collection.image}
-                    width={192}
-                    height={192}
-                    alt={collection.name || `slide-${id}`}
-                    className="h-48 w-48 rounded-xl shadow-md object-cover"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            />
+
+            <div style={{ position: 'relative', zIndex: 10 }} className="pb-2">
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={6}
+                className="mySwipers"
+                style={{ width: "100%" }}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 2,
+                  },
+                  640: {
+                    slidesPerView: 3,
+                  },
+                  768: {
+                    slidesPerView: 4,
+                  },
+                  1024: {
+                    slidesPerView: 5,
+                  },
+                  1380: {
+                    slidesPerView: 6,
+                  },
+                }}
+              >
+                {collectiondata && (
+                  <>
+                    <SwiperSlide key="collection-info" >
+                      <div
+                        className="h-48 w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-4"
+                        style={{ backgroundColor: 'rgba(250,251,252,0.95)' }}
+                      >
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold text-black">
+                            {collectiondata.collection_name}
+                          </h3>
+                          <button
+                            onClick={() =>
+                              router.push(
+                                `/kioskcollections/${collectiondata.path}`
+                              )
+                            }
+                            className="mt-4 bg-black text-white px-4 py-2 rounded-md"
+                          >
+                            Shop All
+                          </button>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+
+                    {collectiondata.product_lists?.map((product, idx) => (
+                      <SwiperSlide key={`product-${idx}`} className="ml-7">
+                        <div
+                          className="h-48 w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-3 overflow-hidden"
+                          style={{ backgroundColor: 'rgba(250,251,252,0.95)' }}
+                        >
+                          <Image
+                            src={product.image}
+                            width={176}
+                            height={176}
+                            alt={product.name || `slide-${idx}`}
+                            className="h-full w-full rounded-md object-contain"
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </>
+                )}
+              </Swiper>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInfluencerCollection } from "../../pageComponents/Influencer/redux/actions";
 import ProductCard from "../singleCollection/ProductCard";
+import { filterAvailableProductList, filterProductListBySelectedTags } from "../../helper/utils";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -17,7 +18,29 @@ const CollectionPage = ({ params }) => {
     setSelectedTags(value === "All" ? [] : [value]);
   }, []);
 
-  console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
+    const productsData = useMemo(() => {
+      let list = filterAvailableProductList(singleCollectionKiosk.product_lists);
+  
+      if (selectedTags.length) {
+        list = filterProductListBySelectedTags(
+          list,
+          selectedTags,
+          singleCollectionKiosk.tag_map,
+        );
+      }
+      // list = sponsorProductList.concat(list);
+  
+      return  list;
+    }, [
+      singleCollectionKiosk.product_lists,
+      singleCollectionKiosk.tag_map,
+      selectedTags,
+      
+    ]);
+    // console.log('productsData',productsData);
+    
+
+  // console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
   const tagsToShow = useMemo(() => {
     const allTag = ["All"];
     const allTags = singleCollectionKiosk.tags
@@ -48,20 +71,20 @@ const CollectionPage = ({ params }) => {
   return (
     <div className="p-8 md:p-12 bg-white min-h-screen">
       {/* Header */}
-      <div className="mb-8">
-        <p className="text-gray-400 text-sm font-semibold tracking-widest mb-3">
+      <div className="mb-3 lg:mb-8">
+        <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-black mb-2">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl  font-bold text-black mb-0 lg:mb-2">
           {singleCollectionKiosk.collection_name}
         </h1>
-        <p className="text-gray-500 text-base">
-          {singleCollectionKiosk?.product_lists?.length}
+        <p className="text-gray-500 text-base lg:mb-0 mb-2">
+          {singleCollectionKiosk?.product_lists?.length} pieces
         </p>
       </div>
 
       {/* Category Filters */}
-      <div className="flex items-center gap-3 mb-12 flex-wrap">
+      <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 mb-5 lg:mb-12 flex-wrap">
         {tagsToShow.map((tag, i) => (
           <button
             key={i}
@@ -70,7 +93,7 @@ const CollectionPage = ({ params }) => {
               activeCategory === tag
                 ? 'bg-black text-white'
                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-            } px-5 py-3 rounded-full font-semibold text-sm transition duration-200`}
+            } lg:px-5 px-3 py-2 lg:py-3 rounded-full font-semibold text-[12px] lg:text-sm transition duration-200`}
           >
             {tag}
           </button>
@@ -78,11 +101,11 @@ const CollectionPage = ({ params }) => {
       </div>
 
       {/* Product Grid Placeholder */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-       {singleCollectionKiosk?.product_lists?.map((item) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
+       {productsData?.map((item) => (
           <div
             key={item}
-            className="bg-gray-100 rounded-lg  flex items-center justify-center"
+            className=" rounded-lg  flex items-center justify-center"
           >
             {productCardKiosk(item)}
           </div>
