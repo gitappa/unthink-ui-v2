@@ -1310,9 +1310,7 @@ const ProductCard = ({
           {(storeData.pdp_settings?.product_card_attributes?.[0] &&
             product?.size?.length > 0) ||
           (storeData.pdp_settings?.product_card_attributes?.[1] &&
-            product?.sleeve?.length > 0) ||
-          (storeData.pdp_settings?.product_card_attributes?.[2] &&
-            product?.fit?.length > 0) ? (
+            product?.sleeve?.length > 0) ? (
             <div
               className={`${styles.tagsContainerWrapper} ${
                 isOverflowing ? styles.isOverflowing : ""
@@ -1353,7 +1351,7 @@ const ProductCard = ({
                     </SwiperSlide>
                   )}
 
-                {storeData.pdp_settings?.product_card_attributes?.[2] &&
+                {/* {storeData.pdp_settings?.product_card_attributes?.[2] &&
                   product?.fit?.length > 0 && (
                     <SwiperSlide style={{ width: "auto" }}>
                       <span className={styles.smalltags}>
@@ -1365,7 +1363,7 @@ const ProductCard = ({
                           : product?.fit?.replace(/,+$/, "").trim()}
                       </span>
                     </SwiperSlide>
-                  )}
+                  )} */}
               </Swiper>
             </div>
           ) : (
