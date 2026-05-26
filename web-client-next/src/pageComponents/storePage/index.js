@@ -686,7 +686,8 @@ const StorePageWrapper = (props) => {
 	}, [
 		isSingleCollectionSharedPage,
 		showWishlistModal,
-		collection_id,	
+		collection_id,
+		
 	]);
 
 

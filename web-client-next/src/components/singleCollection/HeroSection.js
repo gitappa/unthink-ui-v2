@@ -5,8 +5,8 @@ import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import Image from "next/image";
-const HeroSection = ({ im, collectionData }) => {
-  const collectiondata = collectionData?.find(data=>data?.collection_name === 'Brand JWELX')
+const HeroSection = ({ im, products }) => {
+  const collectiondata = products?.find(data=>data?.collection_name === 'Brand JWELX')
   console.log('collectiondatas',collectiondata);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
