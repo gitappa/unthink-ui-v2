@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import HeroSection from "./HeroSection";
 import BannerKisok from "../kiosk/BannerKisok";
+import QRsection from "../kiosk/QRsection";
 
 const HomePageNew = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
@@ -45,9 +46,10 @@ const HomePageNew = ({ blogCollectionPage }) => {
   }, []);
 
   return (
-    <div className=" mx-auto w-full  px-14">
+    <div className=" mx-auto w-full px-6 md:px-14">
       <HeroSection im={im} products={products} />
       <BannerKisok products={products} />
+      <QRsection />
     </div>
   );
 };

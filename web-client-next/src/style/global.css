@@ -74,7 +74,24 @@
     @apply bg-[#f5f0ff];
   }
 }
+/* kiosk designs  */
+@layer components {
+  .h1-kiosk {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
 
+  .h2-kiosk {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  .p-kiosk {
+    @apply text-sm md:text-base xl:text-lg;
+  }
+
+  .button-kiosk {
+    @apply !text-sm md:!text-base lg:!text-lg;
+  }
+}
 /* Remove border from Ant Design select components */
 button {
   cursor: pointer;
