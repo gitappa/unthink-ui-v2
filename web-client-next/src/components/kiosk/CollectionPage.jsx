@@ -75,7 +75,7 @@ const CollectionPage = ({ params }) => {
         <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl  font-bold text-black mb-0 lg:mb-2">
+        <h1 className="h1-kiosk font-bold text-black mb-0 lg:mb-2">
           {singleCollectionKiosk.collection_name}
         </h1>
         <p className="text-gray-500 text-base lg:mb-0 mb-2">
