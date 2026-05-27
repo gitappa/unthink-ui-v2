@@ -95,15 +95,18 @@ const HeroSection = ({ im, products }) => {
           </div>
         )}
 
-        <div className="absolute -bottom-14 w-full">
+        <div className="absolute -bottom-16 w-full">
           <div className="relative pb-2">
             {/* subtle ash gradient behind the swiper cards */}
             <div
               aria-hidden="true"
-              className="absolute -bottom-1  mx-auto rounded-xl pointer-events-none"
+              className="absolute -bottom-0.5 md:-bottom-1 mx-auto rounded-xl pointer-events-none"
               style={{
+                left: 0,
+                right: 0,
+                width: '100%',
                 height: 180,
-                zIndex: 0,
+                zIndex: 1,
                 background: 'linear-gradient(90deg, rgba(245,246,247,0.95) 0%, rgba(234,236,238,0.95) 50%, rgba(245,246,247,0.95) 100%)',
                 filter: 'blur(18px)'
               }}
@@ -117,7 +120,7 @@ const HeroSection = ({ im, products }) => {
                 style={{ width: "100%" }}
                 breakpoints={{
                   0: {
-                    slidesPerView: 2,
+                    slidesPerView: 1.5,
                   },
                   640: {
                     slidesPerView: 3,
@@ -137,7 +140,7 @@ const HeroSection = ({ im, products }) => {
                   <>
                     <SwiperSlide key="collection-info" >
                       <div
-                        className="h-48 w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-4"
+                        className="h-40 w-40 md:h-48 md:w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-4"
                         style={{ backgroundColor: 'rgba(250,251,252,0.95)' }}
                       >
                         <div className="text-center">
@@ -161,7 +164,7 @@ const HeroSection = ({ im, products }) => {
                     {collectiondata.product_lists?.map((product, idx) => (
                       <SwiperSlide key={`product-${idx}`} className="ml-7">
                         <div
-                          className="h-48 w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-3 overflow-hidden"
+                          className="h-40 w-40 md:h-48 md:w-48  rounded-xl mr-3 shadow-md flex items-center justify-center p-3 overflow-hidden"
                           style={{ backgroundColor: 'rgba(250,251,252,0.95)' }}
                         >
                           <Image
