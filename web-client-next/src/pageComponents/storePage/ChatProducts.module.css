@@ -1346,6 +1346,7 @@
   .layout-left {
     grid-template-columns: 1fr !important;
     padding: 0 12rem; /* Added left and right side padding */
+    padding: 0 12rem; /* Added left and right side padding */
   }
   .layout-left .chat-products-shop-look-main {
     display: none !important;
@@ -1583,4 +1584,4 @@
   100% {
     box-shadow: 0 0 0 0 rgba(114, 104, 236, 0);
   }
-}
+}

@@ -1421,7 +1421,11 @@ const ChatProducts = ({
       )}
 
       <button
+<<<<<<< HEAD
         className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[var(--color-brand)] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 hover:bg-[var(--color-brand)] hover:scale-110 active:scale-95 ${
+=======
+        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[#7268ec] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 lg:hidden hover:bg-[#5a4af4] hover:scale-110 active:scale-95 ${
+>>>>>>> 5a608da (kriti commit)
           showScrollBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
         onClick={handleScrollToTop}
