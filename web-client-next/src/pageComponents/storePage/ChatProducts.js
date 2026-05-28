@@ -170,45 +170,39 @@ const ChatProducts = ({
   }, [onOpenMobileSidebar]);
 
   useEffect(() => {
-    if (!isMobile) return;
-
     const handleScroll = () => {
-      const descElement = document.getElementById("aura-description-section");
-
-      let scrollTop = 0;
-      if (descElement) {
-        let parent = descElement.parentElement;
-        while (parent) {
-          const overflowY = window.getComputedStyle(parent).overflowY;
-          if (overflowY === "auto" || overflowY === "scroll") {
-            scrollTop = parent.scrollTop;
-            break;
-          }
-          parent = parent.parentElement;
+      let scrollYPos = 0;
+      let parent = containerRef.current;
+      while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        if (overflowY === "auto" || overflowY === "scroll") {
+          scrollYPos = parent.scrollTop;
+          break;
         }
+        parent = parent.parentElement;
       }
-      if (scrollTop === 0) {
-        scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      if (scrollYPos === 0) {
+        scrollYPos = window.scrollY || document.documentElement.scrollTop;
       }
 
-      if (descElement) {
+      const descElement = document.getElementById("aura-description-section");
+      
+      let shouldShow = false;
+      if (descElement && isMobile) {
         const descRect = descElement.getBoundingClientRect();
         if (descRect.bottom < 100) {
-          setShowScrollBtn(true);
-          if (scrollTop > 100) {
-            setHasScrolledToProducts(true);
-          }
-        } else {
-          setShowScrollBtn(false);
+          shouldShow = true;
         }
       } else {
-        const container = containerRef.current;
-        if (container && container.scrollTop > 150) {
-          setShowScrollBtn(true);
-          setHasScrolledToProducts(true);
-        } else {
-          setShowScrollBtn(false);
+        if (scrollYPos > 150) {
+          shouldShow = true;
         }
+      }
+
+      setShowScrollBtn(shouldShow);
+      if (shouldShow && scrollYPos > 100) {
+        setHasScrolledToProducts(true);
       }
     };
 
@@ -1427,7 +1421,7 @@ const ChatProducts = ({
       )}
 
       <button
-        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[#7268ec] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 lg:hidden hover:bg-[#5a4af4] hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[#7268ec] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 hover:bg-[#5a4af4] hover:scale-110 active:scale-95 ${
           showScrollBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
         onClick={handleScrollToTop}

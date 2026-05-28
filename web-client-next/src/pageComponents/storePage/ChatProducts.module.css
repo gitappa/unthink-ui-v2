@@ -922,39 +922,6 @@
     font-size: 1rem;
   }
 
-  .chat-products-overlay-point {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #ffffff;
-    background-color: var(--color-secondary);
-    border-radius: 9999px;
-    cursor: pointer;
-    z-index: 20;
-    box-shadow: 0 0 10px rgba(114, 104, 236, 0.5);
-    animation: auraPointPulse 2s infinite;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .chat-products-overlay-point:hover {
-    transform: scale(1.4);
-    background-color: #5a4af4;
-    box-shadow: 0 0 20px rgba(114, 104, 236, 0.8);
-  }
-
-  @keyframes auraPointPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(114, 104, 236, 0.6);
-    }
-
-    70% {
-      box-shadow: 0 0 0 12px rgba(114, 104, 236, 0);
-    }
-
-    100% {
-      box-shadow: 0 0 0 0 rgba(114, 104, 236, 0);
-    }
-  }
 
 
   .chat-products-shop-look-main {
@@ -1562,3 +1529,37 @@
     transform: scale(1) rotate(0deg);
   }
 }
+
+.chat-products-overlay-point {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ffffff;
+  background-color: var(--color-secondary);
+  border-radius: 9999px;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: 0 0 10px rgba(114, 104, 236, 0.5);
+  animation: auraPointPulse 2s infinite;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chat-products-overlay-point:hover {
+  transform: scale(1.4);
+  background-color: #5a4af4;
+  box-shadow: 0 0 20px rgba(114, 104, 236, 0.8);
+}
+
+@keyframes auraPointPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(114, 104, 236, 0.6);
+  }
+
+  70% {
+    box-shadow: 0 0 0 12px rgba(114, 104, 236, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(114, 104, 236, 0);
+  }
+}
