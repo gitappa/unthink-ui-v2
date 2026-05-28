@@ -5,7 +5,7 @@ const BannerKisok = ({ products }) => {
   const Tags = ["Look Books", "Social Media", "#Trending"];
   const [showTags, setShowTags] = useState(Tags[0]);
   const router = useRouter();
-  
+
   const dummyProducts = (products || []).filter((x) => x.cover_image);
   const displayedProducts = dummyProducts.slice(0, 8);
 
@@ -26,7 +26,7 @@ const BannerKisok = ({ products }) => {
   //   return shuffled.slice(0, 6);
   // }, [showTags]);
 
-  const handleNavCollection = (Singlecollectiondata) => {   
+  const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
   return (
@@ -80,23 +80,23 @@ const BannerKisok = ({ products }) => {
               ))}
             </div>
           ) : ( */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 gap-y-5 md:gap-y-9 w-full">
-              {displayedProducts.map((product) => (
-                <div
-                  key={product.collection_id}
-                  className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 transition cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60`}
-                >
-                  {product.cover_image && (
-                    <img
-                      src={product.cover_image}
-                      className="rounded-xl shadow-lg h-full object-cover m-auto  w-[225px] lg:w-[215px]"
-                      alt={product.collection_name || product.cover_image}
-                      onClick={() => handleNavCollection(product)}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 gap-y-5 md:gap-y-9 w-full">
+            {displayedProducts.map((product) => (
+              <div
+                key={product.collection_id}
+                className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 transition cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60`}
+              >
+                {product.cover_image && (
+                  <img
+                    src={product.cover_image}
+                    className="rounded-xl shadow-lg h-full object-cover m-auto  w-[225px] lg:w-[215px]"
+                    alt={product.collection_name || product.cover_image}
+                    onClick={() => handleNavCollection(product)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           {/* )} */}
         </div>
 
