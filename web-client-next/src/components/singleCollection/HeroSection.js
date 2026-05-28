@@ -1,20 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import ReactPlayer from 'react-player'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
+import { Spin } from 'antd';
 const HeroSection = ({ im, products }) => {
   const router = useRouter();
-  const collectiondata = products?.find(data => data?.collection_name === 'Brand JWELX')
+  const collectiondata =useMemo(()=>{
+     return   products?.find(data => data?.collection_name === 'Brand JWELX')
+  },[products])
   // console.log('collectiondatas', collectiondata);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage = collectiondata?.thumbnail_image || collectiondata?.image;
-  const [isClient, setIsClient] = useState(true);
+  const [isClient, setIsClient] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // mark client after mount to avoid running client-only effects on SSR
+    setIsClient(true);
+  }, []);
 
   const videoContainerRef = useRef(null);
   const handlePlayClick = () => setIsPlaying(true);
@@ -47,9 +55,25 @@ const HeroSection = ({ im, products }) => {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [isClient]);
+    // re-run when `products` changes so we attach observer when the
+    // video container is mounted after the loading spinner.
+  }, [isClient, products]);
+
+// if (!Array.isArray(products) || products.length === 0) {
+//   return (
+//     <div className="min-h-screen flex items-center justify-center">
+//       <Spin size="large" className="pink-spinner" />
+//     </div>
+//   );
+// }
 
   return (
+    <>
+    {!Array.isArray(products) || products.length === 0 ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <Spin size="large" className="pink-spinner" />
+    </div>
+  ) : (
     <div className="relative mt-7 mb-28">
       <div
         className="relative cursor-pointer"
@@ -185,6 +209,9 @@ const HeroSection = ({ im, products }) => {
         </div>
       </div>
     </div>
+  )}
+  </>
+
   )
 }
 
