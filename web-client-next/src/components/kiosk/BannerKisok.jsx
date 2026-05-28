@@ -6,7 +6,7 @@ const BannerKisok = ({ products }) => {
   const [showTags, setShowTags] = useState(Tags[0]);
   const router = useRouter();
 
-  const dummyProducts = (products || []).filter((x) => x.cover_image);
+  const dummyProducts = (products || []).filter((x) => x.cover_image && x.path);
   const displayedProducts = dummyProducts.slice(0, 8);
 
   // const trendingBase = [

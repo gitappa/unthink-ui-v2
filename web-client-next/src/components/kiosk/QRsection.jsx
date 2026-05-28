@@ -1,44 +1,6 @@
 import React from "react";
 
-const DummyQR = () => (
-  <svg
-    viewBox="0 0 200 200"
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-full h-full block"
-    aria-hidden="true"
-  >
-    <rect width="200" height="200" rx="18" fill="#fff" />
-    {/* Finder squares */}
-    <g fill="#000">
-      <rect x="14" y="14" width="48" height="48" rx="6" />
-      <rect x="14" y="14" width="18" height="18" />
-      <rect x="168" y="14" width="18" height="18" />
-      <rect x="152" y="14" width="48" height="48" rx="6" />
-      <rect x="14" y="152" width="48" height="48" rx="6" />
-      <rect x="14" y="152" width="18" height="18" />
-    </g>
-    {/* Decorative inner pattern (dummy) */}
-    <g fill="#000">
-      <rect x="70" y="40" width="12" height="12" />
-      <rect x="94" y="40" width="10" height="10" />
-      <rect x="120" y="40" width="8" height="8" />
 
-      <rect x="70" y="68" width="8" height="8" />
-      <rect x="88" y="68" width="12" height="12" />
-      <rect x="108" y="68" width="8" height="8" />
-
-      <rect x="44" y="100" width="10" height="10" />
-      <rect x="70" y="100" width="12" height="12" />
-      <rect x="96" y="100" width="8" height="8" />
-      <rect x="118" y="100" width="8" height="8" />
-
-      <rect x="44" y="124" width="8" height="8" />
-      <rect x="70" y="124" width="10" height="10" />
-      <rect x="96" y="124" width="12" height="12" />
-      <rect x="124" y="124" width="6" height="6" />
-    </g>
-  </svg>
-);
 
 const QRsection = ({
   title = "Scan & Earn",
@@ -77,7 +39,7 @@ const QRsection = ({
           on large screens it is shown on the right side. */}
         <div className="flex-shrink-0 flex flex-col items-start  lg:items-center order-first lg:order-last">
           <div className="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] rounded-[14px] bg-[#fbfdff] flex items-center justify-center shadow-md border border-[rgba(2,6,23,0.04)] p-4">
-            <DummyQR />
+            <img src="https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330" alt="Qr code" />
           </div>
 
           <div className="flex items-center gap-2.5 mt-2 lg:mt-2">
