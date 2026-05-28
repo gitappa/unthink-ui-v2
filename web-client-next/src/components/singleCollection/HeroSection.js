@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
-import { Spin } from 'antd';
+
 const HeroSection = ({ im, products }) => {
   const router = useRouter();
   const collectiondata =useMemo(()=>{
@@ -58,22 +58,8 @@ const HeroSection = ({ im, products }) => {
     // re-run when `products` changes so we attach observer when the
     // video container is mounted after the loading spinner.
   }, [isClient, products]);
-
-// if (!Array.isArray(products) || products.length === 0) {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center">
-//       <Spin size="large" className="pink-spinner" />
-//     </div>
-//   );
-// }
-
   return (
-    <>
-    {!Array.isArray(products) || products.length === 0 ? (
-    <div className="min-h-screen flex items-center justify-center">
-      <Spin size="large" className="pink-spinner" />
-    </div>
-  ) : (
+   
     <div className="relative mt-7 mb-28">
       <div
         className="relative cursor-pointer"
@@ -209,8 +195,7 @@ const HeroSection = ({ im, products }) => {
         </div>
       </div>
     </div>
-  )}
-  </>
+ 
 
   )
 }

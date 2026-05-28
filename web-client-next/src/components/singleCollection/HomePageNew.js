@@ -11,6 +11,7 @@ import "swiper/css/scrollbar";
 import HeroSection from "./HeroSection";
 import BannerKisok from "../kiosk/BannerKisok";
 import QRsection from "../kiosk/QRsection";
+import { Spin } from "antd";
 
 const HomePageNew = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
@@ -44,6 +45,12 @@ const HomePageNew = ({ blogCollectionPage }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  if(!Array.isArray(products) || products.length === 0 ){
+    return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Spin size="large" className="pink-spinner" />
+    </div>
+    )}
 
   return (
     <div className=" mx-auto w-full px-6 md:px-14">
