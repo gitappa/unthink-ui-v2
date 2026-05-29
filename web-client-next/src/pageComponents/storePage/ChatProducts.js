@@ -528,27 +528,7 @@ const ChatProducts = ({
     }
   };
   // console.log('showChatLoader',showChatLoader);
-  const handleScrollToTop = () => {
-    const tagsContainer = document.getElementById("aura-response-products-with-tags-container");
-    if (tagsContainer) {
-      tagsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      let scrollContainer = null;
-      let parent = containerRef.current;
-      while (parent) {
-        const overflowY = window.getComputedStyle(parent).overflowY;
-        if (overflowY === "auto" || overflowY === "scroll") {
-          scrollContainer = parent;
-          break;
-        }
-        parent = parent.parentElement;
-      }
-      if (scrollContainer) {
-        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+ 
   const AuraSideNav = () => (
     <div className={styles["aura-sidenav"]}>
       <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-secondary">
