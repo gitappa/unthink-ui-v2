@@ -170,45 +170,39 @@ const ChatProducts = ({
   }, [onOpenMobileSidebar]);
 
   useEffect(() => {
-    if (!isMobile) return;
-
     const handleScroll = () => {
-      const descElement = document.getElementById("aura-description-section");
-
-      let scrollTop = 0;
-      if (descElement) {
-        let parent = descElement.parentElement;
-        while (parent) {
-          const overflowY = window.getComputedStyle(parent).overflowY;
-          if (overflowY === "auto" || overflowY === "scroll") {
-            scrollTop = parent.scrollTop;
-            break;
-          }
-          parent = parent.parentElement;
+      let scrollYPos = 0;
+      let parent = containerRef.current;
+      while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        if (overflowY === "auto" || overflowY === "scroll") {
+          scrollYPos = parent.scrollTop;
+          break;
         }
+        parent = parent.parentElement;
       }
-      if (scrollTop === 0) {
-        scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      if (scrollYPos === 0) {
+        scrollYPos = window.scrollY || document.documentElement.scrollTop;
       }
 
-      if (descElement) {
+      const descElement = document.getElementById("aura-description-section");
+      
+      let shouldShow = false;
+      if (descElement && isMobile) {
         const descRect = descElement.getBoundingClientRect();
         if (descRect.bottom < 100) {
-          setShowScrollBtn(true);
-          if (scrollTop > 100) {
-            setHasScrolledToProducts(true);
-          }
-        } else {
-          setShowScrollBtn(false);
+          shouldShow = true;
         }
       } else {
-        const container = containerRef.current;
-        if (container && container.scrollTop > 150) {
-          setShowScrollBtn(true);
-          setHasScrolledToProducts(true);
-        } else {
-          setShowScrollBtn(false);
+        if (scrollYPos > 150) {
+          shouldShow = true;
         }
+      }
+
+      setShowScrollBtn(shouldShow);
+      if (shouldShow && scrollYPos > 100) {
+        setHasScrolledToProducts(true);
       }
     };
 
@@ -256,28 +250,6 @@ const ChatProducts = ({
       } else {
         descElement.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    }
-  };
-
-  const handleScrollToTop = () => {
-    const tagsContainer = document.getElementById("aura-response-products-with-tags-container");
-    if (tagsContainer) {
-      tagsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      let scrollContainer = null;
-      let parent = containerRef.current;
-      while (parent) {
-        const overflowY = window.getComputedStyle(parent).overflowY;
-        if (overflowY === "auto" || overflowY === "scroll") {
-          scrollContainer = parent;
-          break;
-        }
-        parent = parent.parentElement;
-      }
-      if (scrollContainer) {
-        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
   // const [pastChats, setPastChats] = useState(() => {
@@ -534,7 +506,27 @@ const ChatProducts = ({
     }
   };
   // console.log('showChatLoader',showChatLoader);
-
+  const handleScrollToTop = () => {
+    const tagsContainer = document.getElementById("aura-response-products-with-tags-container");
+    if (tagsContainer) {
+      tagsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      let scrollContainer = null;
+      let parent = containerRef.current;
+      while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        if (overflowY === "auto" || overflowY === "scroll") {
+          scrollContainer = parent;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
   const AuraSideNav = () => (
     <div className="hidden xl:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
       <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-secondary">
@@ -1267,7 +1259,7 @@ const ChatProducts = ({
             {/* Floating glowing button below the close cross */}
             {showScrollBtn && !isSwipeDrawerOpen && (
               <div
-                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-secondary via-[#8c82ff] to-secondary bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
+                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-[var(--color-brand)] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
                 onClick={() => setIsSwipeDrawerOpen(true)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -1427,7 +1419,7 @@ const ChatProducts = ({
       )}
 
       <button
-        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[#7268ec] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 lg:hidden hover:bg-[#5a4af4] hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[var(--color-brand)] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 hover:bg-[var(--color-brand)] hover:scale-110 active:scale-95 ${
           showScrollBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
         onClick={handleScrollToTop}
