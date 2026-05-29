@@ -142,6 +142,7 @@ const ProductCard = ({
   onAddSelectedProductsToCollection,
   isSingleCollectionSharedPage,
   auramodel,
+  bannerImage,
 
 }) => {
   const navigate = useNavigate();
@@ -666,7 +667,16 @@ const ProductCard = ({
         if (cleaned) {
           localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
         }
-        navigate(`/product/${clickedMfrCode}`);
+        if(bannerImage){
+         navigate(
+        `/product/${clickedMfrCode}?from=kioskcollection`
+      );
+    }
+    else{
+       navigate(
+        `/product/${clickedMfrCode}`
+      );
+    }
         // fetchProductDetails();
         // console.log(product?.image);
 
