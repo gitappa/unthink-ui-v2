@@ -506,7 +506,27 @@ const ChatProducts = ({
     }
   };
   // console.log('showChatLoader',showChatLoader);
-
+  const handleScrollToTop = () => {
+    const tagsContainer = document.getElementById("aura-response-products-with-tags-container");
+    if (tagsContainer) {
+      tagsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      let scrollContainer = null;
+      let parent = containerRef.current;
+      while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        if (overflowY === "auto" || overflowY === "scroll") {
+          scrollContainer = parent;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
   const AuraSideNav = () => (
     <div className="hidden lg:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-50 items-center">
       <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-[#7268ec]">
