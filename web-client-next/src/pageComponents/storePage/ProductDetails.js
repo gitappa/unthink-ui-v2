@@ -65,7 +65,9 @@ import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
-
+import { useSearchParams } from "next/navigation";
+import BannerImage from "../../components/kiosk/BannerImage";
+import profilebanner from "../../images/package.jpg";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -255,6 +257,11 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [productDetails],
   );
+const searchParams = useSearchParams();
+
+const fromCollection =
+  searchParams.get("from") === "kioskcollection";
+// console.log('fromCollection',fromCollection);
 
   const handleGoBack = () => {
     if (typeof window !== "undefined" && window?.history?.length > 2) {
@@ -545,6 +552,7 @@ const ProductDetails = ({ params, ...props }) => {
     <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
+      {fromCollection && <BannerImage src={profilebanner.src}  alt="profilebanner" className="mt-4" />}
         <div className="flex flex-col w-full self-center my-8 lg:my-10 gap-6 lg:gap-8">
           <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
