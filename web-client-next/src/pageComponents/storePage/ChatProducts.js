@@ -1261,7 +1261,7 @@ const ChatProducts = ({
             {/* Floating glowing button below the close cross */}
             {showScrollBtn && !isSwipeDrawerOpen && (
               <div
-                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-gradient-to-br from-secondary via-[#8c82ff] to-secondary bg-[length:200%_auto] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
+                className="fixed top-[75px] right-4 z-[1050] cursor-pointer rounded-full bg-[var(--color-brand)] border border-white/35 py-2 px-4 text-white font-bold flex items-center justify-center shadow-[0_4px_15px_rgba(114,104,236,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(114,104,236,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] hover:border-white/60 active:scale-[0.97] animate-[auraGlowPulse_2.5s_infinite_ease-in-out,auraGradientShift_4s_infinite_linear]"
                 onClick={() => setIsSwipeDrawerOpen(true)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -1421,7 +1421,7 @@ const ChatProducts = ({
       )}
 
       <button
-        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[#7268ec] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 hover:bg-[#5a4af4] hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-[145px] right-5 w-[42px] h-[42px] rounded-full bg-[var(--color-brand)] text-white border border-white/15 shadow-[0_8px_24px_rgba(114,104,236,0.4)] flex items-center justify-center text-[18px] cursor-pointer z-[1000] transition-all duration-300 hover:bg-[var(--color-brand)] hover:scale-110 active:scale-95 ${
           showScrollBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
         onClick={handleScrollToTop}
