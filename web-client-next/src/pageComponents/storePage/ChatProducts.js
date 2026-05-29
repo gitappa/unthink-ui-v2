@@ -530,7 +530,7 @@ const ChatProducts = ({
   // console.log('showChatLoader',showChatLoader);
 
   const AuraSideNav = () => (
-    <div className="hidden xl:flex flex-col w-[70px] bg-white border-r border-[#f0f0f0] p-0 shrink-0 h-full sticky top-0 z-[100] items-center">
+    <div className={styles["aura-sidenav"]}>
       <div className="h-[60px] flex items-center justify-center w-full shrink-0 text-[#4c5672] hover:text-secondary">
         <ArrowLeftOutlined
           className="cursor-pointer text-2xl"
