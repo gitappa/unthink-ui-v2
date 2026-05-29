@@ -1258,7 +1258,7 @@ const ChatModal = ({
                                       : displaySearchOptions?.length === 4
                                         ? "lg:grid-cols-4 grid-cols-1"
                                         : "lg:grid-cols-5 grid-cols-1"
-                                  }  w-full gap-2 lg:gap-4.8 overflow-x-auto scroll-snap-type-x-proximity `}
+                                  }  w-full gap-4 lg:gap-5 overflow-x-auto scroll-snap-type-x-proximity `}
                               >
                                 {displaySearchOptions?.map((searchOptions, index) => {
                                   const isOptionActive =
@@ -1280,7 +1280,7 @@ const ChatModal = ({
                                       className={`${styles["chatmodal-search-option-card"]} ${isOptionActive
                                         ? styles["chatmodal-search-option-card-active"]
                                         : ""
-                                        } relative flex items-center gap-2`}
+                                        } relative flex items-center gap-2 p-3`}
                                       onClick={() => handleSetSearchOption(searchOptions)}
                                       role="button"
                                       tabIndex={0}

@@ -1419,6 +1419,28 @@
   background: #fcfaff !important;
 }
 
+@media (max-width: 1024px) {
+  .chatmodal-figma-upload-dragger {
+    padding: 8px 10px !important;
+    height: 110px !important;
+    justify-content: center !important;
+  }
+
+  .chatmodal-figma-upload-dragger-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .chatmodal-figma-upload-dragger-text {
+    font-size: 0.85rem;
+  }
+
+  .chatmodal-figma-upload-dragger-hint {
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+  }
+}
+
 .chatmodal-figma-image-preview-container {
   display: flex;
   flex-direction: column;
@@ -1492,6 +1514,7 @@
 }
 
 .chatmodal-figma-upload-url-label {
+  text-align: center;
   display: block;
   color: #595f6f;
   font-size: 0.8rem;
@@ -1996,7 +2019,7 @@
 /* Aura category heading (eg.-Shop the Look, Shop by Theme, Search) */
 .chatmodal-category-title {
   margin: 0 0 1rem;
-  font-size: 42px;
+  font-size: 24px;
   /* Base size for mobile/small screens */
   line-height: 1.1;
   color: #2c3552;
@@ -2019,7 +2042,7 @@
 /* Tablet Styles */
 @media (min-width: 768px) and (max-width: 1024px) {
   .chatmodal-category-title {
-    font-size: 52px;
+    font-size: 32px;
     margin-bottom: 1.5rem;
     letter-spacing: 0.08em;
   }
@@ -2027,7 +2050,7 @@
 
 @media (max-width: 480px) {
   .chatmodal-category-title {
-    font-size: 42px;
+    font-size: 24px;
     margin-bottom: 1rem;
   }
 }
@@ -2059,12 +2082,12 @@
   }
 
   .chatmodal-initial-layout-wrapper-active .chatmodal-title-group {
-    margin-top: auto;
+    margin-top: 3rem;
     margin-bottom: 1.5rem;
   }
 
   .chatmodal-initial-layout-wrapper-active :global(.chatmodal-input-container) {
-    margin-top: auto;
+    margin-top: 1.5rem;
   }
 }
 
@@ -2297,7 +2320,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 12px 10px;
     border-bottom: 1px solid #e9e4ff;
   }
 

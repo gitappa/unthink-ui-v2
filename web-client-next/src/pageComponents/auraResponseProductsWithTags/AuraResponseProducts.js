@@ -854,7 +854,7 @@ const AuraResponseProducts = ({
 
 	return (
 		<>
-			<div id={elementId}>
+			<div id={elementId} style={{ minHeight: "85vh" }}>
 				<div className="flex-1 min-w-0">
 					{!isCurrentTagLoading ? (
 						<>
@@ -977,7 +977,7 @@ const AuraResponseProducts = ({
 											? 'md:grid-cols-3'
 											: 'md:grid-cols-3 lg:grid-cols-4'
 									}`}>
-								{productsCache[currentTag]?.map((product) => (
+								{(productsCache[currentTag] || chatProductsDataToShow)?.map((product) => (
 									<ProductCard
 										key={product.mfr_code}
 										product={product}
