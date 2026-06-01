@@ -24,7 +24,7 @@ const PopupStore = () => {
 		<div className='font-firaSans'>
 			<section className='mt-24 lg:mt-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto'>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl mx-auto text-center flex flex-col items-center'>
-					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal font-firaSans'>
+					<h1 className='text-4xl lg:text-7xl text-slate-100 font-normal font-firaSans'>
 						An <span className='font-bold'>online</span> pop-up{" "}
 						<span className='font-bold'>store</span> that just...
 						<span className='font-bold'>“Pops”</span>
