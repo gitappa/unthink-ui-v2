@@ -1,7 +1,5 @@
 import React from "react";
 
-
-
 const QRsection = ({
   title = "Scan & Earn",
   subtitle = "Scan the QR code to join our loyalty program and start collecting points instantly.",
@@ -39,7 +37,10 @@ const QRsection = ({
           on large screens it is shown on the right side. */}
         <div className="flex-shrink-0 lg:flex m-auto flex-col items-start md:mt-0  mt-2 lg:items-center order-first lg:order-last">
           <div className="w-[160px] m-auto h-[160px] sm:w-[220px] sm:h-[220px] rounded-[14px] bg-[#fbfdff] flex items-center justify-center shadow-md border border-[rgba(2,6,23,0.04)] p-4">
-            <img src="https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330" alt="Qr code" />
+            <img
+              src="https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330"
+              alt="Qr code"
+            />
           </div>
 
           <div className="flex items-center justify-center gap-2.5 mt-2 lg:mt-2 m-auto">

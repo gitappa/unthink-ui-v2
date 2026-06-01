@@ -13,7 +13,7 @@ const AdditionalAttributes = ({
 	handleFiltersOptionalChange,
 	isShowOptional = true,
 	selectBoxSize = "large",
-	fontColorTheme = "text-gray-103",
+	fontColorTheme = "text-slate-200",
 	fontSizeTheme = "text-base",
 	setProductData,
 	productData,
@@ -140,7 +140,7 @@ const AdditionalAttributes = ({
 													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
@@ -179,7 +179,7 @@ const AdditionalAttributes = ({
 													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
@@ -220,7 +220,7 @@ const AdditionalAttributes = ({
 													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
@@ -269,7 +269,7 @@ const AdditionalAttributes = ({
 													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
@@ -302,7 +302,7 @@ const AdditionalAttributes = ({
 												Mandatory
 											</label>
 											<Checkbox
-												className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+												className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 												onChange={() => handleFiltersOptionalChange("price")}
 												checked={!attributesData?.optional_filters?.includes(
 													"price"

@@ -70,7 +70,7 @@ const getExploreMenuOptions = () => {
 const BudgetTravelHeader = () => {
 	const navigate = useNavigate();
 	return (
-		<div className='bg-black-200 h-12 text-white hidden lg:flex justify-between md:justify-around items-center lg:px-8 lg:py-2'>
+		<div className='bg-black h-12 text-white hidden lg:flex justify-between md:justify-around items-center lg:px-8 lg:py-2'>
 			<div className='lg:flex lg:mr-12 2xl:mr-16'>
 				<Image
 					src={instance_logo}

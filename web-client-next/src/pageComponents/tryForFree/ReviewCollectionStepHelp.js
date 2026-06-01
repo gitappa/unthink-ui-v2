@@ -81,7 +81,7 @@ const ReviewCollectionStepHelp = ({
 
 	return (
 		<div className={`help-step-container ${className}`}>
-			<div className='text-xl font-medium text-lightgray-104 flex items-center overflow-auto leading-none'>
+			<div className='text-xl font-medium text-slate-400 flex items-center overflow-auto leading-none'>
 				{menuItems.map((i) => (
 					<p
 						role='tab'
