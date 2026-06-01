@@ -80,7 +80,7 @@ export const ScheduleDemo = () => {
 					</div>
 				</div>
 
-				<div className='bg-blue-106 flex justify-center items-center'>
+				<div className='bg-slate-100 flex justify-center items-center'>
 					<form id={scheduleDemoFormId}>
 						<div className='mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8'>
 							<div className='col-span-2 sm:col-auto'>

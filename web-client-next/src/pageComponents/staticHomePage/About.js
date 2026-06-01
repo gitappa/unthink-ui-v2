@@ -64,7 +64,7 @@ const About = () => {
 		<div className='font-firaSans static_page_bg'>
 			<section className='py-24 lg:py-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto'>
 				<div className='max-w-340 md:max-w-screen-sm mx-auto text-center flex flex-col items-center'>
-					<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal font-firaSans italic'>
+					<h1 className='text-3xl lg:text-5xl text-slate-100 font-normal font-firaSans italic'>
 						"We are here to un-think the{" "}
 						<span className='whitespace-nowrap'>e-commerce</span> experience"
 					</h1>
@@ -222,13 +222,13 @@ const About = () => {
 				</a>
 				<div className='block lg:flex pt-6 lg:pt-16'>
 					<div className='max-w-s-1 mr-14 py-2 lg:py-0'>
-						<span className='text-base text-lightgray-101'>
+						<span className='text-base text-slate-100'>
 							USA
 							<br /> 18291 Meandering Way, Dallas TX 75252, USA
 						</span>
 					</div>
 					<div className='max-w-s-2 mr-14 py-2 lg:py-0'>
-						<span className='text-base text-lightgray-101'>
+						<span className='text-base text-slate-100'>
 							India
 							<br />
 							No 13 New Express City Complex, Above SBI, NR road, Near Townhall,
@@ -236,7 +236,7 @@ const About = () => {
 						</span>
 					</div>
 					<div className='max-w-s-1 mr-14 py-2 lg:py-0'>
-						<span className='text-base text-lightgray-101'>
+						<span className='text-base text-slate-100'>
 							Contact Us
 							<br /> Email:{" "}
 							<a className='hover:text-current' href='mailto:info@unthink.ai'>

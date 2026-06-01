@@ -311,7 +311,7 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isFirstTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								Within expert e-commerce content
 							</h3>
@@ -340,7 +340,7 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isSecondTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								AI powered shopping assistant
 							</h3>
@@ -369,7 +369,7 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isThirdTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								Pop-up stores created by brand advocates
 							</h3>

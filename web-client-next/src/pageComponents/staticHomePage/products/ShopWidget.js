@@ -48,7 +48,7 @@ const ShopWidget = () => {
 		<div className='font-firaSans'>
 			<section className='mt-24 lg:mt-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto'>
 				<div className='max-w-340 md:max-w-s-3 lg:max-w-xl-1 mx-auto text-center flex flex-col items-center'>
-					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal font-firaSans'>
+					<h1 className='text-4xl lg:text-7xl text-slate-100 font-normal font-firaSans'>
 						A shopping widget for every article
 					</h1>
 					<p className='text-slate-400 text-xl lg:text-3xl-1 lg:leading-44 mx-auto'>
