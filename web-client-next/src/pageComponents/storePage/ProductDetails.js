@@ -17,6 +17,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
@@ -60,7 +61,7 @@ import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
-import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
+// import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
@@ -601,14 +602,32 @@ const onWishlistClick = () => {
                         </span>
                       ) : null}
                             {storeData?.is_tryon_enabled &&
-                  <div
-                    className="py-3 lg:py-6 lg:px-6 px-4 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-2 mb-2"
+                  <button
+                    className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
                     onClick={(e) => {
                       dispatch(vtoIconState(productDetails?.mfr_code || true));
                       e.stopPropagation();
                     }}
+                    title="Try on with virtual camera"
                   >
-                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                    <div className="relative">
+                      <Image
+                        height={18}
+                        width={18}
+                        alt="Try on with camera"
+                        src={camera}
+                        className="group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    <span className="text-whit font-semibold text-xs sm:text-sm whitespace-nowrap">
+                      Try On
+                    </span>
+                  </button>
+                }
+                    </div>
+                  ) : null}
+                </div>
+   {/* <div className="flex items-center gap-3 mb-3 lg:mb-4">
                       <Image
                         height={24}
                         width={24}
@@ -621,13 +640,7 @@ const onWishlistClick = () => {
                     <p>
                       Scan the QR code with your phone to try this piece on
                       virtually.
-                    </p>
-                  </div>
-                }
-                    </div>
-                  ) : null}
-                </div>
-
+                    </p> */}
                 {productDetails?.additional_image &&
                   productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
