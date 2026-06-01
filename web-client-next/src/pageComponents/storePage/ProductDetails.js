@@ -68,6 +68,8 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { useSearchParams } from "next/navigation";
 import BannerImage from "../../components/kiosk/BannerImage";
 import profilebanner from "../../images/package.jpg";
+import { openWishlistModal } from "../wishlist/redux/actions";
+import { BsBookmarkPlusFill } from "react-icons/bs";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -100,7 +102,7 @@ const ProductDetails = ({ params, ...props }) => {
 
   ]);
 
-  const [store_id] = useSelector((state) => [state.store.data.store_id]);
+  const [store_id,isUserLogin] = useSelector((state) => [state.store.data.store_id,	state.auth.user.isUserLogin,]);
 
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
@@ -137,6 +139,7 @@ const ProductDetails = ({ params, ...props }) => {
   //       dispatch(PDPloader(false));
   //     }
   //   };
+  
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -547,13 +550,25 @@ const fromCollection =
     brandsDetails?.couponCode ||
     brandsDetails?.paymentDetails ||
     brandsDetails?.shippingDetails;
-
+const Additionalimages = [
+  productDetails?.image,
+  ...(Array.isArray(productDetails?.additional_image)
+    ? productDetails?.additional_image
+    : productDetails?.additional_image
+      ? [productDetails?.additional_image]
+      : []),
+];
+const onWishlistClick = () => {
+    dispatch(openWishlistModal());
+  };
+  // console.log('ssscdccd',typeof productDetails?.additional_image);
+// ,...productDetails?.additional_image,
   return (
     <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
-      {fromCollection && <BannerImage src={profilebanner.src}  alt="profilebanner" className="mt-4" />}
-        <div className="flex flex-col w-full self-center my-8 lg:my-10 gap-6 lg:gap-8">
+     
+        <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
           <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
@@ -572,7 +587,7 @@ const fromCollection =
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
-                        className="w-full h-full object-contain rounded-2xl max-h-590 max-w-640 min-h-[590px]"
+                        className="w-full h-full object-contain rounded-2xl lg:max-h-590 max-w-640 max-h-[350px] lg:min-h-[590px]"
                         src={
                           additionalimg ||
                           productDetails?.image ||
@@ -585,6 +600,30 @@ const fromCollection =
                           {discountPer}% OFF
                         </span>
                       ) : null}
+                            {storeData?.is_tryon_enabled &&
+                  <div
+                    className="py-3 lg:py-6 lg:px-6 px-4 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-2 mb-2"
+                    onClick={(e) => {
+                      dispatch(vtoIconState(productDetails?.mfr_code || true));
+                      e.stopPropagation();
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                      <Image
+                        height={24}
+                        width={24}
+                        alt="Try on with camera"
+                        className="cursor-pointer"
+                        src={camera}
+                      />
+                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                    </div>
+                    <p>
+                      Scan the QR code with your phone to try this piece on
+                      virtually.
+                    </p>
+                  </div>
+                }
                     </div>
                   ) : null}
                 </div>
@@ -606,17 +645,14 @@ const fromCollection =
                       }}
                       className="w-full cursor-pointer"
                     >
-                      {[
-                        productDetails.image,
-                        ...productDetails.additional_image,
-                      ].map((img, i) => (
+                      {Additionalimages?.map((img, i) => (
                         <SwiperSlide key={i} style={{ width: "auto" }}>
                           <div className="flex">
                             <Image
                               src={img}
                               height={50}
                               width={50}
-                              className={`  w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
+                              className={`w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
                                 ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
                                 : "border-[#e8e2ff] hover:border-[#b8a9ff]"
                                 }`}
@@ -814,15 +850,27 @@ const fromCollection =
                         {productDetails?.user_id === authUser?.user_id ||
                           productDetails?.brand === authUser?.user_name ? (
                           <button
-                            className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                            className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
                             onClick={() => handleOpenProductModal(true)}
                           >
-                            <EditOutlined className="text-xl" />
+                            <EditOutlined className="text-xl lg:h-6 lg:w-6 h-5 w-5" />
                           </button>
                         ) : null}
                       </div>
-                      <div className="relative flex justify-between w-10 h-10">
+                      {isUserLogin && 
+                      <button className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]">
+
+                       <BsBookmarkPlusFill
+                         onClick={onWishlistClick}
+                          style={{ filter: "brightness(0) opacity(0.7)" ,height:24,width:24}}                            
+                                     
+                        className='lg:h-6 lg:w-6 h-5 w-5'
+                       />
+                      </button>
+                        }
+
+                      <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
                           <ShareOptions
                             url={sharePageUrl}
@@ -835,17 +883,16 @@ const fromCollection =
                         )}
                         {sharePageUrl && (
                           <button
-                            className="flex w-10 h-10 items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                            className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
                             onClick={() =>
                               setShowShareProductDetails(
                                 !showShareProductDetails,
                               )
                             }
                           >
-                            <Image
-                              width={28}
-                              height={28}
-                              className="cursor-pointer h-6 w-6"
+                            <img
+                               
+                              className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
                               src={share_icon}
                               preview={false}
                             />
@@ -855,7 +902,7 @@ const fromCollection =
                     </div>
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-4 lg:mt-6">
                     <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
                       {productDetails?.price || productDetails?.listprice ? (
                         <span
@@ -1005,16 +1052,7 @@ const fromCollection =
                   </div>
                 }
 
-                {productDetails?.description && (
-                  <div className="">
-                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Product Description
-                    </div> */}
-                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
-                      {productDetails.description}
-                    </div>
-                  </div>
-                )}
+            
                 {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
@@ -1029,7 +1067,7 @@ const fromCollection =
                   const fieldIndexInFiltered = fieldsWithData.indexOf(field);
                   return productDetails?.[field]?.length > 0 && ProductTags ? (
                     (showAllFields || fieldIndexInFiltered < 4) && (
-                      <div className="mt-2 " key={field}>
+                      <div className="mt-10 " key={field}>
                         <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
                           <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
                             {field}
@@ -1060,7 +1098,17 @@ const fromCollection =
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
                 )} */}
-                {storeData?.is_tryon_enabled &&
+                    {productDetails?.description && (
+                  <div className="">
+                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
+                      Product Description
+                    </div> */}
+                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
+                      {productDetails.description}
+                    </div>
+                  </div>
+                )}
+                {/* {storeData?.is_tryon_enabled &&
                   <div
                     className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
                     onClick={(e) => {
@@ -1083,7 +1131,7 @@ const fromCollection =
                       virtually.
                     </p>
                   </div>
-                }
+                } */}
                 {/* <div className="">
                   <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
@@ -1309,6 +1357,7 @@ const fromCollection =
             )}
           </div>
         </div>
+       {fromCollection && <BannerImage src={profilebanner.src}  alt="profilebanner" className="mt-4" />}
       </div>
     </div>
   );
