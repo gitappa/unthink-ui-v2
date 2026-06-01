@@ -29,7 +29,7 @@ const PopupStore = () => {
 						<span className='font-bold'>store</span> that just...
 						<span className='font-bold'>“Pops”</span>
 					</h1>
-					<p className='text-lightgray-104 text-xl lg:text-3xl-1 lg:leading-44 font-firaSans max-w-sm lg:max-w-lg mx-auto'>
+					<p className='text-slate-400 text-xl lg:text-3xl-1 lg:leading-44 font-firaSans max-w-sm lg:max-w-lg mx-auto'>
 						Build Plug-and-play store pages in under 2 minutes with Unthink.AI
 					</p>
 				</div>
@@ -44,11 +44,11 @@ const PopupStore = () => {
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-gray-103 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-200 font-normal'>
 							Products curated by{" "}
 							<span className='whitespace-nowrap'>AI + Humans</span>
 						</h1>
-						<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5'>
 							Your audience only gets contextual shopping suggestions that are
 							relevant to the content they consume on your site.
 						</p>
@@ -59,19 +59,19 @@ const PopupStore = () => {
 				</div>
 			</section>
 			<section className='mt-28 lg:mt-52'>
-				<h1 className='text-3xl lg:text-5xl text-gray-103 text-center max-w-xs px-0.75 lg:max-w-480 mx-auto'>
+				<h1 className='text-3xl lg:text-5xl text-slate-200 text-center max-w-xs px-0.75 lg:max-w-480 mx-auto'>
 					Take Personalization to the next level
 				</h1>
 				<div className='px-4 pt-10 lg:pt-20 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 					<div>
 						<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-							<h1 className='text-3xl lg:text-3xl-1 lg:leading-44 text-gray-103 font-normal'>
+							<h1 className='text-3xl lg:text-3xl-1 lg:leading-44 text-slate-200 font-normal'>
 								Aura - Smart Voice Assistant
 							</h1>
-							<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5 m-0'>
+							<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5 m-0'>
 								The next best thing to a real store assistant.
 							</p>
-							<p className='max-w-lg lg:pr-2.5 text-lightgray-104 text-lg lg:text-xl-1.5'>
+							<p className='max-w-lg lg:pr-2.5 text-slate-400 text-lg lg:text-xl-1.5'>
 								Speak naturally and see Aura help you find exactly what you
 								need.
 							</p>
@@ -92,10 +92,10 @@ const PopupStore = () => {
 				<div className='lg:pt-20 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 					<div>
 						<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-							<h1 className='text-3xl lg:text-3xl-1 lg:whitespace-nowrap lg:leading-44 text-gray-103 font-normal'>
+							<h1 className='text-3xl lg:text-3xl-1 lg:whitespace-nowrap lg:leading-44 text-slate-200 font-normal'>
 								1-1 Personalized Recommendations
 							</h1>
-							<p className='max-w-md text-lightgray-104 text-lg lg:text-xl-1.5 m-0'>
+							<p className='max-w-md text-slate-400 text-lg lg:text-xl-1.5 m-0'>
 								Our AI engine learns the user’s taste in real time. Oh, and did
 								we mention that the recommendations are super quick, and
 								relevant?
@@ -121,7 +121,7 @@ const PopupStore = () => {
 			</section>
 			{/* more things sections */}
 			<section className='mt-28 lg:mt-52'>
-				<h1 className='text-3xl lg:text-5xl text-gray-103 text-center'>
+				<h1 className='text-3xl lg:text-5xl text-slate-200 text-center'>
 					...& some more things ✨
 				</h1>
 				<div className='mt-9 lg:mt-24 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-12 lg:gap-y-24'>
@@ -132,10 +132,10 @@ const PopupStore = () => {
 							alt='collections_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Collections
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								React to trends immediately with quick collection pages
 							</p>
 						</div>
@@ -147,10 +147,10 @@ const PopupStore = () => {
 							alt='http_lock_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Connect to your own domain
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Rich content on your site by hosting influencer collections
 							</p>
 						</div>
@@ -162,8 +162,8 @@ const PopupStore = () => {
 							alt='web3_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>Web 3</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>Web 3</h3>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Become part of the first live web3 shopping community.
 							</p>
 						</div>
@@ -175,10 +175,10 @@ const PopupStore = () => {
 							alt='analytics_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Google Analytics Integration
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Track the performance of the collections on your own Google
 								Analytics account.
 							</p>
@@ -191,10 +191,10 @@ const PopupStore = () => {
 							alt='mobile_responsive_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Mobile Responsive
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								The collection pages adapt to any screen size or resolution
 								automatically
 							</p>
@@ -207,10 +207,10 @@ const PopupStore = () => {
 							alt='leaderboard_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Leaderboard
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Supercharge your campaigns and grow your following with
 								leaderboards for your brand ambassadors
 							</p>
@@ -224,10 +224,10 @@ const PopupStore = () => {
 							alt='campaign_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Campaign Analytics
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Measure the ROI of the campaign down to which influencers enable
 								the best engagement and conversions
 							</p>
@@ -240,8 +240,8 @@ const PopupStore = () => {
 							alt='theming_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>Theming</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>Theming</h3>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Customize the fonts and colors to match your website
 							</p>
 						</div>
@@ -253,10 +253,10 @@ const PopupStore = () => {
 							alt='catalog_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Catalog Classifier
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Talk to us about our catalog classifier that can auto-correct
 								your product catalog and optimize it for search
 							</p>

@@ -17,15 +17,15 @@ const HomePageNew = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
     state.influencer.collections.data,
   ]);
-//   console.log("collectionDataz", collectionData);
+  //   console.log("collectionDataz", collectionData);
 
   const authUserCollections = useSelector(
     (state) => state.auth.user.collections.data,
   );
-  const Tags = [ "Social Media","Look Books", "#Trending"];
-   const [showTags, setShowTags] = useState(Tags[0]);
+  const Tags = ["Social Media", "Look Books", "#Trending"];
+  const [showTags, setShowTags] = useState(Tags[0]);
   const [products, setProducts] = useState([]);
-//   console.log("products", products);
+  //   console.log("products", products);
 
   const fetchData = async () => {
     try {
@@ -37,7 +37,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
       // store in state
       setProducts(json.data);
 
-    //   console.log(json.data);
+      //   console.log(json.data);
     } catch (err) {
       console.log(err);
     }
@@ -46,16 +46,17 @@ const HomePageNew = ({ blogCollectionPage }) => {
   useEffect(() => {
     fetchData();
   }, []);
-  if(!Array.isArray(products) || products.length === 0 ){
+  if (!Array.isArray(products) || products.length === 0) {
     return (
-    <div className="min-h-screen mt-4 flex items-start justify-center">
-      <Spin size="large" className="pink-spinner" />
-    </div>
-    )}
+      <div className="min-h-screen mt-4 flex items-start justify-center">
+        <Spin size="large" className="pink-spinner" />
+      </div>
+    );
+  }
 
   return (
     <div className=" mx-auto w-full px-6 md:px-14 mt-14">
-       {/* Tag Buttons (pill-style tabs) */}
+      {/* Tag Buttons (pill-style tabs) */}
       <div className="flex items-center mb-8">
         <div className="w-full  mx-auto">
           <div className="flex items-center rounded-full bg-gray-200/60 p-1">
@@ -76,17 +77,15 @@ const HomePageNew = ({ blogCollectionPage }) => {
           </div>
         </div>
       </div>
-      {showTags === 'Social Media' &&
-
+      {showTags === "Social Media" && (
         <HeroSection im={im} products={products} />
-      }
-       {showTags !== 'Social Media' &&
-      <BannerKisok products={products} Tags={Tags} />
-    }
+      )}
+      {showTags !== "Social Media" && (
+        <BannerKisok products={products} Tags={Tags} />
+      )}
       <QRsection />
     </div>
   );
 };
 
 export default HomePageNew;
- 

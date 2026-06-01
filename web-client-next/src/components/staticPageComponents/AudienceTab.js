@@ -318,7 +318,7 @@ const AudienceTab = () => {
 							{/* <p
 								className={`${
 									isFirstTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								These sites target their audience with your products
 							</p> */}
 						</div>
@@ -347,7 +347,7 @@ const AudienceTab = () => {
 							{/* <p
 								className={`${
 									isSecondTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								Influencers showcase your products to their followers
 							</p> */}
 						</div>
@@ -376,7 +376,7 @@ const AudienceTab = () => {
 							{/* <p
 								className={`${
 									isThirdTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								Sell where the the next-gen audience is
 							</p> */}
 						</div>

@@ -41,8 +41,8 @@ const Person = ({ image, name, designation, linkedn }) => {
 					/>
 				</div>
 			<div className='pt-8'>
-				<h4 className='text-xl lg:text-xl-1.5 text-gray-103'>{name}</h4>
-				<h5 className='text-base lg:text-xl text-lightgray-104 max-w-s-2'>
+				<h4 className='text-xl lg:text-xl-1.5 text-slate-200'>{name}</h4>
+				<h5 className='text-base lg:text-xl text-slate-400 max-w-s-2'>
 					{designation}
 				</h5>
 			</div>
@@ -68,7 +68,7 @@ const About = () => {
 						"We are here to un-think the{" "}
 						<span className='whitespace-nowrap'>e-commerce</span> experience"
 					</h1>
-					<p className='text-lightgray-104 text-xl lg:text-xl-1.5 font-firaSans max-w-lg mx-auto'>
+					<p className='text-slate-400 text-xl lg:text-xl-1.5 font-firaSans max-w-lg mx-auto'>
 						We strive to bring the human touch to online discovery with the
 						combination of AI and a network of real human experts
 					</p>
@@ -90,7 +90,7 @@ const About = () => {
 			</section>
 			<section className={`${styles.teams_container} py-10 lg:py-20`}>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-6xl mx-auto'>
-					<h1 className='max-w-5xl mx-auto text-3xl lg:text-5xl lg:leading-54 text-gray-103 text-center lg:text-left'>
+					<h1 className='max-w-5xl mx-auto text-3xl lg:text-5xl lg:leading-54 text-slate-200 text-center lg:text-left'>
 						Our Team
 					</h1>
 					<div className='grid gap-6 grid-cols-2 md:grid-cols-3 gap-y-11 lg:gap-y-24 pt-14 lg:pt-32'>
@@ -155,7 +155,7 @@ const About = () => {
 			</section>
 			<section className='teams_container mt-40 py-10 lg:py-20'>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-6xl mx-auto'>
-					<h1 className='max-w-5xl mx-auto text-3xl lg:text-5xl lg:leading-54 text-gray-103 text-center lg:text-left'>
+					<h1 className='max-w-5xl mx-auto text-3xl lg:text-5xl lg:leading-54 text-slate-200 text-center lg:text-left'>
 						Our Advisors
 					</h1>
 					<div className='grid gap-6 grid-cols-2 md:grid-cols-3 gap-y-11 lg:gap-y-24 pt-14 lg:pt-32'>
@@ -205,7 +205,7 @@ const About = () => {
 				</div>
 			</section>
 			<section className='max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto mt-11 pb-28 lg:pb-64'>
-				<h1 className='text-3xl lg:text-5xl lg:leading-54 text-gray-103 mb-6 lg:mb-16'>
+				<h1 className='text-3xl lg:text-5xl lg:leading-54 text-slate-200 mb-6 lg:mb-16'>
 					Our offices
 				</h1>
 				<a

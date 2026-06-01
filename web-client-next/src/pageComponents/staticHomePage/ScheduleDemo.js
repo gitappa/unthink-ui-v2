@@ -64,16 +64,16 @@ export const ScheduleDemo = () => {
 				style={{ borderTopColor: "#111827", borderBottomColor: "#222F44" }}>
 				<div className='publisher_first_container flex justify-center items-center bg-blue-110'>
 					<div className='mx-auto text-center px-4 sm:px-0 flex gap-4 flex-col'>
-						<h1 className='text-3xl lg:text-5xl text-gray-103 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-200 font-normal'>
 							Join the Revolution
 						</h1>
 
-						<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5'>
 							Discover the future of retail with unthink.ai. Empower your
 							business with the perfect blend of AI and human touch. Join us in
 							transforming the consumer experience.
 						</p>
-						<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5'>
 							To Learn more Request a Demo/
 							<span className='whitespace-nowrap'>Schedule a meeting</span>
 						</p>
@@ -85,7 +85,7 @@ export const ScheduleDemo = () => {
 						<div className='mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8'>
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>
+									<label className='text-base text-slate-200 block'>
 										<span className='text-red-200'>*</span> First name
 									</label>
 								</div>
@@ -103,7 +103,7 @@ export const ScheduleDemo = () => {
 
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>
+									<label className='text-base text-slate-200 block'>
 										Last name
 									</label>
 								</div>
@@ -120,7 +120,7 @@ export const ScheduleDemo = () => {
 
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>
+									<label className='text-base text-slate-200 block'>
 										<span className='text-red-200'>*</span> Business email
 									</label>
 								</div>
@@ -137,7 +137,7 @@ export const ScheduleDemo = () => {
 
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>Phone</label>
+									<label className='text-base text-slate-200 block'>Phone</label>
 								</div>
 								<Input
 									type='text'
@@ -153,7 +153,7 @@ export const ScheduleDemo = () => {
 
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>
+									<label className='text-base text-slate-200 block'>
 										Company
 									</label>
 								</div>
@@ -170,7 +170,7 @@ export const ScheduleDemo = () => {
 
 							<div className='col-span-2 sm:col-auto'>
 								<div className='flex justify-between mb-0.75'>
-									<label className='text-base text-gray-103 block'>
+									<label className='text-base text-slate-200 block'>
 										Country
 									</label>
 								</div>
@@ -191,7 +191,7 @@ export const ScheduleDemo = () => {
 								<input type='hidden' name='message' value='' />
 								<input type='hidden' name='reply_to' value='' />
 								<button
-									className={`text-gray-103 text-xs md:text-sm rounded-xl py-2.5 px-7 h-full font-bold bg-indigo-600`}
+									className={`text-slate-200 text-xs md:text-sm rounded-xl py-2.5 px-7 h-full font-bold bg-indigo-600`}
 									type='submit'
 									// onClick={submitScheduleDemoData}
 									// disabled={isSubmitDisabled}

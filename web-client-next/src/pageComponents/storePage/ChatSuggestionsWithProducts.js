@@ -63,7 +63,7 @@ const ChatSuggestionsWithProducts = ({ wrapperClassName = "" }) => {
 						key={suggestion}
 						className={`relative rounded-full shadow mx-2 my-1 w-max ${
 							suggestion === selectedTag
-								? "bg-lightgray-104"
+								? "bg-slate-400"
 								: checkIsTagEnabled(suggestion)
 								? "bg-lightgray-102"
 								: "bg-white"

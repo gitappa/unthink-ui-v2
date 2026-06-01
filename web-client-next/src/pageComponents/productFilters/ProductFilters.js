@@ -41,11 +41,11 @@ export const ProductFilters = ({
 					availableFilters?.gender?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Gender</label>
+							<label className='text-base text-slate-200 block'>Gender</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("gender")}
 									checked={productFilters?.optional_filters?.includes(
 										"gender"
@@ -76,11 +76,11 @@ export const ProductFilters = ({
 					availableFilters?.age_group?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Age group</label>
+							<label className='text-base text-slate-200 block'>Age group</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 '
+									className='text-slate-200 '
 									onChange={() => handleFiltersOptionalChange("age_group")}
 									checked={productFilters?.optional_filters?.includes(
 										"age_group"
@@ -111,11 +111,11 @@ export const ProductFilters = ({
 					availableFilters?.discount?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Discount</label>
+							<label className='text-base text-slate-200 block'>Discount</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("discount")}
 									checked={productFilters?.optional_filters?.includes(
 										"discount"
@@ -147,11 +147,11 @@ export const ProductFilters = ({
 					availableFilters?.brand?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Seller</label>
+							<label className='text-base text-slate-200 block'>Seller</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("brand")}
 									checked={productFilters?.optional_filters?.includes(
 										"brand"
@@ -182,11 +182,11 @@ export const ProductFilters = ({
 				{displayableFilter.includes("color") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Color</label>
+							<label className='text-base text-slate-200 block'>Color</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("color")}
 									checked={productFilters?.optional_filters?.includes(
 										"color"
@@ -212,15 +212,15 @@ export const ProductFilters = ({
 				{displayableFilter.includes("occasion") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>
+							<label className='text-base text-slate-200 block'>
 								{current_store_name === STORE_USER_NAME_HOMECENTRE
 									? "Room"
 									: "Occasion"}
 							</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("occasion")}
 									checked={productFilters?.optional_filters?.includes(
 										"occasion"
@@ -251,14 +251,14 @@ export const ProductFilters = ({
 				{/* {displayableFilter.includes("custom_filter") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>
+							<label className='text-base text-slate-200 block'>
 								Custom filter{" "}
 								<span className='text-sm'>(max 25 characters)</span>
 							</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("custom_filter")}
 									checked={productFilters?.optional_filters?.includes(
 										"custom_filter"
@@ -284,13 +284,13 @@ export const ProductFilters = ({
 				{displayableFilter.includes("price") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>
+							<label className='text-base text-slate-200 block'>
 								Price range
 							</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("price")}
 									checked={productFilters?.optional_filters?.includes(
 										"price"
@@ -306,7 +306,7 @@ export const ProductFilters = ({
 								onChange={(e) => handlePriceChange("min", e.target.value)}
 								name='priceRange-min'
 							/>
-							<span className='flex justify-center items-center text-gray-103 text-base mx-5'>
+							<span className='flex justify-center items-center text-slate-200 text-base mx-5'>
 								to
 							</span>
 							<Input
@@ -324,11 +324,11 @@ export const ProductFilters = ({
 				{displayableFilter.includes("material") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Material</label>
+							<label className='text-base text-slate-200 block'>Material</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("material")}
 									checked={productFilters?.optional_filters?.includes(
 										"material"
@@ -355,11 +355,11 @@ export const ProductFilters = ({
 					availableFilters?.pattern?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Pattern</label>
+							<label className='text-base text-slate-200 block'>Pattern</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("pattern")}
 									checked={productFilters?.optional_filters?.includes(
 										"pattern"
@@ -389,11 +389,11 @@ export const ProductFilters = ({
 				{displayableFilter.includes("style") ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Style</label>
+							<label className='text-base text-slate-200 block'>Style</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("style")}
 									checked={productFilters?.optional_filters?.includes(
 										"style"
@@ -425,11 +425,11 @@ export const ProductFilters = ({
 					availableFilters?.product_brand?.length ? (
 					<div>
 						<div className='flex justify-between mb-0.75'>
-							<label className='text-base text-gray-103 block'>Brand</label>
+							<label className='text-base text-slate-200 block'>Brand</label>
 							<div className='flex items-center'>
-								<label className='text-gray-103 block mr-1'>Optional</label>
+								<label className='text-slate-200 block mr-1'>Optional</label>
 								<Checkbox
-									className='text-gray-103 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+									className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 									onChange={() => handleFiltersOptionalChange("product_brand")}
 									checked={productFilters?.optional_filters?.includes(
 										"product_brand"

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo } from "react";
-const BannerKisok = ({ products,Tags }) => {
-   
- 
+const BannerKisok = ({ products, Tags }) => {
   const router = useRouter();
 
   const dummyProducts = (products || []).filter((x) => x.cover_image && x.path);
@@ -31,8 +29,6 @@ const BannerKisok = ({ products,Tags }) => {
   };
   return (
     <div className="mt-5">
-     
-
       {/* Banner Section */}
       <div
         className="rounded-3xl bg-gradient-to-r from-black/90 to-black/60 px-4 py-6 md:py-10 md:px-8 overflow-hidden relative "
