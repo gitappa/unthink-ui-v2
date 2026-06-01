@@ -577,7 +577,7 @@ const WishListModal = ({
 											isWishlistFetching={
 												isWishlistFetching || authUserFetching
 											}
-											contentClassName='bg-gray-103'
+											contentClassName='bg-slate-200'
 										/>
 
 									</>

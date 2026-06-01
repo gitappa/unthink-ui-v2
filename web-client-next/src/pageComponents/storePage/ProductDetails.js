@@ -17,6 +17,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
@@ -60,7 +61,7 @@ import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
-import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
+// import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
@@ -88,7 +89,6 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductLoading,
     productDetail,
     ButtonClick,
-
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -98,15 +98,16 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
-
-
   ]);
 
-  const [store_id,isUserLogin] = useSelector((state) => [state.store.data.store_id,	state.auth.user.isUserLogin,]);
+  const [store_id, isUserLogin] = useSelector((state) => [
+    state.store.data.store_id,
+    state.auth.user.isUserLogin,
+  ]);
 
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
-  const [dropDown, setDropDown] = useState(false)
+  const [dropDown, setDropDown] = useState(false);
 
   //   useEffect(() => {
   //     return () => {
@@ -116,7 +117,9 @@ const ProductDetails = ({ params, ...props }) => {
 
   // console.log('customProductsData', customProductsData);
   const [storeData] = useSelector((state) => [state.store.data]);
-  const ProductTags = storeData?.catalog_attributes?.find(att => att.key === "product_tag")?.is_display
+  const ProductTags = storeData?.catalog_attributes?.find(
+    (att) => att.key === "product_tag",
+  )?.is_display;
   // console.log('onMyDev',ProductTags);
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
@@ -139,7 +142,6 @@ const ProductDetails = ({ params, ...props }) => {
   //       dispatch(PDPloader(false));
   //     }
   //   };
-  
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -260,11 +262,10 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [productDetails],
   );
-const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-const fromCollection =
-  searchParams.get("from") === "kioskcollection";
-// console.log('fromCollection',fromCollection);
+  const fromCollection = searchParams.get("from") === "kioskcollection";
+  // console.log('fromCollection',fromCollection);
 
   const handleGoBack = () => {
     if (typeof window !== "undefined" && window?.history?.length > 2) {
@@ -309,7 +310,7 @@ const fromCollection =
   //   "category",
   //   // 'product_tag'
   // ];
-  const fieldsToDisplay = storeData?.pdp_settings?.product_page_attributes
+  const fieldsToDisplay = storeData?.pdp_settings?.product_page_attributes;
   // console.log('fieldsToDisplay',fieldsToDisplay);
 
   // scroll for tags
@@ -480,7 +481,10 @@ const fromCollection =
     const payload = {
       image_urls: [productDetails.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.[collection?.tryon_type] || storeData?.templates?.image_try_on || "",
+      image_tryon_prompt:
+        storeData?.templates?.[collection?.tryon_type] ||
+        storeData?.templates?.image_try_on ||
+        "",
       additional_prompt: descriptionget || "",
       type: collection?.tryon_type || "tryon",
     };
@@ -550,24 +554,23 @@ const fromCollection =
     brandsDetails?.couponCode ||
     brandsDetails?.paymentDetails ||
     brandsDetails?.shippingDetails;
-const Additionalimages = [
-  productDetails?.image,
-  ...(Array.isArray(productDetails?.additional_image)
-    ? productDetails?.additional_image
-    : productDetails?.additional_image
-      ? [productDetails?.additional_image]
-      : []),
-];
-const onWishlistClick = () => {
+  const Additionalimages = [
+    productDetails?.image,
+    ...(Array.isArray(productDetails?.additional_image)
+      ? productDetails?.additional_image
+      : productDetails?.additional_image
+        ? [productDetails?.additional_image]
+        : []),
+  ];
+  const onWishlistClick = () => {
     dispatch(openWishlistModal());
   };
   // console.log('ssscdccd',typeof productDetails?.additional_image);
-// ,...productDetails?.additional_image,
+  // ,...productDetails?.additional_image,
   return (
     <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
-     
         <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
           <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
@@ -600,15 +603,35 @@ const onWishlistClick = () => {
                           {discountPer}% OFF
                         </span>
                       ) : null}
-                            {storeData?.is_tryon_enabled &&
-                  <div
-                    className="py-3 lg:py-6 lg:px-6 px-4 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-2 mb-2"
-                    onClick={(e) => {
-                      dispatch(vtoIconState(productDetails?.mfr_code || true));
-                      e.stopPropagation();
-                    }}
-                  >
-                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                      {storeData?.is_tryon_enabled && (
+                        <button
+                          className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
+                          onClick={(e) => {
+                            dispatch(
+                              vtoIconState(productDetails?.mfr_code || true),
+                            );
+                            e.stopPropagation();
+                          }}
+                          title="Try on with virtual camera"
+                        >
+                          <div className="relative">
+                            <Image
+                              height={18}
+                              width={18}
+                              alt="Try on with camera"
+                              src={camera}
+                              className="group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+                          <span className="text-whit font-semibold text-xs sm:text-sm whitespace-nowrap">
+                            Try On
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+                {/* <div className="flex items-center gap-3 mb-3 lg:mb-4">
                       <Image
                         height={24}
                         width={24}
@@ -621,15 +644,9 @@ const onWishlistClick = () => {
                     <p>
                       Scan the QR code with your phone to try this piece on
                       virtually.
-                    </p>
-                  </div>
-                }
-                    </div>
-                  ) : null}
-                </div>
-
+                    </p> */}
                 {productDetails?.additional_image &&
-                  productDetails?.additional_image.length > 0 ? (
+                productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
                     <Swiper
                       modules={[FreeMode]}
@@ -652,10 +669,11 @@ const onWishlistClick = () => {
                               src={img}
                               height={50}
                               width={50}
-                              className={`w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
-                                ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
-                                : "border-[#e8e2ff] hover:border-[#b8a9ff]"
-                                }`}
+                              className={`w-[110px] h-[120px] rounded-xl border transition ${
+                                additionalimg === img
+                                  ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
+                                  : "border-[#e8e2ff] hover:border-[#b8a9ff]"
+                              }`}
                               onClick={() => setAdditionalImg(img)}
                               alt="product"
                             />
@@ -848,7 +866,7 @@ const onWishlistClick = () => {
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
                         {productDetails?.user_id === authUser?.user_id ||
-                          productDetails?.brand === authUser?.user_name ? (
+                        productDetails?.brand === authUser?.user_name ? (
                           <button
                             className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
@@ -858,17 +876,19 @@ const onWishlistClick = () => {
                           </button>
                         ) : null}
                       </div>
-                      {isUserLogin && 
-                      <button className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]">
-
-                       <BsBookmarkPlusFill
-                         onClick={onWishlistClick}
-                          style={{ filter: "brightness(0) opacity(0.7)" ,height:24,width:24}}                            
-                                     
-                        className='lg:h-6 lg:w-6 h-5 w-5'
-                       />
-                      </button>
-                        }
+                      {isUserLogin && (
+                        <button className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]">
+                          <BsBookmarkPlusFill
+                            onClick={onWishlistClick}
+                            style={{
+                              filter: "brightness(0) opacity(0.7)",
+                              height: 24,
+                              width: 24,
+                            }}
+                            className="lg:h-6 lg:w-6 h-5 w-5"
+                          />
+                        </button>
+                      )}
 
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
@@ -891,7 +911,6 @@ const onWishlistClick = () => {
                             }
                           >
                             <img
-                               
                               className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
                               src={share_icon}
                               preview={false}
@@ -907,14 +926,15 @@ const onWishlistClick = () => {
                       {productDetails?.price || productDetails?.listprice ? (
                         <span
                           dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${productDetails.price || productDetails.listprice
-                              }`,
+                            __html: `${currencySymbol}${
+                              productDetails.price || productDetails.listprice
+                            }`,
                           }}
                           className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                         />
                       ) : null}
                       {productDetails?.price &&
-                        +productDetails.listprice > +productDetails?.price ? (
+                      +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
                           {/* MRP{" "} */}
                           <span
@@ -929,10 +949,11 @@ const onWishlistClick = () => {
 
                     {productDetails?.availability ? (
                       <span
-                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${productDetails.availability === "out stock"
-                          ? "bg-red-100 text-white"
-                          : "bg-green-100 text-green-700"
-                          }`}
+                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
+                          productDetails.availability === "out stock"
+                            ? "bg-red-100 text-white"
+                            : "bg-green-100 text-green-700"
+                        }`}
                       >
                         {productDetails.avlbl === 0
                           ? "SOLD"
@@ -977,7 +998,7 @@ const onWishlistClick = () => {
                           return (
                             <a
                               key={`${link}-${idx}`}
-                              style={{ background: '#7c75ec' }}
+                              style={{ background: "#7c75ec" }}
                               className=" text-white flex justify-center items-center  py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg   "
                               target="_blank"
                               rel="noreferrer"
@@ -990,7 +1011,8 @@ const onWishlistClick = () => {
                     </div>
                   </div>
                 ) : null}
-                {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) &&
+                {(storeData?.pdp_settings?.is_buy_button ||
+                  storeData?.pdp_settings?.is_add_to_cart_button) && (
                   <div className="mt-8 ">
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       {storeData?.pdp_settings?.is_add_to_cart_button && (
@@ -1039,7 +1061,8 @@ const onWishlistClick = () => {
                           style={{
                             background: "#7c75ec",
                             cursor:
-                              !productDetails?.price && !productDetails?.listprice
+                              !productDetails?.price &&
+                              !productDetails?.listprice
                                 ? "not-allowed"
                                 : "",
                           }}
@@ -1050,9 +1073,8 @@ const onWishlistClick = () => {
                       )}
                     </div>
                   </div>
-                }
+                )}
 
-            
                 {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
@@ -1063,31 +1085,35 @@ const onWishlistClick = () => {
                 )} */}
 
                 {fieldsToDisplay.map((field, index) => {
-                  const fieldsWithData = fieldsToDisplay.filter(f => productDetails?.[f]?.length > 0 && ProductTags);
+                  const fieldsWithData = fieldsToDisplay.filter(
+                    (f) => productDetails?.[f]?.length > 0 && ProductTags,
+                  );
                   const fieldIndexInFiltered = fieldsWithData.indexOf(field);
-                  return productDetails?.[field]?.length > 0 && ProductTags ? (
-                    (showAllFields || fieldIndexInFiltered < 4) && (
-                      <div className="mt-10 " key={field}>
-                        <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
-                          <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
-                            {field}
-                          </p>
-                          <p className="font-normal text-sm  md:text-base text-end">
-                            {Array.isArray(productDetails?.[field])
-                              ? productDetails?.[field]?.join(",")
-                              : productDetails?.[field]}
-                          </p>
+                  return productDetails?.[field]?.length > 0 && ProductTags
+                    ? (showAllFields || fieldIndexInFiltered < 4) && (
+                        <div className="mt-10 " key={field}>
+                          <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                            <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
+                              {field}
+                            </p>
+                            <p className="font-normal text-sm  md:text-base text-end">
+                              {Array.isArray(productDetails?.[field])
+                                ? productDetails?.[field]?.join(",")
+                                : productDetails?.[field]}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  ) : null;
+                      )
+                    : null;
                 })}
-                {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0)?.length > 4 && (
+                {fieldsToDisplay.filter(
+                  (field) => productDetails?.[field]?.length > 0,
+                )?.length > 4 && (
                   <button
                     onClick={() => setShowAllFields(!showAllFields)}
                     className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
                   >
-                    {showAllFields ? 'Show Less' : 'Show More'}
+                    {showAllFields ? "Show Less" : "Show More"}
                   </button>
                 )}
                 {/* {productDetails?.product_tag?.length > 0 && (
@@ -1098,7 +1124,7 @@ const onWishlistClick = () => {
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
                 )} */}
-                    {productDetails?.description && (
+                {productDetails?.description && (
                   <div className="">
                     {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Product Description
@@ -1235,16 +1261,28 @@ const onWishlistClick = () => {
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
                       <div className="flex items-center gap-2">
                         {/* <span className="h-2 w-2 rounded-full bg-[#2b3d56]" /> */}
-                        <p className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]" onClick={() => setDropDown(!dropDown)}>
+                        <p
+                          className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]"
+                          onClick={() => setDropDown(!dropDown)}
+                        >
                           Contact Details
                         </p>
                         {/* <p >kughbiuhb</p> */}
-                        {brandsDetails?.shippingDetails || brandsDetails?.paymentDetails || brandsDetails?.info || brandsDetails?.contact || brandsDetails?.email || brandsDetails?.title &&
-                          <RiArrowDropDownLine onClick={() => setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`} />
-                        }
+                        {brandsDetails?.shippingDetails ||
+                          brandsDetails?.paymentDetails ||
+                          brandsDetails?.info ||
+                          brandsDetails?.contact ||
+                          brandsDetails?.email ||
+                          (brandsDetails?.title && (
+                            <RiArrowDropDownLine
+                              onClick={() => setDropDown(!dropDown)}
+                              className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? "rotate-180" : ""}`}
+                            />
+                          ))}
                       </div>
 
-                      {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
+                      {brandsDetails?.instagramUrl ||
+                      brandsDetails?.facebookUrl ? (
                         <div className="flex items-center gap-2">
                           {brandsDetails?.instagramUrl && (
                             <a
@@ -1279,7 +1317,7 @@ const onWishlistClick = () => {
                         </div>
                       ) : null}
                     </div>
-                    {dropDown &&
+                    {dropDown && (
                       <div className="mt-4 divide-y divide-[#edf2f7]">
                         {brandsDetails?.title && (
                           <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
@@ -1320,7 +1358,7 @@ const onWishlistClick = () => {
                           </div>
                         )}
                       </div>
-                    }
+                    )}
 
                     {brandsDetails?.info && dropDown ? (
                       <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
@@ -1329,8 +1367,6 @@ const onWishlistClick = () => {
                     ) : null}
                   </div>
                 )}
-
-
 
                 {brandsDetails?.paymentDetails && dropDown && (
                   <div className="mt-5 lg:mt-8">
@@ -1357,7 +1393,13 @@ const onWishlistClick = () => {
             )}
           </div>
         </div>
-       {fromCollection && <BannerImage src={profilebanner.src}  alt="profilebanner" className="mt-4" />}
+        {fromCollection && (
+          <BannerImage
+            src={profilebanner.src}
+            alt="profilebanner"
+            className="mt-4"
+          />
+        )}
       </div>
     </div>
   );

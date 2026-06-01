@@ -311,14 +311,14 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isFirstTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								Within expert e-commerce content
 							</h3>
 							{/* <p
 								className={`${
 									isFirstTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								These sites target their audience with your products
 							</p> */}
 						</div>
@@ -340,14 +340,14 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isSecondTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								AI powered shopping assistant
 							</h3>
 							{/* <p
 								className={`${
 									isSecondTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								Influencers showcase your products to their followers
 							</p> */}
 						</div>
@@ -369,14 +369,14 @@ const AudienceTab = () => {
 								className={`text-xl-1.5 ${
 									isThirdTabSelected
 										? "text-black-104 text-center"
-										: "text-lightgray-101"
+										: "text-slate-100"
 								}`}>
 								Pop-up stores created by brand advocates
 							</h3>
 							{/* <p
 								className={`${
 									isThirdTabSelected ? "hidden" : "block"
-								} text-xl text-lightgray-104 max-w-287 m-0`}>
+								} text-xl text-slate-400 max-w-287 m-0`}>
 								Sell where the the next-gen audience is
 							</p> */}
 						</div>

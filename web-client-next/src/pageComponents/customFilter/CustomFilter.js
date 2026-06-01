@@ -8,7 +8,7 @@ import { isEmpty } from "../../helper/utils";
 export const CustomFilter = ({
 	handleSaveEditCustomFilter,
 	customFilterStringData = "",
-	hashtagsThemeClassName = "text-gray-103",
+	hashtagsThemeClassName = "text-slate-200",
 	customFilter,
 	setCustomFilter,
 	handleCustomFilterChange,

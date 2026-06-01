@@ -499,11 +499,11 @@ const ReviewCollectionStepContent = ({
 	// 		<>
 	// 			<div>
 	// 				<div className='flex justify-between mb-0.75'>
-	// 					<label className='text-base text-gray-103 block'>{label}</label>
+	// 					<label className='text-base text-slate-200 block'>{label}</label>
 	// 					<div className='flex items-center'>
-	// 						<label className='text-gray-103 block mr-1'>Optional</label>
+	// 						<label className='text-slate-200 block mr-1'>Optional</label>
 	// 						<Checkbox
-	// 							className='text-gray-103'
+	// 							className='text-slate-200'
 	// 							onChange={() => handleSettingsStrictSelectChange(key)}
 	// 							checked={updatedData.settings?.optional_filters?.includes(
 	// 								key
@@ -1352,7 +1352,7 @@ const ReviewCollectionStepContent = ({
 									</div>
 								) : null}
 								{/* {isGeneratedByVideo ? (
-									<div className='ml-auto text-gray-103'>
+									<div className='ml-auto text-slate-200'>
 										<button
 											onClick={() =>
 												onImproveContentModalOpen({
@@ -1510,13 +1510,13 @@ const ReviewCollectionStepContent = ({
 				<div className='tablet:mx-4 desktop:mx-8 tablet:bg-slat-103 tablet:px-4 tablet:py-3 desktop:px-8 desktop:py-6 mt-6'>
 					<div>
 						<p
-							className='flex items-center text-xl text-gray-103  cursor-pointer'
+							className='flex items-center text-xl text-slate-200  cursor-pointer'
 							role='button'
 							onClick={() => setSettingsOpen((value) => !value)}>
 							<RightOutlined rotate={settingsOpen ? 90 : 0} className='mr-2' />{" "}
 							Filters
 						</p>
-						<hr className='my-3 border-gray-103' />
+						<hr className='my-3 border-slate-200' />
 						<div>
 							<div className='flex flex-wrap gap-2'>
 								{selectedFiltersArr
@@ -1546,15 +1546,15 @@ const ReviewCollectionStepContent = ({
 								availableFilters?.gender?.length ? (
 									<div>
 										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+											<label className='text-base text-slate-200 block'>
 												Gender
 											</label>
 											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+												<label className='text-slate-200 block mr-1'>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200'
 													onChange={() =>
 														handleSettingsStrictSelectChange("gender")
 													}
@@ -1866,15 +1866,15 @@ const ReviewCollectionStepContent = ({
 								{displayableFilter.includes("material") ? (
 									<div>
 										<div className='flex justify-between mb-0.75'>
-											<label className='text-base text-gray-103 block'>
+											<label className='text-base text-slate-200 block'>
 												Material
 											</label>
 											<div className='flex items-center'>
-												<label className='text-gray-103 block mr-1'>
+												<label className='text-slate-200 block mr-1'>
 													Optional
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200'
 													onChange={() =>
 														handleSettingsStrictSelectChange("material")
 													}

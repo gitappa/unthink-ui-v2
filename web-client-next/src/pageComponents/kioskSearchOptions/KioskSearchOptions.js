@@ -28,7 +28,7 @@ export const KioskSearchOptions = ({
 				<div className={`grid grid-cols-1 md:grid-cols-2 gap-8`}>
 					{displaySearchOptions.map((searchOptions) => (
 						<div
-							className={`flex flex-col border-2 border-gray-106 shadow-md w-full rounded-xl px-3.5 md:px-5 py-3.5 md:py-5 text-left font-medium cursor-pointer bg-lightgray-101`}
+							className={`flex flex-col border-2 border-gray-106 shadow-md w-full rounded-xl px-3.5 md:px-5 py-3.5 md:py-5 text-left font-medium cursor-pointer bg-slate-100`}
 							onClick={() => handleSetSearchOption(searchOptions)}>
 							<div className='flex justify-between'>
 								<div

@@ -79,7 +79,7 @@ const ChatSuggestionsV2 = ({ onSuggestionClick, wrapperClassName = "" }) => {
 						key={suggestion}
 						className={`cursor-pointer rounded-full shadow mx-2 my-1 w-max ${
 							suggestion === selectedChip
-								? " bg-lightgray-104"
+								? " bg-slate-400"
 								: " bg-lightgray-102"
 						}`}
 						onClick={() => handleSuggestionClick(suggestion)}>

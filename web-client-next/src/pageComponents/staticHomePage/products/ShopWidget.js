@@ -48,10 +48,10 @@ const ShopWidget = () => {
 		<div className='font-firaSans'>
 			<section className='mt-24 lg:mt-32 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto'>
 				<div className='max-w-340 md:max-w-s-3 lg:max-w-xl-1 mx-auto text-center flex flex-col items-center'>
-					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal font-firaSans'>
+					<h1 className='text-4xl lg:text-7xl text-slate-100 font-normal font-firaSans'>
 						A shopping widget for every article
 					</h1>
-					<p className='text-lightgray-104 text-xl lg:text-3xl-1 lg:leading-44 mx-auto'>
+					<p className='text-slate-400 text-xl lg:text-3xl-1 lg:leading-44 mx-auto'>
 						Replace irrelevant ads to shoppable products.
 					</p>
 				</div>
@@ -99,11 +99,11 @@ const ShopWidget = () => {
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-gray-103 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-200 font-normal'>
 							Products that match{" "}
 							<span className='whitespace-nowrap'>your content</span>
 						</h1>
-						<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5'>
 							AI-assisted product selection with final control to you. Because
 							you know what your audience likes!
 						</p>
@@ -125,14 +125,14 @@ const ShopWidget = () => {
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-gray-103 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-200 font-normal'>
 							Plug-n-Play
 						</h1>
-						<p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5 m-0'>
+						<p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5 m-0'>
 							Add a code snippet once and get matching products under every
 							article automatically, with the control overrides that you need.
 						</p>
-						{/* <p className='max-w-lg text-lightgray-104 text-lg lg:text-xl-1.5 m-0 pt-1'>
+						{/* <p className='max-w-lg text-slate-400 text-lg lg:text-xl-1.5 m-0 pt-1'>
 							Speak naturally and see Aura help you find exactly what you need.
 						</p> */}
 					</div>
@@ -142,7 +142,7 @@ const ShopWidget = () => {
 				</div>
 			</section>
 			<section className='mt-28 lg:mt-52 mb-28 lg:mb-60 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto '>
-				<h1 className='text-3xl lg:text-5xl text-gray-103 text-center'>
+				<h1 className='text-3xl lg:text-5xl text-slate-200 text-center'>
 					...& some more things ✨
 				</h1>
 				<div className='mt-9 lg:mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-12 lg:gap-y-24'>
@@ -153,10 +153,10 @@ const ShopWidget = () => {
 							alt='collections_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Simple JS Code
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								React to trends immediately with quick collection pages
 							</p>
 						</div>
@@ -168,10 +168,10 @@ const ShopWidget = () => {
 							alt='http_lock_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Blazing fast
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Rich content on your site by hosting influencer collections
 							</p>
 						</div>
@@ -183,8 +183,8 @@ const ShopWidget = () => {
 							alt='web3_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>Web 3</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>Web 3</h3>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Become part of the first live web3 shopping community.
 							</p>
 						</div>
@@ -196,10 +196,10 @@ const ShopWidget = () => {
 							alt='analytics_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5 xl:whitespace-nowrap'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5 xl:whitespace-nowrap'>
 								Google Analytics Integration
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Track the performance of the collections on your own Google
 								Analytics account.
 							</p>
@@ -212,10 +212,10 @@ const ShopWidget = () => {
 							alt='mobile_responsive_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>
 								Mobile Responsive
 							</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								The collection pages adapt to any screen size or resolution
 								automatically
 							</p>
@@ -228,8 +228,8 @@ const ShopWidget = () => {
 							alt='theming_icon'
 						/>
 						<div className='px-5'>
-							<h3 className='text-gray-103 text-xl lg:text-xl-1.5'>Theming</h3>
-							<p className='max-w-xs text-lightgray-104 text-base lg:text-xl'>
+							<h3 className='text-slate-200 text-xl lg:text-xl-1.5'>Theming</h3>
+							<p className='max-w-xs text-slate-400 text-base lg:text-xl'>
 								Customize the fonts and colors to match your website
 							</p>
 						</div>
