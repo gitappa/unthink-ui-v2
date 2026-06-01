@@ -4,6 +4,7 @@ import ReactPlayer from 'react-player'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
+import { Autoplay } from 'swiper';
 
 const HeroSection = ({ im, products }) => {
   const router = useRouter();
@@ -124,13 +125,21 @@ const HeroSection = ({ im, products }) => {
 
             <div style={{ position: 'relative', zIndex: 10 }} className="pb-2">
               <Swiper
+              modules={[Autoplay]}
                 spaceBetween={10}
                 slidesPerView={6}
                 className="mySwipers"
                 style={{ width: "100%" }}
+                  speed={2000} // move slowly for 2 seconds
+  autoplay={{
+    delay: 3000, // wait 3 seconds before moving
+   disableOnInteraction: true, // stop autoplay after user swipes
+    pauseOnMouseEnter: false,
+  }}
+  // loop={true}
                 breakpoints={{
                   0: {
-                    slidesPerView: 1.5,
+                    slidesPerView: 2,
                   },
                   640: {
                     slidesPerView: 3,
@@ -183,6 +192,9 @@ const HeroSection = ({ im, products }) => {
                             height={176}
                             alt={product.name || `slide-${idx}`}
                             className="h-full w-full rounded-md object-contain"
+                            onClick={()=>router.push(
+                                `/product/${product.mfr_code}`
+                              )}
                           />
                         </div>
                       </SwiperSlide>

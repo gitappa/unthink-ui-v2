@@ -7,7 +7,7 @@ export default function BannerImage({
     <img
       src={src}
       alt={alt}
-      className={`max-h-96 w-full object-cover mb-5 rounded-xl ${className}`}
+      className={`md:max-h-96 max-h-[132px]  w-full object-cover mb-5 rounded-xl ${className}`}
     />
   );
 }

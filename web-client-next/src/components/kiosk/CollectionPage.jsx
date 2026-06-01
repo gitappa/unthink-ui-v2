@@ -84,7 +84,6 @@ const CollectionPage = ({ params }) => {
   }
   return (
     <div className="p-8 md:p-12 bg-white min-h-screen">
-      <BannerImage src={profilebanner?.src} alt="profilebanner" />
       <button
         className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
         onClick={() => window.history.back()}
@@ -94,6 +93,9 @@ const CollectionPage = ({ params }) => {
         </span>
         <span className="capitalize">Go back</span>
       </button>
+      <div className="sticky top-0 py-2 mx-1 bg-white
+       z-20 ">
+
       {/* Header */}
       <div className="mb-3 lg:mb-8">
         {/* <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
@@ -123,6 +125,7 @@ const CollectionPage = ({ params }) => {
           </button>
         ))}
       </div>
+      </div>
 
       {/* Product Grid Placeholder */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
@@ -134,7 +137,9 @@ const CollectionPage = ({ params }) => {
             {productCardKiosk(item)}
           </div>
         ))}
+
       </div>
+      <BannerImage src={profilebanner?.src} alt="profilebanner" className="lg:mt-11 mt-5" />
     </div>
   );
 };
