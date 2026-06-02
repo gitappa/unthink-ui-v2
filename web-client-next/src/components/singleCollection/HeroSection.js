@@ -12,6 +12,8 @@ const HeroSection = ({ im, products }) => {
     return products?.find((data) => data?.collection_name === "Brand JWELX");
   }, [products]);
   // console.log('collectiondatas', collectiondata);
+  // console.log('hellobilling');
+  
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage =

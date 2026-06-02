@@ -6,7 +6,7 @@ const BannerKisok = ({ products, Tags }) => {
 
   const dummyProducts = (products || []).filter((x) => x.cover_image && x.path);
   const displayedProducts = dummyProducts.slice(0, 8);
-
+ 
   // const trendingBase = [
   //   "#Hot Now",
   //   "#Street Style",
