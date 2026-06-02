@@ -55,6 +55,7 @@ import {
 import { openProductModal } from "../customProductModal/redux/actions";
 import { GET_USER_COLLECTIONS } from "../Auth/redux/constants";
 import styles from "./CustomProducts.module.css";
+import { useRouter } from "next/router";
 
 const CustomProducts = ({ isCustomProductsPage }) => {
 	const navigate = useNavigate();
@@ -65,7 +66,8 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 		customProductsData,
 		isLoading,
 		isProductsFetched,
-		userCollections
+		userCollections,
+		isUserLogin,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.store.data,
@@ -74,6 +76,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 		state.auth.customProducts.isLoading,
 		state.auth.customProducts.isFetched,
 		state?.auth?.user?.collections?.data || [],
+		state.auth.user.isUserLogin,
 	]);
 
 	const {
@@ -84,6 +87,14 @@ const CustomProducts = ({ isCustomProductsPage }) => {
 		store_type,
 		admin_list: admin_list,
 	} = storeData;
+
+	
+const router = useRouter();
+ useEffect(() => {
+if (!isUserLogin) {
+router.replace("/");
+ }
+ }, [isUserLogin, router]);
 
  
 
