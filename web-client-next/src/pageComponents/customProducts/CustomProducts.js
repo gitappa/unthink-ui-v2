@@ -76,7 +76,7 @@ const CustomProducts = ({ isCustomProductsPage }) => {
     state.auth.customProducts.isLoading,
     state.auth.customProducts.isFetched,
     state?.auth?.user?.collections?.data || [],
-    state.auth.user.isUserLogin,
+    state.auth.user.isUserLogin,  
   ]);
 
   const {

@@ -288,7 +288,6 @@ const StorePageWrapper = (props) => {
 		serverData,
 		isFailedPage,
 		isSuccessPage,
-		isHomepage,
 	} = props;
  	const [isDropDown, setisDropDown] = useState(false)
 	const {
@@ -393,7 +392,7 @@ const StorePageWrapper = (props) => {
 			(isPageOwner && isSingleCollectionSharedPage)
 		) {
 			if (
-				(isRootPage || isSharedPage || isMyProfilePage || isHomepage) &&
+				(isRootPage || isSharedPage || isMyProfilePage ) &&
 				!isSingleCollectionSharedPage
 			) {
 				return {
@@ -441,7 +440,6 @@ const StorePageWrapper = (props) => {
 		authUserCollections.length,
 		influencerUserCollections,
 		influencerUserCollections.length,
-		isHomepage
 	]);
 
 	 
@@ -642,7 +640,7 @@ const StorePageWrapper = (props) => {
 
 	useEffect(() => {
 		if (
-			(!isRootPage && (isThemePage || isHomepage || isCollectionReviewPage))
+			(!isRootPage && (isThemePage  || isCollectionReviewPage))
 		) {
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
@@ -668,7 +666,6 @@ const StorePageWrapper = (props) => {
 		currentPage,
 		isThemePage,
 		isRootPage,
-		isHomepage,
 		isCollectionReviewPage,
 	]);
 
@@ -1142,7 +1139,7 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
-			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />}
+			{/* {isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />} */}
 
 			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 
