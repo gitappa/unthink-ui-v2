@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import im from "./images/pppp.webp";
-
-import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
@@ -12,6 +11,12 @@ import HeroSection from "./HeroSection";
 import BannerKisok from "../kiosk/BannerKisok";
 import QRsection from "../kiosk/QRsection";
 import { Spin } from "antd";
+import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
+import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../../helper/utils";
+import { logoutVenlyUser } from "../../helper/venlyUtils";
+import { getUserCollectionsReset, getUserInfo } from "../../pageComponents/Auth/redux/actions";
+import { is_store_instance } from "../../constants/config";
+import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
 
 const HomePageNew = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
@@ -26,6 +31,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
   const [showTags, setShowTags] = useState(Tags[0]);
   const [products, setProducts] = useState([]);
   //   console.log("products", products);
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     try {
@@ -46,6 +52,30 @@ const HomePageNew = ({ blogCollectionPage }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const onSignOut = () => {
+      Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
+      localStorage.removeItem("adminRolePopupShown", "false");
+      // Cookies.set('isGuestSkip', false, { expires: SIGN_IN_EXPIRE_DAYS });
+      clearStorages();
+      checkAndGenerateUserId(); // generating user id again for guest user after sign out
+      generateSessionId(); // generating new session id for guest user after sign out
+      // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
+      // showMenu && setShowMenu(false);
+      try {
+        logoutVenlyUser();
+      } catch {
+        console.log("wallet error");
+      }
+  
+      dispatch(getUserCollectionsReset());
+  
+      setTimeout(() => {
+        dispatch(getUserInfo());
+        // navigate(is_store_instance ? "/" : "/store");
+        dispatch(fetchCategoriesReset()); // clearing fetched categories
+      }, 0);
+    };
+
   if (!Array.isArray(products) || products.length === 0) {
     return (
       <div className="min-h-screen mt-4 flex items-start justify-center">
@@ -56,6 +86,19 @@ const HomePageNew = ({ blogCollectionPage }) => {
 
   return (
     <div className=" mx-auto w-full px-6 md:px-14 mt-14">
+{/* <button onClick={()=>onSignOut()} className="text-end w-full mb-6 " >Sign out </button> */}
+      {/* Sign Out Button */}
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={() => onSignOut()}
+          className="group relative px-4 py-1.5 text-sm font-medium text-gray-700 border-2 border-gray-300 rounded-full hover:border-gray-400 transition-all duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+          aria-label="Sign out from your account"
+        >
+          <span className="absolute inset-0 bg-linear-to-r from-gray-100 to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
+          Sign Out
+        </button>
+      </div>
+
       {/* Tag Buttons (pill-style tabs) */}
       <div className="flex items-center mb-8">
         <div className="w-full  mx-auto">
@@ -78,7 +121,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
         </div>
       </div>
       {showTags === "Social Media" && (
-        <HeroSection im={im} products={products} />
+        <HeroSection   products={products} />
       )}
       {showTags !== "Social Media" && (
         <BannerKisok products={products} Tags={Tags} />

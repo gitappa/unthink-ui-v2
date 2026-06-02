@@ -10,6 +10,8 @@ import Header from "../src/pageComponents/staticHomePage/Header";
 import RootStatic from "../src/pageComponents/staticHomePage/RootStatic";
 import { ROUTES } from "../src/constants/codes";
 import { Spin } from "antd";
+import HomePageNew from "../src/components/singleCollection/HomePageNew";
+import { useSelector } from "react-redux";
 
 // Dynamically import StorePage to avoid hydration issues
 const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
@@ -22,17 +24,32 @@ const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
 const Index = ({ ...props }) => {
 	const [mounted, setMounted] = useState(false);
 
+	// Call ALL hooks at the top level
+	const [isUserLogin, authUser, storeData] = useSelector((state) => [
+		state.auth.user.isUserLogin,  
+		state.auth.user.data,
+		state.store.data,
+	]);
+
+	// All useEffect hooks must be at the top level
 	useEffect(() => {
 		setMounted(true);
 	}, []);
 
+	// Now we can do conditionals
 	if (is_store_instance && !mounted) {
 		return null; // Don't render anything until mounted on client
 	}
 
+	// Show HomePageNew if user is logged in and has kiosk_list
+	const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data)=> authUser?.emailId === data) ;
+	console.log('hasKioskAccess', hasKioskAccess);
+
 	return (
 		<>
-			{is_store_instance ? ( // for store home page
+			{hasKioskAccess ? (
+				<HomePageNew {...props} />
+			) : is_store_instance ? ( // for store home page
 				mounted && (
 					<SharedPage
 						isRootPage
@@ -61,8 +78,3 @@ const Index = ({ ...props }) => {
 };
 
 export default Index;
-
-// Use server-side rendering to avoid Redux SSR issues
-export const getServerSideProps = () => {
-	return { props: {} };
-};
