@@ -424,7 +424,7 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  background-color: transparent;
+  background-color: var(--color-brand);
   transition: all 0.3s ease;
   font-size: 16px;
   @media (max-width: 768px) {
@@ -433,9 +433,9 @@
   }
 }
 
-/* .product-buy-button:hover {
-  background-color:#8980ea !important;
-} */
+.product-buy-button:hover {
+  background-color: var(--color-secondary) !important;
+}
 
 .product-buy-button-small {
   display: flex;
@@ -451,13 +451,13 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  background-color: transparent;
+  background-color: var(--color-brand);
   transition: all 0.3s ease;
   font-size: 12px;
 }
 
 .product-buy-button-small:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-secondary);
 }
 
 .product-add-cart-button-header {
@@ -466,23 +466,25 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
   border-radius: 0.75rem;
   padding: 0.5rem;
   color: white;
   font-weight: 600;
   cursor: pointer;
-  background-color: transparent;
+  background-color: var(--color-brand);
   transition: all 0.3s ease;
 }
 
 .product-add-cart-button-header:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-secondary);
 }
 
 .product-add-cart-button {
   padding: 0.75rem;
   border-radius: 0.5rem;
-  background-color: #4f46e5;
+  background-color: var(--color-brand);
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
@@ -492,7 +494,7 @@
 }
 
 .product-add-cart-button:hover {
-  background-color: #4338ca;
+  background-color: var(--color-secondary);
 }
 
 .product-copy-icon {

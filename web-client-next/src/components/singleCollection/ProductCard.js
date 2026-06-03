@@ -1442,7 +1442,7 @@ const ProductCard = ({
                   </button>
                 ) : (
                   <button
-                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]} ${!product?.price && !product?.listprice ? styles["hidden"] : styles["block"]}`}
+                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]} ${!product?.price && !product?.listprice ? styles["hidden"] : ""}`}
                     onClick={handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >

@@ -518,8 +518,8 @@ const CustomProductModal = ({
 	);
 
 	const brandsDetails = useMemo(
-		() => sellerDetails[productData.brand],
-		[sellerDetails, productData.brand]
+		() => sellerDetails?.[productData?.brand],
+		[sellerDetails, productData?.brand]
 	);
 
 	const isContactDetailsAvailable = useMemo(
@@ -810,7 +810,7 @@ const CustomProductModal = ({
 														) : (
 															<button
 																className="box-border border whitespace-nowrap  text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
-																style={{ background: '#7c75ec' }}
+																style={{ background: 'var(--color-brand)' }}
 															// onClick={handleAddToCart}
 															>
 																Add to Cart
