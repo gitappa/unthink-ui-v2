@@ -23,6 +23,7 @@ import {
   CopyFilled,
   UploadOutlined,
   LoadingOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
@@ -46,7 +47,7 @@ import {
   pdp_page_enabled,
 } from "../../constants/config";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
-// import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
+import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
 import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redux/selector";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
@@ -213,8 +214,8 @@ const ProductCard = ({
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-  // const favoriteColl =
-  // 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
+  const favoriteColl =
+  	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
   const [count, setCount] = useState(1);
   // console.log("counttttt",count);
 
@@ -245,11 +246,8 @@ const ProductCard = ({
   // console.log(product);
 
   const handleProductClick = async () => {
-    if (enableSelect) {
-      setSelectValue && setSelectValue(!isSelected);
-    } else {
-      // tracking event happens from here by prop enableClickTracking
-      if (enableClickTracking) {
+    // tracking event happens from here by prop enableClickTracking
+    if (enableClickTracking) {
         await sharedPageTracker.onCollectionProductClick({
           mfrCode: product.mfr_code,
           redirectionUrl: product.url,
@@ -323,7 +321,6 @@ const ProductCard = ({
       } else {
         handleOpenProductModal(allowEdit); // old: show update product modal on product click
       }
-    }
   };
 
   const discountPer =
@@ -341,49 +338,32 @@ const ProductCard = ({
     // NEED TO REMOVE remove from favorites handling as well
 
     // add product in favorites if it is not there
-    // const isProductExistsInFavorites = favoriteColl.product_lists.some(
-    // 	(p) => p.mfr_code === product.mfr_code
-    // );
+    const isProductExistsInFavorites = favoriteColl?.product_lists?.some(
+    	(p) => p.mfr_code === product.mfr_code
+    );
 
-    // if (!isProductExistsInFavorites) {
-    // 	// adding item to favorites (system collection)
-    // 	// const user = {};
-    // 	// const item = { product_id: product.mfr_code };
-    // 	// if (window?.cemantika?.ecommerce)
-    // 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
+    if (!isProductExistsInFavorites) {
+    	const payload = {
+    		_id: favoriteColl?._id,
+    		user_id: authUserId,
+    		collection_name: defaultFavoriteColl.collection_name,
+    		type: defaultFavoriteColl.type,
+    		products: [
+    			{
+    				mfr_code: product.mfr_code,
+    				tagged_by: product.tagged_by,
+    			},
+    		],
+    		fetchRecommendations: true,
+    		fetchUserCollections: true,
+        successMessage: "Added to wishlist!",
+    	};
 
-    // 	// not calling it for add to favorites for now
-    // 	// const event = {
-    // 	// 	mfrCode: product.mfr_code,
-    // 	// 	product_brand: product.product_brand,
-    // 	// 	brand: product.brand,
-    // 	// 	collectionId: productClickParam.collectionId,
-    // 	// 	iCode: productClickParam.iCode,
-    // 	// 	campCode: productClickParam.campCode,
-    // 	// 	collectionName: productClickParam.collectionName,
-    // 	// };
-    // 	// appTracker.onAddItemToWishlist(event);
-
-    // 	const payload = {
-    // 		_id: favoriteColl._id,
-    // 		user_id: authUserId,
-    // 		collection_name: defaultFavoriteColl.collection_name,
-    // 		type: defaultFavoriteColl.type,
-    // 		products: [
-    // 			{
-    // 				mfr_code: product.mfr_code,
-    // 				tagged_by: product.tagged_by,
-    // 			},
-    // 		],
-    // 		fetchRecommendations: true,
-    // 		fetchUserCollections: true,
-    // 	};
-
-    // 	dispatch(addToWishlist(payload));
-    // 	dispatch(setRemoveFromFavorites(true));
-    // } else {
-    dispatch(setRemoveFromFavorites(false));
-    // }
+    	dispatch(addToWishlist(payload));
+    	dispatch(setRemoveFromFavorites(true));
+    } else {
+      dispatch(setRemoveFromFavorites(false));
+    }
 
     let createWishlistData = {};
 
@@ -684,6 +664,7 @@ const ProductCard = ({
         window.open(product.url, "_blank");
       }
       // fetchProductDetails();
+      setClickedMfrCode(null);
     }
   }, [clickedMfrCode]);
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
@@ -755,18 +736,18 @@ const ProductCard = ({
     >
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
-        // onClick={handleProductClick}
-        onClick={() => {
-          if (enableSelect) {
-            handleProductClick();
-          } else {
-            setClickedMfrCode(product?.mfr_code);
-          }
-        }}
+        style={{ cursor: enableSelect ? "pointer" : "default" }}
+        onClick={handleProductClick}
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
+          onClick={(e) => {
+            if (setSelectValue) {
+              e.stopPropagation();
+              setSelectValue(!isSelected);
+            }
+          }}
         >
           <div style={{ width: "100%" }}>
             <img
@@ -796,6 +777,19 @@ const ProductCard = ({
                     src={camera}
                   />
                   <p>Try On</p>
+                </div>
+              )}
+            {!enableSelect &&
+              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              !showWishlistModal && (
+                <div
+                  className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setClickedMfrCode(product?.mfr_code);
+                  }}
+                >
+                  <EyeOutlined className={styles["product-view-icon-eye"]} />
                 </div>
               )}
           </div>
@@ -1033,7 +1027,7 @@ const ProductCard = ({
                   </span>
                 </div>
               )}
-              {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              {/* {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
                 !showWishlistModal && (
                   <Image
                     src={more}
@@ -1058,7 +1052,7 @@ const ProductCard = ({
                       ]
                     }
                   />
-                )}
+                )} */}
               {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
                 <div
                   className={` ${styles["remove-icon"]}`}
@@ -1235,10 +1229,10 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    <FaRegBookmark
-                      // alt="Add to wishlist"
+                    <Image
+                      alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
-                      // src={heart}
+                      src={heart}
                       height={20}
                       width={20}
                     />
@@ -1262,20 +1256,13 @@ const ProductCard = ({
                 onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  {/* <Image
+                  <Image
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
                     width={20}
-                  /> */}
-                      <FaRegBookmark
-                      // alt="Add to wishlist"
-                      className={styles["add_to_wishlist_icon"]}
-                      // src={heart}
-                      height={20}
-                      width={20}
-                    />
+                  />
                 </button>
               </div>
               {/* )} */}
