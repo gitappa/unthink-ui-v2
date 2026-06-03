@@ -348,6 +348,9 @@ const url = window.location.pathname === '/my-profile/'
   }, [singleCollection]);
 
   const onSelectProductClick = (mfr_code) => {
+    if (isSingleCollectionSharedPage || !showCollectionDetails) {
+      setEnableSelectProduct(true);
+    }
     if (selectedProducts.includes(mfr_code)) {
       handleSetSelectedProducts({ remove: [mfr_code] });
     } else {

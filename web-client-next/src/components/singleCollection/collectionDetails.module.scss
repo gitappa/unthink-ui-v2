@@ -1723,9 +1723,13 @@ svg{
 .collectionTitle {
   font-size: 22px;
   font-weight: 600;
-  // text-decoration: underline;
+  text-decoration: underline;
+  color: var(--color-brand);
   cursor: pointer;
   text-transform: capitalize;
+  &:hover {
+    color: var(--color-secondary);
+  }
 @media (max-width:768px) {
   font-size: 18px;
 }
