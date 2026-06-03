@@ -23,6 +23,7 @@ import {
   CopyFilled,
   UploadOutlined,
   LoadingOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
@@ -244,8 +245,8 @@ const ProductCard = ({
   // console.log(product);
 
   const handleProductClick = async () => {
-    if (enableSelect) {
-      setSelectValue && setSelectValue(!isSelected);
+    if (setSelectValue) {
+      setSelectValue(!isSelected);
     } else {
       // tracking event happens from here by prop enableClickTracking
       if (enableClickTracking) {
@@ -674,6 +675,7 @@ const ProductCard = ({
         window.open(product.url, "_blank");
       }
       // fetchProductDetails();
+      setClickedMfrCode(null);
     }
   }, [clickedMfrCode]);
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
@@ -745,14 +747,8 @@ const ProductCard = ({
     >
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
-        // onClick={handleProductClick}
-        onClick={() => {
-          if (enableSelect) {
-            handleProductClick();
-          } else {
-            setClickedMfrCode(product?.mfr_code);
-          }
-        }}
+        style={{ cursor: enableSelect ? "pointer" : "default" }}
+        onClick={handleProductClick}
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
@@ -786,6 +782,19 @@ const ProductCard = ({
                     src={camera}
                   />
                   <p>Try On</p>
+                </div>
+              )}
+            {!enableSelect &&
+              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              !showWishlistModal && (
+                <div
+                  className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setClickedMfrCode(product?.mfr_code);
+                  }}
+                >
+                  <EyeOutlined className={styles["product-view-icon-eye"]} />
                 </div>
               )}
           </div>
@@ -1023,7 +1032,7 @@ const ProductCard = ({
                   </span>
                 </div>
               )}
-              {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              {/* {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
                 !showWishlistModal && (
                   <Image
                     src={more}
@@ -1048,7 +1057,7 @@ const ProductCard = ({
                       ]
                     }
                   />
-                )}
+                )} */}
               {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
                 <div
                   className={` ${styles["remove-icon"]}`}
@@ -1225,10 +1234,10 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    <FaRegBookmark
-                      // alt="Add to wishlist"
+                    <Image
+                      alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
-                      // src={heart}
+                      src={heart}
                       height={20}
                       width={20}
                     />
@@ -1252,20 +1261,13 @@ const ProductCard = ({
                 onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  {/* <Image
+                  <Image
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={heart}
                     height={20}
                     width={20}
-                  /> */}
-                      <FaRegBookmark
-                      // alt="Add to wishlist"
-                      className={styles["add_to_wishlist_icon"]}
-                      // src={heart}
-                      height={20}
-                      width={20}
-                    />
+                  />
                 </button>
               </div>
               {/* )} */}
