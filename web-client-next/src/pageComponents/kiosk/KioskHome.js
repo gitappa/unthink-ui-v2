@@ -7,18 +7,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
-import HeroSection from "./HeroSection";
-import BannerKisok from "../kiosk/BannerKisok";
-import QRsection from "../kiosk/QRsection";
+import HeroSection from "../../components/singleCollection/HeroSection";
+import BannerKisok from "../../components/kiosk/BannerKisok";
+import QRsection from "../../components/kiosk/QRsection";
 import { Spin } from "antd";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../../helper/utils";
 import { logoutVenlyUser } from "../../helper/venlyUtils";
-import { getUserCollectionsReset, getUserInfo } from "../../pageComponents/Auth/redux/actions";
+import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { is_store_instance } from "../../constants/config";
-import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
+import { fetchCategoriesReset } from "../categories/redux/actions";
 
-const HomePageNew = ({ blogCollectionPage }) => {
+const KioskHome = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
     state.influencer.collections.data,
   ]);
@@ -131,4 +131,4 @@ const HomePageNew = ({ blogCollectionPage }) => {
   );
 };
 
-export default HomePageNew;
+export default KioskHome;
