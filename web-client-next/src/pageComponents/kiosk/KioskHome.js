@@ -7,18 +7,22 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
-import HeroSection from "./HeroSection";
-import BannerKisok from "../kiosk/BannerKisok";
-import QRsection from "../kiosk/QRsection";
+import HeroSection from "../../components/singleCollection/HeroSection";
+import BannerKisok from "../../components/kiosk/BannerKisok";
+import QRsection from "../../components/kiosk/QRsection";
 import { Spin } from "antd";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
-import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../../helper/utils";
+import {
+  checkAndGenerateUserId,
+  clearStorages,
+  generateSessionId,
+} from "../../helper/utils";
 import { logoutVenlyUser } from "../../helper/venlyUtils";
-import { getUserCollectionsReset, getUserInfo } from "../../pageComponents/Auth/redux/actions";
+import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { is_store_instance } from "../../constants/config";
-import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
+import { fetchCategoriesReset } from "../categories/redux/actions";
 
-const HomePageNew = ({ blogCollectionPage }) => {
+const KioskHome = ({}) => {
   const [collectionData] = useSelector((state) => [
     state.influencer.collections.data,
   ]);
@@ -53,28 +57,28 @@ const HomePageNew = ({ blogCollectionPage }) => {
     fetchData();
   }, []);
   const onSignOut = () => {
-      Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
-      localStorage.removeItem("adminRolePopupShown", "false");
-      // Cookies.set('isGuestSkip', false, { expires: SIGN_IN_EXPIRE_DAYS });
-      clearStorages();
-      checkAndGenerateUserId(); // generating user id again for guest user after sign out
-      generateSessionId(); // generating new session id for guest user after sign out
-      // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
-      // showMenu && setShowMenu(false);
-      try {
-        logoutVenlyUser();
-      } catch {
-        console.log("wallet error");
-      }
-  
-      dispatch(getUserCollectionsReset());
-  
-      setTimeout(() => {
-        dispatch(getUserInfo());
-        // navigate(is_store_instance ? "/" : "/store");
-        dispatch(fetchCategoriesReset()); // clearing fetched categories
-      }, 0);
-    };
+    Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
+    localStorage.removeItem("adminRolePopupShown", "false");
+    // Cookies.set('isGuestSkip', false, { expires: SIGN_IN_EXPIRE_DAYS });
+    clearStorages();
+    checkAndGenerateUserId(); // generating user id again for guest user after sign out
+    generateSessionId(); // generating new session id for guest user after sign out
+    // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
+    // showMenu && setShowMenu(false);
+    try {
+      logoutVenlyUser();
+    } catch {
+      console.log("wallet error");
+    }
+
+    dispatch(getUserCollectionsReset());
+
+    setTimeout(() => {
+      dispatch(getUserInfo());
+      // navigate(is_store_instance ? "/" : "/store");
+      dispatch(fetchCategoriesReset()); // clearing fetched categories
+    }, 0);
+  };
 
   if (!Array.isArray(products) || products.length === 0) {
     return (
@@ -86,7 +90,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
 
   return (
     <div className=" mx-auto w-full px-6 md:px-14 mt-14">
-{/* <button onClick={()=>onSignOut()} className="text-end w-full mb-6 " >Sign out </button> */}
+      {/* <button onClick={()=>onSignOut()} className="text-end w-full mb-6 " >Sign out </button> */}
       {/* Sign Out Button */}
       <div className="flex justify-end mb-6">
         <button
@@ -120,9 +124,7 @@ const HomePageNew = ({ blogCollectionPage }) => {
           </div>
         </div>
       </div>
-      {showTags === "Social Media" && (
-        <HeroSection   products={products} />
-      )}
+      {showTags === "Social Media" && <HeroSection products={products} />}
       {showTags !== "Social Media" && (
         <BannerKisok products={products} Tags={Tags} />
       )}
@@ -131,4 +133,4 @@ const HomePageNew = ({ blogCollectionPage }) => {
   );
 };
 
-export default HomePageNew;
+export default KioskHome;
