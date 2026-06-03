@@ -47,7 +47,7 @@ import {
   pdp_page_enabled,
 } from "../../constants/config";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
-// import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
+import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
 import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redux/selector";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
@@ -213,8 +213,8 @@ const ProductCard = ({
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-  // const favoriteColl =
-  // 	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
+  const favoriteColl =
+  	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
   const [count, setCount] = useState(1);
   // console.log("counttttt",count);
 
@@ -245,11 +245,8 @@ const ProductCard = ({
   // console.log(product);
 
   const handleProductClick = async () => {
-    if (setSelectValue) {
-      setSelectValue(!isSelected);
-    } else {
-      // tracking event happens from here by prop enableClickTracking
-      if (enableClickTracking) {
+    // tracking event happens from here by prop enableClickTracking
+    if (enableClickTracking) {
         await sharedPageTracker.onCollectionProductClick({
           mfrCode: product.mfr_code,
           redirectionUrl: product.url,
@@ -323,7 +320,6 @@ const ProductCard = ({
       } else {
         handleOpenProductModal(allowEdit); // old: show update product modal on product click
       }
-    }
   };
 
   const discountPer =
@@ -341,49 +337,32 @@ const ProductCard = ({
     // NEED TO REMOVE remove from favorites handling as well
 
     // add product in favorites if it is not there
-    // const isProductExistsInFavorites = favoriteColl.product_lists.some(
-    // 	(p) => p.mfr_code === product.mfr_code
-    // );
+    const isProductExistsInFavorites = favoriteColl?.product_lists?.some(
+    	(p) => p.mfr_code === product.mfr_code
+    );
 
-    // if (!isProductExistsInFavorites) {
-    // 	// adding item to favorites (system collection)
-    // 	// const user = {};
-    // 	// const item = { product_id: product.mfr_code };
-    // 	// if (window?.cemantika?.ecommerce)
-    // 	// 	window.cemantika.ecommerce.addItemToWishlist(user, item);
+    if (!isProductExistsInFavorites) {
+    	const payload = {
+    		_id: favoriteColl?._id,
+    		user_id: authUserId,
+    		collection_name: defaultFavoriteColl.collection_name,
+    		type: defaultFavoriteColl.type,
+    		products: [
+    			{
+    				mfr_code: product.mfr_code,
+    				tagged_by: product.tagged_by,
+    			},
+    		],
+    		fetchRecommendations: true,
+    		fetchUserCollections: true,
+        successMessage: "Added to wishlist!",
+    	};
 
-    // 	// not calling it for add to favorites for now
-    // 	// const event = {
-    // 	// 	mfrCode: product.mfr_code,
-    // 	// 	product_brand: product.product_brand,
-    // 	// 	brand: product.brand,
-    // 	// 	collectionId: productClickParam.collectionId,
-    // 	// 	iCode: productClickParam.iCode,
-    // 	// 	campCode: productClickParam.campCode,
-    // 	// 	collectionName: productClickParam.collectionName,
-    // 	// };
-    // 	// appTracker.onAddItemToWishlist(event);
-
-    // 	const payload = {
-    // 		_id: favoriteColl._id,
-    // 		user_id: authUserId,
-    // 		collection_name: defaultFavoriteColl.collection_name,
-    // 		type: defaultFavoriteColl.type,
-    // 		products: [
-    // 			{
-    // 				mfr_code: product.mfr_code,
-    // 				tagged_by: product.tagged_by,
-    // 			},
-    // 		],
-    // 		fetchRecommendations: true,
-    // 		fetchUserCollections: true,
-    // 	};
-
-    // 	dispatch(addToWishlist(payload));
-    // 	dispatch(setRemoveFromFavorites(true));
-    // } else {
-    dispatch(setRemoveFromFavorites(false));
-    // }
+    	dispatch(addToWishlist(payload));
+    	dispatch(setRemoveFromFavorites(true));
+    } else {
+      dispatch(setRemoveFromFavorites(false));
+    }
 
     let createWishlistData = {};
 
@@ -753,6 +732,12 @@ const ProductCard = ({
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
+          onClick={(e) => {
+            if (setSelectValue) {
+              e.stopPropagation();
+              setSelectValue(!isSelected);
+            }
+          }}
         >
           <div style={{ width: "100%" }}>
             <img

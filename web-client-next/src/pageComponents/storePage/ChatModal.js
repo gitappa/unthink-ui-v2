@@ -1090,30 +1090,7 @@ const ChatModal = ({
                           )}
                         </div>
                         <div className="flex items-center gap-2">
-                          {selectActions && selectActions.chatProductsDataToShow && selectActions.chatProductsDataToShow.length > 0 && (
-                            <>
-                              {selectActions.is_store_instance && (
-                                <button
-                                  type="button"
-                                  className="rounded-full px-2.5 py-1 text-secondary font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-secondary hover:text-white transition-colors"
-                                  onClick={() => selectActions.setEnableSelectProduct(true)}
-                                  title="Save products"
-                                >
-                                  <FolderAddOutlined className="text-xs" style={{ stroke: "currentColor", strokeWidth: 1.5 }} />
-                                  <span>Save</span>
-                                </button>
-                              )}
-                              <button
-                                type="button"
-                                className="rounded-full px-2.5 py-1 text-secondary font-bold bg-[#f3f0ff] border border-solid border-[#d8d3fc] text-xs flex items-center gap-1 cursor-pointer hover:bg-secondary hover:text-white transition-colors"
-                                onClick={() => selectActions.setEnableSelectProduct(true)}
-                                title="Share products"
-                              >
-                                <ShareAltOutlined className="text-xs" style={{ stroke: "currentColor", strokeWidth: 1.5 }} />
-                                <span>Share</span>
-                              </button>
-                            </>
-                          )}
+
                           <CloseOutlined
                             onClick={closeChatModal}
                             className={styles["chatmodal-mobile-close-icon"]}
