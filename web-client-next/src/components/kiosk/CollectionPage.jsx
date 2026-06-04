@@ -10,6 +10,9 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import profilebanner from "../../images/package.jpg";
 import { Spin } from "antd";
 import BannerImage from "./BannerImage";
+import ShareOptions from "../../pageComponents/shared/shareOptions";
+import share_icon from "../../images/profilePage/share_icon.svg";
+import { collectionQRCodeGenerator, getBlogCollectionPagePath } from "../../helper/utils";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -45,6 +48,34 @@ const CollectionPage = ({ params }) => {
   ]);
   // console.log('productsData',productsData);
 
+  const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  const [sharePageUrl, setSharePageUrl] = useState("");
+
+  const collectionPagePath = useMemo(() => {
+    if (!singleCollectionKiosk) return "";
+    try {
+      return getBlogCollectionPagePath(
+        singleCollectionKiosk.user_name,
+        singleCollectionKiosk.path,
+        singleCollectionKiosk._id,
+        singleCollectionKiosk.user_id,
+        singleCollectionKiosk.status,
+        singleCollectionKiosk.hosted_stores,
+        singleCollectionKiosk.collection_theme,
+      );
+    } catch (e) {
+      return "";
+    }
+  }, [singleCollectionKiosk]);
+
+  const qrCodeGeneratorURL = useMemo(() => {
+    if (!collectionPagePath) return "";
+    return collectionQRCodeGenerator(collectionPagePath);
+  }, [collectionPagePath]);
+  
+  // this page is a collection page
+  const fromCollection = true;
+
   // console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
   const tagsToShow = useMemo(() => {
     const allTag = ["All"];
@@ -74,7 +105,12 @@ const CollectionPage = ({ params }) => {
   };
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
-
+  useEffect(() => {
+    if (typeof window !== "undefined" && collectionPagePath) {
+      setSharePageUrl(`${window.location?.origin}${collectionPagePath}`);
+    }
+  }, [collectionPagePath]);
+    
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
       <div className="min-h-screen flex mt-3 justify-center">
@@ -97,16 +133,48 @@ const CollectionPage = ({ params }) => {
        z-20 ">
 
       {/* Header */}
-      <div className="mb-3 lg:mb-8">
+      <div className="mb-3 lg:mb-8 flex justify-between items-start">
         {/* <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p> */}
+        <div>
+
         <h1 className="h1-kiosk font-bold text-black mb-0 lg:mb-2">
           {singleCollectionKiosk.collection_name}
         </h1>
+        
         <p className="text-gray-500 text-base lg:mb-0 mb-2">
           {singleCollectionKiosk?.product_lists?.length} pieces
         </p>
+        </div>
+           <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
+                        {showShareProductDetails && (
+                          <ShareOptions
+                            url={sharePageUrl}
+                            setShow={setShowShareProductDetails}
+                            onClose={() => setShowShareProductDetails(false)}
+                            isOpen={showShareProductDetails}
+                            qrCodeGeneratorURL={qrCodeGeneratorURL}
+                            collection={singleCollectionKiosk}
+                             
+                            fromCollection={fromCollection}
+                          />
+                        )}
+                        {sharePageUrl && (
+                          <button
+                            className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                            onClick={() =>
+                              setShowShareProductDetails(!showShareProductDetails)
+                            }
+                          >
+                            <img
+                              className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
+                              src={share_icon}
+                              preview={false}
+                            />
+                          </button>
+                        )}
+                      </div>
       </div>
 
       {/* Category Filters */}

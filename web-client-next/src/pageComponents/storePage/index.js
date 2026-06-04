@@ -98,7 +98,6 @@ import Cookies from "js-cookie";
 import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
-import HomePageNew from "../../components/singleCollection/HomePageNew.js";
 import DroppWallet from "../../components/DroppWallet.js";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
@@ -705,7 +704,8 @@ const StorePageWrapper = (props) => {
 				dispatch(
 					getUserCollections({
 						product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
-						summary: true
+						summary: true,
+						kisokuser_id:Cookies.get("Kiosk-login") || null
 					})
 				);
 			}
@@ -1139,7 +1139,6 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
-			{/* {isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />} */}
 
 			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 
