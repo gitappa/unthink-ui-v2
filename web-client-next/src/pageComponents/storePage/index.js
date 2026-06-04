@@ -704,7 +704,8 @@ const StorePageWrapper = (props) => {
 				dispatch(
 					getUserCollections({
 						product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
-						summary: true
+						summary: true,
+						kisokuser_id:Cookies.get("Kiosk-login") || null
 					})
 				);
 			}

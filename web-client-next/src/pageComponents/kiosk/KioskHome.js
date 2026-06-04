@@ -12,7 +12,11 @@ import BannerKisok from "../../components/kiosk/BannerKisok";
 import QRsection from "../../components/kiosk/QRsection";
 import { Spin } from "antd";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
-import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../../helper/utils";
+import {
+  checkAndGenerateUserId,
+  clearStorages,
+  generateSessionId,
+} from "../../helper/utils";
 import { logoutVenlyUser } from "../../helper/venlyUtils";
 import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { is_store_instance } from "../../constants/config";
@@ -27,11 +31,17 @@ const KioskHome = ({ blogCollectionPage }) => {
   const authUserCollections = useSelector(
     (state) => state.auth.user.collections.data,
   );
+  const userInfo = useSelector((state) => state.auth.user.data);
   const Tags = ["Social Media", "Look Books", "#Trending"];
   const [showTags, setShowTags] = useState(Tags[0]);
   const [products, setProducts] = useState([]);
   //   console.log("products", products);
   const dispatch = useDispatch();
+  const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
+
+  // session reminder popup state and timer ref
+  const [showSessionPopup, setShowSessionPopup] = useState(false);
+  const timerRef = useRef(null);
 
   const fetchData = async () => {
     try {
@@ -52,29 +62,88 @@ const KioskHome = ({ blogCollectionPage }) => {
   useEffect(() => {
     fetchData();
   }, []);
-  const onSignOut = () => {
-      Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
-      localStorage.removeItem("adminRolePopupShown", "false");
-      // Cookies.set('isGuestSkip', false, { expires: SIGN_IN_EXPIRE_DAYS });
-      clearStorages();
-      checkAndGenerateUserId(); // generating user id again for guest user after sign out
-      generateSessionId(); // generating new session id for guest user after sign out
-      // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
-      // showMenu && setShowMenu(false);
-      try {
-        logoutVenlyUser();
-      } catch {
-        console.log("wallet error");
+
+  // start session reminder timer if Kiosk-login cookie exists and user is logged in
+  const startSessionTimer = () => {
+    // clear any existing timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    const cookie = Cookies.get("Kiosk-login");
+    if (!cookie || !isUserLogin) return;
+
+    // show popup every 1 minute
+    timerRef.current = setInterval(() => {
+      // only show if cookie still exists and user remains logged in
+      if (Cookies.get("Kiosk-login") && isUserLogin) {
+        setShowSessionPopup(true);
+      } else {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
       }
-  
-      dispatch(getUserCollectionsReset());
-  
-      setTimeout(() => {
-        dispatch(getUserInfo());
-        // navigate(is_store_instance ? "/" : "/store");
-        dispatch(fetchCategoriesReset()); // clearing fetched categories
-      }, 0);
+    }, 30 * 1000);
+  };
+
+  // Ensure timer starts on mount if kiosk cookie exists
+  useEffect(() => {
+    startSessionTimer();
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUserLogin]);
+
+  const handleStayLoggedIn = () => {
+    const cookieVal = Cookies.get("Kiosk-login");
+    if (cookieVal) {
+      // renew cookie expiry (keep same value)
+      Cookies.set("Kiosk-login", cookieVal, { expires: 1 });
+    }
+    setShowSessionPopup(false);
+    // restart timer
+    startSessionTimer();
+  };
+
+  const handleLogout = async () => {
+    // remove kiosk cookie
+    Cookies.remove("Kiosk-login");
+
+    // clear kiosk/session related storages
+    try {
+      clearStorages();
+    } catch (e) {
+      // ignore
+    }
+
+    // logout venly user if applicable
+    try {
+      await logoutVenlyUser();
+    } catch (e) {
+      // ignore
+    }
+
+    // dispatch resets for related redux slices
+    try {
+      dispatch(getUserCollectionsReset());
+      dispatch(fetchCategoriesReset());
+    } catch (e) {
+      // ignore
+    }
+
+    setShowSessionPopup(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
 
   if (!Array.isArray(products) || products.length === 0) {
     return (
@@ -86,17 +155,16 @@ const KioskHome = ({ blogCollectionPage }) => {
 
   return (
     <div className=" mx-auto w-full px-6 md:px-14 mt-14">
-{/* <button onClick={()=>onSignOut()} className="text-end w-full mb-6 " >Sign out </button> */}
-      {/* Sign Out Button */}
-      <div className="flex justify-end mb-6">
-        <button
-          onClick={() => onSignOut()}
-          className="group relative px-4 py-1.5 text-sm font-medium text-gray-700 border-2 border-gray-300 rounded-full hover:border-gray-400 transition-all duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
-          aria-label="Sign out from your account"
-        >
-          <span className="absolute inset-0 bg-linear-to-r from-gray-100 to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
-          Sign Out
-        </button>
+      {/* User Info Display */}
+      <div className="flex justify-end items-center mb-6 gap-4">
+        <div className=" border border-gray-200 bg-gray-200/60 rounded-full px-6 py-3 shadow-sm cursor-auto transition-shadow duration-300">
+          <p className="text-sm font-semibold ">
+            👤 Logged in as:{" "}
+            <span className=" ">
+              {userInfo?.user_name || userInfo?.email || "Guest User"}
+            </span>
+          </p>
+        </div>
       </div>
 
       {/* Tag Buttons (pill-style tabs) */}
@@ -120,13 +188,37 @@ const KioskHome = ({ blogCollectionPage }) => {
           </div>
         </div>
       </div>
-      {showTags === "Social Media" && (
-        <HeroSection   products={products} />
-      )}
+      {showTags === "Social Media" && <HeroSection products={products} />}
       {showTags !== "Social Media" && (
         <BannerKisok products={products} Tags={Tags} />
       )}
       <QRsection />
+
+      {/* Session reminder popup for kiosk users (floating bottom-right) */}
+      {showSessionPopup && (
+        <div className="fixed top-5 right-6 z-50">
+          <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-[340px] max-w-full flex items-start gap-3">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">Still here?Let's keep Shopping</h3>
+              <p className="text-xs text-gray-600">Your kiosk session is active. Do you want to stay logged in?</p>
+              <div className="mt-3 flex gap-2">
+                <button
+                  className="flex-1 px-3 py-1 max-w-[150px] rounded-2xl bg-gray-600/60 text-white text-sm hover:bg-gray-500"
+                  onClick={handleStayLoggedIn}
+                >
+                  Stay Logged In
+                </button>
+                <button
+                  className="px-3 py-1 rounded-2xl bg-red-600 text-white text-sm hover:bg-red-700"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
