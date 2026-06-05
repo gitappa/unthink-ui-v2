@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate";
-import { Typography, Drawer, Spin, Button, Tooltip, Checkbox, Modal } from "antd";
+import { Typography, Drawer, Spin, Button, Tooltip, Checkbox, Modal, Select } from "antd";
 import {
 	CloseOutlined,
 	PlusOutlined,
@@ -334,10 +334,32 @@ const WishListModal = ({
 	// feature collection and creator funtion
 
 	const [activeCollection, setActiveCollection] = useState("Feature");
+	const [featuredFilter, setFeaturedFilter] = useState("social_media");
 
 	const handleCollectionClick = (collectionName) => {
 		setActiveCollection(collectionName);
 	};
+
+	const onFeaturedFilterChange = (value) => {
+		setFeaturedFilter(value);
+	};
+
+	useEffect(() => {
+		if (showWishlistModal && activeCollection === "Feature") {
+			let payload = {};
+			if (featuredFilter === "social_media") {
+				payload = { generated_by: "video_based" };
+			} else if (featuredFilter === "lookbooks") {
+				payload = { generated_by: "lookbook_based" };
+			} else if (featuredFilter === "trending") {
+				payload = { collection_type: "trending" };
+			}
+			dispatch(getUserCollections({
+				product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
+				...payload
+			}));
+		}
+	}, [featuredFilter, activeCollection, showWishlistModal, dispatch]);
 
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -560,6 +582,20 @@ const WishListModal = ({
 									</div>
 								)
 							}
+                            {
+                                activeCollection === "Feature" && (
+                                    <div className="flex justify-center mt-3 mb-2 px-4 w-full">
+                                        <div className="flex w-full">
+                                            <button onClick={() => onFeaturedFilterChange("social_media")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border-y border-l border-secondary transition-colors ${featuredFilter === "social_media" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'} rounded-l-md`}>Social Media</button>
+                                            <button onClick={() => onFeaturedFilterChange("lookbooks")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border-y border-l border-secondary transition-colors ${featuredFilter === "lookbooks" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'}`}>Lookbooks</button>
+                                            <button onClick={() => onFeaturedFilterChange("trending")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border border-secondary transition-colors ${featuredFilter === "trending" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'} rounded-r-md`}>Trending</button>
+                                        </div>
+                                    </div>
+                                )
+                            }
 							</>
 							)
 							}
