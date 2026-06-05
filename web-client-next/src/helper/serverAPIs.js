@@ -62,6 +62,7 @@ const createCollectionWithProductsURL =
 	"/user/collections/search_based_collections/";
 const saveProductListsURL = "/user/collections/save_productlists/";
 const improveContentURL = "/user/collections/improve_content/";
+const addProductToWishlistCollectionURL = "/user/collections/handpicked_product_list/";
 
 //profile API urls
 const uploadImgUrl = "/cs/img/";
@@ -667,6 +668,19 @@ const improveContentAPICall = (payload) => {
 	});
 };
 
+const addProductToWishlistCollectionAPICall = (payload) => {
+	const url = `${auraYfretUserCollBaseUrl}${addProductToWishlistCollectionURL}`;
+	const data = {
+		...payload,
+	};
+
+	return apiInstance({
+		url,
+		method: "post",
+		data,
+	});
+};
+
 const collectionDetectKeyApi = (payload) => {
 	const url = `${auraYfretUserCollBaseUrl}${fetchCollectionDetectKeyUrl}`;
 	const data = {
@@ -764,6 +778,10 @@ export const collectionAPIs = {
 	collectionDetectKeyApi,
 	FetchPoolKeyApi,
 	FetchAddModifiedDataKeyUrl,
+};
+
+export const wishlistCollectionAPIs = {
+	addProductToWishlistCollectionAPICall,
 };
 
 const uploadImage = ({
