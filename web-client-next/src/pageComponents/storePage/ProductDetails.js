@@ -75,6 +75,7 @@ import { openWishlistModal, setProductsToAddInWishlist } from "../wishlist/redux
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
 import GuestPopUp from "../Auth/GuestPopUp";
+import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -112,9 +113,28 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.user.isUserLogin,
   ]);
   const [storeData] = useSelector((state) => [state.store.data]);
+  const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
+  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const [fetchedProductDetails, setFetchedProductDetails] = useState();
+  const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+   const savedProductDetails = useMemo(
+    () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
+    [productDetail],
+  );
+
+  const productDetails = useMemo(() => {
+    if (savedProductDetails) {
+      return savedProductDetails;
+    } else {
+      return fetchedProductDetails;
+    }
+  }, [savedProductDetails, fetchedProductDetails]);
+console.log('productDetails',productDetails);
+
+ 
 
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [guestData, setGuestData] = useState({ email: "" });
@@ -126,6 +146,7 @@ const ProductDetails = ({ params, ...props }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -137,10 +158,12 @@ const ProductDetails = ({ params, ...props }) => {
         userId = null,
       } = options;
 
-      if (e?.preventDefault) {
-        e?.preventDefault();
-        e?.stopPropagation();
-      }
+    
+
+      // if (e?.preventDefault) {
+      //   e?.preventDefault();
+      //   e?.stopPropagation();
+      // }
 
       const isUserLoginCokkies = Cookies.get("Kiosk-login")  ;
       guestActionRef.current = isSave ? "save" : "share";
@@ -167,16 +190,38 @@ const ProductDetails = ({ params, ...props }) => {
       };
 
       if (isSave) {
-        dispatch(
-                  setProductsToAddInWishlist([productDetails], {
-                    ...createWishlistData,
-                  })
-                );
-        dispatch(openWishlistModal());
-       
+        // dispatch(
+        //           setProductsToAddInWishlist([productDetails], {
+        //             ...createWishlistData,
+        //           })
+        //         );
+        
+        // Dispatch Redux action to add product to wishlist collection API
+        if (productDetails?.mfr_code) {
+          
+          dispatch(
+            addProductToWishlistCollection({
+              mfr_code: productDetails?.mfr_code,
+              product_name: productDetails?.name,
+              product_image: productDetails?.image,
+              store: storeData?.store_name || "dothelook",
+              user_id: isUserLoginCokkies,
+              eventId:storeData?.event_id,
+              successMessage: "Product added to wishlist successfully!",
+              errorMessage: "Failed to add product to wishlist. Please try again.",
+            })
+          );
+        } else {
+          console.log("[ProductDetails] Product details incomplete for wishlist collection", {
+            mfr_code: productDetails?.mfr_code,
+            name: productDetails?.name, 
+            image: productDetails?.image,
+            storeData: !!storeData,
+          });
+        }
       }
     },
-    [ authUser, isUserLogin, dispatch]
+    [authUser, isUserLogin, dispatch, storeData, productDetails]
   );
 
   const guestChange = useCallback(
@@ -263,10 +308,7 @@ const ProductDetails = ({ params, ...props }) => {
   )?.is_display;
   // console.log('onMyDev',ProductTags);
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-  const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
-  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
-  const [fetchedProductDetails, setFetchedProductDetails] = useState();
-  const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  
 
   //   const fetchProductDetails = async () => {
   //     try {
@@ -289,10 +331,7 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem(`pdp_image_${mfr_code}`) || "";
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
-  const savedProductDetails = useMemo(
-    () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
-    [productDetail],
-  );
+
   useEffect(() => {
     if (!mfr_code) return;
 
@@ -307,13 +346,6 @@ const ProductDetails = ({ params, ...props }) => {
   //     }
   //   }, [mfr_code, savedProductDetails]);
 
-  const productDetails = useMemo(() => {
-    if (savedProductDetails) {
-      return savedProductDetails;
-    } else {
-      return fetchedProductDetails;
-    }
-  }, [savedProductDetails, fetchedProductDetails]);
   // console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {

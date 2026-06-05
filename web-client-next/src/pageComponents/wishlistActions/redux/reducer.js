@@ -7,6 +7,7 @@ import addToWishlistReducer from "../addToWishlist/redux/reducer";
 import removeFromWishlistReducer from "../removeFromWishlist/redux/reducer";
 import reorderWishlistReducer from "../reorderWishlist/redux/reducer";
 import applyWishlistProductsFilterReducer from "../applyWishlistProductsFilter/redux/reducer";
+import addProductToWishlistCollectionReducer from "../addProductToWishlistCollection/redux/reducer";
 
 const wishlistActionsReducer = combineReducers({
 	// handle wishlist (collection) actions only like, API call
@@ -17,6 +18,7 @@ const wishlistActionsReducer = combineReducers({
 	removeFromWishlist: removeFromWishlistReducer,
 	reorderWishlist: reorderWishlistReducer,
 	applyWishlistProductsFilter: applyWishlistProductsFilterReducer,
+	addProductToWishlistCollection: addProductToWishlistCollectionReducer,
 });
 
 export default wishlistActionsReducer;

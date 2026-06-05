@@ -5,3 +5,4 @@ export { addToWishlistWatcher } from "../addToWishlist/redux/saga";
 export { removeFromWishlistWatcher } from "../removeFromWishlist/redux/saga";
 export { reorderWishlistWatcher } from "../reorderWishlist/redux/saga";
 export { applyWishlistProductsFilterWatcher } from "../applyWishlistProductsFilter/redux/saga"; // apply filter and clear filter of products within the collection
+export { addProductToWishlistCollectionWatcher } from "../addProductToWishlistCollection/redux/saga"; // add product to wishlist collection
