@@ -31,7 +31,8 @@ function* addToCartSaga(action) {
     };
 
     const response = yield call(collectionAPIs.addToCollectionAPICall, payload);
-    const data = response?.data?.data?.[0] || response?.data?.data;
+    const data = response?.data?.data?.[1];
+    console.log("response", response)
 
     // console.log("addToCartSaga", data);
 
@@ -59,7 +60,7 @@ function* fetchCartSaga(action) {
 
     const data =
       response?.data?.data && response?.data?.data?.length
-        ? response?.data?.data[0] ||   response?.data?.data[1]
+        ? response?.data?.data[1] ||   response?.data?.data[0]
         : null; 
         console.log('dsdsdsdsdsdsd', data);
 

@@ -52,9 +52,9 @@ export const setIsSavingUserInfo = (payload) => ({
 	payload,
 });
 
-export const getUserCollections = ({ product_limits, summary, Mystatus, ipp, current_page,kisokuser_id } = {}) => ({
+export const getUserCollections = ({ product_limits, summary, Mystatus, ipp, current_page, kisokuser_id, generated_by, collection_type } = {}) => ({
 	type: GET_USER_COLLECTIONS,
-	payload: { product_limits, summary, Mystatus, ipp, current_page ,kisokuser_id},
+	payload: { product_limits, summary, Mystatus, ipp, current_page ,kisokuser_id, generated_by, collection_type },
 });
 
 export const getUserCollectionsSuccess = (payload, count, params) => ({

@@ -53,7 +53,10 @@ const SwiftlyHeader = ({
   };
   // console.log('applied', currentUser.emailId ? 'hello' : null);
 
-  const [storeData] = useSelector((state) => [state.store.data]);
+  const [storeData, cartCollection] = useSelector((state) => [state.store.data, state.cart?.collection]);
+  const cartItemCount = useMemo(() => {
+    return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
+  }, [cartCollection]);
   const syncStickyMetrics = useCallback(() => {
     if (!headerWrapperRef.current || !headerContentRef.current) {
       return;
@@ -241,11 +244,16 @@ const SwiftlyHeader = ({
                 />
               ) : null}
               {storeData?.pdp_settings?.is_add_to_cart_button && (
-                <Link href="/cart" className={styles.cartLink}>
+                <Link href="/cart" className={`${styles.cartLink} relative`}>
                   <FiShoppingCart
                     className={styles.cartIcon}
                     style={{ filter: "brightness(0) opacity(0.7)" }}
                   />
+                  <span
+                    className="absolute -top-[6px] -right-[10px] bg-[var(--color-alert)] text-white rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none"
+                  >
+                    {cartItemCount}
+                  </span>
                 </Link>
               )}
               <UserProfileMenu

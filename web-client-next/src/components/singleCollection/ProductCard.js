@@ -296,30 +296,12 @@ const ProductCard = ({
         // END
       }
 
-      if (isProductUrlAvailable) {
-        // redirect user with a extra query param sid=userId in the opening url (requirement for tracking user details after redirection)
-        const redirectionUrl = authUserId
-          ? addSidInProductUrl(
-              product.url,
-              authUserId,
-              blogCollectionPage?.collection_id,
-            )
-          : product.url;
-        window.open(redirectionUrl, "_blank");
-      } else if (
-        (storeData?.pdp_settings?.is_buy_popup == false &&
-          !isCustomProductsPage) ||
-        pdp_page_enabled
-      ) {
-        navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
-        if (showChatModal) {
-          dispatch(setShowChatModal(false));
-        }
-        if (showWishlistModal) {
-          dispatch(closeWishlistModal());
-        }
-      } else {
-        handleOpenProductModal(allowEdit); // old: show update product modal on product click
+      navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+      if (showChatModal) {
+        dispatch(setShowChatModal(false));
+      }
+      if (showWishlistModal) {
+        dispatch(closeWishlistModal());
       }
   };
 
@@ -640,28 +622,14 @@ const ProductCard = ({
 
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
-      if (product.url === "dummy_url") {
-        // console.log('fdfdfdfq', product?.image);
-        const cleaned = cleanImage(product?.image);
-        if (cleaned) {
-          localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
-        }
-        if(bannerImage){
-         navigate(
-        `/product/${clickedMfrCode}?from=kioskcollection`
-      );
-    }
-    else{
-       navigate(
-        `/product/${clickedMfrCode}`
-      );
-    }
-        // fetchProductDetails();
-        // console.log(product?.image);
-
-        // dispatch(fetchProductDetails({ mfr_code: clickedMfrCode, image: product?.image }))
+      const cleaned = cleanImage(product?.image);
+      if (cleaned) {
+        localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
+      }
+      if(bannerImage){
+        navigate(`/product/${clickedMfrCode}?from=kioskcollection`);
       } else {
-        window.open(product.url, "_blank");
+        navigate(`/product/${clickedMfrCode}`);
       }
       // fetchProductDetails();
       setClickedMfrCode(null);
