@@ -1183,10 +1183,7 @@ const ProductDetails = ({ params, ...props }) => {
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
-                              style={{
-                                backgroundColor: "#7c75ec",
-                              }}
+                              className="text-white h-full px-6 bg-brand w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
                             >
                               Add to Cart
                             </button>
@@ -1195,23 +1192,37 @@ const ProductDetails = ({ params, ...props }) => {
                       )}
 
                       {storeData?.pdp_settings?.is_buy_button && (
-                        <button
-                          className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                          disabled={
-                            !productDetails?.price && !productDetails?.listprice
-                          }
-                          style={{
-                            background: "#7c75ec",
-                            cursor:
-                              !productDetails?.price &&
-                              !productDetails?.listprice
-                                ? "not-allowed"
-                                : "",
-                          }}
-                          onClick={checkoutPayment}
-                        >
-                          Buy
-                        </button>
+                        productDetails?.url && productDetails.url !== "dummy_url" ? (
+                          <a
+                            href={productDetails.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline text-white py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition flex justify-center items-center"
+                            style={{
+                              background: "#7c75ec",
+                            }}
+                          >
+                            Buy
+                          </a>
+                        ) : (
+                          <button
+                            className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                            disabled={
+                              !productDetails?.price && !productDetails?.listprice
+                            }
+                            style={{
+                              background: "#7c75ec",
+                              cursor:
+                                !productDetails?.price &&
+                                !productDetails?.listprice
+                                  ? "not-allowed"
+                                  : "",
+                            }}
+                            onClick={checkoutPayment}
+                          >
+                            Buy
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
