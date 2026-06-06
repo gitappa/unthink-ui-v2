@@ -6,6 +6,8 @@ import { enable_venly } from "../constants/config";
 import { setShowAuraIntro } from "../hooks/chat/redux/actions";
 import { connectVenly } from "../helper/venlyUtils";
 import { getStoreData } from "../pageComponents/store/redux/actions";
+import { fetchCart } from "../pageComponents/DeliveryDetails/redux/action";
+import { getTTid } from "../helper/getTrackerInfo";
 
 // import trackApi from "../track/api";
 
@@ -45,6 +47,14 @@ const ActionWrapper = ({ children }) => {
 			}, 0);
 		}
 	}, [authUser]);
+
+	useEffect(() => {
+		const userId = authUser?.user_id || getTTid();
+		if (userId) {
+			const mycartcollectionpath = `my_cart_${userId}`;
+			dispatch(fetchCart(mycartcollectionpath));
+		}
+	}, [authUser?.user_id, dispatch]);
 
 	return <>{children}</>;
 };
