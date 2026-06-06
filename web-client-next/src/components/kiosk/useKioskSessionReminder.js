@@ -8,23 +8,23 @@ import { getUserCollectionsReset } from '../../pageComponents/Auth/redux/actions
 import { fetchCategoriesReset } from '../../pageComponents/categories/redux/actions';
 
 // Hook: manages kiosk session reminder timer and actions
-export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) {
+export default function useKioskSessionReminder({ time } = {}) {
+  const intervalMs = time ||  5 * 1000
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
   const timerRef = useRef(null);
-
   const startSessionTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
 
-    const cookie = Cookies.get('Kiosk-login');
+    const cookie = sessionStorage.getItem('Kiosk-login');
     if (!cookie || !isUserLogin) return;
 
     timerRef.current = setInterval(() => {
-      if (Cookies.get('Kiosk-login') && isUserLogin) {
+      if (sessionStorage.getItem('Kiosk-login') && isUserLogin) {
         setShowSessionPopup(true);
       } else {
         if (timerRef.current) {
@@ -46,16 +46,16 @@ export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) 
   }, [startSessionTimer]);
 
   const handleStayLoggedIn = useCallback(() => {
-    const cookieVal = Cookies.get('Kiosk-login');
-    if (cookieVal) {
-      Cookies.set('Kiosk-login', cookieVal, { expires: SIGN_IN_EXPIRE_DAYS || 1 });
-    }
+    const cookieVal = sessionStorage.getItem('Kiosk-login');
+    // if (cookieVal) {
+    //   sessionStorage.setItem('Kiosk-login', cookieVal);
+    // }
     setShowSessionPopup(false);
     startSessionTimer();
   }, [startSessionTimer]);
 
   const handleLogout = useCallback(async () => {
-    Cookies.remove('Kiosk-login');
+    sessionStorage.removeItem('Kiosk-login');
 
     try {
       clearStorages();
@@ -88,12 +88,21 @@ export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) 
 
 // Simple presentational popup component exported alongside the hook so consumers can import both from one file
 export function KioskSessionPopup({ onStay, onLogout }) {
+const kioskLoginMail = JSON.parse(
+  sessionStorage.getItem('Kiosk-login') || '{}'
+)?.email;
+const maskedEmail = kioskLoginMail?.replace(
+  /^(.{5})[^@]*(@.*)$/,
+  '$1....$2'
+);
+// console.log('kioskLoginMail',maskedEmail);
+
   return (
     <div className="fixed top-5 right-6 z-50">
       <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-[340px] max-w-full flex items-start gap-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold">Still here? Let's keep Shopping</h3>
-          <p className="text-xs text-gray-600">Your kiosk session is active. Do you want to stay logged in?</p>
+          <p className="text-xs text-gray-600">{maskedEmail} kiosk session is active. Do you want to stay logged in?</p>
           <div className="mt-3 flex gap-2">
             <button
               className="flex-1 px-3 py-1 max-w-[150px] rounded-2xl bg-gray-600/60 text-white text-sm hover:bg-gray-500"
