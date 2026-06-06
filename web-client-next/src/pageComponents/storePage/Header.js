@@ -148,6 +148,12 @@ const Header = ({
     state.store.data,
   ]);
  const removedata =false
+const [kioskLogin, setKioskLogin] = useState(false);
+
+useEffect(() => {
+  const value = localStorage.getItem("kioskLogin") === "true";
+  setKioskLogin(value);
+}, []);
 
   const {
     my_products_enable: isMyProductsEnable,
@@ -648,7 +654,7 @@ const Header = ({
       {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
-
+      {!kioskLogin && 
       <div className={styles.desktopHeaderSticky}>
         {/* budgettravel header */}
         {isBTInstance && <BudgetTravelHeader />}
@@ -849,6 +855,7 @@ const Header = ({
 
         )}
       </div>
+      }
 
       {/* for profile menu in mobile */}
       {!(isUserFetching || isInfluencerFetching) && (

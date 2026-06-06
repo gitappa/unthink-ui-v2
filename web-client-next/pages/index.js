@@ -44,7 +44,12 @@ const Index = ({ ...props }) => {
 	// Show KioskHome if user is logged in and has kiosk_list
 	const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data)=> authUser?.emailId === data) ;
 	console.log('hasKioskAccess', hasKioskAccess);
-
+	if(hasKioskAccess){
+		localStorage.setItem('kioskLogin','true')
+	}
+	else{
+		localStorage.removeItem('kioskLogin')
+	}
 	return (
 		<>
 			{hasKioskAccess ? (
