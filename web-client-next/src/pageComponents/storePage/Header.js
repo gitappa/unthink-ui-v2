@@ -638,7 +638,7 @@ useEffect(() => {
 
       {/* swiftlyStyled mobile UI */}
       {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
-      {!showChatModal && (
+      {!showChatModal &&  !kioskLogin && (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -858,7 +858,7 @@ useEffect(() => {
       }
 
       {/* for profile menu in mobile */}
-      {!(isUserFetching || isInfluencerFetching) && (
+      {!(isUserFetching || isInfluencerFetching) &&  !kioskLogin && (
         <div className={styles.mobileMenuIconContainer}>
           {/* <div
 						className='text-lg text-black flex min-h-7 w-7 cursor-pointer bg-** radius- '

@@ -129,7 +129,6 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-console.log('productDetails',productDetails);
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } = useKioskSessionReminder({time:60*1000}); 
  
@@ -177,32 +176,11 @@ console.log('productDetails',productDetails);
         dispatch(GuestPopUpShow(true));
         return;
       } 
-
-   
-
-      // const createWishlistData = {
-      //   collection_name: "",
-      //   description: "",
-      //   cover_image: productDetails?.image || "",
-      //   image_url: productDetails?.image || "",
-      //   product_lists: productDetails,
-      //   generated_by: "product_page",
-      //   tags: [],
-      //   tagged_show_filters: {},
-      //   keyword_tag_map: {},
-      //   user_id: userId || authUser?.user_id,
-      // };
-
-      if (isSave) {
-        // dispatch(
-        //           setProductsToAddInWishlist([productDetails], {
-        //             ...createWishlistData,
-        //           })
-        //         );
-        
+      console.log('(productDetails',productDetails);
+      
+      if (isSave) {        
         // Dispatch Redux action to add product to wishlist collection API
-        if (productDetails?.mfr_code) {
-          
+        if (productDetails?.mfr_code) {          
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,

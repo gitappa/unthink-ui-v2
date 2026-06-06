@@ -31,9 +31,9 @@ function* addProductToWishlistCollectionSaga(action) {
       throw new Error("User ID is required to add product to wishlist");
     }
 
-    if (!mfr_code || !product_name || !product_image) {
-      throw new Error("Product details (mfr_code, name, image) are required");
-    }
+    // if (!mfr_code || !product_name || !product_image) {
+    //   throw new Error("Product details (mfr_code, name, image) are required");
+    // }
 
     // Prepare the payload
     const payload = {
