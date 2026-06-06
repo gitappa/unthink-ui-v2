@@ -76,6 +76,7 @@ import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
 import GuestPopUp from "../Auth/GuestPopUp";
 import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import useKioskSessionReminder, { KioskSessionPopup } from "../../components/kiosk/useKioskSessionReminder";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -133,7 +134,8 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [savedProductDetails, fetchedProductDetails]);
 console.log('productDetails',productDetails);
-
+  // session reminder popup state and timer ref
+  const { showSessionPopup, handleStayLoggedIn, handleLogout } = useKioskSessionReminder({time:60*1000}); 
  
 
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
@@ -165,7 +167,7 @@ console.log('productDetails',productDetails);
       //   e?.stopPropagation();
       // }
 
-      const isUserLoginCokkies = Cookies.get("Kiosk-login")  ;
+      const isUserLoginCokkies = sessionStorage.getItem("Kiosk-login")  ;
       guestActionRef.current = isSave ? "save" : "share";
 
      
@@ -176,18 +178,18 @@ console.log('productDetails',productDetails);
 
    
 
-      const createWishlistData = {
-        collection_name: "",
-        description: "",
-        cover_image: productDetails?.image || "",
-        image_url: productDetails?.image || "",
-        product_lists: productDetails,
-        generated_by: "product_page",
-        tags: [],
-        tagged_show_filters: {},
-        keyword_tag_map: {},
-        user_id: userId || authUser?.user_id,
-      };
+      // const createWishlistData = {
+      //   collection_name: "",
+      //   description: "",
+      //   cover_image: productDetails?.image || "",
+      //   image_url: productDetails?.image || "",
+      //   product_lists: productDetails,
+      //   generated_by: "product_page",
+      //   tags: [],
+      //   tagged_show_filters: {},
+      //   keyword_tag_map: {},
+      //   user_id: userId || authUser?.user_id,
+      // };
 
       if (isSave) {
         // dispatch(
@@ -275,7 +277,7 @@ console.log('productDetails',productDetails);
           if (res.data.status_code === 200) {
             dispatch(GuestPopUpShow(false));
             if (guestActionRef.current === "save") {
-              Cookies.set("Kiosk-login", user_id, { expires: 7 });
+              sessionStorage.setItem("Kiosk-login", user_id, { expires: 7 });
               onAddSelectedProductsToCollection(null, {
                 isSave: true,
                 isGuestSubmit: true,
@@ -1598,6 +1600,9 @@ console.log('productDetails',productDetails);
 			) : (
 				""
 			)}
+       {showSessionPopup && (
+              <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
+            )}
     </div>
   );
 };

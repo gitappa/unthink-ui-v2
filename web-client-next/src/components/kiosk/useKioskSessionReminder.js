@@ -8,7 +8,8 @@ import { getUserCollectionsReset } from '../../pageComponents/Auth/redux/actions
 import { fetchCategoriesReset } from '../../pageComponents/categories/redux/actions';
 
 // Hook: manages kiosk session reminder timer and actions
-export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) {
+export default function useKioskSessionReminder({ time } = {}) {
+  const intervalMs = time ||  5 * 1000
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
@@ -20,11 +21,11 @@ export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) 
       timerRef.current = null;
     }
 
-    const cookie = Cookies.get('Kiosk-login');
+    const cookie = sessionStorage.getItem('Kiosk-login');
     if (!cookie || !isUserLogin) return;
 
     timerRef.current = setInterval(() => {
-      if (Cookies.get('Kiosk-login') && isUserLogin) {
+      if (sessionStorage.getItem('Kiosk-login') && isUserLogin) {
         setShowSessionPopup(true);
       } else {
         if (timerRef.current) {
@@ -46,16 +47,16 @@ export default function useKioskSessionReminder({ intervalMs = 5 * 1000 } = {}) 
   }, [startSessionTimer]);
 
   const handleStayLoggedIn = useCallback(() => {
-    const cookieVal = Cookies.get('Kiosk-login');
-    if (cookieVal) {
-      Cookies.set('Kiosk-login', cookieVal, { expires: SIGN_IN_EXPIRE_DAYS || 1 });
-    }
+    const cookieVal = sessionStorage.getItem('Kiosk-login');
+    // if (cookieVal) {
+    //   sessionStorage.setItem('Kiosk-login', cookieVal);
+    // }
     setShowSessionPopup(false);
     startSessionTimer();
   }, [startSessionTimer]);
 
   const handleLogout = useCallback(async () => {
-    Cookies.remove('Kiosk-login');
+    sessionStorage.removeItem('Kiosk-login');
 
     try {
       clearStorages();

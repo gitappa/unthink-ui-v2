@@ -21,7 +21,7 @@ const SignOut = () => {
         Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
         localStorage.removeItem("adminRolePopupShown", "false");
          localStorage.removeItem('kioskLogin')
-         Cookies.remove("Kiosk-login");
+         sessionStorage.removeItem("Kiosk-login");
 
         clearStorages();
         

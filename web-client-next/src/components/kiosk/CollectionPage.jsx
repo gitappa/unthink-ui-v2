@@ -13,6 +13,7 @@ import BannerImage from "./BannerImage";
 import ShareOptions from "../../pageComponents/shared/shareOptions";
 import share_icon from "../../images/profilePage/share_icon.svg";
 import { collectionQRCodeGenerator, getBlogCollectionPagePath } from "../../helper/utils";
+import useKioskSessionReminder, { KioskSessionPopup } from "./useKioskSessionReminder";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -31,21 +32,20 @@ const CollectionPage = ({ params }) => {
   const productsData = useMemo(() => {
     let list = filterAvailableProductList(singleCollectionKiosk.product_lists);
 
-    if (selectedTags.length) {
-      list = filterProductListBySelectedTags(
-        list,
-        selectedTags,
-        singleCollectionKiosk.tag_map,
-      );
-    }
-    // list = sponsorProductList.concat(list);
+  if (selectedTags.length) {
+    list = filterProductListBySelectedTags(
+      list,
+      selectedTags,
+      singleCollectionKiosk.tag_map
+    );
+  }
 
-    return list;
-  }, [
-    singleCollectionKiosk.product_lists,
-    singleCollectionKiosk.tag_map,
-    selectedTags,
-  ]);
+  setProductsData(list);
+}, [
+  singleCollectionKiosk.product_lists,
+  singleCollectionKiosk.tag_map,
+  selectedTags,
+]);
   // console.log('productsData',productsData);
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
@@ -208,6 +208,9 @@ const CollectionPage = ({ params }) => {
 
       </div>
       <BannerImage src={profilebanner?.src} alt="profilebanner" className="lg:mt-11 mt-5" />
+        {showSessionPopup && (
+                    <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
+                  )}
     </div>
   );
 };
