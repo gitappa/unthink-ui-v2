@@ -14,7 +14,6 @@ export default function useKioskSessionReminder({ time } = {}) {
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
   const timerRef = useRef(null);
-
   const startSessionTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -89,12 +88,21 @@ export default function useKioskSessionReminder({ time } = {}) {
 
 // Simple presentational popup component exported alongside the hook so consumers can import both from one file
 export function KioskSessionPopup({ onStay, onLogout }) {
+const kioskLoginMail = JSON.parse(
+  sessionStorage.getItem('Kiosk-login') || '{}'
+)?.email;
+const maskedEmail = kioskLoginMail?.replace(
+  /^(.{5})[^@]*(@.*)$/,
+  '$1....$2'
+);
+// console.log('kioskLoginMail',maskedEmail);
+
   return (
     <div className="fixed top-5 right-6 z-50">
       <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-[340px] max-w-full flex items-start gap-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold">Still here? Let's keep Shopping</h3>
-          <p className="text-xs text-gray-600">Your kiosk session is active. Do you want to stay logged in?</p>
+          <p className="text-xs text-gray-600">{maskedEmail} kiosk session is active. Do you want to stay logged in?</p>
           <div className="mt-3 flex gap-2">
             <button
               className="flex-1 px-3 py-1 max-w-[150px] rounded-2xl bg-gray-600/60 text-white text-sm hover:bg-gray-500"

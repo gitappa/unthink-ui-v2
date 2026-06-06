@@ -14,6 +14,8 @@ import ShareOptions from "../../pageComponents/shared/shareOptions";
 import share_icon from "../../images/profilePage/share_icon.svg";
 import { collectionQRCodeGenerator, getBlogCollectionPagePath } from "../../helper/utils";
 import useKioskSessionReminder, { KioskSessionPopup } from "./useKioskSessionReminder";
+import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
+import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -24,32 +26,65 @@ const CollectionPage = ({ params }) => {
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
+  const [isUserLogin, storeData] = useSelector((state) => [
+    state.auth.user.isUserLogin,
+    state.store.data,
+  ]);
   const handleTagClick = useCallback((value) => {
     setActiveCategory(value);
     setSelectedTags(value === "All" ? [] : [value]);
   }, []);
 
   const productsData = useMemo(() => {
+    if (!singleCollectionKiosk?.product_lists) return [];
+
     let list = filterAvailableProductList(singleCollectionKiosk.product_lists);
 
-  if (selectedTags.length) {
-    list = filterProductListBySelectedTags(
-      list,
-      selectedTags,
-      singleCollectionKiosk.tag_map
-    );
-  }
+    if (selectedTags.length) {
+      list = filterProductListBySelectedTags(
+        list,
+        selectedTags,
+        singleCollectionKiosk.tag_map,
+      );
+    }
 
-  setProductsData(list);
-}, [
-  singleCollectionKiosk.product_lists,
-  singleCollectionKiosk.tag_map,
-  selectedTags,
-]);
+    return list;
+  }, [
+    singleCollectionKiosk?.product_lists,
+    singleCollectionKiosk?.tag_map,
+    selectedTags,
+  ]);
   // console.log('productsData',productsData);
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
+  const [isPopupShow, setIsPopupShow] = useState(false);
+  const { showSessionPopup, handleStayLoggedIn, handleLogout } =
+    useKioskSessionReminder({ time: 60 * 1000 });
+
+  const openShareOptions = useCallback(() => {
+    setShowShareProductDetails((show) => !show);
+  }, []);
+
+  const handleShareClick = useCallback(() => {
+    const isKioskLogin = sessionStorage.getItem("Kiosk-login");
+    // console.log('isKioskLogin',!isKioskLogin);
+    // console.log('isUserLogin',isUserLogin);
+    
+    
+    if ( isUserLogin && !isKioskLogin) {
+      setShowShareProductDetails(false);
+      setIsPopupShow(true);
+      // console.log('fdfdfdfd');
+      
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+      // console.log('fdfdfdfd');
+
+    openShareOptions();
+  }, [dispatch, isUserLogin, openShareOptions]);
+
 
   const collectionPagePath = useMemo(() => {
     if (!singleCollectionKiosk) return "";
@@ -163,9 +198,7 @@ const CollectionPage = ({ params }) => {
                         {sharePageUrl && (
                           <button
                             className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                            onClick={() =>
-                              setShowShareProductDetails(!showShareProductDetails)
-                            }
+                            onClick={handleShareClick}
                           >
                             <img
                               className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
@@ -208,6 +241,13 @@ const CollectionPage = ({ params }) => {
 
       </div>
       <BannerImage src={profilebanner?.src} alt="profilebanner" className="lg:mt-11 mt-5" />
+        <GuestUserPopUp
+          isOpen={isPopupShow}
+          setIsOpen={setIsPopupShow}
+          storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
+          persistKioskLogin
+          onSuccess={() => setShowShareProductDetails(true)}
+        />
         {showSessionPopup && (
                     <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
                   )}
