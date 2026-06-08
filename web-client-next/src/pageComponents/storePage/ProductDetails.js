@@ -30,6 +30,7 @@ import {
   isEmpty,
   cleanImage,
 } from "../../helper/utils";
+import { requestSigninWithLink, decryptSigninToken, buildVerifyUrl } from "../../helper/autoLogin";
 import {
   customProductsAPIs,
   profileAPIs,
@@ -114,6 +115,10 @@ const ProductDetails = ({ params, ...props }) => {
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  const addWishlistState = useSelector((state) => state.wishlistActions.addProductToWishlistCollection);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrImageUrl, setQrImageUrl] = useState("");
+  const [qrTargetUrl, setQrTargetUrl] = useState("");
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
@@ -181,6 +186,7 @@ const ProductDetails = ({ params, ...props }) => {
       if (isSave) {        
         // Dispatch Redux action to add product to wishlist collection API
         if (productDetails?.mfr_code) {          
+          console.debug('[ProductDetails] dispatching addProductToWishlistCollection', { mfr_code: productDetails?.mfr_code });
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
@@ -193,6 +199,38 @@ const ProductDetails = ({ params, ...props }) => {
               errorMessage: "Failed to add product to wishlist. Please try again.",
             })
           );
+          // Immediately show a QR so the user can scan while collection is being created.
+          (async () => {
+            try {
+              const origin = typeof window !== 'undefined' ? window.location.origin : '';
+              const kioskEmail = sessionStorage.getItem('kiosk_email') || sessionStorage.getItem('Kiosk-email') || storeData?.store_assistant_email || authUser?.email || null;
+              if (kioskEmail) {
+                const resp = await requestSigninWithLink(kioskEmail);
+                const signin_token = resp?.signin_token || resp?.data?.signin_token;
+                if (signin_token) {
+                  const decrypted = decryptSigninToken(signin_token);
+                  const verifyLink = buildVerifyUrl(decrypted, 'my-products');
+                  const fullVerifyUrl = `${origin}${verifyLink}`;
+                  setQrTargetUrl(fullVerifyUrl);
+                  setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+                  setQrModalOpen(true);
+                  return;
+                }
+              }
+              // fallback to my-products
+              const fallback = `${origin}/my-products`;
+              setQrTargetUrl(fallback);
+              setQrImageUrl(collectionQRCodeGenerator(fallback));
+              setQrModalOpen(true);
+            } catch (e) {
+              console.error('Immediate QR build failed', e);
+              const origin = typeof window !== 'undefined' ? window.location.origin : '';
+              const fallback = `${origin}/my-products`;
+              setQrTargetUrl(fallback);
+              setQrImageUrl(collectionQRCodeGenerator(fallback));
+              setQrModalOpen(true);
+            }
+          })();
         } else {
           console.log("[ProductDetails] Product details incomplete for wishlist collection", {
             mfr_code: productDetails?.mfr_code,
@@ -205,6 +243,17 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [authUser, isUserLogin, dispatch, getKioskLoginUserId, storeData, productDetails]
   );
+
+  // If successMessage appears (even without data) open QR modal so users see something
+  useEffect(() => {
+    if (addWishlistState?.successMessage && !qrModalOpen) {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const fallbackUrl = `${origin}/my-products`;
+      setQrImageUrl(collectionQRCodeGenerator(fallbackUrl));
+      setQrTargetUrl(fallbackUrl);
+      setQrModalOpen(true);
+    }
+  }, [addWishlistState?.successMessage]);
   // ============ END GUEST POPUP HOOKS ============
 
   const handleShareClick = useCallback(() => {
@@ -257,6 +306,75 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem(`pdp_image_${mfr_code}`) || "";
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
+
+  // When wishlist collection is created by addProductToWishlistCollection, show a QR modal
+  useEffect(() => {
+    let mounted = true;
+    const handleWishlistSuccess = async () => {
+      console.debug('[WishlistState]', addWishlistState);
+      const data = addWishlistState?.data;
+      const successMsg = addWishlistState?.successMessage;
+      // If we have neither data nor success message, nothing to do
+      if (!mounted) return;
+      if (!data && !successMsg) return;
+
+  // Try to find collection id/path and username in API response
+  const payload = data?.data || data || {};
+      const collectionId = payload?._id || payload?.id || payload?.collection_id || payload?._id;
+      const userName = payload?.user_name || payload?.user_name  || payload?.user_id  
+console.log('userName',userName);
+
+      if (!collectionId) {
+    // If we don't have a collection id, still show fallback QR to the user's My Products page or origin
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const fallbackUrl = successMsg ? `${origin}/my-products` : origin;
+    const qr = collectionQRCodeGenerator(fallbackUrl);
+    setQrImageUrl(qr);
+    setQrTargetUrl(fallbackUrl);
+    setQrModalOpen(true);
+    return;
+      }
+
+      const collectionPath = `/influencer/${userName}/${collectionId}`;
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
+      // Try to create auto-login verify URL using kiosk/store assistant email
+      try {
+        const kioskEmail = sessionStorage.getItem('kiosk_email') || sessionStorage.getItem('Kiosk-email') || storeData?.store_assistant_email || authUser?.email || null;
+        if (kioskEmail) {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token || resp?.data?.signin_token;
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token); // passthrough in current helper
+            if (decrypted) {
+              const verifyLink = buildVerifyUrl(decrypted, `influencer/${userName}/${collectionId}`);
+              const fullVerifyUrl = `${origin}${verifyLink}`;
+              const qr = collectionQRCodeGenerator(fullVerifyUrl);
+              setQrImageUrl(qr);
+              setQrTargetUrl(fullVerifyUrl);
+              setQrModalOpen(true);
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Error building auto-login QR', e);
+      }
+
+      // fallback: normal collection URL QR
+      const fullCollectionUrl = `${origin}${collectionPath}`;
+      const qr = collectionQRCodeGenerator(fullCollectionUrl);
+      setQrImageUrl(qr);
+      setQrTargetUrl(fullCollectionUrl);
+      setQrModalOpen(true);
+    };
+
+    handleWishlistSuccess();
+
+    return () => {
+      mounted = false;
+    };
+  }, [addWishlistState?.data, addWishlistState?.successMessage]);
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -1527,6 +1645,49 @@ const ProductDetails = ({ params, ...props }) => {
         }}
         onSkip={() => setGuestPopupAction(null)}
       />
+      {/* QR Modal shown after wishlist creation */}
+      <Modal headerText="Scan to open collection" isOpen={qrModalOpen} onClose={() => setQrModalOpen(false)} size="sm">
+        <div className="flex flex-col items-center gap-4">
+          {qrImageUrl ? (
+            <img src={qrImageUrl} alt="QR code" className="w-48 h-48 object-contain" />
+          ) : (
+            <div className="w-48 h-48 bg-gray-100 flex items-center justify-center">QR</div>
+          )}
+          {qrTargetUrl && (
+            <div className="break-all text-center text-sm">
+              <a href={qrTargetUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+                {qrTargetUrl}
+              </a>
+            </div>
+          )}
+          <div className="flex gap-2">
+            <button
+              className="px-4 py-2 bg-indigo-600 text-white rounded"
+              onClick={() => {
+                if (qrTargetUrl) {
+                  navigator.clipboard?.writeText(qrTargetUrl);
+                  message.success('Copied link to clipboard', 1.5);
+                }
+              }}
+            >
+              Copy link
+            </button>
+            <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => setQrModalOpen(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
+      {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}
+      {qrTargetUrl && (
+        <button
+          onClick={() => setQrModalOpen(true)}
+          className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg"
+          aria-label="Show QR"
+        >
+          Show QR
+        </button>
+      )}
        {showSessionPopup && (
               <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
             )}

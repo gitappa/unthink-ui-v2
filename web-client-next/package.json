@@ -67,7 +67,7 @@
     "swiper": "^7.4.1",
     "tailwindcss": "^4.3.0",
     "uuid": "^8.3.2",
-    "whatwg-url": "^15.1.0"
+  "whatwg-url": "^15.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
