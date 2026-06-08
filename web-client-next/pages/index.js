@@ -1,7 +1,7 @@
 // old : used Brands as a home page
 // new : using RootStatic as a home page
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { aura_header_theme, is_store_instance } from "../src/constants/config";

@@ -1094,7 +1094,7 @@ const ChatProducts = ({
                                     className={styles["chat-products-read-more-btn"]}
                                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                                   >
-                                    {isDescriptionExpanded ? "Read Less" : "Read More..."}
+                                    {isDescriptionExpanded ? "Read Less" : "Read More"}
                                   </button>
                                 )}
 

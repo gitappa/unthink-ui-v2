@@ -886,7 +886,7 @@ const AuraResponseProducts = ({
 							) : null}
 
 
-							{chatProductsDataToShow.length && !isMobile ? (
+							{chatProductsDataToShow.length && !isMobile && enableSelectProduct ? (
 								<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
 									<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
 										<div className="flex items-center gap-2">

@@ -23,7 +23,6 @@ import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { openProductModal } from "../customProductModal/redux/actions";
-import Cookies from "js-cookie";
 import {
   getPercentage,
   collectionQRCodeGenerator,
@@ -35,7 +34,6 @@ import {
   customProductsAPIs,
   profileAPIs,
   TryOnVto,
-  authAPIs,
 } from "../../helper/serverAPIs";
 
 import ShareOptions from "../shared/shareOptions";
@@ -74,8 +72,9 @@ import profilebanner from "../../images/package.jpg";
 import { openWishlistModal, setProductsToAddInWishlist } from "../wishlist/redux/actions";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
-import GuestPopUp from "../Auth/GuestPopUp";
+import GuestUserPopUp from "../Auth/GuestUserPopUp";
 import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import useKioskSessionReminder, { KioskSessionPopup } from "../../components/kiosk/useKioskSessionReminder";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -94,7 +93,6 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductLoading,
     productDetail,
     ButtonClick,
-    isGuestPopUpShow,
 
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
@@ -105,7 +103,6 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
-    state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
 
   const [store_id, isUserLogin] = useSelector((state) => [
@@ -132,20 +129,25 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-console.log('productDetails',productDetails);
-
+  // session reminder popup state and timer ref
+  const { showSessionPopup, handleStayLoggedIn, handleLogout } = useKioskSessionReminder({time:60*1000}); 
  
 
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
-  const [guestData, setGuestData] = useState({ email: "" });
-  const [errors, setErrors] = useState({ email: "" });
   const [isPopupShow, setIsPopupShow] = useState(false);
-  const guestActionRef = useRef(null);
+  const [guestPopupAction, setGuestPopupAction] = useState(null);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const getKioskLoginUserId = useCallback(() => {
+    const kioskLogin = sessionStorage.getItem("Kiosk-login");
+
+    if (!kioskLogin) return "";
+
+    try {
+      return JSON.parse(kioskLogin)?.user_id || kioskLogin;
+    } catch (error) {
+      return kioskLogin;
+    }
+  }, []);
   
 
   const onAddSelectedProductsToCollection = useCallback(
@@ -165,47 +167,27 @@ console.log('productDetails',productDetails);
       //   e?.stopPropagation();
       // }
 
-      const isUserLoginCokkies = Cookies.get("Kiosk-login")  ;
-      guestActionRef.current = isSave ? "save" : "share";
+      const kioskLoginUserId = getKioskLoginUserId();
 
      
-      if (isSave  && !isUserLoginCokkies && !isGuestSubmit) {
+      if (isSave  && !kioskLoginUserId && !isGuestSubmit) {
+        setIsPopupShow(true);
+        setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
         return;
       } 
-
-   
-
-      const createWishlistData = {
-        collection_name: "",
-        description: "",
-        cover_image: productDetails?.image || "",
-        image_url: productDetails?.image || "",
-        product_lists: productDetails,
-        generated_by: "product_page",
-        tags: [],
-        tagged_show_filters: {},
-        keyword_tag_map: {},
-        user_id: userId || authUser?.user_id,
-      };
-
-      if (isSave) {
-        // dispatch(
-        //           setProductsToAddInWishlist([productDetails], {
-        //             ...createWishlistData,
-        //           })
-        //         );
-        
+      console.log('(productDetails',productDetails);
+      
+      if (isSave) {        
         // Dispatch Redux action to add product to wishlist collection API
-        if (productDetails?.mfr_code) {
-          
+        if (productDetails?.mfr_code) {          
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
               product_name: productDetails?.name,
               product_image: productDetails?.image,
               store: storeData?.store_name || "dothelook",
-              user_id: isUserLoginCokkies,
+              user_id: userId || kioskLoginUserId,
               eventId:storeData?.event_id,
               successMessage: "Product added to wishlist successfully!",
               errorMessage: "Failed to add product to wishlist. Please try again.",
@@ -221,79 +203,23 @@ console.log('productDetails',productDetails);
         }
       }
     },
-    [authUser, isUserLogin, dispatch, storeData, productDetails]
-  );
-
-  const guestChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      setGuestData((data) => ({ ...data, [name]: value }));
-      if (errors.email) setErrors({ ...errors, email: "" });
-    },
-    [errors]
-  );
-
-  const handleGuestSkip = useCallback(async () => {
-    if (guestActionRef.current === "save") {
-      onAddSelectedProductsToCollection(null, { isSave: true, isSkip: true });
-    }
-    dispatch(GuestPopUpShow(false));
-  }, [onAddSelectedProductsToCollection, dispatch]);
-      // const store = storeData?.store_name;
-
-  const handleGuestSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-
-      if (!guestData.email) {
-        setErrors({ email: "Email is required" });
-        return;
-      }
-
-      if (!validateEmail(guestData.email)) {
-        setErrors({ email: "Please enter a valid email address" });
-        return;
-      }
-
-      const tid = Cookies.get("tid");
-
-      if (!Cookies.get("isGuestLoggedIn")) {
-        Cookies.set("isGuestLoggedIn", false, { expires: 7 });
-      }
-
-      if (validateEmail(guestData.email)) {
-        try {
-          const res = await authAPIs.GuestRegisterAPICall({
-            emailId: guestData.email,
-            user_id: tid,
-            store:storeData?.store_name,
-          });
-
-          const { data } = res;
-          const user_id = data.data.user_id;
-
-          if (res.data.status_code === 200) {
-            dispatch(GuestPopUpShow(false));
-            if (guestActionRef.current === "save") {
-              Cookies.set("Kiosk-login", user_id, { expires: 7 });
-              onAddSelectedProductsToCollection(null, {
-                isSave: true,
-                isGuestSubmit: true,
-                userId: user_id,
-              });
-            }
-          }
-        } catch (error) {
-          console.error("Guest registration error:", error);
-          setErrors({
-            email: "Registration failed. Please try again.",
-          });
-        }
-      }
-    },
-    [guestData, onAddSelectedProductsToCollection, dispatch]
+    [authUser, isUserLogin, dispatch, getKioskLoginUserId, storeData, productDetails]
   );
   // ============ END GUEST POPUP HOOKS ============
+
+  const handleShareClick = useCallback(() => {
+    const kioskLoginUserId = getKioskLoginUserId();
+
+    if (!kioskLoginUserId) {
+      setShowShareProductDetails(false);
+      setGuestPopupAction("share");
+      setIsPopupShow(true);
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+
+    setShowShareProductDetails((show) => !show);
+  }, [dispatch, getKioskLoginUserId]);
 
   //   useEffect(() => {
   //     return () => {
@@ -1078,11 +1004,7 @@ console.log('productDetails',productDetails);
                         {sharePageUrl && (
                           <button
                             className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                            onClick={() =>
-                              setShowShareProductDetails( 
-                                !showShareProductDetails,
-                              )
-                            }
+                            onClick={handleShareClick}
                           >
                             <img
                               className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
@@ -1215,10 +1137,7 @@ console.log('productDetails',productDetails);
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
-                              style={{
-                                backgroundColor: "#7c75ec",
-                              }}
+                              className="text-white h-full px-6 bg-brand w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
                             >
                               Add to Cart
                             </button>
@@ -1227,23 +1146,37 @@ console.log('productDetails',productDetails);
                       )}
 
                       {storeData?.pdp_settings?.is_buy_button && (
-                        <button
-                          className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                          disabled={
-                            !productDetails?.price && !productDetails?.listprice
-                          }
-                          style={{
-                            background: "#7c75ec",
-                            cursor:
-                              !productDetails?.price &&
-                              !productDetails?.listprice
-                                ? "not-allowed"
-                                : "",
-                          }}
-                          onClick={checkoutPayment}
-                        >
-                          Buy
-                        </button>
+                        productDetails?.url && productDetails.url !== "dummy_url" ? (
+                          <a
+                            href={productDetails.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline text-white py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition flex justify-center items-center"
+                            style={{
+                              background: "#7c75ec",
+                            }}
+                          >
+                            Buy
+                          </a>
+                        ) : (
+                          <button
+                            className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                            disabled={
+                              !productDetails?.price && !productDetails?.listprice
+                            }
+                            style={{
+                              background: "#7c75ec",
+                              cursor:
+                                !productDetails?.price &&
+                                !productDetails?.listprice
+                                  ? "not-allowed"
+                                  : "",
+                            }}
+                            onClick={checkoutPayment}
+                          >
+                            Buy
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
@@ -1575,18 +1508,28 @@ console.log('productDetails',productDetails);
           />
         )}
       </div>
-      	{isGuestPopUpShow ? (
-				<GuestPopUp
-					handleGuestSubmit={handleGuestSubmit}
-					errors={errors}
-					handleGuestSkip={handleGuestSkip}
-					guestChange={guestChange}
-					guestData={guestData}
-					setIsPopupShow={setIsPopupShow}
-				/>
-			) : (
-				""
-			)}
+      <GuestUserPopUp
+        isOpen={isPopupShow}
+        setIsOpen={setIsPopupShow}
+        storeName={storeData?.store_name}
+        persistKioskLogin
+        onSuccess={({ userId }) => {
+          if (guestPopupAction === "share") {
+            setShowShareProductDetails(true);
+          } else {
+            onAddSelectedProductsToCollection(null, {
+              isSave: true,
+              isGuestSubmit: true,
+              userId,
+            });
+          }
+          setGuestPopupAction(null);
+        }}
+        onSkip={() => setGuestPopupAction(null)}
+      />
+       {showSessionPopup && (
+              <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
+            )}
     </div>
   );
 };

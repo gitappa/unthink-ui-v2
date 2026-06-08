@@ -107,10 +107,10 @@ function* fetchUserCollectionsSaga(action) {
 	try {
 		const authUserUserName = yield select(getAuthUserUserName);
 
-		const { product_limits,kisokuser_id, summary, view = getCollectionsView(authUserUserName), Mystatus, ipp, current_page } =
+		const { product_limits,kisokuser_id, summary, view = getCollectionsView(authUserUserName), Mystatus, ipp, current_page, generated_by, collection_type } =
 			action.payload;
 
-		const params = { user_id:kisokuser_id || getTTid(), product_limits, view, summary, status: Mystatus, ipp, current_page };
+		const params = { user_id:kisokuser_id || getTTid(), product_limits, view, summary, status: Mystatus, ipp, current_page, generated_by, collection_type };
 		const { data = {}, status } = yield call(
 			collectionAPIs.fetchCollectionsAPICall,
 			params

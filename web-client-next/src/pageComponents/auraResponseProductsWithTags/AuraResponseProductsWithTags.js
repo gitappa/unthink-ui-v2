@@ -43,11 +43,16 @@ const AuraResponseProductsWithTags = ({
 	const dispatch = useDispatch();
 
 	const {
-		suggestions: { tags = [], title = "" },
+		suggestions: { tags = [], title: originalTitle = "" },
 		products: suggestionsProducts,
 		selectedTag,
 		allProductList,
 	} = suggestionsWithProducts;
+
+	const title = originalTitle
+		.replace(/<[^>]*>Click on the keywords to browse products\.?<\/[^>]*>/gi, '')
+		.replace(/Click on the keywords to browse products\.?/gi, '')
+		.trim();
 
 	const {
 		recommendations: { tags: RecTags = [], title: RecTitle = "" },

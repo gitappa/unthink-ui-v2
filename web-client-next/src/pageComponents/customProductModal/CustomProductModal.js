@@ -518,8 +518,8 @@ const CustomProductModal = ({
 	);
 
 	const brandsDetails = useMemo(
-		() => sellerDetails[productData.brand],
-		[sellerDetails, productData.brand]
+		() => sellerDetails?.[productData?.brand],
+		[sellerDetails, productData?.brand]
 	);
 
 	const isContactDetailsAvailable = useMemo(
@@ -801,16 +801,27 @@ const CustomProductModal = ({
 												storeData?.pdp_settings?.is_add_to_cart_button) && (
 													<>
 														{storeData?.pdp_settings?.is_buy_button ? (
-															<button
-																className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
-																onClick={checkoutPayment}
-															>
-																Buy Now
-															</button>
+															productData?.url ? (
+																<a
+																	href={productData.url}
+																	target="_blank"
+																	rel="noreferrer"
+																	className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3 text-white"
+																	style={{ background: 'var(--color-brand)' }}
+																>
+																	Buy Now
+																</a>
+															) : (
+																<button
+																	className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
+																	onClick={checkoutPayment}
+																>
+																	Buy Now
+																</button>
+															)
 														) : (
 															<button
-																className="box-border border whitespace-nowrap  text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
-																style={{ background: '#7c75ec' }}
+																className="box-border border whitespace-nowrap bg-brand text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
 															// onClick={handleAddToCart}
 															>
 																Add to Cart
@@ -995,7 +1006,7 @@ const CustomProductModal = ({
 										) : null}
 									</div>
 
-									<div style={{ width: "200%" }}>
+									<div className='w-full max-w-full overflow-hidden'>
 										<div className='relative w-full mb-4'>
 											<Swiper
 												slidesPerView='auto'

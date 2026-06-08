@@ -1017,7 +1017,7 @@ const CollectionDetails = ({
                   className={styles.readMoreText}
                   onClick={() => dispatch(toggleShowMore(true))}
                 >
-                  Read more...
+                  Read more
                 </span>
               ))}
           </div>

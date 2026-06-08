@@ -148,6 +148,12 @@ const Header = ({
     state.store.data,
   ]);
  const removedata =false
+const [kioskLogin, setKioskLogin] = useState(false);
+
+useEffect(() => {
+  const value = localStorage.getItem("kioskLogin") === "true";
+  setKioskLogin(value);
+}, []);
 
   const {
     my_products_enable: isMyProductsEnable,
@@ -632,7 +638,7 @@ const Header = ({
 
       {/* swiftlyStyled mobile UI */}
       {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
-      {!showChatModal && (
+      {!showChatModal &&  !kioskLogin && (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -648,7 +654,7 @@ const Header = ({
       {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
-
+      {!kioskLogin && 
       <div className={styles.desktopHeaderSticky}>
         {/* budgettravel header */}
         {isBTInstance && <BudgetTravelHeader />}
@@ -849,9 +855,10 @@ const Header = ({
 
         )}
       </div>
+      }
 
       {/* for profile menu in mobile */}
-      {!(isUserFetching || isInfluencerFetching) && (
+      {!(isUserFetching || isInfluencerFetching) &&  !kioskLogin && (
         <div className={styles.mobileMenuIconContainer}>
           {/* <div
 						className='text-lg text-black flex min-h-7 w-7 cursor-pointer bg-** radius- '

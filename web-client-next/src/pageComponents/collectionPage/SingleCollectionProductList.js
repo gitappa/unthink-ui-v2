@@ -319,9 +319,9 @@ const url = window.location.pathname === '/my-profile/'
   const handleSetSelectedProducts = useCallback(
     ({ add = [], remove = [] }) => {
       const products = selectedProducts;
-      const allProducts = singleCollection.product_lists?.map(
+      const allProducts = singleCollection?.product_lists?.map(
         (p) => p.mfr_code,
-      ); // all Products
+      ) || []; // all Products
 
       products.push(...add); //add products
 
@@ -348,6 +348,9 @@ const url = window.location.pathname === '/my-profile/'
   }, [singleCollection]);
 
   const onSelectProductClick = (mfr_code) => {
+    if (isSingleCollectionSharedPage || !showCollectionDetails) {
+      setEnableSelectProduct(true);
+    }
     if (selectedProducts.includes(mfr_code)) {
       handleSetSelectedProducts({ remove: [mfr_code] });
     } else {
