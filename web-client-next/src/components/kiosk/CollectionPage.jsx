@@ -12,7 +12,8 @@ import { Spin } from "antd";
 import BannerImage from "./BannerImage";
 import ShareOptions from "../../pageComponents/shared/shareOptions";
 import share_icon from "../../images/profilePage/share_icon.svg";
-import { collectionQRCodeGenerator, getBlogCollectionPagePath } from "../../helper/utils";
+import { collectionQRCodeGenerator, getBlogCollectionPagePath, buildAutoLoginPagePath } from "../../helper/utils";
+import { requestSigninWithLink, decryptSigninToken, buildVerifyUrl } from "../../helper/autoLogin";
 import useKioskSessionReminder, { KioskSessionPopup } from "./useKioskSessionReminder";
 import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
@@ -58,6 +59,7 @@ const CollectionPage = ({ params }) => {
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
+  const [qrUrl, setQrUrl] = useState("");
   const [isPopupShow, setIsPopupShow] = useState(false);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });
@@ -107,6 +109,10 @@ const CollectionPage = ({ params }) => {
     if (!collectionPagePath) return "";
     return collectionQRCodeGenerator(collectionPagePath);
   }, [collectionPagePath]);
+
+  useEffect(() => {
+    setQrUrl(qrCodeGeneratorURL);
+  }, [qrCodeGeneratorURL]);
   
   // this page is a collection page
   const fromCollection = true;
@@ -141,9 +147,50 @@ const CollectionPage = ({ params }) => {
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
   useEffect(() => {
-    if (typeof window !== "undefined" && collectionPagePath) {
-      setSharePageUrl(`${window.location?.origin}${collectionPagePath}`);
-    }
+    let mounted = true;
+    const makeUrls = async () => {
+      if (typeof window === "undefined" || !collectionPagePath) return;
+      const originPrefix = `${window.location?.origin}`;
+      // default non-auto-login URL
+      const normalUrl = `${originPrefix}${collectionPagePath}`;
+
+      // For kiosk or store assistant flows we want auto-login URLs embedded in the QR/share
+      try {
+        // Determine email to request signin link for. Prefer store assistant/kiosk email from storeData if present
+        const kioskEmail = sessionStorage.getItem('kiosk_email') || sessionStorage.getItem('Kiosk-email') || storeData?.store_assistant_email || storeData?.store_owner_email || null;
+        if (kioskEmail) {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            if (decrypted) {
+              // Build verify link to collection page
+              const verifyLink = buildVerifyUrl(decrypted, `collection/${singleCollectionKiosk?.path || ''}`.replace(/\/+/, '/'));
+              if (mounted) {
+                setSharePageUrl(`${originPrefix}${verifyLink}`);
+                setQrUrl(collectionQRCodeGenerator(`${originPrefix}${verifyLink}`));
+              }
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        // ignore and fallback
+        console.error('auto-login build error', e);
+      }
+
+      // fallback
+      if (mounted) {
+        setSharePageUrl(normalUrl);
+        setQrUrl(qrCodeGeneratorURL);
+      }
+    };
+
+    makeUrls();
+
+    return () => {
+      mounted = false;
+    };
   }, [collectionPagePath]);
     
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
@@ -189,9 +236,8 @@ const CollectionPage = ({ params }) => {
                             setShow={setShowShareProductDetails}
                             onClose={() => setShowShareProductDetails(false)}
                             isOpen={showShareProductDetails}
-                            qrCodeGeneratorURL={qrCodeGeneratorURL}
+                            qrCodeGeneratorURL={qrUrl}
                             collection={singleCollectionKiosk}
-                             
                             fromCollection={fromCollection}
                           />
                         )}

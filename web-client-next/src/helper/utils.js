@@ -639,9 +639,20 @@ export const getProductDetailsPagePath = (productMfrCode) => {
 	return `/product/${productMfrCode}`;
 };
 
-export const collectionQRCodeGenerator = (collectionPagePath) => {
+// collectionQRCodeGenerator now accepts either a collectionPagePath or a full targetUrl
+export const collectionQRCodeGenerator = (collectionPagePathOrUrl) => {
 	const origin = typeof window !== 'undefined' ? window.location?.origin : '';
-	return `${auraYfretUserCollBaseUrl}${collectionQRCodeGeneratorURL}?page_url=${origin}${collectionPagePath}`;
+	const target = collectionPagePathOrUrl?.startsWith('http')
+		? collectionPagePathOrUrl
+		: `${origin}${collectionPagePathOrUrl}`;
+	return `${auraYfretUserCollBaseUrl}${collectionQRCodeGeneratorURL}?page_url=${encodeURIComponent(target)}`;
+};
+
+// Helper to build the page query value used for auto-login verify URLs
+export const buildAutoLoginPagePath = (page, extra = '') => {
+	if (!page) return '';
+	// examples: 'my-products', 'create-collection', 'cart', 'product/<mfr_code>'
+	return extra ? `${page}/${extra}` : page;
 };
 
 export const checkIsFavoriteCollection = (collection) =>
