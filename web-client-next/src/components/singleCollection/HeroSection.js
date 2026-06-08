@@ -9,7 +9,7 @@ import { Autoplay } from "swiper";
 const HeroSection = ({ im, products }) => {
   const router = useRouter();
   const collectiondata = useMemo(() => {
-    return products?.find((data) => data?.collection_name === "Brand JWELX");
+    return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
   }, [products]);
   // console.log('collectiondatas', collectiondata);
   // console.log('hellobilling');
