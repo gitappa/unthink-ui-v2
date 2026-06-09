@@ -481,7 +481,7 @@ console.log('userName',userName);
   );
   const searchParams = useSearchParams();
 
-  const fromCollection = searchParams.get("from") === "kioskcollection";
+  // const fromCollection = searchParams.get("from") === "kioskcollection";
   // console.log('fromCollection',fromCollection);
 
   const handleGoBack = () => {
@@ -1116,7 +1116,7 @@ console.log('userName',userName);
                             isOpen={showShareProductDetails}
                             qrCodeGeneratorURL={qrCodeGeneratorURL}
                             true
-                            fromCollection={fromCollection}
+                            fromCollection ={ true}
                           />
                         )}
                         {sharePageUrl && (
@@ -1618,13 +1618,13 @@ console.log('userName',userName);
             )}
           </div>
         </div>
-        {fromCollection && (
+        {/* {fromCollection && (
           <BannerImage
             src={profilebanner.src}
             alt="profilebanner"
             className="mt-4"
           />
-        )}
+        )} */}
       </div>
       <GuestUserPopUp
         isOpen={isPopupShow}

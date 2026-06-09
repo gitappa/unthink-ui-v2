@@ -1,13 +1,24 @@
 import { apiInstance } from './apiCall';
 import { auraYfretUserCollBaseUrl } from '../constants/config';
+import Fernet from "fernet";
+
 // signin_with_link endpoint (serverAPIs defines this constant internally)
 const signInWithLinkRequestUrl = '/users/signin_with_link';
 
 // Call /users/signin_with_link?emailId=<email>&is_auto_login=true
 export const requestSigninWithLink = async (email) => {
   try {
-    const url = `${auraYfretUserCollBaseUrl}${signInWithLinkRequestUrl}`;
-    const res = await apiInstance({ url, method: 'post', data: { emailId: email, is_auto_login: true } });
+    const url = `https://aurastage.unthink.ai/users/signin_with_link`;
+
+    const res = await apiInstance({
+      url,
+      method: 'get',
+      params: {
+        emailId: email,
+        is_auto_login: true,
+      },
+    });
+
     return res?.data || null;
   } catch (e) {
     console.error('requestSigninWithLink error', e);
@@ -21,7 +32,18 @@ export const requestSigninWithLink = async (email) => {
 // So we return the signin_token as-is. If client-side decryption is required,
 // we can re-introduce 'fernet' and decode using NEXT_PUBLIC_FERNET_SECRET_KEY.
 export const decryptSigninToken = (signin_token) => {
-  return signin_token || null;
+    const secret = new Fernet.Secret(
+  process.env.NEXT_PUBLIC_FERNET_SECRET_KEY
+);
+const token = new Fernet.Token({
+  secret,
+  token: signin_token,
+  ttl: 0,
+});
+const decryptedToken = token.decode();
+
+console.log("decryptedToken", decryptedToken);
+  return decryptedToken || null;
 };
 
 // Generate verify URL for a given decrypted token and page path

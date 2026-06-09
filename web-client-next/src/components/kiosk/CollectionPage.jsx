@@ -7,6 +7,7 @@ import {
   filterProductListBySelectedTags,
 } from "../../helper/utils";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import Cookies from 'js-cookie';
 import profilebanner from "../../images/package.jpg";
 import { Spin } from "antd";
 import BannerImage from "./BannerImage";
@@ -59,6 +60,8 @@ const CollectionPage = ({ params }) => {
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
+  // console.log('sharePageUrl',sharePageUrl);
+  
   const [qrUrl, setQrUrl] = useState("");
   const [isPopupShow, setIsPopupShow] = useState(false);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
@@ -157,15 +160,21 @@ const CollectionPage = ({ params }) => {
       // For kiosk or store assistant flows we want auto-login URLs embedded in the QR/share
       try {
         // Determine email to request signin link for. Prefer store assistant/kiosk email from storeData if present
-        const kioskEmail = sessionStorage.getItem('kiosk_email') || sessionStorage.getItem('Kiosk-email') || storeData?.store_assistant_email || storeData?.store_owner_email || null;
-        if (kioskEmail) {
+        const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email; 
+        // console.log('kioskEmail',kioskEmail);
+         
+        if (kioskEmail) { 
           const resp = await requestSigninWithLink(kioskEmail);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
+          // console.log('signin_token',signin_token);
+          
+          if (signin_token) { 
+            const decrypted = decryptSigninToken(signin_token); 
             if (decrypted) {
               // Build verify link to collection page
               const verifyLink = buildVerifyUrl(decrypted, `collection/${singleCollectionKiosk?.path || ''}`.replace(/\/+/, '/'));
+              console.log('verifyLink',verifyLink);
+              
               if (mounted) {
                 setSharePageUrl(`${originPrefix}${verifyLink}`);
                 setQrUrl(collectionQRCodeGenerator(`${originPrefix}${verifyLink}`));
@@ -191,7 +200,7 @@ const CollectionPage = ({ params }) => {
     return () => {
       mounted = false;
     };
-  }, [collectionPagePath]);
+  }, [isPopupShow]);
     
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
@@ -241,7 +250,7 @@ const CollectionPage = ({ params }) => {
                             fromCollection={fromCollection}
                           />
                         )}
-                        {sharePageUrl && (
+                        {/* {sharePageUrl && ( */}
                           <button
                             className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
                             onClick={handleShareClick}
@@ -252,7 +261,7 @@ const CollectionPage = ({ params }) => {
                               preview={false}
                             />
                           </button>
-                        )}
+                        {/* )} */}
                       </div>
       </div>
 
