@@ -9,7 +9,7 @@ import { fetchCategoriesReset } from '../../pageComponents/categories/redux/acti
 
 // Hook: manages kiosk session reminder timer and actions
 export default function useKioskSessionReminder({ time } = {}) {
-  const intervalMs = time ||  5 * 1000
+  const intervalMs = time ||  30 * 1000
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
