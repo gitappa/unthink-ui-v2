@@ -32,18 +32,35 @@ export const requestSigninWithLink = async (email) => {
 // So we return the signin_token as-is. If client-side decryption is required,
 // we can re-introduce 'fernet' and decode using NEXT_PUBLIC_FERNET_SECRET_KEY.
 export const decryptSigninToken = (signin_token) => {
-    const secret = new Fernet.Secret(
-  process.env.NEXT_PUBLIC_FERNET_SECRET_KEY
-);
-const token = new Fernet.Token({
-  secret,
-  token: signin_token,
-  ttl: 0,
-});
-const decryptedToken = token.decode();
+  if (!signin_token) {
+    console.warn("decryptSigninToken: No signin_token provided");
+    return null;
+  }
 
-console.log("decryptedToken", decryptedToken);
-  return decryptedToken || null;
+  try {
+    const secretKey = process.env.NEXT_PUBLIC_FERNET_SECRET_KEY;
+    if (!secretKey) {
+      console.warn("decryptSigninToken: NEXT_PUBLIC_FERNET_SECRET_KEY not configured");
+      // Passthrough the token if we can't decrypt
+      return signin_token;
+    }
+
+    const secret = new Fernet.Secret(secretKey);
+    const token = new Fernet.Token({
+      secret,
+      token: signin_token,
+      ttl: 0,
+    });
+    const decryptedToken = token.decode();
+    
+    console.log("decryptSigninToken: Successfully decrypted token");
+    return decryptedToken || null;
+  } catch (error) {
+    console.error("decryptSigninToken error:", error?.message || error);
+    // Passthrough the signin_token on error (server can handle it)
+    console.warn("decryptSigninToken: Returning token as-is (server will handle decryption)");
+    return signin_token;
+  }
 };
 
 // Generate verify URL for a given decrypted token and page path
