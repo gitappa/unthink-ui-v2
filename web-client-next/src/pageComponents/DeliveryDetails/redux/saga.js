@@ -31,8 +31,9 @@ function* addToCartSaga(action) {
     };
 
     const response = yield call(collectionAPIs.addToCollectionAPICall, payload);
-    const data = response?.data?.data?.[1];
-    console.log("response", response)
+    const data = response?.data?.data || response?.data?.data?.[0] || response?.data?.data?.[1];
+    // console.log("response", data)
+    // console.log("ssssssssss", response)
 
     // console.log("addToCartSaga", data);
 

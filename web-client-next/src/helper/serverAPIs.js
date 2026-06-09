@@ -1191,6 +1191,15 @@ const updateHandpickedProductsAPICall = (collection_id, product_lists) => {
 	});
 };
 
+const createWishlistHandpickedAPICall = (payload) => {
+	const url = `${auraYfretUserCollBaseUrl}${addHandpickedProductsUrl}`;
+	return apiInstance({
+		url,
+		method: "post",
+		data: payload,
+	});
+};
+
 const getAmazonProductsAPICall = (payload) => {
 	const url = `${auraYfretUserCollBaseUrl}${getAmazonProductsUrl}`;
 	const data = { ...payload };
@@ -1253,6 +1262,7 @@ export const collectionPageAPIs = {
 	fetchProductsAPICall,
 	addHandpickedProductsAPICall,
 	updateHandpickedProductsAPICall,
+	createWishlistHandpickedAPICall,
 	getAmazonProductsAPICall,
 	getImageToDescriptionAPICall,
 };

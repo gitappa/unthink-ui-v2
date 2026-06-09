@@ -53,7 +53,7 @@ export const decryptSigninToken = (signin_token) => {
     });
     const decryptedToken = token.decode();
     
-    console.log("decryptSigninToken: Successfully decrypted token");
+    console.log("decryptSigninToken: Successfully decrypted token",decryptedToken);
     return decryptedToken || null;
   } catch (error) {
     console.error("decryptSigninToken error:", error?.message || error);
@@ -68,8 +68,8 @@ export const buildVerifyUrl = (decryptedToken, pagePath = '') => {
   if (!decryptedToken) return '';
   // Use query param for token to avoid issues with tokens containing
   // characters that can break dynamic path segments (slashes, dots, etc.).
-  const base = `/user/verify?token=${encodeURIComponent(decryptedToken)}`;
-  return pagePath ? `${base}&page=${encodeURIComponent(pagePath)}` : base;
+  const base = `/user/verify/${encodeURIComponent(decryptedToken)}`;
+  return pagePath ? `${base}${encodeURIComponent(pagePath)}` : base;
 };
 
 export default { requestSigninWithLink, decryptSigninToken, buildVerifyUrl };
