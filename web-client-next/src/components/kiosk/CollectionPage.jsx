@@ -62,7 +62,7 @@ const CollectionPage = ({ params }) => {
   const [sharePageUrl, setSharePageUrl] = useState("");
   
   const [qrUrl, setQrUrl] = useState("");
-  console.log('sharePageUrl',qrUrl);
+  console.log('sharePageUrl',sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });
@@ -172,7 +172,7 @@ const CollectionPage = ({ params }) => {
             const decrypted = decryptSigninToken(signin_token); 
             if (decrypted) {
               // Build verify link to collection page
-              const verifyLink = buildVerifyUrl(decrypted, `collection/${singleCollectionKiosk?.path || ''}`.replace(/\/+/, '/'));
+              const verifyLink = buildVerifyUrl(decrypted, `?page=collections/${singleCollectionKiosk?.path || ''}`.replace(/\/+/, '/'));
               console.log('verifyLink',verifyLink);
               
               if (mounted) {
