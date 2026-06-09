@@ -36,6 +36,7 @@ import {
   setProductsToAddInWishlist,
   closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
+import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
@@ -89,6 +90,7 @@ import {
   customProductsAPIs,
   profileAPIs,
   TryOnVto,
+  collectionPageAPIs,
 } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
@@ -157,6 +159,7 @@ const ProductCard = ({
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
+  const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
   const menuRef = useRef(null);
   // console.log('collectionCards',product);
 
@@ -311,50 +314,49 @@ const ProductCard = ({
     +product?.listprice > +product?.price &&
     getPercentage(product.listprice, product.price);
 
+  const callHandpickedAPI = async (userId) => {
+    const payload = {
+      collection_type: "my_wishlist_collection",
+      status: "published",
+      collection_name: "my wishlist",
+      user_id: userId,
+      store: storeData?.store_name || "dothelook",
+      Event_id: "dothelookwebpage_447990",
+      product_lists: [
+        {
+          mfr_code: product.mfr_code,
+          name: product.name,
+          image: product.image
+        }
+      ]
+    };
+
+    try {
+      await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
+      notification.success({ message: "Added to wishlist!" });
+    } catch (err) {
+      notification.error({ message: "Failed to add to wishlist" });
+    }
+  };
+
+  useEffect(() => {
+    if (pendingWishlistAction && isUserLogin) {
+      callHandpickedAPI(authUserId || getTTid());
+      setPendingWishlistAction(false);
+    }
+  }, [isUserLogin, pendingWishlistAction, authUserId]);
+
   const addToWishlistClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // DISABLED this feature of adding item to favorites on click on add to collection
-    // NEED TO REMOVE THIS FEATURE CODE FROM REDUX/ACTION/SAGA
-    // NEED TO REMOVE remove from favorites handling as well
-
-    // add product in favorites if it is not there
-    const isProductExistsInFavorites = favoriteColl?.product_lists?.some(
-    	(p) => p.mfr_code === product.mfr_code
-    );
-
-    if (!isProductExistsInFavorites) {
-    	const payload = {
-    		_id: favoriteColl?._id,
-    		user_id: authUserId,
-    		collection_name: defaultFavoriteColl.collection_name,
-    		type: defaultFavoriteColl.type,
-    		products: [
-    			{
-    				mfr_code: product.mfr_code,
-    				tagged_by: product.tagged_by,
-    			},
-    		],
-    		fetchRecommendations: true,
-    		fetchUserCollections: true,
-        successMessage: "Added to wishlist!",
-    	};
-
-    	dispatch(addToWishlist(payload));
-    	dispatch(setRemoveFromFavorites(true));
-    } else {
-      dispatch(setRemoveFromFavorites(false));
+    if (!isUserLogin) {
+      setPendingWishlistAction(true);
+      dispatch(GuestPopUpShow(true));
+      return;
     }
 
-    let createWishlistData = {};
-
-    if (wishlistGeneratedBy) {
-      createWishlistData.generated_by = wishlistGeneratedBy;
-    }
-
-    dispatch(setProductsToAddInWishlist([product], createWishlistData));
-    dispatch(openWishlistModal());
+    callHandpickedAPI(authUserId || getTTid());
   };
 
   const checkoutPayment = async (e) => {
