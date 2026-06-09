@@ -60,9 +60,9 @@ const CollectionPage = ({ params }) => {
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  // console.log('sharePageUrl',sharePageUrl);
   
   const [qrUrl, setQrUrl] = useState("");
+  console.log('sharePageUrl',qrUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });

@@ -96,6 +96,13 @@ const maskedEmail = kioskLoginMail?.replace(
   '$1....$2'
 );
 // console.log('kioskLoginMail',maskedEmail);
+useEffect(() => {
+  const timer = setTimeout(() => {
+    onLogout();
+  }, 30000);
+
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <div className="fixed top-5 right-6 z-50">

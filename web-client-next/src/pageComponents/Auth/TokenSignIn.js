@@ -26,7 +26,14 @@ const TokenSignIn = () => {
 	const router = useRouter();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const token = router.query.token;
+	// Accept token from either the dynamic route param (/user/verify/[token])
+	// or from the query string (/user/verify?token=...). Some QR flows
+	// embed the token in the query to avoid routing issues with special chars.
+	let token = router.query.token;
+	if (!token && typeof window !== 'undefined') {
+		const params = new URLSearchParams(window.location.search);
+		token = params.get('token') || token;
+	}
 	const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
 	const redirectPage = params?.get("page");
 

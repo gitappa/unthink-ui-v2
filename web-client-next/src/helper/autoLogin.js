@@ -66,8 +66,10 @@ export const decryptSigninToken = (signin_token) => {
 // Generate verify URL for a given decrypted token and page path
 export const buildVerifyUrl = (decryptedToken, pagePath = '') => {
   if (!decryptedToken) return '';
-  const base = `/user/verify/${encodeURIComponent(decryptedToken)}`;
-  return pagePath ? `${base}?page=${encodeURIComponent(pagePath)}` : base;
+  // Use query param for token to avoid issues with tokens containing
+  // characters that can break dynamic path segments (slashes, dots, etc.).
+  const base = `/user/verify?token=${encodeURIComponent(decryptedToken)}`;
+  return pagePath ? `${base}&page=${encodeURIComponent(pagePath)}` : base;
 };
 
 export default { requestSigninWithLink, decryptSigninToken, buildVerifyUrl };
