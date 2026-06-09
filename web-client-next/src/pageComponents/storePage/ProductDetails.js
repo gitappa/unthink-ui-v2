@@ -122,6 +122,7 @@ const ProductDetails = ({ params, ...props }) => {
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+   const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
    const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
     [productDetail],
@@ -1618,13 +1619,13 @@ console.log('userName',userName);
             )}
           </div>
         </div>
-        {/* {fromCollection && (
+        {hasKioskAccess && (
           <BannerImage
             src={profilebanner.src}
             alt="profilebanner"
             className="mt-4"
           />
-        )} */}
+        )}
       </div>
       <GuestUserPopUp
         isOpen={isPopupShow}
