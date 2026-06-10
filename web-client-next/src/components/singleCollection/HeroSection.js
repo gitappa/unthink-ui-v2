@@ -5,15 +5,35 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
 import { Autoplay } from "swiper";
+import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
 const HeroSection = ({ im, products }) => {
   const router = useRouter();
-  const collectiondata = useMemo(() => {
-    return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
-  }, [products]);
+  const [collectiondata, setcollectiondata] = useState([]);
+  // const collectiondata = useMemo(() => {
+  //   return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
+  // }, [products]);
   // console.log('collectiondatas', collectiondata);
-  // console.log('hellobilling');
-  
+  // console.log('collectiondata',collectiondata);
+
+  useEffect(() => {
+    const fetchSocialMedia = async () => {
+      try {
+        const response = await SocialMediaApiCall();
+        // console.log('response',response.data.data);
+
+        const shuffledData = [...response.data.data].sort(
+          () => Math.random() - 0.5,
+        );
+        setcollectiondata(shuffledData[0]);
+        // console.log('shuffledData',shuffledData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchSocialMedia();
+  }, []);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage =
