@@ -74,7 +74,7 @@ import { openWishlistModal, setProductsToAddInWishlist } from "../wishlist/redux
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
 import GuestUserPopUp from "../Auth/GuestUserPopUp";
-import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import { addProductToWishlistCollection, addProductToWishlistCollectionReset } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 import useKioskSessionReminder, { KioskSessionPopup } from "../../components/kiosk/useKioskSessionReminder";
 
 const ProductDetails = ({ params, ...props }) => {
@@ -106,6 +106,8 @@ const ProductDetails = ({ params, ...props }) => {
     state.VtoIconReducer.ButtonClick,
     state.wishlistActions?.addProductToWishlistCollection?.data || []
   ]);
+  console.log('productToWishlistCollection',productToWishlistCollection);
+  
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
@@ -116,6 +118,7 @@ const ProductDetails = ({ params, ...props }) => {
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  const [pendingWishlistQrInfo, setPendingWishlistQrInfo] = useState(null);
   const addWishlistState = useSelector((state) => state.wishlistActions.addProductToWishlistCollection);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrImageUrl, setQrImageUrl] = useState("");
@@ -138,6 +141,8 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
+  // console.log('productDetails',productDetails);
+  
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } = useKioskSessionReminder({time:60*1000}); 
  
@@ -203,47 +208,25 @@ const ProductDetails = ({ params, ...props }) => {
               errorMessage: "Failed to add product to wishlist. Please try again.",
             })
           );
-          // Immediately show a QR so the user can scan while collection is being created.
+          // Kick off signin-with-link immediately, but wait for saga to set the
+          // wishlist collection data before building the QR. We store the
+          // signin token + origin in local state and build the QR in an effect
+          // when `addWishlistState.data` becomes available.
           (async () => {
             try {
               const origin = typeof window !== 'undefined' ? window.location.origin : '';
-              const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email  
+              const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email;
               if (kioskEmail) {
                 const resp = await requestSigninWithLink(kioskEmail);
                 const signin_token = resp?.signin_token || resp?.data?.signin_token;
-               
-                
-                
+                const userName = resp?.data?.user_name || resp?.user_name;
+
                 if (signin_token) {
-                  const decrypted = decryptSigninToken(signin_token);
-             
-                  
-                  const verifyLink = buildVerifyUrl(decrypted, `?page=influencer/${resp?.data?.user_name}/${productToWishlistCollection?.data?._id}`);
-            
-                  
-                  const fullVerifyUrl = `${origin}${verifyLink}`;
-                  console.log('fullVerifyUrl',fullVerifyUrl); //ok 
-                  
-                  setQrTargetUrl(fullVerifyUrl);
-                  setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-                  setQrModalOpen(true);
-                  
-                  return;
+                  setPendingWishlistQrInfo({ origin, signin_token, userName });
                 }
               }
-              // fallback to my-products
-              // const fallback = `${origin}/my-products`;
-              // setQrTargetUrl(fallback);
-              // setQrImageUrl(collectionQRCodeGenerator(fallback));
-              // setQrModalOpen(true);
             } catch (e) {
               console.error('Immediate QR build failed', e);
-              const origin = typeof window !== 'undefined' ? window.location.origin : '';
-              const fallback = `${origin}/my-products`;
-                setQrTargetUrl(fallback);
-                setQrImageUrl(collectionQRCodeGenerator(fallback));
-                setQrModalOpen(true);
-              
             }
           })();
         } else {
@@ -256,34 +239,88 @@ const ProductDetails = ({ params, ...props }) => {
         }
       }
     },
-    [authUser, isUserLogin, dispatch, getKioskLoginUserId, storeData, productDetails]
+    [authUser, isUserLogin, dispatch, getKioskLoginUserId, storeData, productDetails,productToWishlistCollection]
   );
 
-  // If successMessage appears (even without data) open QR modal so users see something
-  // useEffect(() => {
-  //   if (addWishlistState?.successMessage && !qrModalOpen) {
-  //     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  //     const fallbackUrl = `${origin}/my-products`;
-  //     setQrImageUrl(collectionQRCodeGenerator(fallbackUrl));
-  //     setQrTargetUrl(fallbackUrl);
-  //     setQrModalOpen(true);
-  //   }
-  // }, [addWishlistState?.successMessage]);
-  // ============ END GUEST POPUP HOOKS ============
+ 
+  // Build QR once wishlist saga returns data and we have a pending signin token
+  useEffect(() => {
+    if (!pendingWishlistQrInfo) return;
+    if (!addWishlistState?.data) return;
 
-  const handleShareClick = useCallback(() => {
-    const kioskLoginUserId = getKioskLoginUserId();
+    const { origin, signin_token, userName } = pendingWishlistQrInfo;
 
-    if (!kioskLoginUserId) {
-      setShowShareProductDetails(false);
-      setGuestPopupAction("share");
-      setIsPopupShow(true);
-      dispatch(GuestPopUpShow(true));
-      return;
+    try {
+      const decrypted = decryptSigninToken(signin_token);
+
+      const collectionId =
+        addWishlistState?.data?._id ||
+        addWishlistState?.data?.data?._id ||
+        addWishlistState?.data?.collection_id ||
+        addWishlistState?.data?.data?.collection_id;
+
+      const verifyLink = buildVerifyUrl(
+        decrypted,
+        `?page=influencer/${userName}/${collectionId}`,
+      );
+      const fullVerifyUrl = `${origin}${verifyLink}`;
+
+      setQrTargetUrl(fullVerifyUrl);
+      setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+      setQrModalOpen(true);
+    } catch (err) {
+      console.error("Building QR after wishlist success failed", err);
     }
 
-    setShowShareProductDetails((show) => !show);
-  }, [dispatch, getKioskLoginUserId]);
+    setPendingWishlistQrInfo(null);
+    dispatch(addProductToWishlistCollectionReset());
+  }, [addWishlistState?.data, pendingWishlistQrInfo, dispatch]);
+  // ============ END GUEST POPUP HOOKS ============
+
+  const handleShareClick = useCallback(
+    async () => {
+      const kioskLoginUserId = getKioskLoginUserId();
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      try {
+        // Prefer kiosk email from session storage, fallback to authUser email
+        const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email || authUser?.emailId;
+
+        if (kioskLoginUserId && kioskEmail) {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            if (decrypted) {
+              // Build verify link to current product page
+              const pageParam = `?page=${productDetailsPagePath.replace(/^\/+/, '')}`;
+              const verifyLink = buildVerifyUrl(decrypted, pageParam);
+
+              const fullVerifyUrl = `${origin}${verifyLink}`;
+              setSharePageUrl(fullVerifyUrl);
+              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+              setQrTargetUrl(fullVerifyUrl);
+              setShowShareProductDetails(true);
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Share auto-login build error', e);
+      }
+
+      if (!kioskLoginUserId) {
+        setShowShareProductDetails(false);
+        setGuestPopupAction('share');
+        setIsPopupShow(true);
+        dispatch(GuestPopUpShow(true));
+        return;
+      }
+
+      setShowShareProductDetails((show) => !show);
+    },
+    [authUser, dispatch, getKioskLoginUserId],
+  );
 
   //   useEffect(() => {
   //     return () => {
@@ -450,12 +487,22 @@ const ProductDetails = ({ params, ...props }) => {
   );
 
   const [sharePageUrl, setSharePageUrl] = useState("");
+// console.log('sharePageUrl',sharePageUrl);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
+  const shareQrCodeImage = useMemo(() => {
+    try {
+      return sharePageUrl ? collectionQRCodeGenerator(sharePageUrl) : qrCodeGeneratorURL;
+    } catch (e) {
+      return qrCodeGeneratorURL;
     }
-  }, [productDetailsPagePath]);
+  }, [sharePageUrl, qrCodeGeneratorURL]);
+// console.log('shareQrCodeImage',shareQrCodeImage);
+
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
+  //   }
+  // }, [productDetailsPagePath]);
 
   // const fieldsToDisplay = [
   //   // "age_group",
@@ -1060,12 +1107,11 @@ const ProductDetails = ({ params, ...props }) => {
                             setShow={setShowShareProductDetails}
                             onClose={() => setShowShareProductDetails(false)}
                             isOpen={showShareProductDetails}
-                            qrCodeGeneratorURL={qrCodeGeneratorURL}
-                            true
-                            fromCollection ={ true}
+                            qrCodeGeneratorURL={shareQrCodeImage}
+                            fromCollection={true}
                           />
                         )}
-                        {sharePageUrl && (
+                        {/* {sharePageUrl && ( */}
                           <button
                             className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
                             onClick={handleShareClick}
@@ -1076,7 +1122,7 @@ const ProductDetails = ({ params, ...props }) => {
                               preview={false}
                             />
                           </button>
-                        )}
+                        {/* // )} */}
                       </div>
                     </div>
                   </div>
@@ -1577,17 +1623,23 @@ const ProductDetails = ({ params, ...props }) => {
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name}
         persistKioskLogin
-        onSuccess={({ userId }) => {
-          if (guestPopupAction === "share") {
-            setShowShareProductDetails(true);
-          } else {
-            onAddSelectedProductsToCollection(null, {
-              isSave: true,
-              isGuestSubmit: true,
-              userId,
-            });
+        onSuccess={async ({ userId, email }) => {
+          try {
+            if (guestPopupAction === "share") {
+              setShowShareProductDetails(true);
+            } else {
+              onAddSelectedProductsToCollection(null, {
+                isSave: true,
+                isGuestSubmit: true,
+                userId,
+              });
+            }
+          } catch (err) {
+            console.error('Guest onSuccess share flow failed', err);
+            if (guestPopupAction === 'share') setShowShareProductDetails(true);
+          } finally {
+            setGuestPopupAction(null);
           }
-          setGuestPopupAction(null);
         }}
         onSkip={() => setGuestPopupAction(null)}
       />
@@ -1599,13 +1651,13 @@ const ProductDetails = ({ params, ...props }) => {
           ) : (
             <div className="w-48 h-48 bg-gray-100 flex items-center justify-center">QR</div>
           )}
-          {/* {qrTargetUrl && (
+          {qrTargetUrl && (
             <div className="break-all text-center text-sm">
               <a href={qrTargetUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
                 {qrTargetUrl}
               </a>
             </div>
-          )} */}
+          )}
           {/* <div className="flex gap-2">
             <button
               className="px-4 py-2 bg-indigo-600 text-white rounded"
@@ -1625,7 +1677,7 @@ const ProductDetails = ({ params, ...props }) => {
         </div>
       </Modal>
       {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}
-      {qrTargetUrl && (
+      {/* {qrTargetUrl && (
         <button
           onClick={() => setQrModalOpen(true)}
           className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg"
@@ -1633,7 +1685,7 @@ const ProductDetails = ({ params, ...props }) => {
         >
           Show QR
         </button>
-      )}
+      )} */}
        {showSessionPopup && (
               <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
             )}

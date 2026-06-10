@@ -51,9 +51,9 @@ const TokenSignIn = () => {
     token = params.get("token") || token;
   }
 
-  const redirectPage = params?.get("page");
+  const redirectPage = params?.get("page")?.trim()
   console.log("redirectPageaaa", redirectPage);
-  const collectionPath = redirectPage?.split("/").pop();
+  // const collectionPath = redirectPage?.split("/").pop();
 
 //   console.log("collectionPath", collectionPath);
 
@@ -79,6 +79,20 @@ const TokenSignIn = () => {
     });
     navigate(PATH_SIGN_IN);
   };
+  const Signout=()=>{
+     Cookies.set("isGuestLoggedIn", false, {
+            expires: SIGN_IN_EXPIRE_DAYS,
+          });
+          localStorage.removeItem("adminRolePopupShown", "false");
+          clearStorages();
+          checkAndGenerateUserId(); // generating user id again for guest user after sign out
+          generateSessionId(); // generating new session id for guest user after sign out          
+          try {
+            logoutVenlyUser();
+          } catch {
+            console.log("wallet error");
+          }
+  }
 
   const verifyToken = async (signInToken) => {
     try {
@@ -107,23 +121,10 @@ const TokenSignIn = () => {
         if (redirectPage?.startsWith("collections/")) {
           const collectionPath = redirectPage.split("/").pop();
 
-        //   console.log("collectionPath", collectionPath);
+          console.log("collectionPath", collectionPath);
 
           navigate(`/collections/${collectionPath}`);
-          Cookies.set("isGuestLoggedIn", false, {
-            expires: SIGN_IN_EXPIRE_DAYS,
-          });
-          localStorage.removeItem("adminRolePopupShown", "false");
-          clearStorages();
-          checkAndGenerateUserId(); // generating user id again for guest user after sign out
-          generateSessionId(); // generating new session id for guest user after sign out
-          // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
-          //   showMenu && setShowMenu(false);
-          try {
-            logoutVenlyUser();
-          } catch {
-            console.log("wallet error");
-          }
+          Signout()
         }
 		   if (redirectPage?.startsWith("influencer/")) {
           const collectionPath = redirectPage.split("/").pop();
@@ -131,27 +132,24 @@ const TokenSignIn = () => {
         //   console.log("collectionPath", collectionPath);
 
           navigate(`/influencer/${collectionPath}`);
-          Cookies.set("isGuestLoggedIn", false, {
-            expires: SIGN_IN_EXPIRE_DAYS,
-          });
-          localStorage.removeItem("adminRolePopupShown", "false");
-          clearStorages();
-          checkAndGenerateUserId(); // generating user id again for guest user after sign out
-          generateSessionId(); // generating new session id for guest user after sign out
-          // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
-          //   showMenu && setShowMenu(false);
-          try {
-            logoutVenlyUser();
-          } catch {
-            console.log("wallet error");
-          }
+         Signout()
         }
+        if (redirectPage?.startsWith("product/")) {
+          	navigate(`/${redirectPage}`);
+          	Signout();
+        }
+        if (redirectPage?.startsWith("cart/")) {
+          	navigate(`/${redirectPage}`);
+          	// Signout();
+        }
+
 
         redirectBackToHome();
       } else {
         handleVerificationError();
       }
-    } catch {
+    } catch(e) {
+      console.log('tokenerror',e)
       handleVerificationError();
     }
 
