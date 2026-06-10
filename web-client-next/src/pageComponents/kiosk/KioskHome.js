@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
-import HeroSection from "../../components/singleCollection/HeroSection";
+import HeroSection from "../../components/kiosk/HeroSection";
 import BannerKisok from "../../components/kiosk/BannerKisok";
 import QRsection from "../../components/kiosk/QRsection";
 import { Spin } from "antd";
@@ -80,7 +80,7 @@ const KioskHome = ({ blogCollectionPage }) => {
   }
 
   return (
-    <div className=" mx-auto w-full px-6 md:px-14 mt-14">
+    <div className=" mx-auto w-full px-6 md:px-14 mt-10">
       {/* User Actions */}
       <div className="flex justify-end items-center mb-6 gap-4 relative">
         <div className="flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm">

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Autoplay } from "swiper";
 import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
-const HeroSection = ({ im, products }) => {
+const HeroSection = ({ im, }) => {
   const router = useRouter();
   const [collectiondata, setcollectiondata] = useState([]);
   // const collectiondata = useMemo(() => {
@@ -81,9 +81,9 @@ const HeroSection = ({ im, products }) => {
     return () => observer.disconnect();
     // re-run when `products` changes so we attach observer when the
     // video container is mounted after the loading spinner.
-  }, [isClient, products]);
+  }, [isClient, collectiondata]);
   return (
-    <div className="relative mt-7 mb-28">
+    <div className="relative mt-7 mb-24">
       <div
         className="relative cursor-pointer"
         style={{ minHeight: "68vh", height: "700px" }}
