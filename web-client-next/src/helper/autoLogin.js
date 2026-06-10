@@ -53,7 +53,7 @@ export const decryptSigninToken = (signin_token) => {
     });
     const decryptedToken = token.decode();
     
-    // console.log("decryptSigninToken",decryptedToken);
+    console.log("decryptSigninToken",decryptedToken);
     return decryptedToken || null;
   } catch (error) {
     console.error("decryptSigninToken error:", error?.message || error);
