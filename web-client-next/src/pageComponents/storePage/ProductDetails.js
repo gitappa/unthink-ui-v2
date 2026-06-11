@@ -784,7 +784,7 @@ const ProductDetails = ({ params, ...props }) => {
     }
   };
   const [saveData, setResponse] = useState([]);
-  // console.log('response',response);
+  // console.log('response',saveData);
 
   const handleVtoSave = async () => {
     try {
@@ -821,6 +821,10 @@ const ProductDetails = ({ params, ...props }) => {
     // handleVTOCancel()
     handleVTOCancel();
     // attempt to build and show a QR that opens the saved collection
+  
+  };
+useEffect(() => {
+  async function handlepickapi() {
     try {
       // Use the immediate API response instead of reading the state (which
       // may not be updated synchronously).
@@ -862,29 +866,27 @@ const ProductDetails = ({ params, ...props }) => {
         }
       }
 
-      //   // Fallback: build public influencer/shared URL (or influencer by user_name)
-      //   const uname = authUser?.user_name || parsedKiosk?.user_name || null;
-      //   let targetPath = "";
-      //   if (uname) {
-      //     targetPath = `/influencer/${uname}/${collectionId}`;
-      //   } else if (parsedKiosk?.user_id) {
-      //     targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
-      //   } else {
-      //     targetPath = `/influencer/${collectionId}`;
-      //   }
+      // Fallback: build public influencer/shared URL (or influencer by user_name)
+      const uname = authUser?.user_name || parsedKiosk?.user_name || null;
+      let targetPath = "";
+      if (uname) {
+        targetPath = `/influencer/${uname}/${collectionId}`;
+      } else if (parsedKiosk?.user_id) {
+        targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
+      } else {
+        targetPath = `/influencer/${collectionId}`;
+      }
 
-      //   const fullTarget = `${origin}${targetPath}`;
-      //   setQrTargetUrl(fullTarget);
-      //   setQrImageUrl(collectionQRCodeGenerator(fullTarget));
-      //   setQrModalOpen(true);
-      // } catch (err) {
-      //   console.error("Building QR after VTO save failed", err);
-      // }
+      const fullTarget = `${origin}${targetPath}`;
+      setQrTargetUrl(fullTarget);
+      setQrImageUrl(collectionQRCodeGenerator(fullTarget));
+      setQrModalOpen(true);
     } catch (e) {
       console.log(e);
     }
-  };
-
+  }
+  handlepickapi();
+}, [saveData]);
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
     setVtoResultImageUrl(null);
