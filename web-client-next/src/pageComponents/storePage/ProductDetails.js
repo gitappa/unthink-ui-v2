@@ -30,10 +30,15 @@ import {
   isEmpty,
   cleanImage,
 } from "../../helper/utils";
-import { requestSigninWithLink, decryptSigninToken, buildVerifyUrl } from "../../helper/autoLogin";
+import {
+  requestSigninWithLink,
+  decryptSigninToken,
+  buildVerifyUrl,
+} from "../../helper/autoLogin";
 import {
   customProductsAPIs,
   profileAPIs,
+  TryonSaveApiCall,
   TryOnVto,
 } from "../../helper/serverAPIs";
 
@@ -70,12 +75,21 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { useSearchParams } from "next/navigation";
 import BannerImage from "../../components/kiosk/BannerImage";
 import profilebanner from "../../images/package.jpg";
-import { openWishlistModal, setProductsToAddInWishlist } from "../wishlist/redux/actions";
+import {
+  openWishlistModal,
+  setProductsToAddInWishlist,
+} from "../wishlist/redux/actions";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
 import GuestUserPopUp from "../Auth/GuestUserPopUp";
-import { addProductToWishlistCollection, addProductToWishlistCollectionReset } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
-import useKioskSessionReminder, { KioskSessionPopup } from "../../components/kiosk/useKioskSessionReminder";
+import {
+  addProductToWishlistCollection,
+  addProductToWishlistCollectionReset,
+} from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import useKioskSessionReminder, {
+  KioskSessionPopup,
+} from "../../components/kiosk/useKioskSessionReminder";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -93,8 +107,7 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductLoading,
     productDetail,
     ButtonClick,
-    productToWishlistCollection
-
+    productToWishlistCollection,
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -104,10 +117,9 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
-    state.wishlistActions?.addProductToWishlistCollection?.data || []
+    state.wishlistActions?.addProductToWishlistCollection?.data || [],
   ]);
-  console.log('productToWishlistCollection',productToWishlistCollection);
-  
+  console.log("productToWishlistCollection", productToWishlistCollection);
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
@@ -119,17 +131,20 @@ const ProductDetails = ({ params, ...props }) => {
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [pendingWishlistQrInfo, setPendingWishlistQrInfo] = useState(null);
-  const addWishlistState = useSelector((state) => state.wishlistActions.addProductToWishlistCollection);
+  const addWishlistState = useSelector(
+    (state) => state.wishlistActions.addProductToWishlistCollection,
+  );
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
- 
-  
+
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-   const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
-   const savedProductDetails = useMemo(
+  const hasKioskAccess =
+    isUserLogin &&
+    storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
+  const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
     [productDetail],
   );
@@ -142,18 +157,32 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [savedProductDetails, fetchedProductDetails]);
   // console.log('productDetails',productDetails);
-  
+
   // session reminder popup state and timer ref
-  const { showSessionPopup, handleStayLoggedIn, handleLogout } = useKioskSessionReminder({time:60*1000}); 
- 
+  const { showSessionPopup, handleStayLoggedIn, handleLogout } =
+    useKioskSessionReminder({ time: 60 * 1000 });
 
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
+  const kioskLogin =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("Kiosk-login")
+      : null;
+
+  // parsedKiosk: parsed JSON from sessionStorage (if present)
+  const parsedKiosk =
+    typeof window !== "undefined"
+      ? (() => {
+          try {
+            return kioskLogin ? JSON.parse(kioskLogin) : {};
+          } catch (err) {
+            return {};
+          }
+        })()
+      : {};
 
   const getKioskLoginUserId = useCallback(() => {
-    const kioskLogin = sessionStorage.getItem("Kiosk-login");
-
     if (!kioskLogin) return "";
 
     try {
@@ -161,8 +190,7 @@ const ProductDetails = ({ params, ...props }) => {
     } catch (error) {
       return kioskLogin;
     }
-  }, []);
-  
+  }, [kioskLogin]);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -174,8 +202,6 @@ const ProductDetails = ({ params, ...props }) => {
         userId = null,
       } = options;
 
-    
-
       // if (e?.preventDefault) {
       //   e?.preventDefault();
       //   e?.stopPropagation();
@@ -183,19 +209,20 @@ const ProductDetails = ({ params, ...props }) => {
 
       const kioskLoginUserId = getKioskLoginUserId();
 
-     
-      if (isSave  && !kioskLoginUserId && !isGuestSubmit) {
+      if (isSave && !kioskLoginUserId && !isGuestSubmit) {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
         return;
-      } 
+      }
 
-      
-      if (isSave) {        
+      if (isSave) {
         // Dispatch Redux action to add product to wishlist collection API
-        if (productDetails?.mfr_code) {          
-          console.debug('[ProductDetails] dispatching addProductToWishlistCollection', { mfr_code: productDetails?.mfr_code });
+        if (productDetails?.mfr_code) {
+          console.debug(
+            "[ProductDetails] dispatching addProductToWishlistCollection",
+            { mfr_code: productDetails?.mfr_code },
+          );
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
@@ -203,10 +230,11 @@ const ProductDetails = ({ params, ...props }) => {
               product_image: productDetails?.image,
               store: storeData?.store_name || "dothelook",
               user_id: userId || kioskLoginUserId,
-              eventId:storeData?.event_id,
+              eventId: storeData?.event_id,
               successMessage: "Product added to wishlist successfully!",
-              errorMessage: "Failed to add product to wishlist. Please try again.",
-            })
+              errorMessage:
+                "Failed to add product to wishlist. Please try again.",
+            }),
           );
           // Kick off signin-with-link immediately, but wait for saga to set the
           // wishlist collection data before building the QR. We store the
@@ -214,11 +242,15 @@ const ProductDetails = ({ params, ...props }) => {
           // when `addWishlistState.data` becomes available.
           (async () => {
             try {
-              const origin = typeof window !== 'undefined' ? window.location.origin : '';
-              const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email;
+              const origin =
+                typeof window !== "undefined" ? window.location.origin : "";
+              const kioskEmail = JSON.parse(
+                sessionStorage.getItem("Kiosk-login") || "{}",
+              )?.email;
               if (kioskEmail) {
                 const resp = await requestSigninWithLink(kioskEmail);
-                const signin_token = resp?.signin_token || resp?.data?.signin_token;
+                const signin_token =
+                  resp?.signin_token || resp?.data?.signin_token;
                 const userName = resp?.data?.user_name || resp?.user_name;
 
                 if (signin_token) {
@@ -226,23 +258,33 @@ const ProductDetails = ({ params, ...props }) => {
                 }
               }
             } catch (e) {
-              console.error('Immediate QR build failed', e);
+              console.error("Immediate QR build failed", e);
             }
           })();
         } else {
-          console.log("[ProductDetails] Product details incomplete for wishlist collection", {
-            mfr_code: productDetails?.mfr_code,
-            name: productDetails?.name, 
-            image: productDetails?.image,
-            storeData: !!storeData,
-          });
+          console.log(
+            "[ProductDetails] Product details incomplete for wishlist collection",
+            {
+              mfr_code: productDetails?.mfr_code,
+              name: productDetails?.name,
+              image: productDetails?.image,
+              storeData: !!storeData,
+            },
+          );
         }
       }
     },
-    [authUser, isUserLogin, dispatch, getKioskLoginUserId, storeData, productDetails,productToWishlistCollection]
+    [
+      authUser,
+      isUserLogin,
+      dispatch,
+      getKioskLoginUserId,
+      storeData,
+      productDetails,
+      productToWishlistCollection,
+    ],
   );
 
- 
   // Build QR once wishlist saga returns data and we have a pending signin token
   useEffect(() => {
     if (!pendingWishlistQrInfo) return;
@@ -277,50 +319,52 @@ const ProductDetails = ({ params, ...props }) => {
   }, [addWishlistState?.data, pendingWishlistQrInfo, dispatch]);
   // ============ END GUEST POPUP HOOKS ============
 
-  const handleShareClick = useCallback(
-    async () => {
-      const kioskLoginUserId = getKioskLoginUserId();
-      const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      try {
-        // Prefer kiosk email from session storage, fallback to authUser email
-        const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email || authUser?.emailId;
+  const handleShareClick = useCallback(async () => {
+    const kioskLoginUserId = getKioskLoginUserId();
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    try {
+      // Prefer kiosk email from session storage, fallback to authUser email
+      const kioskEmail =
+        JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")?.email ||
+        authUser?.emailId;
 
-        if (kioskLoginUserId && kioskEmail) {
-          const resp = await requestSigninWithLink(kioskEmail);
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+      if (kioskLoginUserId && kioskEmail) {
+        const resp = await requestSigninWithLink(kioskEmail);
+        const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            if (decrypted) {
-              // Build verify link to current product page
-              const pageParam = `?page=${productDetailsPagePath.replace(/^\/+/, '')}`;
-              const verifyLink = buildVerifyUrl(decrypted, pageParam);
+        if (signin_token) {
+          const decrypted = decryptSigninToken(signin_token);
+          if (decrypted) {
+            // Build verify link to current product page
+            const pageParam = `?page=${productDetailsPagePath}`;
+            const verifyLink = buildVerifyUrl(decrypted, pageParam);
+            // console.log('verifyLink',verifyLink);
 
-              const fullVerifyUrl = `${origin}${verifyLink}`;
-              setSharePageUrl(fullVerifyUrl);
-              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-              setQrTargetUrl(fullVerifyUrl);
-              setShowShareProductDetails(true);
-              return;
-            }
+            const fullVerifyUrl = `${origin}${verifyLink}`;
+            // console.log('fullVerifyUrl',fullVerifyUrl);
+
+            setSharePageUrl(fullVerifyUrl);
+            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+            setQrTargetUrl(fullVerifyUrl);
+            setShowShareProductDetails(true);
+            return;
           }
         }
-      } catch (e) {
-        console.error('Share auto-login build error', e);
       }
+    } catch (e) {
+      console.error("Share auto-login build error", e);
+    }
 
-      if (!kioskLoginUserId) {
-        setShowShareProductDetails(false);
-        setGuestPopupAction('share');
-        setIsPopupShow(true);
-        dispatch(GuestPopUpShow(true));
-        return;
-      }
+    if (!kioskLoginUserId) {
+      setShowShareProductDetails(false);
+      setGuestPopupAction("share");
+      setIsPopupShow(true);
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
 
-      setShowShareProductDetails((show) => !show);
-    },
-    [authUser, dispatch, getKioskLoginUserId],
-  );
+    setShowShareProductDetails((show) => !show);
+  }, [authUser, dispatch, getKioskLoginUserId]);
 
   //   useEffect(() => {
   //     return () => {
@@ -328,13 +372,9 @@ const ProductDetails = ({ params, ...props }) => {
   //     };
   //   }, []);
 
-
-
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
   )?.is_display;
-
-  
 
   //   const fetchProductDetails = async () => {
   //     try {
@@ -357,8 +397,6 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem(`pdp_image_${mfr_code}`) || "";
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
-
-
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -480,6 +518,7 @@ const ProductDetails = ({ params, ...props }) => {
     () => getProductDetailsPagePath(productDetails?.mfr_code),
     [productDetails?.mfr_code],
   );
+  // console.log('productDetailsPagePath',productDetailsPagePath);
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
@@ -487,16 +526,18 @@ const ProductDetails = ({ params, ...props }) => {
   );
 
   const [sharePageUrl, setSharePageUrl] = useState("");
-// console.log('sharePageUrl',sharePageUrl);
+  // console.log('sharePageUrl',sharePageUrl);
 
   const shareQrCodeImage = useMemo(() => {
     try {
-      return sharePageUrl ? collectionQRCodeGenerator(sharePageUrl) : qrCodeGeneratorURL;
+      return sharePageUrl
+        ? collectionQRCodeGenerator(sharePageUrl)
+        : qrCodeGeneratorURL;
     } catch (e) {
       return qrCodeGeneratorURL;
     }
   }, [sharePageUrl, qrCodeGeneratorURL]);
-// console.log('shareQrCodeImage',shareQrCodeImage);
+  // console.log('shareQrCodeImage',shareQrCodeImage);
 
   // useEffect(() => {
   //   if (typeof window !== "undefined") {
@@ -521,7 +562,8 @@ const ProductDetails = ({ params, ...props }) => {
   //   "category",
   //   // 'product_tag'
   // ];
-  const fieldsToDisplay = storeData?.pdp_settings?.product_page_attributes || []
+  const fieldsToDisplay =
+    storeData?.pdp_settings?.product_page_attributes || [];
   // console.log('fieldsToDisplay',fieldsToDisplay);
 
   // scroll for tags
@@ -561,8 +603,6 @@ const ProductDetails = ({ params, ...props }) => {
       };
     }
   }, [productDetails, pdploader]);
-
-
 
   const handleAddToCart = () => {
     // e.stopPropagation();
@@ -743,6 +783,107 @@ const ProductDetails = ({ params, ...props }) => {
       }
     }
   };
+  const [saveData, setResponse] = useState([]);
+  // console.log('response',response);
+
+  const handleVtoSave = async () => {
+    try {
+      const payload = {
+        collection_type: "vto_collection",
+        status: "published",
+        collection_name: "my tryons",
+        user_id: parsedKiosk?.user_id || authUser.user_id || null,
+        store: storeData.store_name,
+        event_id: storeData?.event_id || null,
+        product_lists: [
+          {
+            mfr_code: productDetails.mfr_code,
+            name: productDetails.name,
+            image: productDetails.image || "",
+          },
+          {
+            name: "item2",
+            image: vtoResultImageUrl || "",
+          },
+        ],
+      };
+
+      const responseData = await TryonSaveApiCall(payload);
+      // console.log("dfdresponse", response.data.data);
+      setResponse(responseData);
+      notification.success({
+        message: "Save Success",
+        description: "Collection added successfully",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    // handleVTOCancel()
+    handleVTOCancel();
+    // attempt to build and show a QR that opens the saved collection
+    try {
+      // Use the immediate API response instead of reading the state (which
+      // may not be updated synchronously).
+      const saved = saveData;
+      const collectionId =
+        saved?.data?.data?._id || saved?.data?.data?.collection_id;
+
+      if (!collectionId) return;
+
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
+
+      // If kiosk guest - request signin token and build auto-login verify URL
+      const kioskEmail = parsedKiosk?.email || null;
+      if (kioskEmail) {
+        try {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+          const userName =
+            resp?.data?.user_name || resp?.user_name || parsedKiosk?.user_name;
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            const verifyLink = buildVerifyUrl(
+              decrypted,
+              `?page=influencer/${userName}/${collectionId}`,
+            );
+            const fullVerifyUrl = `${origin}${verifyLink}`;
+            console.log("fullVerifyUrl", fullVerifyUrl);
+
+            setQrTargetUrl(fullVerifyUrl);
+            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+            // setShowShareProductDetails(true);
+            setQrModalOpen(true);
+            return;
+          }
+        } catch (err) {
+          console.error("Immediate QR build for VTO failed", err);
+        }
+      }
+
+      //   // Fallback: build public influencer/shared URL (or influencer by user_name)
+      //   const uname = authUser?.user_name || parsedKiosk?.user_name || null;
+      //   let targetPath = "";
+      //   if (uname) {
+      //     targetPath = `/influencer/${uname}/${collectionId}`;
+      //   } else if (parsedKiosk?.user_id) {
+      //     targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
+      //   } else {
+      //     targetPath = `/influencer/${collectionId}`;
+      //   }
+
+      //   const fullTarget = `${origin}${targetPath}`;
+      //   setQrTargetUrl(fullTarget);
+      //   setQrImageUrl(collectionQRCodeGenerator(fullTarget));
+      //   setQrModalOpen(true);
+      // } catch (err) {
+      //   console.error("Building QR after VTO save failed", err);
+      // }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
@@ -773,9 +914,7 @@ const ProductDetails = ({ params, ...props }) => {
         ? [productDetails?.additional_image]
         : []),
   ];
- 
 
-  
   return (
     <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
       <div className=" " />
@@ -816,10 +955,20 @@ const ProductDetails = ({ params, ...props }) => {
                         <button
                           className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
                           onClick={(e) => {
-                            dispatch(
-                              vtoIconState(productDetails?.mfr_code || true),
-                            );
                             e.stopPropagation();
+
+                            if (!kioskLogin) {
+                              setIsPopupShow(true);
+                              setGuestPopupAction("vto");
+                              dispatch(GuestPopUpShow(true));
+                              return;
+                            }
+
+                            const mfrCode = productDetails?.mfr_code;
+
+                            if (mfrCode) {
+                              dispatch(vtoIconState(mfrCode));
+                            }
                           }}
                           title="Try on with virtual camera"
                         >
@@ -949,6 +1098,25 @@ const ProductDetails = ({ params, ...props }) => {
                         className={styles["product-vto-submit-button"]}
                       >
                         Download
+                      </button>
+                      <button
+                        className="rounded-xl
+text-white font-bold 
+text-xs
+md:text-sm
+py-2
+px-[1.125rem]
+bg-indigo-600
+transition-all
+duration-300
+ease-in-out
+border-0
+cursor-pointer
+hover:bg-indigo-700
+"
+                        onClick={handleVtoSave}
+                      >
+                        Save
                       </button>
                     </div>
                   </div>
@@ -1085,12 +1253,16 @@ const ProductDetails = ({ params, ...props }) => {
                           </button>
                         ) : null}
                       </div>
-                      <button 
+                      <button
                         className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
-                        onClick={() => onAddSelectedProductsToCollection(null, { isSave: true })}
+                        onClick={() =>
+                          onAddSelectedProductsToCollection(null, {
+                            isSave: true,
+                          })
+                        }
                         title="Add to wishlist"
                       >
-                        <BsBookmarkPlusFill
+                        <FaRegHeart
                           style={{
                             filter: "brightness(0) opacity(0.7)",
                             height: 24,
@@ -1112,16 +1284,16 @@ const ProductDetails = ({ params, ...props }) => {
                           />
                         )}
                         {/* {sharePageUrl && ( */}
-                          <button
-                            className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                            onClick={handleShareClick}
-                          >
-                            <img
-                              className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
-                              src={share_icon}
-                              preview={false}
-                            />
-                          </button>
+                        <button
+                          className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                          onClick={handleShareClick}
+                        >
+                          <img
+                            className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
+                            src={share_icon}
+                            preview={false}
+                          />
+                        </button>
                         {/* // )} */}
                       </div>
                     </div>
@@ -1255,8 +1427,9 @@ const ProductDetails = ({ params, ...props }) => {
                         </div>
                       )}
 
-                      {storeData?.pdp_settings?.is_buy_button && (
-                        productDetails?.url && productDetails.url !== "dummy_url" ? (
+                      {storeData?.pdp_settings?.is_buy_button &&
+                        (productDetails?.url &&
+                        productDetails.url !== "dummy_url" ? (
                           <a
                             href={productDetails.url}
                             target="_blank"
@@ -1272,7 +1445,8 @@ const ProductDetails = ({ params, ...props }) => {
                           <button
                             className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
                             disabled={
-                              !productDetails?.price && !productDetails?.listprice
+                              !productDetails?.price &&
+                              !productDetails?.listprice
                             }
                             style={{
                               background: "#7c75ec",
@@ -1286,8 +1460,7 @@ const ProductDetails = ({ params, ...props }) => {
                           >
                             Buy
                           </button>
-                        )
-                      )}
+                        ))}
                     </div>
                   </div>
                 )}
@@ -1627,6 +1800,11 @@ const ProductDetails = ({ params, ...props }) => {
           try {
             if (guestPopupAction === "share") {
               setShowShareProductDetails(true);
+            } else if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
             } else {
               onAddSelectedProductsToCollection(null, {
                 isSave: true,
@@ -1635,8 +1813,14 @@ const ProductDetails = ({ params, ...props }) => {
               });
             }
           } catch (err) {
-            console.error('Guest onSuccess share flow failed', err);
-            if (guestPopupAction === 'share') setShowShareProductDetails(true);
+            console.error("Guest onSuccess flow failed", err);
+            if (guestPopupAction === "share") setShowShareProductDetails(true);
+            if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
+            }
           } finally {
             setGuestPopupAction(null);
           }
@@ -1644,16 +1828,34 @@ const ProductDetails = ({ params, ...props }) => {
         onSkip={() => setGuestPopupAction(null)}
       />
       {/* QR Modal shown after wishlist creation */}
-  <Modal headerText="Scan to open collection" isOpen={qrModalOpen} onClose={() => { setQrModalOpen(false);  }} size="sm">
+      <Modal
+        headerText="Scan to open collection"
+        isOpen={qrModalOpen}
+        onClose={() => {
+          setQrModalOpen(false);
+        }}
+        size="sm"
+      >
         <div className="flex flex-col items-center gap-4">
           {qrImageUrl ? (
-            <img src={qrImageUrl} alt="QR code" className="w-48 h-48 object-contain" />
+            <img
+              src={qrImageUrl}
+              alt="QR code"
+              className="w-48 h-48 object-contain"
+            />
           ) : (
-            <div className="w-48 h-48 bg-gray-100 flex items-center justify-center">QR</div>
+            <div className="w-48 h-48 bg-gray-100 flex items-center justify-center">
+              QR
+            </div>
           )}
           {qrTargetUrl && (
             <div className="break-all text-center text-sm">
-              <a href={qrTargetUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+              <a
+                href={qrTargetUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-600 hover:underline"
+              >
                 {qrTargetUrl}
               </a>
             </div>
@@ -1686,9 +1888,12 @@ const ProductDetails = ({ params, ...props }) => {
           Show QR
         </button>
       )} */}
-       {showSessionPopup && (
-              <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
-            )}
+      {showSessionPopup && (
+        <KioskSessionPopup
+          onStay={handleStayLoggedIn}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 };

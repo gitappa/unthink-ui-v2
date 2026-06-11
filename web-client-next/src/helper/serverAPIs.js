@@ -106,8 +106,7 @@ const fetchProductsUrl = "/user/collections/fetch_products/";
 const updateTagsUrl = "/user/collections/update_tags/";
 const getDescAndTagsUrl = "/user/collections/get_descandtags/";
 const addHandpickedProductsUrl = "/user/collections/handpicked_product_list/";
-const updateHandpickedProductsUrl =
-  "/user/collections/handpicked_product_list/";
+
 const getAmazonProductsUrl = "/custom_catalog/getamznproducts/";
 const getImageToDescriptionUrl = "/cs/imagetodescription/";
 
@@ -139,6 +138,8 @@ const trending =
 const lookBook =
   "/user/collections/fetch_collections/?user_id=173081113277330&product_limits=12&view=public&store=dothelook&starred=true&generated_by=lookbook_based&summary=true";
 const stageMainApi = "https://aurastage.unthink.ai";
+const updateHandpickedProductsUrl =
+  "/user/collections/handpicked_product_list/";
 
 const signupAPICall = ({ email, user_name, iCode, password, ...rest }) => {
   const url = `${auraYfretUserCollBaseUrl}${signupUrl}`;
@@ -1511,7 +1512,7 @@ export const customProductsAPIs = {
 
 // KIOSK APIS
 export const SocialMediaApiCall = (params = {}) => {
-  const url = `${stageMainApi}${socialMedia}`;
+  const url = `${auraYfretUserCollBaseUrl}${socialMedia}`;
 
   return apiInstance({
     url,
@@ -1520,11 +1521,20 @@ export const SocialMediaApiCall = (params = {}) => {
   });
 };
 export const TrendingApiCall = (params = {}) => {
-  const url = `${stageMainApi}${trending}`;
+  const url = `${auraYfretUserCollBaseUrl}${trending}`;
 
   return apiInstance({
     url,
     method: "get",
     params,
+  });
+};
+export const TryonSaveApiCall = (data = {}) => {
+  const url = `${auraYfretUserCollBaseUrl}${updateHandpickedProductsUrl}`;
+// console.log("URL:", updateHandpickedProductsUrl);
+  return apiInstance({
+    url,
+    method: "post",
+      data,
   });
 };
