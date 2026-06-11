@@ -165,7 +165,22 @@ const ProductDetails = ({ params, ...props }) => {
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
-  const kioskLogin = sessionStorage.getItem("Kiosk-login");
+  const kioskLogin =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("Kiosk-login")
+      : null;
+
+  // parsedKiosk: parsed JSON from sessionStorage (if present)
+  const parsedKiosk =
+    typeof window !== "undefined"
+      ? (() => {
+          try {
+            return kioskLogin ? JSON.parse(kioskLogin) : {};
+          } catch (err) {
+            return {};
+          }
+        })()
+      : {};
 
   const getKioskLoginUserId = useCallback(() => {
     if (!kioskLogin) return "";
@@ -175,7 +190,7 @@ const ProductDetails = ({ params, ...props }) => {
     } catch (error) {
       return kioskLogin;
     }
-  }, []);
+  }, [kioskLogin]);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -768,13 +783,16 @@ const ProductDetails = ({ params, ...props }) => {
       }
     }
   };
+  const [saveData, setResponse] = useState([]);
+  // console.log('response',response);
+
   const handleVtoSave = async () => {
     try {
       const payload = {
         collection_type: "vto_collection",
         status: "published",
         collection_name: "my tryons",
-        user_id: kioskLogin?.user_id || authUser.user_id || null,
+        user_id: parsedKiosk?.user_id || authUser.user_id || null,
         store: storeData.store_name,
         event_id: storeData?.event_id || null,
         product_lists: [
@@ -789,12 +807,79 @@ const ProductDetails = ({ params, ...props }) => {
           },
         ],
       };
-      const response = await TryonSaveApiCall(payload);
-      console.log("dfdresponse", response);
+
+      const responseData = await TryonSaveApiCall(payload);
+      // console.log("dfdresponse", response.data.data);
+      setResponse(responseData);
       notification.success({
-        message: "Download Success",
-        description: "Collection Added successfully",
+        message: "Save Success",
+        description: "Collection added successfully",
       });
+    } catch (e) {
+      console.log(e);
+    }
+    // handleVTOCancel()
+    handleVTOCancel();
+    // attempt to build and show a QR that opens the saved collection
+    try {
+      // Use the immediate API response instead of reading the state (which
+      // may not be updated synchronously).
+      const saved = saveData;
+      const collectionId =
+        saved?.data?.data?._id || saved?.data?.data?.collection_id;
+
+      if (!collectionId) return;
+
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
+
+      // If kiosk guest - request signin token and build auto-login verify URL
+      const kioskEmail = parsedKiosk?.email || null;
+      if (kioskEmail) {
+        try {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+          const userName =
+            resp?.data?.user_name || resp?.user_name || parsedKiosk?.user_name;
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            const verifyLink = buildVerifyUrl(
+              decrypted,
+              `?page=influencer/${userName}/${collectionId}`,
+            );
+            const fullVerifyUrl = `${origin}${verifyLink}`;
+            console.log("fullVerifyUrl", fullVerifyUrl);
+
+            setQrTargetUrl(fullVerifyUrl);
+            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+            // setShowShareProductDetails(true);
+            setQrModalOpen(true);
+            return;
+          }
+        } catch (err) {
+          console.error("Immediate QR build for VTO failed", err);
+        }
+      }
+
+      //   // Fallback: build public influencer/shared URL (or influencer by user_name)
+      //   const uname = authUser?.user_name || parsedKiosk?.user_name || null;
+      //   let targetPath = "";
+      //   if (uname) {
+      //     targetPath = `/influencer/${uname}/${collectionId}`;
+      //   } else if (parsedKiosk?.user_id) {
+      //     targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
+      //   } else {
+      //     targetPath = `/influencer/${collectionId}`;
+      //   }
+
+      //   const fullTarget = `${origin}${targetPath}`;
+      //   setQrTargetUrl(fullTarget);
+      //   setQrImageUrl(collectionQRCodeGenerator(fullTarget));
+      //   setQrModalOpen(true);
+      // } catch (err) {
+      //   console.error("Building QR after VTO save failed", err);
+      // }
     } catch (e) {
       console.log(e);
     }
@@ -873,6 +958,8 @@ const ProductDetails = ({ params, ...props }) => {
                             e.stopPropagation();
 
                             if (!kioskLogin) {
+                              setIsPopupShow(true);
+                              setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
                               return;
                             }
@@ -1713,6 +1800,11 @@ hover:bg-indigo-700
           try {
             if (guestPopupAction === "share") {
               setShowShareProductDetails(true);
+            } else if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
             } else {
               onAddSelectedProductsToCollection(null, {
                 isSave: true,
@@ -1721,8 +1813,14 @@ hover:bg-indigo-700
               });
             }
           } catch (err) {
-            console.error("Guest onSuccess share flow failed", err);
+            console.error("Guest onSuccess flow failed", err);
             if (guestPopupAction === "share") setShowShareProductDetails(true);
+            if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
+            }
           } finally {
             setGuestPopupAction(null);
           }
