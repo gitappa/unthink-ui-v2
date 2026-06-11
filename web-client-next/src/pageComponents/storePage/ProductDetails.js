@@ -293,10 +293,13 @@ const ProductDetails = ({ params, ...props }) => {
             const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
               // Build verify link to current product page
-              const pageParam = `?page=${productDetailsPagePath.replace(/^\/+/, '')}`;
+              const pageParam = `?page=${productDetailsPagePath}`;
               const verifyLink = buildVerifyUrl(decrypted, pageParam);
-
+              // console.log('verifyLink',verifyLink);
+              
               const fullVerifyUrl = `${origin}${verifyLink}`;
+              // console.log('fullVerifyUrl',fullVerifyUrl);
+              
               setSharePageUrl(fullVerifyUrl);
               setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
               setQrTargetUrl(fullVerifyUrl);
@@ -480,6 +483,8 @@ const ProductDetails = ({ params, ...props }) => {
     () => getProductDetailsPagePath(productDetails?.mfr_code),
     [productDetails?.mfr_code],
   );
+  // console.log('productDetailsPagePath',productDetailsPagePath);
+  
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
