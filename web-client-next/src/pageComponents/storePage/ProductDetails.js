@@ -208,6 +208,7 @@ const ProductDetails = ({ params, ...props }) => {
         isSkip = false,
         isGuestSubmit = false,
         userId = null,
+        email = null,
       } = options;
 
       const kioskLoginUserId = getKioskLoginUserId();
@@ -247,14 +248,27 @@ const ProductDetails = ({ params, ...props }) => {
             try {
               const origin =
                 typeof window !== "undefined" ? window.location.origin : "";
-              const kioskEmail = JSON.parse(
-                sessionStorage.getItem("Kiosk-login") || "{}",
-              )?.email;
-              if (parsedKiosk) {
-                const resp = await requestSigninWithLink(parsedKiosk);
+              const currentKiosk =
+                typeof window !== "undefined"
+                  ? (() => {
+                      try {
+                        const value = sessionStorage.getItem("Kiosk-login");
+                        return value ? JSON.parse(value) : {};
+                      } catch (err) {
+                        return {};
+                      }
+                    })()
+                  : {};
+              const kioskEmail =
+                email || currentKiosk?.email || currentKiosk?.emailId;
+              if (kioskEmail) {
+                const resp = await requestSigninWithLink(kioskEmail);
                 const signin_token =
                   resp?.signin_token || resp?.data?.signin_token;
-                const userName = resp?.data?.user_name || resp?.user_name;
+                const userName =
+                  resp?.data?.user_name ||
+                  resp?.user_name ||
+                  currentKiosk?.user_name;
 
                 if (signin_token) {
                   setPendingWishlistQrInfo({ origin, signin_token, userName });
@@ -1724,6 +1738,7 @@ hover:bg-indigo-700
                 isSave: true,
                 isGuestSubmit: true,
                 userId,
+                email,
               });
             }
           } catch (err) {
