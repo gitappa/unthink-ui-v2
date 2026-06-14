@@ -13,13 +13,22 @@ const AdditionalAttributes = ({
 	handleFiltersOptionalChange,
 	isShowOptional = true,
 	selectBoxSize = "large",
-	fontColorTheme = "text-gray-103",
+	fontColorTheme = "text-slate-200",
 	fontSizeTheme = "text-base",
 	setProductData,
 	productData,
 	collectionValue,
 	isModalOpen,
+	gridClassName,
 }) => {
+	const hashtagAttr = useMemo(() => {
+		return additionalAttributesToShow?.find((attr) => attr.key === "custom_filter");
+	}, [additionalAttributesToShow]);
+
+	const otherAttributes = useMemo(() => {
+		return additionalAttributesToShow?.filter((attr) => attr.key !== "custom_filter");
+	}, [additionalAttributesToShow]);
+
 	const handlePriceChange = (name, value) => {
 		if (isValidNumber(value) || value === "") {
 			handleAdditionalAttributesChange("price", {
@@ -84,26 +93,56 @@ const AdditionalAttributes = ({
 
 	return (
 		<>
-			<div className='grid grid-cols-1 tablet:grid-cols-2 2xl:grid-cols-3 gap-3'>
-				{additionalAttributesToShow.map((attr) => {
+			{hashtagAttr && (
+				<div className="w-full mb-4">
+					<div className='flex justify-between'>
+						<label
+							className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
+							{hashtagAttr.label}
+						</label>
+					</div>
+					<div className="relative">
+						<Select
+							mode="tags"
+							open={false}
+							suffixIcon={null}
+							showSearch
+							className={`w-full product-filters-select-input ${fontSizeTheme} [&:hover_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!shadow-[0_0_0_2px_rgba(150,144,240,0.2)]`}
+							placeholder={`Enter ${hashtagAttr.key}`}
+							value={savedCustomFilter}
+							size={selectBoxSize}
+							onChange={(values) =>
+								handleAdditionalAttributesChange(hashtagAttr.key, values)
+							}
+						/>
+						<Button
+							type="text"
+							className="no-effect-btn absolute top-1/2 -translate-y-1/2 right-0 opacity-35 text-black"
+							icon={<PlusOutlined />}
+						/>
+					</div>
+				</div>
+			)}
+			<div className={`grid gap-3 ${gridClassName || 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3'}`}>
+				{otherAttributes.map((attr) => {
 					return (
 						<React.Fragment key={attr.key}>
 							{attr.input_type === "single_select" ? (
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Optional
+													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={attributesData?.optional_filters?.includes(
+													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -111,7 +150,7 @@ const AdditionalAttributes = ({
 									</div>
 									<Select
 										name={attr.key}
-										className={`w-full product-filters-select-single-input ${fontSizeTheme}`}
+										className={`w-full product-filters-select-single-input ${fontSizeTheme} [&:hover_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!shadow-[0_0_0_2px_rgba(150,144,240,0.2)]`}
 										placeholder={`Select ${attr.key}`}
 										value={(attributesData && attributesData[attr.key]) ?? []}
 										size={selectBoxSize}
@@ -131,18 +170,18 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Optional
+													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={attributesData?.optional_filters?.includes(
+													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -151,7 +190,7 @@ const AdditionalAttributes = ({
 									<Select
 										mode='multiple'
 										name={attr.key}
-										className={`w-full product-filters-select-input ${fontSizeTheme}`}
+										className={`w-full product-filters-select-input ${fontSizeTheme} [&:hover_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!shadow-[0_0_0_2px_rgba(150,144,240,0.2)]`}
 										placeholder={`Select ${attr.key}`}
 										value={(attributesData && attributesData[attr.key]) ?? []}
 										size={selectBoxSize}
@@ -167,24 +206,23 @@ const AdditionalAttributes = ({
 								</div>
 							) : null}
 
-							{attr.input_type === "multi_custom_input" ||
-								attr.key === "custom_filter" ? (
+							{attr.input_type === "multi_custom_input" ? (
 
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Optional
+													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={attributesData?.optional_filters?.includes(
+													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
@@ -197,24 +235,16 @@ const AdditionalAttributes = ({
 										open={false}
 										suffixIcon={null}
 										showSearch
-										className={`w-full product-filters-select-input ${fontSizeTheme}`}
+										className={`w-full product-filters-select-input ${fontSizeTheme} [&:hover_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!border-[#9690F0] [&.ant-select-focused_.ant-select-selector]:!shadow-[0_0_0_2px_rgba(150,144,240,0.2)]`}
 										placeholder={`Enter ${attr.key}`}
 										value={
-											attr.key === "custom_filter"
-												? savedCustomFilter
-												: (attributesData && attributesData[attr.key]) ?? []
+											(attributesData && attributesData[attr.key]) ?? []
 										}
 										size={selectBoxSize}
 										onChange={(values) =>
 											handleAdditionalAttributesChange(attr.key, values)
 										}
 									/>
-									  {/* <button className=" bg-red-400 plusbutedit bg-transparent border-none right-0 opacity-35 text-black hover:!text-black focus:!text-black active:!text-black"
-    type=""
-    icon={<PlusOutlined className="hover:text-black focus:text-black active:text-black" />}
-    // onClick={handleAdd}
-    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-  /> */}
   <Button
   type="text"
   className="no-effect-btn absolute top-1/2 -translate-y-1/2 right-0 opacity-35 text-black"
@@ -230,25 +260,25 @@ const AdditionalAttributes = ({
 								<div>
 									<div className='flex justify-between'>
 										<label
-											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize`}>
+											className={`block ${fontColorTheme} ${fontSizeTheme} capitalize mb-1`}>
 											{attr.label}
 										</label>
 										{isShowOptional ? (
 											<div className='flex items-center'>
 												<label className={`mr-1 block ${fontColorTheme}`}>
-													Optional
+													Mandatory
 												</label>
 												<Checkbox
-													className='text-gray-103'
+													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 													onChange={() => handleFiltersOptionalChange(attr.key)}
-													checked={attributesData?.optional_filters?.includes(
+													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
 											</div>
 										) : null}
 									</div>
 									<input
-										className='text-left placeholder-gray-101 outline-none px-3 h-8 rounded-xl w-full border border-solid border-gray-107'
+										className='text-left placeholder-gray-101 outline-none px-3 h-8 rounded-xl bg-white w-full hover:border-[#9690F0] focus:border-[#9690F0] focus:shadow-[0_0_0_2px_rgba(150,144,240,0.2)] border border-transparent'
 										placeholder={`Enter ${attr.key}`}
 										name={attr.key}
 										type='text'
@@ -264,17 +294,17 @@ const AdditionalAttributes = ({
 							{attr.input_type === "price_range" ? (
 								<div>
 									<div className='flex justify-between'>
-										<label className={`text-base block ${fontColorTheme}`}>
+										<label className={`${fontSizeTheme} block ${fontColorTheme} mb-1`}>
 											Price range
 										</label>
 										<div className='flex items-center'>
 											<label className={`mr-1 block ${fontColorTheme}`}>
-												Optional
+												Mandatory
 											</label>
 											<Checkbox
-												className='text-gray-103'
+												className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
 												onChange={() => handleFiltersOptionalChange("price")}
-												checked={attributesData?.optional_filters?.includes(
+												checked={!attributesData?.optional_filters?.includes(
 													"price"
 												)}></Checkbox>
 										</div>
@@ -282,19 +312,19 @@ const AdditionalAttributes = ({
 									<div className='flex flex-row'>
 										<Input
 											type='text'
-											className='outline-none px-3 h-10 rounded-xl w-full'
+											className='outline-none px-3 h-8 rounded-xl w-full text-sm hover:border-[#9690F0] focus:border-[#9690F0] focus:shadow-[0_0_0_2px_rgba(150,144,240,0.2)]'
 											placeholder='Minimum'
 											value={attributesData?.price?.min || ""}
 											onChange={(e) => handlePriceChange("min", e.target.value)}
 											name='priceRange-min'
 										/>
 										<span
-											className={`flex justify-center items-center text-base mx-5 ${fontColorTheme}`}>
+											className={`flex justify-center items-center text-sm mx-2 ${fontColorTheme}`}>
 											to
 										</span>
 										<Input
 											type='text'
-											className='outline-none px-3 h-10 rounded-xl w-full'
+											className='outline-none px-3 h-8 rounded-xl w-full text-sm hover:border-[#9690F0] focus:border-[#9690F0] focus:shadow-[0_0_0_2px_rgba(150,144,240,0.2)]'
 											placeholder='Maximum'
 											value={attributesData?.price?.max || ""}
 											onChange={(e) => handlePriceChange("max", e.target.value)}

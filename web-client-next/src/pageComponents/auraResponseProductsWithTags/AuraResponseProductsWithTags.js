@@ -26,8 +26,11 @@ const AuraResponseProductsWithTags = ({
 	widgetImage,
 	isAuraChatPage,
 	handleLoadMore,
-	localChatMessage
-
+	localChatMessage,
+	layoutMode,
+	showChatLoader,
+	isMobile,
+	registerSelectActions
 }) => {
 	const [suggestionsWithProducts,suggestionsTags, recommendationsWithProducts, moreProducts] = useSelector((state) => [
 		state.chatV2.suggestions,
@@ -40,11 +43,16 @@ const AuraResponseProductsWithTags = ({
 	const dispatch = useDispatch();
 
 	const {
-		suggestions: { tags = [], title = "" },
+		suggestions: { tags = [], title: originalTitle = "" },
 		products: suggestionsProducts,
 		selectedTag,
 		allProductList,
 	} = suggestionsWithProducts;
+
+	const title = originalTitle
+		.replace(/<[^>]*>Click on the keywords to browse products\.?<\/[^>]*>/gi, '')
+		.replace(/Click on the keywords to browse products\.?/gi, '')
+		.trim();
 
 	const {
 		recommendations: { tags: RecTags = [], title: RecTitle = "" },
@@ -189,7 +197,7 @@ const AuraResponseProductsWithTags = ({
 						<div
 							key='All'
 							className={`${styles['aura-tag-item']} ${!selectedTag && isAllEnabled
-								? styles['aura-tag-selected']
+								? 'bg-secondary text-white '
 								: isAllEnabled
 									? styles['aura-tag-enabled']
 									: styles['aura-tag-disabled']
@@ -214,7 +222,7 @@ const AuraResponseProductsWithTags = ({
 						id={`tag-${suggestion}`}
 						key={suggestion}
 						className={`${styles['aura-tag-item']} ${suggestion === selectedTag
-							? styles['aura-tag-selected']
+							? 'bg-secondary text-white font-medium'
 							: checkIsTagEnabled(suggestion)
 								? styles['aura-tag-enabled']
 								: styles['aura-tag-disabled']
@@ -272,6 +280,10 @@ const AuraResponseProductsWithTags = ({
 				allProductList={allProductList}
 				isAuraChatPage={isAuraChatPage}
 				localChatMessage={localChatMessage}
+				layoutMode={layoutMode}
+				showChatLoader={showChatLoader}
+				isMobile={isMobile}
+				registerSelectActions={registerSelectActions}
 			/>
 		</div>
 	);

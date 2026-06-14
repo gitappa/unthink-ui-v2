@@ -226,6 +226,7 @@ const ContextWrapper = ({ children }) => {
 
 	const onServer = async (data) => {
 
+	//  console.log('setWidgetHeader',data);
 	 
 
 
@@ -261,11 +262,11 @@ const ContextWrapper = ({ children }) => {
 				dispatch(handleRecProductClick());
 			}
 			if ("current_data_widgetHeader" in data) {
+				// store previous value and persist request history in sessionStorage
 				dispatch(
 					setWidgetHeader(
 						data.current_data_widgetHeader || sessionStorage.getItem("widgetHeader") || "",
-						data.request || {}
-					)
+						data.request || {})
 				);
 				dispatch(setWidgetImage(data.image_url || ""));
 				if (data.current_data_widgetHeader) {

@@ -24,11 +24,12 @@ const DeliveryDetails = () => {
 		state.store.data.cart_attributes,
 	]);
 	const { collection, loading } = useSelector((state) => state.cart);
+	console.log("collection", collection)
 	const [unSignedData, setUnSignedData] = useState(null);
 	const [isGuestPopUpShow] = useSelector((state) => [
 		state.GuestPopUpReducer.isGuestPopUpShow,
 	]);
-		
+
 	const [guestData, setGuestData] = useState({
 		email: "",
 		phone: "",
@@ -54,10 +55,10 @@ const DeliveryDetails = () => {
 		}
 	}, [dispatch, mycartcollectionpath]);
 
-	 
+
 
 	const handleRemove = (products) => {
-	 
+
 		const payload = {
 			products: [products],
 			collection_id: collection?.collection_id || collection?._id,
@@ -112,6 +113,8 @@ const DeliveryDetails = () => {
 		...p,
 		qty: p.qty || 1,
 	}));
+
+	console.log("products", products)
 
 	function formatValue(value) {
 		if (!value) return "";
@@ -356,93 +359,93 @@ const DeliveryDetails = () => {
 												</Link>
 												<div className='flex flex-col flex-1'>
 													<Link
-													href={`/product/${item.mfr_code}`}
+														href={`/product/${item.mfr_code}`}
 														className='p-0 m-0'>
 														<h4 className='md:text-2xl text-xl font-semibold text-black-100'>
-														{item.name}
-													</h4>
-												</Link>
+															{item.name}
+														</h4>
+													</Link>
 
-												{/* Cart Attributes with proper styling */}
-												<div className='mt-2 flex flex-wrap gap-2'>
-													{getCartAttributeValues(item).length > 0 && (
-														getCartAttributeValues(item).map((attr, idx) => (
-															<div
-																key={idx}
-																className='inline-flex items-center px-3 py-1 rounded-md text-xs font-medium'
+													{/* Cart Attributes with proper styling */}
+													<div className='mt-2 flex flex-wrap gap-2'>
+														{getCartAttributeValues(item).length > 0 && (
+															getCartAttributeValues(item).map((attr, idx) => (
+																<div
+																	key={idx}
+																	className='inline-flex items-center px-3 py-1 rounded-md text-xs font-medium'
+																	style={{
+																		background: "#770100",
+																		boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
+																	}}>
+																	<span className='font-semibold text-gray-100 capitalize'>
+																		{attr.name}:
+																	</span>
+																	<span className='ml-1 text-white'>
+																		{formatValue(attr.value)}
+																	</span>
+																</div>
+															))
+														)
+															// : (
+															// 	<div
+															// 		className='inline-flex items-center px-3 py-1 rounded-md text-xs'
+															// 		style={{
+															// 			background: "#770100",
+															// 			boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
+															// 		}}>
+															// 		<span className='text-gray-500'>
+															// 			No attributes available
+															// 		</span>
+															// 	</div>
+															// )
+														}
+													</div>
+
+													<div className='flex items-center lg:gap-16 md:gap-7 gap-4 mt-5'>
+														<div
+															style={{ height: "52px" }}
+															className='flex md:gap-10 gap-4 border justify-between items-center md:py-4 px-2 md:px-4 rounded-md w-fit'>
+															<button
 																style={{
-																	background: "#770100",
-																	boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
-																}}>
-																<span className='font-semibold text-gray-100 capitalize'>
-																	{attr.name}:
-																</span>
-																<span className='ml-1 text-white'>
-																	{formatValue(attr.value)}
-																</span>
-															</div>
-														))
-													) 
-													// : (
-													// 	<div
-													// 		className='inline-flex items-center px-3 py-1 rounded-md text-xs'
-													// 		style={{
-													// 			background: "#770100",
-													// 			boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
-													// 		}}>
-													// 		<span className='text-gray-500'>
-													// 			No attributes available
-													// 		</span>
-													// 	</div>
-													// )
-													}
-												</div>
-
-												<div className='flex items-center lg:gap-16 md:gap-7 gap-4 mt-5'>
-													<div
-														style={{ height: "52px" }}
-														className='flex md:gap-10 gap-4 border justify-between items-center md:py-4 px-2 md:px-4 rounded-md w-fit'>
+																	cursor: loading ? "not-allowed" : "pointer",
+																}}
+																className='text-xl font-bold'
+																disabled={loading}
+																onClick={() =>
+																	item.qty === 1
+																		? handleRemove(item.mfr_code)
+																		: updateCartQuantity(item, item.qty - 1)
+																}>
+																-
+															</button>
+															<p>{item.qty}</p>
+															<button
+																style={{
+																	cursor: loading ? "not-allowed" : "pointer",
+																}}
+																className='text-xl font-bold'
+																disabled={loading}
+																onClick={() =>
+																	updateCartQuantity(item, item.qty + 1)
+																}>
+																+
+															</button>
+														</div>
 														<button
-															style={{
-																cursor: loading ? "not-allowed" : "pointer",
-															}}
-															className='text-xl font-bold'
+															className='text-red-600 hover:underline'
 															disabled={loading}
-															onClick={() =>
-																item.qty === 1
-																	? handleRemove(item.mfr_code)
-																	: updateCartQuantity(item, item.qty - 1)
-															}>
-															-
-														</button>
-														<p>{item.qty}</p>
-														<button
-															style={{
-																cursor: loading ? "not-allowed" : "pointer",
-															}}
-															className='text-xl font-bold'
-															disabled={loading}
-															onClick={() =>
-																updateCartQuantity(item, item.qty + 1)
-															}>
-															+
+															onClick={() => handleRemove(item?.mfr_code)}>
+															Remove
 														</button>
 													</div>
-													<button
-														className='text-red-600 hover:underline'
-														disabled={loading}
-														onClick={() => handleRemove(item?.mfr_code)}>
-														Remove
-													</button>
+												</div>
+												<div className='text-right'>
+													<p className='text-xl font-semibold'>
+														₹ {(item.price * item.qty).toLocaleString()}
+													</p>
 												</div>
 											</div>
-											<div className='text-right'>
-												<p className='text-xl font-semibold'>
-													₹ {(item.price * item.qty).toLocaleString()}
-												</p>
-											</div>
 										</div>
-									</div>
 									) : null
 								))}
 								<div>
@@ -521,7 +524,7 @@ const DeliveryDetails = () => {
 							<div className='p-0'>
 								<button
 									onClick={handleContinueClick}
-									style={{										 
+									style={{
 										background: "#7c75ec",
 									}}
 									className='text-white mt-5 w-full rounded-xl lg:h-13 h-11'>

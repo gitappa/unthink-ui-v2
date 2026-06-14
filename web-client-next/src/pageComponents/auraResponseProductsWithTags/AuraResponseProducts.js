@@ -1,4 +1,4 @@
-﻿import React, {
+import React, {
 	useCallback,
 	useEffect,
 	useMemo,
@@ -7,12 +7,12 @@
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./AuraResponseProducts.module.css";
-import { Select, Spin, Input, Checkbox, Button, Modal } from "antd";
+import { Select, Spin, Input, Checkbox, Button, Modal, message, Tooltip } from "antd";
 import {
 	Loading3QuartersOutlined,
 	CloseOutlined,
 	CloseCircleOutlined,
+	PlusOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -31,8 +31,6 @@ import { openAutoCreateCollectionModal } from "../autoCreateCollectionModal/redu
 import { useChat } from "../../hooks/chat/useChat";
 import ProductCard from "../../components/singleCollection/ProductCard";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
-import filterStyles from "../productFilters/productFilters.module.scss";
-import { CustomFilter } from "../customFilter/CustomFilter";
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import {
@@ -58,6 +56,7 @@ import { authAPIs } from "../../helper/serverAPIs";
 import {
 	getUserCollections,
 	getUserInfo,
+	getUserInfoSuccess,
 	GuestPopUpShow,
 } from "../Auth/redux/actions";
 import GuestPopUp from "../Auth/GuestPopUp";
@@ -71,6 +70,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import WishListModal from "../wishlist/WishListModal";
+import { useUserData } from "../../context/UserDataContext";
 
 SwiperCore.use([FreeMode, Navigation]);
 
@@ -103,6 +103,9 @@ const AuraResponseProducts = ({
 	allProductList,
 	isAuraChatPage,
 	localChatMessage,
+	layoutMode,
+	isMobile,
+	registerSelectActions
 }) => {
 	const [
 		authUser,
@@ -111,10 +114,12 @@ const AuraResponseProducts = ({
 		chatImageUrl,
 		storeData,
 		widgetHeaderRequest,
+		chatHistory,
 		selectedSearchOption,
 		isGuestPopUpShow,
 		showWishlistModal,
 		suggestionsTags,
+		showChatLoader,
 	] = useSelector((state) => [
 		state.auth.user.data,
 		state.auth.user.isUserLogin,
@@ -122,17 +127,19 @@ const AuraResponseProducts = ({
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].chatImageUrl],
 		state.store.data,
 		state.chatV2.widgetHeaderRequest,
+		state.chatV2.chatHistory,
 		state.chatV2.activeSearchOption || {},
 		state.GuestPopUpReducer.isGuestPopUpShow,
 		state.appState.wishlist.showWishlistModal,
 		state.chatV2.suggestions?.selectedTag,
+		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
 	]);
+  const {setUserData ,userData } = useUserData()
 
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
 	const [customFilter, setCustomFilter] = useState([]);
-	const [showCustomFilterInput, setShowCustomFilterInput] = useState(false);
 	const [isSkipPopUpShow, setIsSkipPopUpShow] = useState(false);
 	const [loadingStates, setLoadingStates] = useState({
 		loading: false,
@@ -175,7 +182,34 @@ const AuraResponseProducts = ({
 		});
 		return obj;
 	}, [productsFilters, displayableFilter]);
- 
+
+	useEffect(() => {
+		if (Object.keys(productsFilters).length === 0) return;
+		let hasChanges = false;
+		let newOptionalFilters = [...(productsFilters.optional_filters || [])];
+
+		displayableFilter.forEach((key) => {
+			const value = productsFilters[key];
+			const isNowEmpty = key === "price"
+				? (!value || (!value.min && !value.max))
+				: (!value || value.length === 0 || value === "");
+
+			if (isNowEmpty) {
+				if (!newOptionalFilters.includes(key)) {
+					newOptionalFilters.push(key);
+					hasChanges = true;
+				}
+			}
+		});
+
+		if (hasChanges) {
+			dispatch(setSuggestionsProductsFilters(tag, {
+				...productsFilters,
+				optional_filters: newOptionalFilters,
+			}));
+		}
+	}, [productsFilters, displayableFilter, dispatch, tag]);
+
 	const isFiltersAvailable = useMemo(() => {
 		const finalFilters = removeEmptyItems(filters);
 		for (const key in finalFilters) {
@@ -186,13 +220,30 @@ const AuraResponseProducts = ({
 		return false;
 	}, [filters]);
 
+	const hasVisibleFilters = useMemo(() => {
+		const hasCustomFilter = !!filters.custom_filter;
+		return currentTag !== 'all' || isFiltersAvailable || hasCustomFilter;
+	}, [currentTag, isFiltersAvailable, filters.custom_filter]);
+
 	const customFilterStoreData = useMemo(
 		() => catalog_attributes.find((c) => c.key === "custom_filter"),
 		[catalog_attributes]
 	);
 
 	const sendSocketMessage = (newFilters = {}, page = currentPage) => {
-		const finalFilters = removeEmptyItems(newFilters);
+		const filtersToSubmit = { ...newFilters };
+
+		// manual override because when state change from productFilters optional_filters is not updated in filtersit
+		if (Array.isArray(filtersToSubmit.optional_filters)) {
+			filtersToSubmit.optional_filters.forEach((key) => {
+				delete filtersToSubmit[key];
+			});
+		}
+
+		if (Array.isArray(filtersToSubmit.custom_filter)) {
+			filtersToSubmit.custom_filter = filtersToSubmit.custom_filter.join(",");
+		}
+		const finalFilters = removeEmptyItems(filtersToSubmit);
 		sendMessage(requestedText || undefined, requestedImageUrl || undefined, {
 			tags: currentTag === "all" ? [] : [tag],
 			filters: !isEmpty(finalFilters) ? finalFilters : undefined,
@@ -228,7 +279,8 @@ const AuraResponseProducts = ({
 	};
 
 	const handleSaveEditCustomFilter = (hashTags) => {
-		const customFilterArrayToString = hashTags.toString();
+		const actualHashTags = hashTags && hashTags.custom_filter !== undefined ? hashTags.custom_filter : hashTags;
+		const customFilterArrayToString = actualHashTags ? actualHashTags.toString() : "";
 		dispatch(setSuggestionsProductsIsLoading(tag, true));
 		handleChangeFilters({
 			...filters,
@@ -258,19 +310,28 @@ const AuraResponseProducts = ({
 
 
 	const filtersToShow = useMemo(() => {
-		return displayFilters
-			.filter((filter) => filter.key !== "custom_filter")
-			.map((filter) => {
-				if (
-					filter.key in availableFilters &&
-					(filter.input_type === "multi_select" ||
-						filter.input_type === "single_select")
-				) {
-					filter.display_value = availableFilters[filter.key];
-				}
-				return filter;
+		const filters = displayFilters.map((filter) => {
+			if (
+				filter.key in availableFilters &&
+				(filter.input_type === "multi_select" ||
+					filter.input_type === "single_select")
+			) {
+				filter.display_value = availableFilters[filter.key];
+			}
+			return filter;
+		});
+
+		const hasCustomFilter = filters.some((f) => f.key === "custom_filter");
+		if (!hasCustomFilter && customFilterStoreData?.is_display) {
+			filters.push({
+				key: "custom_filter",
+				label: customFilterStoreData.label || "Hashtags",
+				input_type: "multi_custom_input",
 			});
-	}, [displayFilters, availableFilters]);
+		}
+
+		return filters;
+	}, [displayFilters, availableFilters, customFilterStoreData]);
 
 	const onProductClick = () => {
 		if (enableClickFetchRec && !enableSelectProduct) dispatch(handleRecProductClick());
@@ -328,14 +389,14 @@ const AuraResponseProducts = ({
 		moreProducts.selectedAdditionalTag,
 		authUser.user_name,
 	]);
- 
+
 
 	const enableFilters = useMemo(
 		() =>
 			(chatProductsDataToShow.length > 0 || !isEmpty(filters)) &&
 			availableFilters &&
 			!products.selectedAdditionalTag &&
-			isTagEnabled && suggestionsTags,
+			isTagEnabled,
 		[
 			chatProductsDataToShow.length,
 			filters,
@@ -344,7 +405,7 @@ const AuraResponseProducts = ({
 			isTagEnabled,
 		]
 	);
- 
+
 	const enableCustomFilter = useMemo(
 		() => customFilterStoreData?.is_display && enableFilters,
 		[customFilterStoreData?.is_display, enableFilters]
@@ -471,30 +532,14 @@ const AuraResponseProducts = ({
 		});
 	};
 
-	const onSelectAllChange = () => {
-		// e.stopPropagation()
- 
-
-		const currentProducts = productsCache[currentTag] || [];
-		const currentProductCodes = currentProducts.map((p) => p.mfr_code);
-
-		setSelectedProducts((prev) => {
-			// If all are already selected, deselect all
-			if (currentProductCodes.every((code) => prev.includes(code))) {
-				return prev.filter((code) => !currentProductCodes.includes(code));
-			}
-			// Otherwise select all (including any previously selected from other tags)
-			else {
-				const newSelected = [...prev];
-				currentProductCodes.forEach((code) => {
-					if (!newSelected.includes(code)) {
-						newSelected.push(code);
-					}
-				});
-				return newSelected;
-			}
-		});
-	};
+	const onSelectAllChange = useCallback(() => {
+		if (selectedProducts.length < chatProductsDataToShow.length) {
+			setSelectedProducts(chatProductsDataToShow.map((i) => i.mfr_code));
+			setEnableSelectProduct(true);
+		} else {
+			setSelectedProducts([]);
+		}
+	}, [selectedProducts.length, chatProductsDataToShow]);
 
 	const handleSaveOrShareClick = () => {
 		onSelectAllChange();
@@ -503,18 +548,23 @@ const AuraResponseProducts = ({
 
 	const onAddSelectedProductsToCollection = useCallback(
 		(e =null,options ={}) => {
-			      const { isSave = false, isShare = false, isSkip = false } = options;
+			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null } = options;
 
-    if (e?.preventDefault) {
-      e?.preventDefault();
-      e?.stopPropagation();
-    }
+			if (e?.preventDefault) {
+				e?.preventDefault();
+				e?.stopPropagation();
+			}
+
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
 
 			const isSkipPopUp = isSkip && guestActionRef.current === "share";
 
-			if (!isUserLogin && !isUserLoginCokkies && !isSkipPopUp) {
+			if ( isShare && !isSkipPopUp && !isGuestSubmit) {
+				dispatch(GuestPopUpShow(true));
+				return;
+			}
+			else if (isSave && !isUserLogin && !isUserLoginCokkies && !isGuestSubmit) {
 				dispatch(GuestPopUpShow(true));
 				return;
 			}
@@ -547,6 +597,7 @@ const AuraResponseProducts = ({
 					? COLLECTION_GENERATED_BY_IMAGE_BASED
 					: COLLECTION_GENERATED_BY_SEARCH_BASED,
 				...data,
+				user_id:userId || userData?.user_id || authUser?.user_id
 			};
 
 			if (isSave) {
@@ -560,7 +611,7 @@ const AuraResponseProducts = ({
 				// 	dispatch(setIsCreateWishlist(true));
 				// }
 			} else if (isShare) {
-				
+
 				dispatch(
 					openAutoCreateCollectionModal({
 						...createWishlistData,
@@ -585,7 +636,24 @@ const AuraResponseProducts = ({
 	);
 
 	const onFiltersChange = (name, value) => {
-		handleChangeFilters({ ...filters, [name]: value });
+		const newFilters = { ...filters, [name]: value };
+		let newOptionalFilters = newFilters.optional_filters || [];
+		const isNowEmpty = name === "price"
+			? (!value || (!value.min && !value.max))
+			: (!value || value.length === 0 || value === "");
+
+		if (isNowEmpty) {
+			if (!newOptionalFilters.includes(name)) {
+				newOptionalFilters = [...newOptionalFilters, name];
+			}
+		} else {
+			if (newOptionalFilters.includes(name)) {
+				newOptionalFilters = newOptionalFilters.filter((n) => n !== name);
+			}
+		}
+
+		newFilters.optional_filters = newOptionalFilters;
+		handleChangeFilters(newFilters);
 	};
 
 	const handleFiltersSubmit = (
@@ -637,8 +705,8 @@ const AuraResponseProducts = ({
 	};
 
 	const checkAndShowContainer = useCallback(
-		({ isShowCustomFilterInput = false }) => {
-			setShowCustomFilterInput(isShowCustomFilterInput);
+		() => {
+			// setShowCustomFilterInput(isShowCustomFilterInput);
 		},
 		[]
 	);
@@ -701,15 +769,34 @@ const AuraResponseProducts = ({
 
 					if (res.data.status_code === 200) {
 						dispatch(GuestPopUpShow(false));
-						setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
-						dispatch(getUserInfo());
-						Cookies.set("isGuestLoggedIn", true, {
-							expires: SIGN_IN_EXPIRE_DAYS,
-						});
+						if(guestActionRef.current === "share"){ 
+							try {
+								let { data, status } = await authAPIs.getUserInfoAPICall({ user_id });
+
+								if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
+									// dispatch(getUserInfoSuccess(data.data));
+									setUserData(data?.data)
+								}
+							} catch (e) {
+								console.error(e);
+							}
+						}
+						else if (guestActionRef.current === "save") {
+							dispatch(GuestPopUpShow(false));
+
+							setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
+							dispatch(getUserInfo());
+						}
+
+						// setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
+						// dispatch(getUserInfo());
+						// Cookies.set("isGuestLoggedIn", true, {
+						// 	expires: SIGN_IN_EXPIRE_DAYS,
+						// });
 						if (guestActionRef.current === "save") {
-							onAddSelectedProductsToCollection(null, { isSave: true });
+							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true });
 						} else if (guestActionRef.current === "share") {
-							onAddSelectedProductsToCollection(null, { isShare: true });
+							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true ,userId:data?.data?.user_id});
 						}
 					}
 				} catch (error) {
@@ -734,399 +821,395 @@ const AuraResponseProducts = ({
 		}
 	}, [showWishlistModal, isAuraChatPage]);
 
+	useEffect(() => {
+		if (registerSelectActions) {
+			registerSelectActions({
+				enableSelectProduct,
+				selectedProducts,
+				chatProductsDataToShow,
+				is_store_instance,
+				handleResetSelectProduct,
+				setEnableSelectProduct,
+				onSelectAllChange,
+				onAddSelectedProductsToCollection,
+			});
+		}
+		return () => {
+			if (registerSelectActions) {
+				registerSelectActions(null);
+			}
+		};
+	}, [
+		enableSelectProduct,
+		selectedProducts,
+		chatProductsDataToShow,
+		is_store_instance,
+		handleResetSelectProduct,
+		onSelectAllChange,
+		onAddSelectedProductsToCollection,
+		registerSelectActions,
+	]);
+
+	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || isLoading || showChatLoader;
+
 	return (
 		<>
-			<div id={elementId}>
-				{!isLoading ? (
-					<>
-						{enableCustomFilter || enableFilters ? (
-							<div className={styles['aura-products-filter-header']}>
-								{enableCustomFilter ? (
-									<CustomFilter
-										customFilterStringData={filters.custom_filter}
+			<div id={elementId} style={{ minHeight: "85vh" }}>
+				<div className="flex-1 min-w-0">
+					{!isCurrentTagLoading ? (
+						<>
+							{enableFilters ? (
+								<div className={hasVisibleFilters ? "mb-4 md:mb-5" : ""}>
+									<ProductFiltersTags
+										//to hide the optional filters from meta filtersTags
+										productFilters={(() => {
+											const active = { ...filters };
+											if (Array.isArray(active.optional_filters)) {
+												active.optional_filters.forEach((key) => {
+													delete active[key];
+												});
+											}
+											return active;
+										})()}
+										handleFiltersInputClear={handleFiltersInputClear}
+										handleClearFiltersClick={handleClearFiltersClick}
+										displayFilters={filtersToShow.filter(f => f.key !== 'custom_filter')}
+										isShowCustomFilter={true}
+										isShowHashtagButton={false}
 										handleSaveEditCustomFilter={handleSaveEditCustomFilter}
-										hashtagsThemeClassName='text-black-102'
-										customFilter={customFilter}
-										setCustomFilter={setCustomFilter}
-										handleCustomFilterChange={handleCustomFilterChange}
-										showCustomFilterInput={showCustomFilterInput}
-										setShowCustomFilterInput={setShowCustomFilterInput}
-										checkAndShowContainer={checkAndShowContainer}
-									/>
-								) : null}
-								{enableFilters ? (
-									<div
-										className={styles['aura-products-filter-toggle']}
-										onClick={() =>
-											setFilterOptionsVisible(!filterOptionsVisible)
-										}>
-										<Image
-											src={filterIcon}
-											alt='Filters'
-											width={28}
-											height={28}
-											className={styles['aura-products-filter-icon']}
-										/>
-										<p className={styles['aura-products-filter-text']}>
-											Filters
-										</p>
-									</div>
-								) : null}
-							</div>
-						) : null}
-
-						{isFiltersAvailable ? (
-							<div className={styles['aura-products-filters-tags-container']}>
-								<ProductFiltersTags
-									productFilters={filters}
-									handleFiltersInputClear={handleFiltersInputClear}
-									handleClearFiltersClick={handleClearFiltersClick}
-									displayFilters={filtersToShow}
-									tagThemeClassName={filterStyles.tagPillAura}
-									clearFiltersThemeClassName={filterStyles.clearFiltersAura}
-								/>
-							</div>
-						) : null}
-
-						{enableFilters && filterOptionsVisible ? (
-							<>
-								<div className={styles['aura-products-filter-panel']}>
-									<div className={styles['aura-products-filter-panel-header']}>
-										<h4 className={styles['aura-products-filter-panel-title']}>Filter Products</h4>
-										<div className={styles['aura-products-filter-panel-controls']}>
-											{isFiltersAvailable ? (
-												<p
-													className={styles['aura-products-filter-clear-all']}
-													role='button'
-													onClick={handleClearFiltersClick}>
-													Clear All
-												</p>
-											) : null}
-											<button
-												className={styles['aura-products-filter-go-button']}
-												onClick={() => handleFiltersSubmit(filters, false)}
-												role='button'>
-												Go
-											</button>
-											<CloseOutlined
-												className={styles['aura-products-filter-close']}
-												role='button'
-												title='close filters'
-												onClick={() => setFilterOptionsVisible(false)}
-											/>
-										</div>
-									</div>
-
-									<AdditionalAttributes
-										additionalAttributesToShow={filtersToShow}
-										attributesData={filters}
-										handleAdditionalAttributesChange={onFiltersChange}
-										handleFiltersOptionalChange={handleFiltersOptionalChange}
+										tagThemeClassName={"border border-[#334155] text-[#334155] text-base py-0.5 px-3 rounded-full shadow-sm"}
+										clearFiltersThemeClassName={"text-[#334155]"}
+										handleFilterOptionsVisibleChange={currentTag === 'all' ? undefined : setFilterOptionsVisible}
+										filterOptionsVisible={filterOptionsVisible}
 									/>
 								</div>
-							</>
-						) : null}
+							) : null}
 
-						{chatProductsDataToShow.length ? (
-							<div className={styles['aura-products-selection-controls']}>
-								{enableSelectProduct ? (
-									<div className={styles['aura-products-selected-items']}>
-										<div className={styles['aura-products-checkbox-group']}>
-											<Checkbox
-												className={styles['aura-products-checkbox-text-xs']}
-												indeterminate={
-													isTagProductSelected && !isTagProductsAllSelected
-												}
-												onChange={onSelectAllChange}
-												checked={isTagProductsAllSelected}>
-												{selectedProducts.length} Selected
-											</Checkbox>
+
+							{chatProductsDataToShow.length && !isMobile && enableSelectProduct ? (
+								<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
+									<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
+										<div className="flex items-center gap-2">
+											<div
+												className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2 cursor-pointer select-none"
+												onClick={() => {
+													if (enableSelectProduct) handleResetSelectProduct();
+													else setEnableSelectProduct(true);
+												}}
+											>
+												<span className="text-xs md:text-base">
+													{enableSelectProduct ? `${selectedProducts.length} selected` : "Select"}
+												</span>
+												<Checkbox
+													className="text-xs md:text-base"
+													onChange={(e) => {
+														e.stopPropagation();
+														onSelectAllChange();
+													}}
+													onClick={(e) => {
+														e.stopPropagation();
+													}}
+													checked={
+														selectedProducts.length > 0 &&
+														selectedProducts.length === chatProductsDataToShow.length
+													}
+												/>
+											</div>
 										</div>
-										<p
-											onClick={() => handleResetSelectProduct()}
-											className={styles['aura-products-action-link']}
-											role='button'>
-											Cancel
-										</p>
+										{enableSelectProduct && (
+											<p
+												onClick={() => handleResetSelectProduct()}
+												className="text-brand font-medium ml-2 underline cursor-pointer"
+												role='button'>
+												Clear
+											</p>
+										)}
 									</div>
-								) : (
-									<p
-										className={styles['aura-products-select-prompt']}
-										role='link'
-										onClick={() => setEnableSelectProduct(true)}
-										title='Click and select multiple products to build your own collection'>
-										Select products to build your own collection
-									</p>
-								)}
-								{enableSelectProduct ? (
-									<div className={styles['aura-products-action-buttons-container']}>
+									<div className="flex flex-wrap gap-2">
 										{is_store_instance && (
-											<div className={styles['aura-products-button-save-container']}>
+											<div className="flex items-center justify-center">
 												<button
-													className={styles['aura-products-action-button']}
+													className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
 													onClick={(e) =>
-														onAddSelectedProductsToCollection(e,{ isSave: true })
+														onAddSelectedProductsToCollection(e, { isSave: true })
 													}
 													title='Select and add products to collection'>
 													Save
 												</button>
 											</div>
 										)}
-										<div className={styles['aura-products-button-share-container']}>
+										<div className="flex items-center justify-between">
 											<button
-												className={styles['aura-products-action-button']}
+												className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
 												onClick={(e) =>
-													onAddSelectedProductsToCollection(e,{ isShare: true })
+													onAddSelectedProductsToCollection(e, { isShare: true })
 												}
 												title='Select products and share published collection'>
 												Share
 											</button>
 										</div>
 									</div>
-								) : (
-									<div className={styles['aura-products-action-links']}>
-										{is_store_instance && (
-											<>
-												<p
-													className={styles['aura-products-action-text-link']}
-													role='link'
-													onClick={handleSaveOrShareClick}
-													title='Click and select multiple products to save to collection'>
-													Save
-												</p>
-												<span className={styles['aura-products-action-divider']}>
-													|
-												</span>
-											</>
-										)}
-										<p
-											className={styles['aura-products-action-text-link']}
-											role='link'
-											onClick={handleSaveOrShareClick}
-											title='Click and select multiple products to share'>
-											Share
-										</p>
-									</div>
-								)}
-							</div>
-						) : null}
-					</>
-				) : null}
-				{isLoading ? (
-					<div className={styles['aura-products-loading-container']}>
-						<Spin
-							indicator={
-								<Loading3QuartersOutlined
-									className={styles['aura-products-loading-icon']}
-									spin
-								/>
-							}
-						/>
-					</div>
-				) : (
-					<>
-						<div
-							id='chat_products_inner_content'
-							className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-[0.625rem] sm:gap-3 lg:gap-4'
-						// onChange={onSelectAllChange}
-						>
-							{productsCache[currentTag]?.map((product) => (
-								<ProductCard
-									key={product.mfr_code}
-									product={product}
-									onProductClick={onProductClick}
-									selectedSearchOption={selectedSearchOption}
-									enableClickTracking={enableClickTracking}
-									productClickParam={{
-										iCode: authUser.influencer_code,
-										campCode: trackCollectionCampCode,
-										collectionId: trackCollectionId,
-										collectionName: trackCollectionName,
-										collectionICode: trackCollectionICode,
-									}}
-									// hideAddToWishlist={
-									// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-									// }
-									hideAddToWishlist={is_store_instance && !isUserLogin}
-									enableSelect={enableSelectProduct}
-									isSelected={selectedProducts.includes(product.mfr_code)}
-									setSelectValue={() => onSelectProductClick(product.mfr_code)}
-									wishlistGeneratedBy={
-										widgetImage
-											? COLLECTION_GENERATED_BY_IMAGE_BASED
-											: COLLECTION_GENERATED_BY_SEARCH_BASED
-									}
-									localChatMessage={localChatMessage}
-									onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-								/>
-							))}
+								</div>
+							) : null}
+						</>
+					) : null}
+					{isLoading || showChatLoader ? (
+						<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
+							<Spin
+								indicator={
+									<Loading3QuartersOutlined
+										style={{ fontSize: 36, color: 'var(--color-secondary)' }}
+										spin
+									/>
+								}
+							/>
+							<span className="text-secondary font-semibold text-sm tracking-wide">
+								Searching products...
+							</span>
 						</div>
-
-						{RecomChatProductsDataToShow.length ? (
-							<>
-								<div className={styles['aura-products-section-header']}>
-									<div className={styles['aura-products-section-title']}>
-										Recommendations
-									</div>
-									<div className={styles['aura-products-carousel-controls']}>
-										<button
-											id='custom-prev'
-											className={styles['aura-products-carousel-button']}>
-											<FaRegArrowAltCircleLeft />
-										</button>
-										<button
-											id='custom-next'
-											className={styles['aura-products-carousel-button']}>
-											<FaRegArrowAltCircleRight />
-										</button>
-									</div>
-								</div>
-
-								<Swiper
-									slidesPerView={"auto"}
-									spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
-									freeMode={true}
-									modules={[FreeMode, Navigation]}
-									navigation={{
-										nextEl: "#custom-next",
-										prevEl: "#custom-prev",
-									}}
-									className='mySwiper' style={{ padding: 0 }}>
-									{RecomChatProductsDataToShow.map((product) => (
-										<SwiperSlide
-											key={product.mfr_code}
-											style={{ width: "auto" }}>
-											<ProductCard
-												key={product.mfr_code}
-												product={product}
-												onProductClick={onProductClick}
-												selectedSearchOption={selectedSearchOption}
-												enableClickTracking={enableClickTracking}
-												productClickParam={{
-													iCode: authUser.influencer_code,
-													campCode: trackCollectionCampCode,
-													collectionId: trackCollectionId,
-													collectionName: trackCollectionName,
-													collectionICode: trackCollectionICode,
-												}}
-												// hideAddToWishlist={
-												// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-												// }
-												hideAddToWishlist={is_store_instance && !isUserLogin}
-												enableSelect={enableSelectProduct}
-												isSelected={selectedProducts.includes(product.mfr_code)}
-												setSelectValue={() =>
-													onSelectProductClick(product.mfr_code)
-												}
-												wishlistGeneratedBy={
-													widgetImage
-														? COLLECTION_GENERATED_BY_IMAGE_BASED
-														: COLLECTION_GENERATED_BY_SEARCH_BASED
-												}
-												localChatMessage={localChatMessage}
-												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-											/>
-										</SwiperSlide>
-									))}
-								</Swiper>
-							</>
-						) : (
-							""
-						)}
-
-						{moreProductsDataToShow.length ? (
-							<>
-								<div className={styles['aura-products-section-header']}>
-									<div className={styles['aura-products-section-title']}>
-										More Results
-									</div>
-									<div className={styles['aura-products-carousel-controls']}>
-										<button
-											id='more-prev'
-											className={styles['aura-products-carousel-button']}>
-											<FaRegArrowAltCircleLeft />
-										</button>
-										<button
-											id='more-next'
-											className={styles['aura-products-carousel-button']}>
-											<FaRegArrowAltCircleRight />
-										</button>
-									</div>
-								</div>
-
-								<Swiper
-									slidesPerView={"auto"}
-									spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
-									freeMode={true}
-									modules={[FreeMode, Navigation]}
-									navigation={{
-										nextEl: "#more-next",
-										prevEl: "#more-prev",
-									}}
-									className='mySwiper' style={{ padding: 0 }}>
-									{moreProductsDataToShow.map((product) => (
-										<SwiperSlide
-											key={product.mfr_code}
-											style={{ width: "auto" }}>
-											<ProductCard
-												key={product.mfr_code}
-												product={product}
-												onProductClick={onProductClick}
-												selectedSearchOption={selectedSearchOption}
-												enableClickTracking={enableClickTracking}
-												productClickParam={{
-													iCode: authUser.influencer_code,
-													campCode: trackCollectionCampCode,
-													collectionId: trackCollectionId,
-													collectionName: trackCollectionName,
-													collectionICode: trackCollectionICode,
-												}}
-												// hideAddToWishlist={
-												// 	(is_store_instance && !isUserLogin) || isAuraChatPage
-												// }
-												hideAddToWishlist={is_store_instance && !isUserLogin}
-												enableSelect={enableSelectProduct}
-												isSelected={selectedProducts.includes(product.mfr_code)}
-												setSelectValue={() =>
-													onSelectProductClick(product.mfr_code)
-												}
-												wishlistGeneratedBy={
-													widgetImage
-														? COLLECTION_GENERATED_BY_IMAGE_BASED
-														: COLLECTION_GENERATED_BY_SEARCH_BASED
-												}
-												localChatMessage={localChatMessage}
-												onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-												
-											/>
-										</SwiperSlide>
-									))}
-								</Swiper>
-							</>
-						) : (
-							""
-						)}
-
-						{chatProductsDataToShow.length >= 15 && !isEmpty(tag) && (
-							<div className={styles['aura-products-load-more-container']}>
-								<button
-									className={styles['aura-products-load-more-button']}
-									onClick={() => {
-										setLoadingStates((prev) => ({
-											...prev,
-											loadingMore: true,
-										}));
-
-										setTimeout(() => {
-											handleLoadMoreSubmit(filters); // Actual data fetch
-										}, 1000); // 3 seconds delay
-									}}
-									disabled={loadingStates.loadingMore}>
-									{loadingStates.loadingMore ? "Loading..." : "Load More"}
-								</button>
+					) : (
+						<>
+							<div
+								id='chat_products_inner_content'
+								className={`grid grid-cols-2 gap-2 sm:gap-3 ${selectedSearchOption?.id === "product_search"
+										? "md:grid-cols-3 lg:grid-cols-4"
+										: layoutMode === "both"
+											? 'md:grid-cols-3'
+											: 'md:grid-cols-3 lg:grid-cols-4'
+									}`}>
+								{(productsCache[currentTag] || chatProductsDataToShow)?.map((product) => (
+									<ProductCard
+										key={product.mfr_code}
+										product={product}
+										onProductClick={onProductClick}
+										selectedSearchOption={selectedSearchOption}
+										enableClickTracking={enableClickTracking}
+										productClickParam={{
+											iCode: authUser.influencer_code,
+											campCode: trackCollectionCampCode,
+											collectionId: trackCollectionId,
+											collectionName: trackCollectionName,
+											collectionICode: trackCollectionICode,
+										}}
+										// hideAddToWishlist={
+										// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+										// }
+										hideAddToWishlist={is_store_instance && !isUserLogin}
+										enableSelect={enableSelectProduct}
+										isSelected={selectedProducts.includes(product.mfr_code)}
+										setSelectValue={() => onSelectProductClick(product.mfr_code)}
+										wishlistGeneratedBy={
+											widgetImage
+												? COLLECTION_GENERATED_BY_IMAGE_BASED
+												: COLLECTION_GENERATED_BY_SEARCH_BASED
+										}
+										localChatMessage={localChatMessage}
+										onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+									/>
+								))}
 							</div>
-						)}
-					</>
+
+							{RecomChatProductsDataToShow.length ? (
+								<>
+									<div className="flex justify-between items-center mt-8 mb-8">
+										<div className="font-bold text-xl md:text-2xl leading-8">
+											Recommendations
+										</div>
+										<div className="flex gap-2">
+											<button id='custom-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleLeft />
+											</button>
+											<button id='custom-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleRight />
+											</button>
+										</div>
+									</div>
+
+									<Swiper
+										slidesPerView={"auto"}
+										spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
+										freeMode={true}
+										modules={[FreeMode, Navigation]}
+										navigation={{
+											nextEl: "#custom-next",
+											prevEl: "#custom-prev",
+										}}
+										className='mySwiper' style={{ padding: 0 }}>
+										{RecomChatProductsDataToShow.map((product) => (
+											<SwiperSlide
+												key={product.mfr_code}
+												style={{ width: "auto" }}>
+												<ProductCard
+													key={product.mfr_code}
+													product={product}
+													onProductClick={onProductClick}
+													selectedSearchOption={selectedSearchOption}
+													enableClickTracking={enableClickTracking}
+													productClickParam={{
+														iCode: authUser.influencer_code,
+														campCode: trackCollectionCampCode,
+														collectionId: trackCollectionId,
+														collectionName: trackCollectionName,
+														collectionICode: trackCollectionICode,
+													}}
+													// hideAddToWishlist={
+													// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+													// }
+													hideAddToWishlist={is_store_instance && !isUserLogin}
+													enableSelect={enableSelectProduct}
+													isSelected={selectedProducts.includes(product.mfr_code)}
+													setSelectValue={() =>
+														onSelectProductClick(product.mfr_code)
+													}
+													wishlistGeneratedBy={
+														widgetImage
+															? COLLECTION_GENERATED_BY_IMAGE_BASED
+															: COLLECTION_GENERATED_BY_SEARCH_BASED
+													}
+													localChatMessage={localChatMessage}
+													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+												/>
+											</SwiperSlide>
+										))}
+									</Swiper>
+								</>
+							) : (
+								""
+							)}
+
+							{moreProductsDataToShow.length ? (
+								<>
+									<div className="flex justify-between items-center mt-8 mb-8">
+										<div className="font-bold text-xl md:text-2xl leading-8">More Results</div>
+										<div className="flex gap-2">
+											<button id='more-prev' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleLeft />
+											</button>
+											<button id='more-next' className="text-2xl p-1 rounded-md cursor-pointer bg-transparent hover:opacity-70 md:text-3xl">
+												<FaRegArrowAltCircleRight />
+											</button>
+										</div>
+									</div>
+
+									<Swiper
+										slidesPerView={"auto"}
+										spaceBetween={window.innerWidth <= 1024 ? 10 : 16}
+										freeMode={true}
+										modules={[FreeMode, Navigation]}
+										navigation={{
+											nextEl: "#more-next",
+											prevEl: "#more-prev",
+										}}
+										className='mySwiper' style={{ padding: 0 }}>
+										{moreProductsDataToShow.map((product) => (
+											<SwiperSlide
+												key={product.mfr_code}
+												style={{ width: "auto" }}>
+												<ProductCard
+													key={product.mfr_code}
+													product={product}
+													onProductClick={onProductClick}
+													selectedSearchOption={selectedSearchOption}
+													enableClickTracking={enableClickTracking}
+													productClickParam={{
+														iCode: authUser.influencer_code,
+														campCode: trackCollectionCampCode,
+														collectionId: trackCollectionId,
+														collectionName: trackCollectionName,
+														collectionICode: trackCollectionICode,
+													}}
+													// hideAddToWishlist={
+													// 	(is_store_instance && !isUserLogin) || isAuraChatPage
+													// }
+													hideAddToWishlist={is_store_instance && !isUserLogin}
+													enableSelect={enableSelectProduct}
+													isSelected={selectedProducts.includes(product.mfr_code)}
+													setSelectValue={() =>
+														onSelectProductClick(product.mfr_code)
+													}
+													wishlistGeneratedBy={
+														widgetImage
+															? COLLECTION_GENERATED_BY_IMAGE_BASED
+															: COLLECTION_GENERATED_BY_SEARCH_BASED
+													}
+													localChatMessage={localChatMessage}
+													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+
+												/>
+											</SwiperSlide>
+										))}
+									</Swiper>
+								</>
+							) : (
+								""
+							)}
+
+							{chatProductsDataToShow.length >= 15 && (
+								<div className="flex justify-center mt-8">
+									<button
+										className="bg-gradient-to-r from-brand to-secondary text-white px-5 py-2 rounded-md shadow-md font-medium hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+										onClick={() => {
+											setLoadingStates((prev) => ({
+												...prev,
+												loadingMore: true,
+											}));
+
+											setTimeout(() => {
+												handleLoadMoreSubmit(filters); // Actual data fetch
+											}, 1000);
+										}}
+										disabled={loadingStates.loadingMore}>
+										{loadingStates.loadingMore ? "Loading..." : "Load More"}
+									</button>
+								</div>
+							)}
+						</>
+					)}
+				</div>
+
+				{enableFilters && (
+					<Modal
+						className="[&_.ant-modal-content]:!bg-[#f1f5f9] [&_.ant-modal-header]:!bg-transparent [&_.ant-modal-footer]:!bg-transparent"
+						title={
+							<div className="flex justify-between items-center w-full pr-8">
+								<h4 className="text-gray-800 text-lg font-bold">Filter Products</h4>
+								{isFiltersAvailable ? (
+									<p
+										className="text-brand text-sm font-medium cursor-pointer opacity-90 hover:opacity-100 hover:underline"
+										role='button'
+										onClick={handleClearFiltersClick}>
+										Clear All
+									</p>
+								) : null}
+							</div>
+						}
+						open={filterOptionsVisible}
+						onCancel={() => setFilterOptionsVisible(false)}
+						footer={[
+							<button
+								key="submit"
+								className="bg-gradient-to-r from-brand to-secondary text-white rounded-md px-4 py-1 shadow-sm font-medium"
+								onClick={() => handleFiltersSubmit(filters, false)}>
+								Apply Filters
+							</button>
+						]}
+						width={550}
+						centered
+						destroyOnClose
+					>
+						<div className="max-h-[60vh] overflow-y-auto pr-2">
+							<AdditionalAttributes
+								additionalAttributesToShow={filtersToShow}
+								attributesData={filters}
+								handleAdditionalAttributesChange={onFiltersChange}
+								handleFiltersOptionalChange={handleFiltersOptionalChange}
+								gridClassName="grid-cols-1 md:grid-cols-2 gap-4 pb-2"
+								fontSizeTheme="text-sm"
+								fontColorTheme="text-[#4c5672] font-medium"
+								selectBoxSize="default"
+							/>
+						</div>
+					</Modal>
 				)}
 			</div>
 			{isGuestPopUpShow ? (
@@ -1148,7 +1231,6 @@ const AuraResponseProducts = ({
 };
 
 export default AuraResponseProducts;
-
 
 
 

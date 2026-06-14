@@ -28,10 +28,10 @@ const Creators = () => {
 		<div className='font-firaSans'>
 			<section className={styles.creators_first_container + ' py-24 lg:py-32'}>
 				<div className='max-w-340 md:max-w-748 lg:max-w-4xl mx-auto publisher_title_container text-center flex flex-col items-center'>
-					<h1 className='text-4xl lg:text-7xl text-lightgray-101 font-normal font-firaSans z-10'>
+					<h1 className='text-4xl lg:text-7xl text-slate-100 font-normal font-firaSans z-10'>
 						Get paid for being you.
 					</h1>
-					<p className='text-lightgray-104 text-xl lg:text-3xl-1 lg:leading-44 font-firaSans max-w-2xl px-4 mx-auto z-10'>
+					<p className='text-slate-400 text-xl lg:text-3xl-1 lg:leading-44 font-firaSans max-w-2xl px-4 mx-auto z-10'>
 						Create your own <span className='font-bold'>Pop-up store</span>{" "}
 						anywhere, with products that reflect your personality & monetize
 						your followers
@@ -58,11 +58,11 @@ const Creators = () => {
 				<Trustbar text='Trusted by creators in social media & gaming' />
 			</section>
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto text-center flex flex-col items-center'>
-				<h1 className='max-w-xl mx-auto text-3xl lg:text-5xl text-lightgray-101 font-normal'>
+				<h1 className='max-w-xl mx-auto text-3xl lg:text-5xl text-slate-100 font-normal'>
 					An online pop-up store that just ...
 					<span className='font-bold'>“Pops”</span>
 				</h1>
-				<h1 className='max-w-xl text-lightgray-104 text-lg lg:text-xl-1.5 font-normal'>
+				<h1 className='max-w-xl text-slate-400 text-lg lg:text-xl-1.5 font-normal'>
 					Your very own store, filled with the products that scream your
 					personality
 				</h1>
@@ -87,11 +87,11 @@ const Creators = () => {
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-100 font-normal'>
 							Create collections of products{" "}
 							<span className='font-pacifico whitespace-nowrap'>you love</span>
 						</h1>
-						<p className='max-w-lg lg:pr-7 text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg lg:pr-7 text-slate-400 text-lg lg:text-xl-1.5'>
 							Curate from over a million products from top brands - for your
 							audience.
 						</p>
@@ -107,10 +107,10 @@ const Creators = () => {
 				</div>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-100 font-normal'>
 							Get noticed by top-notch lifestyle brands
 						</h1>
-						<p className='max-w-lg lg:pr-7 text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg lg:pr-7 text-slate-400 text-lg lg:text-xl-1.5'>
 							Show off your expertise and see a constant inflow of exciting
 							campaigns.
 						</p>
@@ -120,10 +120,10 @@ const Creators = () => {
 			<section className='mt-28 lg:mt-52 max-w-340 md:max-w-748 lg:max-w-4xl xl:max-w-1260 mx-auto flex flex-col-reverse lg:flex-row items-center justify-between'>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-100 font-normal'>
 							Join a growing Web3 community and watch your influence grow
 						</h1>
-						<p className='max-w-lg lg:pr-10 text-lightgray-104 text-lg lg:text-xl-1.5 lg:whitespace-nowrap'>
+						<p className='max-w-lg lg:pr-10 text-slate-400 text-lg lg:text-xl-1.5 lg:whitespace-nowrap'>
 							Web3 is not just the future - it’s already here.
 						</p>
 					</div>
@@ -146,13 +146,13 @@ const Creators = () => {
 				</div>
 				<div>
 					<div className='max-w-lg mx-auto text-center lg:text-left pt-8 lg:pt-0'>
-						<h1 className='text-3xl lg:text-5xl text-lightgray-101 font-normal'>
+						<h1 className='text-3xl lg:text-5xl text-slate-100 font-normal'>
 							Earn NFTs, rewards and commissions instantly
 						</h1>
-						<p className='max-w-lg lg:pr-10 text-lightgray-104 text-lg lg:text-xl-1.5'>
+						<p className='max-w-lg lg:pr-10 text-slate-400 text-lg lg:text-xl-1.5'>
 							Start earning within minutes
 						</p>
-						<div className='flex flex-col items-center lg:items-start max-w-screen-md w-full text-lightgray-104'>
+						<div className='flex flex-col items-center lg:items-start max-w-screen-md w-full text-slate-400'>
 							<div className='flex items-center pb-5 lg:py-4'>
 								<div className='w-8'>
 										<Image className='mx-auto' src={easy_icon} alt='easy_icon' width={50} height={50} />

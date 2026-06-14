@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	Tooltip,
-	notification,
-	Skeleton,
-	Checkbox,
-	Spin,
-	Modal,
-	Select,
-	Pagination,
+  Tooltip,
+  notification,
+  Skeleton,
+  Checkbox,
+  Spin,
+  Modal,
+  Select,
+  Pagination,
 } from "antd";
 import {
-	DownloadOutlined,
-	Loading3QuartersOutlined,
-	LoadingOutlined,
-	CheckCircleOutlined,
+  DownloadOutlined,
+  Loading3QuartersOutlined,
+  LoadingOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "../../helper/useNavigate";
 
@@ -23,34 +23,34 @@ import ProductCard from "../../components/singleCollection/ProductCard";
 import UploadMultiProductsModal from "../uploadMultiProductsModal";
 import { fetchCustomProducts, removeCustomProducts } from "./redux/actions";
 import {
-	openWishlistModal,
-	setProductsToAddInWishlist,
+  openWishlistModal,
+  setProductsToAddInWishlist,
 } from "../wishlist/redux/actions";
 
 import {
-	customProductsAPIs,
-	profileAPIs,
-	customProductsDownloadCsvURL,
+  customProductsAPIs,
+  profileAPIs,
+  customProductsDownloadCsvURL,
 } from "../../helper/serverAPIs";
 import { openAutoCreateCollectionModal } from "../autoCreateCollectionModal/redux/actions";
 
 import {
-	PATH_ROOT,
-	PATH_STORE,
-	UPLOAD_PRODUCT_MODE_CSV,
-	UPLOAD_PRODUCT_MODE_IMAGES,
-	WISHLIST_TITLE,
-	COLLECTION_TYPE_CUSTOM_PLIST,
-	COLLECTION_GENERATED_BY_MY_PRODUCTS_BASED,
-	STORE_USER_NAME_SAMSKARA,
-	PRODUCT_SORT_OPTIONS,
-	PRODUCT_SORT_OPTIONS_MY_PRODUCTS,
+  PATH_ROOT,
+  PATH_STORE,
+  UPLOAD_PRODUCT_MODE_CSV,
+  UPLOAD_PRODUCT_MODE_IMAGES,
+  WISHLIST_TITLE,
+  COLLECTION_TYPE_CUSTOM_PLIST,
+  COLLECTION_GENERATED_BY_MY_PRODUCTS_BASED,
+  STORE_USER_NAME_SAMSKARA,
+  PRODUCT_SORT_OPTIONS,
+  PRODUCT_SORT_OPTIONS_MY_PRODUCTS,
 } from "../../constants/codes";
 import {
-	auraYfretUserCollBaseUrl,
-	is_store_instance,
-	adminUserId,
-	current_store_name,
+  auraYfretUserCollBaseUrl,
+  is_store_instance,
+  adminUserId,
+  current_store_name,
 } from "../../constants/config";
 import { openProductModal } from "../customProductModal/redux/actions";
 import { GET_USER_COLLECTIONS } from "../Auth/redux/constants";

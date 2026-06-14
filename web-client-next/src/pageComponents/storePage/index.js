@@ -98,7 +98,6 @@ import Cookies from "js-cookie";
 import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
-import HomePageNew from "../../components/singleCollection/HomePageNew.js";
 import DroppWallet from "../../components/DroppWallet.js";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
@@ -288,7 +287,6 @@ const StorePageWrapper = (props) => {
 		serverData,
 		isFailedPage,
 		isSuccessPage,
-		isHomepage,
 	} = props;
  	const [isDropDown, setisDropDown] = useState(false)
 	const {
@@ -393,7 +391,7 @@ const StorePageWrapper = (props) => {
 			(isPageOwner && isSingleCollectionSharedPage)
 		) {
 			if (
-				(isRootPage || isSharedPage || isMyProfilePage || isHomepage) &&
+				(isRootPage || isSharedPage || isMyProfilePage ) &&
 				!isSingleCollectionSharedPage
 			) {
 				return {
@@ -441,7 +439,6 @@ const StorePageWrapper = (props) => {
 		authUserCollections.length,
 		influencerUserCollections,
 		influencerUserCollections.length,
-		isHomepage
 	]);
 
 	 
@@ -642,7 +639,7 @@ const StorePageWrapper = (props) => {
 
 	useEffect(() => {
 		if (
-			(!isRootPage && (isThemePage || isHomepage || isCollectionReviewPage))
+			(!isRootPage && (isThemePage  || isCollectionReviewPage))
 		) {
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
@@ -668,7 +665,6 @@ const StorePageWrapper = (props) => {
 		currentPage,
 		isThemePage,
 		isRootPage,
-		isHomepage,
 		isCollectionReviewPage,
 	]);
 
@@ -708,7 +704,8 @@ const StorePageWrapper = (props) => {
 				dispatch(
 					getUserCollections({
 						product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
-						summary: true
+						summary: true,
+						kisokuser_id:sessionStorage.getItem("Kiosk-login") || null
 					})
 				);
 			}
@@ -1142,7 +1139,6 @@ const StorePageWrapper = (props) => {
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
-			{isHomepage && <HomePageNew blogCollectionPage={currentSingleCollection} />}
 
 			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 

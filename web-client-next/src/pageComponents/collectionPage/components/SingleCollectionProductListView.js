@@ -1011,7 +1011,7 @@ const SingleCollectionProductListView = ({
                                     onClick={() => setExpanded(true)}
                                     className={styles.readMoreLink}
                                   >
-                                    Read more...
+                                    Read more
                                   </span>
                                 )}
 

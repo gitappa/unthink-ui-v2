@@ -1,4 +1,3 @@
-// not using
 import React from "react";
 import Slider from "react-slick";
 import { Typography, Skeleton } from "antd";
@@ -9,7 +8,6 @@ import { setSuggestionsSelectedTag } from "../../hooks/chat/redux/actions";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import styles from './chatSuggestionsWithProducts.module.scss';
 
 const { Title } = Typography;
 
@@ -58,14 +56,14 @@ const ChatSuggestionsWithProducts = ({ wrapperClassName = "" }) => {
 
 	return (
 		<div
-			className={`chat-suggestions-with-products-container px-10 lg:px-0 w-full mx-auto ${wrapperClassName}`}>
+			className={`w-full px-10 lg:px-0 mx-auto ${wrapperClassName}`}>
 			<Slider {...sliderSettings}>
 				{tags?.map((suggestion) => (
 					<div
 						key={suggestion}
-						className={`tag-wrapper rounded-full shadow mx-2 my-1 w-max ${
+						className={`relative rounded-full shadow mx-2 my-1 w-max ${
 							suggestion === selectedTag
-								? "bg-lightgray-104"
+								? "bg-slate-400"
 								: checkIsTagEnabled(suggestion)
 								? "bg-lightgray-102"
 								: "bg-white"
@@ -86,7 +84,7 @@ const ChatSuggestionsWithProducts = ({ wrapperClassName = "" }) => {
 						</Title>
 						{!checkIsTagEnabled(suggestion) ? (
 							<Skeleton.Button
-								className='tag-loading-skeleton'
+								className='absolute top-0 h-full w-full'
 								active
 								shape='round'
 								block

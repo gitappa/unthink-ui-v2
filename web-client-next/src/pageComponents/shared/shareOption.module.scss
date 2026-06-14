@@ -1,13 +1,22 @@
 @import '../../style/variable.module';
+@reference "tailwindcss";
 
-.unthink-share-collection {
-    &__more-products-btn {
-        margin: 5px 0px;
-        @apply py-1 md:px-4 md:text-base text-sm text-white font-semibold rounded-lg ;
-        &:hover {
-            @apply text-white;
-        }
-    }
+.unthink-share-collection__more-products-btn {
+  margin: 5px 0px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .unthink-share-collection__more-products-btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+  }
 }
 
 .unthink-share-url {

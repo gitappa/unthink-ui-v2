@@ -86,7 +86,7 @@ const WishListItems = ({
 								checked={isSelected}
 								onClick={handleSelectProduct}
 								onChange={() => { }} // fix onchange handler warning
-								className={styles.checkboxInput}
+								className='h-[10px] lg:h-4 mr-[10px] cursor-pointer accent-secondary'
 							/>
 						)}
 

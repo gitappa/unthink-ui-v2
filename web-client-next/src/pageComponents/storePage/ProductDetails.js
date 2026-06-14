@@ -17,6 +17,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
@@ -30,8 +31,14 @@ import {
   cleanImage,
 } from "../../helper/utils";
 import {
+  requestSigninWithLink,
+  decryptSigninToken,
+  buildVerifyUrl,
+} from "../../helper/autoLogin";
+import {
   customProductsAPIs,
   profileAPIs,
+  TryonSaveApiCall,
   TryOnVto,
 } from "../../helper/serverAPIs";
 
@@ -60,12 +67,29 @@ import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
-import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
+// import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
-
+import { useSearchParams } from "next/navigation";
+import BannerImage from "../../components/kiosk/BannerImage";
+import profilebanner from "../../images/package.jpg";
+import {
+  openWishlistModal,
+  setProductsToAddInWishlist,
+} from "../wishlist/redux/actions";
+import { BsBookmarkPlusFill } from "react-icons/bs";
+import { GuestPopUpShow } from "../Auth/redux/actions";
+import GuestUserPopUp from "../Auth/GuestUserPopUp";
+import {
+  addProductToWishlistCollection,
+  addProductToWishlistCollectionReset,
+} from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import useKioskSessionReminder, {
+  KioskSessionPopup,
+} from "../../components/kiosk/useKioskSessionReminder";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -73,7 +97,6 @@ const ProductDetails = ({ params, ...props }) => {
   const dispatch = useDispatch();
   const mfr_code = params?.mfr_code || router?.query?.mfr_code;
   const { collection, loading } = useSelector((state) => state.cart);
-  // console.log('collectionsuii', collection);
   const [isloading, setIsLoading] = useState(true);
   const [
     sellerDetails,
@@ -84,7 +107,7 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductLoading,
     productDetail,
     ButtonClick,
-
+    productToWishlistCollection,
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -94,15 +117,254 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
-    
-
+    state.wishlistActions?.addProductToWishlistCollection?.data || [],
   ]);
+  console.log("productToWishlistCollection", productToWishlistCollection);
 
-  const [store_id] = useSelector((state) => [state.store.data.store_id]);
+  const [store_id, isUserLogin] = useSelector((state) => [
+    state.store.data.store_id,
+    state.auth.user.isUserLogin,
+  ]);
+  const [storeData] = useSelector((state) => [state.store.data]);
+  const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
+  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const [fetchedProductDetails, setFetchedProductDetails] = useState();
+  const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  const [pendingWishlistQrInfo, setPendingWishlistQrInfo] = useState(null);
+  const addWishlistState = useSelector(
+    (state) => state.wishlistActions.addProductToWishlistCollection,
+  );
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrImageUrl, setQrImageUrl] = useState("");
+  const [qrTargetUrl, setQrTargetUrl] = useState("");
 
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
-  const [dropDown,setDropDown] = useState(false)
+  const [dropDown, setDropDown] = useState(false);
+  const hasKioskAccess =
+    isUserLogin &&
+    storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
+  const savedProductDetails = useMemo(
+    () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
+    [productDetail],
+  );
+
+  const productDetails = useMemo(() => {
+    if (savedProductDetails) {
+      return savedProductDetails;
+    } else {
+      return fetchedProductDetails;
+    }
+  }, [savedProductDetails, fetchedProductDetails]);
+  // console.log('productDetails',productDetails);
+
+  // session reminder popup state and timer ref
+  const { showSessionPopup, handleStayLoggedIn, handleLogout } =
+    useKioskSessionReminder({ time: 60 * 1000 });
+
+  // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
+  const [isPopupShow, setIsPopupShow] = useState(false);
+  const [guestPopupAction, setGuestPopupAction] = useState(null);
+  const kioskLogin =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("Kiosk-login")
+      : null;
+
+  // parsedKiosk: parsed JSON from sessionStorage (if present)
+  const parsedKiosk =
+    typeof window !== "undefined"
+      ? (() => {
+          try {
+            return kioskLogin ? JSON.parse(kioskLogin) : {};
+          } catch (err) {
+            return {};
+          }
+        })()
+      : {};
+
+  const getKioskLoginUserId = useCallback(() => {
+    if (!kioskLogin) return "";
+
+    try {
+      return JSON.parse(kioskLogin)?.user_id || kioskLogin;
+    } catch (error) {
+      return kioskLogin;
+    }
+  }, [kioskLogin]);
+
+  const onAddSelectedProductsToCollection = useCallback(
+    (e = null, options = {}) => {
+      const {
+        isSave = false,
+        isShare = false,
+        isSkip = false,
+        isGuestSubmit = false,
+        userId = null,
+      } = options;
+
+      // if (e?.preventDefault) {
+      //   e?.preventDefault();
+      //   e?.stopPropagation();
+      // }
+
+      const kioskLoginUserId = getKioskLoginUserId();
+
+      if (isSave && !kioskLoginUserId && !isGuestSubmit) {
+        setIsPopupShow(true);
+        setGuestPopupAction("save");
+        dispatch(GuestPopUpShow(true));
+        return;
+      }
+
+      if (isSave) {
+        // Dispatch Redux action to add product to wishlist collection API
+        if (productDetails?.mfr_code) {
+          console.debug(
+            "[ProductDetails] dispatching addProductToWishlistCollection",
+            { mfr_code: productDetails?.mfr_code },
+          );
+          dispatch(
+            addProductToWishlistCollection({
+              mfr_code: productDetails?.mfr_code,
+              product_name: productDetails?.name,
+              product_image: productDetails?.image,
+              store: storeData?.store_name || "dothelook",
+              user_id: userId || kioskLoginUserId,
+              eventId: storeData?.event_id,
+              successMessage: "Product added to wishlist successfully!",
+              errorMessage:
+                "Failed to add product to wishlist. Please try again.",
+            }),
+          );
+          // Kick off signin-with-link immediately, but wait for saga to set the
+          // wishlist collection data before building the QR. We store the
+          // signin token + origin in local state and build the QR in an effect
+          // when `addWishlistState.data` becomes available.
+          (async () => {
+            try {
+              const origin =
+                typeof window !== "undefined" ? window.location.origin : "";
+              const kioskEmail = JSON.parse(
+                sessionStorage.getItem("Kiosk-login") || "{}",
+              )?.email;
+              if (kioskEmail) {
+                const resp = await requestSigninWithLink(kioskEmail);
+                const signin_token =
+                  resp?.signin_token || resp?.data?.signin_token;
+                const userName = resp?.data?.user_name || resp?.user_name;
+
+                if (signin_token) {
+                  setPendingWishlistQrInfo({ origin, signin_token, userName });
+                }
+              }
+            } catch (e) {
+              console.error("Immediate QR build failed", e);
+            }
+          })();
+        } else {
+          console.log(
+            "[ProductDetails] Product details incomplete for wishlist collection",
+            {
+              mfr_code: productDetails?.mfr_code,
+              name: productDetails?.name,
+              image: productDetails?.image,
+              storeData: !!storeData,
+            },
+          );
+        }
+      }
+    },
+    [
+      authUser,
+      isUserLogin,
+      dispatch,
+      getKioskLoginUserId,
+      storeData,
+      productDetails,
+      productToWishlistCollection,
+    ],
+  );
+
+  // Build QR once wishlist saga returns data and we have a pending signin token
+  useEffect(() => {
+    if (!pendingWishlistQrInfo) return;
+    if (!addWishlistState?.data) return;
+
+    const { origin, signin_token, userName } = pendingWishlistQrInfo;
+
+    try {
+      const decrypted = decryptSigninToken(signin_token);
+
+      const collectionId =
+        addWishlistState?.data?._id ||
+        addWishlistState?.data?.data?._id ||
+        addWishlistState?.data?.collection_id ||
+        addWishlistState?.data?.data?.collection_id;
+
+      const verifyLink = buildVerifyUrl(
+        decrypted,
+        `?page=influencer/${userName}/${collectionId}`,
+      );
+      const fullVerifyUrl = `${origin}${verifyLink}`;
+
+      setQrTargetUrl(fullVerifyUrl);
+      setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+      setQrModalOpen(true);
+    } catch (err) {
+      console.error("Building QR after wishlist success failed", err);
+    }
+
+    setPendingWishlistQrInfo(null);
+    dispatch(addProductToWishlistCollectionReset());
+  }, [addWishlistState?.data, pendingWishlistQrInfo, dispatch]);
+  // ============ END GUEST POPUP HOOKS ============
+
+  const handleShareClick = useCallback(async () => {
+    const kioskLoginUserId = getKioskLoginUserId();
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    try {
+      // Prefer kiosk email from session storage, fallback to authUser email
+      const kioskEmail =
+        JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")?.email ||
+        authUser?.emailId;
+
+      if (kioskLoginUserId && kioskEmail) {
+        const resp = await requestSigninWithLink(kioskEmail);
+        const signin_token = resp?.signin_token || resp?.data?.signin_token;
+
+        if (signin_token) {
+          const decrypted = decryptSigninToken(signin_token);
+          if (decrypted) {
+            // Build verify link to current product page
+            const pageParam = `?page=${productDetailsPagePath}`;
+            const verifyLink = buildVerifyUrl(decrypted, pageParam);
+            // console.log('verifyLink',verifyLink);
+
+            const fullVerifyUrl = `${origin}${verifyLink}`;
+            // console.log('fullVerifyUrl',fullVerifyUrl);
+
+            setSharePageUrl(fullVerifyUrl);
+            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+            setQrTargetUrl(fullVerifyUrl);
+            setShowShareProductDetails(true);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Share auto-login build error", e);
+    }
+
+    if (!kioskLoginUserId) {
+      setShowShareProductDetails(false);
+      setGuestPopupAction("share");
+      setIsPopupShow(true);
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+
+    setShowShareProductDetails((show) => !show);
+  }, [authUser, dispatch, getKioskLoginUserId]);
 
   //   useEffect(() => {
   //     return () => {
@@ -110,15 +372,9 @@ const ProductDetails = ({ params, ...props }) => {
   //     };
   //   }, []);
 
-  // console.log('customProductsData', customProductsData);
-  const [storeData] = useSelector((state) => [state.store.data]);
-  const ProductTags = storeData?.catalog_attributes?.find(att => att.key === "product_tag")?.is_display
-  // console.log('onMyDev',ProductTags);
-  // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-  const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
-  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
-  const [fetchedProductDetails, setFetchedProductDetails] = useState();
-  const [showShareProductDetails, setShowShareProductDetails] = useState(false);
+  const ProductTags = storeData?.catalog_attributes?.find(
+    (att) => att.key === "product_tag",
+  )?.is_display;
 
   //   const fetchProductDetails = async () => {
   //     try {
@@ -141,10 +397,7 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem(`pdp_image_${mfr_code}`) || "";
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
-  const savedProductDetails = useMemo(
-    () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
-    [productDetail],
-  );
+
   useEffect(() => {
     if (!mfr_code) return;
 
@@ -159,13 +412,6 @@ const ProductDetails = ({ params, ...props }) => {
   //     }
   //   }, [mfr_code, savedProductDetails]);
 
-  const productDetails = useMemo(() => {
-    if (savedProductDetails) {
-      return savedProductDetails;
-    } else {
-      return fetchedProductDetails;
-    }
-  }, [savedProductDetails, fetchedProductDetails]);
   // console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {
@@ -203,7 +449,7 @@ const ProductDetails = ({ params, ...props }) => {
     () => sellerDetails[productDetails?.brand],
     [sellerDetails, productDetails?.brand],
   );
- 
+
   const discountPer = useMemo(
     () =>
       productDetails?.price &&
@@ -255,6 +501,10 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [productDetails],
   );
+  const searchParams = useSearchParams();
+
+  // const fromCollection = searchParams.get("from") === "kioskcollection";
+  // console.log('fromCollection',fromCollection);
 
   const handleGoBack = () => {
     if (typeof window !== "undefined" && window?.history?.length > 2) {
@@ -268,6 +518,7 @@ const ProductDetails = ({ params, ...props }) => {
     () => getProductDetailsPagePath(productDetails?.mfr_code),
     [productDetails?.mfr_code],
   );
+  // console.log('productDetailsPagePath',productDetailsPagePath);
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
@@ -275,12 +526,24 @@ const ProductDetails = ({ params, ...props }) => {
   );
 
   const [sharePageUrl, setSharePageUrl] = useState("");
+  // console.log('sharePageUrl',sharePageUrl);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
+  const shareQrCodeImage = useMemo(() => {
+    try {
+      return sharePageUrl
+        ? collectionQRCodeGenerator(sharePageUrl)
+        : qrCodeGeneratorURL;
+    } catch (e) {
+      return qrCodeGeneratorURL;
     }
-  }, [productDetailsPagePath]);
+  }, [sharePageUrl, qrCodeGeneratorURL]);
+  // console.log('shareQrCodeImage',shareQrCodeImage);
+
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
+  //   }
+  // }, [productDetailsPagePath]);
 
   // const fieldsToDisplay = [
   //   // "age_group",
@@ -299,8 +562,9 @@ const ProductDetails = ({ params, ...props }) => {
   //   "category",
   //   // 'product_tag'
   // ];
-const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
-// console.log('fieldsToDisplay',fieldsToDisplay);
+  const fieldsToDisplay =
+    storeData?.pdp_settings?.product_page_attributes || [];
+  // console.log('fieldsToDisplay',fieldsToDisplay);
 
   // scroll for tags
 
@@ -339,8 +603,6 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
       };
     }
   }, [productDetails, pdploader]);
-
-  // console.log('productDetails',productDetails);
 
   const handleAddToCart = () => {
     // e.stopPropagation();
@@ -470,10 +732,13 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
     const payload = {
       image_urls: [productDetails.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.[collection?.tryon_type] || storeData?.templates?.image_try_on || "",
+      image_tryon_prompt:
+        storeData?.templates?.[collection?.tryon_type] ||
+        storeData?.templates?.image_try_on ||
+        "",
       additional_prompt: descriptionget || "",
       type: collection?.tryon_type || "tryon",
-    }; 
+    };
     try {
       setLoading(true);
       const res = await TryOnVto(payload);
@@ -518,7 +783,110 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
       }
     }
   };
+  const [saveData, setResponse] = useState([]);
+  // console.log('response',saveData);
 
+  const handleVtoSave = async () => {
+    try {
+      const payload = {
+        collection_type: "vto_collection",
+        status: "published",
+        collection_name: "my tryons",
+        user_id: parsedKiosk?.user_id || authUser.user_id || null,
+        store: storeData.store_name,
+        event_id: storeData?.event_id || null,
+        product_lists: [
+          {
+            mfr_code: productDetails.mfr_code,
+            name: productDetails.name,
+            image: productDetails.image || "",
+          },
+          {
+            name: "item2",
+            image: vtoResultImageUrl || "",
+          },
+        ],
+      };
+
+      const responseData = await TryonSaveApiCall(payload);
+      // console.log("dfdresponse", response.data.data);
+      setResponse(responseData);
+      notification.success({
+        message: "Save Success",
+        description: "Collection added successfully",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    // handleVTOCancel()
+    handleVTOCancel();
+    // attempt to build and show a QR that opens the saved collection
+  
+  };
+useEffect(() => {
+  async function handlepickapi() {
+    try {
+      // Use the immediate API response instead of reading the state (which
+      // may not be updated synchronously).
+      const saved = saveData;
+      const collectionId =
+        saved?.data?.data?._id || saved?.data?.data?.collection_id;
+
+      if (!collectionId) return;
+
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
+
+      // If kiosk guest - request signin token and build auto-login verify URL
+      const kioskEmail = parsedKiosk?.email || null;
+      if (kioskEmail) {
+        try {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+          const userName =
+            resp?.data?.user_name || resp?.user_name || parsedKiosk?.user_name;
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            const verifyLink = buildVerifyUrl(
+              decrypted,
+              `?page=influencer/${userName}/${collectionId}`,
+            );
+            const fullVerifyUrl = `${origin}${verifyLink}`;
+            console.log("fullVerifyUrl", fullVerifyUrl);
+
+            setQrTargetUrl(fullVerifyUrl);
+            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+            // setShowShareProductDetails(true);
+            setQrModalOpen(true);
+            return;
+          }
+        } catch (err) {
+          console.error("Immediate QR build for VTO failed", err);
+        }
+      }
+
+      // Fallback: build public influencer/shared URL (or influencer by user_name)
+      const uname = authUser?.user_name || parsedKiosk?.user_name || null;
+      let targetPath = "";
+      if (uname) {
+        targetPath = `/influencer/${uname}/${collectionId}`;
+      } else if (parsedKiosk?.user_id) {
+        targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
+      } else {
+        targetPath = `/influencer/${collectionId}`;
+      }
+
+      const fullTarget = `${origin}${targetPath}`;
+      setQrTargetUrl(fullTarget);
+      setQrImageUrl(collectionQRCodeGenerator(fullTarget));
+      setQrModalOpen(true);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  handlepickapi();
+}, [saveData]);
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
     setVtoResultImageUrl(null);
@@ -540,12 +908,20 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
     brandsDetails?.couponCode ||
     brandsDetails?.paymentDetails ||
     brandsDetails?.shippingDetails;
+  const Additionalimages = [
+    productDetails?.image,
+    ...(Array.isArray(productDetails?.additional_image)
+      ? productDetails?.additional_image
+      : productDetails?.additional_image
+        ? [productDetails?.additional_image]
+        : []),
+  ];
 
   return (
     <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
-        <div className="flex flex-col w-full self-center my-8 lg:my-10 gap-6 lg:gap-8">
+        <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
           <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
@@ -564,7 +940,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
                       <img
-                        className="w-full h-full object-contain rounded-2xl max-h-590 max-w-640 min-h-[590px]"
+                        className="w-full h-full object-contain rounded-2xl lg:max-h-590 max-w-640 max-h-[350px] lg:min-h-[590px]"
                         src={
                           additionalimg ||
                           productDetails?.image ||
@@ -577,12 +953,60 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                           {discountPer}% OFF
                         </span>
                       ) : null}
+                      {storeData?.is_tryon_enabled && (
+                        <button
+                          className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            if (!kioskLogin) {
+                              setIsPopupShow(true);
+                              setGuestPopupAction("vto");
+                              dispatch(GuestPopUpShow(true));
+                              return;
+                            }
+
+                            const mfrCode = productDetails?.mfr_code;
+
+                            if (mfrCode) {
+                              dispatch(vtoIconState(mfrCode));
+                            }
+                          }}
+                          title="Try on with virtual camera"
+                        >
+                          <div className="relative">
+                            <Image
+                              height={18}
+                              width={18}
+                              alt="Try on with camera"
+                              src={camera}
+                              className="group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+                          <span className="text-whit font-semibold text-xs sm:text-sm whitespace-nowrap">
+                            Try On
+                          </span>
+                        </button>
+                      )}
                     </div>
                   ) : null}
                 </div>
-
+                {/* <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                      <Image
+                        height={24}
+                        width={24}
+                        alt="Try on with camera"
+                        className="cursor-pointer"
+                        src={camera}
+                      />
+                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                    </div>
+                    <p>
+                      Scan the QR code with your phone to try this piece on
+                      virtually.
+                    </p> */}
                 {productDetails?.additional_image &&
-                  productDetails?.additional_image.length > 0 ? (
+                productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
                     <Swiper
                       modules={[FreeMode]}
@@ -598,20 +1022,18 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                       }}
                       className="w-full cursor-pointer"
                     >
-                      {[
-                        productDetails.image,
-                        ...productDetails.additional_image,
-                      ].map((img, i) => (
+                      {Additionalimages?.map((img, i) => (
                         <SwiperSlide key={i} style={{ width: "auto" }}>
                           <div className="flex">
                             <Image
                               src={img}
                               height={50}
                               width={50}
-                              className={`  w-[110px] h-[120px] rounded-xl border transition ${additionalimg === img
+                              className={`w-[110px] h-[120px] rounded-xl border transition ${
+                                additionalimg === img
                                   ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
                                   : "border-[#e8e2ff] hover:border-[#b8a9ff]"
-                                }`}
+                              }`}
                               onClick={() => setAdditionalImg(img)}
                               alt="product"
                             />
@@ -678,6 +1100,25 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                         className={styles["product-vto-submit-button"]}
                       >
                         Download
+                      </button>
+                      <button
+                        className="rounded-xl
+text-white font-bold 
+text-xs
+md:text-sm
+py-2
+px-[1.125rem]
+bg-indigo-600
+transition-all
+duration-300
+ease-in-out
+border-0
+cursor-pointer
+hover:bg-indigo-700
+"
+                        onClick={handleVtoSave}
+                      >
+                        Save
                       </button>
                     </div>
                   </div>
@@ -804,62 +1245,76 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
                         {productDetails?.user_id === authUser?.user_id ||
-                          productDetails?.brand === authUser?.user_name ? (
+                        productDetails?.brand === authUser?.user_name ? (
                           <button
-                            className="h-10 w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                            className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
                             onClick={() => handleOpenProductModal(true)}
                           >
-                            <EditOutlined className="text-xl" />
+                            <EditOutlined className="text-xl lg:h-6 lg:w-6 h-5 w-5" />
                           </button>
                         ) : null}
                       </div>
-                      <div className="relative flex justify-between w-10 h-10">
+                      <button
+                        className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                        onClick={() =>
+                          onAddSelectedProductsToCollection(null, {
+                            isSave: true,
+                          })
+                        }
+                        title="Add to wishlist"
+                      >
+                        <FaRegHeart
+                          style={{
+                            filter: "brightness(0) opacity(0.7)",
+                            height: 24,
+                            width: 24,
+                          }}
+                          className="lg:h-6 lg:w-6 h-5 w-5"
+                        />
+                      </button>
+
+                      <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
                           <ShareOptions
                             url={sharePageUrl}
                             setShow={setShowShareProductDetails}
                             onClose={() => setShowShareProductDetails(false)}
                             isOpen={showShareProductDetails}
-                            qrCodeGeneratorURL={qrCodeGeneratorURL}
-                            true
+                            qrCodeGeneratorURL={shareQrCodeImage}
+                            fromCollection={true}
                           />
                         )}
-                        {sharePageUrl && (
-                          <button
-                            className="flex w-10 h-10 items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                            onClick={() =>
-                              setShowShareProductDetails(
-                                !showShareProductDetails,
-                              )
-                            }
-                          >
-                            <Image
-                              width={28}
-                              height={28}
-                              className="cursor-pointer h-6 w-6"
-                              src={share_icon}
-                              preview={false}
-                            />
-                          </button>
-                        )}
+                        {/* {sharePageUrl && ( */}
+                        <button
+                          className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                          onClick={handleShareClick}
+                        >
+                          <img
+                            className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
+                            src={share_icon}
+                            preview={false}
+                          />
+                        </button>
+                        {/* // )} */}
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-4 lg:mt-6">
                     <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
                       {productDetails?.price || productDetails?.listprice ? (
                         <span
                           dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${productDetails.price || productDetails.listprice
-                              }`,
+                            __html: `${currencySymbol}${
+                              productDetails.price || productDetails.listprice
+                            }`,
                           }}
                           className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
                         />
                       ) : null}
                       {productDetails?.price &&
-                        +productDetails.listprice > +productDetails?.price ? (
+                      +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
                           {/* MRP{" "} */}
                           <span
@@ -874,10 +1329,11 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
 
                     {productDetails?.availability ? (
                       <span
-                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${productDetails.availability === "out stock"
+                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
+                          productDetails.availability === "out stock"
                             ? "bg-red-100 text-white"
                             : "bg-green-100 text-green-700"
-                          }`}
+                        }`}
                       >
                         {productDetails.avlbl === 0
                           ? "SOLD"
@@ -922,20 +1378,21 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                           return (
                             <a
                               key={`${link}-${idx}`}
-                              style={{ background: '#7c75ec' }}
+                              style={{ background: "#7c75ec" }}
                               className=" text-white flex justify-center items-center  py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg   "
                               target="_blank"
                               rel="noreferrer"
                               href={link}
                             >
-                              Buy Now   
+                              Buy Now
                             </a>
                           );
                         })}
                     </div>
                   </div>
                 ) : null}
-                {(storeData?.pdp_settings?.is_buy_button || storeData?.pdp_settings?.is_add_to_cart_button) &&
+                {(storeData?.pdp_settings?.is_buy_button ||
+                  storeData?.pdp_settings?.is_add_to_cart_button) && (
                   <div className="mt-8 ">
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       {storeData?.pdp_settings?.is_add_to_cart_button && (
@@ -964,10 +1421,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className="text-white h-full px-6 bg-violet-100 w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
-                              style={{
-                                backgroundColor: "#7c75ec",
-                              }}
+                              className="text-white h-full px-6 bg-brand w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
                             >
                               Add to Cart
                             </button>
@@ -975,39 +1429,45 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                         </div>
                       )}
 
-                      {storeData?.pdp_settings?.is_buy_button && (
-                        <button
-                          className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                          disabled={
-                            !productDetails?.price && !productDetails?.listprice
-                          }
-                          style={{
-                            background: "#7c75ec",
-                            cursor:
-                              !productDetails?.price && !productDetails?.listprice
-                                ? "not-allowed"
-                                : "",
-                          }}
-                          onClick={checkoutPayment}
-                        >
-                          Buy
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                }
-
-                {productDetails?.description && (
-                  <div className="">
-                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Product Description
-                    </div> */}
-                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
-                      {productDetails.description}
+                      {storeData?.pdp_settings?.is_buy_button &&
+                        (productDetails?.url &&
+                        productDetails.url !== "dummy_url" ? (
+                          <a
+                            href={productDetails.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline text-white py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition flex justify-center items-center"
+                            style={{
+                              background: "#7c75ec",
+                            }}
+                          >
+                            Buy
+                          </a>
+                        ) : (
+                          <button
+                            className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
+                            disabled={
+                              !productDetails?.price &&
+                              !productDetails?.listprice
+                            }
+                            style={{
+                              background: "#7c75ec",
+                              cursor:
+                                !productDetails?.price &&
+                                !productDetails?.listprice
+                                  ? "not-allowed"
+                                  : "",
+                            }}
+                            onClick={checkoutPayment}
+                          >
+                            Buy
+                          </button>
+                        ))}
                     </div>
                   </div>
                 )}
-                 {/* {productDetails?.product_tag?.length > 0 && (
+
+                {/* {productDetails?.product_tag?.length > 0 && (
                   <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
                     <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
                       Products Tag
@@ -1016,32 +1476,36 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )} */}
 
-                {fieldsToDisplay.map((field, index) => {
-                  const fieldsWithData = fieldsToDisplay.filter(f => productDetails?.[f]?.length > 0 && ProductTags);
+                {fieldsToDisplay?.map((field, index) => {
+                  const fieldsWithData = fieldsToDisplay.filter(
+                    (f) => productDetails?.[f]?.length > 0 && ProductTags,
+                  );
                   const fieldIndexInFiltered = fieldsWithData.indexOf(field);
-                  return productDetails?.[field]?.length > 0 && ProductTags ? (
-                    (showAllFields || fieldIndexInFiltered < 4) && (
-                      <div className="mt-2 " key={field}>
-                        <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
-                          <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
-                            {field}
-                          </p>
-                          <p className="font-normal text-sm  md:text-base text-end">
-                            {Array.isArray(productDetails?.[field])
-                              ? productDetails?.[field]?.join(",")
-                              : productDetails?.[field]}
-                          </p>
+                  return productDetails?.[field]?.length > 0 && ProductTags
+                    ? (showAllFields || fieldIndexInFiltered < 4) && (
+                        <div className="mt-10 " key={field}>
+                          <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                            <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
+                              {field}
+                            </p>
+                            <p className="font-normal text-sm  md:text-base text-end">
+                              {Array.isArray(productDetails?.[field])
+                                ? productDetails?.[field]?.join(",")
+                                : productDetails?.[field]}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  ) : null;
+                      )
+                    : null;
                 })}
-                {fieldsToDisplay.filter(field => productDetails?.[field]?.length > 0)?.length > 4 && (
+                {fieldsToDisplay.filter(
+                  (field) => productDetails?.[field]?.length > 0,
+                )?.length > 4 && (
                   <button
                     onClick={() => setShowAllFields(!showAllFields)}
                     className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
                   >
-                    {showAllFields ? 'Show Less' : 'Show More'}
+                    {showAllFields ? "Show Less" : "Show More"}
                   </button>
                 )}
                 {/* {productDetails?.product_tag?.length > 0 && (
@@ -1052,30 +1516,40 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     <p>{productDetails?.product_tag.join(",")}</p>
                   </div>
                 )} */}
-                {storeData?.is_tryon_enabled &&
-                <div
-                  className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
-                  onClick={(e) => {
-                    dispatch(vtoIconState(productDetails?.mfr_code || true));
-                    e.stopPropagation();
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3 lg:mb-4">
-                    <Image
-                      height={24}
-                      width={24}
-                      alt="Try on with camera"
-                      className="cursor-pointer"
-                      src={camera}
-                    />
-                    <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                {productDetails?.description && (
+                  <div className="">
+                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
+                      Product Description
+                    </div> */}
+                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
+                      {productDetails.description}
+                    </div>
                   </div>
-                  <p>
-                    Scan the QR code with your phone to try this piece on
-                    virtually.
-                  </p>
-                </div>
-}
+                )}
+                {/* {storeData?.is_tryon_enabled &&
+                  <div
+                    className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
+                    onClick={(e) => {
+                      dispatch(vtoIconState(productDetails?.mfr_code || true));
+                      e.stopPropagation();
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
+                      <Image
+                        height={24}
+                        width={24}
+                        alt="Try on with camera"
+                        className="cursor-pointer"
+                        src={camera}
+                      />
+                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
+                    </div>
+                    <p>
+                      Scan the QR code with your phone to try this piece on
+                      virtually.
+                    </p>
+                  </div>
+                } */}
                 {/* <div className="">
                   <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                     keywords
@@ -1147,7 +1621,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     )}
                   </div> */}
                 {/* </div> */}
-                  {brandsDetails?.couponCode ? (
+                {brandsDetails?.couponCode ? (
                   <div className="">
                     <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
                       <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
@@ -1179,16 +1653,28 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
                       <div className="flex items-center gap-2">
                         {/* <span className="h-2 w-2 rounded-full bg-[#2b3d56]" /> */}
-                        <p className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]" onClick={()=>setDropDown(!dropDown)}>
+                        <p
+                          className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]"
+                          onClick={() => setDropDown(!dropDown)}
+                        >
                           Contact Details
                         </p>
                         {/* <p >kughbiuhb</p> */}
-                        {  brandsDetails?.shippingDetails || brandsDetails?.paymentDetails || brandsDetails?.info || brandsDetails?.contact ||brandsDetails?.email || brandsDetails?.title &&
-                        <RiArrowDropDownLine onClick={()=>setDropDown(!dropDown)} className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? 'rotate-180' : ''}`}  />
-                }
+                        {brandsDetails?.shippingDetails ||
+                          brandsDetails?.paymentDetails ||
+                          brandsDetails?.info ||
+                          brandsDetails?.contact ||
+                          brandsDetails?.email ||
+                          (brandsDetails?.title && (
+                            <RiArrowDropDownLine
+                              onClick={() => setDropDown(!dropDown)}
+                              className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? "rotate-180" : ""}`}
+                            />
+                          ))}
                       </div>
 
-                      {brandsDetails?.instagramUrl || brandsDetails?.facebookUrl ? (
+                      {brandsDetails?.instagramUrl ||
+                      brandsDetails?.facebookUrl ? (
                         <div className="flex items-center gap-2">
                           {brandsDetails?.instagramUrl && (
                             <a
@@ -1223,49 +1709,49 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                         </div>
                       ) : null}
                     </div>
-                      {dropDown && 
-                    <div className="mt-4 divide-y divide-[#edf2f7]">
-                      {brandsDetails?.title && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Brand Name
-                          </p>
-                          <p className="font-medium text-[#1f2c3b] break-words">
-                            {brandsDetails.title}
-                          </p>
-                        </div>
-                      )}
+                    {dropDown && (
+                      <div className="mt-4 divide-y divide-[#edf2f7]">
+                        {brandsDetails?.title && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Brand Name
+                            </p>
+                            <p className="font-medium text-[#1f2c3b] break-words">
+                              {brandsDetails.title}
+                            </p>
+                          </div>
+                        )}
 
-                      {brandsDetails?.email && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Brand Email
-                          </p>
-                          <a
-                            className="block p-0 font-medium text-[#334155] break-all hover:underline"
-                            href={`mailto:${brandsDetails.email}`}
-                          >
-                            {brandsDetails.email}
-                          </a>
-                        </div>
-                      )}
+                        {brandsDetails?.email && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Brand Email
+                            </p>
+                            <a
+                              className="block p-0 font-medium text-[#334155] break-all hover:underline"
+                              href={`mailto:${brandsDetails.email}`}
+                            >
+                              {brandsDetails.email}
+                            </a>
+                          </div>
+                        )}
 
-                      {brandsDetails?.contact && (
-                        <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                          <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                            Contact
-                          </p>
-                          <a
-                            className="block p-0 font-medium text-[#334155] hover:underline"
-                            href={`tel:${brandsDetails.contact}`}
-                          >
-                            {brandsDetails.contact}
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                        }
-                       
+                        {brandsDetails?.contact && (
+                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
+                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
+                              Contact
+                            </p>
+                            <a
+                              className="block p-0 font-medium text-[#334155] hover:underline"
+                              href={`tel:${brandsDetails.contact}`}
+                            >
+                              {brandsDetails.contact}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {brandsDetails?.info && dropDown ? (
                       <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
                         {brandsDetails.info}
@@ -1274,9 +1760,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )}
 
-              
-
-                {brandsDetails?.paymentDetails && dropDown &&(
+                {brandsDetails?.paymentDetails && dropDown && (
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Payment Details
@@ -1287,7 +1771,7 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
                   </div>
                 )}
 
-                {brandsDetails?.shippingDetails && dropDown &&(
+                {brandsDetails?.shippingDetails && dropDown && (
                   <div className="mt-5 lg:mt-8">
                     <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
                       Shipping Details
@@ -1301,7 +1785,117 @@ const fieldsToDisplay =  storeData?.pdp_settings?.product_page_attributes
             )}
           </div>
         </div>
+        {hasKioskAccess && (
+          <BannerImage
+            src={profilebanner.src}
+            alt="profilebanner"
+            className="mt-4"
+          />
+        )}
       </div>
+      <GuestUserPopUp
+        isOpen={isPopupShow}
+        setIsOpen={setIsPopupShow}
+        storeName={storeData?.store_name}
+        persistKioskLogin
+        onSuccess={async ({ userId, email }) => {
+          try {
+            if (guestPopupAction === "share") {
+              setShowShareProductDetails(true);
+            } else if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
+            } else {
+              onAddSelectedProductsToCollection(null, {
+                isSave: true,
+                isGuestSubmit: true,
+                userId,
+              });
+            }
+          } catch (err) {
+            console.error("Guest onSuccess flow failed", err);
+            if (guestPopupAction === "share") setShowShareProductDetails(true);
+            if (guestPopupAction === "vto") {
+              const mfrCode = productDetails?.mfr_code;
+              if (mfrCode) {
+                dispatch(vtoIconState(mfrCode));
+              }
+            }
+          } finally {
+            setGuestPopupAction(null);
+          }
+        }}
+        onSkip={() => setGuestPopupAction(null)}
+      />
+      {/* QR Modal shown after wishlist creation */}
+      <Modal
+        headerText="Scan to open collection"
+        isOpen={qrModalOpen}
+        onClose={() => {
+          setQrModalOpen(false);
+        }}
+        size="sm"
+      >
+        <div className="flex flex-col items-center gap-4">
+          {qrImageUrl ? (
+            <img
+              src={qrImageUrl}
+              alt="QR code"
+              className="w-48 h-48 object-contain"
+            />
+          ) : (
+            <div className="w-48 h-48 bg-gray-100 flex items-center justify-center">
+              QR
+            </div>
+          )}
+          {qrTargetUrl && (
+            <div className="break-all text-center text-sm">
+              <a
+                href={qrTargetUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-600 hover:underline"
+              >
+                {qrTargetUrl}
+              </a>
+            </div>
+          )}
+          {/* <div className="flex gap-2">
+            <button
+              className="px-4 py-2 bg-indigo-600 text-white rounded"
+              onClick={() => {
+                if (qrTargetUrl) {
+                  navigator.clipboard?.writeText(qrTargetUrl);
+                  message.success('Copied link to clipboard', 1.5);
+                }
+              }}
+            >
+              Copy link
+            </button>
+            <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => { setQrModalOpen(false); setQrLocked(false); }}>
+              Close
+            </button>
+          </div> */}
+        </div>
+      </Modal>
+      {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}
+      {/* {qrTargetUrl && (
+        <button
+          onClick={() => setQrModalOpen(true)}
+          className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg"
+          aria-label="Show QR"
+        >
+          Show QR
+        </button>
+      )} */}
+      {showSessionPopup && (
+        <KioskSessionPopup
+          onStay={handleStayLoggedIn}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 };

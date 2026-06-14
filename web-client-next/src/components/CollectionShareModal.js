@@ -21,6 +21,7 @@ import {
 import { PUBLISHED } from "../constants/codes";
 import { getTTid } from "../helper/getTrackerInfo";
 import Image from "next/image";
+import { useUserData } from "../context/UserDataContext";
 
 const CollectionShareModal = ({
 	isOpen,
@@ -33,13 +34,14 @@ const CollectionShareModal = ({
 	const dispatch = useDispatch();
 
 
-
-
+	const {userData } = useUserData()
+// console.log('userData',userData);
+  
 	const collectionRedirectPath = useMemo(
 		() =>
 			collectionDetails._id &&
 			getBlogCollectionPagePath(
-				collectionOwner.user_name,
+				userData?.user_name  || collectionOwner.user_name,
 				collectionDetails.path,
 				collectionDetails._id,
 				collectionOwner.user_id,
@@ -68,7 +70,6 @@ const CollectionShareModal = ({
 	);
  
 
-
 	const qrCodeGeneratorURL = useMemo(
 		() => collectionQRCodeGenerator(collectionRedirectPath),
 		[collectionRedirectPath]
@@ -86,11 +87,11 @@ const CollectionShareModal = ({
 	const collectionId = collectionDetails?.collection_id;
 
 
- 
+	const userIdTid = userData?.user_id || getTTid()
 
 	const baseUrl = `${collectionPageUrl}?utm_source=whatsapp&utm_medium=messaging&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=whatsapp&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
 
-	const copybaseUrl = `${collectionPageUrl}?utm_source=unthink_collection_share&utm_medium=${platform}&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=${platform}&unthink_campaign=${collectionId}&unthink_shared=${getTTid()}`;
+	const copybaseUrl = `${collectionPageUrl}?utm_source=unthink_collection_share&utm_medium=${platform}&utm_campaign=${collectionId}&utm_content=unthink_collection_share&unthink_source=unthink_collection_share&unthink_medium=${platform}&unthink_campaign=${collectionId}&unthink_shared=${userIdTid}`;
 
 	const socialMediaUrls = {
 		whatsapp: `https://wa.me/?text=${encodeURIComponent(baseUrl)}`,

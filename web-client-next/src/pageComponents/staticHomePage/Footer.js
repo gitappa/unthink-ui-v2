@@ -51,7 +51,7 @@ const Footer = () => {
 	}, []);
 
 	return (
-		<div className='pt-10 lg:pt-20 pb-3 bg-blue-106 text-slat-50 font-firaSans'>
+		<div className='pt-10 lg:pt-20 pb-3 bg-gray-900 text-slat-50 font-firaSans text-white'>
 			<div className='mx-9 xl:mx-72px'>
 				{/* <img src={unthink_ai_logo_white} height={28} className='mt-3 px-4' /> */}
 				<div className='flex flex-col lg:flex-row gap-12 2xl:gap-24'>

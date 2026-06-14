@@ -48,7 +48,7 @@ import ReviewCollectionPlist from "./ReviewCollectionPlist";
 import ReviewCollectionStepsUI from "./ReviewCollectionStepsUI";
 import { ProductFilters } from "../productFilters/ProductFilters";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
-import filterStyles from "../productFilters/productFilters.module.scss";
+// productFilters.module.scss removed; theme passed as Tailwind classes
 import AskQuestionComponent from "../../components/AskQuestionComponent/AskQuestionComponent";
 import {
 	getSingleUserCollection,
@@ -3251,7 +3251,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 	<>
 	// 		<div className='flex flex-col justify-between'>
 	// 			<div className='flex justify-between'>
-	// 				<h4 className='text-gray-103 text-xl'>Filter Products</h4>
+	// 				<h4 className='text-slate-200 text-xl'>Filter Products</h4>
 	// 				<div className='flex items-center'>
 	// 					<button
 	// 						className='bg-indigo-600 rounded text-white py-1 font-normal text-base px-3'
@@ -3265,7 +3265,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 				{displayableFilter.includes("gender") &&
 	// 				availableFilters?.gender?.length ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Gender</h5>
+	// 						<h5 className='text-slate-200 text-base'>Gender</h5>
 	// 						<Select
 	// 							mode='multiple'
 	// 							allowClear
@@ -3283,7 +3283,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 				{displayableFilter.includes("age_group") &&
 	// 				availableFilters?.age_group?.length ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Age group</h5>
+	// 						<h5 className='text-slate-200 text-base'>Age group</h5>
 	// 						<Select
 	// 							mode='multiple'
 	// 							allowClear
@@ -3301,7 +3301,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 				{displayableFilter.includes("discount") &&
 	// 				availableFilters?.discount?.length ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Discount</h5>
+	// 						<h5 className='text-slate-200 text-base'>Discount</h5>
 	// 						<Select
 	// 							mode='multiple'
 	// 							allowClear
@@ -3321,7 +3321,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 				{displayableFilter.includes("brand") &&
 	// 				availableFilters?.brand?.length ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Brand</h5>
+	// 						<h5 className='text-slate-200 text-base'>Brand</h5>
 	// 						<Select
 	// 							mode='multiple'
 	// 							allowClear
@@ -3338,7 +3338,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 
 	// 				{displayableFilter.includes("color") ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Color</h5>
+	// 						<h5 className='text-slate-200 text-base'>Color</h5>
 	// 						<Select
 	// 							mode='tags'
 	// 							allowClear
@@ -3356,7 +3356,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 				{displayableFilter.includes("occasion") &&
 	// 				availableFilters?.occasion?.length ? (
 	// 					<div>
-	// 						<h5 className='text-gray-103 text-base'>Room</h5>
+	// 						<h5 className='text-slate-200 text-base'>Room</h5>
 	// 						<Select
 	// 							mode='multiple'
 	// 							allowClear
@@ -3373,7 +3373,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 
 	// 				{displayableFilter.includes("custom_filter") ? (
 	// 					<div>
-	// 						<label className='text-base text-gray-103 block'>
+	// 						<label className='text-base text-slate-200 block'>
 	// 							Custom filter
 	// 						</label>
 	// 						<Input
@@ -3390,7 +3390,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 
 	// 				{displayableFilter.includes("price") ? (
 	// 					<div>
-	// 						<label className='text-base text-gray-103 block'>
+	// 						<label className='text-base text-slate-200 block'>
 	// 							Price range
 	// 						</label>
 
@@ -3403,7 +3403,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 	// 								onChange={(e) => onFiltersChange("min", e.target.value)}
 	// 								name='priceRange-min'
 	// 							/>
-	// 							<span className='flex justify-center items-center text-gray-103 text-base mx-2'>
+	// 							<span className='flex justify-center items-center text-slate-200 text-base mx-2'>
 	// 								to
 	// 							</span>
 	// 							<Input
@@ -3960,7 +3960,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 										<div className='flex flex-col lg:flex-row w-full lg:gap-4'>
 											{show_filters?.discount?.length ? (
 												<div className='flex flex-col lg:w-1/3 mt-4 lg:mt-0'>
-													<h5 className='text-gray-103'>Filter by Discount</h5>
+													<h5 className='text-slate-200'>Filter by Discount</h5>
 													<Select
 														allowClear
 														className='w-full'
@@ -3981,13 +3981,13 @@ const isNewCollection = router.query.isNewCollection === "true";
 											) : null}
 											{priceRangeMinMax[0] !== priceRangeMinMax[1] ? (
 												<div className='flex flex-col lg:w-2/3 mt-4 lg:mt-0'>
-													<h5 className='text-gray-103'>
+													<h5 className='text-slate-200'>
 														Filter by Price Range
 													</h5>
 													<div
 														//  added slider selector for price range to select any custom price rang dynamic
 														className='flex items-center'>
-														<h5 className='text-gray-103 mb-0'>
+														<h5 className='text-slate-200 mb-0'>
 															{priceRangeMinMax[0]}
 														</h5>
 														<div className='w-full'>
@@ -4231,7 +4231,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 																		key={tag}
 																		className={`flex items-center rounded-md shadow my-2 mr-2 px-2 py-0.75 sm:px-4 w-max ${
 																			selectedTags.includes(tag)
-																				? "bg-lightgray-104"
+																				? "bg-slate-400"
 																				: "bg-lightgray-102"
 																		}`}
 																		onClick={() => handleTagClick({ tag })}
@@ -4271,7 +4271,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 																		className={`rounded-md shadow my-2 mr-2 px-2 py-0.75 sm:px-4 w-max ${
 																			selectedTags.length
 																				? "bg-lightgray-102"
-																				: "bg-lightgray-104"
+																				: "bg-slate-400"
 																		}`}
 																		onClick={() =>
 																			selectedTags.length &&
@@ -4291,7 +4291,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 																) : null}
 															</>
 														) : (
-															<p className='text-gray-103 mr-2'>
+															<p className='text-slate-200 mr-2'>
 																No {TAGS_TITLE} found. Click on plus to add{" "}
 																{TAGS_TITLE}
 															</p>
@@ -4411,8 +4411,8 @@ const isNewCollection = router.query.isNewCollection === "true";
 													selectedTag={selectedTags}
 													handleFilterOptionsVisibleChange={handleFilterOptionsVisibleChange}
 													filterOptionsVisible={filterOptionsVisible}
-													clearFiltersThemeClassName={filterStyles.clearFiltersBlack}
-													buttonThemeClassName={filterStyles.buttonThemeIndigo}
+													clearFiltersThemeClassName="text-[#232524]"
+													buttonThemeClassName="bg-brand"
 												/>
 											</div>
 										</div>

@@ -28,6 +28,7 @@ jobs:
       NEXT_PUBLIC_ENABLE_VENLY: "false"
       NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL: ""
       NEXT_PUBLIC_PDP_PAGE_ENABLED: "false"
+      NEXT_PUBLIC_FERNET_SECRET_KEY: "3CJeym0L9mZrk3SU7ydWYpZZTK7hIGcDnbG9kunFgc4="
       NEXT_PUBLIC_PAYMENT_URL: "https://unthink-dropp-payment-prod-314035436999.us-central1.run.app"
     steps:
       - name: Checkout

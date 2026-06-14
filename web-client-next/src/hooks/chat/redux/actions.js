@@ -40,6 +40,7 @@ import {
 	SET_MORESEARCH_SELECTED_TAG,
 	SET_AURA_SERVER_IMAGE,
 	SET_OVERLAY_COORDINATES,
+	SET_WIDGET_CHATHISTORY,
 } from "./constants";
 
 export const setSocketId = (payload) => ({ type: SET_SOCKET_ID, payload });
@@ -230,12 +231,16 @@ export const setChatProductsData = (payload) => ({
 	payload,
 });
 
-export const setWidgetHeader = (payload, widgetHeaderRequest) => ({
+export const setWidgetHeader = (payload, widgetHeaderRequest,chatHistory) => ({
 	type: SET_WIDGET_HEADER,
 	payload,
 	widgetHeaderRequest,
+	chatHistory
 });
-
+export const chatHistoryAction =(payload)=>({
+    type:SET_WIDGET_CHATHISTORY,
+	payload,
+})
 export const setWidgetImage = (payload) => ({
 	type: SET_WIDGET_IMAGE,
 	payload,

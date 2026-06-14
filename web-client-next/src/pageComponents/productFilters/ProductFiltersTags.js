@@ -6,29 +6,17 @@ import React, {
 	useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { isEmpty } from "../../helper/utils";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { Select, Tooltip } from "antd";
-import Image from "next/image";
-
-import { isEmpty } from "../../helper/utils";
-import filterIcon from "../../images/filter_outline.svg";
-import styles from "./productFilters.module.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import Addmore from "../../images/addmore2.svg";
-import SwiperCore, { FreeMode } from "swiper";
-
-// Initialize Swiper modules
-SwiperCore.use([FreeMode]);
 
 const ProductFiltersTags = ({
 	productFilters = {},
 	handleFiltersInputClear,
 	handleClearFiltersClick,
 	displayFilters = [],
-	tagThemeClassName = "bg-white text-slat-104 py-0.5 px-2",
-	clearFiltersThemeClassName = "text-gray-103",
+	tagThemeClassName = "bg-white text-brand py-0.5 px-2 rounded-full shadow-sm",
+	clearFiltersThemeClassName = "text-brand",
 	buttonThemeClassName = "bg-indigo-600",
 	isShowClearFilters = true,
 	isShowPriceRange = true,
@@ -37,7 +25,8 @@ const ProductFiltersTags = ({
 	selectedTag = "",
 	handleFilterOptionsVisibleChange,
 	filterOptionsVisible = false,
-	isproductSection
+	isproductSection,
+	isShowHashtagButton = true,
 }) => {
 	const [catalog_attributes] = useSelector((state) => [
 		state.store.data.catalog_attributes,
@@ -48,14 +37,14 @@ const ProductFiltersTags = ({
 
 	const tagInputRef = useRef(null);
 
-	// convert custom filter string to array
-	const savedCustomFilter = useMemo(
-		() =>
-			productFilters.custom_filter
-				? productFilters.custom_filter?.split(",")
-				: [],
-		[productFilters.custom_filter]
-	);
+	const savedCustomFilter = useMemo(() => {
+		const customFilter = productFilters.custom_filter;
+		if (Array.isArray(customFilter)) return customFilter;
+		if (typeof customFilter === "string") {
+			return customFilter.split(",").map((s) => s.trim());
+		}
+		return [];
+	}, [productFilters.custom_filter]);
 
 	useEffect(() => {
 		if (showCustomFilterInput) {
@@ -127,11 +116,13 @@ const ProductFiltersTags = ({
 		() =>
 			customFilterStoreData?.is_display &&
 			isShowCustomFilter &&
-			!showCustomFilterInput,
+			!showCustomFilterInput &&
+			isShowHashtagButton,
 		[
 			customFilterStoreData?.is_display,
 			isShowCustomFilter,
 			showCustomFilterInput,
+			isShowHashtagButton,
 		]
 	);
 
@@ -293,144 +284,87 @@ const ProductFiltersTags = ({
 
 	// scroll for tags
 
-	const swiperRef = useRef(null); // To store Swiper instance
-	const [isOverflowing, setIsOverflowing] = useState(false);
 
-	const checkOverflow = () => {
-		if (swiperRef.current && swiperRef.current.wrapperEl) {
-			const { scrollWidth, clientWidth } = swiperRef.current.wrapperEl;
-			setIsOverflowing(scrollWidth > clientWidth);
-		}
-	};
-
-	useEffect(() => {
-		// Initial check
-		checkOverflow();
-
-		// Recheck on resize
-		window.addEventListener("resize", checkOverflow);
-		return () => {
-			window.removeEventListener("resize", checkOverflow);
-		};
-	}, [savedCustomFilter]);
 
 
 	return (
 		<div>
-			<div className={`${styles.filterTagsRow} hashtag_scroll_div`}>
-				<div className={styles.swiperContainer}>
-					<Swiper
-						slidesPerView="auto"
-						spaceBetween={10}
-						freeMode={true}
-						onSwiper={(swiper) => (swiperRef.current = swiper)}
-						className="pb-1" /* swiper layout class */
-					>
-						{selectedFiltersArr
-							.filter((f) => f.visible)
-							.map((f) => (
-								<SwiperSlide key={f.name} style={{ width: "auto" }}>
-									<div
-										className={`${styles.tagPill} ${tagThemeClassName}`}
-										title={f.tooltipTitle}
-									>
-										{f.title}: {f.value}
-										{f.showClose && (
-											<CloseOutlined
-												className={styles.closeIcon}
-												role="button"
-												onClick={() => handleFiltersInputClear(f.name)}
-											/>
-										)}
-									</div>
-								</SwiperSlide>
-							))}
-
-						{!isEmpty(savedCustomFilter) && isShowCustomFilter &&
-							savedCustomFilter.map((hashtag) => (
-								<SwiperSlide key={hashtag} style={{ width: "auto" }}>
-									<div
-										className={`${styles.tagPill} ${tagThemeClassName}`}
+			<div className={`flex items-start flex-wrap min-w-0 max-w-full overflow-x-hidden gap-2 justify-start hashtag_scroll_div`}>
+				<div className="flex flex-wrap gap-2 flex-1 min-w-0">
+					{selectedFiltersArr
+						.filter((f) => f.visible)
+						.map((f) => (
+							<div key={f.name} className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`}
+								title={f.tooltipTitle}
+							>
+								{f.title}: {f.value}
+								{f.showClose && (
+									<CloseOutlined
+										className="ml-2 cursor-pointer"
 										role="button"
-									>
-										#{hashtag}
-										<CloseOutlined
-											className={styles.closeIcon}
-											role="button"
-											onClick={(e) => onDeleteCustomFilter(e, [hashtag])}
-										/>
-									</div>
-								</SwiperSlide>
-							))}
-					</Swiper>
-					{isOverflowing && (
+										onClick={() => handleFiltersInputClear(f.name)}
+									/>
+								)}
+							</div>
+						))}
+
+					{!isEmpty(savedCustomFilter) && isShowCustomFilter &&
+						savedCustomFilter.map((hashtag) => (
+							<div key={hashtag} className={`rounded-full flex items-center whitespace-nowrap shadow-sm h-7 px-2 sm:px-4 font-normal text-xs md:text-sm leading-none bg-white py-0.5 ${tagThemeClassName}`} role="button">
+								#{hashtag}
+								<CloseOutlined
+									className="ml-2 cursor-pointer"
+									role="button"
+									onClick={(e) => onDeleteCustomFilter(e, [hashtag])}
+								/>
+							</div>
+						))}
+
+					{typeof handleFilterOptionsVisibleChange === "function" && (
 						<div
-							className={`${styles.scrollArrow} addmore_image_edit`}
-							style={{ cursor: "pointer", zIndex: 10 }}
-							onClick={() => {
-								if (swiperRef.current) {
-									swiperRef.current.slideNext();
-								}
-							}}
-						>
-							<img src={Addmore} alt="Scroll Right" />
+							className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-[#334155] cursor-pointer border border-[#e2e8f0] shadow-sm hover:bg-[#e2e8f0]"
+							title="More filter"
+							onClick={() =>
+								handleFilterOptionsVisibleChange(!filterOptionsVisible)
+							}>
+							<PlusOutlined className="text-sm" />
 						</div>
 					)}
-				</div>
 
+					<div className="ml-auto flex items-center gap-2">
+						{showHashTags ? (
+							<div
+								className={`flex items-center gap-1 text-sm md:text-base leading-5 cursor-pointer ${clearFiltersThemeClassName}`}
+								title='Add or remove hashtags'
+								onClick={() => setShowCustomFilterInput(true)}>
+								<PlusOutlined className="mr-1" />
+								<span>Hashtags</span>
+							</div>
+						) : null}
 
+						{showHashTags && showClearAll ? (
+							<div className="border-l-2 border-[#232524] h-5 mx-1" />
+						) : null}
 
-				<div className={styles.actionsRow}>
-					{showHashTags ? (
-						<div
-							className={`${styles.hashtagButton} ${clearFiltersThemeClassName}`}
-							title='Add or remove hashtags'
-							onClick={() => setShowCustomFilterInput(true)}>
-							<PlusOutlined className={styles.plusIcon} />
-							<span>Hashtags</span>
-						</div>
-					) : null}
-
-					{showHashTags && showClearAll ? (
-						<div className={styles.divider}></div>
-					) : null}
-
-					{showClearAll ? (
-						<p
-							className={`${styles.clearAllText} ${clearFiltersThemeClassName}`}
-							role='button'
-							onClick={handleClearFiltersClick}>
-							Clear All
-						</p>
-					) : null}
-
+						{showClearAll ? (
+							<p
+								className={`text-sm md:text-base cursor-pointer ${clearFiltersThemeClassName}`}
+								role='button'
+								onClick={handleClearFiltersClick}>
+								Clear All
+							</p>
+						) : null}
+					</div>
 				</div>
 
 			</div>
-			{typeof handleFilterOptionsVisibleChange === "function" ? (
-				<div className={styles.filterOptionsRow}>
-					<div
-						className={styles.filterButton}
-						onClick={() =>
-							handleFilterOptionsVisibleChange(!filterOptionsVisible)
-						}>
-						<Image
-							src={filterIcon}
-							alt='Filters'
-							width={24}
-							height={24}
-							className={styles.filterIconImg}
-						/>
-						<span className={styles.filterText}>Filters</span>
-					</div>
-				</div>
-			) : null}
+
 			{showCustomFilterInput ? (
-				<div className={styles.customFilterWrapper}>
-					<div className={styles.selectWrapper}>
+				<div className="w-full lg:flex lg:justify-between">
+					<div className="mt-2 w-full">
 						<Select
 							mode='tags'
-							className={`${styles.selectInput} tag-select-input`}
+							className={`w-full text-base tag-select-input`}
 							placeholder='Enter hashtags'
 							value={editCustomFilterValue}
 							onChange={onCustomFilterChange}
@@ -439,16 +373,16 @@ const ProductFiltersTags = ({
 							dropdownStyle={{ display: "none" }}
 						/>
 					</div>
-					<div className={styles.buttonsArea}>
-						<div className={styles.buttonsGrid}>
+					<div className="text-right pt-2 lg:pl-2">
+						<div className="grid grid-cols-2 lg:grid-cols-1 gap-2 w-max ml-auto">
 							<button
 								onClick={onSaveCustomFilter}
-								className={`${styles.actionButton} ${buttonThemeClassName}`}>
+								className={`py-0 px-3 text-white rounded-lg h-6 ${buttonThemeClassName}`}>
 								Save
 							</button>
 							<button
 								onClick={onCancelCustomFilter}
-								className={`${styles.actionButton} ${buttonThemeClassName}`}>
+								className={`py-0 px-3 text-white rounded-lg h-6 ${buttonThemeClassName}`}>
 								Cancel
 							</button>
 						</div>

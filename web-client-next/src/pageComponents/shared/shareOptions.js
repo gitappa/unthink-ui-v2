@@ -51,9 +51,8 @@ const ShareOptions = (props) => {
 
 	useOnClickOutside(ref, handleClickOutside);
 
-	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose } = props;
-// console.log('url',url);
-// console.log('qrCodeGeneratorURL',qrCodeGeneratorURL);
+	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,fromCollection} = props;
+
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;
@@ -143,7 +142,8 @@ function pdf(){
 					)} */}
 
 					<div className='flex flex-col gap-4 md:gap-6'>
-						<div className='grid grid-cols-1 md:grid-cols-2 mt-2 lg:mt-3'>
+						<div className= {`${fromCollection ? '' : 'grid grid-cols-1 md:grid-cols-2'}  mt-2 lg:mt-3` }>
+							{!fromCollection &&
 							<div className='grid gap-3 md:gap-4  grid-cols-4 md:grid-cols-1 mt-2 md:pl-2.5 md:order-last'>
 								<a
 									href={socialMediaUrls.facebook}
@@ -181,17 +181,18 @@ function pdf(){
 									<LinkedinOutlined className='flex justify-center items-center h-full' />
 								</a>
 							</div>
-
-							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || props.true)  ? (
+							}
+							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || fromCollection) ? (
 								<div className='flex items-center justify-center mt-4 md:mt-0'>
 									<img
-										className='w-full max-w-208 object-cover'
+										className='w-full max-w-[208px] max-h-[208px] object-cover'
 										src={qrCodeGeneratorURL}
 									/>
+									{/* <p>{qrCodeGeneratorURL}</p> */}
 								</div>
 							) : null}
 						</div> 
-							{url && 
+							{url && fromCollection &&
 						<div className='border p-1 rounded flex break-all text-base mb-2 md:text-lg '>
 							{url}{" "}
 							<CopyToClipboard className='text-lg'

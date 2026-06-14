@@ -135,6 +135,7 @@ const Header = ({
     // allCollectionsList,
     // associate_seller,
     storeData,
+    authUser,
   ] = useSelector((state) => [
     state.chatV2.showChatModal,
     state.appState.wishlist.showWishlistModal,
@@ -146,8 +147,18 @@ const Header = ({
     // state.auth.user.collections.data,
     // state.store.data.associate_seller,
     state.store.data,
+    state.auth.user.data ?? {},
   ]);
  const removedata =false
+ const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
+//  console.log('hasKioskAccess',hasKioskAccess);
+ 
+// const [kioskLogin, setKioskLogin] = useState(false);
+
+// useEffect(() => {
+//   const value = localStorage.getItem("kioskLogin") === "true";
+//   setKioskLogin(value);
+// }, []);
 
   const {
     my_products_enable: isMyProductsEnable,
@@ -605,7 +616,7 @@ const Header = ({
       ) : null}
 
       {/* samskara mobile UI */}
-      {isSamskaraInstance ? (
+      {isSamskaraInstance && !showChatModal ? (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -618,7 +629,7 @@ const Header = ({
       ) : null}
 
       {/* heroesVillains mobile UI */}
-      {isHeroesVillainsInstance ? (
+      {isHeroesVillainsInstance && !showChatModal ? (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -632,6 +643,7 @@ const Header = ({
 
       {/* swiftlyStyled mobile UI */}
       {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
+      {!showChatModal &&  !hasKioskAccess && (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
@@ -643,10 +655,11 @@ const Header = ({
             setisDropDown={setisDropDown}
           />
         </div>
+      )}
       {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
-
+      {!hasKioskAccess && 
       <div className={styles.desktopHeaderSticky}>
         {/* budgettravel header */}
         {isBTInstance && <BudgetTravelHeader />}
@@ -847,9 +860,10 @@ const Header = ({
 
         )}
       </div>
+      }
 
       {/* for profile menu in mobile */}
-      {!(isUserFetching || isInfluencerFetching) && (
+      {!(isUserFetching || isInfluencerFetching) &&  !hasKioskAccess && (
         <div className={styles.mobileMenuIconContainer}>
           {/* <div
 						className='text-lg text-black flex min-h-7 w-7 cursor-pointer bg-** radius- '

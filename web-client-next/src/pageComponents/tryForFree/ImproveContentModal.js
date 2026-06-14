@@ -66,7 +66,7 @@ const ImproveContentModal = ({
 								{tags.map((tag) => (
 									<div
 										key={tag}
-										className={`flex items-center rounded-md shadow px-2 py-0.75 sm:px-4 w-max min-h-27 bg-lightgray-104 break-word-only`}>
+										className={`flex items-center rounded-md shadow px-2 py-0.75 sm:px-4 w-max min-h-27 bg-slate-400 break-word-only`}>
 										<span
 											level={5}
 											className={`m-0 font-normal text-xs md:text-sm text-white`}>

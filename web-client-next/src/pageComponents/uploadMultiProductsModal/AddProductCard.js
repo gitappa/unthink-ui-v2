@@ -342,7 +342,7 @@ const AddProductCard = ({
 						<img
 							src={product.image}
 							width='100%'
-							className='h-180 w-180 rounded-xl'
+							className='h-[180px] w-[180px] rounded-xl'
 							loading='lazy'
 						/>
 					</div>
@@ -350,7 +350,7 @@ const AddProductCard = ({
 				<div className='flex flex-col gap-3'>
 					<div>
 						<input
-							className='text-left placeholder-gray-101 outline-none px-3 h-10 rounded-xl w-full'
+							className='text-left placeholder-gray-101 bg-white outline-none px-3 h-10 rounded-xl w-full'
 							placeholder='Enter product title / name'
 							name='name'
 							type='text'
@@ -444,7 +444,7 @@ const AddProductCard = ({
 				<div>
 					<label className='text-sm'>List price</label>
 					<input
-						className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+						className='text-left placeholder-gray-101 outline-none bg-white px-3 h-8.5 rounded-xl w-full'
 						placeholder='Enter product list price'
 						name='listprice'
 						type='number'
@@ -460,7 +460,7 @@ const AddProductCard = ({
 				<div>
 					<label className='text-sm'>Selling price (discounted)</label>
 					<input
-						className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+						className='text-left placeholder-gray-101 bg-white outline-none px-3 h-8.5 rounded-xl w-full'
 						placeholder='Enter product final price'
 						name='price'
 						type='number'

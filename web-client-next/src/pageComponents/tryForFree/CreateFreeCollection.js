@@ -1572,7 +1572,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 			</div>
 
 			{(isVideoDataExtractionStarted || createWishlistInProgress) && (
-				<div className='fixed top-0 left-0 flex flex-col justify-center items-center w-full min-h-screen h-full backdrop-filter bg-gray-112 z-20'>
+				<div className='fixed top-0 left-0 flex flex-col justify-center items-center w-full min-h-screen h-full backdrop-filter bg-[#0f141fb3] z-20'>
 					<Spin
 						// indicator={<LoadingOutlined className='text-3xl-1' spin />}
 						indicator={

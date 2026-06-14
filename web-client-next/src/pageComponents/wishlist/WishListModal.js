@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate";
-import { Typography, Drawer, Spin, Button, Tooltip, Checkbox, Modal } from "antd";
+import { Typography, Drawer, Spin, Button, Tooltip, Checkbox, Modal, Select } from "antd";
 import {
 	CloseOutlined,
 	PlusOutlined,
@@ -334,10 +334,32 @@ const WishListModal = ({
 	// feature collection and creator funtion
 
 	const [activeCollection, setActiveCollection] = useState("Feature");
+	const [featuredFilter, setFeaturedFilter] = useState("social_media");
 
 	const handleCollectionClick = (collectionName) => {
 		setActiveCollection(collectionName);
 	};
+
+	const onFeaturedFilterChange = (value) => {
+		setFeaturedFilter(value);
+	};
+
+	useEffect(() => {
+		if (showWishlistModal && activeCollection === "Feature") {
+			let payload = {};
+			if (featuredFilter === "social_media") {
+				payload = { generated_by: "video_based" };
+			} else if (featuredFilter === "lookbooks") {
+				payload = { generated_by: "lookbook_based" };
+			} else if (featuredFilter === "trending") {
+				payload = { collection_type: "trending" };
+			}
+			dispatch(getUserCollections({
+				product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
+				...payload
+			}));
+		}
+	}, [featuredFilter, activeCollection, showWishlistModal, dispatch]);
 
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -493,8 +515,8 @@ const WishListModal = ({
 								<button
 									className={styles.createWishlistButton}
 									onClick={onCreateWishlist}>
-									<PlusOutlined className={styles.createWishlistIcon} />
-									<Text className={styles.createWishlistText}>
+									<PlusOutlined className='text-secondary text-lg' />
+									<Text className='pl-4 text-secondary font-semibold text-base '>
 										Create New {WISHLIST_TITLE}
 									</Text>
 								</button>
@@ -505,9 +527,9 @@ const WishListModal = ({
 							<>
 							<div className={styles.tabsContainer}>
 								<button onClick={() => handleCollectionClick("Feature")}
-									className={`${styles.tabButtonBase} ${styles.tabButtonLeft} ${activeCollection === "Feature" ? styles.tabButtonActive : styles.tabButtonInactive}`}>Featured Collections</button>
+									className={`${styles.tabButtonBase} ${styles.tabButtonLeft} ${activeCollection === "Feature" ? ' bg-secondary text-white rounded-l-[10px]' :' border-secondary border-2 text-secondary bg-transparent rounded-l-[10px]  '}`}>Featured Collections</button>
 								<button onClick={() => handleCollectionClick("Creator")}
-									className={`${styles.tabButtonBase} ${styles.tabButtonRight} ${activeCollection === "Creator" ? styles.tabButtonActive : styles.tabButtonInactive}`}>Creator Collections</button>
+									className={`${styles.tabButtonBase} ${styles.tabButtonRight} ${activeCollection === "Creator" ? ' bg-secondary text-white rounded-r-[10px]' : 'border-secondary border-2 text-secondary bg-transparent rounded-r[10px]' }`}>Creator Collections</button>
 							</div>
 
 							{
@@ -516,22 +538,23 @@ const WishListModal = ({
 									{enableSelectProduct ?
 										<>
 											<div className={styles.selectionControls}>
-												<div className={styles.checkboxContainer}>
-													<Checkbox
-														className={styles.checkboxText}
-														indeterminate={
-															selectedProducts.length > 0 &&
-															selectedProducts.length < collectionsList.length
-														}
-														onChange={onSelectAllChange}
-														checked={selectedProducts.length === collectionsList.length}>
-															{selectedProducts.length} Selected
-													</Checkbox>
-												</div>
+											<div className="flex border border-[#9E9E9E] rounded px-2 py-2">
+  <Checkbox
+    className="customCheckbox"
+    indeterminate={
+      selectedProducts.length > 0 &&
+      selectedProducts.length < collectionsList.length
+    }
+    onChange={onSelectAllChange}
+    checked={selectedProducts.length === collectionsList.length}
+  >
+    {selectedProducts.length} Selected
+  </Checkbox>
+</div>
 												<p
 													onClick={onDeleteSelectedProducts}
 													className={`${styles.actionButton} ${selectedProducts.length
-														? styles.deleteButtonEnabled
+														? 'text-secondary cursor-pointer'
 														: styles.deleteButton
 													}`}
 													title='Click to delete selected products'
@@ -540,7 +563,7 @@ const WishListModal = ({
 												</p>
 												<p
 													onClick={() => handleResetSelectProduct()}
-													className={`${styles.actionButton} ${styles.cancelButton}`}
+													className={`${styles.actionButton} text-secondary cursor-pointer`}
 													role='button'>
 													Cancel
 												</p>
@@ -549,8 +572,8 @@ const WishListModal = ({
 										:
 										(
 											<Tooltip title='Click and select multiple products to delete'>
-											<p className={styles.selectableButton} onClick={() => setEnableSelectProduct(true)} >
-												Select multiple products
+											<p className='lg:text-lg text-base text-secondary cursor-pointer' onClick={() => setEnableSelectProduct(true)} >
+												Select
 											</p>
 										</Tooltip>
 											)
@@ -559,6 +582,20 @@ const WishListModal = ({
 									</div>
 								)
 							}
+                            {
+                                activeCollection === "Feature" && (
+                                    <div className="flex justify-center mt-3 mb-2 px-4 w-full">
+                                        <div className="flex w-full">
+                                            <button onClick={() => onFeaturedFilterChange("social_media")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border-y border-l border-secondary transition-colors ${featuredFilter === "social_media" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'} rounded-l-md`}>Social Media</button>
+                                            <button onClick={() => onFeaturedFilterChange("lookbooks")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border-y border-l border-secondary transition-colors ${featuredFilter === "lookbooks" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'}`}>Lookbooks</button>
+                                            <button onClick={() => onFeaturedFilterChange("trending")}
+                                                className={`flex-1 py-1.5 text-sm font-medium border border-secondary transition-colors ${featuredFilter === "trending" ? 'bg-secondary text-white' : 'text-secondary bg-transparent'} rounded-r-md`}>Trending</button>
+                                        </div>
+                                    </div>
+                                )
+                            }
 							</>
 							)
 							}
@@ -576,7 +613,7 @@ const WishListModal = ({
 											isWishlistFetching={
 												isWishlistFetching || authUserFetching
 											}
-											contentClassName='bg-gray-103'
+											contentClassName='bg-slate-200'
 										/>
 
 									</>

@@ -518,8 +518,8 @@ const CustomProductModal = ({
 	);
 
 	const brandsDetails = useMemo(
-		() => sellerDetails[productData.brand],
-		[sellerDetails, productData.brand]
+		() => sellerDetails?.[productData?.brand],
+		[sellerDetails, productData?.brand]
 	);
 
 	const isContactDetailsAvailable = useMemo(
@@ -773,7 +773,7 @@ const CustomProductModal = ({
 												<div className='h-full product_card_image'>
 													<img
 														src={productData.image}
-														className='h-180 desktop:h-340'
+														className='h-[180px] w-[180px]   '
 														// loading='lazy'
 														width='100%'
 													/>
@@ -801,16 +801,27 @@ const CustomProductModal = ({
 												storeData?.pdp_settings?.is_add_to_cart_button) && (
 													<>
 														{storeData?.pdp_settings?.is_buy_button ? (
-															<button
-																className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
-																onClick={checkoutPayment}
-															>
-																Buy Now
-															</button>
+															productData?.url ? (
+																<a
+																	href={productData.url}
+																	target="_blank"
+																	rel="noreferrer"
+																	className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3 text-white"
+																	style={{ background: 'var(--color-brand)' }}
+																>
+																	Buy Now
+																</a>
+															) : (
+																<button
+																	className="box-border border flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container mt-3"
+																	onClick={checkoutPayment}
+																>
+																	Buy Now
+																</button>
+															)
 														) : (
 															<button
-																className="box-border border whitespace-nowrap  text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
-																style={{ background: '#7c75ec' }}
+																className="box-border border whitespace-nowrap bg-brand text-white flex items-center border-white rounded-xl px-2 py-1 product_add_to_wishlist_container"
 															// onClick={handleAddToCart}
 															>
 																Add to Cart
@@ -995,7 +1006,7 @@ const CustomProductModal = ({
 										) : null}
 									</div>
 
-									<div style={{ width: "200%" }}>
+									<div className='w-full max-w-full overflow-hidden'>
 										<div className='relative w-full mb-4'>
 											<Swiper
 												slidesPerView='auto'
@@ -1091,7 +1102,7 @@ const CustomProductModal = ({
 										<span>Enter some guidelines for your descriptions.</span>
 									</div>
 									<textarea
-										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										className='text-left placeholder-gray-101 outline-none rounded-xl bg-white w-full px-3 py-2 resize-none'
 										placeholder='For example: Describe the print and material in detail.'
 										name='guidelines'
 										type='text'
@@ -1111,7 +1122,7 @@ const CustomProductModal = ({
 										<span>Edit as needed.</span>
 									</div>
 									<textarea
-										className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 resize-none'
+										className='text-left placeholder-gray-101 bg-white outline-none rounded-xl w-full px-3 py-2 resize-none'
 										placeholder='For example: Our products are animal cruelty free.'
 										name='brand_description'
 										type='text'
@@ -1136,7 +1147,7 @@ const CustomProductModal = ({
 									</div>
 								</div>
 								<hr />
-								<div className='grid grid-cols-1 tablet:grid-cols-2 gap-4 tablet:gap-8 mt-4'>
+								<div className='grid grid-cols-1 md:grid-cols-2 gap-4 tablet:gap-8 mt-4'>
 									<div className='flex flex-col gap-4'>
 										<div>
 											{isUploading ? (
@@ -1155,13 +1166,13 @@ const CustomProductModal = ({
 												</div>
 											) : productData.image ? (
 												<div className='flex flex-col items-center justify-center'>
-													<div className='box-content theme-unthink w-40 sm:w-180 desktop:w-80'>
+													<div className='box-content theme-unthink '>
 														<div className='overflow-hidden relative cursor-pointer product_card_container shadow-3xl rounded-xl'>
 															<div className='product-card h-full'>
 																<div className='h-full product_card_image'>
 																	<img
 																		src={productData.image}
-																		className='h-180 desktop:h-340'
+																		className='h-[180px] w-[180px] '
 																		// loading='lazy'
 																		width='100%'
 																	/>
@@ -1169,7 +1180,7 @@ const CustomProductModal = ({
 															</div>
 														</div>
 													</div>
-													<div className='text-center text-primary underline tablet:text-lg text-sm cursor-pointer '>
+													<div className='text-center text-blue-700 underline md:text-lg text-sm cursor-pointer '>
 														<span onClick={() => handleUploadImageChange("")}>
 															remove or change Image
 														</span>
@@ -1197,7 +1208,7 @@ const CustomProductModal = ({
 
 									<div className='flex flex-col gap-4'>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full bg-white'
 											placeholder='Enter product title / name'
 											name='name'
 											type='text'
@@ -1206,7 +1217,7 @@ const CustomProductModal = ({
 										/>
 
 										<textarea
-											className='text-left placeholder-gray-101 outline-none rounded-xl w-full px-3 py-2 h-32 desktop:h-60'
+											className='text-left placeholder-gray-101 bg-white outline-none rounded-xl w-full px-3 py-2 h-32 desktop:h-60'
 											placeholder='Enter description...'
 											name='description'
 											type='text'
@@ -1280,7 +1291,7 @@ const CustomProductModal = ({
 									<div>
 										<label className='text-sm'>List price</label>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left bg-white placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
 											placeholder='Enter product list price'
 											name='listprice'
 											type='number'
@@ -1300,7 +1311,7 @@ const CustomProductModal = ({
 											Selling price (discounted)
 										</label>
 										<input
-											className='text-left placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
+											className='text-left bg-white placeholder-gray-101 outline-none px-3 h-8.5 rounded-xl w-full'
 											placeholder='Enter product final price'
 											name='price'
 											type='number'
