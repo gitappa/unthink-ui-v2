@@ -80,6 +80,9 @@ const SingleCollectionProductList = ({
      isOpen: false,
      selectedImage: "",
    });
+   console.log('showCollectionDetails',showCollectionDetails);
+   console.log('blogCollectionPage',blogCollectionPage);
+   
 
 
 const url = window.location.pathname === '/my-profile/'
@@ -99,7 +102,7 @@ const url = window.location.pathname === '/my-profile/'
       state.auth.user.data,
        state.influencer.collections.data,
     ]);
-    // console.log('influencer',influencerCollections);
+    console.log('singleCollection',singleCollection);
     
   const [showShareCollection, setShowShareCollection] = useState(false);
 
