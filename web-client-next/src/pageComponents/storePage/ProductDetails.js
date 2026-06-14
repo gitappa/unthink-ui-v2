@@ -821,72 +821,73 @@ const ProductDetails = ({ params, ...props }) => {
     // handleVTOCancel()
     handleVTOCancel();
     // attempt to build and show a QR that opens the saved collection
-  
   };
-useEffect(() => {
-  async function handlepickapi() {
-    try {
-      // Use the immediate API response instead of reading the state (which
-      // may not be updated synchronously).
-      const saved = saveData;
-      const collectionId =
-        saved?.data?.data?._id || saved?.data?.data?.collection_id;
+  useEffect(() => {
+    async function handlepickapi() {
+      try {
+        // Use the immediate API response instead of reading the state (which
+        // may not be updated synchronously).
+        const saved = saveData;
+        const collectionId =
+          saved?.data?.data?._id || saved?.data?.data?.collection_id;
 
-      if (!collectionId) return;
+        if (!collectionId) return;
 
-      const origin =
-        typeof window !== "undefined" ? window.location.origin : "";
+        const origin =
+          typeof window !== "undefined" ? window.location.origin : "";
 
-      // If kiosk guest - request signin token and build auto-login verify URL
-      const kioskEmail = parsedKiosk?.email || null;
-      if (kioskEmail) {
-        try {
-          const resp = await requestSigninWithLink(kioskEmail);
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
-          const userName =
-            resp?.data?.user_name || resp?.user_name || parsedKiosk?.user_name;
+        // If kiosk guest - request signin token and build auto-login verify URL
+        const kioskEmail = parsedKiosk?.email || null;
+        if (kioskEmail) {
+          try {
+            const resp = await requestSigninWithLink(kioskEmail);
+            const signin_token = resp?.signin_token || resp?.data?.signin_token;
+            const userName =
+              resp?.data?.user_name ||
+              resp?.user_name ||
+              parsedKiosk?.user_name;
 
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            const verifyLink = buildVerifyUrl(
-              decrypted,
-              `?page=influencer/${userName}/${collectionId}`,
-            );
-            const fullVerifyUrl = `${origin}${verifyLink}`;
-            console.log("fullVerifyUrl", fullVerifyUrl);
+            if (signin_token) {
+              const decrypted = decryptSigninToken(signin_token);
+              const verifyLink = buildVerifyUrl(
+                decrypted,
+                `?page=influencer/${userName}/${collectionId}`,
+              );
+              const fullVerifyUrl = `${origin}${verifyLink}`;
+              console.log("fullVerifyUrl", fullVerifyUrl);
 
-            setQrTargetUrl(fullVerifyUrl);
-            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-            // setShowShareProductDetails(true);
-            setQrModalOpen(true);
-            return;
+              setQrTargetUrl(fullVerifyUrl);
+              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+              // setShowShareProductDetails(true);
+              setQrModalOpen(true);
+              return;
+            }
+          } catch (err) {
+            console.error("Immediate QR build for VTO failed", err);
           }
-        } catch (err) {
-          console.error("Immediate QR build for VTO failed", err);
         }
-      }
 
-      // Fallback: build public influencer/shared URL (or influencer by user_name)
-      const uname = authUser?.user_name || parsedKiosk?.user_name || null;
-      let targetPath = "";
-      if (uname) {
-        targetPath = `/influencer/${uname}/${collectionId}`;
-      } else if (parsedKiosk?.user_id) {
-        targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
-      } else {
-        targetPath = `/influencer/${collectionId}`;
-      }
+        // Fallback: build public influencer/shared URL (or influencer by user_name)
+        const uname = authUser?.user_name || parsedKiosk?.user_name || null;
+        let targetPath = "";
+        if (uname) {
+          targetPath = `/influencer/${uname}/${collectionId}`;
+        } else if (parsedKiosk?.user_id) {
+          targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
+        } else {
+          targetPath = `/influencer/${collectionId}`;
+        }
 
-      const fullTarget = `${origin}${targetPath}`;
-      setQrTargetUrl(fullTarget);
-      setQrImageUrl(collectionQRCodeGenerator(fullTarget));
-      setQrModalOpen(true);
-    } catch (e) {
-      console.log(e);
+        const fullTarget = `${origin}${targetPath}`;
+        setQrTargetUrl(fullTarget);
+        setQrImageUrl(collectionQRCodeGenerator(fullTarget));
+        setQrModalOpen(true);
+      } catch (e) {
+        console.log(e);
+      }
     }
-  }
-  handlepickapi();
-}, [saveData]);
+    handlepickapi();
+  }, [saveData]);
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
     setVtoResultImageUrl(null);
