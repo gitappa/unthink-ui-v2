@@ -25,6 +25,7 @@ import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { is_store_instance } from "../../constants/config";
 import { fetchCategoriesReset } from "../categories/redux/actions";
 import { TrendingApiCall } from "../../helper/serverAPIs";
+import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 
 const KioskHome = ({ blogCollectionPage }) => {
   const [collectionData] = useSelector((state) => [
@@ -206,14 +207,8 @@ const KioskHome = ({ blogCollectionPage }) => {
       )}
 
       {/* Logged in info (fixed bottom-right) */}
-      <div className="fixed bottom-5 right-5 z-50 border border-gray-200 bg-gray-200/90 rounded-full px-6 py-3 shadow-sm cursor-auto transition-shadow duration-300">
-        <p className="text-sm font-semibold text-black">
-          👤 Logged in as:{" "}
-          <span className=" ">
-            {userInfo?.user_name || userInfo?.email || "Guest User"}
-          </span>
-        </p>
-      </div>
+   
+      <LoggedInInfo userInfo={userInfo} />
     </div>
   );
 };

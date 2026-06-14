@@ -14,6 +14,8 @@ export const getAuthUserData = (state) => state.auth.user.data;
 
 export const getAuthUserUserId = (state) => state.auth.user.data.user_id;
 
+export  const loggedInInfo = (state) => state.auth.user.data;
+  
 export const getAuthAdminList = (state) => state.store.data.admin_list;
 
 export const getAuthUserUserName = (state) => state.auth.user.data.user_name;
@@ -34,3 +36,4 @@ export const getAuthUserInfluencerCode = (state) =>
 // get the current user's favorite collection details from the store
 export const getCurrentUserFavoriteCollection = (state) =>
 	state.auth.user.collections.data.find(checkIsFavoriteCollection);
+
