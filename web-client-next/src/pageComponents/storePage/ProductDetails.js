@@ -213,7 +213,7 @@ const ProductDetails = ({ params, ...props }) => {
 
       const kioskLoginUserId = getKioskLoginUserId();
 
-      if (isSave && !kioskLoginUserId && !isGuestSubmit) {
+      if (isSave && !kioskLoginUserId && !isGuestSubmit && hasKioskAccess) {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
@@ -233,7 +233,7 @@ const ProductDetails = ({ params, ...props }) => {
               product_name: productDetails?.name,
               product_image: productDetails?.image,
               store: storeData?.store_name || "dothelook",
-              user_id: userId || kioskLoginUserId,
+              user_id: userId || kioskLoginUserId || authUserId ,
               eventId: storeData?.event_id,
               successMessage: "Product added to wishlist successfully!",
               errorMessage:
@@ -335,7 +335,7 @@ const ProductDetails = ({ params, ...props }) => {
         JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")?.email ||
         authUser?.emailId;
 
-      if (kioskLoginUserId && kioskEmail) {
+      if (kioskLoginUserId && kioskEmail && !hasKioskAccess) {
         const resp = await requestSigninWithLink(kioskEmail);
         const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
@@ -362,7 +362,7 @@ const ProductDetails = ({ params, ...props }) => {
       console.error("Share auto-login build error", e);
     }
 
-    if (!kioskLoginUserId) {
+    if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
       setIsPopupShow(true);
@@ -885,7 +885,7 @@ const ProductDetails = ({ params, ...props }) => {
                           onClick={(e) => {
                             e.stopPropagation();
 
-                            if (!kioskLogin) {
+                            if (!kioskLogin && hasKioskAccess) {
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
