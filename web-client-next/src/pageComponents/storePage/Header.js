@@ -90,6 +90,7 @@ import Cookies from "js-cookie";
 import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
 import { THEME_ALL } from "../../constants/themeCodes";
+import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 
 const { Text } = Typography;
 
@@ -149,9 +150,13 @@ const Header = ({
     state.store.data,
     state.auth.user.data ?? {},
   ]);
- const removedata =false
- const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
-//  console.log('hasKioskAccess',hasKioskAccess);
+  const removedata = false;
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
+  //  console.log('hasKioskAccess',hasKioskAccess);
  
 // const [kioskLogin, setKioskLogin] = useState(false);
 

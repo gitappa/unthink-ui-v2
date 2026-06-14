@@ -8,13 +8,21 @@ const signInWithLinkRequestUrl = '/users/signin_with_link';
 // Call /users/signin_with_link?emailId=<email>&is_auto_login=true
 export const requestSigninWithLink = async (email) => {
   try {
+    const emailId =
+      typeof email === 'string' ? email : email?.email || email?.emailId;
+
+    if (!emailId) {
+      console.warn('requestSigninWithLink: missing emailId');
+      return null;
+    }
+
     const url = `https://aurastage.unthink.ai/users/signin_with_link`;
 
     const res = await apiInstance({
       url,
       method: 'get',
       params: {
-        emailId: email,
+        emailId,
         is_auto_login: true,
       },
     });

@@ -12,6 +12,7 @@ import { ROUTES } from "../src/constants/codes";
 import { Spin } from "antd";
 import { useSelector } from "react-redux";
 import KioskHome from "../src/pageComponents/kiosk/KioskHome";
+import { useKioskAccess } from "../src/components/kiosk/components/LoggedInInfo";
 
 // Dynamically import StorePage to avoid hydration issues
 const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
@@ -36,16 +37,24 @@ const Index = ({ ...props }) => {
         setMounted(true);
     }, []);
 
+    // Show KioskHome if user is logged in and has kiosk_list
+    const hasKioskAccess = useKioskAccess({
+        isUserLogin,
+        storeData,
+        authUser,
+    });
+    const storeAss =
+        isUserLogin &&
+        storeData?.store_assistant_list?.find(
+            (data) => authUser?.emailId === data,
+        );
+
+    console.log('storeAss', storeAss);
+
     // Now we can do conditionals
     if (is_store_instance && !mounted) {
         return null; // Don't render anything until mounted on client
     }
-
-    // Show KioskHome if user is logged in and has kiosk_list
-    const hasKioskAccess = isUserLogin && storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
-    const storeAss = isUserLogin && storeData?.store_assistant_list?.find((data) => authUser?.emailId === data);
-
-    console.log('storeAss', storeAss);
 
     return (
         <>

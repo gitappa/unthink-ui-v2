@@ -18,6 +18,8 @@ import { requestSigninWithLink, decryptSigninToken, buildVerifyUrl } from "../..
 import useKioskSessionReminder, { KioskSessionPopup } from "./useKioskSessionReminder";
 import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
+import LoggedInInfo from "./components/LoggedInInfo";
+import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -32,6 +34,7 @@ const CollectionPage = ({ params }) => {
     state.auth.user.isUserLogin,
     state.store.data,
   ]);
+    const userInfo = useSelector(loggedInInfo);
   const handleTagClick = useCallback((value) => {
     setActiveCategory(value);
     setSelectedTags(value === "All" ? [] : [value]);
@@ -56,7 +59,7 @@ const CollectionPage = ({ params }) => {
     singleCollectionKiosk?.tag_map,
     selectedTags,
   ]);
-  // console.log('productsData',productsData);
+  // console.log('productsData',useSelector(userInfo));
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
@@ -306,6 +309,7 @@ const CollectionPage = ({ params }) => {
         {showSessionPopup && (
                     <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
                   )}
+                  <LoggedInInfo userInfo={userInfo} />
     </div>
   );
 };

@@ -90,6 +90,8 @@ import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import LoggedInInfo, { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
+import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -141,9 +143,20 @@ const ProductDetails = ({ params, ...props }) => {
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-  const hasKioskAccess =
-    isUserLogin &&
-    storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
+  const [additionalimg, setAdditionalImg] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+  const [descriptionget, setDescriptionget] = useState("");
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [showAllFields, setShowAllFields] = useState(false);
+  const [saveData, setResponse] = useState([]);
+  const userInfo = useSelector(loggedInInfo);
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
+  
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
     [productDetail],
@@ -200,16 +213,12 @@ const ProductDetails = ({ params, ...props }) => {
         isSkip = false,
         isGuestSubmit = false,
         userId = null,
+        email = null,
       } = options;
-
-      // if (e?.preventDefault) {
-      //   e?.preventDefault();
-      //   e?.stopPropagation();
-      // }
 
       const kioskLoginUserId = getKioskLoginUserId();
 
-      if (isSave && !kioskLoginUserId && !isGuestSubmit) {
+      if (isSave && !kioskLoginUserId && !isGuestSubmit && hasKioskAccess) {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
@@ -229,7 +238,7 @@ const ProductDetails = ({ params, ...props }) => {
               product_name: productDetails?.name,
               product_image: productDetails?.image,
               store: storeData?.store_name || "dothelook",
-              user_id: userId || kioskLoginUserId,
+              user_id: userId || kioskLoginUserId || authUserId ,
               eventId: storeData?.event_id,
               successMessage: "Product added to wishlist successfully!",
               errorMessage:
@@ -244,14 +253,27 @@ const ProductDetails = ({ params, ...props }) => {
             try {
               const origin =
                 typeof window !== "undefined" ? window.location.origin : "";
-              const kioskEmail = JSON.parse(
-                sessionStorage.getItem("Kiosk-login") || "{}",
-              )?.email;
+              const currentKiosk =
+                typeof window !== "undefined"
+                  ? (() => {
+                      try {
+                        const value = sessionStorage.getItem("Kiosk-login");
+                        return value ? JSON.parse(value) : {};
+                      } catch (err) {
+                        return {};
+                      }
+                    })()
+                  : {};
+              const kioskEmail =
+                email || currentKiosk?.email || currentKiosk?.emailId;
               if (kioskEmail) {
                 const resp = await requestSigninWithLink(kioskEmail);
                 const signin_token =
                   resp?.signin_token || resp?.data?.signin_token;
-                const userName = resp?.data?.user_name || resp?.user_name;
+                const userName =
+                  resp?.data?.user_name ||
+                  resp?.user_name ||
+                  currentKiosk?.user_name;
 
                 if (signin_token) {
                   setPendingWishlistQrInfo({ origin, signin_token, userName });
@@ -261,16 +283,6 @@ const ProductDetails = ({ params, ...props }) => {
               console.error("Immediate QR build failed", e);
             }
           })();
-        } else {
-          console.log(
-            "[ProductDetails] Product details incomplete for wishlist collection",
-            {
-              mfr_code: productDetails?.mfr_code,
-              name: productDetails?.name,
-              image: productDetails?.image,
-              storeData: !!storeData,
-            },
-          );
         }
       }
     },
@@ -291,7 +303,7 @@ const ProductDetails = ({ params, ...props }) => {
     if (!addWishlistState?.data) return;
 
     const { origin, signin_token, userName } = pendingWishlistQrInfo;
-
+    // 2nd time code i have written
     try {
       const decrypted = decryptSigninToken(signin_token);
 
@@ -328,7 +340,7 @@ const ProductDetails = ({ params, ...props }) => {
         JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")?.email ||
         authUser?.emailId;
 
-      if (kioskLoginUserId && kioskEmail) {
+      if (kioskLoginUserId && kioskEmail && !hasKioskAccess) {
         const resp = await requestSigninWithLink(kioskEmail);
         const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
@@ -355,7 +367,7 @@ const ProductDetails = ({ params, ...props }) => {
       console.error("Share auto-login build error", e);
     }
 
-    if (!kioskLoginUserId) {
+    if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
       setIsPopupShow(true);
@@ -366,31 +378,9 @@ const ProductDetails = ({ params, ...props }) => {
     setShowShareProductDetails((show) => !show);
   }, [authUser, dispatch, getKioskLoginUserId]);
 
-  //   useEffect(() => {
-  //     return () => {
-  //       dispatch({ type: RESET_PRODUCT_DETAILS });
-  //     };
-  //   }, []);
-
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
   )?.is_display;
-
-  //   const fetchProductDetails = async () => {
-  //     try {
-  //       const products = await customProductsAPIs.fetchProductDetailsAPICall(
-  //         mfr_code,
-  //         productDetails?.image,
-  //       );
-  //       if (products && products.status === 200 && products.data) {
-  //         setFetchedProductDetails(products.data.data[0]);
-  //       }
-  //     } catch {
-  //       setFetchedProductDetails({});
-  //     } finally {
-  //       dispatch(PDPloader(false));
-  //     }
-  //   };
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -400,19 +390,10 @@ const ProductDetails = ({ params, ...props }) => {
 
   useEffect(() => {
     if (!mfr_code) return;
-
     return () => {
       localStorage.removeItem(`pdp_image_${mfr_code}`);
     };
   }, [mfr_code]);
-  //   useEffect(() => {
-  //     if (!mfr_code) return;
-  //     if (!savedProductDetails) {
-  //       fetchProductDetails(); // fetch product details if not available in redux
-  //     }
-  //   }, [mfr_code, savedProductDetails]);
-
-  // console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {
     return collection?.product_lists?.find(
@@ -503,9 +484,6 @@ const ProductDetails = ({ params, ...props }) => {
   );
   const searchParams = useSearchParams();
 
-  // const fromCollection = searchParams.get("from") === "kioskcollection";
-  // console.log('fromCollection',fromCollection);
-
   const handleGoBack = () => {
     if (typeof window !== "undefined" && window?.history?.length > 2) {
       window.history.back();
@@ -539,29 +517,6 @@ const ProductDetails = ({ params, ...props }) => {
   }, [sharePageUrl, qrCodeGeneratorURL]);
   // console.log('shareQrCodeImage',shareQrCodeImage);
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
-  //   }
-  // }, [productDetailsPagePath]);
-
-  // const fieldsToDisplay = [
-  //   // "age_group",
-  //   // "gemstone",
-  //   "color",
-  //   "gender",
-  //   "material",
-  //   // "occasion",
-  //   "pattern",
-  //   // "shape",
-  //   // "style",
-  //   // "room",
-  //   // "size",
-  //   "sleeve",
-  //   "fit",
-  //   "category",
-  //   // 'product_tag'
-  // ];
   const fieldsToDisplay =
     storeData?.pdp_settings?.product_page_attributes || [];
   // console.log('fieldsToDisplay',fieldsToDisplay);
@@ -718,12 +673,7 @@ const ProductDetails = ({ params, ...props }) => {
       setTimeout(() => onSuccess("ok"), 0);
     },
   };
-  const [additionalimg, setAdditionalImg] = useState(null);
-  const [Loading, setLoading] = useState(false);
-  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-  const [descriptionget, setDescriptionget] = useState("");
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [showAllFields, setShowAllFields] = useState(false);
+
   const handleVTOclick = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -783,7 +733,6 @@ const ProductDetails = ({ params, ...props }) => {
       }
     }
   };
-  const [saveData, setResponse] = useState([]);
   // console.log('response',saveData);
 
   const handleVtoSave = async () => {
@@ -821,72 +770,54 @@ const ProductDetails = ({ params, ...props }) => {
     // handleVTOCancel()
     handleVTOCancel();
     // attempt to build and show a QR that opens the saved collection
-  
   };
-useEffect(() => {
-  async function handlepickapi() {
-    try {
-      // Use the immediate API response instead of reading the state (which
-      // may not be updated synchronously).
-      const saved = saveData;
-      const collectionId =
-        saved?.data?.data?._id || saved?.data?.data?.collection_id;
+  useEffect(() => {
+    async function handlepickapi() {
+      try {
+        const collectionId =
+          saveData?.data?.data?._id || saveData?.data?.data?.collection_id;
 
-      if (!collectionId) return;
+        if (!collectionId) return;
 
-      const origin =
-        typeof window !== "undefined" ? window.location.origin : "";
+        const origin =
+          typeof window !== "undefined" ? window.location.origin : "";
 
-      // If kiosk guest - request signin token and build auto-login verify URL
-      const kioskEmail = parsedKiosk?.email || null;
-      if (kioskEmail) {
-        try {
-          const resp = await requestSigninWithLink(kioskEmail);
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
-          const userName =
-            resp?.data?.user_name || resp?.user_name || parsedKiosk?.user_name;
+        // If kiosk guest - request signin token and build auto-login verify URL
+        const kioskEmail = parsedKiosk?.email || null;
+        if (kioskEmail) {
+          try {
+            const resp = await requestSigninWithLink(kioskEmail);
+            const signin_token = resp?.signin_token || resp?.data?.signin_token;
+            const userName =
+              resp?.data?.user_name ||
+              resp?.user_name ||
+              parsedKiosk?.user_name;
 
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            const verifyLink = buildVerifyUrl(
-              decrypted,
-              `?page=influencer/${userName}/${collectionId}`,
-            );
-            const fullVerifyUrl = `${origin}${verifyLink}`;
-            console.log("fullVerifyUrl", fullVerifyUrl);
+            if (signin_token) {
+              const decrypted = decryptSigninToken(signin_token);
+              const verifyLink = buildVerifyUrl(
+                decrypted,
+                `?page=influencer/${userName}/${collectionId}`,
+              );
+              const fullVerifyUrl = `${origin}${verifyLink}`;
+              console.log("fullVerifyUrl", fullVerifyUrl);
 
-            setQrTargetUrl(fullVerifyUrl);
-            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-            // setShowShareProductDetails(true);
-            setQrModalOpen(true);
-            return;
+              setQrTargetUrl(fullVerifyUrl);
+              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+              // setShowShareProductDetails(true);
+              setQrModalOpen(true);
+              return;
+            }
+          } catch (err) {
+            console.error("Immediate QR build for VTO failed", err);
           }
-        } catch (err) {
-          console.error("Immediate QR build for VTO failed", err);
         }
+      } catch (e) {
+        console.log(e);
       }
-
-      // Fallback: build public influencer/shared URL (or influencer by user_name)
-      const uname = authUser?.user_name || parsedKiosk?.user_name || null;
-      let targetPath = "";
-      if (uname) {
-        targetPath = `/influencer/${uname}/${collectionId}`;
-      } else if (parsedKiosk?.user_id) {
-        targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
-      } else {
-        targetPath = `/influencer/${collectionId}`;
-      }
-
-      const fullTarget = `${origin}${targetPath}`;
-      setQrTargetUrl(fullTarget);
-      setQrImageUrl(collectionQRCodeGenerator(fullTarget));
-      setQrModalOpen(true);
-    } catch (e) {
-      console.log(e);
     }
-  }
-  handlepickapi();
-}, [saveData]);
+    handlepickapi();
+  }, [saveData]);
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
     setVtoResultImageUrl(null);
@@ -959,7 +890,7 @@ useEffect(() => {
                           onClick={(e) => {
                             e.stopPropagation();
 
-                            if (!kioskLogin) {
+                            if (!kioskLogin && hasKioskAccess) {
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
@@ -1812,6 +1743,7 @@ hover:bg-indigo-700
                 isSave: true,
                 isGuestSubmit: true,
                 userId,
+                email,
               });
             }
           } catch (err) {
@@ -1896,6 +1828,9 @@ hover:bg-indigo-700
           onLogout={handleLogout}
         />
       )}
+      {hasKioskAccess &&
+        <LoggedInInfo userInfo={userInfo} />
+      }
     </div>
   );
 };
