@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const LoggedInInfo = ({ userInfo }) => {
   return (
@@ -14,3 +14,17 @@ const LoggedInInfo = ({ userInfo }) => {
 };
 
 export default LoggedInInfo;
+
+export const useKioskAccess = ({ isUserLogin, storeData, authUser }) => {
+  const hasKioskAccess =
+    isUserLogin &&
+    storeData?.kiosk_list?.some((data) => authUser?.emailId === data);
+
+  useEffect(() => {
+    if (!isUserLogin && typeof window !== "undefined") {
+      sessionStorage.removeItem("Kiosk-login");
+    }
+  }, [isUserLogin]);
+
+  return !!hasKioskAccess;
+};

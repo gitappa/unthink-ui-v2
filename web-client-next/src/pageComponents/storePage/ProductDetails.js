@@ -90,7 +90,7 @@ import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
+import LoggedInInfo, { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 
 const ProductDetails = ({ params, ...props }) => {
@@ -151,9 +151,12 @@ const ProductDetails = ({ params, ...props }) => {
   const [showAllFields, setShowAllFields] = useState(false);
   const [saveData, setResponse] = useState([]);
   const userInfo = useSelector(loggedInInfo);
-  const hasKioskAccess =
-    isUserLogin &&
-    storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
+  
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
     [productDetail],
