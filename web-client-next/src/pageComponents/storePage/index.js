@@ -566,7 +566,7 @@ const StorePageWrapper = (props) => {
 			currentSingleCollection._id,
 			showWishlistModal,
 			collection_path,
-			collection_id,
+			collection_id
 		]
 	);
 	// const isFirstRender = useRef(true);
