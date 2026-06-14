@@ -90,6 +90,8 @@ import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
+import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -148,7 +150,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showAllFields, setShowAllFields] = useState(false);
   const [saveData, setResponse] = useState([]);
-
+  const userInfo = useSelector(loggedInInfo);
   const hasKioskAccess =
     isUserLogin &&
     storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
@@ -1823,6 +1825,9 @@ hover:bg-indigo-700
           onLogout={handleLogout}
         />
       )}
+      {hasKioskAccess &&
+        <LoggedInInfo userInfo={userInfo} />
+      }
     </div>
   );
 };
