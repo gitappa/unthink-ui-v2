@@ -141,6 +141,14 @@ const ProductDetails = ({ params, ...props }) => {
   const imageFromQuery = cleanImage(router.query.image);
   const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+  const [additionalimg, setAdditionalImg] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
+  const [descriptionget, setDescriptionget] = useState("");
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [showAllFields, setShowAllFields] = useState(false);
+  const [saveData, setResponse] = useState([]);
+
   const hasKioskAccess =
     isUserLogin &&
     storeData?.kiosk_list?.find((data) => authUser?.emailId === data);
@@ -202,11 +210,6 @@ const ProductDetails = ({ params, ...props }) => {
         userId = null,
       } = options;
 
-      // if (e?.preventDefault) {
-      //   e?.preventDefault();
-      //   e?.stopPropagation();
-      // }
-
       const kioskLoginUserId = getKioskLoginUserId();
 
       if (isSave && !kioskLoginUserId && !isGuestSubmit) {
@@ -247,8 +250,8 @@ const ProductDetails = ({ params, ...props }) => {
               const kioskEmail = JSON.parse(
                 sessionStorage.getItem("Kiosk-login") || "{}",
               )?.email;
-              if (kioskEmail) {
-                const resp = await requestSigninWithLink(kioskEmail);
+              if (parsedKiosk) {
+                const resp = await requestSigninWithLink(parsedKiosk);
                 const signin_token =
                   resp?.signin_token || resp?.data?.signin_token;
                 const userName = resp?.data?.user_name || resp?.user_name;
@@ -261,16 +264,6 @@ const ProductDetails = ({ params, ...props }) => {
               console.error("Immediate QR build failed", e);
             }
           })();
-        } else {
-          console.log(
-            "[ProductDetails] Product details incomplete for wishlist collection",
-            {
-              mfr_code: productDetails?.mfr_code,
-              name: productDetails?.name,
-              image: productDetails?.image,
-              storeData: !!storeData,
-            },
-          );
         }
       }
     },
@@ -291,7 +284,7 @@ const ProductDetails = ({ params, ...props }) => {
     if (!addWishlistState?.data) return;
 
     const { origin, signin_token, userName } = pendingWishlistQrInfo;
-
+    // 2nd time code i have written
     try {
       const decrypted = decryptSigninToken(signin_token);
 
@@ -366,31 +359,9 @@ const ProductDetails = ({ params, ...props }) => {
     setShowShareProductDetails((show) => !show);
   }, [authUser, dispatch, getKioskLoginUserId]);
 
-  //   useEffect(() => {
-  //     return () => {
-  //       dispatch({ type: RESET_PRODUCT_DETAILS });
-  //     };
-  //   }, []);
-
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
   )?.is_display;
-
-  //   const fetchProductDetails = async () => {
-  //     try {
-  //       const products = await customProductsAPIs.fetchProductDetailsAPICall(
-  //         mfr_code,
-  //         productDetails?.image,
-  //       );
-  //       if (products && products.status === 200 && products.data) {
-  //         setFetchedProductDetails(products.data.data[0]);
-  //       }
-  //     } catch {
-  //       setFetchedProductDetails({});
-  //     } finally {
-  //       dispatch(PDPloader(false));
-  //     }
-  //   };
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -400,19 +371,10 @@ const ProductDetails = ({ params, ...props }) => {
 
   useEffect(() => {
     if (!mfr_code) return;
-
     return () => {
       localStorage.removeItem(`pdp_image_${mfr_code}`);
     };
   }, [mfr_code]);
-  //   useEffect(() => {
-  //     if (!mfr_code) return;
-  //     if (!savedProductDetails) {
-  //       fetchProductDetails(); // fetch product details if not available in redux
-  //     }
-  //   }, [mfr_code, savedProductDetails]);
-
-  // console.log("productDetails", productDetails);
 
   const cardItem = useMemo(() => {
     return collection?.product_lists?.find(
@@ -503,9 +465,6 @@ const ProductDetails = ({ params, ...props }) => {
   );
   const searchParams = useSearchParams();
 
-  // const fromCollection = searchParams.get("from") === "kioskcollection";
-  // console.log('fromCollection',fromCollection);
-
   const handleGoBack = () => {
     if (typeof window !== "undefined" && window?.history?.length > 2) {
       window.history.back();
@@ -539,29 +498,6 @@ const ProductDetails = ({ params, ...props }) => {
   }, [sharePageUrl, qrCodeGeneratorURL]);
   // console.log('shareQrCodeImage',shareQrCodeImage);
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     setSharePageUrl(`${window.location?.origin}${productDetailsPagePath}`);
-  //   }
-  // }, [productDetailsPagePath]);
-
-  // const fieldsToDisplay = [
-  //   // "age_group",
-  //   // "gemstone",
-  //   "color",
-  //   "gender",
-  //   "material",
-  //   // "occasion",
-  //   "pattern",
-  //   // "shape",
-  //   // "style",
-  //   // "room",
-  //   // "size",
-  //   "sleeve",
-  //   "fit",
-  //   "category",
-  //   // 'product_tag'
-  // ];
   const fieldsToDisplay =
     storeData?.pdp_settings?.product_page_attributes || [];
   // console.log('fieldsToDisplay',fieldsToDisplay);
@@ -718,12 +654,7 @@ const ProductDetails = ({ params, ...props }) => {
       setTimeout(() => onSuccess("ok"), 0);
     },
   };
-  const [additionalimg, setAdditionalImg] = useState(null);
-  const [Loading, setLoading] = useState(false);
-  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-  const [descriptionget, setDescriptionget] = useState("");
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [showAllFields, setShowAllFields] = useState(false);
+
   const handleVTOclick = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -783,7 +714,6 @@ const ProductDetails = ({ params, ...props }) => {
       }
     }
   };
-  const [saveData, setResponse] = useState([]);
   // console.log('response',saveData);
 
   const handleVtoSave = async () => {
@@ -825,11 +755,8 @@ const ProductDetails = ({ params, ...props }) => {
   useEffect(() => {
     async function handlepickapi() {
       try {
-        // Use the immediate API response instead of reading the state (which
-        // may not be updated synchronously).
-        const saved = saveData;
         const collectionId =
-          saved?.data?.data?._id || saved?.data?.data?.collection_id;
+          saveData?.data?.data?._id || saveData?.data?.data?.collection_id;
 
         if (!collectionId) return;
 
@@ -866,22 +793,6 @@ const ProductDetails = ({ params, ...props }) => {
             console.error("Immediate QR build for VTO failed", err);
           }
         }
-
-        // Fallback: build public influencer/shared URL (or influencer by user_name)
-        const uname = authUser?.user_name || parsedKiosk?.user_name || null;
-        let targetPath = "";
-        if (uname) {
-          targetPath = `/influencer/${uname}/${collectionId}`;
-        } else if (parsedKiosk?.user_id) {
-          targetPath = `/influencer/shared/${parsedKiosk.user_id}/${collectionId}`;
-        } else {
-          targetPath = `/influencer/${collectionId}`;
-        }
-
-        const fullTarget = `${origin}${targetPath}`;
-        setQrTargetUrl(fullTarget);
-        setQrImageUrl(collectionQRCodeGenerator(fullTarget));
-        setQrModalOpen(true);
       } catch (e) {
         console.log(e);
       }
