@@ -31,7 +31,7 @@ const BannerKisok = ({ products, Tags }) => {
     <div className="mt-5">
       {/* Banner Section */}
       <div
-        className="rounded-3xl bg-kiosk-primary px-4 py-6 md:py-10 md:px-8 overflow-hidden relative "
+        className="rounded-3xl bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-4 py-6 md:py-10 md:px-8 overflow-hidden relative "
         // style={{
         //   backgroundImage: `url(${Gold_bg_banner?.src || Gold_bg_banner})`,
         //   backgroundSize: "cover",
