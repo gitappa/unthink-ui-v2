@@ -87,16 +87,13 @@ function GuestUserPopUp({
           emailId: guestData.email,
           user_id: tid,
           store: storeName,
-        });
-
-        
+        });        
         const userId = res?.data?.data?.user_id;
         const email = res?.data?.data?.email ||  res?.data?.data?.emailId;
         if (res?.data?.status_code === 200 && userId) {
           if (persistKioskLogin && typeof window !== "undefined") {
             sessionStorage.setItem("Kiosk-login",JSON.stringify( {user_id : userId,email}) );
           }
-
           closePopup();
           onSuccess?.({ userId, response: res, email: guestData.email });
         }

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Autoplay } from "swiper";
 import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
-const HeroSection = ({ im, }) => {
+const HeroSection = () => {
   const router = useRouter();
   const [collectiondata, setcollectiondata] = useState([]);
   // const collectiondata = useMemo(() => {
@@ -25,7 +25,8 @@ const HeroSection = ({ im, }) => {
         const shuffledData = [...response.data.data].sort(
           () => Math.random() - 0.5,
         );
-        setcollectiondata(shuffledData[0]);
+        // setcollectiondata(shuffledData[0]);
+        setcollectiondata(response.data.data[0]);
         // console.log('shuffledData',shuffledData);
       } catch (error) {
         console.error(error);
@@ -40,8 +41,7 @@ const HeroSection = ({ im, }) => {
     collectiondata?.thumbnail_image || collectiondata?.image;
   const [isClient, setIsClient] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+
 
   useEffect(() => {
     // mark client after mount to avoid running client-only effects on SSR
@@ -52,15 +52,7 @@ const HeroSection = ({ im, }) => {
   const handlePlayClick = () => setIsPlaying(true);
   const handlePauseClick = () => setIsPlaying(false);
 
-  useEffect(() => {
-    if (!isClient) return;
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, [isClient]);
+ 
 
   useEffect(() => {
     if (!isClient) return;
@@ -71,7 +63,7 @@ const HeroSection = ({ im, }) => {
       (entries) => {
         const entry = entries[0];
         const visible = entry.intersectionRatio >= 0.5;
-        setIsVisible(visible);
+       
         setIsPlaying(visible);
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
@@ -128,17 +120,17 @@ const HeroSection = ({ im, }) => {
           </div>
         )}
 
-        <div className="absolute -bottom-16 w-full">
-          <div className="relative pb-2">
+        <div className="absolute -bottom-14 left-0 right-0 px-3 md:px-6">
+          <div className="relative pb-4">
             {/* subtle ash gradient behind the swiper cards */}
             <div
               aria-hidden="true"
-              className="absolute -bottom-0.5 md:-bottom-1 mx-auto rounded-xl pointer-events-none"
+              className="absolute -bottom-0.5 md:-bottom-1 mx-auto rounded-2xl pointer-events-none"
               style={{
                 left: 0,
                 right: 0,
                 width: "100%",
-                height: 180,
+                height: 168,
                 zIndex: 1,
                 background:
                   "linear-gradient(90deg, rgba(245,246,247,0.95) 0%, rgba(234,236,238,0.95) 50%, rgba(245,246,247,0.95) 100%)",
@@ -146,78 +138,68 @@ const HeroSection = ({ im, }) => {
               }}
             />
 
-            <div style={{ position: "relative", zIndex: 10 }} className="pb-2">
+            <div
+              style={{ position: "relative", zIndex: 10 }}
+              className="flex items-stretch gap-3 overflow-hidden rounded-xl pb-2"
+            >
+              <div key="collection-info" className="flex-none">
+                <div
+                  className="h-40 w-44 md:h-48 md:w-52 rounded-xl shadow-lg flex items-center justify-center p-4"
+                  style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
+                >
+                  <div className="text-center">
+                    <h3 className="text-base md:text-lg font-semibold leading-snug text-black">
+                      {collectiondata.collection_name}
+                    </h3>
+                    <button
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        router.push(
+                          `/kioskcollections/${collectiondata.path}`,
+                        );
+                      }}
+                      className="mt-4 bg-black text-white px-4 py-2 rounded-md font-semibold"
+                    >
+                      Shop All
+                    </button>
+                  </div>
+                </div>
+              </div>
               <Swiper
                 modules={[Autoplay]}
-                spaceBetween={10}
-                slidesPerView={6}
+                spaceBetween={12}
+                slidesPerView="auto"
                 className="mySwipers"
-                style={{ width: "100%" }}
+                style={{ width: "100%", minWidth: 0 }}
                 speed={2000} // move slowly for 2 seconds
                 autoplay={{
-                  delay: 3000, // wait 3 seconds before moving
+                  delay: 3500, // wait 3.5 seconds before moving
                   disableOnInteraction: true, // stop autoplay after user swipes
                   pauseOnMouseEnter: false,
                 }}
                 // loop={true}
-                breakpoints={{
-                  0: {
-                    slidesPerView: 2,
-                  },
-                  640: {
-                    slidesPerView: 3,
-                  },
-                  768: {
-                    slidesPerView: 4,
-                  },
-                  1024: {
-                    slidesPerView: 5,
-                  },
-                  1380: {
-                    slidesPerView: 6,
-                  },
-                }}
               >
                 {collectiondata && (
                   <>
-                    <SwiperSlide key="collection-info">
-                      <div
-                        className="h-40 w-40 md:h-48 md:w-48 rounded-xl mr-3 shadow-md flex items-center justify-center p-4"
-                        style={{ backgroundColor: "rgba(250,251,252,0.95)" }}
-                      >
-                        <div className="text-center">
-                          <h3 className="text-lg font-semibold text-black">
-                            {collectiondata.collection_name}
-                          </h3>
-                          <button
-                            onClick={() =>
-                              router.push(
-                                `/kioskcollections/${collectiondata.path}`,
-                              )
-                            }
-                            className="mt-4 bg-black text-white px-4 py-2 rounded-md"
-                          >
-                            Shop All
-                          </button>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-
                     {collectiondata.product_lists?.map((product, idx) => (
-                      <SwiperSlide key={`product-${idx}`} className="ml-7">
+                      <SwiperSlide
+                        key={`product-${idx}`}
+                        style={{ width: "auto" }}
+                      >
                         <div
-                          className="h-40 w-40 md:h-48 md:w-48  rounded-xl mr-3 shadow-md flex items-center justify-center p-3 overflow-hidden"
-                          style={{ backgroundColor: "rgba(250,251,252,0.95)" }}
+                          className="h-40 w-44 md:h-48 md:w-52 rounded-xl shadow-lg flex items-center justify-center p-3 overflow-hidden"
+                          style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
                         >
                           <Image
                             src={product.image}
                             width={176}
                             height={176}
                             alt={product.name || `slide-${idx}`}
-                            className="h-full w-full rounded-md object-contain"
-                            onClick={() =>
-                              router.push(`/product/${product.mfr_code}`)
-                            }
+                            className="h-full w-full rounded-lg object-contain"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              router.push(`/product/${product.mfr_code}`);
+                            }}
                           />
                         </div>
                       </SwiperSlide>

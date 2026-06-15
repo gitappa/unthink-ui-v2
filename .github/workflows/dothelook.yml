@@ -87,6 +87,7 @@ jobs:
           --build-arg NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL=${{ env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL }} \
           --build-arg NEXT_PUBLIC_PDP_PAGE_ENABLED=${{ env.NEXT_PUBLIC_PDP_PAGE_ENABLED }} \
           --build-arg NEXT_PUBLIC_PAYMENT_URL=${{ env.NEXT_PUBLIC_PAYMENT_URL }} \
+          --build-arg NEXT_PUBLIC_FERNET_SECRET_KEY=${{ env.NEXT_PUBLIC_FERNET_SECRET_KEY }} \
           -f web-client-next/Dockerfile .
       
       - name: Push

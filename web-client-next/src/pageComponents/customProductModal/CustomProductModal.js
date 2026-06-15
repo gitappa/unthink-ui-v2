@@ -49,6 +49,34 @@ SwiperCore.use([FreeMode]);
 const { Dragger } = Upload;
 const { Option } = Select;
 
+const normalizeUploadedImages = (images) => {
+	if (Array.isArray(images)) {
+		return images
+			.map((image) => (typeof image === "string" ? image : image?.url))
+			.filter(Boolean);
+	}
+	if (!images) return [];
+	if (typeof images === "string") {
+		const trimmedImages = images.trim();
+		if (!trimmedImages) return [];
+
+		if (trimmedImages.startsWith("[") || trimmedImages.startsWith("{")) {
+			try {
+				return normalizeUploadedImages(JSON.parse(trimmedImages));
+			} catch (error) {
+				// Fall back to comma-separated handling below.
+			}
+		}
+
+		return images
+			.split(",")
+			.map((image) => image.trim())
+			.filter(Boolean);
+	}
+	if (typeof images === "object" && images.url) return [images.url];
+	return [];
+};
+
 const defaultProductData = {
 	mfr_code: "",
 	name: "",
@@ -121,7 +149,7 @@ const CustomProductModal = ({
 
 	const [authUser] = useSelector((state) => [state.auth.user.data]);
 	const [uploadedImages, setUploadedImages] = useState(
-		product?.additional_image || []
+		normalizeUploadedImages(product?.additional_image)
 	);
 
 	const dispatch = useDispatch();
@@ -134,6 +162,7 @@ const CustomProductModal = ({
 					...product,
 					url: product.url === PRODUCT_DUMMY_URL ? "" : product.url,
 				});
+				setUploadedImages(normalizeUploadedImages(product.additional_image));
 				setIsView(data.isView ?? true);
 			}
 
@@ -141,6 +170,7 @@ const CustomProductModal = ({
 				setProductData({
 					...defaultProductData,
 				});
+				setUploadedImages([]);
 				// setOpenContactDetails(false);
 				setIsView(true);
 			};
@@ -296,7 +326,7 @@ const CustomProductModal = ({
 				product_tag: restProductData.product_tag,
 				tags: Array.isArray(_cf) ? _cf.join(",") : _cf,
 				currency: currencyEdit,
-				additional_image: uploadedImages,
+				additional_image: normalizeUploadedImages(uploadedImages),
 			};
 
 			if (
@@ -598,7 +628,7 @@ const CustomProductModal = ({
 
 			const url = data?.data?.[0]?.url;
 			if (url) {
-				setUploadedImages((prev) => [...prev, url]);
+				setUploadedImages((prev) => [...normalizeUploadedImages(prev), url]);
 				notification.success({
 					message: "Image Uploaded Successfully",
 				});
@@ -1247,7 +1277,7 @@ const CustomProductModal = ({
 													<Spin size='small' tip='Uploading...' />
 												</div>
 											)}
-											{uploadedImages?.map((url, index) => (
+											{normalizeUploadedImages(uploadedImages).map((url, index) => (
 												<div
 													key={index}
 													className='relative group h-14 w-14 rounded-xl overflow-hidden'>
@@ -1260,7 +1290,7 @@ const CustomProductModal = ({
 														type='button'
 														onClick={() =>
 															setUploadedImages((prev) =>
-																prev.filter((_, i) => i !== index)
+																normalizeUploadedImages(prev).filter((_, i) => i !== index)
 															)
 														}
 														className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
