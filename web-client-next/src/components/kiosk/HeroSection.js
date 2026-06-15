@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Autoplay } from "swiper";
 import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
-const HeroSection = ({ im, }) => {
+const HeroSection = () => {
   const router = useRouter();
   const [collectiondata, setcollectiondata] = useState([]);
   // const collectiondata = useMemo(() => {
@@ -25,7 +25,8 @@ const HeroSection = ({ im, }) => {
         const shuffledData = [...response.data.data].sort(
           () => Math.random() - 0.5,
         );
-        setcollectiondata(shuffledData[0]);
+        // setcollectiondata(shuffledData[0]);
+        setcollectiondata(response.data.data[0]);
         // console.log('shuffledData',shuffledData);
       } catch (error) {
         console.error(error);
@@ -40,8 +41,7 @@ const HeroSection = ({ im, }) => {
     collectiondata?.thumbnail_image || collectiondata?.image;
   const [isClient, setIsClient] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+
 
   useEffect(() => {
     // mark client after mount to avoid running client-only effects on SSR
@@ -52,15 +52,7 @@ const HeroSection = ({ im, }) => {
   const handlePlayClick = () => setIsPlaying(true);
   const handlePauseClick = () => setIsPlaying(false);
 
-  useEffect(() => {
-    if (!isClient) return;
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, [isClient]);
+ 
 
   useEffect(() => {
     if (!isClient) return;
@@ -71,7 +63,7 @@ const HeroSection = ({ im, }) => {
       (entries) => {
         const entry = entries[0];
         const visible = entry.intersectionRatio >= 0.5;
-        setIsVisible(visible);
+       
         setIsPlaying(visible);
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
