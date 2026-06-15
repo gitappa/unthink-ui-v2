@@ -174,7 +174,7 @@ const KioskHome = ({ blogCollectionPage }) => {
       {/* Tag Buttons (pill-style tabs) */}
       <div className="flex items-center mb-8">
         <div className="w-full  mx-auto">
-          <div className="flex items-center rounded-full bg-gray-200/60 p-1">
+          <div className="flex items-center rounded-full bg-kiosk-secondary p-1">
             {Tags.map((tag, i) => (
               <button
                 key={i}
