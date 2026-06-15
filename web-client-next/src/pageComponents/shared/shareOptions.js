@@ -182,7 +182,7 @@ function pdf(){
 								</a>
 							</div>
 							}
-							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || fromCollection) ? (
+							{qrCodeGeneratorURL && (collection?.status === PUBLISHED || props.true ) ? (
 								<div className='flex items-center justify-center mt-4 md:mt-0'>
 									<img
 										className='w-full max-w-[208px] max-h-[208px] object-cover'
@@ -192,7 +192,7 @@ function pdf(){
 								</div>
 							) : null}
 						</div> 
-							{url && fromCollection &&
+							{url  &&
 						<div className='border p-1 rounded flex break-all text-base mb-2 md:text-lg '>
 							{url}{" "}
 							<CopyToClipboard className='text-lg'

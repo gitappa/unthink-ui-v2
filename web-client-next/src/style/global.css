@@ -92,6 +92,10 @@
     @apply !text-sm md:!text-base lg:!text-lg;
   }
 }
+@theme{
+  --color-kiosk-primary:#FFB9C7;
+  --color-kiosk-secondary:#FFE3E8;
+}
 /* Remove border from Ant Design select components */
 button {
   cursor: pointer;
@@ -180,8 +184,8 @@ p {
 }
 
 .mySwipers {
-  height: 220px;
-  padding: 0 30px !important;
+  height: 200px;
+  padding: 0 !important;
 }
 
 /* Menu Animation */

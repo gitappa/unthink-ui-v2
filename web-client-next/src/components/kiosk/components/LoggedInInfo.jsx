@@ -20,11 +20,11 @@ export const useKioskAccess = ({ isUserLogin, storeData, authUser }) => {
     isUserLogin &&
     storeData?.kiosk_list?.some((data) => authUser?.emailId === data);
 
-  useEffect(() => {
-    if (!isUserLogin && typeof window !== "undefined") {
-      sessionStorage.removeItem("Kiosk-login");
-    }
-  }, [isUserLogin]);
+  // useEffect(() => {
+  //   if (!isUserLogin && typeof window !== "undefined") {
+  //     sessionStorage.removeItem("Kiosk-login");
+  //   }
+  // }, [isUserLogin]);
 
   return !!hasKioskAccess;
 };

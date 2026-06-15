@@ -5,6 +5,7 @@ import {
   is_store_instance,
   webbotNFTServiceBaseUrl,
   current_store_name,
+  adminUserId,
   // realtimeAIBaseUrl,
 } from "../constants/config";
 import { getSid, getTTid, isDebugCookie } from "./getTrackerInfo";
@@ -132,12 +133,12 @@ const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/";
 
 //KIOSK
 const socialMedia =
-  "/user/collections/fetch_collections/?user_id=173081113277330&product_limits=12&view=public&store=dothelook&starred=true&generated_by=video_based";
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
 const trending =
-  "/user/collections/fetch_collections/?user_id=173081113277330&product_limits=12&view=public&collection_type=trending&store=dothelook&starred=true&summary=true";
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true`;
 const lookBook =
-  "/user/collections/fetch_collections/?user_id=173081113277330&product_limits=12&view=public&store=dothelook&starred=true&generated_by=lookbook_based&summary=true";
-const stageMainApi = "https://aurastage.unthink.ai";
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=lookbook_based&summary=true`;
+
 const updateHandpickedProductsUrl =
   "/user/collections/handpicked_product_list/";
 
