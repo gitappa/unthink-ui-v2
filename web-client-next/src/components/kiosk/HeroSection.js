@@ -173,7 +173,7 @@ const HeroSection = () => {
                 style={{ width: "100%", minWidth: 0 }}
                 speed={2000} // move slowly for 2 seconds
                 autoplay={{
-                  delay: 3000, // wait 3 seconds before moving
+                  delay: 3500, // wait 3.5 seconds before moving
                   disableOnInteraction: true, // stop autoplay after user swipes
                   pauseOnMouseEnter: false,
                 }}

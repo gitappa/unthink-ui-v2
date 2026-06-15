@@ -61,7 +61,7 @@ import SwiperCore, { FreeMode } from "swiper";
 import { addToCart, fetchCart } from "../DeliveryDetails/redux/action";
 import { getTTid } from "../../helper/getTrackerInfo";
 import axios from "axios";
-import { payment_url } from "../../constants/config";
+import { auraYfretUserCollBaseUrl, payment_url } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
@@ -150,6 +150,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showAllFields, setShowAllFields] = useState(false);
   const [saveData, setResponse] = useState([]);
+  const [sharePageUrl, setSharePageUrl] = useState("");
   const userInfo = useSelector(loggedInInfo);
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
@@ -170,6 +171,15 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [savedProductDetails, fetchedProductDetails]);
   // console.log('productDetails',productDetails);
+
+  const routeMfrCode = Array.isArray(mfr_code) ? mfr_code[0] : mfr_code;
+  const productMfrCode = productDetails?.mfr_code || routeMfrCode;
+
+  const productDetailsPagePath = useMemo(
+    () => (productMfrCode ? getProductDetailsPagePath(productMfrCode) : ""),
+    [productMfrCode],
+  );
+  // console.log('productDetailsPagePath',productDetailsPagePath);
 
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
@@ -331,42 +341,54 @@ const ProductDetails = ({ params, ...props }) => {
   }, [addWishlistState?.data, pendingWishlistQrInfo, dispatch]);
   // ============ END GUEST POPUP HOOKS ============
 
-  const handleShareClick = useCallback(async () => {
-    const kioskLoginUserId = getKioskLoginUserId();
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    try {
-      // Prefer kiosk email from session storage, fallback to authUser email
-      const kioskEmail =
-        JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")?.email ||
-        authUser?.emailId;
+  const buildShareAutoLoginLink = useCallback(
+    async ({ userId = null, email = null } = {}) => {
+      const kioskLoginUserId = userId || getKioskLoginUserId();
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
 
-      if (kioskLoginUserId && kioskEmail && !hasKioskAccess) {
-        const resp = await requestSigninWithLink(kioskEmail);
-        const signin_token = resp?.signin_token || resp?.data?.signin_token;
+      try {
+        const currentKiosk =
+          typeof window !== "undefined"
+            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
+            : {};
+        // Prefer popup email, then kiosk session email, then logged-in user email.
+        const kioskEmail = email || currentKiosk?.email 
 
-        if (signin_token) {
-          const decrypted = decryptSigninToken(signin_token);
-          if (decrypted) {
-            // Build verify link to current product page
-            const pageParam = `?page=${productDetailsPagePath}`;
-            const verifyLink = buildVerifyUrl(decrypted, pageParam);
-            // console.log('verifyLink',verifyLink);
+        if (kioskLoginUserId && kioskEmail) {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
-            const fullVerifyUrl = `${origin}${verifyLink}`;
-            // console.log('fullVerifyUrl',fullVerifyUrl);
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            if (decrypted) {
+              // Build verify link to current product page
+              const pageParam = `?page=${productDetailsPagePath}`;
+              const verifyLink = buildVerifyUrl(decrypted, pageParam);
+              // console.log('verifyLink',verifyLink);
 
-            setSharePageUrl(fullVerifyUrl);
-            setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-            setQrTargetUrl(fullVerifyUrl);
-            setShowShareProductDetails(true);
-            return;
+              const fullVerifyUrl = `${origin}${verifyLink}`;
+              console.log('fullVerifyUrl',fullVerifyUrl);
+
+              setSharePageUrl(fullVerifyUrl);
+              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+              setQrTargetUrl(fullVerifyUrl);
+              setShowShareProductDetails(true);
+              return true;
+            }
           }
         }
+      } catch (e) {
+        console.error("Share auto-login build error", e);
       }
-    } catch (e) {
-      console.error("Share auto-login build error", e);
-    }
 
+      return false;
+    },
+    [authUser?.emailId, getKioskLoginUserId, productDetailsPagePath],
+  );
+
+  const handleShareClick = useCallback(async () => {
+    const kioskLoginUserId = getKioskLoginUserId();
     if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
@@ -375,8 +397,11 @@ const ProductDetails = ({ params, ...props }) => {
       return;
     }
 
+    const didBuildShareLink = await buildShareAutoLoginLink();
+    if (didBuildShareLink) return;
+
     setShowShareProductDetails((show) => !show);
-  }, [authUser, dispatch, getKioskLoginUserId]);
+  }, [buildShareAutoLoginLink, dispatch, getKioskLoginUserId, hasKioskAccess]);
 
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
@@ -458,15 +483,22 @@ const ProductDetails = ({ params, ...props }) => {
 
   const linkifyText = (description) => {
     const urlRegex = /(?<=\s|^)(https?:\/\/[^\s]+)/g;
-    return description.split(urlRegex).map((text) => {
-      if (urlRegex.test(text)) {
+    const exactUrlRegex = /^https?:\/\/[^\s]+$/;
+    return description.split(urlRegex).map((text, index) => {
+      if (exactUrlRegex.test(text)) {
         return (
-          <a href={text} target="_blank" className="px-0 text-blue-109">
+          <a
+            key={`${text}-${index}`}
+            href={text}
+            target="_blank"
+            rel="noreferrer"
+            className="px-0 text-blue-109"
+          >
             {text}
           </a>
         );
       } else {
-        return <span>{text}</span>;
+        return <span key={`${text}-${index}`}>{text}</span>;
       }
     });
   };
@@ -492,19 +524,26 @@ const ProductDetails = ({ params, ...props }) => {
     }
   };
 
-  const productDetailsPagePath = useMemo(
-    () => getProductDetailsPagePath(productDetails?.mfr_code),
-    [productDetails?.mfr_code],
-  );
-  // console.log('productDetailsPagePath',productDetailsPagePath);
+  
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
     [productDetailsPagePath],
   );
 
-  const [sharePageUrl, setSharePageUrl] = useState("");
-  // console.log('sharePageUrl',sharePageUrl);
+  console.log('productDetailsPagePath',sharePageUrl);
+
+  useEffect(() => {
+    if (
+      hasKioskAccess ||
+      typeof window === "undefined" ||
+      !productDetailsPagePath
+    ) {
+      return;
+    }
+
+    setSharePageUrl(`${window.location.origin}${productDetailsPagePath}`);
+  }, [hasKioskAccess, productDetailsPagePath]);
 
   const shareQrCodeImage = useMemo(() => {
     try {
@@ -1210,7 +1249,8 @@ hover:bg-indigo-700
                             onClose={() => setShowShareProductDetails(false)}
                             isOpen={showShareProductDetails}
                             qrCodeGeneratorURL={shareQrCodeImage}
-                            fromCollection={true}
+                            true
+                            fromCollection={kioskLogin ? true : false}
                           />
                         )}
                         {/* {sharePageUrl && ( */}
@@ -1729,7 +1769,11 @@ hover:bg-indigo-700
         onSuccess={async ({ userId, email }) => {
           try {
             if (guestPopupAction === "share") {
-              setShowShareProductDetails(true);
+              const didBuildShareLink = await buildShareAutoLoginLink({
+                userId,
+                email,
+              });
+              if (!didBuildShareLink) setShowShareProductDetails(true);
             } else if (guestPopupAction === "vto") {
               const mfrCode = productDetails?.mfr_code;
               if (mfrCode) {
