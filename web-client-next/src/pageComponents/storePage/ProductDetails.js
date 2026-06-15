@@ -889,16 +889,13 @@ const ProductDetails = ({ params, ...props }) => {
                           className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
                           onClick={(e) => {
                             e.stopPropagation();
-
                             if (!kioskLogin && hasKioskAccess) {
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
                               return;
                             }
-
                             const mfrCode = productDetails?.mfr_code;
-
                             if (mfrCode) {
                               dispatch(vtoIconState(mfrCode));
                             }
