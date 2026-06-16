@@ -40,9 +40,10 @@ const CollectionPage = ({ params }) => {
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
-  const [isUserLogin, storeData] = useSelector((state) => [
+  const [isUserLogin, storeData, isGuestPopUpShow] = useSelector((state) => [
     state.auth.user.isUserLogin,
     state.store.data,
+    state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
   const userInfo = useSelector(loggedInInfo);
   const handleTagClick = useCallback((value) => {
@@ -156,7 +157,23 @@ const CollectionPage = ({ params }) => {
   //   console.log('colleztctionData',singleCollectionKiosk);
   const productCardKiosk = (productdata) => {
     // console.log(productdata);
-    return <ProductCard product={productdata} bannerImage />;
+    return (
+      <ProductCard
+        product={productdata}
+        bannerImage
+        enableKioskGuestPopup
+        onGuestPopupOpen={() => {
+          setIsPopupShow(true);
+          dispatch(GuestPopUpShow(true));
+        }}
+      />
+    );
+  };
+  const getProductKey = (product, index) => {
+    const productId =
+      product?._id || product?.product_id || product?.mfr_code || product?.id;
+
+    return productId ? `${productId}-${index}` : `product-${index}`;
   };
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
@@ -306,9 +323,9 @@ const CollectionPage = ({ params }) => {
 
       {/* Product Grid Placeholder */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {productsData?.map((item) => (
+        {productsData?.map((item, index) => (
           <div
-            key={item}
+            key={getProductKey(item, index)}
             className=" rounded-lg  flex items-center justify-center"
           >
             {productCardKiosk(item)}
@@ -321,11 +338,15 @@ const CollectionPage = ({ params }) => {
         className="lg:mt-11 mt-5"
       />
       <GuestUserPopUp
-        isOpen={isPopupShow}
+        isOpen={isPopupShow || isGuestPopUpShow}
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
         persistKioskLogin
-        onSuccess={() => setShowShareProductDetails(true)}
+        onSuccess={() => {
+          if (isPopupShow) {
+            setShowShareProductDetails(true);
+          }
+        }}
       />
       {showSessionPopup && (
         <KioskSessionPopup

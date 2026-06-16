@@ -55,11 +55,17 @@ import {
   addSidInProductUrl,
   AdminCheck,
   cleanImage,
+  collectionQRCodeGenerator,
   getCurrentTheme,
   getFinalImageUrl,
   getPercentage,
   // URLAddParam,
 } from "../../helper/utils";
+import {
+  buildVerifyUrl,
+  decryptSigninToken,
+  requestSigninWithLink,
+} from "../../helper/autoLogin";
 import appTracker from "../../helper/webTracker/appTracker";
 import {
   defaultFavoriteColl,
@@ -72,7 +78,6 @@ import more from "./images/Card/more.svg";
 import shopping from "./images/Card/shopping-bag3.svg";
 
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
-import Image from "next/image";
 
 import Link from "next/link";
 import { useNavigate } from "../../helper/useNavigate";
@@ -120,6 +125,16 @@ const getProductBuyButtonClass = (size, hasKioskAccess) =>
     : hasKioskAccess
       ? KIOSKCLASS
       : PRODUCT_BUY_BUTTON_CLASS;
+const getStaticImageSrc = (image) => image?.src || image;
+const getWishlistCollectionId = (response) =>
+  response?.data?.data?._id ||
+  response?.data?.data?.collection_id ||
+  response?.data?.data?.data?._id ||
+  response?.data?.data?.data?.collection_id ||
+  response?.data?._id ||
+  response?.data?.collection_id ||
+  response?._id ||
+  response?.collection_id;
 
 const ProductCard = ({
   product,
@@ -163,6 +178,8 @@ const ProductCard = ({
   isSingleCollectionSharedPage,
   auramodel,
   bannerImage,
+  enableKioskGuestPopup = false,
+  onGuestPopupOpen,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -173,10 +190,16 @@ const ProductCard = ({
   const [uploadedImages, setUploadedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clickedMfrCode, setClickedMfrCode] = useState(null);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrImageUrl, setQrImageUrl] = useState("");
+  const [qrTargetUrl, setQrTargetUrl] = useState("");
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
   const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
+  const isGuestPopUpShow = useSelector(
+    (state) => state.GuestPopUpReducer.isGuestPopUpShow,
+  );
   const menuRef = useRef(null);
   // console.log('collectionCards',product);
 
@@ -223,7 +246,15 @@ const ProductCard = ({
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
   // console.log('Collection_tryonStatement',Collection_tryonStatement);
-  const KioskLogin = JSON.parse(sessionStorage.getItem("Kiosk-login"));
+  const getKioskLogin = useCallback(() => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      return JSON.parse(window.sessionStorage.getItem("Kiosk-login") || "null");
+    } catch (error) {
+      return null;
+    }
+  }, []);
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
     storeData,
@@ -355,31 +386,111 @@ const ProductCard = ({
     };
 
     try {
-      await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
+      const response =
+        await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
       notification.success({ message: "Added to wishlist!" });
+      return response;
     } catch (err) {
       notification.error({ message: "Failed to add to wishlist" });
+      return null;
     }
   };
 
-  useEffect(() => {
-    if (pendingWishlistAction && isUserLogin) {
-      callHandpickedAPI(authUserId || getTTid());
-      setPendingWishlistAction(false);
-    }
-  }, [isUserLogin, pendingWishlistAction, authUserId]);
+  const openWishlistQr = useCallback(
+    async ({ kioskLogin, wishlistResponse }) => {
+      const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
+      const collectionId = getWishlistCollectionId(wishlistResponse);
 
-  const addToWishlistClick = (event) => {
+      if (!kioskEmail || !collectionId) return;
+
+      try {
+        const resp = await requestSigninWithLink(kioskEmail);
+        const signinToken = resp?.signin_token || resp?.data?.signin_token;
+        const userName =
+          resp?.data?.user_name ||
+          resp?.user_name ||
+          kioskLogin?.user_name ||
+          authUserName;
+
+        if (!signinToken || !userName) return;
+
+        const decrypted = decryptSigninToken(signinToken);
+        if (!decrypted) return;
+
+        const verifyLink = buildVerifyUrl(
+          decrypted,
+          `?page=influencer/${userName}/${collectionId}`,
+        );
+        const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
+
+        setQrTargetUrl(fullVerifyUrl);
+        setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+        setQrModalOpen(true);
+      } catch (error) {
+        console.error("Wishlist QR build failed", error);
+      }
+    },
+    [authUserName],
+  );
+
+  // useEffect(() => {
+  //   if (pendingWishlistAction && isUserLogin) {
+  //     callHandpickedAPI(authUserId || getTTid());
+  //     setPendingWishlistAction(false);
+  //   }
+  // }, [isUserLogin, pendingWishlistAction, authUserId]);
+
+  useEffect(() => {
+    if (!pendingWishlistAction || isGuestPopUpShow) return;
+
+    const kioskLogin = getKioskLogin();
+    if (!kioskLogin?.user_id) {
+      setPendingWishlistAction(false);
+      return;
+    }
+
+    let cancelled = false;
+    setPendingWishlistAction(false);
+
+    const addPendingWishlistAndOpenQr = async () => {
+      const wishlistResponse = await callHandpickedAPI(kioskLogin.user_id);
+      if (!cancelled) {
+        openWishlistQr({ kioskLogin, wishlistResponse });
+      }
+    };
+
+    addPendingWishlistAndOpenQr();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    getKioskLogin,
+    isGuestPopUpShow,
+    openWishlistQr,
+    pendingWishlistAction,
+  ]);
+
+  const addToWishlistClick = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // if (!isUserLogin && hasKioskAccess && KioskLogin) {
-    // alert('hwllo codeers')
-    setPendingWishlistAction(true);
-    dispatch(GuestPopUpShow(true));
-    return;
+    const kioskLogin = getKioskLogin();
 
-    callHandpickedAPI(authUserId || getTTid());
+    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
+      setPendingWishlistAction(true);
+      onGuestPopupOpen?.();
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+
+    const wishlistResponse = await callHandpickedAPI(
+      kioskLogin?.user_id || authUserId || getTTid(),
+    );
+
+    if (kioskLogin?.user_id) {
+      openWishlistQr({ kioskLogin, wishlistResponse });
+    }
   };
 
   const checkoutPayment = async (e) => {
@@ -771,12 +882,12 @@ const ProductCard = ({
                     e.stopPropagation();
                   }}
                 >
-                  <Image
+                  <img
                     height={20}
                     width={20}
                     alt="Try on with camera"
                     className={`${styles["product-vto-icon"]}`}
-                    src={camera}
+                    src={getStaticImageSrc(camera)}
                   />
                   <p>Try On</p>
                 </div>
@@ -807,8 +918,8 @@ const ProductCard = ({
                 >
                   {isProductUrlAvailable ? buyNowTitle : null}
                   {isProductUrlAvailable ? (
-                    <Image
-                      src={openInNewTabIcon}
+                    <img
+                      src={getStaticImageSrc(openInNewTabIcon)}
                       alt="open"
                       width={20}
                       height={20}
@@ -1017,7 +1128,7 @@ const ProductCard = ({
                   className={styles["product-view-similar"]}
                   onClick={onSimilarClick}
                 >
-                  <Image
+                  <img
                     src="/images/view_similar_icon.svg"
                     alt="view similar"
                     width={24}
@@ -1231,10 +1342,10 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    <Image
+                    <img
                       alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
-                      src={heart}
+                      src={getStaticImageSrc(heart)}
                       height={20}
                       width={20}
                     />
@@ -1258,10 +1369,10 @@ const ProductCard = ({
                 onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  <Image
+                  <img
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
-                    src={heart}
+                    src={getStaticImageSrc(heart)}
                     height={20}
                     width={20}
                   />
@@ -1427,14 +1538,14 @@ const ProductCard = ({
                     onClick={checkoutPayment}
                     disabled={!product?.price && !product?.listprice}
                   >
-                    <Image
+                    <img
                       style={{
                         filter:
                           !product?.price && !product?.listprice
                             ? "brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)"
                             : "",
                       }}
-                      src={shopping}
+                      src={getStaticImageSrc(shopping)}
                       alt="Buy now"
                       height={20}
                       width={20}
@@ -1454,8 +1565,8 @@ const ProductCard = ({
                     onClick={handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >
-                    <Image
-                      src={shopping}
+                    <img
+                      src={getStaticImageSrc(shopping)}
                       alt="Add to cart"
                       height={20}
                       width={20}
@@ -1474,6 +1585,37 @@ const ProductCard = ({
             )}
         </div>
       </div>
+
+      <Modal
+        headerText="Scan to open wishlist"
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+        size="sm"
+      >
+        <div className="flex flex-col items-center gap-4">
+          {qrImageUrl ? (
+            <img
+              src={qrImageUrl}
+              alt="Wishlist QR code"
+              className="h-48 w-48 object-contain"
+            />
+          ) : (
+            <div className="flex h-48 w-48 items-center justify-center bg-gray-100 text-sm text-gray-500">
+              QR
+            </div>
+          )}
+          {qrTargetUrl ? (
+            <a
+              href={qrTargetUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="break-all text-center text-sm text-indigo-600 hover:underline"
+            >
+              {qrTargetUrl}
+            </a>
+          ) : null}
+        </div>
+      </Modal>
 
       {ButtonClick === product?.mfr_code ? (
         <Modal

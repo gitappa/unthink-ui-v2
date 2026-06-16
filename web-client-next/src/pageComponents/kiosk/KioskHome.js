@@ -27,11 +27,8 @@ import { fetchCategoriesReset } from "../categories/redux/actions";
 import { TrendingApiCall } from "../../helper/serverAPIs";
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 
-const KioskHome = ({ blogCollectionPage }) => {
-  const [collectionData] = useSelector((state) => [
-    state.influencer.collections.data,
-  ]);
-  //   console.log("collectionDataz", collectionData);
+const KioskHome = ({ props }) => {
+   
 
   const authUserCollections = useSelector(
     (state) => state.auth.user.collections.data,
