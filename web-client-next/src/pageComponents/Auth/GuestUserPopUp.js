@@ -93,7 +93,7 @@ function GuestUserPopUp({
       try {
         const res = await authAPIs.GuestRegisterAPICall({
           emailId: email,
-          user_id: tid,
+          // user_id: tid,
           store: storeName,
           phone,
         });        
