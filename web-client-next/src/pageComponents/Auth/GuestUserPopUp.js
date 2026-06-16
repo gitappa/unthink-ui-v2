@@ -21,8 +21,8 @@ function GuestUserPopUp({
   const isGuestPopUpShow = useSelector(
     (state) => state.GuestPopUpReducer.isGuestPopUpShow,
   );
-  const [guestData, setGuestData] = useState({ email: "" });
-  const [errors, setErrors] = useState({ email: "" });
+  const [guestData, setGuestData] = useState({ email: "", phone: "" });
+  const [errors, setErrors] = useState({ email: "", phone: "" });
 
   const setPopupOpen = useCallback(
     (show) => {
@@ -46,9 +46,15 @@ function GuestUserPopUp({
     (e) => {
       const { name, value } = e.target;
       setGuestData((data) => ({ ...data, [name]: value }));
-      if (errors.email) setErrors({ ...errors, email: "" });
+      if (name === "email" || name === "phone") {
+        setErrors((currentErrors) => ({
+          ...currentErrors,
+          email: "",
+          phone: "",
+        }));
+      }
     },
-    [errors],
+    [],
   );
 
   const handleGuestSkip = useCallback(
@@ -63,14 +69,16 @@ function GuestUserPopUp({
   const handleGuestSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      const email = guestData.email?.trim();
+      const phone = guestData.phone?.trim();
 
-      if (!guestData.email) {
-        setErrors({ email: "Email is required" });
+      if (!email && !phone) {
+        setErrors({ email: "Email or phone number is required", phone: "" });
         return;
       }
 
-      if (!validateEmail(guestData.email)) {
-        setErrors({ email: "Please enter a valid email address" });
+      if (email && !validateEmail(email)) {
+        setErrors({ email: "Please enter a valid email address", phone: "" });
         return;
       }
 
@@ -84,18 +92,19 @@ function GuestUserPopUp({
 
       try {
         const res = await authAPIs.GuestRegisterAPICall({
-          emailId: guestData.email,
+          emailId: email,
           user_id: tid,
           store: storeName,
+          phone,
         });        
         const userId = res?.data?.data?.user_id;
-        const email = res?.data?.data?.email ||  res?.data?.data?.emailId;
+        const registeredEmail = res?.data?.data?.email || res?.data?.data?.emailId || email;
         if (res?.data?.status_code === 200 && userId) {
           if (persistKioskLogin && typeof window !== "undefined") {
-            sessionStorage.setItem("Kiosk-login",JSON.stringify( {user_id : userId,email}) );
+            sessionStorage.setItem("Kiosk-login",JSON.stringify( {user_id : userId,email: registeredEmail}) );
           }
           closePopup();
-          onSuccess?.({ userId, response: res, email: guestData.email });
+          onSuccess?.({ userId, response: res, email: registeredEmail, phone });
         }
       } catch (error) {
         console.error("Guest registration error:", error);
@@ -108,6 +117,7 @@ function GuestUserPopUp({
       closePopup,
       cookieExpireDays,
       guestData.email,
+      guestData.phone,
       onSuccess,
       persistKioskLogin,
       storeName,
