@@ -103,7 +103,7 @@ export function KioskSessionPopup({ onStay, onLogout }) {
   // console.log('timer_clock',timer_clock);
 
   return (
-    <div className="fixed top-10 right-8 transform   z-50">
+    <div className="fixed top-10 right-8 transform   z-60">
       <div className="relative bg-white border border-gray-200 rounded-[18px] shadow-xl p-6 w-[369px] md:w-[420px] max-w-[95%] text-center">
         <img
           src={timer_clock.src}
