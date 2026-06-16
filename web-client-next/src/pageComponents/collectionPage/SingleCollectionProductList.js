@@ -436,16 +436,23 @@ const url = window.location.pathname === '/my-profile/'
 
   const [guestData, setGuestData] = useState({
     email: "",
+    phone: "",
   });
-  const [errors, setErrors] = useState({ email: "" });
+  const [errors, setErrors] = useState({ email: "", phone: "" });
 
   const guestChange = useCallback(
     (e) => {
       const { name, value } = e.target;
       setGuestData((data) => ({ ...data, [name]: value }));
-      if (errors.email) setErrors({ ...errors, email: "" }); // Clear error when user starts typing
+      if (name === "email" || name === "phone") {
+        setErrors((currentErrors) => ({
+          ...currentErrors,
+          email: "",
+          phone: "",
+        }));
+      }
     },
-    [errors],
+    [],
   );
 
   const validateEmail = (email) => {
@@ -464,14 +471,16 @@ const url = window.location.pathname === '/my-profile/'
   const handleGuestSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      const email = guestData.email?.trim();
+      const phone = guestData.phone?.trim();
 
-      if (!guestData.email) {
-        setErrors({ email: "Email is required" });
+      if (!email && !phone) {
+        setErrors({ email: "Email or phone number is required", phone: "" });
         return;
       }
 
-      if (!validateEmail(guestData.email)) {
-        setErrors({ email: "Please enter a valid email address" });
+      if (email && !validateEmail(email)) {
+        setErrors({ email: "Please enter a valid email address", phone: "" });
         return;
       }
 
@@ -483,12 +492,13 @@ const url = window.location.pathname === '/my-profile/'
         Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
       }
 
-      if (validateEmail(guestData.email)) {
+      if (email || phone) {
         try {
           const res = await authAPIs.GuestRegisterAPICall({
-            emailId: guestData.email,
+            emailId: email,
             user_id: tid,
             store,
+            phone,
           });
 
           const { data } = res;
@@ -510,7 +520,7 @@ const url = window.location.pathname === '/my-profile/'
         }
       }
     },
-    [guestData.email, onAddSelectedProductsToCollection],
+    [guestData.email, guestData.phone, onAddSelectedProductsToCollection],
   );
 
   const onProductClick = (product) => {

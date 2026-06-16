@@ -201,13 +201,14 @@ const GuestSignupAPICall = ({ email, user_name }) => {
   });
 };
 
-const GuestRegisterAPICall = ({ emailId, user_id, store }) => {
+const GuestRegisterAPICall = ({ emailId, user_id, store ,phone}) => {
   const url = `${auraYfretUserCollBaseUrl}${guestRegisterUrl}`;
 
   const guestData = {
     emailId,
     user_id,
     store,
+    phone
   };
 
   return apiInstance({

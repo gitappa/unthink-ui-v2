@@ -96,12 +96,24 @@ import { PDPloader } from "../../pageComponents/storePage/redux/action";
 import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
 import { fetchProductDetails } from "./ProductRedux/actions";
+import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
+import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
   DEFAULT: "default",
   ACTION_COVER: "actionCover",
 };
+
+const PRODUCT_BUY_BUTTON_CLASS =
+  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-px py-[5px] text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-[var(--color-secondary)] md:px-1.5 md:py-3 md:text-base";
+
+const PRODUCT_BUY_BUTTON_SMALL_CLASS =
+  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-[5px] py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[var(--color-secondary)]";
+const KIOSKCLASS =  'group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium'
+const KIOSK_CART_ICON_CLASS = "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
+const getProductBuyButtonClass = (size,hasKioskAccess) =>
+  size === "small" ? PRODUCT_BUY_BUTTON_SMALL_CLASS : hasKioskAccess ? KIOSKCLASS : PRODUCT_BUY_BUTTON_CLASS;
 
 const ProductCard = ({
   product,
@@ -204,8 +216,13 @@ const ProductCard = ({
   // console.log('collectionsSSW', ButtonClick);
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] = useState(null);
-// console.log('Collection_tryonStatement',Collection_tryonStatement);
-
+  // console.log('Collection_tryonStatement',Collection_tryonStatement);
+  const KioskLogin = JSON.parse(sessionStorage.getItem("Kiosk-login"));
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
   const { admin_list: admin_list } = storeData;
   // pdp_settings
   const isAdminLoggedIn = AdminCheck(
@@ -350,11 +367,11 @@ const ProductCard = ({
     event.preventDefault();
     event.stopPropagation();
 
-    if (!isUserLogin) {
+    // if (!isUserLogin && hasKioskAccess && KioskLogin) {
+      // alert('hwllo codeers')
       setPendingWishlistAction(true);
       dispatch(GuestPopUpShow(true));
       return;
-    }
 
     callHandpickedAPI(authUserId || getTTid());
   };
@@ -697,7 +714,7 @@ const ProductCard = ({
           ? styles["product-wrapper-medium-single"]
           : auramodel
             ? `${styles["product-wrapper-medium-single"]} ml-0`
-            : styles["product-wrapper-medium-single"]
+            : styles["product-wrapper-medium-single"];
 
   return (
     <div
@@ -797,7 +814,7 @@ const ProductCard = ({
                 <>
                   {storeData?.pdp_settings?.is_buy_button ? (
                     <button
-                      className={` ${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                      className={getProductBuyButtonClass(size,hasKioskAccess)}
                       onClick={checkoutPayment}
                     >
                       Buy Now
@@ -1391,7 +1408,7 @@ const ProductCard = ({
                       color:
                         !product?.price && !product?.listprice ? "#616161" : "",
                     }}
-                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]}`}
+                    className={getProductBuyButtonClass(size,hasKioskAccess)}
                     onClick={checkoutPayment}
                     disabled={!product?.price && !product?.listprice}
                   >
@@ -1406,13 +1423,13 @@ const ProductCard = ({
                       alt="Buy now"
                       height={20}
                       width={20}
-                      className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
+                      className={showWishlistModal || size === "small" ? styles["product-cart-icon-small"] : hasKioskAccess ?  KIOSK_CART_ICON_CLASS : "h-4 w-4 md:h-5 md:w-5"}
                     />
                     Buy Now
                   </button>
                 ) : (
                   <button
-                    className={`${size === "small" ? styles["product-buy-button-small"] : styles["product-buy-button"]} ${!product?.price && !product?.listprice ? styles["hidden"] : ""}`}
+                    className={`${getProductBuyButtonClass(size,hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
                     onClick={handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >
@@ -1421,7 +1438,7 @@ const ProductCard = ({
                       alt="Add to cart"
                       height={20}
                       width={20}
-                      className={`${styles[showWishlistModal || size === "small" ? "product-cart-icon-small" : "product-cart-icon-large"]}`}
+                      className={showWishlistModal || size === "small" ? styles["product-cart-icon-small"] : hasKioskAccess ?  KIOSK_CART_ICON_CLASS : "h-4 w-4 md:h-5 md:w-5"}
                     />
                     Add to Cart
                   </button>

@@ -363,7 +363,7 @@ const ProductDetails = ({ params, ...props }) => {
             const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
               // Build verify link to current product page
-              const pageParam = `?page=${productDetailsPagePath}`;
+              const pageParam = `?page=product/${productMfrCode}`;
               const verifyLink = buildVerifyUrl(decrypted, pageParam);
               // console.log('verifyLink',verifyLink);
 
@@ -1389,7 +1389,7 @@ hover:bg-indigo-700
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className="text-white h-full px-6 bg-brand w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
+                              className={` h-full px-6 ${hasKioskAccess ? 'bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium' : 'bg-brand text-white font-semibold'} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
                             </button>
