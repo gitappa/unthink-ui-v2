@@ -55,11 +55,17 @@ import {
   addSidInProductUrl,
   AdminCheck,
   cleanImage,
+  collectionQRCodeGenerator,
   getCurrentTheme,
   getFinalImageUrl,
   getPercentage,
   // URLAddParam,
 } from "../../helper/utils";
+import {
+  buildVerifyUrl,
+  decryptSigninToken,
+  requestSigninWithLink,
+} from "../../helper/autoLogin";
 import appTracker from "../../helper/webTracker/appTracker";
 import {
   defaultFavoriteColl,
@@ -72,7 +78,6 @@ import more from "./images/Card/more.svg";
 import shopping from "./images/Card/shopping-bag3.svg";
 
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
-import Image from "next/image";
 
 import Link from "next/link";
 import { useNavigate } from "../../helper/useNavigate";
@@ -110,10 +115,26 @@ const PRODUCT_BUY_BUTTON_CLASS =
 
 const PRODUCT_BUY_BUTTON_SMALL_CLASS =
   "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-[5px] py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[var(--color-secondary)]";
-const KIOSKCLASS =  'group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium'
-const KIOSK_CART_ICON_CLASS = "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
-const getProductBuyButtonClass = (size,hasKioskAccess) =>
-  size === "small" ? PRODUCT_BUY_BUTTON_SMALL_CLASS : hasKioskAccess ? KIOSKCLASS : PRODUCT_BUY_BUTTON_CLASS;
+const KIOSKCLASS =
+  "group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium";
+const KIOSK_CART_ICON_CLASS =
+  "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
+const getProductBuyButtonClass = (size, hasKioskAccess) =>
+  size === "small"
+    ? PRODUCT_BUY_BUTTON_SMALL_CLASS
+    : hasKioskAccess
+      ? KIOSKCLASS
+      : PRODUCT_BUY_BUTTON_CLASS;
+const getStaticImageSrc = (image) => image?.src || image;
+const getWishlistCollectionId = (response) =>
+  response?.data?.data?._id ||
+  response?.data?.data?.collection_id ||
+  response?.data?.data?.data?._id ||
+  response?.data?.data?.data?.collection_id ||
+  response?.data?._id ||
+  response?.data?.collection_id ||
+  response?._id ||
+  response?.collection_id;
 
 const ProductCard = ({
   product,
@@ -157,7 +178,8 @@ const ProductCard = ({
   isSingleCollectionSharedPage,
   auramodel,
   bannerImage,
-
+  enableKioskGuestPopup = false,
+  onGuestPopupOpen,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -168,10 +190,16 @@ const ProductCard = ({
   const [uploadedImages, setUploadedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clickedMfrCode, setClickedMfrCode] = useState(null);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrImageUrl, setQrImageUrl] = useState("");
+  const [qrTargetUrl, setQrTargetUrl] = useState("");
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
   const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
+  const isGuestPopUpShow = useSelector(
+    (state) => state.GuestPopUpReducer.isGuestPopUpShow,
+  );
   const menuRef = useRef(null);
   // console.log('collectionCards',product);
 
@@ -198,7 +226,7 @@ const ProductCard = ({
     ButtonClick,
     isUserLogin,
     collections,
-    singleCollections
+    singleCollections,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -209,15 +237,24 @@ const ProductCard = ({
     state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick,
     state?.auth?.user?.isUserLogin,
-     state.auth.user.collections.data,
-     state.auth.user.singleCollections.data,
+    state.auth.user.collections.data,
+    state.auth.user.singleCollections.data,
   ]);
 
   // console.log('collectionsSSW', ButtonClick);
   const [storeData] = useSelector((state) => [state.store.data]);
-  const [Collection_tryonStatement, setCollectionTryonStatement] = useState(null);
+  const [Collection_tryonStatement, setCollectionTryonStatement] =
+    useState(null);
   // console.log('Collection_tryonStatement',Collection_tryonStatement);
-  const KioskLogin = JSON.parse(sessionStorage.getItem("Kiosk-login"));
+  const getKioskLogin = useCallback(() => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      return JSON.parse(window.sessionStorage.getItem("Kiosk-login") || "null");
+    } catch (error) {
+      return null;
+    }
+  }, []);
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
     storeData,
@@ -235,7 +272,7 @@ const ProductCard = ({
 
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const favoriteColl =
-  	useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
+    useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
   const [count, setCount] = useState(1);
   // console.log("counttttt",count);
 
@@ -268,61 +305,61 @@ const ProductCard = ({
   const handleProductClick = async () => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
-        await sharedPageTracker.onCollectionProductClick({
-          mfrCode: product.mfr_code,
-          redirectionUrl: product.url,
-          product_brand: product.product_brand,
-          brand: product.brand,
-          sponsored: product.sponsored,
-          collectionId: collection_id,
-          ...productClickParam,
-        });
-      }
-      // prop function to fetch recommendation on shared page
-      if (onProductClick) onProductClick();
+      await sharedPageTracker.onCollectionProductClick({
+        mfrCode: product.mfr_code,
+        redirectionUrl: product.url,
+        product_brand: product.product_brand,
+        brand: product.brand,
+        sponsored: product.sponsored,
+        collectionId: collection_id,
+        ...productClickParam,
+      });
+    }
+    // prop function to fetch recommendation on shared page
+    if (onProductClick) onProductClick();
 
-      if (selectedSearchOption?.title) {
-        // GTAG CONFIGURATION AURA
-        // START
+    if (selectedSearchOption?.title) {
+      // GTAG CONFIGURATION AURA
+      // START
 
-        gTagAuraProductClick({
-          mft_code: product?.mfr_code,
-          aura_widget: selectedSearchOption?.id,
-          user_id: getTTid(),
-          user_name: authUserName,
-          term: localChatMessage || "",
-        });
-        // END
-      } else {
-        // GTAG CONFIGURATION
-        // START
+      gTagAuraProductClick({
+        mft_code: product?.mfr_code,
+        aura_widget: selectedSearchOption?.id,
+        user_id: getTTid(),
+        user_name: authUserName,
+        term: localChatMessage || "",
+      });
+      // END
+    } else {
+      // GTAG CONFIGURATION
+      // START
 
-        // console.log(blogCollectionPage);
+      // console.log(blogCollectionPage);
 
-        gTagCollectionProductClick({
-          mft_code: product?.mfr_code,
-          collection_path: authUserId
-            ? addSidInProductUrl(
-                product.url,
-                authUserId,
-                blogCollectionPage?.collection_id,
-              )
-            : product.url,
-          user_id: getTTid(),
-          user_name: authUserName,
-          collection_id: blogCollectionPage?.collection_id || "",
-          collection_name: blogCollectionPage?.collection_name,
-        });
-        // END
-      }
+      gTagCollectionProductClick({
+        mft_code: product?.mfr_code,
+        collection_path: authUserId
+          ? addSidInProductUrl(
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
+          : product.url,
+        user_id: getTTid(),
+        user_name: authUserName,
+        collection_id: blogCollectionPage?.collection_id || "",
+        collection_name: blogCollectionPage?.collection_name,
+      });
+      // END
+    }
 
-      navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
-      if (showChatModal) {
-        dispatch(setShowChatModal(false));
-      }
-      if (showWishlistModal) {
-        dispatch(closeWishlistModal());
-      }
+    navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+    if (showChatModal) {
+      dispatch(setShowChatModal(false));
+    }
+    if (showWishlistModal) {
+      dispatch(closeWishlistModal());
+    }
   };
 
   const discountPer =
@@ -343,37 +380,117 @@ const ProductCard = ({
         {
           mfr_code: product.mfr_code,
           name: product.name,
-          image: product.image
-        }
-      ]
+          image: product.image,
+        },
+      ],
     };
 
     try {
-      await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
+      const response =
+        await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
       notification.success({ message: "Added to wishlist!" });
+      return response;
     } catch (err) {
       notification.error({ message: "Failed to add to wishlist" });
+      return null;
     }
   };
 
-  useEffect(() => {
-    if (pendingWishlistAction && isUserLogin) {
-      callHandpickedAPI(authUserId || getTTid());
-      setPendingWishlistAction(false);
-    }
-  }, [isUserLogin, pendingWishlistAction, authUserId]);
+  const openWishlistQr = useCallback(
+    async ({ kioskLogin, wishlistResponse }) => {
+      const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
+      const collectionId = getWishlistCollectionId(wishlistResponse);
 
-  const addToWishlistClick = (event) => {
+      if (!kioskEmail || !collectionId) return;
+
+      try {
+        const resp = await requestSigninWithLink(kioskEmail);
+        const signinToken = resp?.signin_token || resp?.data?.signin_token;
+        const userName =
+          resp?.data?.user_name ||
+          resp?.user_name ||
+          kioskLogin?.user_name ||
+          authUserName;
+
+        if (!signinToken || !userName) return;
+
+        const decrypted = decryptSigninToken(signinToken);
+        if (!decrypted) return;
+
+        const verifyLink = buildVerifyUrl(
+          decrypted,
+          `?page=influencer/${userName}/${collectionId}`,
+        );
+        const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
+
+        setQrTargetUrl(fullVerifyUrl);
+        setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+        setQrModalOpen(true);
+      } catch (error) {
+        console.error("Wishlist QR build failed", error);
+      }
+    },
+    [authUserName],
+  );
+
+  // useEffect(() => {
+  //   if (pendingWishlistAction && isUserLogin) {
+  //     callHandpickedAPI(authUserId || getTTid());
+  //     setPendingWishlistAction(false);
+  //   }
+  // }, [isUserLogin, pendingWishlistAction, authUserId]);
+
+  useEffect(() => {
+    if (!pendingWishlistAction || isGuestPopUpShow) return;
+
+    const kioskLogin = getKioskLogin();
+    if (!kioskLogin?.user_id) {
+      setPendingWishlistAction(false);
+      return;
+    }
+
+    let cancelled = false;
+    setPendingWishlistAction(false);
+
+    const addPendingWishlistAndOpenQr = async () => {
+      const wishlistResponse = await callHandpickedAPI(kioskLogin.user_id);
+      if (!cancelled) {
+        openWishlistQr({ kioskLogin, wishlistResponse });
+      }
+    };
+
+    addPendingWishlistAndOpenQr();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    getKioskLogin,
+    isGuestPopUpShow,
+    openWishlistQr,
+    pendingWishlistAction,
+  ]);
+
+  const addToWishlistClick = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // if (!isUserLogin && hasKioskAccess && KioskLogin) {
-      // alert('hwllo codeers')
+    const kioskLogin = getKioskLogin();
+
+    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
+      onGuestPopupOpen?.();
       dispatch(GuestPopUpShow(true));
       return;
+    }
 
-    callHandpickedAPI(authUserId || getTTid());
+    const wishlistResponse = await callHandpickedAPI(
+      kioskLogin?.user_id || authUserId || getTTid(),
+    );
+
+    if (kioskLogin?.user_id) {
+      openWishlistQr({ kioskLogin, wishlistResponse });
+    }
   };
 
   const checkoutPayment = async (e) => {
@@ -538,20 +655,26 @@ const ProductCard = ({
     },
   };
   useEffect(() => {
-    const currentCollection = singleCollections?._id === collection_id 
-      ? singleCollections 
-      : collections?.find(item => item._id === collection_id);
+    const currentCollection =
+      singleCollections?._id === collection_id
+        ? singleCollections
+        : collections?.find((item) => item._id === collection_id);
 
-    setCollectionTryonStatement(currentCollection?.tryon_statement ? currentCollection : null);
+    setCollectionTryonStatement(
+      currentCollection?.tryon_statement ? currentCollection : null,
+    );
   }, [singleCollections, collections, collection_id]);
 
-  const currentVtoCollection = singleCollections?._id === collection_id 
-    ? singleCollections 
-    : collections?.find(item => item._id === collection_id);
+  const currentVtoCollection =
+    singleCollections?._id === collection_id
+      ? singleCollections
+      : collections?.find((item) => item._id === collection_id);
 
-  const Collection_vto = currentVtoCollection?.tryon_type ? currentVtoCollection : null;
+  const Collection_vto = currentVtoCollection?.tryon_type
+    ? currentVtoCollection
+    : null;
   // console.log('Collection_vto',Collection_vto );
-  
+
   // const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
   const handleVTOclick = async (e) => {
     e.stopPropagation();
@@ -562,7 +685,10 @@ const ProductCard = ({
     const payload = {
       image_urls: [product.image, uploadedImages[0]],
       store: storeData.store_name,
-      image_tryon_prompt: storeData?.templates?.[Collection_vto?.tryon_type] || storeData?.templates?.image_try_on || "",
+      image_tryon_prompt:
+        storeData?.templates?.[Collection_vto?.tryon_type] ||
+        storeData?.templates?.image_try_on ||
+        "",
       additional_prompt: descriptionget || "",
       type: Collection_vto?.tryon_type || "tryon",
     };
@@ -645,7 +771,7 @@ const ProductCard = ({
       if (cleaned) {
         localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
       }
-      if(bannerImage){
+      if (bannerImage) {
         navigate(`/product/${clickedMfrCode}?from=kioskcollection`);
       } else {
         navigate(`/product/${clickedMfrCode}`);
@@ -756,12 +882,12 @@ const ProductCard = ({
                     e.stopPropagation();
                   }}
                 >
-                  <Image
+                  <img
                     height={20}
                     width={20}
                     alt="Try on with camera"
                     className={`${styles["product-vto-icon"]}`}
-                    src={camera}
+                    src={getStaticImageSrc(camera)}
                   />
                   <p>Try On</p>
                 </div>
@@ -792,8 +918,8 @@ const ProductCard = ({
                 >
                   {isProductUrlAvailable ? buyNowTitle : null}
                   {isProductUrlAvailable ? (
-                    <Image
-                      src={openInNewTabIcon}
+                    <img
+                      src={getStaticImageSrc(openInNewTabIcon)}
                       alt="open"
                       width={20}
                       height={20}
@@ -814,7 +940,7 @@ const ProductCard = ({
                 <>
                   {storeData?.pdp_settings?.is_buy_button ? (
                     <button
-                      className={getProductBuyButtonClass(size,hasKioskAccess)}
+                      className={getProductBuyButtonClass(size, hasKioskAccess)}
                       onClick={checkoutPayment}
                     >
                       Buy Now
@@ -1002,7 +1128,7 @@ const ProductCard = ({
                   className={styles["product-view-similar"]}
                   onClick={onSimilarClick}
                 >
-                  <Image
+                  <img
                     src="/images/view_similar_icon.svg"
                     alt="view similar"
                     width={24}
@@ -1216,10 +1342,10 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    <Image
+                    <img
                       alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
-                      src={heart}
+                      src={getStaticImageSrc(heart)}
                       height={20}
                       width={20}
                     />
@@ -1243,10 +1369,10 @@ const ProductCard = ({
                 onClick={(e) => onAddSelectedProductsToCollection(e, product)}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  <Image
+                  <img
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
-                    src={heart}
+                    src={getStaticImageSrc(heart)}
                     height={20}
                     width={20}
                   />
@@ -1408,37 +1534,49 @@ const ProductCard = ({
                       color:
                         !product?.price && !product?.listprice ? "#616161" : "",
                     }}
-                    className={getProductBuyButtonClass(size,hasKioskAccess)}
+                    className={getProductBuyButtonClass(size, hasKioskAccess)}
                     onClick={checkoutPayment}
                     disabled={!product?.price && !product?.listprice}
                   >
-                    <Image
+                    <img
                       style={{
                         filter:
                           !product?.price && !product?.listprice
                             ? "brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)"
                             : "",
                       }}
-                      src={shopping}
+                      src={getStaticImageSrc(shopping)}
                       alt="Buy now"
                       height={20}
                       width={20}
-                      className={showWishlistModal || size === "small" ? styles["product-cart-icon-small"] : hasKioskAccess ?  KIOSK_CART_ICON_CLASS : "h-4 w-4 md:h-5 md:w-5"}
+                      className={
+                        showWishlistModal || size === "small"
+                          ? styles["product-cart-icon-small"]
+                          : hasKioskAccess
+                            ? KIOSK_CART_ICON_CLASS
+                            : "h-4 w-4 md:h-5 md:w-5"
+                      }
                     />
                     Buy Now
                   </button>
                 ) : (
                   <button
-                    className={`${getProductBuyButtonClass(size,hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
+                    className={`${getProductBuyButtonClass(size, hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
                     onClick={handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >
-                    <Image
-                      src={shopping}
+                    <img
+                      src={getStaticImageSrc(shopping)}
                       alt="Add to cart"
                       height={20}
                       width={20}
-                      className={showWishlistModal || size === "small" ? styles["product-cart-icon-small"] : hasKioskAccess ?  KIOSK_CART_ICON_CLASS : "h-4 w-4 md:h-5 md:w-5"}
+                      className={
+                        showWishlistModal || size === "small"
+                          ? styles["product-cart-icon-small"]
+                          : hasKioskAccess
+                            ? KIOSK_CART_ICON_CLASS
+                            : "h-4 w-4 md:h-5 md:w-5"
+                      }
                     />
                     Add to Cart
                   </button>
@@ -1448,11 +1586,46 @@ const ProductCard = ({
         </div>
       </div>
 
+      <Modal
+        headerText="Scan to open wishlist"
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+        size="sm"
+      >
+        <div className="flex flex-col items-center gap-4">
+          {qrImageUrl ? (
+            <img
+              src={qrImageUrl}
+              alt="Wishlist QR code"
+              className="h-48 w-48 object-contain"
+            />
+          ) : (
+            <div className="flex h-48 w-48 items-center justify-center bg-gray-100 text-sm text-gray-500">
+              QR
+            </div>
+          )}
+          {qrTargetUrl ? (
+            <a
+              href={qrTargetUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="break-all text-center text-sm text-indigo-600 hover:underline"
+            >
+              {qrTargetUrl}
+            </a>
+          ) : null}
+        </div>
+      </Modal>
+
       {ButtonClick === product?.mfr_code ? (
         <Modal
           isOpen={!!ButtonClick}
           headerText={"Virtual Try-On"}
-          subText={ Collection_tryonStatement?.tryon_statement ? Collection_tryonStatement?.tryon_statement :  "Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."}
+          subText={
+            Collection_tryonStatement?.tryon_statement
+              ? Collection_tryonStatement?.tryon_statement
+              : "Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+          }
           onClose={() => handleVTOCancel()}
           size="md"
         >

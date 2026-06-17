@@ -7,15 +7,25 @@ import {
   filterProductListBySelectedTags,
 } from "../../helper/utils";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import profilebanner from "../../images/package.jpg";
 import { Spin } from "antd";
 import BannerImage from "./BannerImage";
 import ShareOptions from "../../pageComponents/shared/shareOptions";
 import share_icon from "../../images/profilePage/share_icon.svg";
-import { collectionQRCodeGenerator, getBlogCollectionPagePath, buildAutoLoginPagePath } from "../../helper/utils";
-import { requestSigninWithLink, decryptSigninToken, buildVerifyUrl } from "../../helper/autoLogin";
-import useKioskSessionReminder, { KioskSessionPopup } from "./useKioskSessionReminder";
+import {
+  collectionQRCodeGenerator,
+  getBlogCollectionPagePath,
+  buildAutoLoginPagePath,
+} from "../../helper/utils";
+import {
+  requestSigninWithLink,
+  decryptSigninToken,
+  buildVerifyUrl,
+} from "../../helper/autoLogin";
+import useKioskSessionReminder, {
+  KioskSessionPopup,
+} from "./useKioskSessionReminder";
 import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import LoggedInInfo from "./components/LoggedInInfo";
@@ -30,11 +40,12 @@ const CollectionPage = ({ params }) => {
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
-  const [isUserLogin, storeData] = useSelector((state) => [
+  const [isUserLogin, storeData, isGuestPopUpShow] = useSelector((state) => [
     state.auth.user.isUserLogin,
     state.store.data,
+    state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
-    const userInfo = useSelector(loggedInInfo);
+  const userInfo = useSelector(loggedInInfo);
   const handleTagClick = useCallback((value) => {
     setActiveCategory(value);
     setSelectedTags(value === "All" ? [] : [value]);
@@ -63,9 +74,9 @@ const CollectionPage = ({ params }) => {
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  
+
   const [qrUrl, setQrUrl] = useState("");
-  console.log('sharePageUrl',sharePageUrl);
+  console.log("sharePageUrl", sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });
@@ -78,21 +89,19 @@ const CollectionPage = ({ params }) => {
     const isKioskLogin = sessionStorage.getItem("Kiosk-login");
     // console.log('isKioskLogin',!isKioskLogin);
     // console.log('isUserLogin',isUserLogin);
-    
-    
-    if ( isUserLogin && !isKioskLogin) {
+
+    if (isUserLogin && !isKioskLogin) {
       setShowShareProductDetails(false);
       setIsPopupShow(true);
       // console.log('fdfdfdfd');
-      
+
       dispatch(GuestPopUpShow(true));
       return;
     }
-      // console.log('fdfdfdfd');
+    // console.log('fdfdfdfd');
 
     openShareOptions();
   }, [dispatch, isUserLogin, openShareOptions]);
-
 
   const collectionPagePath = useMemo(() => {
     if (!singleCollectionKiosk) return "";
@@ -119,7 +128,7 @@ const CollectionPage = ({ params }) => {
   useEffect(() => {
     setQrUrl(qrCodeGeneratorURL);
   }, [qrCodeGeneratorURL]);
-  
+
   // this page is a collection page
   const fromCollection = true;
 
@@ -148,7 +157,23 @@ const CollectionPage = ({ params }) => {
   //   console.log('colleztctionData',singleCollectionKiosk);
   const productCardKiosk = (productdata) => {
     // console.log(productdata);
-    return <ProductCard product={productdata} bannerImage />;
+    return (
+      <ProductCard
+        product={productdata}
+        bannerImage
+        enableKioskGuestPopup
+        onGuestPopupOpen={() => {
+          setIsPopupShow(true);
+          dispatch(GuestPopUpShow(true));
+        }}
+      />
+    );
+  };
+  const getProductKey = (product, index) => {
+    const productId =
+      product?._id || product?.product_id || product?.mfr_code || product?.id;
+
+    return productId ? `${productId}-${index}` : `product-${index}`;
   };
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
@@ -163,24 +188,34 @@ const CollectionPage = ({ params }) => {
       // For kiosk or store assistant flows we want auto-login URLs embedded in the QR/share
       try {
         // Determine email to request signin link for. Prefer store assistant/kiosk email from storeData if present
-        const kioskEmail = JSON.parse(sessionStorage.getItem('Kiosk-login') || '{}')?.email; 
+        const kioskEmail = JSON.parse(
+          sessionStorage.getItem("Kiosk-login") || "{}",
+        )?.email;
         // console.log('kioskEmail',kioskEmail);
-         
-        if (kioskEmail) { 
+
+        if (kioskEmail) {
           const resp = await requestSigninWithLink(kioskEmail);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
           // console.log('signin_token',signin_token);
-          
-          if (signin_token) { 
-            const decrypted = decryptSigninToken(signin_token); 
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
               // Build verify link to collection page
-              const verifyLink = buildVerifyUrl(decrypted, `?page=collections/${singleCollectionKiosk?.path || ''}`.replace(/\/+/, '/'));
-              console.log('verifyLink',verifyLink);
-              
+              const verifyLink = buildVerifyUrl(
+                decrypted,
+                `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
+                  /\/+/,
+                  "/",
+                ),
+              );
+              console.log("verifyLink", verifyLink);
+
               if (mounted) {
                 setSharePageUrl(`${originPrefix}${verifyLink}`);
-                setQrUrl(collectionQRCodeGenerator(`${originPrefix}${verifyLink}`));
+                setQrUrl(
+                  collectionQRCodeGenerator(`${originPrefix}${verifyLink}`),
+                );
               }
               return;
             }
@@ -188,7 +223,7 @@ const CollectionPage = ({ params }) => {
         }
       } catch (e) {
         // ignore and fallback
-        console.error('auto-login build error', e);
+        console.error("auto-login build error", e);
       }
 
       // fallback
@@ -204,7 +239,7 @@ const CollectionPage = ({ params }) => {
       mounted = false;
     };
   }, [isPopupShow]);
-    
+
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
       <div className="min-h-screen flex mt-3 justify-center">
@@ -223,93 +258,103 @@ const CollectionPage = ({ params }) => {
         </span>
         <span className="capitalize">Go back</span>
       </button>
-      <div className="sticky top-0 py-2 mx-1 bg-white
-       z-20 ">
-
-      {/* Header */}
-      <div className="mb-3 lg:mb-8 flex justify-between items-start">
-        {/* <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
+      <div
+        className="sticky top-0 py-2 mx-1 bg-white
+       z-20 "
+      >
+        {/* Header */}
+        <div className="mb-3 lg:mb-8 flex justify-between items-start">
+          {/* <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p> */}
-        <div>
+          <div>
+            <h1 className="h1-kiosk font-bold text-black mb-0 lg:mb-2">
+              {singleCollectionKiosk.collection_name}
+            </h1>
 
-        <h1 className="h1-kiosk font-bold text-black mb-0 lg:mb-2">
-          {singleCollectionKiosk.collection_name}
-        </h1>
-        
-        <p className="text-gray-500 text-base lg:mb-0 mb-2">
-          {singleCollectionKiosk?.product_lists?.length} pieces
-        </p>
+            <p className="text-gray-500 text-base lg:mb-0 mb-2">
+              {singleCollectionKiosk?.product_lists?.length} pieces
+            </p>
+          </div>
+          <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
+            {showShareProductDetails && (
+              <ShareOptions
+                url={sharePageUrl}
+                setShow={setShowShareProductDetails}
+                onClose={() => setShowShareProductDetails(false)}
+                isOpen={showShareProductDetails}
+                qrCodeGeneratorURL={qrUrl}
+                collection={singleCollectionKiosk}
+                fromCollection={fromCollection}
+              />
+            )}
+            {/* {sharePageUrl && ( */}
+            <button
+              className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+              onClick={handleShareClick}
+            >
+              <img
+                className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
+                src={share_icon}
+                preview={false}
+              />
+            </button>
+            {/* )} */}
+          </div>
         </div>
-           <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
-                        {showShareProductDetails && (
-                          <ShareOptions
-                            url={sharePageUrl}
-                            setShow={setShowShareProductDetails}
-                            onClose={() => setShowShareProductDetails(false)}
-                            isOpen={showShareProductDetails}
-                            qrCodeGeneratorURL={qrUrl}
-                            collection={singleCollectionKiosk}
-                            fromCollection={fromCollection}
-                          />
-                        )}
-                        {/* {sharePageUrl && ( */}
-                          <button
-                            className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
-                            onClick={handleShareClick}
-                          >
-                            <img
-                              className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
-                              src={share_icon}
-                              preview={false}
-                            />
-                          </button>
-                        {/* )} */}
-                      </div>
-      </div>
 
-      {/* Category Filters */}
-      <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 mb-5 lg:mb-12 flex-wrap">
-        {tagsToShow.map((tag, i) => (
-          <button
-            key={i}
-            onClick={() => handleTagClick(tag)}
-            className={`${
-              activeCategory === tag
-                ? "bg-black text-white"
-                : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-            } lg:px-5 px-3 py-2 lg:py-3 rounded-full font-semibold text-[12px] lg:text-sm transition duration-200`}
-          >
-            {tag}
-          </button>
-        ))}
-      </div>
+        {/* Category Filters */}
+        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 mb-5 lg:mb-12 flex-wrap">
+          {tagsToShow.map((tag, i) => (
+            <button
+              key={i}
+              onClick={() => handleTagClick(tag)}
+              className={`${
+                activeCategory === tag
+                  ? "bg-black text-white"
+                  : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+              } lg:px-5 px-3 py-2 lg:py-3 rounded-full font-semibold text-[12px] lg:text-sm transition duration-200`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Product Grid Placeholder */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {productsData?.map((item) => (
+        {productsData?.map((item, index) => (
           <div
-            key={item}
+            key={getProductKey(item, index)}
             className=" rounded-lg  flex items-center justify-center"
           >
             {productCardKiosk(item)}
           </div>
         ))}
-
       </div>
-      <BannerImage src={profilebanner?.src} alt="profilebanner" className="lg:mt-11 mt-5" />
-        <GuestUserPopUp
-          isOpen={isPopupShow}
-          setIsOpen={setIsPopupShow}
-          storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
-          persistKioskLogin
-          onSuccess={() => setShowShareProductDetails(true)}
+      <BannerImage
+        src={profilebanner?.src}
+        alt="profilebanner"
+        className="lg:mt-11 mt-5"
+      />
+      <GuestUserPopUp
+        isOpen={isPopupShow || isGuestPopUpShow}
+        setIsOpen={setIsPopupShow}
+        storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
+        persistKioskLogin
+        onSuccess={() => {
+          if (isPopupShow) {
+            setShowShareProductDetails(true);
+          }
+        }}
+      />
+      {showSessionPopup && (
+        <KioskSessionPopup
+          onStay={handleStayLoggedIn}
+          onLogout={handleLogout}
         />
-        {showSessionPopup && (
-                    <KioskSessionPopup onStay={handleStayLoggedIn} onLogout={handleLogout} />
-                  )}
-                  <LoggedInInfo userInfo={userInfo} />
+      )}
+      <LoggedInInfo userInfo={userInfo} />
     </div>
   );
 };
