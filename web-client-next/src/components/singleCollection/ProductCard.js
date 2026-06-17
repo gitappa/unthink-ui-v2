@@ -180,6 +180,7 @@ const ProductCard = ({
   bannerImage,
   enableKioskGuestPopup = false,
   onGuestPopupOpen,
+
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -302,6 +303,8 @@ const ProductCard = ({
   );
   // console.log(product);
 
+
+
   const handleProductClick = async () => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
@@ -352,6 +355,7 @@ const ProductCard = ({
       });
       // END
     }
+
 
     navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
@@ -687,7 +691,7 @@ const ProductCard = ({
       store: storeData.store_name,
       image_tryon_prompt:
         storeData?.templates?.[Collection_vto?.tryon_type] ||
-        storeData?.templates?.image_try_on ||
+        storeData?.templates?.[storeData?.default_tryon_type] ||  // default tyeon type
         "",
       additional_prompt: descriptionget || "",
       type: Collection_vto?.tryon_type || "tryon",
@@ -771,6 +775,7 @@ const ProductCard = ({
       if (cleaned) {
         localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
       }
+      // saveProductDetailsReturnPath();
       if (bannerImage) {
         navigate(`/product/${clickedMfrCode}?from=kioskcollection`);
       } else {
@@ -783,6 +788,80 @@ const ProductCard = ({
   // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const productCardAttributes = useMemo(() => {
+    const attributes = storeData?.pdp_settings?.product_page_attributes || [];
+    console.log('attributes',attributes);
+    
+    const normalizeKey = (value) =>
+      String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "_");
+
+    const getAttributeConfig = (attribute) => {
+      if (typeof attribute === "string") {
+        return {
+          key: attribute,
+          label: attribute.replace(/_/g, " ").trim(),
+        };
+      }
+
+      if (!attribute || typeof attribute !== "object") return null;
+
+      const key =
+        attribute.key ||
+        attribute.value ||
+        attribute.name ||
+        attribute.field ||
+        attribute.attribute ||
+        attribute.attribute_name;
+
+      if (!key) return null;
+
+      return {
+        key,
+        label:
+          attribute.label ||
+          attribute.title ||
+          attribute.display_name ||
+          String(key).replace(/_/g, " ").trim(),
+      };
+    };
+
+    const getProductValue = (attributeKey) => {
+      if (!product || !attributeKey) return undefined;
+      if (Object.prototype.hasOwnProperty.call(product, attributeKey)) {
+        return product[attributeKey];
+      }
+
+      const normalizedAttributeKey = normalizeKey(attributeKey);
+      const productKey = Object.keys(product).find(
+        (key) => normalizeKey(key) === normalizedAttributeKey,
+      );
+
+      return productKey ? product[productKey] : undefined;
+    };
+
+    const formatValue = (value) => {
+      if (Array.isArray(value)) {
+        return value
+          .map((item) => String(item ?? "").replace(/,+$/, "").trim())
+          .filter(Boolean)
+          .join(", ");
+      }
+
+      return String(value ?? "").replace(/,+$/, "").trim();
+    };
+
+    return attributes
+      .map(getAttributeConfig)
+      .filter(Boolean)
+      .map((attribute) => ({
+        ...attribute,
+        value: formatValue(getProductValue(attribute.key)),
+      }))
+      .filter((attribute) => attribute.value.length > 0);
+  }, [product, storeData?.pdp_settings?.product_card_attributes]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -874,7 +953,7 @@ const ProductCard = ({
               storeData.is_tryon_enabled &&
               !enableSelect &&
               widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-              !showWishlistModal && (
+              !showWishlistModal &&  product?.custom_product !== false &&(
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
                   onClick={(e) => {
@@ -1417,10 +1496,7 @@ const ProductCard = ({
             )}
           </div>
 
-          {(storeData.pdp_settings?.product_card_attributes?.[0] &&
-            product?.size?.length > 0) ||
-          (storeData.pdp_settings?.product_card_attributes?.[1] &&
-            product?.sleeve?.length > 0) ? (
+          {productCardAttributes.length > 0 ? (
             <div
               className={`${styles.tagsContainerWrapper} ${
                 isOverflowing ? styles.isOverflowing : ""
@@ -1433,47 +1509,16 @@ const ProductCard = ({
                 freeMode={true}
                 className={styles.tagscontainer}
               >
-                {storeData.pdp_settings?.product_card_attributes?.[0] &&
-                  product?.size?.length > 0 && (
-                    <SwiperSlide style={{ width: "auto" }}>
-                      <span className={styles.smalltags}>
-                        size:
-                        {Array.isArray(product?.size)
-                          ? product.size
-                              .map((f) => f.replace(/,+$/, "").trim())
-                              .join(", ")
-                          : product?.size?.replace(/,+$/, "").trim()}
-                      </span>
-                    </SwiperSlide>
-                  )}
-
-                {storeData.pdp_settings?.product_card_attributes?.[1] &&
-                  product?.sleeve?.length > 0 && (
-                    <SwiperSlide style={{ width: "auto" }}>
-                      <span className={styles.smalltags}>
-                        sleeve :
-                        {Array.isArray(product?.sleeve)
-                          ? product.sleeve
-                              .map((f) => f.replace(/,+$/, "").trim())
-                              .join(", ")
-                          : product?.sleeve?.replace(/,+$/, "").trim()}
-                      </span>
-                    </SwiperSlide>
-                  )}
-
-                {/* {storeData.pdp_settings?.product_card_attributes?.[2] &&
-                  product?.fit?.length > 0 && (
-                    <SwiperSlide style={{ width: "auto" }}>
-                      <span className={styles.smalltags}>
-                        fit:
-                        {Array.isArray(product?.fit)
-                          ? product.fit
-                              .map((f) => f.replace(/,+$/, "").trim())
-                              .join(", ")
-                          : product?.fit?.replace(/,+$/, "").trim()}
-                      </span>
-                    </SwiperSlide>
-                  )} */}
+                {productCardAttributes.map((attribute) => (
+                  <SwiperSlide
+                    key={attribute.key}
+                    style={{ width: "auto" }}
+                  >
+                    <span className={styles.smalltags}>
+                      {attribute.label}: {attribute.value}
+                    </span>
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>
           ) : (
@@ -1624,7 +1669,7 @@ const ProductCard = ({
           subText={
             Collection_tryonStatement?.tryon_statement
               ? Collection_tryonStatement?.tryon_statement
-              : "Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+              : storeData?.defult_tryon_statement
           }
           onClose={() => handleVTOCancel()}
           size="md"
