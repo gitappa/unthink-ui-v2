@@ -28,7 +28,8 @@ const Breadcrumbs = ({
 	theme,
 	userName,
 	user_id,
-	isCreateFreeCollectionPage
+	isCreateFreeCollectionPage,
+	pdppage
 }) => {
 	const router = useRouter();
 	 const [
@@ -125,16 +126,19 @@ const Breadcrumbs = ({
 					}`}>
 				<div className={styles.breadcrumbsFlex}>
 					{/* Back Button for Collection Review Page */}
-					{(isCollectionReviewPage || isCreateFreeCollectionPage || router.asPath === `/influencer/${authUserName?.user_name}/`) && (
+					{(isCollectionReviewPage || isCreateFreeCollectionPage || pdppage || router.asPath === `/influencer/${authUserName?.user_name}/`) && (
 						<>
 							<ArrowLeftOutlined
 								className={styles.backIcon}
 								onClick={() => window.history.back()}
 							/>
-							<div>/</div>
+							{!pdppage && 
+							<div>/</div> }
+							{ pdppage && <p className="cursor-pointer" onClick={() => window.history.back()} >Go back</p> }
 						</>
 					)}
 					{/* Home Icon */}
+					{!pdppage && 
 					<HomeOutlined
 						className={`${styles.homeIcon} ${isHomeDisable ? styles.homeIconDisabled : styles.homeIconActive
 							}`}
@@ -145,6 +149,7 @@ const Breadcrumbs = ({
 								: navigate(is_store_instance ? PATH_ROOT : PATH_STORE))
 						}
 					/>
+					}
 					{/* Breadcrumb Items */}
 					{breadCrumbs?.map((item) => {
 						return item?.label ? (

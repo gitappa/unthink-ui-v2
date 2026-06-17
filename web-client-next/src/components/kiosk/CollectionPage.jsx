@@ -30,10 +30,12 @@ import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import LoggedInInfo from "./components/LoggedInInfo";
 import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
+import { useNavigate } from "../../helper/useNavigate";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
   const dispatch = useDispatch();
+   const navigate = useNavigate();
   const [isTagsShowMoreActive, setIsTagsShowMoreActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -251,7 +253,7 @@ const CollectionPage = ({ params }) => {
     <div className="p-8 md:p-12 bg-white min-h-screen">
       <button
         className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
-        onClick={() => window.history.back()}
+        onClick={() => navigate('/')}
       >
         <span className=" leading-none flex transition group-hover:-translate-x-0.5">
           <ArrowLeftOutlined />
