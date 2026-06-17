@@ -695,7 +695,10 @@ const StorePageWrapper = (props) => {
 			sessionStorage.removeItem("widgetHeader");
 		}
 	}, [isRootPage]);
-	const KioskLogin = sessionStorage.getItem("Kiosk-login") || null
+	const KioskLogin =
+		typeof window !== "undefined"
+			? sessionStorage.getItem("Kiosk-login") || null
+			: null;
 
 	useEffect(() => {
 		if (authUser.user_id) {
