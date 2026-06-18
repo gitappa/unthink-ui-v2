@@ -410,14 +410,16 @@ const ProductDetails = ({ params, ...props }) => {
 
   useEffect(() => {
     if (!mfr_code) return;
-    const storedImage = localStorage.getItem(`pdp_image_${mfr_code}`) || "";
+    const storedImage = localStorage.getItem('pdp_image') || "";
+    // console.log('storedImage',storedImage);
+    
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
 
   useEffect(() => {
     if (!mfr_code) return;
     return () => {
-      localStorage.removeItem(`pdp_image_${mfr_code}`);
+      localStorage.removeItem(`pdp_image`);
     };
   }, [mfr_code]);
 
@@ -516,18 +518,22 @@ const ProductDetails = ({ params, ...props }) => {
     [productDetails],
   );
   const handleGoBack = () => {
-    if (typeof window === "undefined") {  
-      navigate(PATH_ROOT);
-      return;
-    }
-
+    // if (typeof window === "undefined") {  
+    //   navigate(PATH_ROOT);
+    //   return;
+    // }
+  //  console.log('handleGoBack',window.navigation.entries())
+    if (window?.history?.length > 2) {
+			window.history.back();
+		} 
+    // window.history.back()
     // const storedReturnPath = window.sessionStorage.getItem(
     //   PDP_RETURN_PATH_STORAGE_KEY,
     // );
     // const returnPath = isValidProductReturnPath(storedReturnPath)
     //   ? storedReturnPath
     //   : PATH_ROOT;
-    navigate(storedReturnPath)
+    // navigate(storedReturnPath)
 
     // window.sessionStorage.removeItem(PDP_RETURN_PATH_STORAGE_KEY);
     // router.push(returnPath).catch(() => {
@@ -904,7 +910,7 @@ const ProductDetails = ({ params, ...props }) => {
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
         <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
-          {/* <button
+          <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
           >
@@ -912,8 +918,8 @@ const ProductDetails = ({ params, ...props }) => {
               <ArrowLeftOutlined />
             </span>
             <span className="capitalize">Go back</span>
-          </button> */}
-          <Breadcrumbs pdppage={true} />
+          </button>
+          {/* <Breadcrumbs pdppage={true} /> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
