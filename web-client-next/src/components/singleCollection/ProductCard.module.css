@@ -881,6 +881,7 @@
 .product-view-icon-eye {
   z-index: 19;
   font-size: 20px;
+  cursor: pointer;
   color: #111827;
   @media (max-width:768px) {
     font-size: 16px;
