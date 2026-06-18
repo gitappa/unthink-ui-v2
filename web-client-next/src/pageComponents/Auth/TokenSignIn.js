@@ -124,23 +124,23 @@ const TokenSignIn = () => {
           console.log("collectionPath", collectionPath);
 
           navigate(`/collections/${collectionPath}`);
-          Signout()
+          // Signout()
+          return;
         }
 		   if (redirectPage?.startsWith("influencer/")) {
-          const collectionPath = redirectPage.split("/").pop();
-
         //   console.log("collectionPath", collectionPath);
-
-          navigate(`/influencer/${collectionPath}`);
-         Signout()
+          navigate(`/${redirectPage}`);
+        //  Signout()
+          return;
         }
-        if (redirectPage?.startsWith("product/")) {
-          	navigate(`/${redirectPage}`);
-          	Signout();
+        if (redirectPage?.startsWith("product/")) {          
+          navigate(`/${redirectPage}`);
+          return;
         }
         if (redirectPage?.startsWith("cart/")) {
           	navigate(`/${redirectPage}`);
           	// Signout();
+            return;
         }
 
 

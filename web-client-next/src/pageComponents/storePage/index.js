@@ -695,17 +695,20 @@ const StorePageWrapper = (props) => {
 			sessionStorage.removeItem("widgetHeader");
 		}
 	}, [isRootPage]);
-
+	const KioskLogin =
+		typeof window !== "undefined"
+			? sessionStorage.getItem("Kiosk-login") || null
+			: null;
 
 	useEffect(() => {
 		if (authUser.user_id) {
-			if (showWishlistModal) {
+			if (showWishlistModal && KioskLogin) {
 				// Always call API when wishlist popup opens
 				dispatch(
 					getUserCollections({
 						product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
 						summary: true,
-						kisokuser_id:sessionStorage.getItem("Kiosk-login") || null
+						kisokuser_id:KioskLogin
 					})
 				);
 			}

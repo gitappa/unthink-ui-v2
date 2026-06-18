@@ -133,7 +133,7 @@ const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/";
 
 //KIOSK
 const socialMedia =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based&summary=true`;
 const trending =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true`;
 const lookBook =
@@ -201,13 +201,14 @@ const GuestSignupAPICall = ({ email, user_name }) => {
   });
 };
 
-const GuestRegisterAPICall = ({ emailId, user_id, store }) => {
+const GuestRegisterAPICall = ({ emailId, user_id, store ,phone}) => {
   const url = `${auraYfretUserCollBaseUrl}${guestRegisterUrl}`;
 
   const guestData = {
     emailId,
     user_id,
     store,
+    phone
   };
 
   return apiInstance({

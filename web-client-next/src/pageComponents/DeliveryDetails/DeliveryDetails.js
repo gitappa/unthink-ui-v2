@@ -33,10 +33,10 @@ const DeliveryDetails = () => {
 	const [guestData, setGuestData] = useState({
 		email: "",
 		phone: "",
-		altPhone: "",
+		 
 	});
 
-	const [errors, setErrors] = useState({ email: "", phone: "", altPhone: "" });
+	const [errors, setErrors] = useState({ email: "", phone: "", });
 	const [isPopupShow, setIsPopupShow] = useState(false);
 	const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
 
@@ -153,9 +153,16 @@ const DeliveryDetails = () => {
 		(e) => {
 			const { name, value } = e.target;
 			setGuestData((data) => ({ ...data, [name]: value }));
-			if (errors.email) setErrors({ ...errors, email: "" });
+			if (name === "email" || name === "phone" ) {
+				setErrors((currentErrors) => ({
+					...currentErrors,
+					email: "",
+					phone: "",
+					 
+				}));
+			}
 		},
-		[errors]
+		[]
 	);
 
 	// Guest skip handler
@@ -167,19 +174,17 @@ const DeliveryDetails = () => {
 	const handleGuestSubmit = useCallback(
 		async (e) => {
 			e.preventDefault();
+			const email = guestData.email?.trim();
+			const phone = guestData.phone?.trim();
+	 
 
-			if (!guestData.email) {
-				setErrors({ ...errors, email: "Email is required" });
-				return;
-			}
-
-			if (!validateEmail(guestData.email)) {
+			if (email && !validateEmail(email)) {
 				setErrors({ ...errors, email: "Please enter a valid email address" });
 				return;
 			}
 
 			// Phone validation for cart page
-			if (guestData.phone === "" && guestData.altPhone === "") {
+			if (!phone ) {
 				setErrors({
 					...errors,
 					phone: "At least one phone number is required",
@@ -187,7 +192,7 @@ const DeliveryDetails = () => {
 				return;
 			}
 
-			if (guestData.phone && !validatePhone(guestData.phone)) {
+			if (phone && !validatePhone(phone)) {
 				setErrors({
 					...errors,
 					phone: "Please enter a valid 10-digit phone number",
@@ -195,14 +200,7 @@ const DeliveryDetails = () => {
 				return;
 			}
 
-			if (guestData.altPhone && !validatePhone(guestData.altPhone)) {
-				setErrors({
-					...errors,
-					altPhone: "Please enter a valid 10-digit phone number",
-				});
-				return;
-			}
-
+			 
 			const tid = Cookies.get("tid");
 			const store = current_store_name;
 
@@ -211,7 +209,7 @@ const DeliveryDetails = () => {
 				Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
 			}
 
-			if (validateEmail(guestData.email)) {
+			if (phone ) {
 				try {
 					const response = await collectionAPIs.fetchCollectionsAPICall({
 						is_display_amount: true,
@@ -221,11 +219,11 @@ const DeliveryDetails = () => {
 					setUnSignedData(response?.data?.data?.[0] || null);
 
 					const res = await authAPIs.GuestRegisterAPICall({
-						emailId: guestData.email,
+						emailId: email,
 						user_id: tid,
 						store,
-						phone: guestData.phone || null,
-						altPhone: guestData.altPhone || null,
+						phone,
+						 
 					});
 
 					const { data } = res;
@@ -310,7 +308,7 @@ const DeliveryDetails = () => {
 		[
 			guestData.email,
 			guestData.phone,
-			guestData.altPhone,
+		 
 			dispatch,
 			extractedProducts,
 		]

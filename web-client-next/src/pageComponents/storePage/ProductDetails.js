@@ -72,7 +72,6 @@ import Modal from "../../components/modal/Modal";
 import styles from "../../components/singleCollection/ProductCard.module.css";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { useSearchParams } from "next/navigation";
 import BannerImage from "../../components/kiosk/BannerImage";
 import profilebanner from "../../images/package.jpg";
 import {
@@ -92,6 +91,8 @@ import useKioskSessionReminder, {
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import LoggedInInfo, { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import { loggedInInfo, userInfo } from "../Auth/redux/selector";
+import Breadcrumbs from "./Breadcrumbs";
+
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -363,7 +364,7 @@ const ProductDetails = ({ params, ...props }) => {
             const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
               // Build verify link to current product page
-              const pageParam = `?page=${productDetailsPagePath}`;
+              const pageParam = `?page=product/${productMfrCode}`;
               const verifyLink = buildVerifyUrl(decrypted, pageParam);
               // console.log('verifyLink',verifyLink);
 
@@ -514,14 +515,24 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [productDetails],
   );
-  const searchParams = useSearchParams();
-
   const handleGoBack = () => {
-    if (typeof window !== "undefined" && window?.history?.length > 2) {
-      window.history.back();
-    } else {
+    if (typeof window === "undefined") {  
       navigate(PATH_ROOT);
+      return;
     }
+
+    // const storedReturnPath = window.sessionStorage.getItem(
+    //   PDP_RETURN_PATH_STORAGE_KEY,
+    // );
+    // const returnPath = isValidProductReturnPath(storedReturnPath)
+    //   ? storedReturnPath
+    //   : PATH_ROOT;
+    navigate(storedReturnPath)
+
+    // window.sessionStorage.removeItem(PDP_RETURN_PATH_STORAGE_KEY);
+    // router.push(returnPath).catch(() => {
+    //   window.location.assign(returnPath);
+    // });
   };
 
   
@@ -723,7 +734,7 @@ const ProductDetails = ({ params, ...props }) => {
       store: storeData.store_name,
       image_tryon_prompt:
         storeData?.templates?.[collection?.tryon_type] ||
-        storeData?.templates?.image_try_on ||
+       storeData?.templates?.[storeData?.default_tryon_type] || 
         "",
       additional_prompt: descriptionget || "",
       type: collection?.tryon_type || "tryon",
@@ -792,6 +803,7 @@ const ProductDetails = ({ params, ...props }) => {
           {
             name: "item2",
             image: vtoResultImageUrl || "",
+            custom_product :false
           },
         ],
       };
@@ -892,7 +904,7 @@ const ProductDetails = ({ params, ...props }) => {
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
         <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
-          <button
+          {/* <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
           >
@@ -900,11 +912,12 @@ const ProductDetails = ({ params, ...props }) => {
               <ArrowLeftOutlined />
             </span>
             <span className="capitalize">Go back</span>
-          </button>
+          </button> */}
+          <Breadcrumbs pdppage={true} />
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
-              <div className="w-full  lg:w-full   mx-auto border border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
+              <div className="w-full  lg:w-full   mx-auto border-2 border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
                 {/* <div className="h-[300px] sm:h-[420px] lg:h-[500px]  rounded-2xl bg-white/70   overflow-hidden"> */}
                 <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-590">
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
@@ -998,7 +1011,7 @@ const ProductDetails = ({ params, ...props }) => {
                               width={50}
                               className={`w-[110px] h-[120px] rounded-xl border transition ${
                                 additionalimg === img
-                                  ? "border-[#7c74ec] shadow-md ring-2 ring-[#e4e9ff]"
+                                  ? "border-[#7c74ec] border-2  "
                                   : "border-[#e8e2ff] hover:border-[#b8a9ff]"
                               }`}
                               onClick={() => setAdditionalImg(img)}
@@ -1044,7 +1057,7 @@ const ProductDetails = ({ params, ...props }) => {
               <Modal
                 isOpen={!!ButtonClick}
                 headerText={"Virtual Try-On"}
-                subText="Upload a photo of yourself .Make sure and expose your face,hands,sholders etc depending on what you want to try on."
+                subText={storeData?.defult_tryon_statement}
                 onClose={() => handleVTOCancel()}
                 size="md"
               >
@@ -1361,7 +1374,7 @@ hover:bg-indigo-700
                 ) : null}
                 {(storeData?.pdp_settings?.is_buy_button ||
                   storeData?.pdp_settings?.is_add_to_cart_button) && (
-                  <div className="mt-8 ">
+                  <div className="my-8 pb-2">
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       {storeData?.pdp_settings?.is_add_to_cart_button && (
                         <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
@@ -1389,7 +1402,7 @@ hover:bg-indigo-700
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className="text-white h-full px-6 bg-brand w-full rounded-xl font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition"
+                              className={` h-full px-6 ${hasKioskAccess ? 'bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium' : 'bg-brand text-white font-semibold'} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
                             </button>
@@ -1450,9 +1463,9 @@ hover:bg-indigo-700
                   );
                   const fieldIndexInFiltered = fieldsWithData.indexOf(field);
                   return productDetails?.[field]?.length > 0 && ProductTags
-                    ? (showAllFields || fieldIndexInFiltered < 4) && (
-                        <div className="mt-10 " key={field}>
-                          <div className="flex justify-between items-center gap-7 mb-3 border-b-1.5 border-[hsl(240,5%,96%)] pb-3">
+                    ? (showAllFields || fieldIndexInFiltered < 5) && (
+                        <div className="" key={field}>
+                          <div className="flex justify-between items-center gap-7  border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mb-5">
                             <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
                               {field}
                             </p>
@@ -1468,10 +1481,10 @@ hover:bg-indigo-700
                 })}
                 {fieldsToDisplay.filter(
                   (field) => productDetails?.[field]?.length > 0,
-                )?.length > 4 && (
+                )?.length > 5 && (
                   <button
                     onClick={() => setShowAllFields(!showAllFields)}
-                    className="mt-4 text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
+                    className=" text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
                   >
                     {showAllFields ? "Show Less" : "Show More"}
                   </button>

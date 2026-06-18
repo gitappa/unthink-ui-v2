@@ -150,8 +150,8 @@ const AuraResponseProducts = ({
 		currentPages: {}, // Track page numbers per tag
 		hasMore: {}, // Track hasMore per tag
 	});
-	const [guestData, setGuestData] = useState({ email: "" });
-	const [errors, setErrors] = useState({ email: "" });
+	const [guestData, setGuestData] = useState({ email: "", phone: "" });
+	const [errors, setErrors] = useState({ email: "", phone: "" });
 	const [isPopupShow, setIsPopupShow] = useState(false);
 
 	const dispatch = useDispatch();
@@ -715,9 +715,15 @@ const AuraResponseProducts = ({
 		(e) => {
 			const { name, value } = e.target;
 			setGuestData((data) => ({ ...data, [name]: value }));
-			if (errors.email) setErrors({ ...errors, email: "" });
+			if (name === "email" || name === "phone") {
+				setErrors((currentErrors) => ({
+					...currentErrors,
+					email: "",
+					phone: "",
+				}));
+			}
 		},
-		[errors]
+		[]
 	);
 
 	const validateEmail = (email) => {
@@ -738,14 +744,16 @@ const AuraResponseProducts = ({
 	const handleGuestSubmit = useCallback(
 		async (e) => {
 			e.preventDefault();
+			const email = guestData.email?.trim();
+			const phone = guestData.phone?.trim();
 
-			if (!guestData.email) {
-				setErrors({ email: "Email is required" });
+			if (!email && !phone) {
+				setErrors({ email: "Email or phone number is required", phone: "" });
 				return;
 			}
 
-			if (!validateEmail(guestData.email)) {
-				setErrors({ email: "Please enter a valid email address" });
+			if (email && !validateEmail(email)) {
+				setErrors({ email: "Please enter a valid email address", phone: "" });
 				return;
 			}
 
@@ -756,12 +764,13 @@ const AuraResponseProducts = ({
 				Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
 			}
 
-			if (validateEmail(guestData.email)) {
+			if (email || phone) {
 				try {
 					const res = await authAPIs.GuestRegisterAPICall({
-						emailId: guestData.email,
+						emailId: email,
 						user_id: tid,
 						store,
+						phone,
 					});
 
 					const { data } = res;
@@ -804,7 +813,7 @@ const AuraResponseProducts = ({
 				}
 			}
 		},
-		[guestData.email, onAddSelectedProductsToCollection]
+		[guestData.email, guestData.phone, onAddSelectedProductsToCollection]
 	);
 
 	useEffect(() => {
@@ -1231,6 +1240,3 @@ const AuraResponseProducts = ({
 };
 
 export default AuraResponseProducts;
-
-
-
