@@ -133,7 +133,7 @@ const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/";
 
 //KIOSK
 const socialMedia =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based&summary=true`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
 const trending =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true`;
 const lookBook =
