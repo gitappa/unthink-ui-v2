@@ -103,6 +103,7 @@ import { vtoIconState } from "./redux/actions";
 import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
+import { useRouter } from "next/router";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -201,7 +202,11 @@ const ProductCard = ({
   const isGuestPopUpShow = useSelector(
     (state) => state.GuestPopUpReducer.isGuestPopUpShow,
   );
+  // console.log('clickedMfrCode',clickedMfrCode);
+  
   const menuRef = useRef(null);
+    const router = useRouter();
+  
   // console.log('collectionCards',product);
 
   useEffect(() => {
@@ -338,26 +343,27 @@ const ProductCard = ({
       // START
 
       // console.log(blogCollectionPage);
-
-      gTagCollectionProductClick({
-        mft_code: product?.mfr_code,
-        collection_path: authUserId
-          ? addSidInProductUrl(
-              product.url,
-              authUserId,
-              blogCollectionPage?.collection_id,
-            )
-          : product.url,
-        user_id: getTTid(),
-        user_name: authUserName,
-        collection_id: blogCollectionPage?.collection_id || "",
-        collection_name: blogCollectionPage?.collection_name,
-      });
+      // I commented this code for causing some trubles in the navigation 
+      // gTagCollectionProductClick({
+      //   mft_code: product?.mfr_code,
+      //   collection_path: authUserId
+      //     ? addSidInProductUrl(
+      //         product.url,
+      //         authUserId,
+      //         blogCollectionPage?.collection_id,
+      //       )
+      //     : product.url,
+      //   user_id: getTTid(),
+      //   user_name: authUserName,
+      //   collection_id: blogCollectionPage?.collection_id || "",
+      //   collection_name: blogCollectionPage?.collection_name,
+      // });
       // END
     }
+    // console.log('Hello World');
+    
 
-
-    navigate(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+    router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
       dispatch(setShowChatModal(false));
     }
@@ -776,11 +782,9 @@ const ProductCard = ({
         localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
       }
       // saveProductDetailsReturnPath();
-      if (bannerImage) {
-        navigate(`/product/${clickedMfrCode}?from=kioskcollection`);
-      } else {
-        navigate(`/product/${clickedMfrCode}`);
-      }
+        // console.log('navigating to Product page');
+        // router.push(`/product/${clickedMfrCode}`);
+      
       // fetchProductDetails();
       setClickedMfrCode(null);
     }
@@ -790,7 +794,7 @@ const ProductCard = ({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const productCardAttributes = useMemo(() => {
     const attributes = storeData?.pdp_settings?.product_page_attributes || [];
-    console.log('attributes',attributes);
+    // console.log('attributes',attributes);
     
     const normalizeKey = (value) =>
       String(value || "")
