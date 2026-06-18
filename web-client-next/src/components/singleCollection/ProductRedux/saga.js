@@ -18,8 +18,12 @@ function* fetchProductDetailsSaga(action) {
       mfr_code,
       image
     );
+  // console.log('fdsfdsffds',image);
+
 
     if (res && res.status === 200 && res.data) {
+      // console.log('dfdfdgf',res.data);
+      
       yield put({
         type: FETCH_PRODUCT_DETAILS_SUCCESS,
         payload: res.data,

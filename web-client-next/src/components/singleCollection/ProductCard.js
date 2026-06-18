@@ -362,7 +362,10 @@ const ProductCard = ({
     }
     // console.log('Hello World');
     
-
+        const cleaned = cleanImage(product?.image);
+      if (cleaned) {
+        localStorage.setItem(`pdp_image`, cleaned);
+      }
     router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
       dispatch(setShowChatModal(false));
@@ -777,10 +780,10 @@ const ProductCard = ({
 
     const result = savedProduct(clickedMfrCode);
     if (clickedMfrCode) {
-      const cleaned = cleanImage(product?.image);
-      if (cleaned) {
-        localStorage.setItem(`pdp_image_${clickedMfrCode}`, cleaned);
-      }
+      // const cleaned = cleanImage(product?.image);
+      // if (cleaned) {
+      //   localStorage.setItem(`pdp_image`, cleaned);
+      // }
       // saveProductDetailsReturnPath();
         // console.log('navigating to Product page');
         // router.push(`/product/${clickedMfrCode}`);
