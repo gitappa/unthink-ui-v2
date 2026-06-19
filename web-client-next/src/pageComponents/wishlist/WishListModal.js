@@ -30,7 +30,7 @@ import {
 } from "../../constants/codes";
 import CreateWishlist from "./CreateWishlist";
 import BlogCollectionGallery from "./blogCollection/BlogCollectionGallery";
-import { adminUserId, current_store_name, is_store_instance, super_admin } from "../../constants/config";
+import { adminUserId, current_store_name, is_store_instance } from "../../constants/config";
 import { addToWishlist } from "../wishlistActions/addToWishlist/redux/actions";
 import {
 	checkIsFavoriteCollection,
@@ -345,7 +345,7 @@ const WishListModal = ({
 	};
 
 	useEffect(() => {
-		if (showWishlistModal && activeCollection === "Feature") {
+		if (showWishlistModal && activeCollection === "Feature" && isAdminLoggedIn) {
 			let payload = {};
 			if (featuredFilter === "social_media") {
 				payload = { generated_by: "video_based" };
@@ -355,11 +355,13 @@ const WishListModal = ({
 				payload = { collection_type: "trending" };
 			}
 			dispatch(getUserCollections({
+				user_id: adminUserId,
 				product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
+				view: "admin",
 				...payload
 			}));
 		}
-	}, [featuredFilter, activeCollection, showWishlistModal, dispatch]);
+	}, [featuredFilter, activeCollection, showWishlistModal, isAdminLoggedIn, dispatch]);
 
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -418,18 +420,15 @@ const WishListModal = ({
 		setEnableSelectProduct(false)
 	};
  const isStoreAdminLoggedIn = useMemo(
-	 () =>
-	   is_store_instance &&
-	   authUser.user_name &&
-	   authUser.user_name === super_admin,
-	 [authUser.user_name],
+	 () => is_store_instance && isAdminLoggedIn,
+	 [isAdminLoggedIn],
    );
 	// call creator collection if admin true
 	useEffect(() => {
 		if (isStoreAdminLoggedIn && showWishlistModal && activeCollection === "Creator") {
 			dispatch(getCreatorCollection());
 		}
-	}, [isStoreAdminLoggedIn, showWishlistModal, activeCollection]);
+	}, [isStoreAdminLoggedIn, showWishlistModal, activeCollection, dispatch]);
 
 	const wishlistData =
 		activeCollection === "Feature"
@@ -644,9 +643,7 @@ const WishListModal = ({
 										enableSelectProduct={enableSelectProduct}
 										contentClassName='bg-blue-104'
 										isBlogPages
-										showStar={
-											is_store_instance && authUser.user_name === super_admin // isStoreAdminLoggedIn
-										}
+										showStar={isStoreAdminLoggedIn}
 										hideSorting={enabledProductToAddInWishlist}
 										showFavoriteCollection={
 											enabledProductToAddInWishlist || favoriteCollection._id

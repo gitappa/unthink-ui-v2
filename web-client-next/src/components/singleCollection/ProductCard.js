@@ -247,7 +247,12 @@ const ProductCard = ({
     state.auth.user.singleCollections.data,
   ]);
 
-  // console.log('collectionsSSW', ButtonClick);
+  const isMyWishlistCollection =
+    singleCollections?.collection_name?.trim()?.toLowerCase() === "my wishlist";
+  const hideWishlistHeartForSystemProduct = isMyWishlistCollection && product?.custom_product === false;
+  const isTryonCollection = singleCollections?.collection_name?.trim()?.toLowerCase() === 'my tryons';
+   const hideMyTryonForSystemProduct =isTryonCollection &&  product?.custom_product === false;
+
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
@@ -796,7 +801,7 @@ const ProductCard = ({
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const productCardAttributes = useMemo(() => {
-    const attributes = storeData?.pdp_settings?.product_page_attributes || [];
+    const attributes = storeData?.pdp_settings?.product_card_attributes || [];
     // console.log('attributes',attributes);
     
     const normalizeKey = (value) =>
@@ -960,7 +965,8 @@ const ProductCard = ({
               storeData.is_tryon_enabled &&
               !enableSelect &&
               widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-              !showWishlistModal &&  product?.custom_product !== false &&(
+              !showWishlistModal &&
+              !hideMyTryonForSystemProduct && (
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
                   onClick={(e) => {
@@ -1420,7 +1426,8 @@ const ProductCard = ({
         {(!hideAddToWishlist ||
           (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar)) &&
           !showWishlistModal &&
-          !enableSelect && (
+          !enableSelect &&
+          !hideWishlistHeartForSystemProduct && (
             <div className={styles["product-menu-item"]}>
               {!hideAddToWishlist && (
                 <div

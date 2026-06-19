@@ -56,16 +56,16 @@ const BannerKisok = ({ products, Tags }) => {
               ))}
             </div>
           ) : ( */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 gap-y-5 md:gap-y-9 w-full">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 gap-y-5 md:gap-y-5 xl:gap-5 w-full">
             {displayedProducts.map((product) => (
               <div
                 key={product.collection_id}
-                className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 transition cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60`}
+                className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 transition cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60 xl:h-[405px]`}
               >
                 {product.cover_image && (
                   <img
                     src={product.cover_image}
-                    className="rounded-xl shadow-lg h-full object-cover m-auto  w-[225px] lg:w-[215px]"
+                    className="rounded-xl shadow-lg h-full object-cover m-auto  w-[225px] lg:w-[215px] xl:w-full"
                     alt={product.collection_name || product.cover_image}
                     onClick={() => handleNavCollection(product)}
                   />

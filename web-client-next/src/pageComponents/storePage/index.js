@@ -699,10 +699,21 @@ const StorePageWrapper = (props) => {
 		typeof window !== "undefined"
 			? sessionStorage.getItem("Kiosk-login") || null
 			: null;
+	const isAuthAdminLoggedIn = useMemo(
+		() =>
+			is_store_instance &&
+			AdminCheck(
+				{ user_id: authUser?.user_id, emailId: authUser?.emailId },
+				current_store_name,
+				adminUserId,
+				admin_list
+			),
+		[authUser?.user_id, authUser?.emailId, admin_list]
+	);
 
 	useEffect(() => {
 		if (authUser.user_id) {
-			if (showWishlistModal && KioskLogin) {
+			if (showWishlistModal && !isAuthAdminLoggedIn) {
 				// Always call API when wishlist popup opens
 				dispatch(
 					getUserCollections({
@@ -724,7 +735,7 @@ const StorePageWrapper = (props) => {
 				);
 			}
 		}
-	}, [authUser.user_id, showWishlistModal, isMyProfilePage, currentPage]);
+	}, [authUser.user_id, showWishlistModal, isMyProfilePage, currentPage, isAuthAdminLoggedIn]);
 
 
 	useEffect(() => {
