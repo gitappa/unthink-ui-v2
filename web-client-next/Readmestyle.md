@@ -4,4 +4,4 @@ xl:text-lg md:text-base text-sm -p
 lg:text-lg md:text-base text-sm  - button 
 
 
-try-kiosk111@yopmail.com
+try-kiosk222@yopmail.com

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { notification } from "antd";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import GuestPopUp from "./GuestPopUp";
@@ -82,8 +83,6 @@ function GuestUserPopUp({
         return;
       }
 
-      const tid = Cookies.get("tid");
-
       if (!Cookies.get("isGuestLoggedIn")) {
         Cookies.set("isGuestLoggedIn", false, {
           expires: cookieExpireDays,
@@ -96,15 +95,38 @@ function GuestUserPopUp({
           // user_id: tid,
           store: storeName,
           phone,
-        });        
+        });
         const userId = res?.data?.data?.user_id;
-        const registeredEmail = res?.data?.data?.email || res?.data?.data?.emailId || email;
+        const registeredUserName =
+          res?.data?.data?.user_name ||
+          res?.data?.data?.username ||
+          res?.data?.data?.name;
+        const registeredEmail =
+          res?.data?.data?.email || res?.data?.data?.emailId || email;
         if (res?.data?.status_code === 200 && userId) {
           if (persistKioskLogin && typeof window !== "undefined") {
-            sessionStorage.setItem("Kiosk-login",JSON.stringify( {user_id : userId,email: registeredEmail}) );
+            sessionStorage.setItem(
+              "Kiosk-login",
+              JSON.stringify({
+                user_id: userId,
+                user_name: registeredUserName || registeredEmail || phone,
+                username: registeredUserName || registeredEmail || phone,
+                email: registeredEmail,
+                phone,
+              }),
+            );
           }
+          notification.success({
+            message: "Login Successfully",
+          });
           closePopup();
-          onSuccess?.({ userId, response: res, email: registeredEmail, phone });
+          onSuccess?.({
+            userId,
+            response: res,
+            userName: registeredUserName || registeredEmail || phone,
+            email: registeredEmail,
+            phone,
+          });
         }
       } catch (error) {
         console.error("Guest registration error:", error);
