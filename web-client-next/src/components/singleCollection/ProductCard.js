@@ -315,7 +315,7 @@ const ProductCard = ({
 
 
 
-  const handleProductClick = async () => {
+  const handleProductClick = async ({open}) => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
       await sharedPageTracker.onCollectionProductClick({
@@ -371,7 +371,10 @@ const ProductCard = ({
       if (cleaned) {
         localStorage.setItem(`pdp_image`, cleaned);
       }
-    router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
+      if(open){
+        window.open(`/product/${product.mfr_code}`, "_blank");
+      }
+    // router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
       dispatch(setShowChatModal(false));
     }
@@ -941,7 +944,7 @@ const ProductCard = ({
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
-        onClick={handleProductClick}
+        // onClick={handleProductClick}
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
@@ -953,6 +956,10 @@ const ProductCard = ({
             }
           }}
         >
+            {/* SOLD Badge */}
+            {product?.avlble === 0 && (
+              <div className={styles["product-sold-badge"]}>SOLD</div>
+            )}
           <div style={{ width: "100%" }}>
             <img
               src={getFinalImageUrl(product.image)}
@@ -991,7 +998,7 @@ const ProductCard = ({
                   className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setClickedMfrCode(product?.mfr_code);
+                    handleProductClick({open});
                   }}
                 >
                   <EyeOutlined className={styles["product-view-icon-eye"]} />
@@ -1504,10 +1511,7 @@ const ProductCard = ({
               {product.name || "\u00A0"}
             </Text>
 
-            {/* SOLD Badge */}
-            {product?.avlble === 0 && (
-              <div className={styles["product-sold-badge"]}>SOLD</div>
-            )}
+          
           </div>
 
           {productCardAttributes.length > 0 ? (
@@ -1728,7 +1732,7 @@ const ProductCard = ({
                 </div>
               ) : (
                 <form onSubmit={handleVTOclick}>
-                  <div className={styles["product-vto-upload-container"]}>
+                  <div className="relative flex flex-col items-center justify-center pb-[25px]">
                     {showLoader ? (
                       <LoadingOutlined
                         className={styles["product-vto-loading-spinner"]}
@@ -1737,21 +1741,21 @@ const ProductCard = ({
                       <>
                         {uploadedImages.length < 1 && (
                           <div
-                            className={styles["product-vto-upload-container"]}
+                            className="relative flex flex-col items-center justify-center pb-[25px]"
                           >
-                            <h4 className={styles["product-vto-upload-title"]}>
+                            <h4 className="mb-3 text-start text-xl font-semibold">
                               Upload Your Image{" "}
                             </h4>
                             <Upload.Dragger
-                              className={styles["product-vto-upload-zone"]}
+                              className="h-56 w-56 bg-transparent"
                               {...uploadImageDraggerProps}
                               name="upload_image"
                               showUploadList={false}
                             >
-                              <p className={styles["product-vto-upload-icon"]}>
+                              <p className={`text-[2rem] ${hasKioskAccess ? 'text-kiosk-primary ' :'text-indigo-600' } `}>
                                 <UploadOutlined />
                               </p>
-                              <p className={styles["product-vto-upload-text"]}>
+                              <p className="mx-auto w-2/3">
                                 Click or drag file(s) to this area
                               </p>
                             </Upload.Dragger>
@@ -1760,29 +1764,25 @@ const ProductCard = ({
                       </>
                     )}
                     {uploadedImages.length > 0 && (
-                      <div
-                        className={
-                          styles["product-vto-uploaded-image-container"]
-                        }
-                      >
+                      <div className="relative">
                         <img
                           src={uploadedImages[0]}
                           alt="Uploaded"
-                          className={styles["product-vto-uploaded-image"]}
+                          className="mt-2 max-h-40"
                         />
                         <CloseCircleOutlined
-                          className={styles["product-vto-close-uploaded"]}
+                          className="absolute right-0 top-2 cursor-pointer text-xl text-white transition-all duration-300 ease-in-out hover:opacity-80"
                           onClick={() => setUploadedImages([])}
                         />
                       </div>
                     )}
                   </div>
-                  <h4 className={styles["product-vto-prompt-label"]}>
+                  <h4 className="font-semibold text-gray-800">
                     {" "}
                     Add a prompt for AI (optional){" "}
                   </h4>
                   <textarea
-                    className={styles["product-vto-prompt-input"]}
+                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:border-indigo-600 focus:ring-[3px] focus:ring-indigo-600/10"
                     placeholder="Enter description..."
                     name="description"
                     type="text"
@@ -1791,11 +1791,11 @@ const ProductCard = ({
                     rows={5}
                   />
 
-                  <div className={styles["product-vto-submit-container"]}>
+                  <div className="flex justify-end">
                     <button></button>
                     <button
                       type="submit"
-                      className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
+                      className={`mt-5 flex cursor-pointer justify-end rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${loading ? (hasKioskAccess ? "bg-kiosk-secondary text-black hover:opacity-90" : "bg-indigo-300 text-indigo-600 hover:opacity-90") : (hasKioskAccess ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-kiosk-secondary hover:text-white" : "bg-indigo-600 text-white hover:bg-indigo-700")}`}
                     >
                       Submit
                     </button>
