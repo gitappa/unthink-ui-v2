@@ -371,8 +371,11 @@ const ProductCard = ({
       if (cleaned) {
         localStorage.setItem(`pdp_image`, cleaned);
       }
-      if(open){
+      if(open && !hasKioskAccess){
         window.open(`/product/${product.mfr_code}`, "_blank");
+      }
+      else if(hasKioskAccess){
+        router.push(`/product/${product.mfr_code}`)
       }
     // router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
