@@ -1894,9 +1894,9 @@ hover:bg-indigo-700
           onLogout={handleLogout}
         />
       )}
-      {hasKioskAccess &&
+      {/* {hasKioskAccess &&
         <LoggedInInfo userInfo={userInfo} />
-      }
+      } */}
     </div>
   );
 };

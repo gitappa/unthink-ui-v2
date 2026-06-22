@@ -358,7 +358,7 @@ const CollectionPage = ({ params }) => {
           onLogout={handleLogout}
         />
       )}
-      <LoggedInInfo userInfo={userInfo} />
+      {/* <LoggedInInfo userInfo={userInfo} /> */}
     </div>
   );
 };
