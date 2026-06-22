@@ -92,6 +92,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import LoggedInInfo, { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 import Breadcrumbs from "./Breadcrumbs";
+import AuthInput from "../../components/kiosk/components/AuthInput";
 
 
 const ProductDetails = ({ params, ...props }) => {
@@ -906,11 +907,14 @@ const ProductDetails = ({ params, ...props }) => {
   ];
 
   return (
-    <div className="relative w-full overflow-hidden pb-20 lg:pb-14 ">
+    <div className={`relative w-full overflow-hidden pb-20 lg:pb-14 ${hasKioskAccess ? 'p-8' : ''} `}>
+      { hasKioskAccess && 
+      <AuthInput styles={'mb-0  pr-7'} />
+      }
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
         <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
-          <button
+          {/* <button
             className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
             onClick={handleGoBack}
           >
@@ -918,7 +922,7 @@ const ProductDetails = ({ params, ...props }) => {
               <ArrowLeftOutlined />
             </span>
             <span className="capitalize">Go back</span>
-          </button>
+          </button> */}
           {/* <Breadcrumbs pdppage={true} /> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
