@@ -251,7 +251,7 @@ const CollectionPage = ({ params }) => {
     );
   }
   return (
-    <div className="p-8 md:p-12 bg-white min-h-screen">
+    <div className="p-8 pt-6 md:p-12 bg-white min-h-screen">
       <AuthInput styles={'mb-0'} />
       <button
         className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
