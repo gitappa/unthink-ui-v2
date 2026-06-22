@@ -6,15 +6,12 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { message, notification, Upload } from "antd";
+import { message, notification } from "antd";
 import Image from "next/image";
 import {
   CopyOutlined,
   EditOutlined,
   ArrowLeftOutlined,
-  CloseCircleOutlined,
-  UploadOutlined,
-  LoadingOutlined,
 } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 import camera from "../../components/singleCollection/images/Card/camera.svg";
@@ -35,12 +32,7 @@ import {
   decryptSigninToken,
   buildVerifyUrl,
 } from "../../helper/autoLogin";
-import {
-  customProductsAPIs,
-  profileAPIs,
-  TryonSaveApiCall,
-  TryOnVto,
-} from "../../helper/serverAPIs";
+import { customProductsAPIs } from "../../helper/serverAPIs";
 
 import ShareOptions from "../shared/shareOptions";
 
@@ -69,7 +61,7 @@ import { fetchProductDetails } from "../../components/singleCollection/ProductRe
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
 // import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
-import styles from "../../components/singleCollection/ProductCard.module.css";
+import VirtualTryOnModal from "../../components/singleCollection/VirtualTryOnModal";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import BannerImage from "../../components/kiosk/BannerImage";
@@ -143,15 +135,9 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrTargetUrl, setQrTargetUrl] = useState("");
 
   const imageFromQuery = cleanImage(router.query.image);
-  const [showLoader, setShowLoader] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [additionalimg, setAdditionalImg] = useState(null);
-  const [Loading, setLoading] = useState(false);
-  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-  const [descriptionget, setDescriptionget] = useState("");
-  const [uploadedImages, setUploadedImages] = useState([]);
   const [showAllFields, setShowAllFields] = useState(false);
-  const [saveData, setResponse] = useState([]);
   const [sharePageUrl, setSharePageUrl] = useState("");
   const userInfo = useSelector(loggedInInfo);
   const hasKioskAccess = useKioskAccess({
@@ -671,7 +657,7 @@ const ProductDetails = ({ params, ...props }) => {
         },
       );
 
-      // 🔁 If API returns payment URL
+      // If API returns payment URL
       if (res?.data?.redirectUrl) {
         if (typeof window !== "undefined") {
           window.location.href = res.data.redirectUrl;
@@ -683,205 +669,6 @@ const ProductDetails = ({ params, ...props }) => {
     }
   };
 
-  const handleUploadImage = async ({ file }) => {
-    try {
-      setShowLoader(true);
-
-      const response = await profileAPIs.uploadImage({ file });
-      const data = response?.data;
-
-      if (data?.status_code === 400 || data?.status === "failure") {
-        notification.error({
-          message: "Image Upload Failed",
-          description:
-            data?.status_desc || "Something went wrong. Please try again.",
-        });
-        return;
-      }
-      const url = data?.data?.[0]?.url;
-      setUploadedImages((prev) => prev.concat(url));
-      if (url) {
-        // setUploadedImages((prev) => [...prev, url]);
-        // additional_images.push(url)
-        notification.success({
-          message: "Image Uploaded Successfully",
-        });
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      console.log(error);
-
-      notification.error({
-        message: "Image Upload Failed",
-        description:
-          error?.response?.data?.message || "Unexpected error occurred",
-      });
-    } finally {
-      setShowLoader(false);
-    }
-  };
-
-  const uploadImageDraggerProps = {
-    accept: "image/*",
-    multiple: true,
-    showUploadList: false,
-    customRequest: ({ file, onSuccess }) => {
-      handleUploadImage({ file });
-      setTimeout(() => onSuccess("ok"), 0);
-    },
-  };
-
-  const handleVTOclick = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const url = window.location.origin;
-    // setButtonClick(true);
-    const payload = {
-      image_urls: [productDetails.image, uploadedImages[0]],
-      store: storeData.store_name,
-      image_tryon_prompt:
-        storeData?.templates?.[collection?.tryon_type] ||
-       storeData?.templates?.[storeData?.default_tryon_type] || 
-        "",
-      additional_prompt: descriptionget || "",
-      type: collection?.tryon_type || "tryon",
-    };
-    try {
-      setLoading(true);
-      const res = await TryOnVto(payload);
-      setVtoResultImageUrl(res.data.data.image_url);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      notification.error({
-        message: "Virtual Try-On Failed",
-        description:
-          error?.response?.data?.message ||
-          "Failed to process image. Please try again.",
-      });
-      setLoading(false);
-    }
-  };
-
-  const handleVTODownload = async () => {
-    if (vtoResultImageUrl) {
-      try {
-        const response = await fetch(vtoResultImageUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `vto-result-${Date.now()}.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        notification.success({
-          message: "Download Successful",
-          description: "Your virtual try-on image has been downloaded.",
-        });
-        handleVTOCancel();
-      } catch (error) {
-        console.error("Download failed:", error);
-        notification.error({
-          message: "Download Failed",
-          description: "Failed to download the image. Please try again.",
-        });
-      }
-    }
-  };
-  // console.log('response',saveData);
-
-  const handleVtoSave = async () => {
-    try {
-      const payload = {
-        collection_type: "vto_collection",
-        status: "published",
-        collection_name: "my tryons",
-        user_id: parsedKiosk?.user_id || authUser.user_id || null,
-        store: storeData.store_name,
-        event_id: storeData?.event_id || null,
-        product_lists: [
-          {
-            mfr_code: productDetails.mfr_code,
-            name: productDetails.name,
-            image: productDetails.image || "",
-          },
-          {
-            name: "item2",
-            image: vtoResultImageUrl || "",
-            custom_product :false
-          },
-        ],
-      };
-
-      const responseData = await TryonSaveApiCall(payload);
-      // console.log("dfdresponse", response.data.data);
-      setResponse(responseData);
-      notification.success({
-        message: "Save Success",
-        description: "Collection added successfully",
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    // handleVTOCancel()
-    handleVTOCancel();
-    // attempt to build and show a QR that opens the saved collection
-  };
-  useEffect(() => {
-    async function handlepickapi() {
-      try {
-        const collectionId =
-          saveData?.data?.data?._id || saveData?.data?.data?.collection_id;
-
-        if (!collectionId) return;
-
-        const origin =
-          typeof window !== "undefined" ? window.location.origin : "";
-
-        // If kiosk guest - request signin token and build auto-login verify URL
-        const kioskEmail = parsedKiosk?.email || null;
-        if (kioskEmail) {
-          try {
-            const resp = await requestSigninWithLink(kioskEmail);
-            const signin_token = resp?.signin_token || resp?.data?.signin_token;
-            const userName =
-              resp?.data?.user_name ||
-              resp?.user_name ||
-              parsedKiosk?.user_name;
-
-            if (signin_token) {
-              const decrypted = decryptSigninToken(signin_token);
-              const verifyLink = buildVerifyUrl(
-                decrypted,
-                `?page=influencer/${userName}/${collectionId}`,
-              );
-              const fullVerifyUrl = `${origin}${verifyLink}`;
-              console.log("fullVerifyUrl", fullVerifyUrl);
-
-              setQrTargetUrl(fullVerifyUrl);
-              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-              // setShowShareProductDetails(true);
-              setQrModalOpen(true);
-              return;
-            }
-          } catch (err) {
-            console.error("Immediate QR build for VTO failed", err);
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    handlepickapi();
-  }, [saveData]);
-  const handleVTOCancel = () => {
-    dispatch(vtoIconState(false));
-    setVtoResultImageUrl(null);
-    setUploadedImages([]);
-    setDescriptionget("");
-  };
 
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
@@ -1064,168 +851,37 @@ const ProductDetails = ({ params, ...props }) => {
                 ) : null}
               </div>
             </div>
-
-            {ButtonClick === productDetails?.mfr_code ? (
-              <Modal
-                isOpen={!!ButtonClick}
-                headerText={"Virtual Try-On"}
-                subText={storeData?.defult_tryon_statement}
-                onClose={() => handleVTOCancel()}
-                size="md"
-              >
-                {vtoResultImageUrl ? (
-                  <div className={styles["product-vto-result-container"]}>
-                    <img
-                      src={vtoResultImageUrl}
-                      alt="VTO Result"
-                      className={styles["product-vto-result-image"]}
-                    />
-                    <div className={styles["product-vto-buttons-group"]}>
-                      <button
-                        onClick={handleVTOCancel}
-                        className={styles["product-vto-cancel-button"]}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={handleVTODownload}
-                        className={styles["product-vto-submit-button"]}
-                      >
-                        Download
-                      </button>
-                      <button
-                        className="rounded-xl
-text-white font-bold 
-text-xs
-md:text-sm
-py-2
-px-[1.125rem]
-bg-indigo-600
-transition-all
-duration-300
-ease-in-out
-border-0
-cursor-pointer
-hover:bg-indigo-700
-"
-                        onClick={handleVtoSave}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {Loading ? (
-                      <div className={styles["product-vto-loading-container"]}>
-                        <LoadingOutlined
-                          className={styles["product-vto-loading-spinner"]}
-                        />
-                        <div className={styles["product-vto-loading-text"]}>
-                          <p className={styles["product-vto-loading-title"]}>
-                            AI is generating your image
-                          </p>
-                          <p className={styles["product-vto-loading-subtitle"]}>
-                            Please wait while we process your request...
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <form onSubmit={handleVTOclick}>
-                        <div className={styles["product-vto-upload-container"]}>
-                          {showLoader ? (
-                            <LoadingOutlined
-                              className={styles["product-vto-loading-spinner"]}
-                            />
-                          ) : (
-                            <>
-                              {uploadedImages.length < 1 && (
-                                <div
-                                  className={
-                                    styles["product-vto-upload-container"]
-                                  }
-                                >
-                                  <h4
-                                    className={
-                                      styles["product-vto-upload-title"]
-                                    }
-                                  >
-                                    Upload Your Image{" "}
-                                  </h4>
-                                  <Upload.Dragger
-                                    className={
-                                      styles["product-vto-upload-zone"]
-                                    }
-                                    {...uploadImageDraggerProps}
-                                    name="upload_image"
-                                    showUploadList={false}
-                                  >
-                                    <p
-                                      className={
-                                        styles["product-vto-upload-icon"]
-                                      }
-                                    >
-                                      <UploadOutlined />
-                                    </p>
-                                    <p
-                                      className={
-                                        styles["product-vto-upload-text"]
-                                      }
-                                    >
-                                      Click or drag file(s) to this area
-                                    </p>
-                                  </Upload.Dragger>
-                                </div>
-                              )}
-                            </>
-                          )}
-                          {uploadedImages.length > 0 && (
-                            <div
-                              className={
-                                styles["product-vto-uploaded-image-container"]
-                              }
-                            >
-                              <img
-                                src={uploadedImages[0]}
-                                alt="Uploaded"
-                                className={styles["product-vto-uploaded-image"]}
-                              />
-                              <CloseCircleOutlined
-                                className={styles["product-vto-close-uploaded"]}
-                                onClick={() => setUploadedImages([])}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <h4 className={styles["product-vto-prompt-label"]}>
-                          {" "}
-                          Add a prompt for AI (optional){" "}
-                        </h4>
-                        <textarea
-                          className={styles["product-vto-prompt-input"]}
-                          placeholder="Enter description..."
-                          name="description"
-                          type="text"
-                          onChange={(e) => setDescriptionget(e.target.value)}
-                          value={descriptionget}
-                          rows={5}
-                        />
-
-                        <div className={styles["product-vto-submit-container"]}>
-                          <button></button>
-                          <button
-                            type="submit"
-                            className={`${styles["product-vto-submit-form-button"]} ${loading ? styles["product-vto-submit-form-button-loading"] : styles["product-vto-submit-form-button-active"]}`}
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </form>
-                    )}
-                  </>
-                )}
-              </Modal>
-            ) : null}
+            <VirtualTryOnModal
+              isOpen={ButtonClick === productDetails?.mfr_code}
+              subText={storeData?.defult_tryon_statement}
+              hasKioskAccess={hasKioskAccess}
+              productImage={productDetails?.image}
+              storeName={storeData?.store_name}
+              imageTryonPrompt={
+                storeData?.templates?.[collection?.tryon_type] ||
+                storeData?.templates?.[storeData?.default_tryon_type] ||
+                ""
+              }
+              tryonType={collection?.tryon_type || "tryon"}
+              saveProduct={
+                productDetails
+                  ? {
+                      mfr_code: productDetails?.mfr_code,
+                      name: productDetails?.name,
+                      image: productDetails?.image || "",
+                    }
+                  : null
+              }
+              saveUserId={parsedKiosk?.user_id || authUser?.user_id || null}
+              eventId={storeData?.event_id || null}
+              kioskEmail={parsedKiosk?.email || null}
+              kioskUserName={parsedKiosk?.user_name || null}
+              onSavedCollectionQr={({ imageUrl, targetUrl }) => {
+                setQrTargetUrl(targetUrl);
+                setQrImageUrl(imageUrl);
+                setQrModalOpen(true);
+              }}
+            />
 
             {productDetails && (
               <div className="flex flex-col  w-full   bg-white/95 ">
@@ -1854,7 +1510,7 @@ hover:bg-indigo-700
                 href={qrTargetUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-indigo-600 hover:underline"
+                className={hasKioskAccess ? "text-kiosk-primary hover:underline" : "text-indigo-600 hover:underline"}
               >
                 {qrTargetUrl}
               </a>

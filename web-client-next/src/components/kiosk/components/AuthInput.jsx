@@ -1,8 +1,52 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { authAPIs } from "../../../helper/serverAPIs";
+import { authAPIs, collectionAPIs } from "../../../helper/serverAPIs";
 import { current_store_name } from "../../../constants/config";
+import { collectionQRCodeGenerator } from "../../../helper/utils";
+import {
+  buildVerifyUrl,
+  decryptSigninToken,
+  requestSigninWithLink,
+} from "../../../helper/autoLogin";
+import Modal from "../../modal/Modal";
 
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
+
+const INITIAL_COLLECTION_QR_STATE = {
+  isOpen: false,
+  isLoading: false,
+  title: "",
+  qrUrl: "",
+  shareUrl: "",
+  message: "",
+};
+
+const KIOSK_COLLECTION_ACTIONS = [
+  {
+    key: "wishlist",
+    label: "Wishlist",
+    pathPrefix: "my_wishlist",
+    modalTitle: "Wishlist QR",
+    emptyMessage: "No wishlist there. Create the Wishlist",
+  },
+  {
+    key: "cart",
+    label: "Cart",
+    pathPrefix: "my_cart",
+    modalTitle: "Cart QR",
+    emptyMessage: "No cart there.",
+  },
+  {
+    key: "tryon",
+    label: "Try on",
+    modalTitle: "Try on QR",
+    emptyMessage: "No try-on there.",
+    getFetchParams: (userId) => ({
+      collection_name: "my tryons",
+      user_id: userId,
+      type: "system",
+    }),
+  },
+];
 
 const getStoredKioskLogin = () => {
   if (typeof window === "undefined") return null;
@@ -15,7 +59,7 @@ const getStoredKioskLogin = () => {
 };
 
 const getGuestLoginName = (user) =>
-  user?.user_name || user?.username || user?.email || user?.emailId || user?.phone;
+  user?.user_name   || user?.email || user?.emailId || user?.phone;
 
 const getPhoneValue = (value) => value.replace(/[^\d+]/g, "");
 
@@ -23,18 +67,134 @@ const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
 const isValidPhone = (value) => /^\+?\d{10,15}$/.test(getPhoneValue(value));
 
-const AuthInput = ({ onLoginChange }) => {
+const getCollectionListFromResponse = (response) => {
+  const data = response?.data?.data;
+
+  if (Array.isArray(data)) return data.filter(Boolean);
+  if (Array.isArray(data?.data)) return data.data.filter(Boolean);
+  if (data && typeof data === "object") return [data];
+
+  return [];
+};
+
+const getCollectionProductCount = (collection) => {
+  const productLists =
+    collection?.product_lists || collection?.product_list || collection?.products;
+
+  return Array.isArray(productLists) ? productLists.filter(Boolean).length : 0;
+};
+
+const getFetchedCollection = (response, collectionPath) => {
+  const collections = getCollectionListFromResponse(response);
+
+  return (
+    collections.find((collection) => collection?.path === collectionPath) ||
+    collections.find((collection) => getCollectionProductCount(collection) > 0) ||
+    collections[1] ||
+    collections[0] ||
+    null
+  );
+};
+
+const buildCollectionVerifyPageParam = (
+  collection,
+  collectionPath,
+  kioskLogin,
+  fallbackUserName,
+) => {
+  const path = collection?.path || collectionPath;
+
+  if (path) return `?page=collections/${path}`;
+
+  const collectionId = collection?._id || collection?.collection_id;
+  const userName = collection?.user_name || fallbackUserName || kioskLogin?.user_name;
+
+  if (userName && collectionId) {
+    return `?page=influencer/${userName}/${collectionId}`;
+  }
+
+  if (collection?.user_id && collectionId) {
+    return `?page=influencer/shared/${collection.user_id}/${collectionId}`;
+  }
+
+  return "";
+};
+
+const renderCollectionActionIcon = (actionKey) => {
+  if (actionKey === "wishlist") {
+    return (
+      <svg
+        className="w-5 h-5 text-red-500"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+        ></path>
+      </svg>
+    );
+  }
+
+  if (actionKey === "cart") {
+    return (
+      <svg
+        className="w-5 h-5 text-blue-500"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+        ></path>
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      className="w-5 h-5 text-green-500"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+      ></path>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+      ></path>
+    </svg>
+  );
+};
+
+const AuthInput = ({ onLoginChange, styles }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [emailPhone, setEmailPhone] = useState("");
   const [kioskLogin, setKioskLogin] = useState(null);
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [qrState, setQrState] = useState(
+    INITIAL_COLLECTION_QR_STATE,
+  );
+  const [activeCollectionAction, setActiveCollectionAction] = useState("");
   const containerRef = useRef(null);
 
   const syncKioskLogin = useCallback(
     (login) => {
       setKioskLogin(login);
-
+      onLoginChange?.(login);
     },
     [onLoginChange],
   );
@@ -108,7 +268,7 @@ const AuthInput = ({ onLoginChange }) => {
       });
       const responseData = res?.data?.data || {};
       const userId = responseData.user_id;
-      const registeredUserName = responseData.user_name 
+      const registeredUserName = responseData.user_name;
       const registeredEmail = responseData.email || responseData.emailId;
       const loginName = registeredUserName || registeredEmail;
 
@@ -166,12 +326,115 @@ const AuthInput = ({ onLoginChange }) => {
     clearKioskLogin();
   };
 
+  const handleCollectionActionClick = useCallback(
+    async (action) => {
+      if (activeCollectionAction) return;
+
+      const userId = kioskLogin?.user_id;
+      const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
+
+      if (!userId) {
+        setStatus("Login is required");
+        return;
+      }
+
+      const collectionPath = action.pathPrefix ? `${action.pathPrefix}_${userId}` : "";
+      const fetchParams = action.getFetchParams
+        ? action.getFetchParams(userId)
+        : {
+            path: collectionPath,
+            ...(action.key === "cart" ? { is_display_amount: true } : {}),
+          };
+
+      setIsDropdownOpen(false);
+      setStatus("");
+      setActiveCollectionAction(action.key);
+      setQrState({
+        ...INITIAL_COLLECTION_QR_STATE,
+        isOpen: true,
+        isLoading: true,
+        title: action.modalTitle,
+      });
+
+      try {
+        const response = await collectionAPIs.fetchCollectionsAPICall(fetchParams);
+        const collection = getFetchedCollection(response, collectionPath);
+
+        const hasCollectionData = action.key === "tryon"
+          ? Boolean(collection)
+          : getCollectionProductCount(collection) > 0;
+
+        if (!collection || !hasCollectionData) {
+          setQrState((prev) => ({
+            ...prev,
+            isLoading: false,
+            message: action.emptyMessage,
+          }));
+          return;
+        }
+
+        if (!kioskEmail) {
+          setQrState((prev) => ({
+            ...prev,
+            isLoading: false,
+            message: `Email is required to create ${action.label.toLowerCase()} QR.`,
+          }));
+          return;
+        }
+
+        const resp = await requestSigninWithLink(kioskEmail);
+        const signinToken = resp?.signin_token || resp?.data?.signin_token;
+        const signinUserName = resp?.data?.user_name || resp?.user_name;
+
+        if (!signinToken) {
+          throw new Error(`Missing ${action.label} signin token`);
+        }
+
+        const decrypted = decryptSigninToken(signinToken);
+        if (!decrypted) {
+          throw new Error(`Unable to decode ${action.label} signin token`);
+        }
+
+        const pageParam = buildCollectionVerifyPageParam(
+          collection,
+          collectionPath,
+          kioskLogin,
+          signinUserName,
+        );
+
+        if (!pageParam) {
+          throw new Error(`Unable to build ${action.label} page link`);
+        }
+
+        const verifyLink = buildVerifyUrl(decrypted, pageParam);
+        const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
+
+        setQrState((prev) => ({
+          ...prev,
+          isLoading: false,
+          qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
+          shareUrl: fullVerifyUrl,
+        }));
+      } catch (error) {
+        console.error(`${action.label} QR build failed`, error);
+        setQrState((prev) => ({
+          ...prev,
+          isLoading: false,
+          message: `Unable to create ${action.label.toLowerCase()} QR.`,
+        }));
+      } finally {
+        setActiveCollectionAction("");
+      }
+    },
+    [activeCollectionAction, kioskLogin],
+  );
+
   const loginName = getGuestLoginName(kioskLogin);
 
   return (
     <div
       ref={containerRef}
-      className="flex justify-end items-center mb-6 gap-4 relative"
+      className={`flex justify-end items-center ${styles ? styles : "mb-4"} gap-4 relative`}
     >
       <div
         className={`flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
@@ -196,7 +459,6 @@ const AuthInput = ({ onLoginChange }) => {
             isSubmitting ? "cursor-not-allowed opacity-60" : ""
           }`}
         >
-          {/* User SVG */}
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -218,72 +480,32 @@ const AuthInput = ({ onLoginChange }) => {
       </div>
 
       {status && (
-        <div className="absolute top-12 text-red-500 pt-0.5 right-1 text-xs text-gray-700">
+        <div className="absolute top-12 pt-0.5 right-1 text-xs text-red-500">
           {status}
         </div>
       )}
 
       {kioskLogin && isDropdownOpen && (
-        <div className="absolute top-12 right-0 bg-white border border-gray-200 shadow-lg rounded-xl py-2 w-48 z-50">
-          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            <svg
-              className="w-5 h-5 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
+        <div className="absolute top-14 right-0 bg-white border border-gray-200 shadow-lg rounded-xl py-2 w-48 z-50">
+          {KIOSK_COLLECTION_ACTIONS.map((action) => (
+            <button
+              key={action.key}
+              onClick={() => handleCollectionActionClick(action)}
+              disabled={Boolean(activeCollectionAction)}
+              className={`w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${
+                activeCollectionAction ? "cursor-not-allowed opacity-60" : ""
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              ></path>
-            </svg>
-            Wishlist
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            <svg
-              className="w-5 h-5 text-blue-500"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              ></path>
-            </svg>
-            Cart
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-            <svg
-              className="w-5 h-5 text-green-500"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-              ></path>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-              ></path>
-            </svg>
-            Try on
-          </button>
+              {renderCollectionActionIcon(action.key)}
+              {activeCollectionAction === action.key ? "Loading..." : action.label}
+            </button>
+          ))}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50   "
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
             <svg
-              className="w-5 h-5 text-gray-500  "
+              className="w-5 h-5 text-gray-500"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -299,6 +521,44 @@ const AuthInput = ({ onLoginChange }) => {
           </button>
         </div>
       )}
+
+      <Modal
+        headerText={qrState.title}
+        isOpen={qrState.isOpen}
+        onClose={() => setQrState(INITIAL_COLLECTION_QR_STATE)}
+        size="sm"
+      >
+        <div className="flex flex-col items-center gap-4">
+          {qrState.isLoading ? (
+            <div className="flex h-48 w-48 items-center justify-center bg-gray-100 text-sm text-gray-500">
+              Loading QR...
+            </div>
+          ) : qrState.qrUrl ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrState.qrUrl}
+                alt={`${qrState.title} code`}
+                className="h-48 w-48 object-contain"
+              />
+            </>
+          ) : (
+            <div className="flex min-h-32 w-full items-center justify-center rounded bg-gray-100 px-4 text-center text-sm text-gray-600">
+              {qrState.message || "QR unavailable"}
+            </div>
+          )}
+          {qrState.shareUrl ? (
+            <a
+              href={qrState.shareUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="break-all text-center text-sm text-indigo-600 hover:underline"
+            >
+              {qrState.shareUrl}
+            </a>
+          ) : null}
+        </div>
+      </Modal>
     </div>
   );
 };

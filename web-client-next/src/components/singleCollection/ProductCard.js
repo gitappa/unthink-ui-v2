@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { notification, Typography, Upload } from "antd";
+import { notification, Typography } from "antd";
 import { IoBagHandleOutline } from "react-icons/io5";
 import styles from "./ProductCard.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,8 +21,6 @@ import {
   CopyTwoTone,
   CopyrightCircleFilled,
   CopyFilled,
-  UploadOutlined,
-  LoadingOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
 import { LuCopy } from "react-icons/lu";
@@ -91,10 +89,9 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
 import Modal from "../modal/Modal";
+import VirtualTryOnModal from "./VirtualTryOnModal";
 import {
   customProductsAPIs,
-  profileAPIs,
-  TryOnVto,
   collectionPageAPIs,
 } from "../../helper/serverAPIs";
 import { PDPloader } from "../../pageComponents/storePage/redux/action";
@@ -186,11 +183,6 @@ const ProductCard = ({
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
   // console.log('qzssddsdsds',product);
-  const [showLoader, setShowLoader] = useState(false);
-  const [descriptionget, setDescriptionget] = useState("");
-  const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [clickedMfrCode, setClickedMfrCode] = useState(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrImageUrl, setQrImageUrl] = useState("");
@@ -203,10 +195,10 @@ const ProductCard = ({
     (state) => state.GuestPopUpReducer.isGuestPopUpShow,
   );
   // console.log('clickedMfrCode',clickedMfrCode);
-  
+
   const menuRef = useRef(null);
     const router = useRouter();
-  
+
   // console.log('collectionCards',product);
 
   useEffect(() => {
@@ -313,8 +305,6 @@ const ProductCard = ({
   );
   // console.log(product);
 
-
-
   const handleProductClick = async ({open}) => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
@@ -366,7 +356,7 @@ const ProductCard = ({
       // END
     }
     // console.log('Hello World');
-    
+
         const cleaned = cleanImage(product?.image);
       if (cleaned) {
         localStorage.setItem(`pdp_image`, cleaned);
@@ -633,51 +623,7 @@ const ProductCard = ({
     },
     [onStarClick],
   );
-  const handleUploadImage = async ({ file }) => {
-    try {
-      setShowLoader(true);
 
-      const response = await profileAPIs.uploadImage({ file });
-      const data = response?.data;
-
-      if (data?.status_code === 400 || data?.status === "failure") {
-        notification.error({
-          message: "Image Upload Failed",
-          description:
-            data?.status_desc || "Something went wrong. Please try again.",
-        });
-        return;
-      }
-      const url = data?.data?.[0]?.url;
-      setUploadedImages((prev) => prev.concat(url));
-      if (url) {
-        // setUploadedImages((prev) => [...prev, url]);
-        // additional_images.push(url)
-        notification.success({
-          message: "Image Uploaded Successfully",
-        });
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      notification.error({
-        message: "Image Upload Failed",
-        description:
-          error?.response?.data?.message || "Unexpected error occurred",
-      });
-    } finally {
-      setShowLoader(false);
-    }
-  };
-
-  const uploadImageDraggerProps = {
-    accept: "image/*",
-    multiple: true,
-    showUploadList: false,
-    customRequest: ({ file, onSuccess }) => {
-      handleUploadImage({ file });
-      setTimeout(() => onSuccess("ok"), 0);
-    },
-  };
   useEffect(() => {
     const currentCollection =
       singleCollections?._id === collection_id
@@ -700,73 +646,7 @@ const ProductCard = ({
   // console.log('Collection_vto',Collection_vto );
 
   // const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
-  const handleVTOclick = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const url = window.location.origin;
-    // setButtonClick(true);
 
-    const payload = {
-      image_urls: [product.image, uploadedImages[0]],
-      store: storeData.store_name,
-      image_tryon_prompt:
-        storeData?.templates?.[Collection_vto?.tryon_type] ||
-        storeData?.templates?.[storeData?.default_tryon_type] ||  // default tyeon type
-        "",
-      additional_prompt: descriptionget || "",
-      type: Collection_vto?.tryon_type || "tryon",
-    };
-    try {
-      setLoading(true);
-      const res = await TryOnVto(payload);
-      setVtoResultImageUrl(res.data.data.image_url);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      notification.error({
-        message: "Virtual Try-On Failed",
-        description:
-          error?.response?.data?.message ||
-          "Failed to process image. Please try again.",
-      });
-      setLoading(false);
-    }
-  };
-
-  const handleVTODownload = async () => {
-    if (vtoResultImageUrl) {
-      try {
-        const response = await fetch(vtoResultImageUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `vto-result-${Date.now()}.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        notification.success({
-          message: "Download Successful",
-          description: "Your virtual try-on image has been downloaded.",
-        });
-        handleVTOCancel();
-      } catch (error) {
-        console.error("Download failed:", error);
-        notification.error({
-          message: "Download Failed",
-          description: "Failed to download the image. Please try again.",
-        });
-      }
-    }
-  };
-
-  const handleVTOCancel = () => {
-    dispatch(vtoIconState(false));
-    setVtoResultImageUrl(null);
-    setUploadedImages([]);
-    setDescriptionget("");
-  };
   // const fetchProductDetails = async () => {
   //   dispatch(PDPloader(true));
   //   console.log(product?.image);
@@ -798,7 +678,7 @@ const ProductCard = ({
       // saveProductDetailsReturnPath();
         // console.log('navigating to Product page');
         // router.push(`/product/${clickedMfrCode}`);
-      
+
       // fetchProductDetails();
       setClickedMfrCode(null);
     }
@@ -809,7 +689,7 @@ const ProductCard = ({
   const productCardAttributes = useMemo(() => {
     const attributes = storeData?.pdp_settings?.product_card_attributes || [];
     // console.log('attributes',attributes);
-    
+
     const normalizeKey = (value) =>
       String(value || "")
         .trim()
@@ -1170,7 +1050,7 @@ const ProductCard = ({
 											) : (
 												<StarOutlined className='text-lg text-gray-600' />
 											)}
-							
+
 										</button>
 									)} */}
               </div>
@@ -1514,7 +1394,6 @@ const ProductCard = ({
               {product.name || "\u00A0"}
             </Text>
 
-          
           </div>
 
           {productCardAttributes.length > 0 ? (
@@ -1675,140 +1554,30 @@ const ProductCard = ({
               href={qrTargetUrl}
               target="_blank"
               rel="noreferrer"
-              className="break-all text-center text-sm text-indigo-600 hover:underline"
+              className={`break-all text-center text-sm hover:underline ${hasKioskAccess ? "text-kiosk-primary" : "text-indigo-600"}`}
             >
               {qrTargetUrl}
             </a>
           ) : null}
         </div>
       </Modal>
-
-      {ButtonClick === product?.mfr_code ? (
-        <Modal
-          isOpen={!!ButtonClick}
-          headerText={"Virtual Try-On"}
-          subText={
-            Collection_tryonStatement?.tryon_statement
-              ? Collection_tryonStatement?.tryon_statement
-              : storeData?.defult_tryon_statement
-          }
-          onClose={() => handleVTOCancel()}
-          size="md"
-        >
-          {vtoResultImageUrl ? (
-            <div className={styles["product-vto-result-container"]}>
-              <img
-                src={vtoResultImageUrl}
-                alt="VTO Result"
-                className={styles["product-vto-result-image"]}
-              />
-              <div className={styles["product-vto-buttons-group"]}>
-                <button
-                  onClick={handleVTOCancel}
-                  className={styles["product-vto-cancel-button"]}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVTODownload}
-                  className={styles["product-vto-submit-button"]}
-                >
-                  Download
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              {loading ? (
-                <div className={styles["product-vto-loading-container"]}>
-                  <LoadingOutlined
-                    className={styles["product-vto-loading-spinner"]}
-                  />
-                  <div className={styles["product-vto-loading-text"]}>
-                    <p className={styles["product-vto-loading-title"]}>
-                      AI is generating your image
-                    </p>
-                    <p className={styles["product-vto-loading-subtitle"]}>
-                      Please wait while we process your request...
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleVTOclick}>
-                  <div className="relative flex flex-col items-center justify-center pb-[25px]">
-                    {showLoader ? (
-                      <LoadingOutlined
-                        className={styles["product-vto-loading-spinner"]}
-                      />
-                    ) : (
-                      <>
-                        {uploadedImages.length < 1 && (
-                          <div
-                            className="relative flex flex-col items-center justify-center pb-[25px]"
-                          >
-                            <h4 className="mb-3 text-start text-xl font-semibold">
-                              Upload Your Image{" "}
-                            </h4>
-                            <Upload.Dragger
-                              className="h-56 w-56 bg-transparent"
-                              {...uploadImageDraggerProps}
-                              name="upload_image"
-                              showUploadList={false}
-                            >
-                              <p className={`text-[2rem] ${hasKioskAccess ? 'text-kiosk-primary ' :'text-indigo-600' } `}>
-                                <UploadOutlined />
-                              </p>
-                              <p className="mx-auto w-2/3">
-                                Click or drag file(s) to this area
-                              </p>
-                            </Upload.Dragger>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    {uploadedImages.length > 0 && (
-                      <div className="relative">
-                        <img
-                          src={uploadedImages[0]}
-                          alt="Uploaded"
-                          className="mt-2 max-h-40"
-                        />
-                        <CloseCircleOutlined
-                          className="absolute right-0 top-2 cursor-pointer text-xl text-white transition-all duration-300 ease-in-out hover:opacity-80"
-                          onClick={() => setUploadedImages([])}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="font-semibold text-gray-800">
-                    {" "}
-                    Add a prompt for AI (optional){" "}
-                  </h4>
-                  <textarea
-                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:border-indigo-600 focus:ring-[3px] focus:ring-indigo-600/10"
-                    placeholder="Enter description..."
-                    name="description"
-                    type="text"
-                    onChange={(e) => setDescriptionget(e.target.value)}
-                    value={descriptionget}
-                    rows={5}
-                  />
-
-                  <div className="flex justify-end">
-                    <button></button>
-                    <button
-                      type="submit"
-                      className={`mt-5 flex cursor-pointer justify-end rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${loading ? (hasKioskAccess ? "bg-kiosk-secondary text-black hover:opacity-90" : "bg-indigo-300 text-indigo-600 hover:opacity-90") : (hasKioskAccess ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-kiosk-secondary hover:text-white" : "bg-indigo-600 text-white hover:bg-indigo-700")}`}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
-              )}
-            </>
-          )}
-        </Modal>
-      ) : null}
+      <VirtualTryOnModal
+        isOpen={ButtonClick === product?.mfr_code}
+        subText={
+          Collection_tryonStatement?.tryon_statement
+            ? Collection_tryonStatement?.tryon_statement
+            : storeData?.defult_tryon_statement
+        }
+        hasKioskAccess={hasKioskAccess}
+        productImage={product?.image}
+        storeName={storeData?.store_name}
+        imageTryonPrompt={
+          storeData?.templates?.[Collection_vto?.tryon_type] ||
+          storeData?.templates?.[storeData?.default_tryon_type] ||
+          ""
+        }
+        tryonType={Collection_vto?.tryon_type || "tryon"}
+      />
 
       {/* // REMOVE // remove chin section integration and flag // not required */}
       {showChinSection && (
