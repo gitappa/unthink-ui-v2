@@ -73,10 +73,7 @@ import {
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { GuestPopUpShow } from "../Auth/redux/actions";
 import GuestUserPopUp from "../Auth/GuestUserPopUp";
-import {
-  addProductToWishlistCollection,
-  addProductToWishlistCollectionReset,
-} from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
@@ -115,7 +112,7 @@ const ProductDetails = ({ params, ...props }) => {
     state.VtoIconReducer.ButtonClick,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
   ]);
-  console.log("productToWishlistCollection", productToWishlistCollection);
+  // console.log("productToWishlistCollection", productToWishlistCollection);
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
@@ -126,10 +123,6 @@ const ProductDetails = ({ params, ...props }) => {
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
-  const [pendingWishlistQrInfo, setPendingWishlistQrInfo] = useState(null);
-  const addWishlistState = useSelector(
-    (state) => state.wishlistActions.addProductToWishlistCollection,
-  );
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
@@ -243,44 +236,6 @@ const ProductDetails = ({ params, ...props }) => {
                 "Failed to add product to wishlist. Please try again.",
             }),
           );
-          // Kick off signin-with-link immediately, but wait for saga to set the
-          // wishlist collection data before building the QR. We store the
-          // signin token + origin in local state and build the QR in an effect
-          // when `addWishlistState.data` becomes available.
-          (async () => {
-            try {
-              const origin =
-                typeof window !== "undefined" ? window.location.origin : "";
-              const currentKiosk =
-                typeof window !== "undefined"
-                  ? (() => {
-                      try {
-                        const value = sessionStorage.getItem("Kiosk-login");
-                        return value ? JSON.parse(value) : {};
-                      } catch (err) {
-                        return {};
-                      }
-                    })()
-                  : {};
-              const kioskEmail =
-                email || currentKiosk?.email || currentKiosk?.emailId;
-              if (kioskEmail) {
-                const resp = await requestSigninWithLink(kioskEmail);
-                const signin_token =
-                  resp?.signin_token || resp?.data?.signin_token;
-                const userName =
-                  resp?.data?.user_name ||
-                  resp?.user_name ||
-                  currentKiosk?.user_name;
-
-                if (signin_token) {
-                  setPendingWishlistQrInfo({ origin, signin_token, userName });
-                }
-              }
-            } catch (e) {
-              console.error("Immediate QR build failed", e);
-            }
-          })();
         }
       }
     },
@@ -295,38 +250,6 @@ const ProductDetails = ({ params, ...props }) => {
     ],
   );
 
-  // Build QR once wishlist saga returns data and we have a pending signin token
-  useEffect(() => {
-    if (!pendingWishlistQrInfo) return;
-    if (!addWishlistState?.data) return;
-
-    const { origin, signin_token, userName } = pendingWishlistQrInfo;
-    // 2nd time code i have written
-    try {
-      const decrypted = decryptSigninToken(signin_token);
-
-      const collectionId =
-        addWishlistState?.data?._id ||
-        addWishlistState?.data?.data?._id ||
-        addWishlistState?.data?.collection_id ||
-        addWishlistState?.data?.data?.collection_id;
-
-      const verifyLink = buildVerifyUrl(
-        decrypted,
-        `?page=influencer/${userName}/${collectionId}`,
-      );
-      const fullVerifyUrl = `${origin}${verifyLink}`;
-
-      setQrTargetUrl(fullVerifyUrl);
-      setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-      setQrModalOpen(true);
-    } catch (err) {
-      console.error("Building QR after wishlist success failed", err);
-    }
-
-    setPendingWishlistQrInfo(null);
-    dispatch(addProductToWishlistCollectionReset());
-  }, [addWishlistState?.data, pendingWishlistQrInfo, dispatch]);
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
@@ -876,11 +799,7 @@ const ProductDetails = ({ params, ...props }) => {
               eventId={storeData?.event_id || null}
               kioskEmail={parsedKiosk?.email || null}
               kioskUserName={parsedKiosk?.user_name || null}
-              onSavedCollectionQr={({ imageUrl, targetUrl }) => {
-                setQrTargetUrl(targetUrl);
-                setQrImageUrl(imageUrl);
-                setQrModalOpen(true);
-              }}
+            
             />
 
             {productDetails && (
@@ -1516,22 +1435,7 @@ const ProductDetails = ({ params, ...props }) => {
               </a>
             </div>
           )}
-          {/* <div className="flex gap-2">
-            <button
-              className="px-4 py-2 bg-indigo-600 text-white rounded"
-              onClick={() => {
-                if (qrTargetUrl) {
-                  navigator.clipboard?.writeText(qrTargetUrl);
-                  message.success('Copied link to clipboard', 1.5);
-                }
-              }}
-            >
-              Copy link
-            </button>
-            <button className="px-4 py-2 bg-gray-200 rounded" onClick={() => { setQrModalOpen(false); setQrLocked(false); }}>
-              Close
-            </button>
-          </div> */}
+        
         </div>
       </Modal>
       {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}

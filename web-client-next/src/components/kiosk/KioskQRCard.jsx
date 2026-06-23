@@ -13,7 +13,7 @@ const KioskQRCard = ({
   const Icon = icon === "gift" ? FaGift : AiFillStar;
 
   return (
-    <div className="bg-white rounded-[18px] p-5 border border-[rgba(2,6,23,0.04)] shadow-xl">
+    <div className="bg-white rounded-[18px] p-4 border border-[rgba(2,6,23,0.04)] shadow-xl">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 flex flex-col items-start text-left">
           <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-md ${icon === "gift" ? "bg-[#fff0f4]" : "bg-[#fff6e6]"}`}>
@@ -25,7 +25,7 @@ const KioskQRCard = ({
         </div>
 
         <div className="flex-shrink-0 flex flex-col items-center gap-2 mt-2 lg:mt-0">
-          <div className="w-[160px] h-[160px] sm:w-[220px] sm:h-[220px] rounded-[14px] bg-[#fbfdff] p-3 border border-[rgba(2,6,23,0.04)] shadow-md flex items-center justify-center">
+          <div className="w-[160px] h-[160px]  rounded-[14px] bg-[#fbfdff] p-2 border border-[rgba(2,6,23,0.04)] shadow-md flex items-center justify-center">
             <img src={qrSrc} alt={`${title} QR`} className="max-w-full max-h-full object-contain" />
           </div>
 

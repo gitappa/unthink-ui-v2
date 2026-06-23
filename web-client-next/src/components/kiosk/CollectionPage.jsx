@@ -32,6 +32,7 @@ import LoggedInInfo from "./components/LoggedInInfo";
 import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
 import { useNavigate } from "../../helper/useNavigate";
 import AuthInput from "./components/AuthInput";
+import { vtoIconState } from "../singleCollection/redux/actions";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -40,6 +41,7 @@ const CollectionPage = ({ params }) => {
   const [isTagsShowMoreActive, setIsTagsShowMoreActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [onMfrCode,setOnMfrCode] = useState('')
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
@@ -167,8 +169,9 @@ const CollectionPage = ({ params }) => {
         enableKioskGuestPopup
         onGuestPopupOpen={() => {
           setIsPopupShow(true);
-          dispatch(GuestPopUpShow(true));
         }}
+        setOnMfrCode={setOnMfrCode}
+
       />
     );
   };
@@ -349,6 +352,9 @@ const CollectionPage = ({ params }) => {
         onSuccess={() => {
           if (isPopupShow) {
             setShowShareProductDetails(true);
+          }
+          if (onMfrCode) {
+             dispatch(vtoIconState(onMfrCode));
           }
         }}
       />

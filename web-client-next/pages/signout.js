@@ -22,7 +22,7 @@ const SignOut = () => {
         localStorage.removeItem("adminRolePopupShown", "false");
          
          sessionStorage.removeItem("Kiosk-login");
-
+        sessionStorage.removeItem('selectedTag')
         clearStorages();
         
         // Generate new user ID for guest user

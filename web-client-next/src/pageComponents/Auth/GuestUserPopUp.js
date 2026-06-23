@@ -99,7 +99,6 @@ function GuestUserPopUp({
         const userId = res?.data?.data?.user_id;
         const registeredUserName =
           res?.data?.data?.user_name ||
-          res?.data?.data?.username ||
           res?.data?.data?.name;
         const registeredEmail =
           res?.data?.data?.email || res?.data?.data?.emailId || email;
@@ -110,7 +109,6 @@ function GuestUserPopUp({
               JSON.stringify({
                 user_id: userId,
                 user_name: registeredUserName || registeredEmail || phone,
-                username: registeredUserName || registeredEmail || phone,
                 email: registeredEmail,
                 phone,
               }),
