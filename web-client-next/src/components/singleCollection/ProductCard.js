@@ -53,17 +53,11 @@ import {
   addSidInProductUrl,
   AdminCheck,
   cleanImage,
-  collectionQRCodeGenerator,
   getCurrentTheme,
   getFinalImageUrl,
   getPercentage,
   // URLAddParam,
 } from "../../helper/utils";
-import {
-  buildVerifyUrl,
-  decryptSigninToken,
-  requestSigninWithLink,
-} from "../../helper/autoLogin";
 import appTracker from "../../helper/webTracker/appTracker";
 import {
   defaultFavoriteColl,
@@ -88,7 +82,6 @@ import {
 import { getTTid } from "../../helper/getTrackerInfo";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import axios from "axios";
-import Modal from "../modal/Modal";
 import VirtualTryOnModal from "./VirtualTryOnModal";
 import {
   customProductsAPIs,
@@ -99,7 +92,6 @@ import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
 import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
-import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
 import { useRouter } from "next/router";
 const { Text } = Typography;
 
@@ -124,15 +116,6 @@ const getProductBuyButtonClass = (size, hasKioskAccess) =>
       ? KIOSKCLASS
       : PRODUCT_BUY_BUTTON_CLASS;
 const getStaticImageSrc = (image) => image?.src || image;
-const getWishlistCollectionId = (response) =>
-  response?.data?.data?._id ||
-  response?.data?.data?.collection_id ||
-  response?.data?.data?.data?._id ||
-  response?.data?.data?.data?.collection_id ||
-  response?.data?._id ||
-  response?.data?.collection_id ||
-  response?._id ||
-  response?.collection_id;
 
 const ProductCard = ({
   product,
@@ -177,16 +160,12 @@ const ProductCard = ({
   auramodel,
   bannerImage,
   enableKioskGuestPopup = false,
-  onGuestPopupOpen,
-
+  setOnMfrCode,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
   // console.log('qzssddsdsds',product);
   const [clickedMfrCode, setClickedMfrCode] = useState(null);
-  const [qrModalOpen, setQrModalOpen] = useState(false);
-  const [qrImageUrl, setQrImageUrl] = useState("");
-  const [qrTargetUrl, setQrTargetUrl] = useState("");
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
@@ -197,7 +176,7 @@ const ProductCard = ({
   // console.log('clickedMfrCode',clickedMfrCode);
 
   const menuRef = useRef(null);
-    const router = useRouter();
+  const router = useRouter();
 
   // console.log('collectionCards',product);
 
@@ -241,9 +220,12 @@ const ProductCard = ({
 
   const isMyWishlistCollection =
     singleCollections?.collection_name?.trim()?.toLowerCase() === "my wishlist";
-  const hideWishlistHeartForSystemProduct = isMyWishlistCollection && product?.custom_product === false;
-  const isTryonCollection = singleCollections?.collection_name?.trim()?.toLowerCase() === 'my tryons';
-   const hideMyTryonForSystemProduct =isTryonCollection &&  product?.custom_product === false;
+  const hideWishlistHeartForSystemProduct =
+    isMyWishlistCollection && product?.custom_product === false;
+  const isTryonCollection =
+    singleCollections?.collection_name?.trim()?.toLowerCase() === "my tryons";
+  const hideMyTryonForSystemProduct =
+    isTryonCollection && product?.custom_product === false;
 
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
@@ -258,6 +240,8 @@ const ProductCard = ({
       return null;
     }
   }, []);
+  const KioskLoginAuth = getKioskLogin();
+
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
     storeData,
@@ -305,7 +289,7 @@ const ProductCard = ({
   );
   // console.log(product);
 
-  const handleProductClick = async ({open}) => {
+  const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
       await sharedPageTracker.onCollectionProductClick({
@@ -336,9 +320,8 @@ const ProductCard = ({
     } else {
       // GTAG CONFIGURATION
       // START
-
       // console.log(blogCollectionPage);
-      // I commented this code for causing some trubles in the navigation 
+      // I commented this code for causing some trubles in the navigation
       // gTagCollectionProductClick({
       //   mft_code: product?.mfr_code,
       //   collection_path: authUserId
@@ -357,16 +340,15 @@ const ProductCard = ({
     }
     // console.log('Hello World');
 
-        const cleaned = cleanImage(product?.image);
-      if (cleaned) {
-        localStorage.setItem(`pdp_image`, cleaned);
-      }
-      if(open && !hasKioskAccess){
-        window.open(`/product/${product.mfr_code}`, "_blank");
-      }
-      else if(hasKioskAccess){
-        router.push(`/product/${product.mfr_code}`)
-      }
+    const cleaned = cleanImage(product?.image);
+    if (cleaned) {
+      localStorage.setItem(`pdp_image`, cleaned);
+    }
+    if (open && !hasKioskAccess) {
+      window.open(`/product/${product.mfr_code}`, "_blank");
+    } else if (hasKioskAccess) {
+      router.push(`/product/${product.mfr_code}`);
+    }
     // router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
       dispatch(setShowChatModal(false));
@@ -382,7 +364,7 @@ const ProductCard = ({
     +product?.listprice > +product?.price &&
     getPercentage(product.listprice, product.price);
 
-  const callHandpickedAPI = async (userId) => {
+  const callHandpickedAPI = useCallback(async (userId) => {
     const payload = {
       collection_type: "my_wishlist_collection",
       status: "published",
@@ -408,82 +390,18 @@ const ProductCard = ({
       notification.error({ message: "Failed to add to wishlist" });
       return null;
     }
-  };
-
-  const openWishlistQr = useCallback(
-    async ({ kioskLogin, wishlistResponse }) => {
-      const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
-      const collectionId = getWishlistCollectionId(wishlistResponse);
-
-      if (!kioskEmail || !collectionId) return;
-
-      try {
-        const resp = await requestSigninWithLink(kioskEmail);
-        const signinToken = resp?.signin_token || resp?.data?.signin_token;
-        const userName =
-          resp?.data?.user_name ||
-          resp?.user_name ||
-          kioskLogin?.user_name ||
-          authUserName;
-
-        if (!signinToken || !userName) return;
-
-        const decrypted = decryptSigninToken(signinToken);
-        if (!decrypted) return;
-
-        const verifyLink = buildVerifyUrl(
-          decrypted,
-          `?page=influencer/${userName}/${collectionId}`,
-        );
-        const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
-
-        setQrTargetUrl(fullVerifyUrl);
-        setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-        setQrModalOpen(true);
-      } catch (error) {
-        console.error("Wishlist QR build failed", error);
-      }
-    },
-    [authUserName],
-  );
-
-  // useEffect(() => {
-  //   if (pendingWishlistAction && isUserLogin) {
-  //     callHandpickedAPI(authUserId || getTTid());
-  //     setPendingWishlistAction(false);
-  //   }
-  // }, [isUserLogin, pendingWishlistAction, authUserId]);
+  }, [product, storeData?.store_name]);
 
   useEffect(() => {
     if (!pendingWishlistAction || isGuestPopUpShow) return;
 
     const kioskLogin = getKioskLogin();
-    if (!kioskLogin?.user_id) {
-      setPendingWishlistAction(false);
-      return;
-    }
-
-    let cancelled = false;
     setPendingWishlistAction(false);
 
-    const addPendingWishlistAndOpenQr = async () => {
-      const wishlistResponse = await callHandpickedAPI(kioskLogin.user_id);
-      if (!cancelled) {
-        openWishlistQr({ kioskLogin, wishlistResponse });
-      }
-    };
-
-    addPendingWishlistAndOpenQr();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    getKioskLogin,
-    isGuestPopUpShow,
-    openWishlistQr,
-    pendingWishlistAction,
-  ]);
+    if (kioskLogin?.user_id) {
+      callHandpickedAPI(kioskLogin.user_id);
+    }
+  }, [callHandpickedAPI, getKioskLogin, isGuestPopUpShow, pendingWishlistAction]);
 
   const addToWishlistClick = async (event) => {
     event.preventDefault();
@@ -493,18 +411,11 @@ const ProductCard = ({
 
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
-      onGuestPopupOpen?.();
       dispatch(GuestPopUpShow(true));
       return;
     }
 
-    const wishlistResponse = await callHandpickedAPI(
-      kioskLogin?.user_id || authUserId || getTTid(),
-    );
-
-    if (kioskLogin?.user_id) {
-      openWishlistQr({ kioskLogin, wishlistResponse });
-    }
+    await callHandpickedAPI(kioskLogin?.user_id || authUserId || getTTid());
   };
 
   const checkoutPayment = async (e) => {
@@ -676,8 +587,8 @@ const ProductCard = ({
       //   localStorage.setItem(`pdp_image`, cleaned);
       // }
       // saveProductDetailsReturnPath();
-        // console.log('navigating to Product page');
-        // router.push(`/product/${clickedMfrCode}`);
+      // console.log('navigating to Product page');
+      // router.push(`/product/${clickedMfrCode}`);
 
       // fetchProductDetails();
       setClickedMfrCode(null);
@@ -743,12 +654,18 @@ const ProductCard = ({
     const formatValue = (value) => {
       if (Array.isArray(value)) {
         return value
-          .map((item) => String(item ?? "").replace(/,+$/, "").trim())
+          .map((item) =>
+            String(item ?? "")
+              .replace(/,+$/, "")
+              .trim(),
+          )
           .filter(Boolean)
           .join(", ");
       }
 
-      return String(value ?? "").replace(/,+$/, "").trim();
+      return String(value ?? "")
+        .replace(/,+$/, "")
+        .trim();
     };
 
     return attributes
@@ -839,10 +756,10 @@ const ProductCard = ({
             }
           }}
         >
-            {/* SOLD Badge */}
-            {product?.avlble === 0 && (
-              <div className={styles["product-sold-badge"]}>SOLD</div>
-            )}
+          {/* SOLD Badge */}
+          {product?.avlble === 0 && (
+            <div className={styles["product-sold-badge"]}>SOLD</div>
+          )}
           <div style={{ width: "100%" }}>
             <img
               src={getFinalImageUrl(product.image)}
@@ -860,9 +777,20 @@ const ProductCard = ({
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
                   onClick={(e) => {
-                    dispatch(vtoIconState(product?.mfr_code || true));
+                    setOnMfrCode(product?.mfr_code);
                     e.stopPropagation();
+                    if (!KioskLoginAuth && hasKioskAccess) {
+                      // setIsPopupShow(true);
+                      // setGuestPopupAction("vto");
+                      dispatch(GuestPopUpShow(true));
+                      return;
+                    }
+                    const mfrCode = product?.mfr_code;
+                    if (mfrCode) {
+                      dispatch(vtoIconState(mfrCode));
+                    }
                   }}
+                  title="Try on with virtual camera"
                 >
                   <img
                     height={20}
@@ -881,7 +809,7 @@ const ProductCard = ({
                   className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleProductClick({open});
+                    handleProductClick({ open });
                   }}
                 >
                   <EyeOutlined className={styles["product-view-icon-eye"]} />
@@ -1393,7 +1321,6 @@ const ProductCard = ({
             >
               {product.name || "\u00A0"}
             </Text>
-
           </div>
 
           {productCardAttributes.length > 0 ? (
@@ -1410,10 +1337,7 @@ const ProductCard = ({
                 className={styles.tagscontainer}
               >
                 {productCardAttributes.map((attribute) => (
-                  <SwiperSlide
-                    key={attribute.key}
-                    style={{ width: "auto" }}
-                  >
+                  <SwiperSlide key={attribute.key} style={{ width: "auto" }}>
                     <span className={styles.smalltags}>
                       {attribute.label}: {attribute.value}
                     </span>
@@ -1531,36 +1455,6 @@ const ProductCard = ({
         </div>
       </div>
 
-      <Modal
-        headerText="Scan to open wishlist"
-        isOpen={qrModalOpen}
-        onClose={() => setQrModalOpen(false)}
-        size="sm"
-      >
-        <div className="flex flex-col items-center gap-4">
-          {qrImageUrl ? (
-            <img
-              src={qrImageUrl}
-              alt="Wishlist QR code"
-              className="h-48 w-48 object-contain"
-            />
-          ) : (
-            <div className="flex h-48 w-48 items-center justify-center bg-gray-100 text-sm text-gray-500">
-              QR
-            </div>
-          )}
-          {qrTargetUrl ? (
-            <a
-              href={qrTargetUrl}
-              target="_blank"
-              rel="noreferrer"
-              className={`break-all text-center text-sm hover:underline ${hasKioskAccess ? "text-kiosk-primary" : "text-indigo-600"}`}
-            >
-              {qrTargetUrl}
-            </a>
-          ) : null}
-        </div>
-      </Modal>
       <VirtualTryOnModal
         isOpen={ButtonClick === product?.mfr_code}
         subText={
@@ -1577,6 +1471,17 @@ const ProductCard = ({
           ""
         }
         tryonType={Collection_vto?.tryon_type || "tryon"}
+        saveProduct={
+          product
+            ? {
+                mfr_code: product?.mfr_code,
+                name: product?.name,
+                image: product?.image || "",
+              }
+            : null
+        }
+        eventId={storeData?.event_id || null}
+        saveUserId={KioskLoginAuth?.user_id || authUser?.user_id || null}
       />
 
       {/* // REMOVE // remove chin section integration and flag // not required */}

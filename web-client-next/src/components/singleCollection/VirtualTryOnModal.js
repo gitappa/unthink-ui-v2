@@ -62,7 +62,6 @@ const VirtualTryOnModal = ({
   eventId = null,
   kioskEmail = null,
   kioskUserName = null,
-  onSavedCollectionQr,
   saveText = "Save",
 }) => {
   const dispatch = useDispatch();
@@ -220,32 +219,6 @@ const VirtualTryOnModal = ({
         description: "Collection added successfully",
       });
 
-      const collectionId =
-        responseData?.data?.data?._id ||
-        responseData?.data?.data?.collection_id;
-
-      if (collectionId && kioskEmail) {
-        const response = await requestSigninWithLink(kioskEmail);
-        const signinToken = response?.signin_token || response?.data?.signin_token;
-        const userName =
-          response?.data?.user_name ||
-          response?.user_name ||
-          kioskUserName;
-
-        if (signinToken && userName) {
-          const decrypted = decryptSigninToken(signinToken);
-          const verifyLink = buildVerifyUrl(
-            decrypted,
-            `?page=influencer/${userName}/${collectionId}`,
-          );
-          const targetUrl = `${window.location.origin}${verifyLink}`;
-
-          onSavedCollectionQr?.({
-            imageUrl: collectionQRCodeGenerator(targetUrl),
-            targetUrl,
-          });
-        }
-      }
     } catch (error) {
       console.log(error);
       notification.error({
