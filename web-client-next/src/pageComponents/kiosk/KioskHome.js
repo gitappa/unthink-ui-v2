@@ -36,12 +36,12 @@ const KioskHome = ({ props }) => {
   );
   const userInfo = useSelector((state) => state.auth.user.data);
   const Tags = ["Social Media", "Look Books", "#Trending"];
-  const [showTags, setShowTags] = useState(Tags[0]);
+  const [showTags, setShowTags] = useState(sessionStorage.getItem('selectedTag') ||  Tags[0]);
   const [products, setProducts] = useState([]);
   //   console.log("products", products);
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
-
+  
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder();
@@ -89,7 +89,7 @@ const KioskHome = ({ props }) => {
             {Tags.map((tag, i) => (
               <button
                 key={i}
-                onClick={() => setShowTags(tag)}
+                onClick={() => { setShowTags(tag) , sessionStorage.setItem("selectedTag", tag)}}
                 aria-pressed={showTags === tag}
                 className={`flex-1 text-center button-kiosk px-3 md:px-5 py-2 font-semibold transition rounded-full ${
                   showTags === tag

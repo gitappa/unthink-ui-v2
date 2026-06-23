@@ -773,6 +773,7 @@
   cursor: pointer;
   padding: 4px 10px;
   border-radius: 35px;
+  flex-direction: row-reverse;
   @media (max-width: 768px) {
     padding: 5px 7px;
   }
