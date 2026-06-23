@@ -78,14 +78,13 @@ const KioskHome = ({ props }) => {
   }
 
   return (
-    <div className=" mx-auto w-full px-6 md:px-14 mt-10">
+    <div className=" mx-auto w-full px-6 md:px-14 mt-8 ">
       {/* User Actions */}
-     <AuthInput />
 
       {/* Tag Buttons (pill-style tabs) */}
-      <div className="flex items-center mb-8">
-        <div className="w-full  mx-auto">
-          <div className="flex items-center rounded-full bg-kiosk-secondary p-1">
+      <div className="flex items-center mb-6">
+        <div className="w-full  flex items-center mx-auto">
+          <div className="flex items-center rounded-full bg-kiosk-secondary w-full p-1">
             {Tags.map((tag, i) => (
               <button
                 key={i}
@@ -101,6 +100,7 @@ const KioskHome = ({ props }) => {
               </button>
             ))}
           </div>
+     <AuthInput />
         </div>
       </div>
       {showTags === "Social Media" && <HeroSection />}
