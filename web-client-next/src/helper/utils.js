@@ -580,13 +580,14 @@ export const getBlogCollectionPagePath = (
 		if (collection_theme)
 			return `/categories/${collection_theme}/${collectionPath}`;
 		return `/collections/${collectionPath}`;
-	} else if (user_name && collectionPath) {
+	}  else if (user_name && collectionId) {
+		return `/influencer/${user_name}/${collectionId}`;
+	}
+	 else if (user_name && collectionPath) {
 		if (collection_theme)
 			return `/${user_name}/categories/${collection_theme}/${collectionPath}`;
 		return `/${user_name}/collections/${collectionPath}`;
-	} else if (user_name && collectionId) {
-		return `/influencer/${user_name}/${collectionId}`;
-	} else if (user_id) {
+	}  else if (user_id) {
 		return `/influencer/shared/${user_id}/${collectionId}`;
 	} else if (collectionPath) {
 		return `/collections/${collectionPath}`;
