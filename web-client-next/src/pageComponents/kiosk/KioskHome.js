@@ -24,7 +24,7 @@ import { logoutVenlyUser } from "../../helper/venlyUtils";
 import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
 import { is_store_instance } from "../../constants/config";
 import { fetchCategoriesReset } from "../categories/redux/actions";
-import { TrendingApiCall } from "../../helper/serverAPIs";
+import { LookBookApiCall, TrendingApiCall } from "../../helper/serverAPIs";
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 
@@ -38,6 +38,7 @@ const KioskHome = ({ props }) => {
   const Tags = ["Social Media", "Look Books", "#Trending"];
   const [showTags, setShowTags] = useState(sessionStorage.getItem('selectedTag') ||  Tags[0]);
   const [products, setProducts] = useState([]);
+  const [lookBooks,setLookBooks] = useState([])
   //   console.log("products", products);
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
@@ -59,6 +60,10 @@ const KioskHome = ({ props }) => {
         const shuffledData = [...data].sort(() => Math.random() - 0.5);
         setProducts(shuffledData);
         // console.log('shuffledData', shuffledData);
+        const lookBookResponse = await LookBookApiCall()
+        setLookBooks(lookBookResponse?.data?.data)
+        // console.log('lookBookResponse',lookBookResponse?.data?.data);
+        
       } catch (error) {
         console.error(error);
       }
@@ -105,7 +110,7 @@ const KioskHome = ({ props }) => {
       </div>
       {showTags === "Social Media" && <HeroSection />}
       {showTags !== "Social Media" && (
-        <BannerKisok products={products} Tags={Tags} />
+        <BannerKisok products={products} Tags={showTags} lookBooks={lookBooks} />
       )}
       <QRsection />
 
