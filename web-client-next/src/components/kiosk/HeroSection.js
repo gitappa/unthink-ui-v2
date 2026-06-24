@@ -75,10 +75,10 @@ const HeroSection = () => {
     // video container is mounted after the loading spinner.
   }, [isClient, collectiondata]);
   return (
-    <div className="relative  mb-24">
+    <div className="relative w-full mb-24">
       <div
         className="relative cursor-pointer"
-        style={{ maxHeight: "58vh", height: "700px" }}
+        style={{ maxHeight: "78vh", height: "700px" }}
         onClick={handlePlayClick}
         ref={videoContainerRef}
       >
