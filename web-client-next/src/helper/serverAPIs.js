@@ -1533,6 +1533,15 @@ export const TrendingApiCall = (params = {}) => {
     params,
   });
 };
+export const LookBookApiCall = (params = {}) => {
+  const url = `${auraYfretUserCollBaseUrl}${lookBook}`;
+
+  return apiInstance({
+    url,
+    method: "get",
+    params,
+  });
+};
 export const TryonSaveApiCall = (data = {}) => {
   const url = `${auraYfretUserCollBaseUrl}${updateHandpickedProductsUrl}`;
 // console.log("URL:", updateHandpickedProductsUrl);

@@ -1,13 +1,13 @@
 import React from "react";
 import KioskQRCard from "./KioskQRCard";
 
-const QRsection = () => {
+const QRsection = ({showTags}) => {
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
 
   return (
-    <div className="w-full mt-8 pb-4">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+    <div className={`${showTags === 'Social Media' ? 'w-auto': 'w-full mt-4 pb-4' }`}>
+      <div className={`${showTags=== 'Social Media' ? 'block': 'grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5'}`}>
         <KioskQRCard
           title="Loyalty Rewards"
           subtitle="Scan to join our loyalty program and start collecting points instantly."
@@ -15,6 +15,7 @@ const QRsection = () => {
           badgeText="POINTS ONLY"
           badgeColor="emerald"
           icon="star"
+          showTags={showTags}
         />
 
         <KioskQRCard
@@ -24,6 +25,8 @@ const QRsection = () => {
           badgeText="GIVEAWAY ENTRY"
           badgeColor="red"
           icon="gift"
+          showTags={showTags}
+          space
         />
       </div>
     </div>

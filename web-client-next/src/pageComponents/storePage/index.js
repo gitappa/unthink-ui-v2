@@ -303,7 +303,7 @@ const StorePageWrapper = (props) => {
 		isMyProfilePage || isSharedPage || isCollectionPage || isThemePage;
 
 	const isSignInRequired = useMemo(() => isStorePage, [isStorePage]); // redirecting user to sign in page if user is not logged in
-
+const isAdminLog = authUser?.user_name ===  super_admin;
 	const { collection_name: collection_path = router.query.collection_name, params: page_params } = props;
 	const queryCollectionTheme = Array.isArray(router.query.collection_theme)
 		? router.query.collection_theme[0]
@@ -713,7 +713,7 @@ const StorePageWrapper = (props) => {
 
 	useEffect(() => {
 		if (authUser.user_id) {
-			if (showWishlistModal && !isAuthAdminLoggedIn) {
+			if (showWishlistModal && !isAdminLog ) {
 				// Always call API when wishlist popup opens
 				dispatch(
 					getUserCollections({

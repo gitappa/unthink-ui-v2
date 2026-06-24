@@ -134,7 +134,7 @@ const VirtualTryOnModal = ({
     event.preventDefault();
 
     const payload = {
-      image_urls: [productImage, uploadedImage],
+      image_urls: [ uploadedImage,productImage],
       store: storeName,
       image_tryon_prompt: imageTryonPrompt || "",
       additional_prompt: description || "",
