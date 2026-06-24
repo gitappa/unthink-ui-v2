@@ -217,20 +217,10 @@ const ProductCard = ({
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
   ]);
-
-  const isMyWishlistCollection =
-    singleCollections?.collection_name?.trim()?.toLowerCase() === "my wishlist";
-  const hideWishlistHeartForSystemProduct =
-    isMyWishlistCollection && product?.custom_product === false;
-  const isTryonCollection =
-    singleCollections?.collection_name?.trim()?.toLowerCase() === "my tryons";
-  const hideMyTryonForSystemProduct =
-    isTryonCollection && product?.custom_product === false;
-
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
-  // console.log('Collection_tryonStatement',Collection_tryonStatement);
+  // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
     if (typeof window === "undefined") return null;
 
@@ -773,12 +763,12 @@ const ProductCard = ({
               !enableSelect &&
               widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
               !showWishlistModal &&
-              !hideMyTryonForSystemProduct && (
+               product?.custom_product !== false && singleCollections?.collection_name !== 'my tryons' &&(
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
                   onClick={(e) => {
-                    setOnMfrCode(product?.mfr_code);
                     e.stopPropagation();
+                    setOnMfrCode?.(product?.mfr_code);
                     if (!KioskLoginAuth && hasKioskAccess) {
                       // setIsPopupShow(true);
                       // setGuestPopupAction("vto");
@@ -1019,7 +1009,7 @@ const ProductCard = ({
         >
           {/* reversed contents for hover css */}
 
-          {enableSelect ? (
+          {enableSelect  && product?.custom_product !== false ? (
             <div
               className={`${styles["product-remove-icon-container"]} ${size === "small" ? styles["product-remove-icon-container-small"] : ""}`}
             >
@@ -1245,7 +1235,7 @@ const ProductCard = ({
           (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar)) &&
           !showWishlistModal &&
           !enableSelect &&
-          !hideWishlistHeartForSystemProduct && (
+          product?.custom_product !== false && singleCollections?.collection_name !== 'my wishlist' &&  (
             <div className={styles["product-menu-item"]}>
               {!hideAddToWishlist && (
                 <div

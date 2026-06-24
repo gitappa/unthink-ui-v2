@@ -1,79 +1,112 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
-const BannerKisok = ({ products, Tags }) => {
-  const router = useRouter();
+import React, { useRef } from "react";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
-  const dummyProducts = (products || []).filter((x) => x.cover_image && x.path);
-  const displayedProducts = dummyProducts.slice(0, 8);
- 
-  // const trendingBase = [
-  //   "#Hot Now",
-  //   "#Street Style",
-  //   "#OOTD",
-  //   "#Viral",
-  //   "#Editor's Pick",
-  //   "#Must Haves",
-  //   "#New Arrivals",
-  //   "#Eco Friendly",
-  //   "#Celeb Picks",
-  // ];
-  // const trendingTags = useMemo(() => {
-  //   if (showTags !== "#Trending") return [];
-  //   const shuffled = [...trendingBase].sort(() => Math.random() - 0.5);
-  //   return shuffled.slice(0, 6);
-  // }, [showTags]);
+const BannerKisok = ({ products, Tags, lookBooks }) => {
+  const router = useRouter();
+  const swiperRef = useRef(null);
+
+  const trendingProducts = (products || [])
+    .filter((x) => x.cover_image && x.path)
+    .slice(0, 8);
+  const lookBooksProducts = (lookBooks || [])
+    .filter((x) => x.cover_image && x.path)
+    .slice(0, 8);
+  const displayedProducts =
+    Tags === "#Trending" ? trendingProducts : lookBooksProducts;
+  //  console.log('displayedProducts',displayedProducts);
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       {/* Banner Section */}
-      <div
-        className="rounded-3xl bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-4 py-6 md:py-10 md:px-8 overflow-hidden relative "
-        // style={{
-        //   backgroundImage: `url(${Gold_bg_banner?.src || Gold_bg_banner})`,
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center",
-        //   backgroundRepeat: "no-repeat",
-        // }}
-      >
+      <div className="rounded-3xl bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-7 md:px-8 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
         <div className="   rounded-3xl pointer-events-none z-0" />
         <div className="w-full mx-auto relative z-10">
-          {/* {showTags === "#Trending" ? (
-            <div className="grid grid-cols-3 gap-3 gap-y-9 w-full">
-              {trendingTags.map((tag, idx) => (
-                <div
-                  key={`${tag}-${idx}`}
-                  className="overflow-hidden opacity-90 m-auto hover:opacity-100 hover:shadow-lg transition h-8 w-48 cursor-pointer flex items-center justify-center"
+          <div className="relative px-9 md:px-10 xl:px-12">
+            <Swiper
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              slidesPerView={2}
+              spaceBetween={20}
+              speed={700}
+              loop={displayedProducts.length > 4}
+              watchOverflow={true}
+              grabCursor={true}
+              threshold={8}
+              resistanceRatio={0.75}
+              touchRatio={0.9}
+              breakpoints={{
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+              className="kiosk-banner-swiper w-full"
+            >
+              {displayedProducts.map((product) => (
+                <SwiperSlide
+                  key={product.collection_id}
+                  className="h-auto"
                 >
-                  <div className="rounded-2xl shadow-lg h-full w-full flex items-center justify-center bg-gray-200">
-                    <span className="text-black text-lg font-bold">{tag}</span>
+                  <div
+                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60 xl:h-[316px]`}
+                  >
+                    {product.cover_image && (
+                      <img
+                        src={product.cover_image}
+                        className="rounded-xl shadow-lg h-full object-cover m-auto w-full transition-transform duration-500 ease-out"
+                        alt={product.collection_name || product.cover_image}
+                        onClick={() => handleNavCollection(product)}
+                      />
+                    )}
                   </div>
-                </div>
+                </SwiperSlide>
               ))}
-            </div>
-          ) : ( */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 gap-y-5 md:gap-y-5 xl:gap-5 w-full">
-            {displayedProducts.map((product) => (
-              <div
-                key={product.collection_id}
-                className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 transition cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60 xl:h-[405px]`}
-              >
-                {product.cover_image && (
-                  <img
-                    src={product.cover_image}
-                    className="rounded-xl shadow-lg h-full object-cover m-auto  w-[225px] lg:w-[215px] xl:w-full"
-                    alt={product.collection_name || product.cover_image}
-                    onClick={() => handleNavCollection(product)}
-                  />
-                )}
-              </div>
-            ))}
+            </Swiper>
+
+            {displayedProducts.length > 4 && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous collections"
+                  className="absolute left-0 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-300 ease-out hover:shadow-xl active:scale-95 md:h-10 md:w-10"
+                  onClick={() => swiperRef.current?.slidePrev(700)}
+                >
+                  <MdOutlineKeyboardArrowLeft className="text-2xl" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next collections"
+                  className="absolute right-0 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-300 ease-out hover:shadow-xl active:scale-95 md:h-10 md:w-10"
+                  onClick={() => swiperRef.current?.slideNext(700)}
+                >
+                  <MdOutlineKeyboardArrowLeft className="rotate-180 text-2xl" />
+                </button>
+              </>
+            )}
+            <style jsx global>{`
+              .kiosk-banner-swiper .swiper-wrapper {
+                transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+                will-change: transform;
+              }
+
+              .kiosk-banner-swiper .swiper-slide {
+                backface-visibility: hidden;
+                transform: translateZ(0);
+              }
+            `}</style>
           </div>
-          {/* )} */}
         </div>
 
         {/* Decorative Element */}
@@ -86,3 +119,4 @@ const BannerKisok = ({ products, Tags }) => {
 };
 
 export default BannerKisok;
+

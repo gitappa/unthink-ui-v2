@@ -30,7 +30,7 @@ import {
 } from "../../constants/codes";
 import CreateWishlist from "./CreateWishlist";
 import BlogCollectionGallery from "./blogCollection/BlogCollectionGallery";
-import { adminUserId, current_store_name, is_store_instance } from "../../constants/config";
+import { adminUserId, current_store_name, is_store_instance, super_admin } from "../../constants/config";
 import { addToWishlist } from "../wishlistActions/addToWishlist/redux/actions";
 import {
 	checkIsFavoriteCollection,
@@ -329,8 +329,8 @@ const WishListModal = ({
 
 	// user admin or not checked
 
-	const isAdminLoggedIn = AdminCheck(authUser, current_store_name, adminUserId, admin_list);
-
+	// const isAdminLoggedIn = AdminCheck(authUser, current_store_name, adminUserId, admin_list);
+const isAdminLoggedIn = authUser?.user_name ===  super_admin;
 	// feature collection and creator funtion
 
 	const [activeCollection, setActiveCollection] = useState("Feature");
@@ -361,7 +361,7 @@ const WishListModal = ({
 				...payload
 			}));
 		}
-	}, [featuredFilter, activeCollection, showWishlistModal, isAdminLoggedIn, dispatch]);
+	}, [featuredFilter, activeCollection, showWishlistModal, dispatch,isAdminLoggedIn]);
 
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
