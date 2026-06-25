@@ -39,7 +39,6 @@ const HeroesVillainsMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 			<div className='flex flex-row items-center gap-4'>
 				<MenuOutlined
 					width={32}
-					preview={false}
 					className='cursor-pointer h-8 text-black-101 text-2xl flex items-center'
 					onClick={() => setOpenMenu(true)}
 				/>
@@ -114,7 +113,7 @@ const HeroesVillainsMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 														? "rotate-180"
 														: "rotate-0"
 												}`}>
-												<img src={downArrowIcon} preview={false} />
+												<img src={downArrowIcon} alt="" />
 											</button>
 										</div>
 									) : null}

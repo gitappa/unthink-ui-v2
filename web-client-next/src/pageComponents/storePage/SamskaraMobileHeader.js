@@ -115,7 +115,7 @@ const SamskaraMobileHeader = ({ showProfileIcon, setShowMenu }) => {
 														? "rotate-180"
 														: "rotate-0"
 												}`}>
-												<img src={downArrowIcon} preview={false} />
+												<img src={downArrowIcon} alt="" />
 											</button>
 										</div>
 									) : null}

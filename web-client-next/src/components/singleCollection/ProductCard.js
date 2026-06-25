@@ -93,6 +93,7 @@ import { vtoIconState } from "./redux/actions";
 import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
+import { FaCartArrowDown } from "react-icons/fa";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -161,6 +162,7 @@ const ProductCard = ({
   bannerImage,
   enableKioskGuestPopup = false,
   setOnMfrCode,
+  onGuestPopupOpen,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -217,6 +219,9 @@ const ProductCard = ({
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
   ]);
+  const { collection, loading } = useSelector((state) => state.cart);
+  const cartCollection = collection?.product_lists.map((arr =>arr?.mfr_code)).find((arr)=>arr === product.mfr_code)
+  console.log('cartCollection',cartCollection );
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
@@ -245,8 +250,6 @@ const ProductCard = ({
     adminUserId,
     admin_list,
   );
-  const mycartcollectionpath = `my_cart_${KioskLoginAuth?.user_id || authUserId || getTTid()}`;
-
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const favoriteColl =
     useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
@@ -455,6 +458,23 @@ const ProductCard = ({
     e.stopPropagation();
 
     if (!product?.mfr_code) return;
+
+    const kioskLogin = getKioskLogin();
+
+    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin?.user_id) {
+      onGuestPopupOpen?.({
+        type: "cart",
+        product: {
+          mfr_code: product.mfr_code,
+          tagged_by: product.tagged_by || [],
+        },
+        qty: Number(count),
+      });
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+    const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
+
     const payload = {
       is_display_amount:true,
       products: [
@@ -467,9 +487,9 @@ const ProductCard = ({
       product_lists: [],
       collection_name: "my cart",
       type: "system",
-      user_id: KioskLoginAuth?.user_id || authUserId || getTTid(),
+      user_id: cartUserId,
       // collection_id: mycartcollectionid,
-      path: mycartcollectionpath,
+      path: `my_cart_${cartUserId}`,
     };
     dispatch(addToCart(payload));
   };
@@ -772,6 +792,10 @@ const ProductCard = ({
                     if (!KioskLoginAuth && hasKioskAccess) {
                       // setIsPopupShow(true);
                       // setGuestPopupAction("vto");
+                      onGuestPopupOpen?.({
+                        type: "vto",
+                        mfrCode: product?.mfr_code,
+                      });
                       dispatch(GuestPopUpShow(true));
                       return;
                     }
@@ -1421,14 +1445,16 @@ const ProductCard = ({
                 ) : (
                   <button
                     className={`${getProductBuyButtonClass(size, hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
-                    onClick={handleAddToCart}
+                    onClick={cartCollection ? null : handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >
-                    <img
-                      src={getStaticImageSrc(shopping)}
+                    {/* <img
+                      src={ shopping}
                       alt="Add to cart"
                       height={20}
-                      width={20}
+                      width={20} */}
+                      {cartCollection ?                     
+                      < FaCartArrowDown
                       className={
                         showWishlistModal || size === "small"
                           ? styles["product-cart-icon-small"]
@@ -1437,7 +1463,16 @@ const ProductCard = ({
                             : "h-4 w-4 md:h-5 md:w-5"
                       }
                     />
-                    Add to Cart
+                    :
+                      <FiShoppingCart className={
+                        showWishlistModal || size === "small"
+                          ? styles["product-cart-icon-small"]
+                          : hasKioskAccess
+                            ? KIOSK_CART_ICON_CLASS
+                            : "h-4 w-4 md:h-5 md:w-5"
+                      }/>
+                    }
+                 { cartCollection  ? ' Go to Cart ' : ' Add to Cart'}
                   </button>
                 )}
               </>

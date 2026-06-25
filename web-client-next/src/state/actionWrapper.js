@@ -8,6 +8,7 @@ import { connectVenly } from "../helper/venlyUtils";
 import { getStoreData } from "../pageComponents/store/redux/actions";
 import { fetchCart } from "../pageComponents/DeliveryDetails/redux/action";
 import { getTTid } from "../helper/getTrackerInfo";
+import { getStoredKioskLoginUserId } from "../helper/utils";
 
 // import trackApi from "../track/api";
 
@@ -49,7 +50,7 @@ const ActionWrapper = ({ children }) => {
 	}, [authUser]);
 
 	useEffect(() => {
-		const userId = authUser?.user_id || getTTid();
+		const userId = getStoredKioskLoginUserId() || authUser?.user_id || getTTid();
 		if (userId) {
 			const mycartcollectionpath = `my_cart_${userId}`;
 			dispatch(fetchCart(mycartcollectionpath));
