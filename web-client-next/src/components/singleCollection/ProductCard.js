@@ -245,7 +245,7 @@ const ProductCard = ({
     adminUserId,
     admin_list,
   );
-  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const mycartcollectionpath = `my_cart_${KioskLoginAuth?.user_id || authUserId || getTTid()}`;
 
   // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
   const favoriteColl =
@@ -455,8 +455,8 @@ const ProductCard = ({
     e.stopPropagation();
 
     if (!product?.mfr_code) return;
-
     const payload = {
+      is_display_amount:true,
       products: [
         {
           mfr_code: product.mfr_code,
@@ -467,7 +467,7 @@ const ProductCard = ({
       product_lists: [],
       collection_name: "my cart",
       type: "system",
-      user_id: authUserId || getTTid(),
+      user_id: KioskLoginAuth?.user_id || authUserId || getTTid(),
       // collection_id: mycartcollectionid,
       path: mycartcollectionpath,
     };
