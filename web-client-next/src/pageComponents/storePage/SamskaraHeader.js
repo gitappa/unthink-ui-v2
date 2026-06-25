@@ -398,7 +398,7 @@ const SamskaraHeader = ({
 								{menu.children && (
 									<img
 										src={downArrowIcon}
-										preview={false}
+										alt=""
 										className='cursor-pointer'
 									/>
 								)}

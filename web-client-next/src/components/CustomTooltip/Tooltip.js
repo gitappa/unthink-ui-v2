@@ -19,7 +19,7 @@ const Tooltip = ({
 				<img
 					className={styles.closeIcon}
 					src={close_bg_icon}
-					preview={false}
+					alt=""
 					onClick={(e) => {
 						e.stopPropagation();
 						onClose();

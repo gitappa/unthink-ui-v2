@@ -102,13 +102,11 @@ const buildCollectionVerifyPageParam = (
   kioskLogin,
   fallbackUserName,
 ) => {
-  const path = collection?.path || collectionPath;
-
-  if (path) return `?page=collections/${path}`;
-
-  const collectionId = collection?._id || collection?.collection_id;
+  const collectionId = collection?._id 
   const userName = collection?.user_name || fallbackUserName || kioskLogin?.user_name;
-
+    if(collection.collection_name === "my cart"){
+      return `?page=cart`;
+    }
   if (userName && collectionId) {
     return `?page=influencer/${userName}/${collectionId}`;
   }

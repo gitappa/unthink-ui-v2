@@ -999,3 +999,26 @@ export const AdminCheck = (authUser, currentStoreName, adminUserId, admin_list) 
 };
 
 export const cleanImage = (img)=> typeof img === "string" ? img.replace(/"/g, "").trim() : "";
+export const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
+
+export const getStoredKioskLogin = () => {
+	if (typeof window === "undefined") return null;
+
+	const login = sessionStorage.getItem(KIOSK_LOGIN_STORAGE_KEY);
+	if (!login) return null;
+
+	try {
+		return JSON.parse(login);
+	} catch (error) {
+		return login;
+	}
+};
+
+export const getStoredKioskLoginUserId = () => {
+	const kioskLogin = getStoredKioskLogin();
+
+	if (!kioskLogin) return "";
+	if (typeof kioskLogin === "string") return kioskLogin;
+
+	return kioskLogin?.user_id || "";
+};
