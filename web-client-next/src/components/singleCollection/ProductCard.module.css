@@ -152,14 +152,14 @@
 
 .product-menu-wishlist {
   position: absolute;
-  top: 15px;
+  top: 55px;
   right: 15px;
   z-index: 35;
 }
 
 @media (min-width: 1000px) {
   .product-menu-wishlist {
-    top: 15px;
+    top: 55px;
     right: 15px;
   }
 }
@@ -792,7 +792,7 @@
 
 .product-view-btn {
   position: absolute;
-  top: 55px;
+  top: 15px;
   right: 15px;
   background: #ffffff;
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);

@@ -33,6 +33,8 @@ import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
 import { useNavigate } from "../../helper/useNavigate";
 import AuthInput from "./components/AuthInput";
 import { vtoIconState } from "../singleCollection/redux/actions";
+import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
+import { is_kiosk } from "../../constants/config";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -83,6 +85,7 @@ const CollectionPage = ({ params }) => {
   const [qrUrl, setQrUrl] = useState("");
   console.log("sharePageUrl", sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
+  const [pendingGuestAction, setPendingGuestAction] = useState(null);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });
 
@@ -97,6 +100,7 @@ const CollectionPage = ({ params }) => {
 
     if (isUserLogin && !isKioskLogin) {
       setShowShareProductDetails(false);
+      setPendingGuestAction({ type: "share" });
       setIsPopupShow(true);
       // console.log('fdfdfdfd');
 
@@ -167,7 +171,8 @@ const CollectionPage = ({ params }) => {
         product={productdata}
         bannerImage
         enableKioskGuestPopup
-        onGuestPopupOpen={() => {
+        onGuestPopupOpen={(action) => {
+          setPendingGuestAction(action || null);
           setIsPopupShow(true);
         }}
         setOnMfrCode={setOnMfrCode}
@@ -303,7 +308,7 @@ const CollectionPage = ({ params }) => {
               <img
                 className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
                 src={share_icon}
-                preview={false}
+                alt="Share"
               />
             </button>
             {/* )} */}
@@ -349,14 +354,48 @@ const CollectionPage = ({ params }) => {
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
         persistKioskLogin
-        onSuccess={() => {
-          if (isPopupShow) {
+        onSuccess={({ userId }) => {
+          if (pendingGuestAction?.type === "cart" && userId) {
+            const cartProduct = pendingGuestAction.product;
+
+            if (cartProduct?.mfr_code) {
+              dispatch(
+                addToCart({
+                  is_display_amount: true,
+                  products: [
+                    {
+                      mfr_code: cartProduct.mfr_code,
+                      tagged_by: cartProduct.tagged_by || [],
+                      qty: Number(pendingGuestAction.qty) || 1,
+                    },
+                  ],
+                  product_lists: [],
+                  collection_name: "my cart",
+                  type: "system",
+                  user_id: userId,
+                  path: `my_cart_${userId}`,
+                }),
+              );
+            }
+          } else if (
+            pendingGuestAction?.type === "share" ||
+            (!pendingGuestAction && isPopupShow)
+          ) {
             setShowShareProductDetails(true);
           }
-          if (onMfrCode) {
-             dispatch(vtoIconState(onMfrCode));
+
+          const vtoMfrCode =
+            pendingGuestAction?.type === "vto"
+              ? pendingGuestAction.mfrCode
+              : !pendingGuestAction && onMfrCode;
+
+          if (vtoMfrCode) {
+             dispatch(vtoIconState(vtoMfrCode));
           }
+          setOnMfrCode("");
+          setPendingGuestAction(null);
         }}
+        onSkip={() => setPendingGuestAction(null)}
       />
       {showSessionPopup && (
         <KioskSessionPopup

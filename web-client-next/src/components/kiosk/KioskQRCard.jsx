@@ -35,10 +35,10 @@ const KioskQRCard = ({
           </div>
 }
 
-          <h3 className={`text-xl md:text-[24px] leading-[34px] ${showTags === "Social Media" ? 'mt-0' : 'mt-3'}   mb-2 text-slate-900 font-semibold  `} >
+          <h3 className={`text-xl  leading-[34px] ${showTags === "Social Media" ? 'mt-0' : 'mt-3'}   mb-2 text-slate-900 font-semibold  `} >
             {title}
           </h3>
-          <p className={`text-slate-400 mb-2 ${showTags === "Social Media" ? 'text-center' : ''} max-w-[420px] text-sm`}>
+          <p className={`text-slate-400 mb-2 ${showTags === "Social Media" ? 'text-center' : ''} max-w-[420px] text-[12px]`}>
             {subtitle}
           </p>
         </div>
@@ -57,7 +57,7 @@ const KioskQRCard = ({
               className={`w-[10px] h-[10px] rounded-full ${badgeColor === "emerald" ? "bg-emerald-500 ring-4 ring-emerald-100/20" : "bg-red-500 ring-4 ring-red-100/20"}`}
             />
             <span
-              className={`font-semibold text-[13px] ${badgeColor === "emerald" ? "text-emerald-500" : "text-red-500"}`}
+              className={`font-semibold text-[11px] ${badgeColor === "emerald" ? "text-emerald-500" : "text-red-500"}`}
             >
               {badgeText}
             </span>

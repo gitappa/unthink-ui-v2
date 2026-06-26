@@ -137,7 +137,7 @@ const TokenSignIn = () => {
           navigate(`/${redirectPage}`);
           return;
         }
-        if (redirectPage?.startsWith("cart/")) {
+        if (redirectPage === "cart") {
           	navigate(`/${redirectPage}`);
           	// Signout();
             return;
