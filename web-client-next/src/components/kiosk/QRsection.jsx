@@ -8,7 +8,7 @@ const QRsection = ({ showTags }) => {
   if (showTags === "Social Media" || showTags === "#Trending" || showTags === "Look Books") {
     return (
       <div className="w-[272px] shrink-0 h-screen ">
-        <div className="relative h-[700px] max-h-[78vh]  rounded-[16px] border border-white/80 bg-[linear-gradient(180deg,#fff1f6_0%,#f8f8f8_34%,#f1f1f1_100%)] px-[18px] pb-[12px] pt-[18px] shadow-[0_0_22px_rgba(236,126,153,0.42),0_18px_36px_rgba(15,23,42,0.26),inset_0_0_22px_rgba(255,255,255,0.95)]">
+        <div className="relative max-h-[78vh]  rounded-[16px] border border-white/80 bg-[linear-gradient(180deg,#fff1f6_0%,#f8f8f8_34%,#f1f1f1_100%)] px-[18px] pb-[24px] pt-[18px] shadow-[0_0_22px_rgba(236,126,153,0.42),0_18px_36px_rgba(15,23,42,0.26),inset_0_0_22px_rgba(255,255,255,0.95)]">
           <div
             className="absolute -top-[7px] right-2.5  -translate-x-1/2
  w-5 h-5 bg-[#fff1f6]

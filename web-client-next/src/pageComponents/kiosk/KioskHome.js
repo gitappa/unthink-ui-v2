@@ -105,7 +105,7 @@ const KioskHome = ({ props }) => {
               </button>
             ))}
           </div>
-     <AuthInput />
+     <AuthInput  styles='min-w-[272px] max-w-[272px]'/>
         </div>
       </div>
       <div className={`flex ${showTags === "Social Media" ? 'items-start' : 'items-center' } gap-3`}>
