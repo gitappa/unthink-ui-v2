@@ -619,7 +619,7 @@ const ProductDetails = ({ params, ...props }) => {
   return (
     <div className={`relative w-full overflow-hidden pb-20 lg:pb-14 ${hasKioskAccess ? 'p-8' : ''} `}>
       {        hasKioskAccess && 
-      <AuthInput styles={'mb-0  pr-7'} />
+      <AuthInput styles={'mb-0 w-fit pr-7'} />
       }
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
