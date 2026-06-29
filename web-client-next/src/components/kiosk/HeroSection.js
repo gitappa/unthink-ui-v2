@@ -77,7 +77,7 @@ const HeroSection = () => {
   return (
     <div className="relative w-full mb-24">
       <div
-        className="relative cursor-pointer"
+        className="relative cursor-pointer rounded-4xl " 
         style={{ maxHeight: "78vh", height: "700px" }}
         onClick={handlePlayClick}
         ref={videoContainerRef}
@@ -95,6 +95,10 @@ const HeroSection = () => {
               height="100%"
               playsinline
               controls={false}
+                style={{
+    borderRadius: "16px",
+    overflow: "hidden",
+  }}
               config={{
                 youtube: {
                   playerVars: {
@@ -120,7 +124,7 @@ const HeroSection = () => {
           </div>
         )}
 
-        <div className="absolute -bottom-14 left-0 right-0 px-3 md:px-6">
+        <div className="absolute -bottom-20 left-0 right-0 px-3 md:px-6">
           <div className="relative pb-4">
             {/* subtle ash gradient behind the swiper cards */}
             <div
@@ -144,7 +148,7 @@ const HeroSection = () => {
             >
               <div key="collection-info" className="flex-none">
                 <div
-                  className="h-40 w-44 md:h-48 md:w-52 rounded-xl shadow-lg flex items-center justify-center p-4"
+                  className="h-44 w-50 rounded-xl shadow-lg flex items-center justify-center p-4"
                   style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
                 >
                   <div className="text-center">

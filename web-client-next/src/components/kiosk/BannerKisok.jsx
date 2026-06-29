@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import QRsection from "./QRsection";
 
 const BannerKisok = ({ products, Tags, lookBooks }) => {
   const router = useRouter();
@@ -10,10 +11,10 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
 
   const trendingProducts = (products || [])
     .filter((x) => x.cover_image && x.path)
-    .slice(0, 8);
+    .slice(0, 6);
   const lookBooksProducts = (lookBooks || [])
     .filter((x) => x.cover_image && x.path)
-    .slice(0, 8);
+    .slice(0, 6);
   const displayedProducts =
     Tags === "#Trending" ? trendingProducts : lookBooksProducts;
   //  console.log('displayedProducts',displayedProducts);
@@ -22,21 +23,21 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
   return (
-    <div className="mt-3">
+    <div className="mt-3 flex justify-center items-start  gap-3 ">
       {/* Banner Section */}
-      <div className="rounded-3xl bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-7 md:px-8 overflow-hidden relative ">
+      <div className="rounded-3xl   w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-7 md:px-8 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
         <div className="   rounded-3xl pointer-events-none z-0" />
-        <div className="w-full mx-auto relative z-10">
-          <div className="relative px-9 md:px-10 xl:px-12">
-            <Swiper
+        <div className="w-full mx-auto relative z-10 h-full ">
+          <div className="relative gap-4  grid grid-cols-3 h-full ">
+            {/* <Swiper
               onSwiper={(swiper) => {
                 swiperRef.current = swiper;
               }}
               slidesPerView={2}
               spaceBetween={20}
               speed={700}
-              loop={displayedProducts.length > 4}
+              loop={displayedProducts.length > 3}
               watchOverflow={true}
               grabCursor={true}
               threshold={8}
@@ -44,23 +45,23 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
               touchRatio={0.9}
               breakpoints={{
                 1024: {
-                  slidesPerView: 4,
+                  slidesPerView: 3,
                   spaceBetween: 20,
                 },
                 1280: {
-                  slidesPerView: 4,
+                  slidesPerView: 3,
                   spaceBetween: 20,
                 },
               }}
               className="kiosk-banner-swiper w-full"
-            >
+            > */}
               {displayedProducts.map((product) => (
-                <SwiperSlide
+                <div
                   key={product.collection_id}
                   className="h-auto"
                 >
                   <div
-                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-60 xl:h-[316px]`}
+                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-56  `}
                   >
                     {product.cover_image && (
                       <img
@@ -71,11 +72,11 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
                       />
                     )}
                   </div>
-                </SwiperSlide>
+                </div>
               ))}
-            </Swiper>
+            {/* </Swiper> */}
 
-            {displayedProducts.length > 4 && (
+            {/* {displayedProducts.length > 3 && (
               <>
                 <button
                   type="button"
@@ -94,8 +95,8 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
                   <MdOutlineKeyboardArrowLeft className="rotate-180 text-2xl" />
                 </button>
               </>
-            )}
-            <style jsx global>{`
+            )} */}
+            {/* <style jsx global>{`
               .kiosk-banner-swiper .swiper-wrapper {
                 transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
                 will-change: transform;
@@ -105,7 +106,7 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
                 backface-visibility: hidden;
                 transform: translateZ(0);
               }
-            `}</style>
+            `}</style> */}
           </div>
         </div>
 
@@ -114,6 +115,8 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
           <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-transparent rounded-full"></div>
         </div>
       </div>
+      <QRsection showTags={Tags} />
+
     </div>
   );
 };
