@@ -44,11 +44,11 @@ const KioskQRCard = ({
         </div>
 
         <div className="flex-shrink-0 flex flex-col items-center gap-2 mt-2 lg:mt-0">
-          <div className={`${showTags === "Social Media" ? ' w-[120px] h-[120px]' : ' w-[160px] h-[160px] ' }  rounded-[14px] bg-[#fbfdff] p-2 border border-[rgba(2,6,23,0.04)] shadow-md flex items-center justify-center`}>
+          <div className={`${showTags === "Social Media" ? ' w-[120px] h-[120px]' : ' w-[160px] h-[160px] ' }  rounded-[14px] bg-[#a98b3d] p-2 border border-[rgba(2,6,23,0.04)] shadow-md flex items-center justify-center`}>
             <img
               src={qrSrc}
               alt={`${title} QR`}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain mix-blend-lighten"
             />
           </div>
 

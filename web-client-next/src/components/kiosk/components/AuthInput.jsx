@@ -432,10 +432,10 @@ const AuthInput = ({ onLoginChange, styles }) => {
   return (
     <div
       ref={containerRef}
-      className={`flex justify-end items-center ${styles ? styles : "mb-0"} gap-4 relative`}
+      className={`flex justify-end items-center min-w-[272px] max-w-[272px] ${styles ? styles : "mb-0"} gap-4 relative`}
     >
       <div
-        className={`flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
+        className={`flex items-center w-full justify-end bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
           kioskLogin ? "w-fit" : ""
         }`}
       >
