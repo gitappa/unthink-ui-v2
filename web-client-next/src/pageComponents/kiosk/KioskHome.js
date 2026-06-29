@@ -83,7 +83,7 @@ const KioskHome = ({ props }) => {
   }
 
   return (
-    <div className=" mx-auto w-full px-6 md:px-14 mt-4 ">
+    <div className=" mx-auto w-full px-6 md:px-10 mt-4 ">
       {/* User Actions */}
 
       {/* Tag Buttons (pill-style tabs) */}
@@ -111,16 +111,17 @@ const KioskHome = ({ props }) => {
       <div className={`flex ${showTags === "Social Media" ? 'items-start' : 'items-center' } gap-3`}>
       {showTags === "Social Media" && 
       <>
-      <HeroSection />
+      <div className="min-w-0 flex-1">
+        <HeroSection />
+      </div>
       <QRsection showTags={showTags}/>
       </>
       }
       </div>
       {showTags !== "Social Media" && (
-        <>
+        <div className="">
         <BannerKisok products={products} Tags={showTags} lookBooks={lookBooks} />
- <QRsection showTags={showTags}/>
-        </>
+        </div>
       )}
       {/* Session reminder popup for kiosk users (floating bottom-right) */}
       {showSessionPopup && (
