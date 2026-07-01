@@ -163,6 +163,7 @@ const ProductCard = ({
   enableKioskGuestPopup = false,
   setOnMfrCode,
   onGuestPopupOpen,
+  onKioskTryonClick,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -786,24 +787,31 @@ const ProductCard = ({
                product?.custom_product !== false && singleCollections?.collection_name !== 'my tryons' &&(
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOnMfrCode?.(product?.mfr_code);
-                    if (!KioskLoginAuth && hasKioskAccess) {
-                      // setIsPopupShow(true);
-                      // setGuestPopupAction("vto");
-                      onGuestPopupOpen?.({
-                        type: "vto",
-                        mfrCode: product?.mfr_code,
-                      });
-                      dispatch(GuestPopUpShow(true));
-                      return;
-                    }
-                    const mfrCode = product?.mfr_code;
-                    if (mfrCode) {
-                      dispatch(vtoIconState(mfrCode));
-                    }
-                  }}
+	                  onClick={(e) => {
+	                    e.stopPropagation();
+	                    const mfrCode = product?.mfr_code;
+	                    setOnMfrCode?.(mfrCode);
+	                    if (hasKioskAccess && enableKioskGuestPopup) {
+	                      if (!KioskLoginAuth) {
+	                      // setIsPopupShow(true);
+	                      // setGuestPopupAction("vto");
+	                      onGuestPopupOpen?.({
+	                        type: "vto",
+	                        mfrCode,
+	                      });
+	                      dispatch(GuestPopUpShow(true));
+	                      return;
+	                      }
+
+	                      if (mfrCode && onKioskTryonClick) {
+	                        onKioskTryonClick(mfrCode);
+	                        return;
+	                      }
+	                    }
+	                    if (mfrCode) {
+	                      dispatch(vtoIconState(mfrCode));
+	                    }
+	                  }}
                   title="Try on with virtual camera"
                 >
                   <img

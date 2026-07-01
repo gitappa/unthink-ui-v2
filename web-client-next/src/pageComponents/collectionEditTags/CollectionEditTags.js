@@ -187,10 +187,10 @@ const CollectionEditTags = ({
 					showEditTagsInput && (
 						<div className="text-right pt-2 lg:pl-2">
 							<div className="grid grid-cols-2 lg:grid-cols-1 gap-2 w-max ml-auto">
-								<button onClick={() => handleEditTagsSaveClick()} className="py-0 px-3 text-white rounded-lg h-6 bg-indigo-103">
+								<button onClick={() => handleEditTagsSaveClick()} className="py-0 px-3 text-brand rounded-lg h-6 bg-indigo-103">
 									Save
 								</button>
-								<button onClick={handleEditTagsCancel} className="py-0 px-3 text-white rounded-lg h-6 bg-indigo-103">
+								<button onClick={handleEditTagsCancel} className="py-0 px-3 text-brand rounded-lg h-6 bg-indigo-103">
 									Cancel
 								</button>
 							</div>
