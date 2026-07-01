@@ -25,7 +25,7 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
   return (
     <div className="mt-3 flex justify-center items-start  gap-3 ">
       {/* Banner Section */}
-      <div className="rounded-3xl   w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-7 md:px-8 overflow-hidden relative ">
+      <div className="rounded-3xl   w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
         <div className="   rounded-3xl pointer-events-none z-0" />
         <div className="w-full mx-auto relative z-10 h-full ">
@@ -61,7 +61,7 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
                   className="h-auto"
                 >
                   <div
-                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-64  `}
+                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
                   >
                     {product.cover_image && (
                       <img
