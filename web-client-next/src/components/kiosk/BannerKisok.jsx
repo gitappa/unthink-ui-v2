@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import QRsection from "./QRsection";
 
-const BannerKisok = ({ products, Tags, lookBooks }) => {
+const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
   const router = useRouter();
   const swiperRef = useRef(null);
 
@@ -61,7 +61,7 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
                   className="h-auto"
                 >
                   <div
-                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-56  `}
+                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-64  `}
                   >
                     {product.cover_image && (
                       <img
@@ -115,7 +115,7 @@ const BannerKisok = ({ products, Tags, lookBooks }) => {
           <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-transparent rounded-full"></div>
         </div>
       </div>
-      <QRsection showTags={Tags} />
+      <QRsection showTags={Tags} storeData={storeData} />
 
     </div>
   );
