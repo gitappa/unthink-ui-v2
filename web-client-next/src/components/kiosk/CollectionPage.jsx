@@ -16,7 +16,7 @@ import share_icon from "../../images/profilePage/share_icon.svg";
 import {
   collectionQRCodeGenerator,
   getBlogCollectionPagePath,
-  buildAutoLoginPagePath,
+  getProductDetailsPagePath,
 } from "../../helper/utils";
 import {
   requestSigninWithLink,
@@ -32,7 +32,6 @@ import LoggedInInfo from "./components/LoggedInInfo";
 import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
 import { useNavigate } from "../../helper/useNavigate";
 import AuthInput from "./components/AuthInput";
-import { vtoIconState } from "../singleCollection/redux/actions";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import { is_kiosk } from "../../constants/config";
 
@@ -83,34 +82,12 @@ const CollectionPage = ({ params }) => {
   const [sharePageUrl, setSharePageUrl] = useState("");
 
   const [qrUrl, setQrUrl] = useState("");
+  const [shareContext, setShareContext] = useState("collection");
   console.log("sharePageUrl", sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [pendingGuestAction, setPendingGuestAction] = useState(null);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 60 * 1000 });
-
-  const openShareOptions = useCallback(() => {
-    setShowShareProductDetails((show) => !show);
-  }, []);
-
-  const handleShareClick = useCallback(() => {
-    const isKioskLogin = sessionStorage.getItem("Kiosk-login");
-    // console.log('isKioskLogin',!isKioskLogin);
-    // console.log('isUserLogin',isUserLogin);
-
-    if (isUserLogin && !isKioskLogin) {
-      setShowShareProductDetails(false);
-      setPendingGuestAction({ type: "share" });
-      setIsPopupShow(true);
-      // console.log('fdfdfdfd');
-
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-    // console.log('fdfdfdfd');
-
-    openShareOptions();
-  }, [dispatch, isUserLogin, openShareOptions]);
 
   const collectionPagePath = useMemo(() => {
     if (!singleCollectionKiosk) return "";
@@ -175,6 +152,7 @@ const CollectionPage = ({ params }) => {
           setPendingGuestAction(action || null);
           setIsPopupShow(true);
         }}
+        onKioskTryonClick={buildVtoProductAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}
 
       />
@@ -188,59 +166,80 @@ const CollectionPage = ({ params }) => {
   };
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
-  useEffect(() => {
-    let mounted = true;
-    const makeUrls = async () => {
-      if (typeof window === "undefined" || !collectionPagePath) return;
-      const originPrefix = `${window.location?.origin}`;
-      // default non-auto-login URL
-      const normalUrl = `${originPrefix}${collectionPagePath}`;
+  const buildKioskAutoLoginUrls = useCallback(
+    async ({ targetPath, pageParam, fallbackQrUrl, errorLabel }) => {
+      if (typeof window === "undefined" || !targetPath) return null;
 
-      // For kiosk or store assistant flows we want auto-login URLs embedded in the QR/share
+      const originPrefix = `${window.location?.origin}`;
+      const normalUrl = targetPath.startsWith("http")
+        ? targetPath
+        : `${originPrefix}${targetPath}`;
+
       try {
-        // Determine email to request signin link for. Prefer store assistant/kiosk email from storeData if present
         const kioskEmail = JSON.parse(
           sessionStorage.getItem("Kiosk-login") || "{}",
         )?.email;
-        // console.log('kioskEmail',kioskEmail);
 
-        if (kioskEmail) {
+        if (kioskEmail && pageParam) {
           const resp = await requestSigninWithLink(kioskEmail);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
-          // console.log('signin_token',signin_token);
 
           if (signin_token) {
             const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
-              // Build verify link to collection page
-              const verifyLink = buildVerifyUrl(
-                decrypted,
-                `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
-                  /\/+/,
-                  "/",
-                ),
-              );
-              console.log("verifyLink", verifyLink);
+              const verifyLink = buildVerifyUrl(decrypted, pageParam);
+              const fullVerifyUrl = verifyLink?.startsWith("http")
+                ? verifyLink
+                : `${originPrefix}${verifyLink}`;
 
-              if (mounted) {
-                setSharePageUrl(`${originPrefix}${verifyLink}`);
-                setQrUrl(
-                  collectionQRCodeGenerator(`${originPrefix}${verifyLink}`),
-                );
-              }
-              return;
+              return {
+                shareUrl: fullVerifyUrl,
+                qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
+              };
             }
           }
         }
       } catch (e) {
-        // ignore and fallback
-        console.error("auto-login build error", e);
+        console.error(`${errorLabel || "auto-login"} build error`, e);
       }
 
-      // fallback
-      if (mounted) {
-        setSharePageUrl(normalUrl);
-        setQrUrl(qrCodeGeneratorURL);
+      return {
+        shareUrl: normalUrl,
+        qrUrl: fallbackQrUrl || collectionQRCodeGenerator(normalUrl),
+      };
+    },
+    [],
+  );
+
+  const getCollectionAutoLoginUrls = useCallback(
+    () =>
+      buildKioskAutoLoginUrls({
+        targetPath: collectionPagePath,
+        pageParam: `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
+          /\/+/,
+          "/",
+        ),
+        fallbackQrUrl: qrCodeGeneratorURL,
+        errorLabel: "collection auto-login",
+      }),
+    [
+      buildKioskAutoLoginUrls,
+      collectionPagePath,
+      qrCodeGeneratorURL,
+      singleCollectionKiosk?.path,
+    ],
+  );
+
+  useEffect(() => {
+    let mounted = true;
+
+    const makeUrls = async () => {
+      const urls = await getCollectionAutoLoginUrls();
+
+      if (mounted && urls) {
+        setSharePageUrl(urls.shareUrl);
+        setQrUrl(urls.qrUrl);
+        setShareContext("collection");
       }
     };
 
@@ -249,7 +248,64 @@ const CollectionPage = ({ params }) => {
     return () => {
       mounted = false;
     };
-  }, [isPopupShow]);
+  }, [getCollectionAutoLoginUrls]);
+
+  const openShareOptions = useCallback(async () => {
+    if (showShareProductDetails && shareContext === "collection") {
+      setShowShareProductDetails(false);
+      return;
+    }
+
+    const urls = await getCollectionAutoLoginUrls();
+
+    if (urls) {
+      setSharePageUrl(urls.shareUrl);
+      setQrUrl(urls.qrUrl);
+      setShareContext("collection");
+    }
+
+    setShowShareProductDetails(true);
+  }, [getCollectionAutoLoginUrls, shareContext, showShareProductDetails]);
+
+  const handleShareClick = useCallback(() => {
+    const isKioskLogin =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("Kiosk-login")
+        : null;
+
+    if (isUserLogin && !isKioskLogin) {
+      setShowShareProductDetails(false);
+      setPendingGuestAction({ type: "share" });
+      setIsPopupShow(true);
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+
+    openShareOptions();
+  }, [dispatch, isUserLogin, openShareOptions]);
+
+  const buildVtoProductAutoLoginUrls = useCallback(
+    async (productMfrCode) => {
+      console.log('productMfrCode',productMfrCode);
+      
+      if (!productMfrCode) return;
+
+      const productDetailsPagePath = getProductDetailsPagePath(productMfrCode);
+      const urls = await buildKioskAutoLoginUrls({
+        targetPath: productDetailsPagePath,
+        pageParam: `?page=product/${productMfrCode}`,
+        errorLabel: "product auto-login",
+      });
+
+      if (urls) {
+        setSharePageUrl(urls.shareUrl);
+        setQrUrl(urls.qrUrl);
+        setShareContext("product");
+        setShowShareProductDetails(true);
+      }
+    },
+    [buildKioskAutoLoginUrls],
+  );
 
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
@@ -298,6 +354,7 @@ const CollectionPage = ({ params }) => {
                 qrCodeGeneratorURL={qrUrl}
                 collection={singleCollectionKiosk}
                 fromCollection={fromCollection}
+                kioskHeader={shareContext === "collection" ? " ": "Scan to Try On  (Then tap the camera icon on your phone)"}
               />
             )}
             {/* {sharePageUrl && ( */}
@@ -354,7 +411,7 @@ const CollectionPage = ({ params }) => {
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
         persistKioskLogin
-        onSuccess={({ userId }) => {
+        onSuccess={async ({ userId }) => {
           if (pendingGuestAction?.type === "cart" && userId) {
             const cartProduct = pendingGuestAction.product;
 
@@ -377,11 +434,6 @@ const CollectionPage = ({ params }) => {
                 }),
               );
             }
-          } else if (
-            pendingGuestAction?.type === "share" ||
-            (!pendingGuestAction && isPopupShow)
-          ) {
-            setShowShareProductDetails(true);
           }
 
           const vtoMfrCode =
@@ -390,7 +442,19 @@ const CollectionPage = ({ params }) => {
               : !pendingGuestAction && onMfrCode;
 
           if (vtoMfrCode) {
-             dispatch(vtoIconState(vtoMfrCode));
+            await buildVtoProductAutoLoginUrls(vtoMfrCode);
+          } else if (
+            pendingGuestAction?.type === "share" ||
+            (!pendingGuestAction && isPopupShow)
+          ) {
+            const urls = await getCollectionAutoLoginUrls();
+
+            if (urls) {
+              setSharePageUrl(urls.shareUrl);
+              setQrUrl(urls.qrUrl);
+              setShareContext("collection");
+            }
+            setShowShareProductDetails(true);
           }
           setOnMfrCode("");
           setPendingGuestAction(null);

@@ -51,7 +51,7 @@ const ShareOptions = (props) => {
 
 	useOnClickOutside(ref, handleClickOutside);
 
-	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,fromCollection} = props;
+	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,kioskHeader,fromCollection} = props;
 
 
 	const collectionName = collection?.collection_name;
@@ -112,6 +112,9 @@ function pdf(){
 						{collectionName}
 					</h1>
 				</div>
+				{kioskHeader && 
+				<h3>{kioskHeader}</h3>
+}
 				{/* {isAutoCreateCollection ? (
 					<div>
 						<Alert
