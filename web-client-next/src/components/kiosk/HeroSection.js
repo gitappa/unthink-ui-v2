@@ -7,9 +7,17 @@ import Image from "next/image";
 import { Autoplay } from "swiper";
 import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
-const HeroSection = () => {
+
+
+const HeroSection = ({ storeData }) => {
   const router = useRouter();
-  const [collectiondata, setcollectiondata] = useState([]);
+  const [socialMediaData, setSocialMediaData] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const rotationDelay = storeData?.kiosk_settings?.video_time_gap
+  const collectiondata = useMemo(
+    () => socialMediaData[activeIndex] || null,
+    [socialMediaData, activeIndex],
+  );
   // const collectiondata = useMemo(() => {
   //   return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
   // }, [products]);
@@ -22,12 +30,11 @@ const HeroSection = () => {
         const response = await SocialMediaApiCall();
         // console.log('response',response.data.data);
 
-        const shuffledData = [...response.data.data].sort(
-          () => Math.random() - 0.5,
-        );
-        // setcollectiondata(shuffledData[0]);
-        setcollectiondata(response.data.data[0]);
-        // console.log('shuffledData',shuffledData);
+        const data = Array.isArray(response?.data?.data)
+          ? response.data.data
+          : [];
+        setSocialMediaData(data);
+        setActiveIndex(0);
       } catch (error) {
         console.error(error);
       }
@@ -35,6 +42,18 @@ const HeroSection = () => {
 
     fetchSocialMedia();
   }, []);
+
+  useEffect(() => {
+    if (socialMediaData.length <= 1 || !rotationDelay) return;
+
+    const timer = setInterval(() => {
+      setActiveIndex((currentIndex) =>
+        (currentIndex + 1) % socialMediaData.length,
+      );
+    }, rotationDelay);
+
+    return () => clearInterval(timer);
+  }, [rotationDelay, socialMediaData.length]);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage =
@@ -85,6 +104,7 @@ const HeroSection = () => {
         {isClient ? (
           collectiondata?.video_url ? (
             <ReactPlayer
+              key={collectiondata?.video_url || activeIndex}
               url={collectiondata?.video_url}
               playing={isPlaying}
               onPlay={handlePlayClick}
@@ -153,13 +173,13 @@ const HeroSection = () => {
                 >
                   <div className="text-center">
                     <h3 className="text-base md:text-lg font-semibold leading-snug text-black">
-                      {collectiondata.collection_name}
+                      {collectiondata?.collection_name}
                     </h3>
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
                         router.push(
-                          `/kioskcollections/${collectiondata.path}`,
+                          `/kioskcollections/${collectiondata?.path}`,
                         );
                       }}
                       className="mt-4 bg-black text-white px-4 py-2 rounded-md font-semibold"
@@ -191,7 +211,7 @@ const HeroSection = () => {
                         style={{ width: "auto" }}
                       >
                         <div
-                          className="h-40 w-44 md:h-48 md:w-52 rounded-xl shadow-lg flex items-center justify-center p-3 overflow-hidden"
+                          className="h-44 w-50   rounded-xl shadow-lg flex items-center justify-center p-3 overflow-hidden"
                           style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
                         >
                           <Image

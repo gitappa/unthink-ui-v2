@@ -41,7 +41,7 @@ const KioskHome = ({ props }) => {
   const [lookBooks,setLookBooks] = useState([])
   //   console.log("products", products);
   const dispatch = useDispatch();
-  const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
+  const [isUserLogin,storeData] = useSelector((state) => [state.auth.user.isUserLogin,state.store.data]);
   
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
@@ -112,15 +112,15 @@ const KioskHome = ({ props }) => {
       {showTags === "Social Media" && 
       <>
       <div className="min-w-0 flex-1">
-        <HeroSection />
+        <HeroSection storeData={storeData} />
       </div>
-      <QRsection showTags={showTags}/>
+      <QRsection storeData={storeData} showTags={showTags}/>
       </>
       }
       </div>
       {showTags !== "Social Media" && (
         <div className="">
-        <BannerKisok products={products} Tags={showTags} lookBooks={lookBooks} />
+        <BannerKisok products={products} Tags={showTags} lookBooks={lookBooks} storeData={storeData}/>
         </div>
       )}
       {/* Session reminder popup for kiosk users (floating bottom-right) */}
