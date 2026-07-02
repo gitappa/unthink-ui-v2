@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import ReactPlayer from "react-player";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import HeroSection from "../../components/kiosk/HeroSection";
@@ -14,16 +9,6 @@ import { Spin } from "antd";
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
-import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
-import {
-  checkAndGenerateUserId,
-  clearStorages,
-  generateSessionId,
-} from "../../helper/utils";
-import { logoutVenlyUser } from "../../helper/venlyUtils";
-import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
-import { is_store_instance } from "../../constants/config";
-import { fetchCategoriesReset } from "../categories/redux/actions";
 import { LookBookApiCall, TrendingApiCall } from "../../helper/serverAPIs";
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
@@ -31,9 +16,7 @@ import AuthInput from "../../components/kiosk/components/AuthInput";
 const KioskHome = ({ props }) => {
    
 
-  const authUserCollections = useSelector(
-    (state) => state.auth.user.collections.data,
-  );
+ 
   const userInfo = useSelector((state) => state.auth.user.data);
   const Tags = ["Social Media", "Look Books", "#Trending"];
   const [showTags, setShowTags] = useState(sessionStorage.getItem('selectedTag') ||  Tags[0]);

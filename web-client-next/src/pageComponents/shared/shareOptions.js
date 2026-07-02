@@ -51,8 +51,10 @@ const ShareOptions = (props) => {
 
 	useOnClickOutside(ref, handleClickOutside);
 
-	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,kioskHeader,fromCollection} = props;
+			 
+	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,kioskHeader,fromCollection ,headerText,subHeaderText} = props;
 
+// console.log('kioskHeader',props);
 
 	const collectionName = collection?.collection_name;
 	const collectionId = collection?.collection_id;
@@ -100,7 +102,7 @@ function pdf(){
 
 	return (
 			<Modal
-				headerText='Share'
+				headerText={headerText || 'Share' }
 				isOpen={props.isOpen}
 				onClose={pdf}
 				maskClosable={false}
@@ -112,8 +114,10 @@ function pdf(){
 						{collectionName}
 					</h1>
 				</div>
-				{kioskHeader && 
-				<h3>{kioskHeader}</h3>
+				{subHeaderText && 
+				<h2 className="text-2xl font-semibold">{subHeaderText}</h2>
+}{kioskHeader &&
+				<p>{kioskHeader}</p>
 }
 				{/* {isAutoCreateCollection ? (
 					<div>

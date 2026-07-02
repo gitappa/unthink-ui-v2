@@ -3,16 +3,28 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { clearStorages } from "../../helper/utils";
-import { logoutVenlyUser } from "../../helper/venlyUtils";
 import { getUserCollectionsReset } from "../../pageComponents/Auth/redux/actions";
 import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
 import timer_clock from "../../images/kiosk/timer_clock.png";
+
+const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
+
+const notifyKioskLoginChange = () => {
+  if (typeof window === "undefined") return;
+
+  window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
+};
+
 // Hook: manages kiosk session reminder timer and actions
 export default function useKioskSessionReminder({ time } = {}) {
-  const intervalMs = time || 30 * 1000;
+  const intervalMs = time || 120 * 1000;
+  console.log('time',time);
+  
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
+// console.log('showSessionPopup',showSessionPopup);
+
   const timerRef = useRef(null);
   const startSessionTimer = useCallback(() => {
     if (timerRef.current) {
@@ -55,15 +67,14 @@ export default function useKioskSessionReminder({ time } = {}) {
   }, [startSessionTimer]);
 
   const handleLogout = useCallback(async () => {
-    sessionStorage.removeItem("Kiosk-login");
 
     try {
-      clearStorages();
+      // clearStorages();
+      sessionStorage.removeItem("Kiosk-login");
+      notifyKioskLoginChange();
     } catch (e) {}
 
-    try {
-      await logoutVenlyUser();
-    } catch (e) {}
+ 
 
     try {
       dispatch(getUserCollectionsReset());
