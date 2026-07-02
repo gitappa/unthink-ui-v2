@@ -537,6 +537,8 @@ export const clearStorages = () => {
 	removeSid();
 	removePrevSid();
 	removeUserId();
+	sessionStorage.removeItem("Kiosk-login");
+	sessionStorage.removeItem('selectedTag')
 	// window.location.href = shared_profile_on_root ? "/" : "/store"; // removed reload page on logout
 };
 
