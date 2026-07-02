@@ -38,7 +38,7 @@ const KIOSK_COLLECTION_ACTIONS = [
   },
   {
     key: "tryon",
-    label: "Try on",
+    label: "Try ons",
     modalTitle: "Try on QR",
     emptyMessage: "No try-on there.",
     getFetchParams: (userId) => ({
@@ -192,12 +192,9 @@ const AuthInput = ({ onLoginChange, styles }) => {
   );
   const [activeCollectionAction, setActiveCollectionAction] = useState("");
   const containerRef = useRef(null);
-console.log('styles',styles);
 
   const syncKioskLogin = useCallback(
-    (login) => {
-      console.log('hiifrnds');
-      
+    (login) => {     
       setKioskLogin(login);
       onLoginChange?.(login);
     },
