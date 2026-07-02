@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { authAPIs, collectionAPIs } from "../../../helper/serverAPIs";
 import { current_store_name } from "../../../constants/config";
-import { collectionQRCodeGenerator } from "../../../helper/utils";
+import { collectionQRCodeGenerator, getStoredKioskLoginUserId } from "../../../helper/utils";
 import {
   buildVerifyUrl,
   decryptSigninToken,
@@ -10,6 +10,7 @@ import {
 import Modal from "../../modal/Modal";
 
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
+const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
 
 const INITIAL_COLLECTION_QR_STATE = {
   isOpen: false,
@@ -181,6 +182,9 @@ const AuthInput = ({ onLoginChange, styles }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [emailPhone, setEmailPhone] = useState("");
   const [kioskLogin, setKioskLogin] = useState(null);
+  const kiosklogin = getStoredKioskLoginUserId();
+  // console.log('kioskLogin',kioskLogin);
+  
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [qrState, setQrState] = useState(
@@ -192,31 +196,52 @@ console.log('styles',styles);
 
   const syncKioskLogin = useCallback(
     (login) => {
+      console.log('hiifrnds');
+      
       setKioskLogin(login);
       onLoginChange?.(login);
     },
-    [onLoginChange],
+    [onLoginChange,kiosklogin],
   );
 
   const clearKioskLogin = useCallback(
     ({ resetInput = true } = {}) => {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined"   ) {
         sessionStorage.removeItem(KIOSK_LOGIN_STORAGE_KEY);
       }
       if (resetInput) setEmailPhone("");
       setStatus("");
       setIsDropdownOpen(false);
       syncKioskLogin(null);
+      // notifyKioskLoginChange();
     },
     [syncKioskLogin],
   );
 
-  useEffect(() => {
+ useEffect(() => {
     const storedLogin = getStoredKioskLogin();
-    if (!storedLogin) return;
+    if (!storedLogin){
+      setEmailPhone("");
+      setStatus("");
+      setIsDropdownOpen(false);
+      syncKioskLogin(null);
+      return;
+    } 
 
     setEmailPhone(getGuestLoginName(storedLogin) || "");
     syncKioskLogin(storedLogin);
+  }, [syncKioskLogin,kiosklogin]);
+
+ 
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+
+    return () => {
+      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+    };
   }, [syncKioskLogin]);
 
   useEffect(() => {
@@ -436,8 +461,8 @@ console.log('styles',styles);
       className={`flex justify-end items-center    ${styles ? styles : " "} gap-4 relative ml-auto`}
     >
       <div
-        className={`flex items-center w-full justify-end bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
-          kioskLogin ? "w-fit" : ""
+        className={`flex items-center w-full  bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
+          kioskLogin ? "w-fit justify-start  " : "justify-end  " 
         }`}
       >
         {!kioskLogin && (

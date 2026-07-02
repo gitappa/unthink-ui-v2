@@ -164,7 +164,7 @@ const ProductDetails = ({ params, ...props }) => {
 
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
-    useKioskSessionReminder({ time: 60 * 1000 });
+    useKioskSessionReminder({ time: 500 * 1000 });
 
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);

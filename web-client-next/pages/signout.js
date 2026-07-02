@@ -21,8 +21,7 @@ const SignOut = () => {
         Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
         localStorage.removeItem("adminRolePopupShown", "false");
          
-         sessionStorage.removeItem("Kiosk-login");
-        sessionStorage.removeItem('selectedTag')
+         
         clearStorages();
         
         // Generate new user ID for guest user
