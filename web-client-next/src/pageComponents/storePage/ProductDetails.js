@@ -127,8 +127,9 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
   const [shareContext, setShareContext] = useState("product");
-const isMobile = window.innerWidth < 878;
-  const imageFromQuery = cleanImage(router.query.image);
+  console.log('shareContext',shareContext);
+  
+const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
   const [additionalimg, setAdditionalImg] = useState(null);
   const [showAllFields, setShowAllFields] = useState(false);
@@ -909,6 +910,9 @@ const isMobile = window.innerWidth < 878;
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
                           <ShareOptions
+                          headerText= {shareContext === "product"
+                                ? "Share"
+                                : 'Virtual Try-On'}
                             url={sharePageUrl}
                             setShow={setShowShareProductDetails}
                             onClose={() => setShowShareProductDetails(false)}
@@ -919,8 +923,9 @@ const isMobile = window.innerWidth < 878;
                             kioskHeader={
                               shareContext === "vto"
                                 ? "Scan to Try On (Then tap the camera icon on your phone)"
-                                : ""
+                                : ''
                             }
+                            subHeaderText={productDetails?.name}
                           />
                         )}
                         {/* {sharePageUrl && ( */}
