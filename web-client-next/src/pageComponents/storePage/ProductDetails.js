@@ -126,7 +126,8 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
-
+  const [shareContext, setShareContext] = useState("product");
+const isMobile = window.innerWidth < 878;
   const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
   const [additionalimg, setAdditionalImg] = useState(null);
@@ -295,7 +296,60 @@ const ProductDetails = ({ params, ...props }) => {
 
       return false;
     },
-    [authUser?.emailId, getKioskLoginUserId, productDetailsPagePath],
+    [getKioskLoginUserId, productMfrCode],
+  );
+
+  const buildProductAutoLoginQr = useCallback(
+    async ({ mfrCode = productMfrCode, email = null } = {}) => {
+      if (typeof window === "undefined" || !mfrCode) return false;
+
+      const targetPath = getProductDetailsPagePath(mfrCode);
+      const origin = window.location.origin;
+      const normalUrl = `${origin}${targetPath}`;
+
+      try {
+        const currentKiosk =
+          typeof window !== "undefined"
+            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
+            : {};
+        const kioskEmail = email || currentKiosk?.email;
+
+        if (kioskEmail) {
+          const resp = await requestSigninWithLink(kioskEmail);
+          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+
+          if (signin_token) {
+            const decrypted = decryptSigninToken(signin_token);
+            if (decrypted) {
+              const verifyLink = buildVerifyUrl(
+                decrypted,
+                `?page=product/${mfrCode}`,
+              );
+              const fullVerifyUrl = verifyLink?.startsWith("http")
+                ? verifyLink
+                : `${origin}${verifyLink}`;
+
+              setSharePageUrl(fullVerifyUrl);
+              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
+              setQrTargetUrl(fullVerifyUrl);
+              setShareContext("vto");
+              setShowShareProductDetails(true);
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Product auto-login QR build error", e);
+      }
+
+      setSharePageUrl(normalUrl);
+      setQrImageUrl(collectionQRCodeGenerator(normalUrl));
+      setQrTargetUrl(normalUrl);
+      setShareContext("vto");
+      setShowShareProductDetails(true);
+      return true;
+    },
+    [productMfrCode],
   );
 
   const handleShareClick = useCallback(async () => {
@@ -309,8 +363,12 @@ const ProductDetails = ({ params, ...props }) => {
     }
 
     const didBuildShareLink = await buildShareAutoLoginLink();
-    if (didBuildShareLink) return;
+    if (didBuildShareLink) {
+      setShareContext("product");
+      return;
+    }
 
+    setShareContext("product");
     setShowShareProductDetails((show) => !show);
   }, [buildShareAutoLoginLink, dispatch, getKioskLoginUserId, hasKioskAccess]);
 
@@ -661,15 +719,22 @@ const ProductDetails = ({ params, ...props }) => {
                       {storeData?.is_tryon_enabled && (
                         <button
                           className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.stopPropagation();
+                            const mfrCode = productDetails?.mfr_code;
+
                             if (!kioskLogin && hasKioskAccess) {
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
                               return;
                             }
-                            const mfrCode = productDetails?.mfr_code;
+
+                            if (hasKioskAccess && !isMobile) {
+                              await buildProductAutoLoginQr({ mfrCode });
+                              return;
+                            }
+
                             if (mfrCode) {
                               dispatch(vtoIconState(mfrCode));
                             }
@@ -850,7 +915,12 @@ const ProductDetails = ({ params, ...props }) => {
                             isOpen={showShareProductDetails}
                             qrCodeGeneratorURL={shareQrCodeImage}
                             true
-                            fromCollection={kioskLogin ? true : false}
+                            fromCollection={shareContext === "vto" || !!kioskLogin}
+                            kioskHeader={
+                              shareContext === "vto"
+                                ? "Scan to Try On (Then tap the camera icon on your phone)"
+                                : ""
+                            }
                           />
                         )}
                         {/* {sharePageUrl && ( */}
@@ -1373,11 +1443,12 @@ const ProductDetails = ({ params, ...props }) => {
                 userId,
                 email,
               });
+              setShareContext("product");
               if (!didBuildShareLink) setShowShareProductDetails(true);
             } else if (guestPopupAction === "vto") {
               const mfrCode = productDetails?.mfr_code;
               if (mfrCode) {
-                dispatch(vtoIconState(mfrCode));
+                await buildProductAutoLoginQr({ mfrCode, email });
               }
             } else {
               onAddSelectedProductsToCollection(null, {
@@ -1393,7 +1464,7 @@ const ProductDetails = ({ params, ...props }) => {
             if (guestPopupAction === "vto") {
               const mfrCode = productDetails?.mfr_code;
               if (mfrCode) {
-                dispatch(vtoIconState(mfrCode));
+                await buildProductAutoLoginQr({ mfrCode, email });
               }
             }
           } finally {
