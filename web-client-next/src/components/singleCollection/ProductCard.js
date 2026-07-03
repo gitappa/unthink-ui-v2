@@ -790,7 +790,7 @@ const ProductCard = ({
 	                  onClick={(e) => {
 	                    e.stopPropagation();
 	                    const mfrCode = product?.mfr_code;
-	                    setOnMfrCode?.(mfrCode);
+	                    setOnMfrCode?.(product);
 	                    if (hasKioskAccess && enableKioskGuestPopup) {
 	                      if (!KioskLoginAuth) {
 	                      // setIsPopupShow(true);
@@ -798,13 +798,14 @@ const ProductCard = ({
 	                      onGuestPopupOpen?.({
 	                        type: "vto",
 	                        mfrCode,
+	                        product,
 	                      });
 	                      dispatch(GuestPopUpShow(true));
 	                      return;
 	                      }
 
 	                      if (mfrCode && onKioskTryonClick) {
-	                        onKioskTryonClick(mfrCode);
+	                        onKioskTryonClick(product);
 	                        return;
 	                      }
 	                    }

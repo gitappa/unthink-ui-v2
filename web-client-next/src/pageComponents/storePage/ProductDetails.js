@@ -255,7 +255,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
-    async ({ userId = null, email = null } = {}) => {
+    async ({ userId = null, email = null,phone } = {}) => {
       const kioskLoginUserId = userId || getKioskLoginUserId();
       const origin =
         typeof window !== "undefined" ? window.location.origin : "";
@@ -267,9 +267,9 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
             : {};
         // Prefer popup email, then kiosk session email, then logged-in user email.
         const kioskEmail = email || currentKiosk?.email 
-
-        if (kioskLoginUserId && kioskEmail) {
-          const resp = await requestSigninWithLink(kioskEmail);
+        const kioksPhone = phone
+        if (kioskLoginUserId && (kioksPhone || kioskEmail) ) {
+          const resp = await requestSigninWithLink(kioskEmail,kioksPhone);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -889,7 +889,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
                         ) : null}
                       </div>
                       <button
-                        className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                        className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-support text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                         onClick={() =>
                           onAddSelectedProductsToCollection(null, {
                             isSave: true,
@@ -930,7 +930,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
                         )}
                         {/* {sharePageUrl && ( */}
                         <button
-                          className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-[#e0d9ff] bg-white hover:bg-[#f2eeff]"
+                          className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-support bg-white hover:bg-[#f2eeff]"
                           onClick={handleShareClick}
                         >
                           <img
@@ -1040,7 +1040,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       {storeData?.pdp_settings?.is_add_to_cart_button && (
                         <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
-                          <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-[#ddd1ff] rounded-xl bg-white">
+                          <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-support rounded-xl bg-white">
                             <button
                               className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
                               onClick={() => {
@@ -1441,12 +1441,13 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name}
         persistKioskLogin
-        onSuccess={async ({ userId, email }) => {
+        onSuccess={async ({ userId, email , phone}) => {
           try {
             if (guestPopupAction === "share") {
               const didBuildShareLink = await buildShareAutoLoginLink({
                 userId,
                 email,
+                phone,
               });
               setShareContext("product");
               if (!didBuildShareLink) setShowShareProductDetails(true);

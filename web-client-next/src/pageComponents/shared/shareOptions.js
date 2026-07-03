@@ -52,7 +52,7 @@ const ShareOptions = (props) => {
 	useOnClickOutside(ref, handleClickOutside);
 
 			 
-	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,kioskHeader,fromCollection ,headerText,subHeaderText} = props;
+	const { url, collection,qrCodeGeneratorURL,collectionPagePath,onClose ,kioskHeader,fromCollection ,headerText,subHeaderText,removeheaderColleciton } = props;
 
 // console.log('kioskHeader',props);
 
@@ -110,9 +110,11 @@ function pdf(){
 			// okButtonProps={{ className: "hidden" }}
 			>
 				<div>
+					{collectionName && !removeheaderColleciton &&
 					<h1 className='md:text-2xl text-xl font-bold capital-first-letter'>
 						{collectionName}
 					</h1>
+					}
 				</div>
 				{subHeaderText && 
 				<h2 className="text-2xl font-semibold">{subHeaderText}</h2>
