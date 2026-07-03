@@ -43,6 +43,8 @@ const CollectionPage = ({ params }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
   const [onMfrCode,setOnMfrCode] = useState('')
+  console.log("onMfrCode",onMfrCode);
+  
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
@@ -154,7 +156,6 @@ const CollectionPage = ({ params }) => {
         }}
         onKioskTryonClick={buildVtoProductAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}
-
       />
     );
   };
@@ -355,6 +356,8 @@ const CollectionPage = ({ params }) => {
                 collection={singleCollectionKiosk}
                 fromCollection={fromCollection}
                 kioskHeader={shareContext === "collection" ? " ": "Scan to Try On  (Then tap the camera icon on your phone)"}
+                subHeaderText={onMfrCode.name}
+                removeheaderColleciton
               />
             )}
             {/* {sharePageUrl && ( */}

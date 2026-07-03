@@ -790,7 +790,7 @@ const ProductCard = ({
 	                  onClick={(e) => {
 	                    e.stopPropagation();
 	                    const mfrCode = product?.mfr_code;
-	                    setOnMfrCode?.(mfrCode);
+	                    setOnMfrCode?.(product);
 	                    if (hasKioskAccess && enableKioskGuestPopup) {
 	                      if (!KioskLoginAuth) {
 	                      // setIsPopupShow(true);
