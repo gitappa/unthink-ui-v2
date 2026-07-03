@@ -82,6 +82,8 @@ const getPriceRangeText = (price) => {
 	}
 };
 
+const OPTIONAL_FILTERS_TO_SUBMIT = ["paul"];
+
 const AuraResponseProducts = ({
 	products = {},
 	recommendationsProducts = {},
@@ -157,6 +159,8 @@ const AuraResponseProducts = ({
 	const dispatch = useDispatch();
 	const { sendMessage } = useChat();
 	const guestActionRef = useRef(null);
+	const checked = useRef([]);
+console.log('thisishtechecked',checked);
 
 	const currentTag = tag === "" ? "all" : tag;
 	const currentPage = pagination.currentPages[currentTag] || 0;
@@ -173,15 +177,25 @@ const AuraResponseProducts = ({
 	const { filter_settings = {}, catalog_attributes = [] } = storeData;
 	const availableFilters = filter_settings.available_filters;
 	const displayFilters = filter_settings.display_filters;
-	const displayableFilter = displayFilters.map((v) => v.key);
+	const displayableFilter = useMemo(
+		() => displayFilters.map((v) => v.key),
+		[displayFilters]
+	);
 
 	const filters = useMemo(() => {
-		const obj = { optional_filters: productsFilters.optional_filters };
+		const obj = { optional_filters: productsFilters.optional_filters || [] };
 		displayableFilter.forEach((v) => {
 			obj[v] = productsFilters[v];
 		});
 		return obj;
 	}, [productsFilters, displayableFilter]);
+
+	useEffect(() => {
+		const optionalFilters = productsFilters.optional_filters || [];
+		checked.current = displayableFilter.filter(
+			(key) => !optionalFilters.includes(key)
+		);
+	}, [productsFilters.optional_filters, displayableFilter]);
 
 	useEffect(() => {
 		if (Object.keys(productsFilters).length === 0) return;
@@ -233,12 +247,7 @@ const AuraResponseProducts = ({
 	const sendSocketMessage = (newFilters = {}, page = currentPage) => {
 		const filtersToSubmit = { ...newFilters };
 
-		// manual override because when state change from productFilters optional_filters is not updated in filtersit
-		if (Array.isArray(filtersToSubmit.optional_filters)) {
-			filtersToSubmit.optional_filters.forEach((key) => {
-				delete filtersToSubmit[key];
-			});
-		}
+		filtersToSubmit.optional_filters = OPTIONAL_FILTERS_TO_SUBMIT;
 
 		if (Array.isArray(filtersToSubmit.custom_filter)) {
 			filtersToSubmit.custom_filter = filtersToSubmit.custom_filter.join(",");
@@ -683,12 +692,17 @@ const AuraResponseProducts = ({
 		handleFiltersSubmit({ ...filters, [name]: value }, filterOptionsVisible);
 	};
 
-	const handleFiltersOptionalChange = (name) => {
-		const optional_filters = filters.optional_filters || [];
-		const values = optional_filters.includes(name)
-			? optional_filters.filter((s) => s !== name)
-			: [...optional_filters, name];
+	const handleFiltersOptionalChange = (name, isChecked) => {
+		const checkedWithoutCurrent = checked.current.filter((key) => key !== name);
+		checked.current = isChecked
+			? [...checkedWithoutCurrent, name]
+			: checkedWithoutCurrent;
 
+		const optional_filters = filters.optional_filters || [];
+		const values = isChecked
+			? optional_filters.filter((s) => s !== name)
+			: [...optional_filters.filter((s) => s !== name), name];
+		
 		handleChangeFilters({
 			...filters,
 			optional_filters: values,
