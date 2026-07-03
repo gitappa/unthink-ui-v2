@@ -686,7 +686,7 @@ background-size: cover;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     height: 2.5rem;
-    background-color: #f1f5f9;
+    background-color: var(--color-support, #f2f2f2);
     border-radius: 0.75rem;
     width: 100%;
     border: 1px solid transparent;
@@ -718,11 +718,11 @@ background-size: cover;
 
 .guestButton {
     border-radius: 0.75rem;
-    color: #e0e7ff;
+    color: #ffffff;
     font-weight: 700;
     font-size: 0.75rem;
     padding: 0.5rem 1.125rem;
-    background-color: #4f46e5;
+    background-color: #000000;
     border: none;
     cursor: pointer;
 }

@@ -9,12 +9,6 @@ import {
 import Modal from "../modal/Modal";
 import { profileAPIs, TryonSaveApiCall, TryOnVto } from "../../helper/serverAPIs";
 import { vtoIconState } from "./redux/actions";
-import { collectionQRCodeGenerator } from "../../helper/utils";
-import {
-  buildVerifyUrl,
-  decryptSigninToken,
-  requestSigninWithLink,
-} from "../../helper/autoLogin";
 
 const getVTOLoadingSpinnerClass = (hasKioskAccess) =>
   `animate-spin text-5xl ${hasKioskAccess ? "text-kiosk-primary" : "text-indigo-600"}`;

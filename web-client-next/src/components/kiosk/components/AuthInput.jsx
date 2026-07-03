@@ -8,7 +8,11 @@ import {
   requestSigninWithLink,
 } from "../../../helper/autoLogin";
 import Modal from "../../modal/Modal";
+import CopyToClipboard from "react-copy-to-clipboard";
 
+import {
+	CopyOutlined,
+} from "@ant-design/icons";
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
 const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
 
@@ -353,7 +357,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
 
       const userId = kioskLogin?.user_id;
       const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
-
+      const kioskPhone = kioskLogin?.phone || kioskLogin?.phoneId;
       if (!userId) {
         setStatus("Login is required");
         return;
@@ -394,16 +398,16 @@ const AuthInput = ({ onLoginChange, styles }) => {
           return;
         }
 
-        if (!kioskEmail) {
+        if (!kioskEmail && !kioskPhone) {
           setQrState((prev) => ({
             ...prev,
             isLoading: false,
-            message: `Email is required to create ${action.label.toLowerCase()} QR.`,
+            message: `Email or phone is required to create ${action.label.toLowerCase()} QR.`,
           }));
           return;
         }
 
-        const resp = await requestSigninWithLink(kioskEmail);
+        const resp = await requestSigninWithLink(kioskEmail, kioskPhone);
         const signinToken = resp?.signin_token || resp?.data?.signin_token;
         const signinUserName = resp?.data?.user_name || resp?.user_name;
 
@@ -569,14 +573,14 @@ const AuthInput = ({ onLoginChange, styles }) => {
             </div>
           )}
           {qrState.shareUrl ? (
-            <a
-              href={qrState.shareUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="break-all text-center text-sm text-indigo-600 hover:underline"
-            >
-              {qrState.shareUrl}
-            </a>
+           	<div className='border p-1 rounded flex break-all text-base mb-2 md:text-lg '>
+							{qrState.shareUrl}{" "}
+							<CopyToClipboard className='text-lg'
+								text={qrState.shareUrl}
+								onCopy={() => message.success("Copied", 1)}>
+								<CopyOutlined className='text-xl flex ml-auto' />
+							</CopyToClipboard>  
+						</div> 
           ) : null}
         </div>
       </Modal>

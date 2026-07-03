@@ -6,23 +6,29 @@ import Fernet from "fernet";
 const signInWithLinkRequestUrl = '/users/signin_with_link';
 
 // Call /users/signin_with_link?emailId=<email>&is_auto_login=true
-export const requestSigninWithLink = async (email) => {
+export const requestSigninWithLink = async (email,phone) => {
   try {
+    console.log('email',email);
+    console.log('phone',phone);
+    
+    
     const emailId =
       typeof email === 'string' ? email : email?.email || email?.emailId;
 
-    if (!emailId) {
-      console.warn('requestSigninWithLink: missing emailId');
-      return null;
-    }
+    // if (!emailId || !phone) {
+    //   console.warn('requestSigninWithLink: missing emailId or phone');
+    //   return null;
+    // }
 
     const url = `https://aurastage.unthink.ai/users/signin_with_link`;
+console.log('hello world');
 
     const res = await apiInstance({
       url,
       method: 'get',
       params: {
-        emailId,
+        phone:phone ,
+        emailId:emailId || '',
         is_auto_login: true,
       },
     });

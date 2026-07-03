@@ -42,7 +42,9 @@ const CollectionPage = ({ params }) => {
   const [isTagsShowMoreActive, setIsTagsShowMoreActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [onMfrCode,setOnMfrCode] = useState('')
+  const [onMfrCode,setOnMfrCode] = useState(null);
+  console.log("onMfrCode",onMfrCode);
+  
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
@@ -149,12 +151,14 @@ const CollectionPage = ({ params }) => {
         bannerImage
         enableKioskGuestPopup
         onGuestPopupOpen={(action) => {
+          if (action?.product) {
+            setOnMfrCode(action.product);
+          }
           setPendingGuestAction(action || null);
           setIsPopupShow(true);
         }}
         onKioskTryonClick={buildVtoProductAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}
-
       />
     );
   };
@@ -176,12 +180,16 @@ const CollectionPage = ({ params }) => {
         : `${originPrefix}${targetPath}`;
 
       try {
-        const kioskEmail = JSON.parse(
-          sessionStorage.getItem("Kiosk-login") || "{}",
-        )?.email;
+        const kioskUser = JSON.parse(
+          sessionStorage.getItem("Kiosk-login") ||   "{}",
+        )  ;
+        const kioskLoginEmail = kioskUser?.email ;
+        const kioskLoginPhone = kioskUser?.phone;
+        console.log("kioskLoginEmail",kioskLoginEmail);
+        console.log("kioskLoginPhone",kioskLoginPhone);
 
-        if (kioskEmail && pageParam) {
-          const resp = await requestSigninWithLink(kioskEmail);
+        if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
+          const resp = await requestSigninWithLink(kioskLoginEmail,kioskLoginPhone);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -285,8 +293,15 @@ const CollectionPage = ({ params }) => {
   }, [dispatch, isUserLogin, openShareOptions]);
 
   const buildVtoProductAutoLoginUrls = useCallback(
-    async (productMfrCode) => {
-      console.log('productMfrCode',productMfrCode);
+    async (productOrMfrCode) => {
+      const productMfrCode =
+        typeof productOrMfrCode === "string"
+          ? productOrMfrCode
+          : productOrMfrCode?.mfr_code;
+
+      if (productOrMfrCode && typeof productOrMfrCode === "object") {
+        setOnMfrCode(productOrMfrCode);
+      }
       
       if (!productMfrCode) return;
 
@@ -348,13 +363,23 @@ const CollectionPage = ({ params }) => {
             {showShareProductDetails && (
               <ShareOptions
                 url={sharePageUrl}
-                setShow={setShowShareProductDetails}
-                onClose={() => setShowShareProductDetails(false)}
+                setShow={(show) => {
+                  setShowShareProductDetails(show);
+                  if (!show) {
+                    setOnMfrCode(null);
+                  }
+                }}
+                onClose={() => {
+                  setShowShareProductDetails(false);
+                  setOnMfrCode(null);
+                }}
                 isOpen={showShareProductDetails}
                 qrCodeGeneratorURL={qrUrl}
                 collection={singleCollectionKiosk}
                 fromCollection={fromCollection}
                 kioskHeader={shareContext === "collection" ? " ": "Scan to Try On  (Then tap the camera icon on your phone)"}
+                subHeaderText={shareContext === "product" ? onMfrCode?.name : singleCollectionKiosk?.collection_name}
+                removeheaderColleciton
               />
             )}
             {/* {sharePageUrl && ( */}
@@ -456,7 +481,6 @@ const CollectionPage = ({ params }) => {
             }
             setShowShareProductDetails(true);
           }
-          setOnMfrCode("");
           setPendingGuestAction(null);
         }}
         onSkip={() => setPendingGuestAction(null)}
