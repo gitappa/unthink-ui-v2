@@ -134,7 +134,7 @@
 
 /* Body */
 .modalBody {
-    background-color: #dbdfe3;
+    background-color: var(--color-support);
     /* bg-slate-200 */
 }
 

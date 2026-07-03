@@ -61,15 +61,22 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
                   className="h-auto"
                 >
                   <div
-                    className={`overflow-hidden opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
+                    className={`relative overflow-hidden rounded-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
+                    onClick={() => handleNavCollection(product)}
                   >
                     {product.cover_image && (
+                      <>
                       <img
                         src={product.cover_image}
-                        className="rounded-xl shadow-lg h-full object-cover m-auto w-full transition-transform duration-500 ease-out"
+                        className="shadow-lg h-full object-cover m-auto w-full transition-transform duration-500 ease-out"
                         alt={product.collection_name || product.cover_image}
-                        onClick={() => handleNavCollection(product)}
                       />
+                      <div className="absolute bottom-0 right-0.5 bg-white/20 backdrop-blur-md border-t border-white/30 w-fit rounded-2xl px-2 py-1 shadow-[0_-8px_24px_rgba(0,0,0,0.18)]">
+                        <p className="truncate text-sm font-medium text-white drop-shadow-sm">
+                          {product.collection_name.slice(0, 10) || "Untitled collection"}...
+                        </p>
+                      </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -122,4 +129,3 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
 };
 
 export default BannerKisok;
-

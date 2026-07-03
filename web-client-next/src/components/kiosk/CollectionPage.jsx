@@ -180,12 +180,16 @@ const CollectionPage = ({ params }) => {
         : `${originPrefix}${targetPath}`;
 
       try {
-        const kioskEmail = JSON.parse(
-          sessionStorage.getItem("Kiosk-login") || "{}",
-        )?.email;
+        const kioskUser = JSON.parse(
+          sessionStorage.getItem("Kiosk-login") ||   "{}",
+        )  ;
+        const kioskLoginEmail = kioskUser?.email ;
+        const kioskLoginPhone = kioskUser?.phone;
+        console.log("kioskLoginEmail",kioskLoginEmail);
+        console.log("kioskLoginPhone",kioskLoginPhone);
 
-        if (kioskEmail && pageParam) {
-          const resp = await requestSigninWithLink(kioskEmail);
+        if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
+          const resp = await requestSigninWithLink(kioskLoginEmail,kioskLoginPhone);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
