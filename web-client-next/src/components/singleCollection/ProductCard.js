@@ -798,13 +798,14 @@ const ProductCard = ({
 	                      onGuestPopupOpen?.({
 	                        type: "vto",
 	                        mfrCode,
+	                        product,
 	                      });
 	                      dispatch(GuestPopUpShow(true));
 	                      return;
 	                      }
 
 	                      if (mfrCode && onKioskTryonClick) {
-	                        onKioskTryonClick(mfrCode);
+	                        onKioskTryonClick(product);
 	                        return;
 	                      }
 	                    }
