@@ -82,7 +82,6 @@ const getPriceRangeText = (price) => {
 	}
 };
 
-const OPTIONAL_FILTERS_TO_SUBMIT = ["paul"];
 
 const AuraResponseProducts = ({
 	products = {},
@@ -137,6 +136,7 @@ const AuraResponseProducts = ({
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
 	]);
   const {setUserData ,userData } = useUserData()
+const [notData,setNotData] = useState(null)
 
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
@@ -160,7 +160,7 @@ const AuraResponseProducts = ({
 	const { sendMessage } = useChat();
 	const guestActionRef = useRef(null);
 	const checked = useRef([]);
-console.log('thisishtechecked',checked);
+// console.log('thisishtechecked',checked);
 
 	const currentTag = tag === "" ? "all" : tag;
 	const currentPage = pagination.currentPages[currentTag] || 0;
@@ -192,10 +192,16 @@ console.log('thisishtechecked',checked);
 
 	useEffect(() => {
 		const optionalFilters = productsFilters.optional_filters || [];
-		checked.current = displayableFilter.filter(
-			(key) => !optionalFilters.includes(key)
+		const keys = Object.keys(filters).filter(
+			(key) => key !== "optional_filters" && filters[key] !== undefined
 		);
-	}, [productsFilters.optional_filters, displayableFilter]);
+
+		const result = keys?.filter((key) => optionalFilters?.includes(key)  && !notData?.includes(key) );
+		// console.log('notData',notData);
+		// console.log('resultssssss',result);
+		
+		checked.current = result;
+	}, [productsFilters.optional_filters, filters]);
 
 	useEffect(() => {
 		if (Object.keys(productsFilters).length === 0) return;
@@ -247,7 +253,7 @@ console.log('thisishtechecked',checked);
 	const sendSocketMessage = (newFilters = {}, page = currentPage) => {
 		const filtersToSubmit = { ...newFilters };
 
-		filtersToSubmit.optional_filters = OPTIONAL_FILTERS_TO_SUBMIT;
+		filtersToSubmit.optional_filters = checked.current;
 
 		if (Array.isArray(filtersToSubmit.custom_filter)) {
 			filtersToSubmit.custom_filter = filtersToSubmit.custom_filter.join(",");
@@ -643,10 +649,12 @@ console.log('thisishtechecked',checked);
 			chatImageUrl
 		]
 	);
-
 	const onFiltersChange = (name, value) => {
 		const newFilters = { ...filters, [name]: value };
+		// console.log('newOptionalFilters',newFilters);
+
 		let newOptionalFilters = newFilters.optional_filters || [];
+
 		const isNowEmpty = name === "price"
 			? (!value || (!value.min && !value.max))
 			: (!value || value.length === 0 || value === "");
@@ -660,7 +668,9 @@ console.log('thisishtechecked',checked);
 				newOptionalFilters = newOptionalFilters.filter((n) => n !== name);
 			}
 		}
+				// console.log('newOptional ',newOptionalFilters);
 
+setNotData(newOptionalFilters)
 		newFilters.optional_filters = newOptionalFilters;
 		handleChangeFilters(newFilters);
 	};
@@ -693,19 +703,24 @@ console.log('thisishtechecked',checked);
 	};
 
 	const handleFiltersOptionalChange = (name, isChecked) => {
-		const checkedWithoutCurrent = checked.current.filter((key) => key !== name);
-		checked.current = isChecked
-			? [...checkedWithoutCurrent, name]
-			: checkedWithoutCurrent;
+		const keys = Object.keys(filters).filter(
+			(key) => key !== "optional_filters" && filters[key] !== undefined
+		);
+		// console.log('keys',name);
+		
+		const optionalFilters = filters.optional_filters || [];
+		const checkedFilters = keys.filter((key) => !optionalFilters.includes(key));
+		const nextCheckedFilters = isChecked
+			? [...checkedFilters.filter((key) => key !== name), name]
+			: checkedFilters.filter((key) => key !== name);
+		const result = keys?.filter((key) => !nextCheckedFilters?.includes(key));
+		// console.log('result', result);
 
-		const optional_filters = filters.optional_filters || [];
-		const values = isChecked
-			? optional_filters.filter((s) => s !== name)
-			: [...optional_filters.filter((s) => s !== name), name];
+		checked.current = result;
 		
 		handleChangeFilters({
 			...filters,
-			optional_filters: values,
+			optional_filters: result,
 		});
 	};
 

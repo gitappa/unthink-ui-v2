@@ -24,6 +24,15 @@ const AdditionalAttributes = ({
 	const hashtagAttr = useMemo(() => {
 		return additionalAttributesToShow?.find((attr) => attr.key === "custom_filter");
 	}, [additionalAttributesToShow]);
+// console.log(attributesData);
+// console.log(Array.isArray(attributesData));
+// console.log(attributesData?.length);
+
+// const keys = Object.keys(attributesData).filter(
+//   key => key !== "optional_filters" && attributesData[key] !== undefined
+// );
+
+// console.log(keys);
 
 	const otherAttributes = useMemo(() => {
 		return additionalAttributesToShow?.filter((attr) => attr.key !== "custom_filter");
