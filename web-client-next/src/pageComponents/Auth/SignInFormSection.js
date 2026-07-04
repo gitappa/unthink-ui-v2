@@ -255,7 +255,7 @@ export default function SignInFormSection() {
 		} catch(e) {
 			setHasError("Failed to sign in");
 			notification["error"]({
-			message: e.response.data.status_desc,
+			message: e.response?.data.status_desc,
 		})
 			
 		}

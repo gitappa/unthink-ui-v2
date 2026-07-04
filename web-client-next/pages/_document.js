@@ -5,6 +5,37 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {process.env.NODE_ENV === 'development' ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function () {
+                  function isExtensionUrl(value) {
+                    return typeof value === 'string' && value.indexOf('chrome-extension://') === 0;
+                  }
+
+                  window.addEventListener('error', function (event) {
+                    if (isExtensionUrl(event.filename)) {
+                      event.preventDefault();
+                      event.stopImmediatePropagation();
+                    }
+                  }, true);
+
+                  window.addEventListener('unhandledrejection', function (event) {
+                    var reason = event.reason || {};
+                    var stack = reason.stack || '';
+                    var message = reason.message || '';
+
+                    if (stack.indexOf('chrome-extension://') !== -1 || message.indexOf('chrome-extension://') !== -1) {
+                      event.preventDefault();
+                      event.stopImmediatePropagation();
+                    }
+                  }, true);
+                })();
+              `,
+            }}
+          />
+        ) : null}
         {/* Google Tag Manager */}
         <script
           async

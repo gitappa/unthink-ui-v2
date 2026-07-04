@@ -82,6 +82,7 @@ const getPriceRangeText = (price) => {
 	}
 };
 
+
 const AuraResponseProducts = ({
 	products = {},
 	recommendationsProducts = {},
@@ -135,6 +136,7 @@ const AuraResponseProducts = ({
 		state.chatV2[CHAT_TYPES_KEYS[chatTypeKey].showChatLoader],
 	]);
   const {setUserData ,userData } = useUserData()
+const [notData,setNotData] = useState(null)
 
 	const [filterOptionsVisible, setFilterOptionsVisible] = useState(false);
 	const [enableSelectProduct, setEnableSelectProduct] = useState(false);
@@ -157,6 +159,8 @@ const AuraResponseProducts = ({
 	const dispatch = useDispatch();
 	const { sendMessage } = useChat();
 	const guestActionRef = useRef(null);
+	const checked = useRef([]);
+// console.log('thisishtechecked',checked);
 
 	const currentTag = tag === "" ? "all" : tag;
 	const currentPage = pagination.currentPages[currentTag] || 0;
@@ -173,15 +177,31 @@ const AuraResponseProducts = ({
 	const { filter_settings = {}, catalog_attributes = [] } = storeData;
 	const availableFilters = filter_settings.available_filters;
 	const displayFilters = filter_settings.display_filters;
-	const displayableFilter = displayFilters.map((v) => v.key);
+	const displayableFilter = useMemo(
+		() => displayFilters.map((v) => v.key),
+		[displayFilters]
+	);
 
 	const filters = useMemo(() => {
-		const obj = { optional_filters: productsFilters.optional_filters };
+		const obj = { optional_filters: productsFilters.optional_filters || [] };
 		displayableFilter.forEach((v) => {
 			obj[v] = productsFilters[v];
 		});
 		return obj;
 	}, [productsFilters, displayableFilter]);
+
+	useEffect(() => {
+		const optionalFilters = productsFilters.optional_filters || [];
+		const keys = Object.keys(filters).filter(
+			(key) => key !== "optional_filters" && filters[key] !== undefined
+		);
+
+		const result = keys?.filter((key) => optionalFilters?.includes(key)  && !notData?.includes(key) );
+		// console.log('notData',notData);
+		// console.log('resultssssss',result);
+		
+		checked.current = result;
+	}, [productsFilters.optional_filters, filters]);
 
 	useEffect(() => {
 		if (Object.keys(productsFilters).length === 0) return;
@@ -233,12 +253,7 @@ const AuraResponseProducts = ({
 	const sendSocketMessage = (newFilters = {}, page = currentPage) => {
 		const filtersToSubmit = { ...newFilters };
 
-		// manual override because when state change from productFilters optional_filters is not updated in filtersit
-		if (Array.isArray(filtersToSubmit.optional_filters)) {
-			filtersToSubmit.optional_filters.forEach((key) => {
-				delete filtersToSubmit[key];
-			});
-		}
+		filtersToSubmit.optional_filters = checked.current;
 
 		if (Array.isArray(filtersToSubmit.custom_filter)) {
 			filtersToSubmit.custom_filter = filtersToSubmit.custom_filter.join(",");
@@ -634,10 +649,12 @@ const AuraResponseProducts = ({
 			chatImageUrl
 		]
 	);
-
 	const onFiltersChange = (name, value) => {
 		const newFilters = { ...filters, [name]: value };
+		// console.log('newOptionalFilters',newFilters);
+
 		let newOptionalFilters = newFilters.optional_filters || [];
+
 		const isNowEmpty = name === "price"
 			? (!value || (!value.min && !value.max))
 			: (!value || value.length === 0 || value === "");
@@ -651,7 +668,9 @@ const AuraResponseProducts = ({
 				newOptionalFilters = newOptionalFilters.filter((n) => n !== name);
 			}
 		}
+				// console.log('newOptional ',newOptionalFilters);
 
+setNotData(newOptionalFilters)
 		newFilters.optional_filters = newOptionalFilters;
 		handleChangeFilters(newFilters);
 	};
@@ -683,15 +702,25 @@ const AuraResponseProducts = ({
 		handleFiltersSubmit({ ...filters, [name]: value }, filterOptionsVisible);
 	};
 
-	const handleFiltersOptionalChange = (name) => {
-		const optional_filters = filters.optional_filters || [];
-		const values = optional_filters.includes(name)
-			? optional_filters.filter((s) => s !== name)
-			: [...optional_filters, name];
+	const handleFiltersOptionalChange = (name, isChecked) => {
+		const keys = Object.keys(filters).filter(
+			(key) => key !== "optional_filters" && filters[key] !== undefined
+		);
+		// console.log('keys',name);
+		
+		const optionalFilters = filters.optional_filters || [];
+		const checkedFilters = keys.filter((key) => !optionalFilters.includes(key));
+		const nextCheckedFilters = isChecked
+			? [...checkedFilters.filter((key) => key !== name), name]
+			: checkedFilters.filter((key) => key !== name);
+		const result = keys?.filter((key) => !nextCheckedFilters?.includes(key));
+		// console.log('result', result);
 
+		checked.current = result;
+		
 		handleChangeFilters({
 			...filters,
-			optional_filters: values,
+			optional_filters: result,
 		});
 	};
 

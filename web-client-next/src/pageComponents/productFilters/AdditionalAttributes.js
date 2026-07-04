@@ -24,6 +24,15 @@ const AdditionalAttributes = ({
 	const hashtagAttr = useMemo(() => {
 		return additionalAttributesToShow?.find((attr) => attr.key === "custom_filter");
 	}, [additionalAttributesToShow]);
+// console.log(attributesData);
+// console.log(Array.isArray(attributesData));
+// console.log(attributesData?.length);
+
+// const keys = Object.keys(attributesData).filter(
+//   key => key !== "optional_filters" && attributesData[key] !== undefined
+// );
+
+// console.log(keys);
 
 	const otherAttributes = useMemo(() => {
 		return additionalAttributesToShow?.filter((attr) => attr.key !== "custom_filter");
@@ -141,7 +150,12 @@ const AdditionalAttributes = ({
 												</label>
 												<Checkbox
 													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
-													onChange={() => handleFiltersOptionalChange(attr.key)}
+													onChange={(e) =>
+														handleFiltersOptionalChange(
+															attr.key,
+															e.target.checked
+														)
+													}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
@@ -179,8 +193,13 @@ const AdditionalAttributes = ({
 													Mandatory
 												</label>
 												<Checkbox
-													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
-													onChange={() => handleFiltersOptionalChange(attr.key)}
+													className='text-slate-200   hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
+													onChange={(e) =>
+														handleFiltersOptionalChange(
+															attr.key,
+															e.target.checked
+														)
+													}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
@@ -221,7 +240,12 @@ const AdditionalAttributes = ({
 												</label>
 												<Checkbox
 													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
-													onChange={() => handleFiltersOptionalChange(attr.key)}
+													onChange={(e) =>
+														handleFiltersOptionalChange(
+															attr.key,
+															e.target.checked
+														)
+													}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
@@ -270,7 +294,12 @@ const AdditionalAttributes = ({
 												</label>
 												<Checkbox
 													className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
-													onChange={() => handleFiltersOptionalChange(attr.key)}
+													onChange={(e) =>
+														handleFiltersOptionalChange(
+															attr.key,
+															e.target.checked
+														)
+													}
 													checked={!attributesData?.optional_filters?.includes(
 														attr.key
 													)}></Checkbox>
@@ -303,7 +332,12 @@ const AdditionalAttributes = ({
 											</label>
 											<Checkbox
 												className='text-slate-200 [&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-[#9690F0] [&_.ant-checkbox-checked_.ant-checkbox-inner]:border-[#9690F0] hover:[&_.ant-checkbox-inner]:border-[#9690F0]'
-												onChange={() => handleFiltersOptionalChange("price")}
+												onChange={(e) =>
+													handleFiltersOptionalChange(
+														"price",
+														e.target.checked
+													)
+												}
 												checked={!attributesData?.optional_filters?.includes(
 													"price"
 												)}></Checkbox>
