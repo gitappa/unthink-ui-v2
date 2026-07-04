@@ -23,7 +23,7 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
   return (
-    <div className="mt-3 flex justify-center items-start  gap-3 ">
+    <div className=" flex justify-center items-start  gap-3 ">
       {/* Banner Section */}
       <div className="rounded-3xl   w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
@@ -58,27 +58,31 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
               {displayedProducts.map((product) => (
                 <div
                   key={product.collection_id}
-                  className="h-auto"
+                  
                 >
+                  <div className="h-auto bg-white rounded-t-xl">
+
                   <div
-                    className={`relative overflow-hidden rounded-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
+                    className={`relative overflow-hidden rounded-t-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
                     onClick={() => handleNavCollection(product)}
                   >
                     {product.cover_image && (
                       <>
                       <img
                         src={product.cover_image}
-                        className="shadow-lg h-full object-cover m-auto w-full transition-transform duration-500 ease-out"
+                        className="shadow-lg h-full object-contain m-auto w-full transition-transform duration-500 ease-out"
                         alt={product.collection_name || product.cover_image}
                       />
-                      <div className="absolute bottom-0 right-0.5 bg-white/20 backdrop-blur-md border-t border-white/30 w-fit rounded-2xl px-2 py-1 shadow-[0_-8px_24px_rgba(0,0,0,0.18)]">
-                        <p className="truncate text-sm font-medium text-white drop-shadow-sm">
-                          {product.collection_name.slice(0, 10) || "Untitled collection"}...
-                        </p>
-                      </div>
+                      
                       </>
                     )}
                   </div>
+                  </div>
+<div className="  bottom-0 left-0.5 bg-white/20 backdrop-blur-md border-t border-white/30 w-full rounded-b-lg px-2 py-1 shadow-[0_-8px_24px_rgba(0,0,0,0.18)]">
+                        <p className="truncate text-center text-lg font-medium text-black drop-shadow-sm">
+                          {product.collection_name || "Untitled collection"} 
+                        </p>
+                      </div>
                 </div>
               ))}
             {/* </Swiper> */}

@@ -109,6 +109,7 @@
   --color-kiosk-secondary:#FFE3E8;
   --color-hover-primary:#e9718b;
   --color-common:#F2F2F2;
+  --color-kiosk-tertiary:#FAC6B6;
 }
 /* Remove border from Ant Design select components */
 button {
