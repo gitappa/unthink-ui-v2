@@ -11,6 +11,7 @@ import carousel_arrow_icon from "../../images/carousel_arrow_icon.png";
 import styles from './Carousal.module.scss';
 import cssStyles from './CarouselContainer.module.css';
 import ReactPlayer from "react-player";
+import { useSelector } from "react-redux";
 
 const { Text } = Typography;
 SwiperCore.use([FreeMode, Mousewheel]);
@@ -23,6 +24,9 @@ function CarousalContainer({
 	description,
 	collection_image_list,
 }) {
+	   const [ storeData] = useSelector((state) => [			 
+			state.store.data,
+		]);
 	const [previewVisible, setPreviewVisible] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
 	const swiperRef = useRef(null);
@@ -74,10 +78,12 @@ function CarousalContainer({
 	};
 
 	return (
+		
 		<>
+		{storeData?.is_featured_carousel_enabled && 
+<>
 
-
-			{showOuterTitle && (
+			{showOuterTitle &&  (
 				<>
 					<div className={cssStyles.outerTitleWrapper}>
 						<h1 className={cssStyles.outerTitle}>
@@ -301,7 +307,11 @@ function CarousalContainer({
 
 				}
 			</div>
+</>
+
+				}
 		</>
+		
 	);
 }
 

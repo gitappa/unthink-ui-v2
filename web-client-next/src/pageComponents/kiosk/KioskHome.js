@@ -14,22 +14,23 @@ import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 
 const KioskHome = ({ props }) => {
-   
-
- 
   const userInfo = useSelector((state) => state.auth.user.data);
   const Tags = ["Social Media", "Look Books", "#Trending"];
-  const [showTags, setShowTags] = useState(sessionStorage.getItem('selectedTag') ||  Tags[0]);
+  const [showTags, setShowTags] = useState(
+    sessionStorage.getItem("selectedTag") || Tags[0],
+  );
   const [products, setProducts] = useState([]);
-  const [lookBooks,setLookBooks] = useState([])
+  const [lookBooks, setLookBooks] = useState([]);
   //   console.log("products", products);
   const dispatch = useDispatch();
-  const [isUserLogin,storeData] = useSelector((state) => [state.auth.user.isUserLogin,state.store.data]);
-  
+  const [isUserLogin, storeData] = useSelector((state) => [
+    state.auth.user.isUserLogin,
+    state.store.data,
+  ]);
+
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder();
-
 
   useEffect(() => {
     const fetchSocialMedia = async () => {
@@ -43,10 +44,9 @@ const KioskHome = ({ props }) => {
         const shuffledData = [...data].sort(() => Math.random() - 0.5);
         setProducts(shuffledData);
         // console.log('shuffledData', shuffledData);
-        const lookBookResponse = await LookBookApiCall()
-        setLookBooks(lookBookResponse?.data?.data)
+        const lookBookResponse = await LookBookApiCall();
+        setLookBooks(lookBookResponse?.data?.data);
         // console.log('lookBookResponse',lookBookResponse?.data?.data);
-        
       } catch (error) {
         console.error(error);
       }
@@ -76,7 +76,10 @@ const KioskHome = ({ props }) => {
             {Tags.map((tag, i) => (
               <button
                 key={i}
-                onClick={() => { setShowTags(tag) , sessionStorage.setItem("selectedTag", tag)}}
+                onClick={() => {
+                  (setShowTags(tag),
+                    sessionStorage.setItem("selectedTag", tag));
+                }}
                 aria-pressed={showTags === tag}
                 className={`flex-1 text-center button-kiosk px-3 md:px-5 py-2 font-semibold transition rounded-full ${
                   showTags === tag
@@ -88,22 +91,29 @@ const KioskHome = ({ props }) => {
               </button>
             ))}
           </div>
-     <AuthInput  styles='min-w-[272px] max-w-[272px]'/>
+          <AuthInput styles="min-w-[272px] max-w-[272px]" />
         </div>
       </div>
-      <div className={`flex ${showTags === "Social Media" ? 'items-start' : 'items-center' } gap-3`}>
-      {showTags === "Social Media" && 
-      <>
-      <div className="min-w-0 flex-1">
-        <HeroSection storeData={storeData} />
-      </div>
-      <QRsection storeData={storeData} showTags={showTags}/>
-      </>
-      }
+      <div
+        className={`flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
+      >
+        {showTags === "Social Media" && (
+          <>
+            <div className="min-w-0 flex-1">
+              <HeroSection storeData={storeData} />
+            </div>
+            <QRsection storeData={storeData} showTags={showTags} />
+          </>
+        )}
       </div>
       {showTags !== "Social Media" && (
         <div className="">
-        <BannerKisok products={products} Tags={showTags} lookBooks={lookBooks} storeData={storeData}/>
+          <BannerKisok
+            products={products}
+            Tags={showTags}
+            lookBooks={lookBooks}
+            storeData={storeData}
+          />
         </div>
       )}
       {/* Session reminder popup for kiosk users (floating bottom-right) */}
@@ -115,7 +125,7 @@ const KioskHome = ({ props }) => {
       )}
 
       {/* Logged in info (fixed bottom-right) */}
-   
+
       <LoggedInInfo userInfo={userInfo} />
     </div>
   );
