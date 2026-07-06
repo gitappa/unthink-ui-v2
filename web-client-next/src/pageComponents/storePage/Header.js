@@ -708,7 +708,8 @@ const Header = ({
             setShowMenu={setShowMenu}
             headerProfileMenu={headerProfileMenu}
             setisDropDown={setisDropDown}
-cartItemCount={cartItemCount}            
+cartItemCount={cartItemCount}         
+   
           />
         </div>
       )}
@@ -766,6 +767,7 @@ cartItemCount={cartItemCount}
                 setisDropDown={setisDropDown}
 handleVtoFetch ={handleVtoFetch }
 cartItemCount={cartItemCount}
+isUserLogin={isUserLogin}
               />
             )}
           </>
@@ -786,6 +788,7 @@ cartItemCount={cartItemCount}
                 setisDropDown={setisDropDown}
                 handleVtoFetch={handleVtoFetch}
                 cartItemCount={cartItemCount}
+                isUserLogin={isUserLogin}
               /> 
               {removedata && 
           <div className={styles.desktopHeaderContainer}>

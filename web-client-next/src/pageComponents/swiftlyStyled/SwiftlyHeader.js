@@ -40,6 +40,7 @@ const SwiftlyHeader = ({
   setisDropDown,
   handleVtoFetch,
   cartItemCount,
+  isUserLogin
 }) => {
   const navigate = useNavigate();
   const { themeCodes } = useTheme();
@@ -240,6 +241,7 @@ const SwiftlyHeader = ({
                   className={styles.wishlistIcon}
                 />
               ) : null} */}
+              {isUserLogin &&
               <Image
                 src={tryOnIcon}
                 alt="Try on"
@@ -250,6 +252,7 @@ const SwiftlyHeader = ({
                   handleVtoFetch();
                    }}
                />
+                  }
               {storeData?.pdp_settings?.is_add_to_cart_button && (
                 <Link href="/cart" className={`${styles.cartLink} relative`}>
                   <FiShoppingCart
