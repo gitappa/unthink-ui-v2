@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import walletIcon from "../../components/singleCollection/images/wallet_new.svg";
+import tryOnIcon from "../../components/singleCollection/images/Card/camera.svg";
 import Image from "next/image";
 import styles from "./SwiftlyHeader.module.css";
 import { current_store_name, is_store_instance } from "../../constants/config";
@@ -37,6 +38,8 @@ const SwiftlyHeader = ({
   isDoTheLookInstance,
   isRootPage,
   setisDropDown,
+  handleVtoFetch,
+  cartItemCount,
 }) => {
   const navigate = useNavigate();
   const { themeCodes } = useTheme();
@@ -53,10 +56,10 @@ const SwiftlyHeader = ({
   };
   // console.log('applied', currentUser.emailId ? 'hello' : null);
 
-  const [storeData, cartCollection] = useSelector((state) => [state.store.data, state.cart?.collection]);
-  const cartItemCount = useMemo(() => {
-    return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
-  }, [cartCollection]);
+  const [storeData,  ] = useSelector((state) => [state.store.data, ]);
+  // const cartItemCount = useMemo(() => {
+  //   return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
+  // }, [cartCollection]);
   const syncStickyMetrics = useCallback(() => {
     if (!headerWrapperRef.current || !headerContentRef.current) {
       return;
@@ -224,16 +227,10 @@ const SwiftlyHeader = ({
                   className={styles.walletIcon}
                 />
               )}
-              <button
-                className={styles.collectionButton}
-                onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
-                style={{ color: themeCodes.header.textColor }}
-              >
-                Collections
-              </button>
+         
 
-              {currentUser?.emailId ? (
-                <BsBookmarkPlusFill
+              {/* {currentUser?.emailId ? (
+                <FaRegHeart
                   style={{
                     filter: themeCodes.header.fills
                       ? themeCodes.header.fills
@@ -242,7 +239,17 @@ const SwiftlyHeader = ({
                   onClick={onWishlistClick}
                   className={styles.wishlistIcon}
                 />
-              ) : null}
+              ) : null} */}
+              <Image
+                src={tryOnIcon}
+                alt="Try on"
+                height={24}
+                width={24}
+                className={styles.tryOnIcon}
+                onClick={() => {
+                  handleVtoFetch();
+                   }}
+               />
               {storeData?.pdp_settings?.is_add_to_cart_button && (
                 <Link href="/cart" className={`${styles.cartLink} relative`}>
                   <FiShoppingCart

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Image, Dropdown, Menu, Typography } from "antd";
+import { Image, Dropdown, Menu, Typography, notification } from "antd";
 import {
   // MenuOutlined,
   CloseOutlined,
@@ -91,6 +91,7 @@ import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
 import { THEME_ALL } from "../../constants/themeCodes";
 import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
+import { collectionAPIs } from "../../helper/serverAPIs";
 
 const { Text } = Typography;
 
@@ -137,6 +138,7 @@ const Header = ({
     // associate_seller,
     storeData,
     authUser,
+    cartCollection
   ] = useSelector((state) => [
     state.chatV2.showChatModal,
     state.appState.wishlist.showWishlistModal,
@@ -149,6 +151,7 @@ const Header = ({
     // state.store.data.associate_seller,
     state.store.data,
     state.auth.user.data ?? {},
+    state.cart?.collection
   ]);
   const removedata = false;
   const hasKioskAccess = useKioskAccess({
@@ -164,7 +167,9 @@ const Header = ({
 //   const value = localStorage.getItem("kioskLogin") === "true";
 //   setKioskLogin(value);
 // }, []);
-
+ const cartItemCount = useMemo(() => {
+    return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
+  }, [cartCollection]);
   const {
     my_products_enable: isMyProductsEnable,
     seller_list: storeSellerList,
@@ -313,7 +318,26 @@ const Header = ({
     [isUserLogin],
   );
  
-
+  const handleVtoFetch =async()=>{
+    const  payload ={
+  collection_name: "my tryons",
+      user_id: authUser?.user_id,
+      type: "system",
+    }
+    try{
+        const response = await collectionAPIs.fetchCollectionsAPICall(payload);
+        // console.log('response', response.data?.data[0]?._id);
+        if(response.data?.data?.length > 0){  
+          navigate(`influencer/${authUser.user_name}/${response.data?.data[0]?._id}`);
+        }
+        else{
+          notification.warning({ message: "No Try ons Collections found." });
+        }
+    }
+    catch(e){
+      console.error('Error fetching collections:', e);
+    }
+  }
   const viewLeaderboardEnabled = useMemo(
     () =>
       (isStoreAdminLoggedIn || isStagingEnv) &&
@@ -362,6 +386,32 @@ const Header = ({
               Create {WISHLIST_TITLE}
             </Link>
           ),
+        },
+             {
+          key: "My Collections",
+          className: styles.headerMenuItemPy2,
+            onClick: () => {
+          onWishlistClick()
+          },
+          label:  (
+            <span className={styles.headerMenuLinkTextBase}  >
+              My Collections
+            </span>
+          ),
+        
+        },
+         {
+          key: "My Try ons",
+          className: styles.headerMenuItemPy2,
+            onClick: () => {
+          handleVtoFetch()
+          },
+          label:  (
+            <span className={styles.headerMenuLinkTextBase}  >
+              My Try ons
+            </span>
+          ),
+        
         },
         {
           key: "myprofile",
@@ -658,6 +708,7 @@ const Header = ({
             setShowMenu={setShowMenu}
             headerProfileMenu={headerProfileMenu}
             setisDropDown={setisDropDown}
+cartItemCount={cartItemCount}            
           />
         </div>
       )}
@@ -713,6 +764,8 @@ const Header = ({
                 isSwiftlyStyledInstance={isSwiftlyStyledInstance}
                 isDoTheLookInstance={isDoTheLookInstance}
                 setisDropDown={setisDropDown}
+handleVtoFetch ={handleVtoFetch }
+cartItemCount={cartItemCount}
               />
             )}
           </>
@@ -731,6 +784,8 @@ const Header = ({
                 isSwiftlyStyledInstance={isSwiftlyStyledInstance}
                 isDoTheLookInstance={isDoTheLookInstance}
                 setisDropDown={setisDropDown}
+                handleVtoFetch={handleVtoFetch}
+                cartItemCount={cartItemCount}
               /> 
               {removedata && 
           <div className={styles.desktopHeaderContainer}>
