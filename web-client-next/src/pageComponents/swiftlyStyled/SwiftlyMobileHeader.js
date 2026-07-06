@@ -138,7 +138,7 @@ const SwiftlyMobileHeader = ({
   {storeData?.pdp_settings?.is_add_to_cart_button && (
                 <Link  href="/cart" className={`p-0  relative`}>
                   <FiShoppingCart
-                    className='text-white h-6 w-6 cursor-pointer '
+                    className='text-white h-6 w-6 cursor-pointer pr-0.5'
                     style={{ filter: "brightness(0) opacity(0.7)" }}
                   />
                   <span
