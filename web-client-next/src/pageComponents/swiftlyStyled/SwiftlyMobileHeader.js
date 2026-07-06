@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Typography } from "antd";
 import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
 import userIcon from "../../images/swiftly-styled/User.svg";
-
+import Link from "next/link";
 import useTheme from "../../hooks/chat/useTheme";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import {
@@ -22,12 +22,14 @@ import { THEME_ALL } from "../../constants/themeCodes";
 import { openWishlistModal } from "../wishlist/redux/actions";
 import { FaRegHeart } from "react-icons/fa6";
 import { BsBookmarkPlusFill } from "react-icons/bs";
+import { FiShoppingCart } from "react-icons/fi";
 
 const SwiftlyMobileHeader = ({
   showProfileIcon,
   setShowMenu,
   headerProfileMenu,
-  setisDropDown
+  setisDropDown,
+  cartItemCount,
 }) => {
   const { Text } = Typography;
   const dispatch = useDispatch();
@@ -124,7 +126,7 @@ const SwiftlyMobileHeader = ({
             />
           )} */}
 
-          <BsBookmarkPlusFill
+          {/* <FaRegHeart
                                 onClick={onWishlistClick}
                                    style={{ filter: "brightness(0) opacity(0.7)" ,height:24,width:24}}
             
@@ -132,8 +134,20 @@ const SwiftlyMobileHeader = ({
               height={24}
               width={24}
                                 className={styles.walletIcon}
-                              />
-
+                              /> */}
+  {storeData?.pdp_settings?.is_add_to_cart_button && (
+                <Link  href="/cart" className={`p-0  relative`}>
+                  <FiShoppingCart
+                    className='text-white h-6 w-6 cursor-pointer '
+                    style={{ filter: "brightness(0) opacity(0.7)" }}
+                  />
+                  <span
+                    className="absolute -top-[6px] -right-[10px] bg-[var(--color-alert)] text-white rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none"
+                  >
+                    {cartItemCount}
+                  </span>
+                </Link>
+              )}
 
           <div className={styles.profileIconWrapper}>
             {showProfileIcon ? (

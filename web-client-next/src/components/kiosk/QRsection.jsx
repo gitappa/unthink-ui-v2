@@ -2,9 +2,19 @@ import React from "react";
 import KioskQRCard from "./KioskQRCard";
 import cart from "../../images/kiosk/cart.png";
 const QRsection = ({ showTags, storeData }) => {
+  const [fetchedData, setFetchedData] = React.useState(null);
+  console.log('fetchedData',fetchedData);
+  
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
-
+  const data =storeData.kiosk_settings?.tabs
+  // data.push(storeData.kiosk_settings?.tab1,storeData.kiosk_settings?.tab2,storeData.kiosk_settings?.tab3,storeData.kiosk_settings?.tab4);
+React.useEffect(() => {
+  const item = data.find((item) => item?.label === showTags);
+  setFetchedData(item || null);
+}, [showTags, storeData]);
+      
+  // console.log('data',data)
   if (
     showTags === "Social Media" ||
     showTags === "#Trending" ||
@@ -22,7 +32,7 @@ const QRsection = ({ showTags, storeData }) => {
 
           <div className="relative z-10 flex h-full flex-col items-center">
             <div className="flex w-full items-center pt-8  justify-center gap-[10px]">
-              <img src={cart.src} className="w-[50%]" alt="cart" />
+              <img src={fetchedData?.title_icon || cart.src} className="w-[50%]" alt="cart" />
 
               <div className="p-2.5 w-full  bg-white rounded">
                 <div className="flex h-auto w-fit m-auto   items-center justify-center bg-[#a98b3d]  shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_3px_8px_rgba(0,0,0,0.08)]">
@@ -36,8 +46,8 @@ const QRsection = ({ showTags, storeData }) => {
             </div>
 
             <p className="mt-[26px] text-center text-[28px] font-normal leading-[1.4] text-[#252525]">
-              {storeData.kiosk_settings?.event_message ||
-                "Scan to pick up your digital cart"}
+              {fetchedData?.event_message ||
+                "Scan to pick up your digital cartq"}
             </p>
 
             <div className="relative my-[30px] w-full rounded-[8px] bg-[#f5aaad] px-[18px] py-[18px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]">
@@ -65,7 +75,7 @@ const QRsection = ({ showTags, storeData }) => {
               </div>
               <div className="flex h-[88px] items-center justify-center rounded-[8px] bg-[#f2f2f2] px-4 shadow-[inset_0_0_14px_rgba(0,0,0,0.05)]">
                 <span className="whitespace-nowrap text-[52px] font-extrabold leading-none text-[#555555]">
-                  {storeData.kiosk_settings?.offer_message || "Rs 500"}
+                  {fetchedData?.offer_message || "Rs 500"}
                 </span>
               </div>
             </div>
@@ -74,7 +84,11 @@ const QRsection = ({ showTags, storeData }) => {
               Shop &amp; Play to earn!
             </p>
           </div>
-          <img src="https://www.giva.co/cdn/shop/files/logo__3.png?v=1752672324&width=100" alt="" className="p-4 m-auto mt-3"/>
+          <img
+            src={fetchedData?.offer_image || "https://www.giva.co/cdn/shop/files/logo__3.png?v=1752672324&width=100"}
+            alt="offer_image"
+            className="p-4 m-auto mt-3"
+          />
         </div>
       </div>
     );
