@@ -116,6 +116,7 @@ const ChatModal = ({
   setShowSubmitImageTooltip,
   isBTNormalUserLoggedIn,
   isAuraChatPage,
+  
 }) => {
   const navigate = useNavigate();
   const [
@@ -226,6 +227,8 @@ const ChatModal = ({
     dispatch(setActiveSearchOption({})); // Reset active search option
     dispatch(setShowChatModal(false));
     showSubmitImageTooltip && setShowSubmitImageTooltip(false);
+    window.history.back()
+
   };
 
   const handleGoBack = () => {
@@ -238,6 +241,7 @@ const ChatModal = ({
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
     sessionStorage.removeItem('widgetHeaderRequestHistory')
+    window.history.back()
   };
 
   const handleHomeClick = () => {
@@ -981,13 +985,21 @@ const ChatModal = ({
             <>
               {/* Desktop Close/Layout Header */}
               {!(isShowShopLookSplitLayout && layoutMode !== "left" && !isMobile) && (
-                <div className={`${styles["chatmodal-close-icon-container"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
-
-                  <CloseOutlined
+                <div className={`${styles["chatmodal-content-max-width"]} ${isMobile ? styles["chatmodal-hidden-mobile"] : ""}`}>
+                   <button
+                          className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
+                          onClick={closeChatModal}
+                        >
+                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
+                            <ArrowLeftOutlined />
+                          </span>
+                          <span className="capitalize">Go back</span>
+                        </button>
+                  {/* <CloseOutlined
                     id="chat_modal_close_icon"
                     onClick={closeChatModal}
                     className={styles["chatmodal-close-icon"]}
-                  />
+                  /> */}
                 </div>
               )}
 
@@ -1104,11 +1116,16 @@ const ChatModal = ({
 
               {/* Standalone Mobile Close Icon when navbar is hidden */}
               {isMobile && (!isActiveSearchOptionAvailable || !isShowAuraResponse) && (
-                <div className={styles["chatmodal-mobile-standalone-close"]}>
-                  <CloseOutlined
-                    onClick={closeChatModal}
-                    className={styles["chatmodal-mobile-close-icon"]}
-                  />
+                <div className='px-3'>
+                 <button
+                          className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
+                          onClick={handleGoBack}
+                        >
+                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
+                            <ArrowLeftOutlined />
+                          </span>
+                          <span className="capitalize">Go back</span>
+                        </button>
                 </div>
               )}
             </>
@@ -1127,12 +1144,21 @@ const ChatModal = ({
                 className={isSearchPopupOpen ? styles["chatmodal-search-popup-content"] : ""}
                 onClick={(e) => isSearchPopupOpen && e.stopPropagation()}
               >
-                {isSearchPopupOpen && (
-                  <CloseOutlined
+                {/* {isSearchPopupOpen && ( */}
+                  {/* <CloseOutlined
                     className={styles["chatmodal-search-popup-close"]}
                     onClick={() => setIsSearchPopupOpen(false)}
-                  />
-                )}
+                  /> */}
+                {/* )} */}
+                  <button
+                          className="group px-3 mt-7 text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
+                          onClick={closeChatModal}
+                        >
+                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
+                            <ArrowLeftOutlined />
+                          </span>
+                          <span className="capitalize">Go back</span>
+                        </button>
                 <div
                   className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
                     } `}

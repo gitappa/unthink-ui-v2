@@ -61,7 +61,7 @@
 }
 
 /* Close icon container */
-.chatmodal-close-icon-container {
+/* .chatmodal-close-icon-container {
   font-size: 1.125rem;
   line-height: 1;
   display: flex;
@@ -72,17 +72,17 @@
   top: 1rem;
   right: 1rem;
   z-index: 6;
-}
+} */
 
 
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .chatmodal-close-icon-container {
     font-size: 1.25rem;
     top: 1.25rem;
     right: 1.5rem;
   }
-}
+} */
 
 .chatmodal-close-icon {
   cursor: pointer;
@@ -2379,13 +2379,7 @@
     margin-top: 0;
   }
 
-  .chatmodal-mobile-standalone-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 1100;
-    line-height: 1;
-  }
+ 
 }
 
 .chatmodal-mini-tabs {
