@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import GuestPopUp from "./GuestPopUp";
 import { GuestPopUpShow } from "./redux/actions";
 import { authAPIs } from "../../helper/serverAPIs";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 
 const DEFAULT_GUEST_COOKIE_EXPIRE_DAYS = 7;
 
@@ -113,6 +114,7 @@ function GuestUserPopUp({
                 phone,
               }),
             );
+            window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
           }
           notification.success({
             message: "Login Successfully",

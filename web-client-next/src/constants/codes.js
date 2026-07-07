@@ -447,3 +447,5 @@ export const MAIN_SITE_URL = {
 // 			"Varnah Jewelry is a renowned seller of exquisite jewelry pieces.  With their attention to detail and craftsmanship, Varnah Jewelry creates unique and stunning pieces that are perfect for any occasion.  Their collection features a mix of traditional and contemporary designs, catering to different tastes and preferences.",
 // 	},
 // };
+
+export const KIOSK_LOGIN_CHANGE_EVENT = 'kiosk-login-change'

@@ -61,6 +61,7 @@ import {
 import appTracker from "../../helper/webTracker/appTracker";
 import {
   defaultFavoriteColl,
+  KIOSK_LOGIN_CHANGE_EVENT,
   PRODUCT_DUMMY_URL,
   WISHLIST_TITLE,
 } from "../../constants/codes";
@@ -226,8 +227,11 @@ const ProductCard = ({
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
+const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
+
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
+    //  console.log("Raw:", sessionStorage.getItem("Kiosk-login"));
     if (typeof window === "undefined") return null;
 
     try {
@@ -236,7 +240,23 @@ const ProductCard = ({
       return null;
     }
   }, []);
-  const KioskLoginAuth = getKioskLogin();
+
+
+const syncKioskLogin = useCallback(() => {
+ const login = getKioskLogin();
+  // console.log("login:", login);
+  setKioskLoginAuth(login);}, 
+  [getKioskLogin]);
+
+useEffect(() => {
+    syncKioskLogin(); // Get initial value
+  window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+
+  return () => {
+    window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+  };
+}, [syncKioskLogin]);
+// console.log('KioskLoginAuth',KioskLoginAuth);
 
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
