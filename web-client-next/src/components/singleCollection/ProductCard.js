@@ -223,7 +223,7 @@ const ProductCard = ({
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
   const cartCollection = collection?.product_lists.map((arr =>arr?.mfr_code)).find((arr)=>arr === product.mfr_code)
-  console.log('cartCollection',cartCollection );
+  // console.log('cartCollection',cartCollection );
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
