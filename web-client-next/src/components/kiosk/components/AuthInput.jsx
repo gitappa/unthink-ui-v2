@@ -307,6 +307,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         };
 
         sessionStorage.setItem(KIOSK_LOGIN_STORAGE_KEY, JSON.stringify(loginData));
+        window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
         setEmailPhone(loginName);
         syncKioskLogin(loginData);
         setStatus("");
