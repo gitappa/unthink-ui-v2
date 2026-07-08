@@ -7,9 +7,9 @@ const signInWithLinkRequestUrl = '/users/signin_with_link';
 
 // Call /users/signin_with_link?emailId=<email>&is_auto_login=true
 export const requestSigninWithLink = async (email,phone) => {
-  // try {
-  //   console.log('email',email);
-  //   console.log('phone',phone);
+  try {
+    // console.log('email',email);
+    // console.log('phone',phone);
     
     
     const emailId =
