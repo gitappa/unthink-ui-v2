@@ -13,8 +13,9 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import {
 	CopyOutlined,
 } from "@ant-design/icons";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
+import { message } from "antd";
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
-const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
 
 const INITIAL_COLLECTION_QR_STATE = {
   isOpen: false,
@@ -209,6 +210,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
     ({ resetInput = true } = {}) => {
       if (typeof window !== "undefined"   ) {
         sessionStorage.removeItem(KIOSK_LOGIN_STORAGE_KEY);
+        window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
       }
       if (resetInput) setEmailPhone("");
       setStatus("");
@@ -306,6 +308,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         };
 
         sessionStorage.setItem(KIOSK_LOGIN_STORAGE_KEY, JSON.stringify(loginData));
+        window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
         setEmailPhone(loginName);
         syncKioskLogin(loginData);
         setStatus("");

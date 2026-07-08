@@ -8,8 +8,8 @@ const signInWithLinkRequestUrl = '/users/signin_with_link';
 // Call /users/signin_with_link?emailId=<email>&is_auto_login=true
 export const requestSigninWithLink = async (email,phone) => {
   try {
-    console.log('email',email);
-    console.log('phone',phone);
+    // console.log('email',email);
+    // console.log('phone',phone);
     
     
     const emailId =
@@ -20,8 +20,8 @@ export const requestSigninWithLink = async (email,phone) => {
     //   return null;
     // }
 
-    const url = `https://aurastage.unthink.ai/users/signin_with_link`;
-console.log('hello world');
+    const url = `${auraYfretUserCollBaseUrl}/users/signin_with_link`;
+// console.log('hello world');
 
     const res = await apiInstance({
       url,

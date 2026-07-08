@@ -400,19 +400,7 @@ const Header = ({
           ),
         
         },
-         {
-          key: "My Try ons",
-          className: styles.headerMenuItemPy2,
-            onClick: () => {
-          handleVtoFetch()
-          },
-          label:  (
-            <span className={styles.headerMenuLinkTextBase}  >
-              My Try ons
-            </span>
-          ),
-        
-        },
+      
         {
           key: "myprofile",
           className: styles.headerMenuItemPy2,
@@ -427,7 +415,23 @@ const Header = ({
           },
         },
       );
+   if(window.innerWidth <= 1024){
+    items.push({
 
+          key: "My Try ons",
+          className: styles.headerMenuItemPy2,
+            onClick: () => {
+          handleVtoFetch()
+          },
+          label:  (
+            <span className={styles.headerMenuLinkTextBase}  >
+              My Try ons
+            </span>
+          ),
+         })
+
+        
+        }
       if (is_store_instance && isSellerLoggedIn) {
         items.push({
           key: "myproducts",

@@ -28,6 +28,7 @@ import ChatModal from "./ChatModal";
 import AuraChatSettingModal from "../auraChatSettingModal";
 import { AuraChatSettingModalModes } from "../auraChatSettingModal/AuraChatSettingModal";
 import { adminUserId, current_store_name, is_store_instance, super_admin } from "../../constants/config";
+import { useRouter } from "next/router";
 
 const defaultHiMessage = "Hi";
 
@@ -168,6 +169,10 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     }),
     [showSettings, activeSearchOption?.id, JSON.stringify(auraChatSetting), isSendSTLTemplates, isSendCTLTemplates, auraChatSetting, isFollowUpQuery]
   );
+  const router = useRouter();
+  const isHomePage = router.pathname === "/";
+  const isNotHomePage = router.pathname ==='/search'
+  const shouldShowChatModal = isAuraChatPage || (showChatModal && !isHomePage);
 
   useEffect(() => {
     if (!streaming) {
@@ -208,7 +213,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
 
   const chatModalLayer = (
     <>
-      <div className={`fixed inset-0 z-40 h-full overflow-auto transition-all duration-300 ease-in-out ${showChatModal ? "translate-y-0 delay-300 opacity-100" : "-translate-y-full opacity-0"}`}>
+      <div className=" inset-0 z-40 h-full overflow-auto transition-all duration-300 ease-in-out">
         <ChatModal
           handleMicrophoneClick={handleMicrophoneClick}
           streaming={streaming}
@@ -236,11 +241,12 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
       <AuraChatSettingModal isOpen={settingModalOpen} onClose={closeSettingModal} mode={auraChatSettingMode} />
     </>
   );
+// console.log('isNotHomePage',isNotHomePage);
 
   return (
     <>
       {storeData?.is_searchOptions_enabled ? (
-        <div className="hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2">
+        <div className={`${!isNotHomePage ? 'hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2' : 'hidden'} `}>
           <Chat
             handleMicrophoneClick={handleMicrophoneClick}
             streaming={streaming}
@@ -259,7 +265,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
       ) : (
         <div className="hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2" />
       )}
-      {portalTarget ? createPortal(chatModalLayer, portalTarget) : null}
+      {portalTarget && shouldShowChatModal ? createPortal(chatModalLayer, portalTarget) : null}
     </>
   );
 };

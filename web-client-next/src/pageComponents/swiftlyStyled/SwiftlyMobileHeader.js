@@ -86,7 +86,7 @@ const SwiftlyMobileHeader = ({
       >
         <div className={styles.logoContainer}>
           <span className={styles.logoText} onClick={() => navigate(PATH_ROOT)}>
-            {is_store_instance && current_store_name}
+            {is_store_instance && current_store_name.length >15 ? current_store_name.slice(0,15)+ '...'  : current_store_name}
           </span> 
         </div>
         <div className="flex items-center gap-2.5">
@@ -110,6 +110,7 @@ const SwiftlyMobileHeader = ({
               style={{ filter: "brightness(0) opacity(0.7)" }}
               alt="searchIcon"
               className={styles.searchIcon}
+              onClick={()=>navigate('/search')}
               // style={{ filter: "invert(1)" }}
             />
           </button>

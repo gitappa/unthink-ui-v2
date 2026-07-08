@@ -34,6 +34,7 @@ import {
 import { availableChatSearchTypes as _availableChatSearchTypes, isStagingEnv } from "../../constants/config";
 import { profileAPIs } from "../../helper/serverAPIs";
 import { isEmpty } from "../../helper/utils";
+import { useRouter } from "next/router";
 
 const Chat = ({
   localChatMessage,
@@ -59,7 +60,7 @@ const Chat = ({
   handleSubmitChatInput,
 }) => {
   const dispatch = useDispatch();
-
+  const router = useRouter()
   const [
     chatMessage,
     chatImageUrl,
@@ -98,9 +99,9 @@ const Chat = ({
 
   const activeChatSearchType = __activeChatSearchType || _activeChatSearchType;
 
-  const aura_header_theme = config.aura_header_theme;
+  // const aura_header_theme = config.aura_header_theme;
 
-  const mic_icon = aura_header_theme === "dark" ? header_mic_dark : header_mic;
+  // const mic_icon = aura_header_theme === "dark" ? header_mic_dark : header_mic;
 
   const handleChangeChatMessage = (message) => {
     dispatch(setChatMessage(message, chatTypeKey));
@@ -281,13 +282,15 @@ const Chat = ({
             !isBTInstance ? "border border-gray-300" : ""
           }`}
           onClick={() => {
+            router.push("/search");
             showAuraIntro && dispatch(setShowAuraIntro(false));
             onChatClick && onChatClick();
           }}>
           {isBTNormalUserLoggedIn ? (
             <div className="h-10">
               <div className={`flex items-center border border-brand rounded-full gap-1 p-1 ${
-                aura_header_theme === "dark" ? "bg-gray-100 border-gray-100" : ""
+                // aura_header_theme === "dark" ? "bg-gray-100 border-gray-100" : ""
+                ''
               }`}>
                 <TypeAuraUIRender />
                 <TypeSearchUIRender />
@@ -297,7 +300,9 @@ const Chat = ({
 
           {inputControls?.length && !showChatModal ? (
             <div className="flex items-center gap-2 pl-0">
-              <div className={`h-7 ${aura_header_theme === "dark" ? "border-l-2 border-white" : ""}`} />
+              <div className={`h-7 
+                `}
+                 />
               {inputControls}
             </div>
           ) : null}
@@ -330,7 +335,9 @@ const Chat = ({
 
           {inputControls?.length && showChatModal ? (
             <div className="flex items-center gap-1 pr-4 pl-1 md:gap-1 md:pr-4">
-              <div className={`h-7 ${aura_header_theme === "dark" ? "border-l-2 border-white" : "border-l-2 border-black"}`} />
+              <div className={`h-7 `}
+ 
+                 />
               {inputControls}
             </div>
           ) : null}

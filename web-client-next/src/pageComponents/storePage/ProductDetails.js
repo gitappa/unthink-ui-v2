@@ -42,6 +42,7 @@ import share_icon from "../../images/profilePage/share_icon.svg";
 import {
   CURRENCY_SYMBOLS,
   CURRENCY_USD,
+  KIOSK_LOGIN_CHANGE_EVENT,
   PATH_ROOT,
   STORE_USER_NAME_SAMSKARA,
 } from "../../constants/codes";
@@ -171,32 +172,29 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
-  const kioskLogin =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("Kiosk-login")
-      : null;
 
-  // parsedKiosk: parsed JSON from sessionStorage (if present)
-  const parsedKiosk =
-    typeof window !== "undefined"
-      ? (() => {
-          try {
-            return kioskLogin ? JSON.parse(kioskLogin) : {};
-          } catch (err) {
-            return {};
-          }
-        })()
-      : {};
+const [kioskLogin, setKioskLoginAuth] = useState(null);
+      // console.log('kioskLogin',kioskLogin);
 
-  const getKioskLoginUserId = useCallback(() => {
-    if (!kioskLogin) return "";
+useEffect(() => {
+  const handleKioskLoginChange = () => {
+    const kioskLogin = sessionStorage.getItem("Kiosk-login");
 
     try {
-      return JSON.parse(kioskLogin)?.user_id || kioskLogin;
-    } catch (error) {
-      return kioskLogin;
+      const parsed = setKioskLoginAuth (kioskLogin ?  JSON.parse(kioskLogin) : {});
+      // console.log("Updated:", parsed);
+    } catch {
+      console.log("Invalid JSON");
     }
-  }, [kioskLogin]);
+  };
+  handleKioskLoginChange()
+
+  window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
+
+  return () => {
+    window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
+  };
+}, []);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -209,7 +207,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
         email = null,
       } = options;
 
-      const kioskLoginUserId = getKioskLoginUserId();
+      const kioskLoginUserId = kioskLogin?.user_id;
 
       if (isSave && !kioskLoginUserId && !isGuestSubmit && hasKioskAccess) {
         setIsPopupShow(true);
@@ -245,7 +243,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
       authUser,
       isUserLogin,
       dispatch,
-      getKioskLoginUserId,
+       kioskLogin?.user_id,
       storeData,
       productDetails,
       productToWishlistCollection,
@@ -256,7 +254,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
 
   const buildShareAutoLoginLink = useCallback(
     async ({ userId = null, email = null,phone } = {}) => {
-      const kioskLoginUserId = userId || getKioskLoginUserId();
+      const kioskLoginUserId = userId || kioskLogin?.user_id;
       const origin =
         typeof window !== "undefined" ? window.location.origin : "";
 
@@ -297,7 +295,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
 
       return false;
     },
-    [getKioskLoginUserId, productMfrCode],
+    [ kioskLogin?.user_id, productMfrCode],
   );
 
   const buildProductAutoLoginQr = useCallback(
@@ -354,7 +352,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
   );
 
   const handleShareClick = useCallback(async () => {
-    const kioskLoginUserId = getKioskLoginUserId();
+    const kioskLoginUserId = kioskLogin?.user_id;
     if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
@@ -371,7 +369,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
 
     setShareContext("product");
     setShowShareProductDetails((show) => !show);
-  }, [buildShareAutoLoginLink, dispatch, getKioskLoginUserId, hasKioskAccess]);
+  }, [buildShareAutoLoginLink, dispatch,  kioskLogin?.user_id, hasKioskAccess]);
 
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
@@ -861,10 +859,10 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
                     }
                   : null
               }
-              saveUserId={parsedKiosk?.user_id || authUser?.user_id || null}
+              saveUserId={kioskLogin?.user_id || authUser?.user_id || null}
               eventId={storeData?.event_id || null}
-              kioskEmail={parsedKiosk?.email || null}
-              kioskUserName={parsedKiosk?.user_name || null}
+              kioskEmail={kioskLogin?.email || null}
+              kioskUserName={kioskLogin?.user_name || null}
             
             />
 
