@@ -282,7 +282,7 @@ const Chat = ({
             !isBTInstance ? "border border-gray-300" : ""
           }`}
           onClick={() => {
-            router.push("/aura");
+            router.push("/search");
             showAuraIntro && dispatch(setShowAuraIntro(false));
             onChatClick && onChatClick();
           }}>

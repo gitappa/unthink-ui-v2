@@ -24,6 +24,7 @@ import Image from "next/image";
 import styles from "./SwiftlyHeader.module.css";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import { BsBookmarkPlus, BsBookmarkPlusFill } from "react-icons/bs";
+import { Tooltip } from "antd";
 
 const SwiftlyHeader = ({
   disabledOutSideClick,
@@ -40,7 +41,7 @@ const SwiftlyHeader = ({
   setisDropDown,
   handleVtoFetch,
   cartItemCount,
-  isUserLogin
+  isUserLogin,
 }) => {
   const navigate = useNavigate();
   const { themeCodes } = useTheme();
@@ -57,7 +58,7 @@ const SwiftlyHeader = ({
   };
   // console.log('applied', currentUser.emailId ? 'hello' : null);
 
-  const [storeData,  ] = useSelector((state) => [state.store.data, ]);
+  const [storeData] = useSelector((state) => [state.store.data]);
   // const cartItemCount = useMemo(() => {
   //   return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
   // }, [cartCollection]);
@@ -218,17 +219,25 @@ const SwiftlyHeader = ({
           <div className={styles.rightSection}>
             <div className={styles.collections}>
               {storeData?.is_droppWallet_connect_enabled && (
-                <Image
-                  src={walletIcon}
-                  style={{ filter: "brightness(0) opacity(0.7)" }}
-                  onClick={() => setisDropDown(true)}
-                  alt="wallet"
-                  height={24}
-                  width={24}
-                  className={styles.walletIcon}
-                />
+                <Tooltip title="Wallet">
+                  <Image
+                    src={walletIcon}
+                    style={{ filter: "brightness(0) opacity(0.7)" }}
+                    onClick={() => setisDropDown(true)}
+                    alt="wallet"
+                    height={24}
+                    width={24}
+                    className={styles.walletIcon}
+                  />
+                </Tooltip>
               )}
-         
+              <button
+                className="m-0 xl:text-base font-bold  overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2"
+                //  style={{ color: "#4F4F4F" ,fontWeight:600,fontSize:14,fontFamily:''}}
+                onClick={() => navigate(getThemeCollectionsPagePath(THEME_ALL))}
+              >
+                Collections
+              </button>
 
               {/* {currentUser?.emailId ? (
                 <FaRegHeart
@@ -241,30 +250,32 @@ const SwiftlyHeader = ({
                   className={styles.wishlistIcon}
                 />
               ) : null} */}
-              {isUserLogin &&
-              <Image
-                src={tryOnIcon}
-                alt="Try on"
-                height={24}
-                width={24}
-                className={styles.tryOnIcon}
-                onClick={() => {
-                  handleVtoFetch();
-                   }}
-               />
-                  }
-              {storeData?.pdp_settings?.is_add_to_cart_button && (
-                <Link href="/cart" className={`${styles.cartLink} relative`}>
-                  <FiShoppingCart
-                    className={styles.cartIcon}
-                    style={{ filter: "brightness(0) opacity(0.7)" }}
+              {isUserLogin && (
+                <Tooltip title="My Try Ons">
+                  <Image
+                    src={tryOnIcon}
+                    alt="Try on"
+                    height={24}
+                    width={24}
+                    className={styles.tryOnIcon}
+                    onClick={() => {
+                      handleVtoFetch();
+                    }}
                   />
-                  <span
-                    className="absolute -top-[6px] -right-[10px] bg-[var(--color-alert)] text-white rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none"
-                  >
-                    {cartItemCount}
-                  </span>
-                </Link>
+                </Tooltip>
+              )}
+              {storeData?.pdp_settings?.is_add_to_cart_button && (
+                <Tooltip title="My Cart">
+                  <Link href="/cart" className={`${styles.cartLink} relative`}>
+                    <FiShoppingCart
+                      className={styles.cartIcon}
+                      style={{ filter: "brightness(0) opacity(0.7)" }}
+                    />
+                    <span className="absolute -top-[6px] -right-[10px] bg-[var(--color-alert)] text-white rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none">
+                      {cartItemCount}
+                    </span>
+                  </Link>
+                </Tooltip>
               )}
               <UserProfileMenu
                 isUserFetching={isUserFetching}

@@ -1,19 +1,28 @@
-import React from "react";
+import React, { useMemo } from "react";
 import KioskQRCard from "./KioskQRCard";
 import cart from "../../images/kiosk/cart.png";
+import { collectionQRCodeGenerator } from "../../helper/utils";
 const QRsection = ({ showTags, storeData }) => {
   const [fetchedData, setFetchedData] = React.useState(null);
-  console.log('fetchedData',fetchedData);
-  
+  console.log("fetchedData", fetchedData);
+
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
-  const data =storeData.kiosk_settings?.tabs
+  const data = storeData.kiosk_settings?.tabs;
   // data.push(storeData.kiosk_settings?.tab1,storeData.kiosk_settings?.tab2,storeData.kiosk_settings?.tab3,storeData.kiosk_settings?.tab4);
-React.useEffect(() => {
-  const item = data.find((item) => item?.label === showTags);
-  setFetchedData(item || null);
-}, [showTags, storeData]);
-      
+  React.useEffect(() => {
+    const item = data.find((item) => item?.label === showTags);
+    setFetchedData(item || null);
+  }, [showTags, storeData]);
+
+  const shareQrCodeImage = (sharePageUrl) => {
+    try {
+      return collectionQRCodeGenerator(sharePageUrl);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // console.log('data',data)
   if (
     showTags === "Social Media" ||
@@ -32,12 +41,18 @@ React.useEffect(() => {
 
           <div className="relative z-10 flex h-full flex-col items-center">
             <div className="flex w-full items-center pt-8  justify-center gap-[10px]">
-              <img src={fetchedData?.title_icon || cart.src} className="w-[50%]" alt="cart" />
+              <img
+                src={fetchedData?.title_icon || cart.src}
+                className="w-[50%]"
+                alt="cart"
+              />
 
               <div className="p-2.5 w-full  bg-white rounded">
                 <div className="flex h-auto w-fit m-auto   items-center justify-center bg-[#a98b3d]  shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_3px_8px_rgba(0,0,0,0.08)]">
                   <img
-                    src={qr1}
+                    src={
+                      shareQrCodeImage(fetchedData?.event_app_list[0]) || qr1
+                    }
                     alt="Digital cart QR"
                     className="h-full w-full object-contain mix-blend-lighten"
                   />
@@ -85,7 +100,10 @@ React.useEffect(() => {
             </p>
           </div>
           <img
-            src={fetchedData?.offer_image || "https://www.giva.co/cdn/shop/files/logo__3.png?v=1752672324&width=100"}
+            src={
+              fetchedData?.offer_image ||
+              "https://www.giva.co/cdn/shop/files/logo__3.png?v=1752672324&width=100"
+            }
             alt="offer_image"
             className="p-4 m-auto mt-3"
           />
