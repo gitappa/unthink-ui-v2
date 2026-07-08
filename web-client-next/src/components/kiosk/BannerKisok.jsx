@@ -11,12 +11,12 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
 
   const trendingProducts = (products || [])
     .filter((x) => x.cover_image && x.path)
-    .slice(0, 6);
+ 
   const lookBooksProducts = (lookBooks || [])
     .filter((x) => x.cover_image && x.path)
     .slice(0, 6);
   const displayedProducts =
-    Tags === "#Trending" ? trendingProducts : lookBooksProducts;
+    Tags === "#Trending" ? trendingProducts.slice(0,trendingProducts.length >= 12 ? 12 : trendingProducts.length > 10 ? 9 : 6 ) : lookBooksProducts.slice(0,lookBooksProducts.length > 13 ? 12 :lookBooksProducts.length > 10 ? 9 : 6);
   //  console.log('displayedProducts',displayedProducts);
 
   const handleNavCollection = (Singlecollectiondata) => {

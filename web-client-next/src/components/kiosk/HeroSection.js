@@ -7,60 +7,32 @@ import Image from "next/image";
 import { Autoplay } from "swiper";
 import { SocialMediaApiCall } from "../../helper/serverAPIs";
 
-
-
-const HeroSection = ({ storeData }) => {
+const HeroSection = ({ storeData, collectiondata }) => {
   const router = useRouter();
-  const [socialMediaData, setSocialMediaData] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const rotationDelay = storeData?.kiosk_settings?.video_time_gap
-  const collectiondata = useMemo(
-    () => socialMediaData[activeIndex] || null,
-    [socialMediaData, activeIndex],
-  );
+
   // const collectiondata = useMemo(() => {
   //   return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
   // }, [products]);
   // console.log('collectiondatas', collectiondata);
   // console.log('collectiondata',collectiondata);
 
-  useEffect(() => {
-    const fetchSocialMedia = async () => {
-      try {
-        const response = await SocialMediaApiCall();
-        // console.log('response',response.data.data);
+  // useEffect(() => {
+  //   const fetchSocialMedia = async () => {
+  //     try {
 
-        const data = Array.isArray(response?.data?.data)
-          ? response.data.data
-          : [];
-        setSocialMediaData(data);
-        setActiveIndex(0);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchSocialMedia();
-  }, []);
-
-  useEffect(() => {
-    if (socialMediaData.length <= 1 || !rotationDelay) return;
-
-    const timer = setInterval(() => {
-      setActiveIndex((currentIndex) =>
-        (currentIndex + 1) % socialMediaData.length,
-      );
-    }, rotationDelay);
-
-    return () => clearInterval(timer);
-  }, [rotationDelay, socialMediaData.length]);
+  //   fetchSocialMedia();
+  // }, []);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage =
     collectiondata?.thumbnail_image || collectiondata?.image;
   const [isClient, setIsClient] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-
 
   useEffect(() => {
     // mark client after mount to avoid running client-only effects on SSR
@@ -71,8 +43,6 @@ const HeroSection = ({ storeData }) => {
   const handlePlayClick = () => setIsPlaying(true);
   const handlePauseClick = () => setIsPlaying(false);
 
- 
-
   useEffect(() => {
     if (!isClient) return;
     const node = videoContainerRef.current;
@@ -82,7 +52,7 @@ const HeroSection = ({ storeData }) => {
       (entries) => {
         const entry = entries[0];
         const visible = entry.intersectionRatio >= 0.5;
-       
+
         setIsPlaying(visible);
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
@@ -96,7 +66,7 @@ const HeroSection = ({ storeData }) => {
   return (
     <div className="relative w-full mb-24">
       <div
-        className="relative cursor-pointer rounded-4xl " 
+        className="relative cursor-pointer rounded-4xl "
         style={{ maxHeight: "78vh", height: "700px" }}
         onClick={handlePlayClick}
         ref={videoContainerRef}
@@ -115,10 +85,10 @@ const HeroSection = ({ storeData }) => {
               height="100%"
               playsinline
               controls={false}
-                style={{
-    borderRadius: "16px",
-    overflow: "hidden",
-  }}
+              style={{
+                borderRadius: "16px",
+                overflow: "hidden",
+              }}
               config={{
                 youtube: {
                   playerVars: {
