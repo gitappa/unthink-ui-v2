@@ -110,7 +110,7 @@ const SwiftlyMobileHeader = ({
               style={{ filter: "brightness(0) opacity(0.7)" }}
               alt="searchIcon"
               className={styles.searchIcon}
-              onClick={()=>navigate('/aura')}
+              onClick={()=>navigate('/search')}
               // style={{ filter: "invert(1)" }}
             />
           </button>
