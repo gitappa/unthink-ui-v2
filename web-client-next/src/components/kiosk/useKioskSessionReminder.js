@@ -18,7 +18,7 @@ const notifyKioskLoginChange = () => {
 // Hook: manages kiosk session reminder timer and actions
 export default function useKioskSessionReminder({ time } = {}) {
   const intervalMs = time || 120 * 1000;
-  console.log('time',time);
+  // console.log('time',time);
   
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
