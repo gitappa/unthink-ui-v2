@@ -171,6 +171,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
   );
   const router = useRouter();
   const isHomePage = router.pathname === "/";
+  const isNotHomePage = router.pathname ==='/search'
   const shouldShowChatModal = isAuraChatPage || (showChatModal && !isHomePage);
 
   useEffect(() => {
@@ -240,11 +241,12 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
       <AuraChatSettingModal isOpen={settingModalOpen} onClose={closeSettingModal} mode={auraChatSettingMode} />
     </>
   );
+// console.log('isNotHomePage',isNotHomePage);
 
   return (
     <>
       {storeData?.is_searchOptions_enabled ? (
-        <div className={`${isHomePage ? 'hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2' : 'hidden'} `}>
+        <div className={`${!isNotHomePage ? 'hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2' : 'hidden'} `}>
           <Chat
             handleMicrophoneClick={handleMicrophoneClick}
             streaming={streaming}
