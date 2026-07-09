@@ -515,7 +515,9 @@ const DeliveryDetails = () => {
                 <p>Estimated Delivery by</p>
                 <p className="font-semibold text-black">1st Nov 2025</p>
               </div>
-              <button className="text-xl cursor-pointer " onClick={() => navigate(`/claim-points/${authUserId}/${storeData.store_name}`)} > Claim Rewards </button>
+              {storeData?.store_name=== 'giva_indiranagar2_hs' && (
+                <button className="text-xl cursor-pointer " onClick={() => navigate(`/claim-points/${authUserId}/${storeData?.store_name}`)} > Claim Rewards </button>
+              )}
               <div className="relative mt-6"> 
                 <input
                   placeholder="Coupon Code"
