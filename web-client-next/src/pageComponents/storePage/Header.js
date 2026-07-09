@@ -84,7 +84,11 @@ import { UserProfileMenu } from "./UserProfileMenu";
 import Leaderboard from "../leaderboard";
 import { logoutVenlyUser, openVenlyWallet } from "../../helper/venlyUtils";
 // import PageLoader from "../../components/Loader/PageLoader";
-import { getUserCollectionsReset, getUserInfo } from "../Auth/redux/actions";
+import {
+  getUserCollections,
+  getUserCollectionsReset,
+  getUserInfo,
+} from "../Auth/redux/actions";
 import { connectVenlyWallet } from "../earnedRewardModal/redux/actions";
 import Cookies from "js-cookie";
 import { FaRegHeart } from "react-icons/fa";
@@ -138,7 +142,8 @@ const Header = ({
     // associate_seller,
     storeData,
     authUser,
-    cartCollection
+    cartCollection,
+    userCollection,
   ] = useSelector((state) => [
     state.chatV2.showChatModal,
     state.appState.wishlist.showWishlistModal,
@@ -151,7 +156,8 @@ const Header = ({
     // state.store.data.associate_seller,
     state.store.data,
     state.auth.user.data ?? {},
-    state.cart?.collection
+    state.cart?.collection,
+    state.auth.user.collections.data,
   ]);
   const removedata = false;
   const hasKioskAccess = useKioskAccess({
@@ -159,16 +165,24 @@ const Header = ({
     storeData,
     authUser,
   });
-  //  console.log('hasKioskAccess',hasKioskAccess);
- 
-// const [kioskLogin, setKioskLogin] = useState(false);
+  const router = useRouter();
+  // console.log('userCollectsssion',userCollection);
 
-// useEffect(() => {
-//   const value = localStorage.getItem("kioskLogin") === "true";
-//   setKioskLogin(value);
-// }, []);
- const cartItemCount = useMemo(() => {
-    return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
+  //  console.log('hasKioskAccess',hasKioskAccess);
+
+  // const [kioskLogin, setKioskLogin] = useState(false);
+
+  // useEffect(() => {
+  //   const value = localStorage.getItem("kioskLogin") === "true";
+  //   setKioskLogin(value);
+  // }, []);
+  const cartItemCount = useMemo(() => {
+    return (
+      cartCollection?.product_lists?.reduce(
+        (total, item) => total + (item.qty || 1),
+        0,
+      ) || 0
+    );
   }, [cartCollection]);
   const {
     my_products_enable: isMyProductsEnable,
@@ -317,27 +331,27 @@ const Header = ({
       isUserLogin,
     [isUserLogin],
   );
- 
-  const handleVtoFetch =async()=>{
-    const  payload ={
-  collection_name: "my tryons",
+
+  const handleVtoFetch = async () => {
+    const payload = {
+      collection_name: "my tryons",
       user_id: authUser?.user_id,
       type: "system",
-    }
-    try{
-        const response = await collectionAPIs.fetchCollectionsAPICall(payload);
-        // console.log('response', response.data?.data[0]?._id);
-        if(response.data?.data?.length > 0){  
-          navigate(`influencer/${authUser.user_name}/${response.data?.data[0]?._id}`);
-        }
-        else{
-          notification.warning({ message: "No Try ons Collections found." });
-        }
-    }
-    catch(e){
-      console.error('Error fetching collections:', e);
-    }
-  }
+      callback: (response) => {
+      if (response.data?.data?.length > 0) {
+        router.push(
+          `/influencer/${authUser.user_name}/${response.data.data[0]._id}`
+        );
+      } else {
+        notification.warning({
+          message: "No Try ons Collections found.",
+        });
+      }
+    },
+    };
+    dispatch(getUserCollections(payload));
+    
+  };
   const viewLeaderboardEnabled = useMemo(
     () =>
       (isStoreAdminLoggedIn || isStagingEnv) &&
@@ -354,7 +368,18 @@ const Header = ({
   // 	() => associate_seller?.includes(currentUser.emailId),
   // 	[associate_seller, currentUser.emailId]
   // );
-
+  const myWishlistClick = () => {
+    dispatch(
+      getUserCollections({
+        path: `my_wishlist_${currentUser?.user_id}`,
+        callback: (collections) => {
+          router.push(
+            `/influencer/${currentUser.user_name}/${collections[0]._id}`,
+          );
+        },
+      }),
+    );
+  };
   const getHeaderProfileMenuItems = () => {
     const items = [];
 
@@ -387,20 +412,20 @@ const Header = ({
             </Link>
           ),
         },
-             {
+
+        {
           key: "My Collections",
           className: styles.headerMenuItemPy2,
-            onClick: () => {
-          onWishlistClick()
+          onClick: () => {
+            onWishlistClick();
           },
-          label:  (
-            <span className={styles.headerMenuLinkTextBase}  >
+          label: (
+            <span className={styles.headerMenuLinkTextBase}>
               My Collections
             </span>
           ),
-        
         },
-      
+
         {
           key: "myprofile",
           className: styles.headerMenuItemPy2,
@@ -415,23 +440,30 @@ const Header = ({
           },
         },
       );
-   if(window.innerWidth <= 1024){
-    items.push({
-
+      if (window.innerWidth <= 1024) {
+        items.push({
           key: "My Try ons",
           className: styles.headerMenuItemPy2,
-            onClick: () => {
-          handleVtoFetch()
+          onClick: () => {
+            handleVtoFetch();
           },
-          label:  (
-            <span className={styles.headerMenuLinkTextBase}  >
-              My Try ons
-            </span>
+          label: (
+            <span className={styles.headerMenuLinkTextBase}>My Try ons</span>
           ),
-         })
-
-        
-        }
+        });
+      }
+      if (window.innerWidth <= 1024) {
+        items.push({
+          key: "My Wishlists",
+          className: styles.headerMenuItemPy2,
+          onClick: () => {
+            myWishlistClick();
+          },
+          label: (
+            <span className={styles.headerMenuLinkTextBase}>My Wishlists</span>
+          ),
+        });
+      }
       if (is_store_instance && isSellerLoggedIn) {
         items.push({
           key: "myproducts",
@@ -517,8 +549,10 @@ const Header = ({
       //   });
       // }
 
-
-      if (storeData?.is_droppWallet_connect_enabled && window.innerWidth <= 1024) {
+      if (
+        storeData?.is_droppWallet_connect_enabled &&
+        window.innerWidth <= 1024
+      ) {
         // if (showCategories) {
         //   items.push({
         //     key: "Discover",
@@ -543,21 +577,23 @@ const Header = ({
         //   });
         // }
         // if(storeData?.is_droppWallet_connect_enabled){
-        
-      // }
- 
-      // }  
-      
-      items.push({
-          key: 'droppwalletconnect',
+
+        // }
+
+        // }
+
+        items.push({
+          key: "droppwalletconnect",
           className: styles.headerMenuItemPy2,
           onClick: () => setisDropDown(true),
           label: (
-            <span className={styles.headerMenuSpanTextBase}>Dropp Wallet Connect</span>
+            <span className={styles.headerMenuSpanTextBase}>
+              Dropp Wallet Connect
+            </span>
           ),
         });
       }
-        items.push({
+      items.push({
         key: "signout",
         className: styles.headerMenuItemPy2,
         onClick: onSignOut,
@@ -572,7 +608,8 @@ const Header = ({
     items: getHeaderProfileMenuItems(),
     className: styles.headerProfileMenuContainer,
   };
- {/* {storeData?.is_droppWallet_connect_enabled && (
+  {
+    /* {storeData?.is_droppWallet_connect_enabled && (
             <Image
               src={walletIcon}
               style={{ filter: "brightness(0) opacity(0.7)" }}
@@ -582,16 +619,27 @@ const Header = ({
               width={24}
               className={styles.walletIcon}
             />
-          )} */}
+          )} */
+  }
+
   return (
     <>
       {/* ----mobile ui start ---- */}
       {!isSwiftlyStyledInstance || !isDoTheLookInstance ? ( // hide for swiftly styled store
         <div
-          className={`${styles.mobileBottomNav} ${showChatModal ? styles.mobileBottomNavHidden : showCategories || showPeople || (pageUser.user_name !== "RaniZaver" && storeData?.is_searchOptions_enabled) || showRewards || isUserLogin ?
-            //  styles.mobileBottomNavVisible 
-            'hidden'
-            : "hidden"}`}
+          className={`${styles.mobileBottomNav} ${
+            showChatModal
+              ? styles.mobileBottomNavHidden
+              : showCategories ||
+                  showPeople ||
+                  (pageUser.user_name !== "RaniZaver" &&
+                    storeData?.is_searchOptions_enabled) ||
+                  showRewards ||
+                  isUserLogin
+                ? //  styles.mobileBottomNavVisible
+                  "hidden"
+                : "hidden"
+          }`}
         >
           {/* this div must have 3 child only to keep the aura center aligned */}
           {showCategories || showPeople ? (
@@ -626,7 +674,7 @@ const Header = ({
           )}
 
           {pageUser.user_name !== "RaniZaver" &&
-            storeData?.is_searchOptions_enabled ? (
+          storeData?.is_searchOptions_enabled ? (
             <MobileChat onChatClick={onChatClick} />
           ) : null}
 
@@ -702,82 +750,84 @@ const Header = ({
 
       {/* swiftlyStyled mobile UI */}
       {/* {isSwiftlyStyledInstance || isDoTheLookInstance ? ( */}
-      {!showChatModal &&  !hasKioskAccess && (
+      {!showChatModal && !hasKioskAccess && (
         <div
           className={styles.mobileHeaderSticky}
           data-store-mobile-sticky-header="true"
-         >
+        >
           <SwiftlyMobileHeader
             showProfileIcon={showProfileIcon && isUserLogin}
             setShowMenu={setShowMenu}
             headerProfileMenu={headerProfileMenu}
             setisDropDown={setisDropDown}
-cartItemCount={cartItemCount}         
-   
+            cartItemCount={cartItemCount}
+            myWishlistClick={myWishlistClick}
           />
         </div>
       )}
       {/* ) : null} */}
 
       {/* ----mobile ui end ---- */}
-      {!hasKioskAccess && 
-      <div className={styles.desktopHeaderSticky}>
-        {/* budgettravel header */}
-        {isBTInstance && <BudgetTravelHeader />}
+      {!hasKioskAccess && (
+        <div className={styles.desktopHeaderSticky}>
+          {/* budgettravel header */}
+          {isBTInstance && <BudgetTravelHeader />}
 
-        {isSamskaraInstance ||
+          {isSamskaraInstance ||
           isSwiftlyStyledInstance ||
           isDoTheLookInstance ? (
-          <>
-            {isSamskaraInstance && (
-              <SamskaraHeader
-                disabledOutSideClick={disabledOutSideClick}
-                config={config}
-                trackCollectionData={trackCollectionData}
-                isBTInstance={isBTInstance}
-                showProfileIcon={showProfileIcon}
-                isUserFetching={isUserFetching}
-                headerProfileMenu={headerProfileMenu}
-                currentUser={currentUser}
-                showChatModal={showChatModal}
-              />
-            )}
-            {isHeroesVillainsInstance && (
-              <HeroesVillainsHeader
-                disabledOutSideClick={disabledOutSideClick}
-                config={config}
-                trackCollectionData={trackCollectionData}
-                isBTInstance={isBTInstance}
-                showProfileIcon={showProfileIcon}
-                isUserFetching={isUserFetching}
-                headerProfileMenu={headerProfileMenu}
-                currentUser={currentUser}
-                showChatModal={showChatModal}
-              />
-            )}
-            {(isSwiftlyStyledInstance || isDoTheLookInstance) && (
+            <>
+              {isSamskaraInstance && (
+                <SamskaraHeader
+                  disabledOutSideClick={disabledOutSideClick}
+                  config={config}
+                  trackCollectionData={trackCollectionData}
+                  isBTInstance={isBTInstance}
+                  showProfileIcon={showProfileIcon}
+                  isUserFetching={isUserFetching}
+                  headerProfileMenu={headerProfileMenu}
+                  currentUser={currentUser}
+                  showChatModal={showChatModal}
+                />
+              )}
+              {isHeroesVillainsInstance && (
+                <HeroesVillainsHeader
+                  disabledOutSideClick={disabledOutSideClick}
+                  config={config}
+                  trackCollectionData={trackCollectionData}
+                  isBTInstance={isBTInstance}
+                  showProfileIcon={showProfileIcon}
+                  isUserFetching={isUserFetching}
+                  headerProfileMenu={headerProfileMenu}
+                  currentUser={currentUser}
+                  showChatModal={showChatModal}
+                />
+              )}
+              {(isSwiftlyStyledInstance || isDoTheLookInstance) && (
+                <SwiftlyHeader
+                  isRootPage={isRootPage}
+                  disabledOutSideClick={disabledOutSideClick}
+                  config={config}
+                  trackCollectionData={trackCollectionData}
+                  isBTInstance={isBTInstance}
+                  showProfileIcon={showProfileIcon && isUserLogin}
+                  isUserFetching={isUserFetching}
+                  headerProfileMenu={headerProfileMenu}
+                  currentUser={currentUser}
+                  isSwiftlyStyledInstance={isSwiftlyStyledInstance}
+                  isDoTheLookInstance={isDoTheLookInstance}
+                  setisDropDown={setisDropDown}
+                  handleVtoFetch={handleVtoFetch}
+                  cartItemCount={cartItemCount}
+                  isUserLogin={isUserLogin}
+                  userCollection={userCollection}
+                  myWishlistClick={myWishlistClick}
+                />
+              )}
+            </>
+          ) : (
+            <>
               <SwiftlyHeader
-                isRootPage={isRootPage}
-                disabledOutSideClick={disabledOutSideClick}
-                config={config}
-                trackCollectionData={trackCollectionData}
-                isBTInstance={isBTInstance}
-                showProfileIcon={showProfileIcon && isUserLogin}
-                isUserFetching={isUserFetching}
-                headerProfileMenu={headerProfileMenu}
-                currentUser={currentUser}
-                isSwiftlyStyledInstance={isSwiftlyStyledInstance}
-                isDoTheLookInstance={isDoTheLookInstance}
-                setisDropDown={setisDropDown}
-handleVtoFetch ={handleVtoFetch }
-cartItemCount={cartItemCount}
-isUserLogin={isUserLogin}
-              />
-            )}
-          </>
-        ) : (
-          <>
-               <SwiftlyHeader
                 isRootPage={isRootPage}
                 disabledOutSideClick={disabledOutSideClick}
                 config={config}
@@ -793,43 +843,47 @@ isUserLogin={isUserLogin}
                 handleVtoFetch={handleVtoFetch}
                 cartItemCount={cartItemCount}
                 isUserLogin={isUserLogin}
-              /> 
-              {removedata && 
-          <div className={styles.desktopHeaderContainer}>
-            
-
-            {/* this div must have 3 child only to keep the aura center aligned */}
-            <div className={styles.desktopHeaderLeft}>
-              {!is_store_instance && (
-                <Link
-                  href={ROUTES.STORE_PAGE}
-                  className={styles.desktopHeaderLogoLink}
-                >
-                  <Image src={unthink_favicon} width={29} preview={false} />
-                </Link>
-              )}
-              {/* <HomeOutlined
+                userCollection={userCollection}
+                myWishlistClick={myWishlistClick}
+              />
+              {removedata && (
+                <div className={styles.desktopHeaderContainer}>
+                  {/* this div must have 3 child only to keep the aura center aligned */}
+                  <div className={styles.desktopHeaderLeft}>
+                    {!is_store_instance && (
+                      <Link
+                        href={ROUTES.STORE_PAGE}
+                        className={styles.desktopHeaderLogoLink}
+                      >
+                        <Image
+                          src={unthink_favicon}
+                          width={29}
+                          preview={false}
+                        />
+                      </Link>
+                    )}
+                    {/* <HomeOutlined
 								className='flex text-2xl cursor-pointer'
 								onClick={() =>
 									navigate(is_store_instance ? PATH_ROOT : PATH_STORE)
 								}
 							/> */}
-            </div>
+                  </div>
 
-            <ChatContainer
-              disabledOutSideClick={disabledOutSideClick}
-              config={config}
-              trackCollectionData={trackCollectionData}
-              isBTInstance={isBTInstance}
-            />
+                  <ChatContainer
+                    disabledOutSideClick={disabledOutSideClick}
+                    config={config}
+                    trackCollectionData={trackCollectionData}
+                    isBTInstance={isBTInstance}
+                  />
 
-            {showCategories ||
-              showPeople ||
-              showRewards ||
-              showCreate ||
-              showProfileIcon ? (
-              <>
-                {/* {showCategories && (
+                  {showCategories ||
+                  showPeople ||
+                  showRewards ||
+                  showCreate ||
+                  showProfileIcon ? (
+                    <>
+                      {/* {showCategories && (
 									<div
 										className='pl-3 xl:pl-6 lg:flex hidden cursor-pointer'
 										onClick={onCategoriesClick}>
@@ -838,24 +892,26 @@ isUserLogin={isUserLogin}
 										</span>
 									</div>
 								)} */}
-                {showPeople && ( // REMOVE people tab code is not required
-                  <div
-                    className={styles.desktopNavItem}
-                    onClick={onPeopleClick}
-                  >
-                    <span className={styles.desktopNavText}>PEOPLE</span>
-                  </div>
-                )}
+                      {showPeople && ( // REMOVE people tab code is not required
+                        <div
+                          className={styles.desktopNavItem}
+                          onClick={onPeopleClick}
+                        >
+                          <span className={styles.desktopNavText}>PEOPLE</span>
+                        </div>
+                      )}
 
-                {showRewards && (
-                  <div
-                    className={styles.desktopNavItem}
-                    onClick={onEarnRewardsClick}
-                  >
-                    <span className={styles.desktopNavTextNoWrap}>REWARDS</span>
-                  </div>
-                )}
-                {/* {showCreate ? (
+                      {showRewards && (
+                        <div
+                          className={styles.desktopNavItem}
+                          onClick={onEarnRewardsClick}
+                        >
+                          <span className={styles.desktopNavTextNoWrap}>
+                            REWARDS
+                          </span>
+                        </div>
+                      )}
+                      {/* {showCreate ? (
 									<Dropdown
 										overlayClassName={styles.dropdownOverlayFixed}
 										// disabled={isUserFetching}
@@ -869,68 +925,67 @@ isUserLogin={isUserLogin}
 										</div>
 									</Dropdown>
 								) : null} */}
-                <button
-                  className={styles.collectionButton}
-                  onClick={() =>
-                    navigate(getThemeCollectionsPagePath(THEME_ALL))
-                  }
-                >
-                  COLLECTIONS
-                </button>
+                      <button
+                        className={styles.collectionButton}
+                        onClick={() =>
+                          navigate(getThemeCollectionsPagePath(THEME_ALL))
+                        }
+                      >
+                        COLLECTIONS
+                      </button>
 
-                {showProfileIcon ? (
-                  // <Dropdown
-                  // 	overlayClassName='fixed'
-                  // 	disabled={isUserFetching}
-                  // 	overlay={headerProfileMenu}
-                  // 	trigger={["click"]}
-                  // 	destroyPopupOnHide>
-                  // 	<div className='pl-3 xl:pl-6 lg:flex items-center hidden cursor-pointer'>
-                  // 		{currentUser?.user_name && (
-                  // 			<Text
-                  // 				title={currentUser?.user_name}
-                  // 				ellipsis={true}
-                  // 				className={`m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2`}>
-                  // 				{currentUser?.user_name}
-                  // 			</Text>
-                  // 		)}
-                  // 		<Image
-                  // 			src={avatarImg}
-                  // 			preview={false}
-                  // 			className='pr-1 pl-2'
-                  // 		/>
-                  // 	</div>
-                  // </Dropdown>
-                  <div className={styles.desktopProfileSection}>
-                    <FaRegHeart
-                      onClick={onWishlistClick}
-                      className={styles.desktopWishlistIcon}
-                    />
+                      {showProfileIcon ? (
+                        // <Dropdown
+                        // 	overlayClassName='fixed'
+                        // 	disabled={isUserFetching}
+                        // 	overlay={headerProfileMenu}
+                        // 	trigger={["click"]}
+                        // 	destroyPopupOnHide>
+                        // 	<div className='pl-3 xl:pl-6 lg:flex items-center hidden cursor-pointer'>
+                        // 		{currentUser?.user_name && (
+                        // 			<Text
+                        // 				title={currentUser?.user_name}
+                        // 				ellipsis={true}
+                        // 				className={`m-0 xl:text-base font-semibold leading-6 max-w-102 overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2`}>
+                        // 				{currentUser?.user_name}
+                        // 			</Text>
+                        // 		)}
+                        // 		<Image
+                        // 			src={avatarImg}
+                        // 			preview={false}
+                        // 			className='pr-1 pl-2'
+                        // 		/>
+                        // 	</div>
+                        // </Dropdown>
+                        <div className={styles.desktopProfileSection}>
+                          <FaRegHeart
+                            onClick={onWishlistClick}
+                            className={styles.desktopWishlistIcon}
+                          />
+                          <UserProfileMenu
+                            isUserFetching={isUserFetching}
+                            headerProfileMenu={headerProfileMenu}
+                            currentUser={currentUser}
+                          />
+                        </div>
+                      ) : null}
+                    </>
+                  ) : (
                     <UserProfileMenu
                       isUserFetching={isUserFetching}
                       headerProfileMenu={headerProfileMenu}
                       currentUser={currentUser}
                     />
-                  </div>
-                ) : null}
-              </>
-            ) : (
-              <UserProfileMenu
-                isUserFetching={isUserFetching}
-                headerProfileMenu={headerProfileMenu}
-                currentUser={currentUser}
-              />
-            )}
-          </div>
-}
-          </>
-
-        )}
-      </div>
-      }
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {/* for profile menu in mobile */}
-      {!(isUserFetching || isInfluencerFetching) &&  !hasKioskAccess && (
+      {!(isUserFetching || isInfluencerFetching) && !hasKioskAccess && (
         <div className={styles.mobileMenuIconContainer}>
           {/* <div
 						className='text-lg text-black flex min-h-7 w-7 cursor-pointer bg-** radius- '
@@ -982,7 +1037,8 @@ isUserLogin={isUserLogin}
         attribution={currentUser?.attribution}
         statsModalTitle={
           (currentUser.first_name || currentUser.last_name) &&
-          `Audience stats for ${currentUser.first_name || ""} ${currentUser.last_name || ""
+          `Audience stats for ${currentUser.first_name || ""} ${
+            currentUser.last_name || ""
           }:`
         }
         showAttributionModal={showAttributions}
