@@ -25,6 +25,7 @@ import styles from "./SwiftlyHeader.module.css";
 import { current_store_name, is_store_instance } from "../../constants/config";
 import { BsBookmarkPlus, BsBookmarkPlusFill } from "react-icons/bs";
 import { Tooltip } from "antd";
+import { useRouter } from "next/router";
 
 const SwiftlyHeader = ({
   disabledOutSideClick,
@@ -42,6 +43,8 @@ const SwiftlyHeader = ({
   handleVtoFetch,
   cartItemCount,
   isUserLogin,
+  userCollection,
+  myWishlistClick,
 }) => {
   const navigate = useNavigate();
   const { themeCodes } = useTheme();
@@ -56,8 +59,8 @@ const SwiftlyHeader = ({
   const onWishlistClick = () => {
     dispatch(openWishlistModal());
   };
-  // console.log('applied', currentUser.emailId ? 'hello' : null);
-
+  // console.log('applied', userCollection );
+  const router = useRouter();
   const [storeData] = useSelector((state) => [state.store.data]);
   // const cartItemCount = useMemo(() => {
   //   return cartCollection?.product_lists?.reduce((total, item) => total + (item.qty || 1), 0) || 0;
@@ -239,17 +242,19 @@ const SwiftlyHeader = ({
                 Collections
               </button>
 
-              {/* {currentUser?.emailId ? (
-                <FaRegHeart
-                  style={{
-                    filter: themeCodes.header.fills
-                      ? themeCodes.header.fills
-                      : "brightness(0) opacity(0.7)",
-                  }}
-                  onClick={onWishlistClick}
-                  className={styles.wishlistIcon}
-                />
-              ) : null} */}
+              {currentUser?.emailId ? (
+                <Tooltip title="My Wishlist">
+                  <FaRegHeart
+                    style={{
+                      filter: themeCodes.header.fills
+                        ? themeCodes.header.fills
+                        : "brightness(0) opacity(0.7)",
+                    }}
+                    onClick={myWishlistClick}
+                    className={styles.wishlistIcon}
+                  />
+                </Tooltip>
+              ) : null}
               {isUserLogin && (
                 <Tooltip title="My Try Ons">
                   <Image
