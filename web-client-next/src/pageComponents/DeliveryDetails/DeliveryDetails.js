@@ -19,12 +19,13 @@ import { setCookie } from "../../helper/utils";
 const DeliveryDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [authUserId, cart_attributes] = useSelector((state) => [
+  const [authUserId, cart_attributes, storeData] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.store.data.cart_attributes,
+    state.store.data
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
-  console.log("collection", collection);
+  // console.log("collection", collection);
   const [unSignedData, setUnSignedData] = useState(null);
   const [isGuestPopUpShow] = useSelector((state) => [
     state.GuestPopUpReducer.isGuestPopUpShow,
@@ -514,7 +515,8 @@ const DeliveryDetails = () => {
                 <p>Estimated Delivery by</p>
                 <p className="font-semibold text-black">1st Nov 2025</p>
               </div>
-              <div className="relative mt-6">
+              <button className="text-xl cursor-pointer " onClick={() => navigate(`/claim-points/${authUserId}/${storeData.store_name}`)} > Claim Rewards </button>
+              <div className="relative mt-6"> 
                 <input
                   placeholder="Coupon Code"
                   type="text"
@@ -524,7 +526,7 @@ const DeliveryDetails = () => {
               </div>
 
               <div className="p-0">
-                <button
+                <button 
                   onClick={handleContinueClick}
                   style={{
                     background: "#7c75ec",

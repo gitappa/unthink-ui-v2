@@ -50,7 +50,8 @@ function* fetchCollections(action) {
 		collection_theme,
 		product_limits,
 		ipp,
-		current_page
+		current_page,
+		type,
 	} = action.payload;
 
 	const view = getCollectionPageView(user_id === authUserId, isStoreHomePage);
@@ -65,7 +66,8 @@ function* fetchCollections(action) {
 		view: !collection_theme ? view : undefined,
 		collection_theme,
 		ipp,
-		current_page
+		current_page,
+		type,
 	};
 
 	try {

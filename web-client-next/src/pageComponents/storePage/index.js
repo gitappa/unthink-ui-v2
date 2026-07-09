@@ -842,7 +842,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				collection_id: currentSingleCollection._id,
 				Clickpage: storedClickPage || "unthink_collection", // fallback only if null
 			});
-		}
+		} 
 	}, [isSingleCollectionSharedPage, currentSingleCollection._id]);
 
 
