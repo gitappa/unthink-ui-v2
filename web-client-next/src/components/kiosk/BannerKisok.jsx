@@ -25,11 +25,11 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
   return (
     <div className=" flex justify-center items-start  gap-3 ">
       {/* Banner Section */}
-      <div className="rounded-3xl   w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
+      <div className="rounded-3xl max-h-[600px]  w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
         <div className="   rounded-3xl pointer-events-none z-0" />
         <div className="w-full mx-auto relative z-10 h-full ">
-          <div className="relative gap-4  grid grid-cols-3 h-full ">
+          <div className="relative grid max-h-[calc(600px-1rem)] grid-cols-3 gap-4 overflow-y-auto pr-1 md:max-h-[calc(600px-3rem)]">
             {/* <Swiper
               onSwiper={(swiper) => {
                 swiperRef.current = swiper;

@@ -126,17 +126,20 @@ const Breadcrumbs = ({
 					}`}>
 				<div className={styles.breadcrumbsFlex}>
 					{/* Back Button for Collection Review Page */}
-					{(isCollectionReviewPage || isCreateFreeCollectionPage || pdppage || router.asPath === `/influencer/${authUserName?.user_name}/`) && (
+					{/* {(isCollectionReviewPage || isCreateFreeCollectionPage || pdppage || router.asPath === `/influencer/${authUserName?.user_name}/`) && ( */}
+					{router.asPath !== `/` && (
 						<>
-							<ArrowLeftOutlined
+							<ArrowLeftOutlined 
 								className={styles.backIcon}
 								onClick={() => window.history.back()}
 							/>
-							{!pdppage && 
-							<div>/</div> }
-							{ pdppage && <p className="cursor-pointer" onClick={() => window.history.back()} >Go back</p> }
+							{/* {!pdppage &&  */}
+							<div>/</div> 
+							{/* { pdppage && */}
+							 {/* <p className="cursor-pointer" onClick={() => window.history.back()} >Go back</p>  */}
 						</>
 					)}
+					{/* )} */}
 					{/* Home Icon */}
 					{!pdppage && 
 					<HomeOutlined

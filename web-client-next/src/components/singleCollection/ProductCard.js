@@ -222,12 +222,14 @@ const ProductCard = ({
     state.auth.user.singleCollections.data,
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
-  const cartCollection = collection?.product_lists.map((arr =>arr?.mfr_code)).find((arr)=>arr === product.mfr_code)
+  const cartCollection = collection?.product_lists
+    .map((arr) => arr?.mfr_code)
+    .find((arr) => arr === product.mfr_code);
   // console.log('cartCollection',cartCollection );
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
-const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
+  const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
 
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
@@ -241,22 +243,21 @@ const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
     }
   }, []);
 
+  const syncKioskLogin = useCallback(() => {
+    const login = getKioskLogin();
+    // console.log("login:", login);
+    setKioskLoginAuth(login);
+  }, [getKioskLogin]);
 
-const syncKioskLogin = useCallback(() => {
- const login = getKioskLogin();
-  // console.log("login:", login);
-  setKioskLoginAuth(login);}, 
-  [getKioskLogin]);
-
-useEffect(() => {
+  useEffect(() => {
     syncKioskLogin(); // Get initial value
-  window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
 
-  return () => {
-    window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
-  };
-}, [syncKioskLogin]);
-// console.log('KioskLoginAuth',KioskLoginAuth);
+    return () => {
+      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+    };
+  }, [syncKioskLogin]);
+  // console.log('KioskLoginAuth',KioskLoginAuth);
 
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
@@ -378,33 +379,36 @@ useEffect(() => {
     +product?.listprice > +product?.price &&
     getPercentage(product.listprice, product.price);
 
-  const callHandpickedAPI = useCallback(async (userId) => {
-    const payload = {
-      collection_type: "my_wishlist_collection",
-      status: "published",
-      collection_name: "my wishlist",
-      user_id: userId,
-      store: storeData?.store_name || "dothelook",
-      Event_id: "dothelookwebpage_447990",
-      product_lists: [
-        {
-          mfr_code: product.mfr_code,
-          name: product.name,
-          image: product.image,
-        },
-      ],
-    };
+  const callHandpickedAPI = useCallback(
+    async (userId) => {
+      const payload = {
+        collection_type: "my_wishlist_collection",
+        status: "published",
+        collection_name: "my wishlist",
+        user_id: userId,
+        store: storeData?.store_name || "dothelook",
+        Event_id: "dothelookwebpage_447990",
+        product_lists: [
+          {
+            mfr_code: product.mfr_code,
+            name: product.name,
+            image: product.image,
+          },
+        ],
+      };
 
-    try {
-      const response =
-        await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
-      notification.success({ message: "Added to wishlist!" });
-      return response;
-    } catch (err) {
-      notification.error({ message: "Failed to add to wishlist" });
-      return null;
-    }
-  }, [product, storeData?.store_name]);
+      try {
+        const response =
+          await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
+        notification.success({ message: "Added to wishlist!" });
+        return response;
+      } catch (err) {
+        notification.error({ message: "Failed to add to wishlist" });
+        return null;
+      }
+    },
+    [product, storeData?.store_name],
+  );
 
   useEffect(() => {
     if (!pendingWishlistAction || isGuestPopUpShow) return;
@@ -415,7 +419,12 @@ useEffect(() => {
     if (kioskLogin?.user_id) {
       callHandpickedAPI(kioskLogin.user_id);
     }
-  }, [callHandpickedAPI, getKioskLogin, isGuestPopUpShow, pendingWishlistAction]);
+  }, [
+    callHandpickedAPI,
+    getKioskLogin,
+    isGuestPopUpShow,
+    pendingWishlistAction,
+  ]);
 
   const addToWishlistClick = async (event) => {
     event.preventDefault();
@@ -497,7 +506,7 @@ useEffect(() => {
     const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
 
     const payload = {
-      is_display_amount:true,
+      is_display_amount: true,
       products: [
         {
           mfr_code: product.mfr_code,
@@ -804,35 +813,36 @@ useEffect(() => {
               !enableSelect &&
               widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
               !showWishlistModal &&
-               product?.custom_product !== false && singleCollections?.collection_name !== 'my tryons' &&(
+              product?.custom_product !== false &&
+              singleCollections?.collection_name !== "my tryons" && (
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
-	                  onClick={(e) => {
-	                    e.stopPropagation();
-	                    const mfrCode = product?.mfr_code;
-	                    setOnMfrCode?.(product);
-	                    if (hasKioskAccess && enableKioskGuestPopup) {
-	                      if (!KioskLoginAuth) {
-	                      // setIsPopupShow(true);
-	                      // setGuestPopupAction("vto");
-	                      onGuestPopupOpen?.({
-	                        type: "vto",
-	                        mfrCode,
-	                        product,
-	                      });
-	                      dispatch(GuestPopUpShow(true));
-	                      return;
-	                      }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const mfrCode = product?.mfr_code;
+                    setOnMfrCode?.(product);
+                    if (hasKioskAccess && enableKioskGuestPopup) {
+                      if (!KioskLoginAuth) {
+                        // setIsPopupShow(true);
+                        // setGuestPopupAction("vto");
+                        onGuestPopupOpen?.({
+                          type: "vto",
+                          mfrCode,
+                          product,
+                        });
+                        dispatch(GuestPopUpShow(true));
+                        return;
+                      }
 
-	                      if (mfrCode && onKioskTryonClick) {
-	                        onKioskTryonClick(product);
-	                        return;
-	                      }
-	                    }
-	                    if (mfrCode) {
-	                      dispatch(vtoIconState(mfrCode));
-	                    }
-	                  }}
+                      if (mfrCode && onKioskTryonClick) {
+                        onKioskTryonClick(product);
+                        return;
+                      }
+                    }
+                    if (mfrCode) {
+                      dispatch(vtoIconState(mfrCode));
+                    }
+                  }}
                   title="Try on with virtual camera"
                 >
                   <img
@@ -1062,7 +1072,7 @@ useEffect(() => {
         >
           {/* reversed contents for hover css */}
 
-          {enableSelect  && product?.custom_product !== false ? (
+          {enableSelect && product?.custom_product !== false ? (
             <div
               className={`${styles["product-remove-icon-container"]} ${size === "small" ? styles["product-remove-icon-container-small"] : ""}`}
             >
@@ -1288,7 +1298,8 @@ useEffect(() => {
           (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar)) &&
           !showWishlistModal &&
           !enableSelect &&
-          product?.custom_product !== false && singleCollections?.collection_name !== 'my wishlist' &&  (
+          product?.custom_product !== false &&
+          singleCollections?.collection_name !== "my wishlist" && (
             <div className={styles["product-menu-item"]}>
               {!hideAddToWishlist && (
                 <div
@@ -1482,26 +1493,28 @@ useEffect(() => {
                       alt="Add to cart"
                       height={20}
                       width={20} */}
-                      {cartCollection ?                     
-                      < FaCartArrowDown
-                      className={
-                        showWishlistModal || size === "small"
-                          ? styles["product-cart-icon-small"]
-                          : hasKioskAccess
-                            ? KIOSK_CART_ICON_CLASS
-                            : "h-4 w-4 md:h-5 md:w-5"
-                      }
-                    />
-                    :
-                      <FiShoppingCart className={
-                        showWishlistModal || size === "small"
-                          ? styles["product-cart-icon-small"]
-                          : hasKioskAccess
-                            ? KIOSK_CART_ICON_CLASS
-                            : "h-4 w-4 md:h-5 md:w-5"
-                      }/>
-                    }
-                 { cartCollection  ? ' Go to Cart ' : ' Add to Cart'}
+                    {cartCollection ? (
+                      <FaCartArrowDown
+                        className={
+                          showWishlistModal || size === "small"
+                            ? styles["product-cart-icon-small"]
+                            : hasKioskAccess
+                              ? KIOSK_CART_ICON_CLASS
+                              : "h-4 w-4 md:h-5 md:w-5"
+                        }
+                      />
+                    ) : (
+                      <FiShoppingCart
+                        className={
+                          showWishlistModal || size === "small"
+                            ? styles["product-cart-icon-small"]
+                            : hasKioskAccess
+                              ? KIOSK_CART_ICON_CLASS
+                              : "h-4 w-4 md:h-5 md:w-5"
+                        }
+                      />
+                    )}
+                    {cartCollection ? " Go to Cart " : " Add to Cart"}
                   </button>
                 )}
               </>
