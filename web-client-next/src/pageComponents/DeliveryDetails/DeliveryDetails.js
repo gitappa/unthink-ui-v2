@@ -14,7 +14,7 @@ import GuestPopUp from "../Auth/GuestPopUp";
 import { COOKIE_TT_ID, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
-import { setCookie } from "../../helper/utils";
+import { collectionQRCodeGenerator, setCookie } from "../../helper/utils";
 
 const DeliveryDetails = () => {
   const navigate = useNavigate();
@@ -306,7 +306,13 @@ const DeliveryDetails = () => {
     },
     [guestData.email, guestData.phone, dispatch, extractedProducts],
   );
-
+    const shareQrCodeImage = (sharePageUrl) => {
+      try {
+        return collectionQRCodeGenerator(sharePageUrl);
+      } catch (e) {
+        console.log(e);
+      }
+    };
   // Handle continue button click
   const handleContinueClick = () => {
     const isUserLoginCookies = Cookies.get("isGuestLoggedIn") === "true";
@@ -316,7 +322,8 @@ const DeliveryDetails = () => {
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
     } else {
-      navigate("/cart/checkout");
+      // navigate("/cart/checkout");
+      navigate(`/claim-points/${authUserId}/${storeData?.store_name}`)
     }
   };
 
@@ -447,6 +454,8 @@ const DeliveryDetails = () => {
                     </div>
                   ) : null,
                 )}
+              {storeData?.store_name !== 'giva_indiranagar2_hs' && (
+
                 <div>
                   <p
                     className="md:p-5 p-3 text-sm md:text-base border"
@@ -463,6 +472,7 @@ const DeliveryDetails = () => {
                     spend of $150. TCA
                   </p>
                 </div>
+              )} 
               </div>
             )}
           </div>
@@ -476,7 +486,8 @@ const DeliveryDetails = () => {
               <h2 className="text-center font-bold md:text-3xl text-2xl mb-6 md:mb-10">
                 ORDER SUMMARY
               </h2>
-
+              {storeData?.store_name !== 'giva_indiranagar2_hs' && ( 
+                <>
               <div className="flex justify-between mb-5">
                 <p className="md:text-lg text-base">Subtotal</p>
                 <p className="md:text-lg text-base font-medium">
@@ -503,6 +514,9 @@ const DeliveryDetails = () => {
                 <p className="md:text-lg text-base">Coupon Applied</p>
                 <p className="md:text-lg text-base font-medium">0.00</p>
               </div>
+                </>
+
+              )}
 
               <div className="flex justify-between font-bold md:mb-8 mb-5">
                 <p className="md:text-xl text-lg">TOTAL</p>
@@ -510,22 +524,33 @@ const DeliveryDetails = () => {
                   ₹ {collection?.total_amount?.toLocaleString()}
                 </p>
               </div>
+              {storeData?.store_name !== 'giva_indiranagar2_hs' && (
 
               <div className="flex justify-between text-gray-600 text-sm">
                 <p>Estimated Delivery by</p>
                 <p className="font-semibold text-black">1st Nov 2025</p>
               </div>
-              {storeData?.store_name=== 'giva_indiranagar2_hs' && (
+)}
+              {/* {storeData?.store_name=== 'giva_indiranagar2_hs' && (
                 <button className="text-xl cursor-pointer " onClick={() => navigate(`/claim-points/${authUserId}/${storeData?.store_name}`)} > Claim Rewards </button>
-              )}
-              <div className="relative mt-6"> 
+              )} */}
+              {/* <div className="relative mt-6"> 
                 <input
                   placeholder="Coupon Code"
                   type="text"
                   className="border p-5 w-full mb-6"
                 />
                 <img src="" alt="input" className="absolute right-5 top-5" />
-              </div>
+              </div> */}
+              {authUserId && storeData?.store_name === 'giva_indiranagar2_hs' && (
+               <img
+                    src={
+                      shareQrCodeImage(`/claim-points/${authUserId}/${storeData?.store_name}`)
+                    }
+                    alt="Digital cart QR"
+                    className="h-30 w-30 m-auto object-contain mix-blend-lighten"
+                  />
+         ) }
 
               <div className="p-0">
                 <button 

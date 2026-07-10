@@ -79,20 +79,20 @@ const TokenSignIn = () => {
     });
     navigate(PATH_SIGN_IN);
   };
-  const Signout=()=>{
-     Cookies.set("isGuestLoggedIn", false, {
-            expires: SIGN_IN_EXPIRE_DAYS,
-          });
-          localStorage.removeItem("adminRolePopupShown", "false");
-          clearStorages();
-          checkAndGenerateUserId(); // generating user id again for guest user after sign out
-          generateSessionId(); // generating new session id for guest user after sign out          
-          try {
-            logoutVenlyUser();
-          } catch {
-            console.log("wallet error");
-          }
-  }
+  // const Signout=()=>{
+  //    Cookies.set("isGuestLoggedIn", false, {
+  //           expires: SIGN_IN_EXPIRE_DAYS,
+  //         });
+  //         localStorage.removeItem("adminRolePopupShown", "false");
+  //         clearStorages();
+  //         checkAndGenerateUserId(); // generating user id again for guest user after sign out
+  //         generateSessionId(); // generating new session id for guest user after sign out          
+  //         try {
+  //           logoutVenlyUser();
+  //         } catch {
+  //           console.log("wallet error");
+  //         }
+  // }
 
   const verifyToken = async (signInToken) => {
     try {
@@ -102,8 +102,9 @@ const TokenSignIn = () => {
         res.data.status_code === 200 &&
         res.data.data.user_id &&
         res.data.data.user_name &&
-        res.data.data.emailId
+        (res.data.data?.emailId || res.data.data?.phone)
       ) {
+
         // START
         setTTid(res.data.data.user_id);
         setIsRegistered(true);
@@ -142,17 +143,16 @@ const TokenSignIn = () => {
           	// Signout();
             return;
         }
-
-
         redirectBackToHome();
       } else {
+        console.log('this is not valid token',res.data);
+        
         handleVerificationError();
       }
     } catch(e) {
       console.log('tokenerror',e)
       handleVerificationError();
     }
-
     dispatch(getUserCollectionsReset());
 
     setTimeout(() => {
