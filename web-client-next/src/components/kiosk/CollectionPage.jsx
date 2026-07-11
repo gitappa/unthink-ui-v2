@@ -131,9 +131,11 @@ const CollectionPage = ({ params }) => {
 
   useEffect(() => {
     if (params?.collection_name) {
+      console.log('itsworkiing');
+      
       dispatch(
         getInfluencerCollection({
-          collection_id: params.collection_name,
+          // collection_id: params.collection_name,
           path: params.collection_name,
           isStoreHomePage: false,
           product_sort_by: undefined,
