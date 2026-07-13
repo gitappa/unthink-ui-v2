@@ -14,10 +14,10 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
  
   const lookBooksProducts = (lookBooks || [])
     .filter((x) => x.cover_image && x.path)
-    .slice(0, 6);
+    
   const displayedProducts =
-    Tags === "#Trending" ? trendingProducts.slice(0,trendingProducts.length >= 12 ? 12 : trendingProducts.length > 9 ? 9 : 6 ) : lookBooksProducts.slice(0,lookBooksProducts.length > 12 ? 12 :lookBooksProducts.length > 9 ? 9 : 6);
-  //  console.log('displayedProducts',displayedProducts);
+    Tags === "#Trending" ? trendingProducts.slice(0,trendingProducts.length >= 12 ? 12 : trendingProducts.length >= 9 ? 9 : 6 ) : lookBooksProducts.slice(0,lookBooksProducts.length > 12 ? 12 :lookBooksProducts.length >= 9 ? 9 : 6);
+  //  console.log('displayedProducts',lookBooksProducts.length);
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
