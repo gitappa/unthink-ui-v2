@@ -50,6 +50,7 @@ const CreateStore = () => {
 	const [brandList, setBrandList] = useState([]);
 	const [successMessage, setSuccessMessage] = useState("");
 	const [updatedTemplates, setUpdatedTemplates] = useState({});
+	const userContact = user.data.emailId || user.data.phone;
 
 	const fetchBrandsList = async () => {
 		try {
@@ -61,7 +62,7 @@ const CreateStore = () => {
 				const defaultSelectedBrand = brandsData.filter(
 					(brand) => brand.active && brand.available
 				);
-				if (!user.data.emailId) {
+				if (!userContact) {
 					setProfileData((value) => ({
 						...value,
 						brands: defaultSelectedBrand.map((brand) => brand.brand),
@@ -96,7 +97,7 @@ const CreateStore = () => {
 
 	useEffect(() => {
 		if (user.data.user_id) {
-			if (user.data.emailId) {
+			if (userContact) {
 				const {
 					wishlist_brands = [],
 					requested_brands = [],
@@ -112,7 +113,7 @@ const CreateStore = () => {
 				navigate("/store/");
 			}
 		}
-	}, [user.data.emailId, user.data.user_id, brandList]);
+	}, [userContact, user.data.user_id, brandList]);
 
 	const onStepChange = (current) => {
 		if (current < 1) setCurrentStep(current);
@@ -216,6 +217,7 @@ const CreateStore = () => {
 		const payload = {
 			...profileData,
 			emailId: user.data.emailId,
+			phone: user.data.phone,
 			user_name: user.data.user_name,
 			user_id: user.data.user_id,
 			is_influencer: user.data.is_influencer,
@@ -331,13 +333,13 @@ const CreateStore = () => {
 			default:
 				break;
 		}
-	};
+	}; 
 
 
 	return (
 		<div className={`${styles['profilePageWrapper']} static_page_bg`}>
 			<div className={styles['profile-header-container']}>
-				<AuthHeader hideProfile showBackToStore={user?.data?.filters} />
+				<AuthHeader hideProfile showBackToStore={user?.data} />
 			</div>
 			<div className={`${styles['profile-container']} ${styles['profileContainerPadding']}`}>
 				{!successMessage ? (

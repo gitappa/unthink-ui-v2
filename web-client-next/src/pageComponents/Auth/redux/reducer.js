@@ -62,8 +62,8 @@ const userReducer = (state = userInitialState, action = {}) => {
 			newState.data = payload;
 			newState.isFetching = false;
 			newState.enablePlist = !!payload.user_name; // enable create plist (blog/auto collection) only for the users who has the username
-			newState.userNotFound = !payload.emailId; // using this to check if user is guest user
-			newState.isUserLogin = !!payload.emailId;
+			newState.userNotFound = !(payload.emailId || payload.phone); // using this to check if user is guest user
+			newState.isUserLogin = !!payload.emailId || !!payload.phone;
 			// newState.isUserLogin = !!payload.emailId && !payload.trial_user; // removed trial user check // allowing try for free users all actions
 
 			// reset collections
