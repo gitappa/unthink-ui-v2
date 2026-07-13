@@ -8,7 +8,13 @@ import defaultAvatar from "../../images/avatar.svg";
 const CreatorsListView = ({ pageUser }) => {
 	if (pageUser.creators && pageUser.creators.length) {
 		return (
-			<div className='max-w-s-3 sm:max-w-lg-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto w-full'>
+			<div className='mt-6 mx-auto
+    max-w-[350px]
+    min-[500px]:max-w-[470px]
+    min-[700px]:w-[650px] min-[700px]:max-w-[650px]
+    min-[835px]:max-[1535px]:w-[calc(100%_-_80px)] min-[835px]:max-[1535px]:max-w-none
+    min-[1271px]:max-[1439px]:w-[1202px] min-[1271px]:max-[1439px]:max-w-[1202px]
+    min-[1440px]:w-[1332px] min-[1440px]:max-w-[1332px] mx-auto w-full'>
 				<h1 className='text-display-l font-semibold'>Featured Creators</h1>
 				<div className='grid grid-cols-3 sm:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-10 mt-7'>
 					{pageUser.creators.map((inf) => {

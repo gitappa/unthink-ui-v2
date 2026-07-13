@@ -99,6 +99,7 @@ import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
 import DroppWallet from "../../components/DroppWallet.js";
+import MyPoints from "../DeliveryDetails/MyPoints.jsx";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -287,6 +288,7 @@ const StorePageWrapper = (props) => {
 		serverData,
 		isFailedPage,
 		isSuccessPage,
+		isMyPointsPage,
 	} = props;
  	const [isDropDown, setisDropDown] = useState(false)
 	const {
@@ -1153,6 +1155,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			{isCartPage && <DeliveryDetails />}
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
+			{isMyPointsPage && <MyPoints />}
 
 			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 

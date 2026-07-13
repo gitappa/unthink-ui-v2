@@ -344,7 +344,7 @@ const CreateFreeCollection = ({ location: propLocation }) => {
 	};
 
 	useEffect(() => {
-		if (authUser.user_id && !token && !authUser.emailId) {
+		if (authUser.user_id && !token && !(authUser.emailId || authUser.phone)) {
 			navigate(PATH_ROOT);
 		}
 	}, [authUser]);

@@ -565,7 +565,7 @@ const SingleCollectionProductListView = ({
             <div className="colloction_details_cards_div">
               <div className={styles.lgContainer}>
                 {isSingleCollectionSharedPage &&
-                  (userId || (publish && isSingleCollectionSharedPage)) && (
+                  (userId || (publish && isSingleCollectionSharedPage)) &&  (
                     <div className={styles.tagsOuterContainer}>
                       {showTagsSelection &&
                       tagsToShow?.length &&

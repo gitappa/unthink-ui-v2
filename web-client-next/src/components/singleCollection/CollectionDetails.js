@@ -602,6 +602,8 @@ const CollectionDetails = ({
 
         </Link>
       ) : null}
+      {collection?.collection_name !== 'my wishlist' && collection?.collection_name !== 'my tryons' && 
+      <>
 
       <div className={cssStyles.container}>
         <div
@@ -1125,7 +1127,6 @@ const CollectionDetails = ({
           />
         )}
       </div>
-
       {collection?.sponsor_details?.collection_image_list?.length > 0 && (
         <CarousalContainer
           items={collection?.sponsor_details?.collection_image_list}
@@ -1133,6 +1134,9 @@ const CollectionDetails = ({
           collection_image_list
         />
       )}
+      </>
+}
+
     </>
   );
 };
