@@ -1,6 +1,5 @@
 import React from "react";
 import { useRouter } from "next/router";
-
 import AuthHeader from "../AuthHeader";
 import NeedHelpSection from "./NeedHelpSection";
 import SignupFormSection from "./SignupFormSection";
