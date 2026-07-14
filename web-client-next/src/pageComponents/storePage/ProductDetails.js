@@ -26,6 +26,7 @@ import {
   getProductDetailsPagePath,
   isEmpty,
   cleanImage,
+  getStoredKioskLogin,
 } from "../../helper/utils";
 import {
   requestSigninWithLink,
@@ -79,11 +80,12 @@ import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import LoggedInInfo, { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
+import LoggedInInfo, {
+  useKioskAccess,
+} from "../../components/kiosk/components/LoggedInInfo";
 import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 import Breadcrumbs from "./Breadcrumbs";
 import AuthInput from "../../components/kiosk/components/AuthInput";
-
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -128,9 +130,10 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
   const [shareContext, setShareContext] = useState("product");
-  console.log('shareContext',shareContext);
-  
-const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  const imageFromQuery = cleanImage(router.query.image);
+  console.log("shareContext", shareContext);
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
+  const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
   const [additionalimg, setAdditionalImg] = useState(null);
   const [showAllFields, setShowAllFields] = useState(false);
@@ -141,7 +144,7 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
     storeData,
     authUser,
   });
-  
+
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
     [productDetail],
@@ -172,29 +175,36 @@ const isMobile =  typeof window !== "undefined" && window.innerWidth < 878;  con
   // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
+  const [pendingGuestAction, setPendingGuestAction] = useState(null);
+  // console.log('pendingGuestAction',pendingGuestAction);
 
-const [kioskLogin, setKioskLoginAuth] = useState(null);
-      // console.log('kioskLogin',kioskLogin);
+  const [kioskLogin, setKioskLoginAuth] = useState(null);
+  // console.log('kioskLogin',kioskLogin);
 
-useEffect(() => {
-  const handleKioskLoginChange = () => {
-    const kioskLogin = sessionStorage.getItem("Kiosk-login");
+  useEffect(() => {
+    const handleKioskLoginChange = () => {
+      const kioskLogin = sessionStorage.getItem("Kiosk-login");
 
-    try {
-      const parsed = setKioskLoginAuth (kioskLogin ?  JSON.parse(kioskLogin) : {});
-      // console.log("Updated:", parsed);
-    } catch {
-      console.log("Invalid JSON");
-    }
-  };
-  handleKioskLoginChange()
+      try {
+        const parsed = setKioskLoginAuth(
+          kioskLogin ? JSON.parse(kioskLogin) : null,
+        );
+        // console.log("Updated:", parsed);
+      } catch {
+        console.log("Invalid JSON");
+      }
+    };
+    handleKioskLoginChange();
 
-  window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
+    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
 
-  return () => {
-    window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-  };
-}, []);
+    return () => {
+      window.removeEventListener(
+        KIOSK_LOGIN_CHANGE_EVENT,
+        handleKioskLoginChange,
+      );
+    };
+  }, []);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -229,7 +239,7 @@ useEffect(() => {
               product_name: productDetails?.name,
               product_image: productDetails?.image,
               store: storeData?.store_name || "dothelook",
-              user_id: userId || kioskLoginUserId || authUserId ,
+              user_id: userId || kioskLoginUserId || authUserId,
               eventId: storeData?.event_id,
               successMessage: "Product added to wishlist successfully!",
               errorMessage:
@@ -243,7 +253,7 @@ useEffect(() => {
       authUser,
       isUserLogin,
       dispatch,
-       kioskLogin?.user_id,
+      kioskLogin?.user_id,
       storeData,
       productDetails,
       productToWishlistCollection,
@@ -253,7 +263,7 @@ useEffect(() => {
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
-    async ({ userId = null, email = null,phone } = {}) => {
+    async ({ userId = null, email = null, phone } = {}) => {
       const kioskLoginUserId = userId || kioskLogin?.user_id;
       const origin =
         typeof window !== "undefined" ? window.location.origin : "";
@@ -264,10 +274,10 @@ useEffect(() => {
             ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
             : {};
         // Prefer popup email, then kiosk session email, then logged-in user email.
-        const kioskEmail = email || currentKiosk?.email 
-        const kioksPhone = phone
-        if (kioskLoginUserId && (kioksPhone || kioskEmail) ) {
-          const resp = await requestSigninWithLink(kioskEmail,kioksPhone);
+        const kioskEmail = email || currentKiosk?.email;
+        const kioksPhone = phone;
+        if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
+          const resp = await requestSigninWithLink(kioskEmail, kioksPhone);
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -279,7 +289,7 @@ useEffect(() => {
               // console.log('verifyLink',verifyLink);
 
               const fullVerifyUrl = `${origin}${verifyLink}`;
-              console.log('fullVerifyUrl',fullVerifyUrl);
+              console.log("fullVerifyUrl", fullVerifyUrl);
 
               setSharePageUrl(fullVerifyUrl);
               setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
@@ -295,7 +305,7 @@ useEffect(() => {
 
       return false;
     },
-    [ kioskLogin?.user_id, productMfrCode],
+    [kioskLogin?.user_id, productMfrCode],
   );
 
   const buildProductAutoLoginQr = useCallback(
@@ -369,7 +379,7 @@ useEffect(() => {
 
     setShareContext("product");
     setShowShareProductDetails((show) => !show);
-  }, [buildShareAutoLoginLink, dispatch,  kioskLogin?.user_id, hasKioskAccess]);
+  }, [buildShareAutoLoginLink, dispatch, kioskLogin?.user_id, hasKioskAccess]);
 
   const ProductTags = storeData?.catalog_attributes?.find(
     (att) => att.key === "product_tag",
@@ -377,9 +387,9 @@ useEffect(() => {
 
   useEffect(() => {
     if (!mfr_code) return;
-    const storedImage = localStorage.getItem('pdp_image') || "";
+    const storedImage = localStorage.getItem("pdp_image") || "";
     // console.log('storedImage',storedImage);
-    
+
     dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
   }, [mfr_code, dispatch]);
 
@@ -404,6 +414,13 @@ useEffect(() => {
   }, [dispatch, mycartcollectionpath]);
 
   const updateCartQuantity = (newQty) => {
+    if (hasKioskAccess && !kioskLogin?.user_id) {
+      // console.log('hello world');
+      setIsPopupShow(true);
+      setPendingGuestAction({ type: "cart", productDetails } || null);
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
     const payload = {
       products: [
         {
@@ -485,14 +502,14 @@ useEffect(() => {
     [productDetails],
   );
   const handleGoBack = () => {
-    // if (typeof window === "undefined") {  
+    // if (typeof window === "undefined") {
     //   navigate(PATH_ROOT);
     //   return;
     // }
-  //  console.log('handleGoBack',window.navigation.entries())
+    //  console.log('handleGoBack',window.navigation.entries())
     if (window?.history?.length > 2) {
-			window.history.back();
-		} 
+      window.history.back();
+    }
     // window.history.back()
     // const storedReturnPath = window.sessionStorage.getItem(
     //   PDP_RETURN_PATH_STORAGE_KEY,
@@ -508,14 +525,12 @@ useEffect(() => {
     // });
   };
 
-  
-
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
     [productDetailsPagePath],
   );
 
-  console.log('productDetailsPagePath',sharePageUrl);
+  console.log("productDetailsPagePath", sharePageUrl);
 
   useEffect(() => {
     if (
@@ -582,11 +597,27 @@ useEffect(() => {
     }
   }, [productDetails, pdploader]);
 
-  const handleAddToCart = () => {
-    // e.stopPropagation();
+  const handleAddToCart = (e) => {
+    e?.stopPropagation();
+    // console.log('hello world');
+
     if (!productDetails?.mfr_code) return;
 
+    const kioskLogin = getStoredKioskLogin();
+
+    if (hasKioskAccess && !kioskLogin?.user_id) {
+      // console.log('hello world');
+      setIsPopupShow(true);
+      setPendingGuestAction({ type: "cart", productDetails } || null);
+
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+    const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
+    console.log("hello world");
+
     const payload = {
+      is_display_amount: true,
       products: [
         {
           mfr_code: productDetails.mfr_code,
@@ -597,9 +628,9 @@ useEffect(() => {
       product_lists: [],
       collection_name: "my cart",
       type: "system",
-      user_id: authUserId || getTTid(),
+      user_id: cartUserId,
       // collection_id: mycartcollectionid,
-      // path: mycartcollectionpath,
+      path: `my_cart_${cartUserId}`,
     };
     dispatch(addToCart(payload));
   };
@@ -649,7 +680,6 @@ useEffect(() => {
     }
   };
 
-
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
   }
@@ -674,24 +704,24 @@ useEffect(() => {
   ];
 
   return (
-    <div className={`relative w-full overflow-hidden pb-20 lg:pb-14 ${hasKioskAccess ? 'p-8' : ''} `}>
-      {        hasKioskAccess && 
-      <AuthInput styles={'mb-0 w-fit pr-7'} />
-      }
+    <div
+      className={`relative w-full overflow-hidden pb-20 lg:pb-14 ${hasKioskAccess ? "p-8" : ""} `}
+    >
+      {hasKioskAccess && <AuthInput styles={"mb-0 w-fit pr-7"} />}
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
         <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
-          {hasKioskAccess && 
-          <button
-            className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
-            onClick={handleGoBack}
-          >
-            <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
-              <ArrowLeftOutlined />
-            </span>
-            <span className="capitalize">Go back</span>
-          </button>
-          }
+          {hasKioskAccess && (
+            <button
+              className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
+              onClick={handleGoBack}
+            >
+              <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
+                <ArrowLeftOutlined />
+              </span>
+              <span className="capitalize">Go back</span>
+            </button>
+          )}
           {/* <Breadcrumbs pdppage={true} /> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
@@ -723,13 +753,16 @@ useEffect(() => {
                             const mfrCode = productDetails?.mfr_code;
 
                             if (!kioskLogin && hasKioskAccess) {
+                              console.log("hello world");
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
                               return;
                             }
 
-                            if (hasKioskAccess && !isMobile) {
+                            if (hasKioskAccess && !isMobile && kioskLogin) {
+                              // console.log('hello world');
+
                               await buildProductAutoLoginQr({ mfrCode });
                               return;
                             }
@@ -863,7 +896,6 @@ useEffect(() => {
               eventId={storeData?.event_id || null}
               kioskEmail={kioskLogin?.email || null}
               kioskUserName={kioskLogin?.user_name || null}
-            
             />
 
             {productDetails && (
@@ -908,20 +940,24 @@ useEffect(() => {
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
                           <ShareOptions
-                          headerText= {shareContext === "product"
+                            headerText={
+                              shareContext === "product"
                                 ? "Share"
-                                : 'Virtual Try-On'}
+                                : "Virtual Try-On"
+                            }
                             url={sharePageUrl}
                             setShow={setShowShareProductDetails}
                             onClose={() => setShowShareProductDetails(false)}
                             isOpen={showShareProductDetails}
                             qrCodeGeneratorURL={shareQrCodeImage}
                             true
-                            fromCollection={shareContext === "vto" || !!kioskLogin}
+                            fromCollection={
+                              shareContext === "vto" || !!kioskLogin
+                            }
                             kioskHeader={
                               shareContext === "vto"
                                 ? "Scan to Try On (Then tap the camera icon on your phone)"
-                                : ''
+                                : ""
                             }
                             subHeaderText={productDetails?.name}
                           />
@@ -1062,7 +1098,7 @@ useEffect(() => {
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={handleAddToCart}
-                              className={` h-full px-6 ${hasKioskAccess ? 'bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium' : 'bg-brand text-white font-semibold'} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
+                              className={` h-full px-6 ${hasKioskAccess ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
                             </button>
@@ -1439,7 +1475,12 @@ useEffect(() => {
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name}
         persistKioskLogin
-        onSuccess={async ({ userId, email , phone}) => {
+        onSuccess={async ({ userId, email, phone }) => {
+          if (pendingGuestAction?.type === "cart") {
+            handleAddToCart();
+            setPendingGuestAction(null);
+            return;
+          }
           try {
             if (guestPopupAction === "share") {
               const didBuildShareLink = await buildShareAutoLoginLink({
@@ -1504,13 +1545,16 @@ useEffect(() => {
                 href={qrTargetUrl}
                 target="_blank"
                 rel="noreferrer"
-                className={hasKioskAccess ? "text-kiosk-primary hover:underline" : "text-indigo-600 hover:underline"}
+                className={
+                  hasKioskAccess
+                    ? "text-kiosk-primary hover:underline"
+                    : "text-indigo-600 hover:underline"
+                }
               >
                 {qrTargetUrl}
               </a>
             </div>
           )}
-        
         </div>
       </Modal>
       {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}

@@ -85,7 +85,7 @@ const CollectionPage = ({ params }) => {
 
   const [qrUrl, setQrUrl] = useState("");
   const [shareContext, setShareContext] = useState("collection");
-  console.log("sharePageUrl", sharePageUrl);
+  // console.log("sharePageUrl", sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [pendingGuestAction, setPendingGuestAction] = useState(null);
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
