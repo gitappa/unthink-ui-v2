@@ -128,6 +128,7 @@ const Header = ({
   pageUser,
   isRootPage,
   setisDropDown,
+  isAuraChatPage
 }) => {
   const navigate = useNavigate();
   const [
@@ -166,7 +167,7 @@ const Header = ({
     authUser,
   });
   const router = useRouter();
-  // console.log('userCollectsssion',userCollection);
+  // console.log('userCollectsssion',showChatModal);
 
   //  console.log('hasKioskAccess',hasKioskAccess);
 
@@ -337,10 +338,10 @@ const Header = ({
       collection_name: "my tryons",
       user_id: authUser?.user_id,
       type: "system",
-      callback: (response) => {
-      if (response.data?.data?.length > 0) {
+      callback: (response) => {        
+      if (response?.length > 0) {
         router.push(
-          `/influencer/${authUser.user_name}/${response.data.data[0]._id}`
+          `/influencer/${authUser.user_name}/${response[0]._id}`
         );
       } else {
         notification.warning({
@@ -822,6 +823,7 @@ const Header = ({
                   isUserLogin={isUserLogin}
                   userCollection={userCollection}
                   myWishlistClick={myWishlistClick}
+                  isAuraChatPage={isAuraChatPage}
                 />
               )}
             </>
@@ -845,6 +847,7 @@ const Header = ({
                 isUserLogin={isUserLogin}
                 userCollection={userCollection}
                 myWishlistClick={myWishlistClick}
+                isAuraChatPage={isAuraChatPage}
               />
               {removedata && (
                 <div className={styles.desktopHeaderContainer}>
@@ -870,12 +873,12 @@ const Header = ({
 							/> */}
                   </div>
 
-                  <ChatContainer
+                  {/* <ChatContainer
                     disabledOutSideClick={disabledOutSideClick}
                     config={config}
                     trackCollectionData={trackCollectionData}
                     isBTInstance={isBTInstance}
-                  />
+                  /> */}
 
                   {showCategories ||
                   showPeople ||

@@ -100,6 +100,8 @@ import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
 import DroppWallet from "../../components/DroppWallet.js";
 import MyPoints from "../DeliveryDetails/MyPoints.jsx";
+import ChatContainer from "./ChatContainer.js";
+import { setShowChatModal } from "../../hooks/chat/redux/actions.js";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -289,6 +291,7 @@ const StorePageWrapper = (props) => {
 		isFailedPage,
 		isSuccessPage,
 		isMyPointsPage,
+		isAuraChatPage,
 	} = props;
  	const [isDropDown, setisDropDown] = useState(false)
 	const {
@@ -317,6 +320,13 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 		[collection_id, collection_path]
 	);
  
+
+	useEffect(() => {
+		if(!isAuraChatPage) {
+			dispatch(setShowChatModal(false));
+		}
+	}, [isAuraChatPage]);
+
 
 // console.log('isSingleCollectionSharedPage',isCollectionPage);
 
@@ -894,7 +904,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			showPageContent &&
 			(isCollectionReviewPage ||
 				isCreateFreeCollectionPage ||
-				isCustomProductsPage ||
+				isCustomProductsPage || isAuraChatPage ||
 				isProductDetailPage),
 		[
 			showPageContent,
@@ -902,6 +912,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			isCreateFreeCollectionPage,
 			isCustomProductsPage,
 			isProductDetailPage,
+			isAuraChatPage
 		]
 	);
 
@@ -1111,6 +1122,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				pageUser={pageUser}
 				setisDropDown={setisDropDown}
 				isDropDown={isDropDown}
+				isAuraChatPage={isAuraChatPage}
 			/>
 
 			{showPageContent &&
@@ -1124,7 +1136,6 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 					isMyProfilePage ||
 					isCustomProductsPage ||
 					isStorePage ||
-
 					breadcrumbTheme) ? (
 				<Breadcrumbs
 					isRootPage={isRootPage}
@@ -1156,6 +1167,14 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			{isFailedPage && <FailureUrl />}
 			{isSuccessPage && <SuccessUrl />}
 			{isMyPointsPage && <MyPoints />}
+			{isAuraChatPage && <ChatContainer
+				disabledOutSideClick={true}
+				config={serverData.config}
+				trackCollectionData={{}}
+				isBTInstance={false}
+				isAuraChatPage={isAuraChatPage}
+			/>
+			}
 
 			{isDropDown && <DroppWallet setisDropDown={setisDropDown} isDropDown={isDropDown} />}
 

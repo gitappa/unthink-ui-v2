@@ -96,7 +96,7 @@ const QRsection = ({ showTags, storeData }) => {
             </div>
 
             <p className="mt-0 whitespace-nowrap text-center text-[28px] font-normal leading-none text-[#252525]">
-              Shop &amp; Play to earn!
+             {fetchedData?.tag_line || "Shop & Play to earn!"}
             </p>
           </div>
           <img

@@ -3,30 +3,36 @@ import { useDispatch } from "react-redux";
 
 import ChatContainer from "../src/pageComponents/storePage/ChatContainer";
 import { setShowChatModal } from "../src/hooks/chat/redux/actions";
-import { current_store_name, is_store_instance } from "../src/constants/config";
+import { aura_header_theme, current_store_name, is_store_instance } from "../src/constants/config";
 import { STORE_USER_NAME_BUDGETTRAVEL } from "../src/constants/codes";
+import StorePage from "../src/pageComponents/storePage";
 
 const AURA_CHAT_PROPS_STORAGE_KEY = "auraChatContainerProps";
 
-const AuraModel = () => {
-  const dispatch = useDispatch();
+const AuraModel = (props) => {
+   
+  //  useEffect(() => {
+  //   dispatch(setShowChatModal(true));
+
+  //   return () => {
+  //     dispatch(setShowChatModal(false));
+  //   };
+  // }, [dispatch]);
+
  
-  const isBTInstance = useMemo(
-    () =>
-      is_store_instance && current_store_name === STORE_USER_NAME_BUDGETTRAVEL,
-    []
+
+  return (
+    <StorePage
+      isAuraChatPage
+      {...props}
+      serverData={{
+        config: {
+          aura_header_theme: aura_header_theme,
+        },
+      }}
+    />
+ 
   );
-   useEffect(() => {
-    dispatch(setShowChatModal(true));
-
-    return () => {
-      dispatch(setShowChatModal(false));
-    };
-  }, [dispatch]);
-
- 
-
-  return <ChatContainer isBTInstance ={isBTInstance} disabledOutSideClick={true}   isAuraChatPage={true} />;
 };
 
 export default AuraModel;

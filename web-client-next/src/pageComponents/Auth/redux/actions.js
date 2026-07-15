@@ -63,7 +63,8 @@ export const getUserCollections = ({
   collection_type,
   path,
   callback,
-  type
+  type,
+  collection_name
 } = {}) => ({
   type: GET_USER_COLLECTIONS,
   payload: {
@@ -77,7 +78,8 @@ export const getUserCollections = ({
     collection_type,
     path,
     callback,
-	type
+	type,
+  collection_name
   },
 });
 

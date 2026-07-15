@@ -241,7 +241,7 @@ const ChatModal = ({
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
     sessionStorage.removeItem('widgetHeaderRequestHistory')
-    window.history.back()
+    // window.history.back()
   };
 
   const handleHomeClick = () => {
@@ -536,6 +536,10 @@ const ChatModal = ({
       chatProductsData,
     ],
   );
+  console.log('isShowShopLookSplitLayout',isShowShopLookSplitLayout);
+  console.log('layoutMode', layoutMode);
+  
+  
 
   const searchOptionPreviewImages = useMemo(
     () => ({
@@ -1150,7 +1154,7 @@ const ChatModal = ({
                     onClick={() => setIsSearchPopupOpen(false)}
                   /> */}
                 {/* )} */}
-                  <button
+                  {/* <button
                           className="group px-3 mt-7 text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
                           onClick={closeChatModal}
                         >
@@ -1158,7 +1162,7 @@ const ChatModal = ({
                             <ArrowLeftOutlined />
                           </span>
                           <span className="capitalize">Go back</span>
-                        </button>
+                        </button> */}
                 <div
                   className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
                     } `}
