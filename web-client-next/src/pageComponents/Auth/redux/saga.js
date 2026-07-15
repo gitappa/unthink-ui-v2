@@ -119,7 +119,7 @@ function* fetchUserCollectionsSaga(action) {
       collection_type,
       path,
       callback,
-      type
+      type,collection_name
     } = action.payload;
 
     const params = {
@@ -134,7 +134,8 @@ function* fetchUserCollectionsSaga(action) {
       collection_type,
       path,
       callback,
-      type
+      type,
+      collection_name
     };
     const { data = {}, status } = yield call(
       collectionAPIs.fetchCollectionsAPICall,

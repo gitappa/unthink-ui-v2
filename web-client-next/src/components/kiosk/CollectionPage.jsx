@@ -43,7 +43,7 @@ const CollectionPage = ({ params }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
   const [onMfrCode,setOnMfrCode] = useState(null);
-  console.log("onMfrCode",onMfrCode);
+  // console.log("onMfrCode",onMfrCode);
   
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
@@ -333,7 +333,6 @@ const CollectionPage = ({ params }) => {
   }
   return (
     <div className="p-8 pt-6 md:p-12 bg-white min-h-screen">
-      <AuthInput styles={'mb-0 w-fit'} />
       <button
         className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
         onClick={() => navigate('/')}
@@ -361,7 +360,9 @@ const CollectionPage = ({ params }) => {
               {singleCollectionKiosk?.product_lists?.length} pieces
             </p>
           </div>
-          <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
+          <div className="relative flex flex-col gap-3  items-end  ">
+      <AuthInput styles={'mb-0 w-fit'} />
+            
             {showShareProductDetails && (
               <ShareOptions
                 url={sharePageUrl}

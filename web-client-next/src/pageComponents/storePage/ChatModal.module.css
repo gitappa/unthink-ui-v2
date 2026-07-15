@@ -2064,7 +2064,7 @@
 }
 
 .chatmodal-initial-layout-wrapper-active {
-  min-height: calc(100vh - 250px);
+  min-height: calc(100vh - 35vh);
   justify-content: center;
 }
 
