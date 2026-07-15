@@ -45,6 +45,8 @@ const SwiftlyHeader = ({
   isUserLogin,
   userCollection,
   myWishlistClick,
+  isAuraChatPage,
+
 }) => {
   const navigate = useNavigate();
   const { themeCodes } = useTheme();
@@ -190,32 +192,17 @@ const SwiftlyHeader = ({
               {is_store_instance && current_store_name}
             </div>
           </div>
-          {/* {
-							isSwiftlyStyledInstance ? (
-								<ChatContainer
-									disabledOutSideClick={disabledOutSideClick}
-									config={config}
-									trackCollectionData={trackCollectionData}
-									isBTInstance={isBTInstance}
-								/>
-							) : isDoTheLookInstance && !isRootPage ? (
-								// isDotheLookInstance true and not root page
-								<ChatContainer
-									disabledOutSideClick={disabledOutSideClick}
-									config={config}
-									trackCollectionData={trackCollectionData}
-									isBTInstance={isBTInstance}
-								/>
-							) : null
-						} */}
+       
 
           {/* <div className='flex-1 flex justify-center'> */}
-          <ChatContainer
+          {!isAuraChatPage && (
+           <ChatContainer
             disabledOutSideClick={disabledOutSideClick}
             config={config}
             trackCollectionData={trackCollectionData}
             isBTInstance={isBTInstance}
           />
+          )}
           {/* </div> */}
 
           {/* set width only to keep the aura center aligned */}

@@ -133,7 +133,11 @@ const ClaimPoints = () => {
               </p>
             </div>
 
-            <div className="mx-auto mt-7 flex max-w-[230px] flex-col items-center text-center">
+          
+          </div>
+
+          <div className="p-5">
+              <div className="mx-auto mb-6 flex max-w-[230px] flex-col items-center text-center">
               <div className="relative flex h-28 w-28 items-center justify-center rounded-[28px] border-4 border-[#d6a432] bg-gradient-to-br from-[#fff3ad] via-[#e3b945] to-[#a8751e] shadow-[0_12px_24px_rgba(135,91,19,0.28)]">
                 <div className="absolute inset-3 rounded-[22px] border-2 border-[#fff1a8]" />
                 <FaAward className="relative z-10 text-6xl text-[#8a5c14]" />
@@ -146,10 +150,8 @@ const ClaimPoints = () => {
                 {BLOCKCHAIN_POINTS.toLocaleString()} pts]
               </p>
             </div>
-          </div>
-
-          <div className="p-5">
             <div className="rounded-md border border-[#d7d7d7] bg-[#fbfbfb] p-5 shadow-sm">
+              
               <h2 className="text-xl font-semibold">Rewards Points</h2>
               <p className="mt-1 text-sm font-semibold">
                 *Reward points available to redeem:**{" "}

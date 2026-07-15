@@ -58,6 +58,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     state.store.data.admin_list,
     state.store.data,
   ]);
+  
 
   const dispatch = useDispatch();
   const inputRef = useRef(null);
@@ -242,6 +243,9 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     </>
   );
 // console.log('isNotHomePage',isNotHomePage);
+  // console.log(portalTarget );
+  // console.log( shouldShowChatModal);
+  
 
   return (
     <>
@@ -265,7 +269,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
       ) : (
         <div className="hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2" />
       )}
-      {portalTarget && shouldShowChatModal ? createPortal(chatModalLayer, portalTarget) : null}
+      {portalTarget && shouldShowChatModal && isNotHomePage ? createPortal(chatModalLayer, portalTarget) : null}
     </>
   );
 };
