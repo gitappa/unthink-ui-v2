@@ -705,13 +705,14 @@ const ProductDetails = ({ params, ...props }) => {
 
   return (
     <div
-      className={`relative w-full overflow-hidden pb-20 lg:pb-14 ${hasKioskAccess ? "p-8" : ""} `}
+      className={`relative w-full   pb-20 lg:pb-14 ${hasKioskAccess ? "px-8" : ""} `}
     >
-      {hasKioskAccess && <AuthInput styles={"mb-0 w-fit pr-7"} />}
+     
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
-        <div className="flex flex-col w-full self-center my-7 lg:my-9 gap-3.5 lg:gap-8">
+        <div className={`flex flex-col bg-white w-full self-center ${!hasKioskAccess ?'lg:pt-10 pt-7 ' :''} gap-3.5 lg:gap-8 `}>
           {hasKioskAccess && (
+          <div className="flex items-start sticky py-7  z-30 top-0 bg-white">
             <button
               className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
               onClick={handleGoBack}
@@ -721,6 +722,8 @@ const ProductDetails = ({ params, ...props }) => {
               </span>
               <span className="capitalize">Go back</span>
             </button>
+            <AuthInput styles={"mb-0 w-fit pr-7"} />
+           </div>
           )}
           {/* <Breadcrumbs pdppage={true} /> */}
 

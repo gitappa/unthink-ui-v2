@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { Typography } from "antd";
 import searchIcon from "../../images/swiftly-styled/Aura - Search.svg";
-import userIcon from "../../images/swiftly-styled/User.svg";
 import Link from "next/link";
 import useTheme from "../../hooks/chat/useTheme";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
@@ -40,7 +39,16 @@ const SwiftlyMobileHeader = ({
     }
   }, [router]);
   const { themeCodes } = useTheme();
-  const [storeData] = useSelector((state) => [state.store.data]);
+  const [storeData, authUser] = useSelector((state) => [
+    state.store.data,
+    state.auth.user.data,
+  ]);
+  const userInitials = useMemo(() => {
+    const displayName =
+      authUser?.user_name || authUser?.emailId || "User";
+
+    return displayName.trim().replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase() || "US";
+  }, [authUser]);
   // console.log('headerProfileMenu full:', headerProfileMenu);
   // console.log('headerProfileMenu.items:', headerProfileMenu?.items);
 
@@ -159,13 +167,9 @@ const SwiftlyMobileHeader = ({
                 onClick={() => setShowMenu(true)}
                 aria-label="Open profile menu"
               >
-                <img
-                  style={{ filter: "brightness(0) opacity(0.7)" }}
-                  src={userIcon}
-                  alt="userIcon"
-                  className={styles.userIcon}
-                  // style={{ filter: "invert(1)" }}
-                />
+                <span className={styles.userInitials} aria-hidden="true">
+                  {userInitials}
+                </span>
               </button>
             ) : (
               <Text
