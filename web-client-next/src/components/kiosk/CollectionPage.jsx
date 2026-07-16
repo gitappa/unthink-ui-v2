@@ -333,21 +333,27 @@ const CollectionPage = ({ params }) => {
   }
   return (
     <div className="p-8 pt-6 md:p-12 bg-white min-h-screen">
-      <button
-        className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
-        onClick={() => navigate('/')}
-      >
-        <span className=" leading-none flex transition group-hover:-translate-x-0.5">
-          <ArrowLeftOutlined />
-        </span>
-        <span className="capitalize">Go back</span>
-      </button>
+      
       <div
         className="sticky top-0 py-2 mx-1 bg-white
        z-20 "
       >
+        <div className="flex items-start mb-2 ">
+
+        <button
+        className="group text-gray-500 flex w-fit   gap-2 rounded-full button-kiosk font-medium   transition "
+        onClick={() => navigate('/')}
+      >
+        <span className="   flex transition group-hover:-translate-x-0.5">
+          <ArrowLeftOutlined />
+        </span>
+        <span className="capitalize">Go back</span>
+      </button>
+      <AuthInput styles={'mb-0 w-fit'} />
+        </div>
+
         {/* Header */}
-        <div className="mb-3 lg:mb-8 flex justify-between items-start">
+        <div className="mb-3  flex justify-between items-start">
           {/* <p className="text-gray-400 text-sm lg:text-base font-semibold tracking-widest mb-3">
           JEWEL GENIE
         </p> */}
@@ -361,7 +367,6 @@ const CollectionPage = ({ params }) => {
             </p>
           </div>
           <div className="relative flex flex-col gap-3  items-end  ">
-      <AuthInput styles={'mb-0 w-fit'} />
             
             {showShareProductDetails && (
               <ShareOptions
@@ -401,7 +406,7 @@ const CollectionPage = ({ params }) => {
         </div>
 
         {/* Category Filters */}
-        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 mb-5 lg:mb-12 flex-wrap">
+        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 mb-5  flex-wrap">
           {tagsToShow.map((tag, i) => (
             <button
               key={i}

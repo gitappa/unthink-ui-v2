@@ -521,3 +521,6 @@ p {
 .sort_dropdown .ant-select-selector {
   border: none !important;
 }
+.ChatModal_chatmodal-figma-upload-popover__6x2OU .ant-upload  {
+  padding: 0px !important;
+}
