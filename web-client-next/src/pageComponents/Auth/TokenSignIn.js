@@ -143,6 +143,11 @@ const TokenSignIn = () => {
           	// Signout();
             return;
         }
+        if (redirectPage === "my-points") {
+          	navigate(`/${redirectPage}`);
+          	// Signout();
+            return;
+        }
         redirectBackToHome();
       } else {
         console.log('this is not valid token',res.data);
