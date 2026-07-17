@@ -68,7 +68,7 @@ const SwiftlyStyledIndex = ({ authUser, pageUser, pageUserCollections }) => {
 		});
 		// END
 
-		console.log("GTAG SHOP WIDGET CLICK", item);
+		// console.log("GTAG SHOP WIDGET CLICK", item);
 
 		const collectionPagePath = getBlogCollectionPagePath(
 			pageUser.user_name,

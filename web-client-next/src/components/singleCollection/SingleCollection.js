@@ -166,6 +166,7 @@ const SingleCollection = ({
 											product_brand: product.product_brand,
 											brand: product.brand,
 										}}
+										source='COLLECTION'
 									/>
 								</div>
 							))}

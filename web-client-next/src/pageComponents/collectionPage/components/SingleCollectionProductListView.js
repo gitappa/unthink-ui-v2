@@ -173,6 +173,7 @@ const SingleCollectionProductListView = ({
         collection_status={blogCollectionPage.status}
         blogCollectionPage={blogCollectionPage}
         onAddSelectedProductsToCollection={onAddSelectedProductsToCollection} //collectyion product data passing
+        source='COLLECTION'
       />
     );
 
@@ -519,6 +520,7 @@ const SingleCollectionProductListView = ({
                     onAddSelectedProductsToCollection
                   }
                   isSingleCollectionSharedPage={isSingleCollectionSharedPage}
+                  source='COLLECTION'
                 />
               </div>
             ))}
