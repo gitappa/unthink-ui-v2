@@ -165,6 +165,7 @@ const ProductCard = ({
   setOnMfrCode,
   onGuestPopupOpen,
   onKioskTryonClick,
+  source
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -337,20 +338,20 @@ const ProductCard = ({
       // START
       // console.log(blogCollectionPage);
       // I commented this code for causing some trubles in the navigation
-      // gTagCollectionProductClick({
-      //   mft_code: product?.mfr_code,
-      //   collection_path: authUserId
-      //     ? addSidInProductUrl(
-      //         product.url,
-      //         authUserId,
-      //         blogCollectionPage?.collection_id,
-      //       )
-      //     : product.url,
-      //   user_id: getTTid(),
-      //   user_name: authUserName,
-      //   collection_id: blogCollectionPage?.collection_id || "",
-      //   collection_name: blogCollectionPage?.collection_name,
-      // });
+      gTagCollectionProductClick({
+        mft_code: product?.mfr_code,
+        collection_path: authUserId
+          ? addSidInProductUrl(
+              product.url,
+              authUserId,
+              blogCollectionPage?.collection_id,
+            )
+          : product.url,
+        user_id: getTTid(),
+        user_name: authUserName,
+        collection_id: blogCollectionPage?.collection_id || "",
+        collection_name: blogCollectionPage?.collection_name,
+      });
       // END
     }
     // console.log('Hello World');
@@ -483,9 +484,11 @@ const ProductCard = ({
       // alert("Payment initiation failed. Please try again.");
     }
   };
+// console.log('source',source);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+// console.log('source',source);
 
     if (!product?.mfr_code) return;
 
@@ -497,6 +500,7 @@ const ProductCard = ({
         product: {
           mfr_code: product.mfr_code,
           tagged_by: product.tagged_by || [],
+         
         },
         qty: Number(count),
       });
@@ -504,7 +508,16 @@ const ProductCard = ({
       return;
     }
     const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
-
+    let collectionpayload;
+    if (source === 'COLLECTION'){
+        collectionpayload = {
+        id:collection_id,
+        name:collection_name,
+        path:collection_path
+      }
+      // console.log('collectionpayload',collectionpayload);
+    }
+    
     const payload = {
       is_display_amount: true,
       products: [
@@ -512,6 +525,9 @@ const ProductCard = ({
           mfr_code: product.mfr_code,
           tagged_by: product.tagged_by || [],
           qty: Number(count),
+           source:source,
+           collection:collectionpayload,
+          event_id:storeData?.event_id
         },
       ],
       product_lists: [],

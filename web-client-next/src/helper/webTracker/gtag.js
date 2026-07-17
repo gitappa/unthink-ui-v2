@@ -185,7 +185,7 @@ export const gTagAuraProductClick = (data) => {
 			og_url,
 		});
 
-	window.history?.replaceState?.({}, "", og_url);
+	// window.history?.replaceState?.({}, "", og_url);
 
 	return url.toString();
 };
@@ -231,21 +231,4 @@ export const gTagShopWidgetClick = (data) => {
 
 	const og_url = url.href;
 
- 
-
-	// if (window.gtag) {
-	// 	window.gtag(gTagEvent, event_shop_widget_click, {
-	// 		collection_id,
-	// 		collection_path,
-	// 		collection_status,
-	// 		user,
-	// 		shared_id,
-	// 		term,
-	// 		og_url,
-	// 	});
-	// }
-
-	// window.history.replaceState({}, "", og_url);
-
-	// return url.toString();
 };

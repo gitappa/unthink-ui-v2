@@ -1043,6 +1043,8 @@ setNotData(newOptionalFilters)
 										}
 										localChatMessage={localChatMessage}
 										onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+										source="SEARCH"
+
 									/>
 								))}
 							</div>
@@ -1106,6 +1108,8 @@ setNotData(newOptionalFilters)
 													}
 													localChatMessage={localChatMessage}
 													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+										source="SEARCH"
+
 												/>
 											</SwiperSlide>
 										))}
@@ -1172,6 +1176,7 @@ setNotData(newOptionalFilters)
 													}
 													localChatMessage={localChatMessage}
 													onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+										source="SEARCH"
 
 												/>
 											</SwiperSlide>
