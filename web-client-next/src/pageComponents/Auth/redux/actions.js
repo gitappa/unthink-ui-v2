@@ -15,6 +15,9 @@ import {
   GET_USER_INFO,
   GET_USER_INFO_FAILURE,
   GET_USER_INFO_SUCCESS,
+  GET_WISHLIST_USER_COLLECTION,
+  GET_WISHLIST_USER_COLLECTION_FAILURE,
+  GET_WISHLIST_USER_COLLECTION_SUCCESS,
   GUEST_POPUP_SHOW,
   IS_SAVING_USER_INFO,
   REMOVE_COLLECTION_FROM_USER_COLLECTIONS,
@@ -187,5 +190,20 @@ export const getCreatorCollectionSuccess = (data) => ({
 // Action on failure
 export const getCreatorCollectionFailure = (error) => ({
   type: GET_CREATOR_COLLECTIONS_FAILURE,
+  payload: error,
+});
+//DSSSSSSSSSSA
+
+export const getwishlistUserCollection = (payload) => ({
+  type: GET_WISHLIST_USER_COLLECTION,
+  payload,
+});
+
+export const getwishlsitUserCollectionSuccess = (payload) => ({
+  type: GET_WISHLIST_USER_COLLECTION_SUCCESS,
+  payload,
+});
+export const getwishlsitUserCollectionFailure = (error) => ({
+  type: GET_WISHLIST_USER_COLLECTION_FAILURE,
   payload: error,
 });

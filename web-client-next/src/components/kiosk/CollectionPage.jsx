@@ -434,11 +434,11 @@ const CollectionPage = ({ params }) => {
           </div>
         ))}
       </div>
-      <BannerImage
+      {/* <BannerImage
         src={profilebanner?.src}
         alt="profilebanner"
         className="lg:mt-11 mt-5"
-      />
+      /> */}
       <GuestUserPopUp
         isOpen={isPopupShow || isGuestPopUpShow}
         setIsOpen={setIsPopupShow}

@@ -46,7 +46,7 @@ import {
 	getInfluencerCollectionsSuccess,
 	getInfluencerInfo,
 } from "../Influencer/redux/actions.js";
-import { getCreatorCollection, getSingleUserCollection, getUserCollection, getUserCollections, getUserInfo } from "../Auth/redux/actions.js";
+import { getCreatorCollection, getSingleUserCollection, getUserCollection, getUserCollections, getUserInfo, getwishlistUserCollection } from "../Auth/redux/actions.js";
 // import CollectionPageContent from "../collectionPage/CollectionPageContent";
 import {
 	shared_profile_on_root,
@@ -840,7 +840,17 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	}, [showWishlistModal]);
 
  
+useEffect(()=>{
 
+ if (!isUserLogin) return 
+ 
+
+				dispatch( 
+					getwishlistUserCollection({
+						path: `my_wishlist_${authUser.user_id}`,
+					}),
+				);
+},[isUserLogin])
 
 	useEffect(() => {
 		if (isSingleCollectionSharedPage && currentSingleCollection._id) {
