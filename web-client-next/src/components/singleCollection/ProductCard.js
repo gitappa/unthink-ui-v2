@@ -26,7 +26,7 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaMinus, FaRegBookmark } from "react-icons/fa6";
+import { FaHeart, FaMinus, FaRegBookmark } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
   setRemoveFromFavorites,
@@ -34,7 +34,7 @@ import {
   setProductsToAddInWishlist,
   closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
-import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
+import { getwishlistUserCollection, GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
@@ -209,6 +209,7 @@ const ProductCard = ({
     isUserLogin,
     collections,
     singleCollections,
+    wishlistCollections
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -221,6 +222,7 @@ const ProductCard = ({
     state?.auth?.user?.isUserLogin,
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
+    state.auth.user.wishlistCollections,
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
   const cartCollection = collection?.product_lists
@@ -231,6 +233,8 @@ const ProductCard = ({
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
+const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code === product.mfr_code)
+// console.log('colllectionssd',KioskLoginAuth);
 
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
@@ -304,7 +308,7 @@ const ProductCard = ({
     [product, collection_id, allowEdit],
   );
   // console.log(product);
-
+ 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
@@ -440,8 +444,30 @@ const ProductCard = ({
     }
 
     await callHandpickedAPI(kioskLogin?.user_id || authUserId || getTTid());
+     if(isUserLogin  ){
+      let login_userID
+      if(kioskLogin){
+        login_userID = kioskLogin?.user_id 
+      }
+      else if (!kioskLogin){
+        login_userID= authUserId
+      }
+				dispatch( 
+					getwishlistUserCollection({
+						path: `my_wishlist_${login_userID}`,
+					}),
+				);}
   };
-
+  
+  
+// useEffect(()=>{
+//  if (!kioskUserLogin) return 
+// 				dispatch( 
+// 					getwishlistUserCollection({
+// 						path: `my_wishlist_${kioskUserLogin}`,
+// 					}),
+// 				);
+// },[kioskUserLogin])
   const checkoutPayment = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -538,6 +564,7 @@ const ProductCard = ({
       path: `my_cart_${cartUserId}`,
     };
     dispatch(addToCart(payload));
+   
   };
 
   const onSimilarClick = (event) => {
@@ -1323,6 +1350,7 @@ const ProductCard = ({
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
+                    {heartRedProduct ? <FaHeart  className="text-red-500"  /> : 
                     <img
                       alt="Add to wishlist"
                       className={styles["add_to_wishlist_icon"]}
@@ -1330,6 +1358,7 @@ const ProductCard = ({
                       height={20}
                       width={20}
                     />
+                  }
                   </button>
                 </div>
               )}
@@ -1634,4 +1663,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default React.memo(ProductCard);

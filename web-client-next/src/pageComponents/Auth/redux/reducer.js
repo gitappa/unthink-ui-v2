@@ -15,6 +15,9 @@ import {
 	GET_USER_INFO,
 	GET_USER_INFO_FAILURE,
 	GET_USER_INFO_SUCCESS,
+	GET_WISHLIST_USER_COLLECTION,
+	GET_WISHLIST_USER_COLLECTION_FAILURE,
+	GET_WISHLIST_USER_COLLECTION_SUCCESS,
 	IS_SAVING_USER_INFO,
 	REMOVE_COLLECTION_FROM_USER_COLLECTIONS,
 	REMOVE_PRODUCTS_FROM_USER_COLLECTIONS,
@@ -43,6 +46,10 @@ const userInitialState = {
 	singleCollections: {
 		data: [],
 	},
+	wishlistCollections:{
+
+	},
+	isWishlistFetching:false,
 	enablePlist: false,
 	userNotFound: false,
 	isUserLogin: false,
@@ -210,6 +217,18 @@ const userReducer = (state = userInitialState, action = {}) => {
 
 			return newState;
 		}
+		case GET_WISHLIST_USER_COLLECTION:
+			newState.isWishlistFetching = true;
+			return newState;
+
+		case GET_WISHLIST_USER_COLLECTION_SUCCESS:
+			newState.isWishlistFetching = false;
+			newState.wishlistCollections = payload;
+			return newState;
+
+		case GET_WISHLIST_USER_COLLECTION_FAILURE:
+			newState.isWishlistFetching = false;
+			return newState;
 
 		case REMOVE_COLLECTION_FROM_USER_COLLECTIONS: {
 			if (payload._id) {

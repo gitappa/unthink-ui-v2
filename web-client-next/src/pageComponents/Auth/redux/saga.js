@@ -4,6 +4,7 @@ import {
   GET_USER_COLLECTION,
   GET_USER_COLLECTIONS,
   GET_USER_INFO,
+  GET_WISHLIST_USER_COLLECTION,
   SAVE_USER_INFO,
 } from "./constants";
 import {
@@ -15,6 +16,7 @@ import {
   getUserCollectionSuccess,
   getUserInfoFailure,
   getUserInfoSuccess,
+  getwishlsitUserCollectionSuccess,
   setIsSavingUserInfo,
 } from "./actions";
 import { getInfluencerCollectionSuccess } from "../../Influencer/redux/actions";
@@ -27,6 +29,7 @@ import { getTTid } from "../../../helper/getTrackerInfo";
 import { getCollectionsView } from "../../../helper/utils";
 import { getAuthUserUserName } from "./selector";
 import { customProductsWatcher } from "../../customProducts/redux/saga";
+import { current_store_name } from "../../../constants/config";
 // import { getInfluencerInfoSuccess } from "../../Influencer/redux/actions"; // REMOVE
 // import {
 // 	authUserState,
@@ -129,7 +132,7 @@ function* fetchUserCollectionsSaga(action) {
       summary,
       status: Mystatus,
       ipp,
-      current_page,
+      current_page, 
       generated_by,
       collection_type,
       path,
@@ -231,11 +234,36 @@ function* fetchUserSingleCollectionSaga(action) {
     yield put(getSingleUserCollectionFailure());
   }
 }
+function* fetchUserWishlistCollectionSaga(action) {
+  try {
+    const {
+      path,
+      store=current_store_name
+    } = action.payload;
+
+    const params = {
+     path,
+     current_store_name
+    };
+
+    const { data = {}, status } = yield call(
+      collectionAPIs.fetchCollectionsAPICall,
+      params,
+    );    
+    if (status === 200 && data.data) {      
+      yield put(getwishlsitUserCollectionSuccess(data.data[0]));
+    }
+  } catch (err) {
+    console.error(err);
+    yield put(getwishlsitUserCollectionFailure());
+  }
+}
 
 export function* userCollectionsWatcher() {
   yield takeLatest(GET_USER_COLLECTIONS, fetchUserCollectionsSaga);
   yield takeLatest(GET_USER_COLLECTION, fetchUserCollectionSaga);
   yield takeLatest(GET_SINGLE_USER_COLLECTION, fetchUserSingleCollectionSaga);
+  yield takeLatest(GET_WISHLIST_USER_COLLECTION, fetchUserWishlistCollectionSaga);
 }
 
 export default {
