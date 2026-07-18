@@ -16,6 +16,7 @@ import { useKioskAccess } from "../src/components/kiosk/components/LoggedInInfo"
 import { fetchCart } from "../src/pageComponents/DeliveryDetails/redux/action";
 import { getStoredKioskLoginUserId } from "../src/helper/utils";
 import { getTTid } from "../src/helper/getTrackerInfo";
+import KioskRoot from "../src/pageComponents/kiosk/KioskRoot";
 
 // Dynamically import StorePage to avoid hydration issues
 const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
@@ -72,7 +73,7 @@ const Index = ({ ...props }) => {
     return (
         <>
             {hasKioskAccess ? (
-                <KioskHome {...props} />
+                <KioskRoot isRootPage {...props} />
             ) : is_store_instance ? ( // for store home page
                 mounted && (
                     <SharedPage

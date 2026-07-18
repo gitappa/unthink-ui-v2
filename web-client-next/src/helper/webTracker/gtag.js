@@ -131,7 +131,7 @@ export const gTagCollectionProductClick = (data) => {
 			og_url,
 		});
 
-	window.history?.replaceState?.({}, "", og_url);
+	// window.history?.replaceState?.({}, "", og_url);
 
 	return url.toString();
 };
