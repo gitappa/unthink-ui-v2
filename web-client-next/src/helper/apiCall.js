@@ -27,6 +27,7 @@ export const apiInstance = ({
 	data = {},
 	params = {},
 	config = {},
+	responseType="",
 }) => {
 	let cancel;
 	const promise = axios({
@@ -38,6 +39,7 @@ export const apiInstance = ({
 		cancelToken: new axios.CancelToken((c) => {
 			cancel = c;
 		}),
+		responseType
 	});
  
 	
