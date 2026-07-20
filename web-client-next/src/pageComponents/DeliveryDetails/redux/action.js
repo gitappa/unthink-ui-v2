@@ -8,6 +8,12 @@ import {
 	REMOVE_FROM_CART,
 	REMOVE_FROM_CART_FAILURE,
 	REMOVE_FROM_CART_SUCCESS,
+	CREATE_LOYALTY_BADGE,
+	CREATE_LOYALTY_BADGE_FAILURE,
+	CREATE_LOYALTY_BADGE_SUCCESS,
+	FETCH_EARNING_POINTS,
+	FETCH_EARNING_POINTS_FAILURE,
+	FETCH_EARNING_POINTS_SUCCESS,
 } from "./constant";
 
 // ADD TO CART
@@ -54,5 +60,35 @@ export const removeFromCartSuccess = (data) => ({
 
 export const removeFromCartFailure = (error) => ({
 	type: REMOVE_FROM_CART_FAILURE,
+	payload: error,
+});
+
+export const createLoyaltyBadge = (payload) => ({
+	type: CREATE_LOYALTY_BADGE,
+	payload,
+});
+
+export const createLoyaltyBadgeSuccess = (imageUrl) => ({
+	type: CREATE_LOYALTY_BADGE_SUCCESS,
+	payload: imageUrl,
+});
+
+export const createLoyaltyBadgeFailure = (error) => ({
+	type: CREATE_LOYALTY_BADGE_FAILURE,
+	payload: error,
+});
+
+export const fetchEarningPoints = (payload) => ({
+	type: FETCH_EARNING_POINTS,
+	payload,
+});
+
+export const fetchEarningPointsSuccess = (data) => ({
+	type: FETCH_EARNING_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const fetchEarningPointsFailure = (error) => ({
+	type: FETCH_EARNING_POINTS_FAILURE,
 	payload: error,
 });

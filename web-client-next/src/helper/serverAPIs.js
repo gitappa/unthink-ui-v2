@@ -131,6 +131,8 @@ const GetModifiedDataKeyUrl = "/attribute_pool/getMPCollectionData/";
 // Vto Api
 const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/";
 
+const earningPoints = '/user/earnings/by_store/' 
+const createBadge = '/user/earnings/generate_loyalty_badge/'
 //KIOSK
 const socialMedia =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
@@ -1551,3 +1553,33 @@ export const TryonSaveApiCall = (data = {}) => {
       data,
   });
 };
+export const EarningPointsApiCall = ({user_id ,store_name}) => {
+  const url = `${auraYfretUserCollBaseUrl}${earningPoints}`;
+console.log("URL:", user_id, store_name);
+// user_id:178453318805888,
+//       store_name :'dothelook',
+  return apiInstance({
+    url,
+    method: "get",
+    params: {
+      user_id,
+      store_name ,
+    },
+  });
+};
+export const CreateBadgeApiCall = ({name ,points, badge_image_url,qr_page_url}) => {
+  const url = `${auraYfretUserCollBaseUrl}${createBadge}`;
+// console.log("URL:", name, points, badge_image_url);
+  return apiInstance({
+    url,
+    method: "post",
+    data: {
+      name,
+      points,
+      badge_image_url,  
+      qr_page_url,
+    },
+    responseType: "blob",
+  }); 
+};
+

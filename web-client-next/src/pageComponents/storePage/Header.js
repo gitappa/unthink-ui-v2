@@ -440,6 +440,16 @@ const Header = ({
             showMenu && setShowMenu(false);
           },
         },
+          {
+          key: "my points",
+          className: styles.headerMenuItemPy2,
+          label: (
+            <Link className={styles.headerMenuLinkTextBase} href={'/my-points'}>
+              My points
+            </Link>
+          ),
+ 
+        },
       );
       if (window.innerWidth <= 1024) {
         items.push({
