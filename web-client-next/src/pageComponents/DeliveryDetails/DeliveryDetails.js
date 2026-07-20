@@ -323,7 +323,7 @@ const DeliveryDetails = () => {
       dispatch(GuestPopUpShow(true));
     } else {
       // navigate("/cart/checkout");
-      navigate(`/claim-points/${authUserId}/${storeData?.store_name}`)
+      navigate(`/checkout-claim-badge`)
     }
   };
 
@@ -373,16 +373,15 @@ const DeliveryDetails = () => {
                                   (attr, idx) => (
                                     <div
                                       key={idx}
-                                      className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium"
+                                      className="inline-flex bg-support items-center px-3 py-1 rounded-md text-xs font-medium"
                                       style={{
-                                        background: "#770100",
-                                        boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
+                                        //  boxShadow: `inset 8px -8px 12px rgba(0, 0, 0, 0.5),9px 9px 15px rgba(0, 0, 0, 0.3)`,
                                       }}
                                     >
-                                      <span className="font-semibold text-gray-100 capitalize">
+                                      <span className="font-semibold  capitalize">
                                         {attr.name}:
                                       </span>
-                                      <span className="ml-1 text-white">
+                                      <span className="ml-1 ">
                                         {formatValue(attr.value)}
                                       </span>
                                     </div>
@@ -544,8 +543,8 @@ const DeliveryDetails = () => {
               </div> */}
               {authUserId && storeData?.store_name === 'giva_indiranagar2_hs' && (
                <img
-                    src={
-                      shareQrCodeImage(`/claim-points/${authUserId}/${storeData?.store_name}`)
+                    src={ 
+                      shareQrCodeImage(`/checkout-claim-badge`)
                     }
                     alt="Digital cart QR"
                     className="h-30 w-30 m-auto object-contain mix-blend-lighten"
