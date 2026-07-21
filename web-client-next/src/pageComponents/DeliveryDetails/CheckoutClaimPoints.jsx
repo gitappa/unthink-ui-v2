@@ -1,14 +1,29 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { FaAward, FaShoppingCart, FaTicketAlt } from "react-icons/fa";
-import { fetchCart } from "./redux/action";
+import {
+  checkoutUpdatePoints,
+  fetchCart,
+  redeemSessionHCS20Points,
+} from "./redux/action";
+import { current_store_name } from "../../constants/config";
 
-const REWARD_POINTS_AVAILABLE = 5000;
-const BLOCKCHAIN_POINTS = 15500;
+const TOTAL_CLAIM_POINTS = 600;
+const REWARD_POINTS_AVAILABLE = 500;
 const DEFAULT_REDEEM_POINTS = 500;
+const DEFAULT_NFT_INSTANCE_ID = "GIVA loyalty points";
+const DEFAULT_CLAIM_IMAGE_URL = "https://example.com/nft/platnium.png";
 
 const getRouteValue = (value) => (Array.isArray(value) ? value[0] : value);
+const getPointValue = (source, keys, fallback) => {
+  const rawValue = keys.reduce(
+    (value, key) => (value === undefined ? source?.[key] : value),
+    undefined
+  );
+  const nextValue = Number(rawValue);
+
+  return Number.isFinite(nextValue) ? nextValue : fallback;
+};
 
 const CheckoutClaimPoints = () => {
   const router = useRouter();
@@ -17,11 +32,26 @@ const CheckoutClaimPoints = () => {
   const routeStoreName = getRouteValue(router.query.store_name);
   const [redeemPoints, setRedeemPoints] = useState(DEFAULT_REDEEM_POINTS);
   const [confirmedPoints, setConfirmedPoints] = useState(0);
+  const [redeemPointsError, setRedeemPointsError] = useState("");
 
-  const [collection, loading, authUser] = useSelector((state) => [
+  const [
+    collection,
+    loading,
+    authUser,
+    checkoutUpdatedPoints,
+    checkoutUpdatePointsLoading,
+    checkoutUpdatePointsError,
+    redeemSessionHCS20PointsLoading,
+    storeData,
+  ] = useSelector((state) => [
     state.cart?.collection,
     state.cart?.loading,
     state.auth?.user?.data,
+    state.cart?.checkoutUpdatedPoints,
+    state.cart?.checkoutUpdatePointsLoading,
+    state.cart?.checkoutUpdatePointsError,
+    state.cart?.redeemSessionHCS20PointsLoading,
+    state.store.data,
   ]);
 
   const cartPath = routeUserId ? `my_cart_${routeUserId}` : "";
@@ -40,9 +70,38 @@ const CheckoutClaimPoints = () => {
     [collection]
   );
 
+  const checkoutPointsData =
+    checkoutUpdatedPoints?.events?.[0] ||
+    checkoutUpdatedPoints?.event ||
+    checkoutUpdatedPoints;
+  const hasCalculatedPoints = Boolean(checkoutPointsData);
+  const totalClaimPoints = getPointValue(
+    checkoutPointsData,
+    ["total_earned", "total_points", "totalPoints", "points", "earned_points"],
+    checkoutUpdatedPoints?.total_earned
+  );
+  const maxAvailableToRedeem = getPointValue(
+    checkoutPointsData,
+    [
+      "max_available_to_redeem",
+      "maxAvailableToRedeem",
+      "available_to_redeem",
+      "available_balance",
+      "available_points",
+    ],
+    checkoutUpdatedPoints?.available_balance
+  );
   const orderTotal = collection?.total_amount || 0;
-  const appliedVoucherValue = confirmedPoints ? Math.floor(confirmedPoints / 10) : 0;
-  const payableTotal = Math.max(orderTotal - appliedVoucherValue, 0);
+  const redeemablePoints = Math.min(
+    Math.max(Number(redeemPoints) || 0, 0),
+    maxAvailableToRedeem
+  );
+  const appliedPoints = confirmedPoints || redeemablePoints;
+  const remainingPoints = getPointValue(
+    checkoutPointsData,
+    ["available_balance", "remaining_balance", "remainingBalance", "remaining_points"],
+    Math.max(totalClaimPoints - appliedPoints, 0)
+  );
   const customerName =
     authUser?.full_name ||
     authUser?.name ||
@@ -52,19 +111,87 @@ const CheckoutClaimPoints = () => {
   const storeLabel = routeStoreName
     ? routeStoreName.toString().replace(/_/g, " ")
     : "Store";
+  const checkoutUserId = routeUserId || authUser?.user_id || authUser?._id;
+  const checkoutStoreName = storeData?.store_name || current_store_name;
+  const userDID = authUser?.userDID;
+  const claimImageUrl =
+    storeData?.pdp_settings?.badge_url ||
+    storeData?.badge_image_url ||
+    DEFAULT_CLAIM_IMAGE_URL;
 
   const handlePointsChange = (event) => {
     const nextValue = Number(event.target.value);
-    setRedeemPoints(Number.isNaN(nextValue) ? 0 : nextValue);
+    const normalizedValue = Number.isNaN(nextValue) ? 0 : nextValue;
+    setRedeemPoints(normalizedValue);
+
+    if (hasCalculatedPoints && normalizedValue > maxAvailableToRedeem) {
+      setRedeemPointsError(
+        `Enter ${maxAvailableToRedeem} points or less to redeem.`
+      );
+      return;
+    }
+
+    setRedeemPointsError("");
+  };
+
+  const handleCalculatePoints = () => {
+    if (!checkoutUserId || !checkoutStoreName) {
+      console.error("Missing checkout points payload:", {
+        user_id: checkoutUserId,
+        store_name: checkoutStoreName,
+      });
+      return;
+    }
+
+    dispatch(
+      checkoutUpdatePoints({
+        user_id: checkoutUserId.toString(),
+        store_name: checkoutStoreName,
+        userDID,
+      })
+    );
   };
 
   const handleConfirmRedemption = () => {
-    const validPoints = Math.min(
-      Math.max(Number(redeemPoints) || 0, 0),
-      REWARD_POINTS_AVAILABLE
-    );
+    const validPoints = Math.max(Number(redeemPoints) || 0, 0);
+
+    if (!userDID) {
+      setRedeemPointsError("User DID is required to redeem points.");
+      return;
+    }
+
+    if (validPoints > maxAvailableToRedeem) {
+      setRedeemPointsError(
+        `Enter ${maxAvailableToRedeem} points or less to redeem.`
+      );
+      return;
+    }
+
+    setRedeemPointsError("");
     setRedeemPoints(validPoints);
     setConfirmedPoints(validPoints);
+    dispatch(
+      redeemSessionHCS20Points({
+        redeemPayload: {
+          recipientId: userDID,
+          pointsAmount: validPoints,
+        },
+        claimPayload: {
+          user_id: checkoutUserId?.toString(),
+          store_name: checkoutStoreName,
+          nft_instance_id: DEFAULT_NFT_INSTANCE_ID,
+          points_exchanged: validPoints,
+          image_url: claimImageUrl,
+        },
+      })
+    );
+     dispatch(
+      checkoutUpdatePoints({
+        user_id: checkoutUserId.toString(),
+        store_name: checkoutStoreName,
+        userDID,
+      })
+    );
   };
 
   return (
@@ -112,8 +239,8 @@ const CheckoutClaimPoints = () => {
                       />
                     )}
                     <div>
-                      <p className="font-medium">
-                        Product {index + 1} ({product.name || product.mfr_code || "Item"})
+                      <p className="font-medium whitespace-nowrap overflow-hidden ">
+                         ({product.name || product.mfr_code || "Item"})
                       </p>
                       <p className="text-gray-500">Qty {product.qty}</p>
                     </div>
@@ -132,96 +259,87 @@ const CheckoutClaimPoints = () => {
                 {orderTotal ? `Rs ${orderTotal.toLocaleString()}` : "SX"} Total
               </p>
             </div>
-
-          
           </div>
 
           <div className="p-5">
-              <div className="mx-auto mb-6 flex max-w-[230px] flex-col items-center text-center">
-              <div className="relative flex h-28 w-28 items-center justify-center rounded-[28px] border-4 border-[#d6a432] bg-gradient-to-br from-[#fff3ad] via-[#e3b945] to-[#a8751e] shadow-[0_12px_24px_rgba(135,91,19,0.28)]">
-                <div className="absolute inset-3 rounded-[22px] border-2 border-[#fff1a8]" />
-                <FaAward className="relative z-10 text-6xl text-[#8a5c14]" />
+            <div className="mx-auto max-w-[420px]  text-[15px] text-black">
+              <button
+                type="button"
+                onClick={handleCalculatePoints}
+                disabled={checkoutUpdatePointsLoading}
+                className="w-full bg-kiosk-secondary hover:bg-kiosk-primary py-1 text-center text-[16px] uppercase disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {checkoutUpdatePointsLoading ? "CALCULATING POINTS" : "CALCULATE POINTS"}
+              </button>
+              {checkoutUpdatePointsLoading && 
+              <div className="px-3 py-2 leading-6">
+                <p>Calculating points at checkout....</p>
+                <p>Reading rules..</p>
+                <p>Checking for points per product........</p>
+              </div>
+                 }
+
+              <div className="border-t-2 mt-3 border-black pt-3 text-center">
+                <p className="text-[16px] uppercase">
+                  TOTAL POINTS FOR {customerName.toString().toUpperCase()}:{" "}
+                  {totalClaimPoints}
+                </p>
+                <p className="mt-5 text-[16px]">
+                  Max Available to redeem:{" "}
+                  <span className="ml-2">{maxAvailableToRedeem}</span>
+                </p>
               </div>
 
-              <p className="mt-4 text-base font-semibold">Badge Level: Gold</p>
-              <p className="text-sm leading-5">
-                [Current Points on Blockchain:
-                <br />
-                {BLOCKCHAIN_POINTS.toLocaleString()} pts]
-              </p>
-            </div>
-            <div className="rounded-md border border-[#d7d7d7] bg-[#fbfbfb] p-5 shadow-sm">
-              
-              <h2 className="text-xl font-semibold">Rewards Points</h2>
-              <p className="mt-1 text-sm font-semibold">
-                *Reward points available to redeem:**{" "}
-                {REWARD_POINTS_AVAILABLE.toLocaleString()}
-              </p>
-
-              <div className="mt-5 flex items-center gap-4">
-                <FaShoppingCart className="text-4xl text-[#b9b9b9]" />
+              <div className="mt-5 bg-[#fbfbfb] px-2 py-3">
+                <label
+                  htmlFor="redeem-points"
+                  className="mb-1 block text-base font-semibold"
+                >
+                  [Enter points to redeem]
+                </label>
+                <input
+                  id="redeem-points"
+                  type="number"
+                  min="0"
+                  max={maxAvailableToRedeem}
+                  value={redeemPoints}
+                  onChange={handlePointsChange}
+                  disabled={!hasCalculatedPoints}
+                  className="h-7 w-full border border-[#dedede] bg-white px-2 text-[11px] outline-none disabled:cursor-not-allowed disabled:bg-[#f2f2f2] disabled:text-[#9a9a9a]"
+                />
+                {redeemPointsError && (
+                  <p className="mt-1 text-[10px] leading-4 text-red-600">
+                    {redeemPointsError}
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={handleConfirmRedemption}
-                  className="h-11 flex-1 rounded-md bg-brand text-base font-medium text-white shadow-sm transition hover:brightness-95 active:scale-[0.99]"
+                  disabled={
+                    !hasCalculatedPoints ||
+                    Boolean(redeemPointsError) ||
+                    redeemSessionHCS20PointsLoading
+                  }
+                  className="mt-2 w-full hover:bg-kiosk-primary bg-kiosk-secondary py-1 text-center text-[16px] uppercase disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Redeem points
+                  {redeemSessionHCS20PointsLoading
+                    ? "REDEEMING POINTS"
+                    : "REDEEM POINTS"}
                 </button>
               </div>
 
-              <label className="mt-8 block text-sm font-medium" htmlFor="redeem-points">
-                [Enter points to redeem:]
-              </label>
-              <input
-                id="redeem-points"
-                type="number"
-                min="0"
-                max={REWARD_POINTS_AVAILABLE}
-                value={redeemPoints}
-                onChange={handlePointsChange}
-                className="mt-2 h-10 w-full rounded border border-[#cfcfcf] bg-white px-3 text-sm outline-none bg-brand focus:ring-2 focus:ring-[#b06fd3]/20"
-              />
+              {hasCalculatedPoints && (
+                <div className="mt-6 border-t-2 border-black px-3 pt-5 leading-6">
+                  { redeemSessionHCS20PointsLoading&& <p>Updating final balance....</p>}
+                  <p>Remaining balance: {remainingPoints} points</p>
+                </div>
+              )}
 
-              <button
-                type="button"
-                onClick={handleConfirmRedemption}
-                className="mt-3 h-11 w-full rounded-md bg-brand text-sm font-medium text-white shadow-sm transition hover:brightness-95 active:scale-[0.99]"
-              >
-                + Confirm Redemption
-              </button>
-
-              {confirmedPoints > 0 && (
-                <p className="mt-4 rounded bg-[#f0e2f8] px-3 py-2 text-sm font-medium text-[#6e2d87]">
-                  {confirmedPoints.toLocaleString()} points confirmed for redemption.
+              {checkoutUpdatePointsError && (
+                <p className="mt-6 border-t-2 border-black px-3 pt-5 text-xs text-red-600">
+                  Failed to calculate checkout points.
                 </p>
               )}
-            </div>
-
-            <div className="mt-8 flex justify-end">
-              <div className="w-full max-w-[520px] rounded-md bg-white p-4 shadow-[0_28px_80px_rgba(176,111,211,0.22)]">
-                <div className="mb-4 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Cart total</span>
-                    <span>{orderTotal ? `Rs ${orderTotal.toLocaleString()}` : "SX"}</span>
-                  </div>
-                  <div className="flex justify-between text-[#7b3f98]">
-                    <span>Points value</span>
-                    <span>- Rs {appliedVoucherValue.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-[#e5e5e5] pt-2 font-semibold">
-                    <span>Payable total</span>
-                    <span>{orderTotal ? `Rs ${payableTotal.toLocaleString()}` : "SX"}</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  className="flex h-11 w-full items-center justify-center gap-2 rounded-md bg-brand text-sm font-semibold text-white shadow-sm transition hover:bg-secondary"
-                >
-                  <FaTicketAlt />
-                  Apply Voucher Now (SX off)
-                </button>
-              </div>
             </div>
           </div>
         </div>

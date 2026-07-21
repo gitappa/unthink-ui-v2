@@ -133,6 +133,14 @@ const VtoTryOn = "https://auraprod.unthink.ai/cs/image_tryon/";
 
 const earningPoints = '/user/earnings/by_store/' 
 const createBadge = '/user/earnings/generate_loyalty_badge/'
+const checkoutUpdatePoints = "/user/earnings/checkout_update_points/";
+const claimStorePoints = "/user/earnings/claim_store/";
+const sendSessionHCS20Points =
+  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/send-sessionhcs20-points";
+const checkSessionHCS20Points =
+  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/check-sessionhcs20-points";
+const redeemSessionHCS20Points =
+  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/redeem-sessionhcs20-points";
 //KIOSK
 const socialMedia =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
@@ -1557,7 +1565,7 @@ export const EarningPointsApiCall = ({user_id ,store_name}) => {
   const url = `${auraYfretUserCollBaseUrl}${earningPoints}`;
 console.log("URL:", user_id, store_name);
 // user_id:178453318805888,
-//       store_name :'dothelook',
+//       store_name :'  ',
   return apiInstance({
     url,
     method: "get",
@@ -1565,6 +1573,43 @@ console.log("URL:", user_id, store_name);
       user_id,
       store_name ,
     },
+  });
+};
+export const CheckoutUpdatePointsApiCall = (data = {}) => {
+   const url = `${auraYfretUserCollBaseUrl}${checkoutUpdatePoints}`;
+  return apiInstance({
+    url,
+    method: "post",
+    data,
+  });
+};
+export const SendSessionHCS20PointsApiCall = (data = {}) => {
+  return apiInstance({
+    url: sendSessionHCS20Points,
+    method: "post",
+    data,
+  });
+};
+export const CheckSessionHCS20PointsApiCall = (data = {}) => {
+  return apiInstance({
+    url: checkSessionHCS20Points,
+    method: "post",
+    data,
+  });
+};
+export const RedeemSessionHCS20PointsApiCall = (data = {}) => {
+  return apiInstance({
+    url: redeemSessionHCS20Points,
+    method: "post",
+    data,
+  });
+};
+export const ClaimStorePointsApiCall = (data = {}) => {
+  const url = `${auraYfretUserCollBaseUrl}${claimStorePoints}`;
+  return apiInstance({
+    url,
+    method: "post",
+    data,
   });
 };
 export const CreateBadgeApiCall = ({name ,points, badge_image_url,qr_page_url}) => {
@@ -1582,4 +1627,3 @@ export const CreateBadgeApiCall = ({name ,points, badge_image_url,qr_page_url}) 
     responseType: "blob",
   }); 
 };
-
