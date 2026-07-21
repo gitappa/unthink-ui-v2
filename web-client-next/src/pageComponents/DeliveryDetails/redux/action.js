@@ -14,6 +14,18 @@ import {
 	FETCH_EARNING_POINTS,
 	FETCH_EARNING_POINTS_FAILURE,
 	FETCH_EARNING_POINTS_SUCCESS,
+	CHECKOUT_UPDATE_POINTS,
+	CHECKOUT_UPDATE_POINTS_FAILURE,
+	CHECKOUT_UPDATE_POINTS_SUCCESS,
+	CHECK_SESSION_HCS20_POINTS_FAILURE,
+	CHECK_SESSION_HCS20_POINTS_SUCCESS,
+	CLAIM_STORE_POINTS_FAILURE,
+	CLAIM_STORE_POINTS_SUCCESS,
+	REDEEM_SESSION_HCS20_POINTS,
+	REDEEM_SESSION_HCS20_POINTS_FAILURE,
+	REDEEM_SESSION_HCS20_POINTS_SUCCESS,
+	SEND_SESSION_HCS20_POINTS_FAILURE,
+	SEND_SESSION_HCS20_POINTS_SUCCESS,
 } from "./constant";
 
 // ADD TO CART
@@ -90,5 +102,65 @@ export const fetchEarningPointsSuccess = (data) => ({
 
 export const fetchEarningPointsFailure = (error) => ({
 	type: FETCH_EARNING_POINTS_FAILURE,
+	payload: error,
+});
+
+export const checkoutUpdatePoints = (payload) => ({
+	type: CHECKOUT_UPDATE_POINTS,
+	payload,
+});
+
+export const checkoutUpdatePointsSuccess = (data) => ({
+	type: CHECKOUT_UPDATE_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const checkoutUpdatePointsFailure = (error) => ({
+	type: CHECKOUT_UPDATE_POINTS_FAILURE,
+	payload: error,
+});
+
+export const sendSessionHCS20PointsSuccess = (data) => ({
+	type: SEND_SESSION_HCS20_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const sendSessionHCS20PointsFailure = (error) => ({
+	type: SEND_SESSION_HCS20_POINTS_FAILURE,
+	payload: error,
+});
+
+export const checkSessionHCS20PointsSuccess = (data) => ({
+	type: CHECK_SESSION_HCS20_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const checkSessionHCS20PointsFailure = (error) => ({
+	type: CHECK_SESSION_HCS20_POINTS_FAILURE,
+	payload: error,
+});
+
+export const redeemSessionHCS20Points = (payload) => ({
+	type: REDEEM_SESSION_HCS20_POINTS,
+	payload,
+});
+
+export const redeemSessionHCS20PointsSuccess = (data) => ({
+	type: REDEEM_SESSION_HCS20_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const redeemSessionHCS20PointsFailure = (error) => ({
+	type: REDEEM_SESSION_HCS20_POINTS_FAILURE,
+	payload: error,
+});
+
+export const claimStorePointsSuccess = (data) => ({
+	type: CLAIM_STORE_POINTS_SUCCESS,
+	payload: data,
+});
+
+export const claimStorePointsFailure = (error) => ({
+	type: CLAIM_STORE_POINTS_FAILURE,
 	payload: error,
 });

@@ -1,17 +1,24 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { message } from "antd";
 import {
+  CheckSessionHCS20PointsApiCall,
+  ClaimStorePointsApiCall,
   collectionAPIs,
+  CheckoutUpdatePointsApiCall,
   CreateBadgeApiCall,
   EarningPointsApiCall,
+  RedeemSessionHCS20PointsApiCall,
+  SendSessionHCS20PointsApiCall,
 } from "../../../helper/serverAPIs";
 import { collectionQRCodeGenerator } from "../../../helper/utils";
 
 import {
   ADD_TO_CART,
+  CHECKOUT_UPDATE_POINTS,
   CREATE_LOYALTY_BADGE,
   FETCH_EARNING_POINTS,
   FETCH_CART,
+  REDEEM_SESSION_HCS20_POINTS,
   REMOVE_FROM_CART,
   
 } from "./constant";
@@ -27,6 +34,16 @@ import {
   createLoyaltyBadgeFailure,
   fetchEarningPointsSuccess,
   fetchEarningPointsFailure,
+  checkoutUpdatePointsSuccess,
+  checkoutUpdatePointsFailure,
+  checkSessionHCS20PointsSuccess,
+  checkSessionHCS20PointsFailure,
+  claimStorePointsSuccess,
+  claimStorePointsFailure,
+  redeemSessionHCS20PointsSuccess,
+  redeemSessionHCS20PointsFailure,
+  sendSessionHCS20PointsSuccess,
+  sendSessionHCS20PointsFailure,
   
 } from "./action";
 
@@ -148,6 +165,159 @@ function* fetchEarningPointsSaga(action) {
   }
 }
 
+function* checkoutUpdatePointsSaga(action) {
+  try {
+    const { userDID, ...checkoutPayload } = action.payload || {};
+    const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload);
+    const data = response?.data?.data ?? response?.data;
+    const currentCheckoutEarnedPoints = Number(data?.total_earned) || 0;
+
+    yield put(checkoutUpdatePointsSuccess(data));
+
+    if (userDID && currentCheckoutEarnedPoints > 0) {
+      const sessionHCS20Payload = {
+        recipientId: userDID,
+        pointsAmount: currentCheckoutEarnedPoints,
+      };
+
+      try {
+        const hcs20Response = yield call(
+          SendSessionHCS20PointsApiCall,
+          sessionHCS20Payload
+        );
+        yield put(
+          sendSessionHCS20PointsSuccess({
+            requestPayload: sessionHCS20Payload,
+            response: hcs20Response?.data,
+          })
+        );
+
+        const sessionHCS20BalancePayload = {
+          recipientId: userDID,
+        };
+        try {
+          const hcs20BalanceResponse = yield call(
+            CheckSessionHCS20PointsApiCall,
+            sessionHCS20BalancePayload
+          );
+          yield put(
+            checkSessionHCS20PointsSuccess({
+              requestPayload: sessionHCS20BalancePayload,
+              response: hcs20BalanceResponse?.data,
+            })
+          );
+        } catch (hcs20BalanceError) {
+          console.error("Error checking session HCS20 points:", {
+            status: hcs20BalanceError.response?.status,
+            data: hcs20BalanceError.response?.data || hcs20BalanceError.message,
+            payload: sessionHCS20BalancePayload,
+          });
+          yield put(
+            checkSessionHCS20PointsFailure({
+              requestPayload: sessionHCS20BalancePayload,
+              error: hcs20BalanceError.response?.data || hcs20BalanceError,
+            })
+          );
+        }
+      } catch (hcs20Error) {
+        console.error("Error sending session HCS20 points:", {
+          status: hcs20Error.response?.status,
+          data: hcs20Error.response?.data || hcs20Error.message,
+          payload: sessionHCS20Payload,
+        });
+        yield put(sendSessionHCS20PointsFailure({
+          requestPayload: sessionHCS20Payload,
+          error: hcs20Error.response?.data || hcs20Error,
+        }));
+      }
+    }
+  } catch (error) {
+    console.error("Error updating checkout points:", {
+      status: error.response?.status,
+      data: error.response?.data || error.message,
+      payload: action.payload,
+    });
+    yield put(checkoutUpdatePointsFailure(error.response?.data || error));
+  }
+}
+
+const getTransactionId = (responseData) =>{
+
+  console.log('responseData',responseData);
+
+  return responseData?.transactionId || "";
+}
+
+function* redeemSessionHCS20PointsSaga(action) {
+  const { redeemPayload, claimPayload } = action.payload || {};
+
+  try {
+    const redeemResponse = yield call(
+      RedeemSessionHCS20PointsApiCall,
+      redeemPayload
+    );
+    const redeemResponseData = redeemResponse?.data;
+    const pointsSmartContractTransactionId =
+      getTransactionId(redeemResponseData) || "";
+    
+    yield put(
+      redeemSessionHCS20PointsSuccess({
+        requestPayload: redeemPayload,
+        response: redeemResponseData,
+      })
+    );
+
+    const finalClaimPayload = {
+      ...claimPayload,
+      points_smart_contract_transactionId: pointsSmartContractTransactionId,
+
+
+  metadata: {
+    type: "GIVA-loyalty-points",
+    //"mint_number": 42,
+    trait_type: "points",
+    store_specific: true
+  }
+
+    };
+
+    try {
+      const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
+
+      yield put(
+        claimStorePointsSuccess({
+          requestPayload: finalClaimPayload,
+          response: claimResponse?.data,
+        })
+      );
+    } catch (claimError) {
+      console.error("Error claiming store points:", {
+        status: claimError.response?.status,
+        data: claimError.response?.data || claimError.message,
+        payload: finalClaimPayload,
+      });
+      yield put(
+        claimStorePointsFailure({
+          requestPayload: finalClaimPayload,
+          error: claimError.response?.data || claimError,
+        })
+      );
+    }
+  } catch (error) {
+    console.error("Error redeeming checkout points:", {
+      status: error.response?.status,
+      data: error.response?.data || error.message,
+      payload: action.payload,
+    });
+    yield put(
+      redeemSessionHCS20PointsFailure({
+        requestPayload: redeemPayload,
+        error: error.response?.data || error,
+      })
+    );
+  }
+}
+
 // ✅ Export all sagas (important for Object.values in rootSaga)
 export function* cartSaga() {
   yield takeLatest(ADD_TO_CART, addToCartSaga);
@@ -155,6 +325,8 @@ export function* cartSaga() {
   yield takeLatest(REMOVE_FROM_CART, removeProductsSaga);
   yield takeLatest(CREATE_LOYALTY_BADGE, createLoyaltyBadgeSaga);
   yield takeLatest(FETCH_EARNING_POINTS, fetchEarningPointsSaga);
+  yield takeLatest(CHECKOUT_UPDATE_POINTS, checkoutUpdatePointsSaga);
+  yield takeLatest(REDEEM_SESSION_HCS20_POINTS, redeemSessionHCS20PointsSaga);
 }
 export default {
   cartSaga
