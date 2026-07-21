@@ -170,6 +170,12 @@ const CheckoutClaimPoints = () => {
     setRedeemPointsError("");
     setRedeemPoints(validPoints);
     setConfirmedPoints(validPoints);
+
+    const checkoutRefreshPayload = {
+      user_id: checkoutUserId?.toString(),
+      store_name: checkoutStoreName,
+    };
+
     dispatch(
       redeemSessionHCS20Points({
         redeemPayload: {
@@ -183,13 +189,7 @@ const CheckoutClaimPoints = () => {
           points_exchanged: validPoints,
           image_url: claimImageUrl,
         },
-      })
-    );
-     dispatch(
-      checkoutUpdatePoints({
-        user_id: checkoutUserId.toString(),
-        store_name: checkoutStoreName,
-        userDID,
+        checkoutRefreshPayload,
       })
     );
   };
