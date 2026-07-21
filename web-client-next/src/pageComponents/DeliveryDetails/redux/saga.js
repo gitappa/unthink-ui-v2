@@ -36,6 +36,7 @@ import {
   fetchEarningPointsFailure,
   checkoutUpdatePointsSuccess,
   checkoutUpdatePointsFailure,
+  checkoutUpdatePoints,
   checkSessionHCS20PointsSuccess,
   checkSessionHCS20PointsFailure,
   claimStorePointsSuccess,
@@ -249,7 +250,7 @@ const getTransactionId = (responseData) =>{
 }
 
 function* redeemSessionHCS20PointsSaga(action) {
-  const { redeemPayload, claimPayload } = action.payload || {};
+  const { redeemPayload, claimPayload, checkoutRefreshPayload } = action.payload || {};
 
   try {
     const redeemResponse = yield call(
@@ -290,6 +291,13 @@ function* redeemSessionHCS20PointsSaga(action) {
           response: claimResponse?.data,
         })
       );
+
+      if (
+        checkoutRefreshPayload?.user_id &&
+        checkoutRefreshPayload?.store_name
+      ) {
+        yield put(checkoutUpdatePoints(checkoutRefreshPayload));
+      }
     } catch (claimError) {
       console.error("Error claiming store points:", {
         status: claimError.response?.status,
