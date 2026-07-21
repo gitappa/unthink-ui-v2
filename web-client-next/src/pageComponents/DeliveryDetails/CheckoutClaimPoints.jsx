@@ -201,7 +201,7 @@ const CheckoutClaimPoints = () => {
           <p className="text-2xl font-semibold">
             Checkout at the counter - [Customer Name: {customerName}]
           </p>
-          <p className="mt-1 capitalize text-sm text-gray-500">{storeLabel}</p>
+          <p className="mt-1 capitalize text-sm text-gray-500">{storeData?.store_name}</p>
         </header>
 
         <div className="grid gap-0 lg:grid-cols-[1fr_1.55fr]">
