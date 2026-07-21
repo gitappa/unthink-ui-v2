@@ -15,6 +15,7 @@ import { COOKIE_TT_ID, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
 import { collectionQRCodeGenerator, setCookie } from "../../helper/utils";
+import Modal from "../../components/modal/Modal";
 
 const DeliveryDetails = () => {
   const navigate = useNavigate();
@@ -38,7 +39,13 @@ const DeliveryDetails = () => {
 
   const [errors, setErrors] = useState({ email: "", phone: "" });
   const [isPopupShow, setIsPopupShow] = useState(false);
+  const [isCheckoutClaimQrModalOpen, setIsCheckoutClaimQrModalOpen] =
+    useState(false);
   const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+  const shouldShowCheckoutClaimQr =
+    authUserId && storeData?.store_name === "giva_indiranagar2_hs";
+  const checkoutClaimMessage =
+    storeData?.cart_settings?.checkout_claim_message;
 
   const extractedProducts = useMemo(() => {
     if (!collection?.product_lists) return [];
@@ -321,6 +328,8 @@ const DeliveryDetails = () => {
     if (!authUserId && !isUserLoginCookies) {
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
+    } else if (shouldShowCheckoutClaimQr) {
+      setIsCheckoutClaimQrModalOpen(true);
     } else {
       // navigate("/cart/checkout");
       navigate(`/checkout-claim-badge`)
@@ -541,16 +550,6 @@ const DeliveryDetails = () => {
                 />
                 <img src="" alt="input" className="absolute right-5 top-5" />
               </div> */}
-              {authUserId && storeData?.store_name === 'giva_indiranagar2_hs' && (
-               <img
-                    src={ 
-                      shareQrCodeImage(`/checkout-claim-badge`)
-                    }
-                    alt="Digital cart QR"
-                    className="h-30 w-30 m-auto object-contain mix-blend-lighten"
-                  />
-         ) }
-
               <div className="p-0">
                 <button 
                   onClick={handleContinueClick}
@@ -578,6 +577,26 @@ const DeliveryDetails = () => {
           cartPageGuestPopup
         />
       )}
+
+      <Modal
+        headerText="Scan QR"
+        isOpen={isCheckoutClaimQrModalOpen}
+        onClose={() => setIsCheckoutClaimQrModalOpen(false)}
+        size="sm"
+      >
+        <div className="flex flex-col items-center gap-4 text-center">
+          {checkoutClaimMessage && (
+            <p className="text-base font-medium text-gray-900">
+              {checkoutClaimMessage}
+            </p>
+          )}
+          <img
+            src={shareQrCodeImage(`/checkout-claim-badge`)}
+            alt="Digital cart QR"
+            className="h-48 w-48 object-contain "
+          />
+        </div>
+      </Modal>
     </>
   );
 };
