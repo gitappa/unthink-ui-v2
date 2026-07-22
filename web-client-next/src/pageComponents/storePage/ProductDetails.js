@@ -73,7 +73,7 @@ import {
   setProductsToAddInWishlist,
 } from "../wishlist/redux/actions";
 import { BsBookmarkPlusFill } from "react-icons/bs";
-import { GuestPopUpShow } from "../Auth/redux/actions";
+import { getwishlistUserCollection, GuestPopUpShow } from "../Auth/redux/actions";
 import GuestUserPopUp from "../Auth/GuestUserPopUp";
 import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 import useKioskSessionReminder, {
@@ -104,6 +104,7 @@ const ProductDetails = ({ params, ...props }) => {
     productDetail,
     ButtonClick,
     productToWishlistCollection,
+    wishlistCollections,
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -114,8 +115,9 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.productDetails.data,
     state.VtoIconReducer.ButtonClick,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
+    state.auth.user.wishlistCollections,
   ]);
-  // console.log("productToWishlistCollection", productToWishlistCollection);
+  // console.log("productToWishlistCollection", wishlistCollections);
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
@@ -130,8 +132,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
   const [shareContext, setShareContext] = useState("product");
-  console.log("shareContext", shareContext);
-
+  
   const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
   const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
@@ -158,6 +159,19 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [savedProductDetails, fetchedProductDetails]);
   // console.log('productDetails',productDetails);
+  const [kioskLogin, setKioskLoginAuth] = useState(null);
+
+  const wishlist =
+  Array.isArray(wishlistCollections)
+    ? wishlistCollections
+    : wishlistCollections?.product_lists || [];
+const heartRedProduct = wishlist?.find(x=>{ return String(x?.mfr_code).trim() === String(productDetails?.mfr_code).trim()})  
+
+  const showHeartWishlist  =hasKioskAccess ?  kioskLogin && isUserLogin : isUserLogin
+//  console.log('heartRedProduct',heartRedProduct);
+//  console.log('showHeartWishlist',productDetails?.mfr_code);
+ 
+
 
   const routeMfrCode = Array.isArray(mfr_code) ? mfr_code[0] : mfr_code;
   const productMfrCode = productDetails?.mfr_code || routeMfrCode;
@@ -178,7 +192,6 @@ const ProductDetails = ({ params, ...props }) => {
   const [pendingGuestAction, setPendingGuestAction] = useState(null);
   // console.log('pendingGuestAction',pendingGuestAction);
 
-  const [kioskLogin, setKioskLoginAuth] = useState(null);
   // console.log('kioskLogin',kioskLogin);
 
   useEffect(() => {
@@ -229,10 +242,17 @@ const ProductDetails = ({ params, ...props }) => {
       if (isSave) {
         // Dispatch Redux action to add product to wishlist collection API
         if (productDetails?.mfr_code) {
-          console.debug(
-            "[ProductDetails] dispatching addProductToWishlistCollection",
-            { mfr_code: productDetails?.mfr_code },
-          );
+                      
+            // let login_userID
+            //      if(kioskLogin){
+            //       login_userID = kioskLogin?.user_id 
+            //     }
+            //     else if (!kioskLogin){
+            //       login_userID= authUserId
+            //     }
+              
+            //     }
+     const login_userID = kioskLogin?.user_id || authUserId;
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
@@ -244,12 +264,20 @@ const ProductDetails = ({ params, ...props }) => {
               successMessage: "Product added to wishlist successfully!",
               errorMessage:
                 "Failed to add product to wishlist. Please try again.",
+                  callback: () => {
+                  //  console.log("callback executed");
+                  dispatch( 
+                    getwishlistUserCollection({
+                      path: `my_wishlist_${login_userID}`,
+                    }),
+                  );}
             }),
           );
         }
+        
       }
     },
-    [
+    [ 
       authUser,
       isUserLogin,
       dispatch,
@@ -259,7 +287,18 @@ const ProductDetails = ({ params, ...props }) => {
       productToWishlistCollection,
     ],
   );
+useEffect(()=>{
 
+ if (!isUserLogin) return 
+    if(hasKioskAccess && kioskLogin) {
+        dispatch( 
+          getwishlistUserCollection({
+            path: `my_wishlist_${kioskLogin.user_id}`,
+          }),
+        );
+      }
+       
+  }, [isUserLogin,kioskLogin]);	
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
@@ -930,14 +969,23 @@ const ProductDetails = ({ params, ...props }) => {
                         }
                         title="Add to wishlist"
                       >
-                        <FaRegHeart
-                          style={{
-                            filter: "brightness(0) opacity(0.7)",
-                            height: 24,
-                            width: 24,
-                          }}
-                          className="lg:h-6 lg:w-6 h-5 w-5"
-                        />
+                     {heartRedProduct  && showHeartWishlist  ? (
+  <FaHeart
+  className="text-red-500"
+    style={{
+      width: 24,
+      height: 24,
+    }}
+  />
+) : (
+  <FaRegHeart
+    style={{
+      color: "black",
+      width: 24,
+      height: 24,
+    }}
+  />
+)}
                       </button>
 
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">

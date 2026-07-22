@@ -26,7 +26,7 @@ const DeliveryDetails = () => {
     state.store.data
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
-  // console.log("collection", collection);
+  // console.log("collection", storeData?.store_name   );
   const [unSignedData, setUnSignedData] = useState(null);
   const [isGuestPopUpShow] = useSelector((state) => [
     state.GuestPopUpReducer.isGuestPopUpShow,
@@ -313,7 +313,11 @@ const DeliveryDetails = () => {
     },
     [guestData.email, guestData.phone, dispatch, extractedProducts],
   );
+  let shareUrl
+  // console.log('sharePageUrl', shareUrl);
     const shareQrCodeImage = (sharePageUrl) => {
+      shareUrl =sharePageUrl
+
       try {
         return collectionQRCodeGenerator(sharePageUrl);
       } catch (e) {
@@ -538,7 +542,7 @@ const DeliveryDetails = () => {
                 <p>Estimated Delivery by</p>
                 <p className="font-semibold text-black">1st Nov 2025</p>
               </div>
-)}
+                )}
               {/* {storeData?.store_name=== 'giva_indiranagar2_hs' && (
                 <button className="text-xl cursor-pointer " onClick={() => navigate(`/claim-points/${authUserId}/${storeData?.store_name}`)} > Claim Rewards </button>
               )} */}
@@ -591,10 +595,12 @@ const DeliveryDetails = () => {
             </p>
           )}
           <img
-            src={shareQrCodeImage(`/checkout-claim-badge`)}
+            src={shareQrCodeImage(`/checkout-claim-badge/${authUserId}/${storeData?.store_name}`)}
             alt="Digital cart QR"
             className="h-48 w-48 object-contain "
           />
+          <p> {shareUrl}</p>
+
         </div>
       </Modal>
     </>
