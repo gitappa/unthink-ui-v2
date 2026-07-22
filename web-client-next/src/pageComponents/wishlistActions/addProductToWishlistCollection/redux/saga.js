@@ -7,6 +7,7 @@ import {
 import { wishlistCollectionAPIs } from "../../../../helper/serverAPIs";
 import { getAuthUserData, getIsGuestUser } from "../../../Auth/redux/selector";
 import { ADD_PRODUCT_TO_WISHLIST_COLLECTION } from "./constants";
+import { getwishlistUserCollection } from "../../../Auth/redux/actions";
 
 function* addProductToWishlistCollectionSaga(action) {
   const {
@@ -18,6 +19,7 @@ function* addProductToWishlistCollectionSaga(action) {
     store,
     eventId,
     user_id,
+    callback
   } = action.payload;
 
   try {
@@ -66,6 +68,17 @@ function* addProductToWishlistCollectionSaga(action) {
 
     if (status === 200 && data?.status_code === 200) {
       yield put(addProductToWishlistCollectionSuccess(data));
+//  yield put(
+//     getwishlistUserCollection({
+//       path: `my_wishlist_${user_id}`,
+//     })
+//   );
+// console.log('callback',callback);
+
+// callback && callback(); // Call the callback function if provided
+  if (callback) {
+    callback();
+  }
 
       if (successMessage) {
         notification.success({

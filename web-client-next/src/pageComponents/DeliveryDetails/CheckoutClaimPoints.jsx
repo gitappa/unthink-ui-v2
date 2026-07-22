@@ -201,7 +201,7 @@ const CheckoutClaimPoints = () => {
           <p className="text-2xl font-semibold">
             Checkout at the counter - [Customer Name: {customerName}]
           </p>
-          <p className="mt-1 capitalize text-sm text-gray-500">{storeLabel}</p>
+          <p className="mt-1 capitalize text-sm text-gray-500">{storeData?.store_name}</p>
         </header>
 
         <div className="grid gap-0 lg:grid-cols-[1fr_1.55fr]">
@@ -280,10 +280,7 @@ const CheckoutClaimPoints = () => {
                  }
 
               <div className="border-t-2 mt-3 border-black pt-3 text-center">
-                <p className="text-[16px] uppercase">
-                  TOTAL POINTS FOR {customerName.toString().toUpperCase()}:{" "}
-                  {totalClaimPoints}
-                </p>
+                
                 <p className="mt-5 text-[16px]">
                   Max Available to redeem:{" "}
                   <span className="ml-2">{maxAvailableToRedeem}</span>
@@ -293,7 +290,7 @@ const CheckoutClaimPoints = () => {
               <div className="mt-5 bg-[#fbfbfb] px-2 py-3">
                 <label
                   htmlFor="redeem-points"
-                  className="mb-1 block text-base font-semibold"
+                  className="mb-1 block text-center text-base font-semibold"
                 >
                   [Enter points to redeem]
                 </label>

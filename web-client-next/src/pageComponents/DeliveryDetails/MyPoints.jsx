@@ -22,15 +22,9 @@ const MyPoints = () => {
     state.cart.earningPointsLoading,
     state.cart.earningPointsError,
   ]);
-  // console.log("earningPoints", authUser);
+  // console.log("earningPoints", earningPoints);
 
   const dispatch = useDispatch();
-  const points =
-    earningPoints?.points ??
-    earningPoints?.total_points ??
-    earningPoints?.earned_points ??
-    earningPoints?.available_points ??
-    earningPoints?.balance;
 
   useEffect(() => {
     if (!authUserId || !storeData?.store_name || earningPoints) {
