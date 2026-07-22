@@ -102,6 +102,7 @@ import DroppWallet from "../../components/DroppWallet.js";
 import MyPoints from "../DeliveryDetails/MyPoints.jsx";
 import ChatContainer from "./ChatContainer.js";
 import { setShowChatModal } from "../../hooks/chat/redux/actions.js";
+import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo.jsx";
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -838,13 +839,15 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			sessionStorage.setItem("clickPage", "unthink_collection");
 		}
 	}, [showWishlistModal]);
-
+   const hasKioskAccess = useKioskAccess({
+		isUserLogin,
+		storeData,
+		authUser,
+	});
  
 useEffect(()=>{
 
- if (!isUserLogin) return 
- 
-
+ if (!isUserLogin && hasKioskAccess ) return;			
 				dispatch( 
 					getwishlistUserCollection({
 						path: `my_wishlist_${authUser.user_id}`,

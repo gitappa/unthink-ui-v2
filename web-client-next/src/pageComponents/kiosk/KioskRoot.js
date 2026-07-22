@@ -41,7 +41,9 @@ const KioskRoot = (props) => {
   }, [getKioskLogin]);
 
   const kioskUserLogin = getKioskLogin()?.user_id;
-  useEffect(() => {
+  // console.log('kioskUserLogin',kioskUserLogin);
+   
+  useEffect(() => { 
     window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
 
     return () => {
@@ -49,6 +51,8 @@ const KioskRoot = (props) => {
     };
   }, [syncKioskLogin]);
   useEffect(() => {
+    // console.log('running');
+    
     dispatch(
       getwishlistUserCollection({
         path: `my_wishlist_${KioskLoginAuth?.user_id}`,

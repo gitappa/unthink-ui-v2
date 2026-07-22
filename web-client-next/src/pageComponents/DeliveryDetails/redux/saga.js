@@ -157,9 +157,9 @@ function* fetchEarningPointsSaga(action) {
       store_name: action.payload?.store_name,
     });
     const data = response?.data?.data ?? response?.data;
- console.log('dfdbfd',data?.events[0]);
+//  console.log('dfdbfd',data);
  
-    yield put(fetchEarningPointsSuccess(data?.events[0]));
+    yield put(fetchEarningPointsSuccess(data));
   } catch (error) {
     console.error("Error fetching earning points:", error.response?.data || error);
     yield put(fetchEarningPointsFailure(error.response?.data || error));

@@ -456,7 +456,8 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
 					getwishlistUserCollection({
 						path: `my_wishlist_${login_userID}`,
 					}),
-				);}
+				);
+      }
   };
   
   
