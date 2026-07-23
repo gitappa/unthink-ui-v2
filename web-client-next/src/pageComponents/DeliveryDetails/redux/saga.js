@@ -133,10 +133,8 @@ function* createLoyaltyBadgeSaga(action) {
       name: action.payload?.name ,
       points: action.payload?.points ,
       badge_image_url: action.payload?.badge_image_url,
-      qr_page_url: collectionQRCodeGenerator(
-        action.payload?.qr_page_url  
-      ),
-    });
+      qr_page_url: action.payload?.qr_page_url,
+      });
 
     const blob = new Blob([response.data], {
       type: response.headers["content-type"],
@@ -168,8 +166,8 @@ function* fetchEarningPointsSaga(action) {
 
 function* checkoutUpdatePointsSaga(action) {
   try {
-    const { userDID, ...checkoutPayload } = action.payload || {};
-    const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload);
+    const { userDID, claimpoints,...checkoutPayload } = action.payload || {};
+    const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload); 
     const data = response?.data?.data ?? response?.data;
     const currentCheckoutEarnedPoints = Number(data?.total_earned) || 0;
 
@@ -180,7 +178,7 @@ function* checkoutUpdatePointsSaga(action) {
         recipientId: userDID,
         pointsAmount: currentCheckoutEarnedPoints,
       };
-
+if(!claimpoints) return;
       try {
         const hcs20Response = yield call(
           SendSessionHCS20PointsApiCall,

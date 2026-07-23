@@ -361,9 +361,10 @@ useEffect(()=>{
             ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
             : {};
         const kioskEmail = email || currentKiosk?.email;
+        const kioskPhone =   currentKiosk?.phone;
 
-        if (kioskEmail) {
-          const resp = await requestSigninWithLink(kioskEmail);
+        if (kioskEmail || kioskPhone) {
+          const resp = await requestSigninWithLink({ email: kioskEmail , phone: kioskPhone });
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -795,7 +796,7 @@ useEffect(()=>{
                             const mfrCode = productDetails?.mfr_code;
 
                             if (!kioskLogin && hasKioskAccess) {
-                              console.log("hello world");
+                              // console.log("hello world");
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
@@ -1513,13 +1514,13 @@ useEffect(()=>{
             )}
           </div>
         </div>
-        {hasKioskAccess && (
+        {/* {hasKioskAccess && (
           <BannerImage
             src={profilebanner.src}
             alt="profilebanner"
             className="mt-4"
           />
-        )}
+        )} */}
       </div>
       <GuestUserPopUp
         isOpen={isPopupShow}
