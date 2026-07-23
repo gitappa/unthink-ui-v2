@@ -492,8 +492,8 @@ const DeliveryDetails = () => {
           {/* Right Side - Order Summary */}
           {products.length !== 0 && (
             <div
-              className="border lg:p-10 md:p-7 p-5 w-[400px] lg:ml-10 rounded-sm shadow-lg h-full sticky top-36 lg:mt-0 mt-6"
-              style={{ borderColor: "#D1D1D8", minWidth: "450px" }}
+              className="border lg:p-10 md:p-7 p-5 lg:w-[400px] lg:ml-10 rounded-sm shadow-lg h-full sticky top-36 lg:mt-0 mt-6"
+              style={{ borderColor: "#D1D1D8", minWidth: "250px" }}
             >
               <h2 className="text-center font-bold md:text-3xl text-2xl mb-6 md:mb-10">
                 ORDER SUMMARY
