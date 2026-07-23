@@ -39,13 +39,13 @@ const KIOSK_COLLECTION_ACTIONS = [
     label: "Cart",
     pathPrefix: "my_cart",
     modalTitle: "Cart QR",
-    emptyMessage: "No cart there.",
+    emptyMessage: "No items in the cart. Please add items to your cart.",
   },
   {
     key: "tryon",
     label: "Try ons",
     modalTitle: "Try on QR",
-    emptyMessage: "No try-on there.",
+    emptyMessage: "No try-on there. Please create a try-on using the mobile .",
     getFetchParams: (userId) => ({
       collection_name: "my tryons",
       user_id: userId,
