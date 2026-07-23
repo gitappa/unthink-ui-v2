@@ -48,7 +48,7 @@ const MyPoints = () => {
         name: authUser?.first_name || authUser?.last_name || authUser?.user_name,
         points: earningPoints?.available_balance,
         badge_image_url: storeData?.pdp_settings?.badge_url,
-        qr_page_url: `/checkout-claim-badge`,
+        qr_page_url: `${window.location.origin}/claim-points/${authUserId}/${storeData?.store_name}`,
       }),
     );
   }, [dispatch, earningPoints?.available_balance]);
