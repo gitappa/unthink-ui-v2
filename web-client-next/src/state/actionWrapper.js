@@ -133,6 +133,77 @@ const ActionWrapper = ({ children }) => {
 		}
 	}, [hasKioskAccess]);
 
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+
+		if (hasKioskAccess) {
+			const originalOverscroll = document.body.style.overscrollBehavior;
+			const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+			document.body.style.overscrollBehavior = "none";
+			document.documentElement.style.overscrollBehavior = "none";
+
+			const requestFullscreen = () => {
+				const docEl = document.documentElement;
+				const isFullscreen = !!(
+					document.fullscreenElement ||
+					document.webkitFullscreenElement ||
+					document.mozFullScreenElement ||
+					document.msFullscreenElement
+				);
+
+				if (!isFullscreen) {
+					const req =
+						docEl.requestFullscreen ||
+						docEl.webkitRequestFullscreen ||
+						docEl.mozRequestFullScreen ||
+						docEl.msRequestFullscreen;
+
+					if (req) {
+						req.call(docEl).catch((err) => {
+							console.warn("Kiosk Mode: Fullscreen request was rejected:", err);
+						});
+					}
+				}
+			};
+
+			const handleGesture = () => {
+				requestFullscreen();
+			};
+
+			window.addEventListener("click", handleGesture, { passive: true });
+			window.addEventListener("touchstart", handleGesture, { passive: true });
+
+			// Request immediately in case we're in an event loop execution from a user gesture
+			requestFullscreen();
+
+			return () => {
+				window.removeEventListener("click", handleGesture);
+				window.removeEventListener("touchstart", handleGesture);
+				document.body.style.overscrollBehavior = originalOverscroll;
+				document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+
+				// Exit fullscreen when kiosk access is lost
+				const isFullscreen = !!(
+					document.fullscreenElement ||
+					document.webkitFullscreenElement ||
+					document.mozFullScreenElement ||
+					document.msFullscreenElement
+				);
+				if (isFullscreen) {
+					const exit =
+						document.exitFullscreen ||
+						document.webkitExitFullscreen ||
+						document.mozCancelFullScreen ||
+						document.msExitFullscreen;
+					if (exit) {
+						exit.call(document).catch((err) => console.warn(err));
+					}
+				}
+			};
+		}
+	}, [hasKioskAccess]);
+
 	return <>{children}</>;
 };
 
