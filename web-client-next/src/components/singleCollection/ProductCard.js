@@ -165,6 +165,7 @@ const ProductCard = ({
   setOnMfrCode,
   onGuestPopupOpen,
   onKioskTryonClick,
+  onKioskCartClick,
   source
 }) => {
   const navigate = useNavigate();
@@ -566,6 +567,18 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
     };
     dispatch(addToCart(payload));
    
+  };
+
+  const handleGoToCart = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (hasKioskAccess && KioskLoginAuth?.user_id && onKioskCartClick) {
+      onKioskCartClick();
+      return;
+    }
+
+    router.push("/cart");
   };
 
   const onSimilarClick = (event) => {
@@ -1531,7 +1544,7 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
                 ) : (
                   <button
                     className={`${getProductBuyButtonClass(size, hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
-                    onClick={cartCollection ? null : handleAddToCart}
+                    onClick={cartCollection ? handleGoToCart : handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >
                     {/* <img

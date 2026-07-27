@@ -160,6 +160,7 @@ const CollectionPage = ({ params }) => {
           setIsPopupShow(true);
         }}
         onKioskTryonClick={buildVtoProductAutoLoginUrls}
+        onKioskCartClick={buildCartAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}
       />
     );
@@ -191,7 +192,7 @@ const CollectionPage = ({ params }) => {
         console.log("kioskLoginPhone",kioskLoginPhone);
 
         if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
-          const resp = await requestSigninWithLink(kioskLoginEmail,kioskLoginPhone);
+          const resp = await requestSigninWithLink({email:kioskLoginEmail,phone:kioskLoginPhone});
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -324,6 +325,21 @@ const CollectionPage = ({ params }) => {
     [buildKioskAutoLoginUrls],
   );
 
+  const buildCartAutoLoginUrls = useCallback(async () => {
+    const urls = await buildKioskAutoLoginUrls({
+      targetPath: "?page=cart",
+      pageParam: "?page=cart",
+      errorLabel: "cart auto-login",
+    });
+
+    if (urls) {
+      setSharePageUrl(urls.shareUrl);
+      setQrUrl(urls.qrUrl);
+      setShareContext("cart");
+      setShowShareProductDetails(true);
+    }
+  }, [buildKioskAutoLoginUrls]);
+
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
       <div className="min-h-screen flex mt-3 justify-center">
@@ -385,7 +401,13 @@ const CollectionPage = ({ params }) => {
                 qrCodeGeneratorURL={qrUrl}
                 collection={singleCollectionKiosk}
                 fromCollection={fromCollection}
-                kioskHeader={shareContext === "collection" ? " ": "Scan to Try On  (Then tap the camera icon on your phone)"}
+                kioskHeader={
+                  shareContext === "collection"
+                    ? " "
+                    : shareContext === "cart"
+                      ? "Scan to open your cart on mobile"
+                      : "Scan to Try On  (Then tap the camera icon on your phone)"
+                }
                 subHeaderText={shareContext === "product" ? onMfrCode?.name : singleCollectionKiosk?.collection_name}
                 removeheaderColleciton
               />

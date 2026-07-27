@@ -316,7 +316,7 @@ useEffect(()=>{
         const kioskEmail = email || currentKiosk?.email;
         const kioksPhone = phone;
         if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
-          const resp = await requestSigninWithLink(kioskEmail, kioksPhone);
+          const resp = await requestSigninWithLink({email:kioskEmail, phone:kioksPhone});
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
