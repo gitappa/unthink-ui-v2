@@ -197,14 +197,19 @@ const [
 
   return (
     <div className="p-5 ">
+      { !checkoutPage &&
+      
       <div className="flex  items-center gap-2  mb-7 ">
     <IoCartOutline className="text-xl text-kiosk-primary font-semibold md:text-2xl" />
     <p className="text-xl font-semibold md:text-2xl " >Get Voucher At the Counter</p>
       </div>
+        }
     <div className=" flex justify-center gap-4 md:flex-row flex-col items-center ">
+      { !checkoutPage &&
       <div className="">
         <img className="max-w-[300px] lg:max-w-[400px]" src="https://cdn.unthink.ai/img/unthink_ai/Screenshot%202026-07-27%20at%2012.40.53PM_zfiviby.webp" />
       </div>
+}
       <div className="mx-auto w-auto sm:w-[400px] lg:w-[500px] text-[15px] text-black">
         <button
           type="button"
