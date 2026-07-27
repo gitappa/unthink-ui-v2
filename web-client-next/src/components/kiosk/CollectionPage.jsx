@@ -191,7 +191,7 @@ const CollectionPage = ({ params }) => {
         console.log("kioskLoginPhone",kioskLoginPhone);
 
         if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
-          const resp = await requestSigninWithLink(kioskLoginEmail,kioskLoginPhone);
+          const resp = await requestSigninWithLink({email:kioskLoginEmail,phone:kioskLoginPhone});
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {

@@ -6,8 +6,8 @@ import {
 } from "./redux/action";
 import { current_store_name } from "../../constants/config";
 import { useRouter } from "next/router";
+import { IoCartOutline } from "react-icons/io5";
 
-const DEFAULT_REDEEM_POINTS = 500;
 const DEFAULT_NFT_INSTANCE_ID = "GIVA loyalty points";
 
 const getPointValue = (source, keys, fallback = 0) => {
@@ -35,11 +35,13 @@ const ClaimPoints = ({
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [redeemPoints, setRedeemPoints] = useState(DEFAULT_REDEEM_POINTS);
+  const [redeemPoints, setRedeemPoints] = useState(null);
   const [confirmedPoints, setConfirmedPoints] = useState(0);
   const [redeemPointsError, setRedeemPointsError] = useState("");
   const [pendingRedeemPoints, setPendingRedeemPoints] = useState(null);
   const routeUserId = getRouteValue(router.query.user_id);
+  // console.log('redeemPoints',redeemPoints);
+  
 const [
     collection,
     loading,
@@ -59,6 +61,7 @@ const [
     state.cart?.redeemSessionHCS20PointsLoading,
     state.store.data,
   ]);
+
 
   const userDID = authUser?.userDID;
   const checkoutStoreName = storeData?.store_name || current_store_name;
@@ -101,7 +104,7 @@ const [
 
   const handlePointsChange = (event) => {
     const nextValue = Number(event.target.value);
-    const normalizedValue = Number.isNaN(nextValue) ? 0 : nextValue;
+    const normalizedValue = nextValue === 0 ? '' : nextValue;
     setRedeemPoints(normalizedValue);
 
     if (hasCalculatedPoints && normalizedValue > maxAvailableToRedeem) {
@@ -136,10 +139,6 @@ const [
   const handleConfirmRedemption = () => {
     const validPoints = Math.max(Number(redeemPoints) || 0, 0);
 
-    if (!userDID) {
-      setRedeemPointsError("User DID is required to redeem points.");
-      return;
-    }
 
     if (validPoints > maxAvailableToRedeem) {
       setRedeemPointsError(
@@ -167,7 +166,7 @@ const [
     const validPoints = pendingRedeemPoints;
 
     setRedeemPointsError("");
-    setRedeemPoints(validPoints);
+    setRedeemPoints('');
     setConfirmedPoints(validPoints);
     setPendingRedeemPoints(null);
 
@@ -178,10 +177,12 @@ const [
 
     dispatch(
       redeemSessionHCS20Points({
-        redeemPayload: {
-          recipientId: userDID,
-          pointsAmount: validPoints,
-        },
+        ...(userDID && {
+          redeemPayload: {
+            recipientId: userDID,
+            pointsAmount: validPoints,
+          },
+        }),
         claimPayload: {
           user_id: checkoutUserId?.toString(),
           store_name: checkoutStoreName,
@@ -195,8 +196,16 @@ const [
   };
 
   return (
-    <div className="p-5">
-      <div className="mx-auto max-w-[420px] text-[15px] text-black">
+    <div className="p-5 ">
+      <div className="flex  items-center gap-2  mb-7 ">
+    <IoCartOutline className="text-xl text-kiosk-primary font-semibold md:text-2xl" />
+    <p className="text-xl font-semibold md:text-2xl " >Get Voucher At the Counter</p>
+      </div>
+    <div className=" flex justify-center gap-4 md:flex-row flex-col items-center ">
+      <div className="">
+        <img className="max-w-[300px] lg:max-w-[400px]" src="https://cdn.unthink.ai/img/unthink_ai/Screenshot%202026-07-27%20at%2012.40.53PM_zfiviby.webp" />
+      </div>
+      <div className="mx-auto w-auto sm:w-[400px] lg:w-[500px] text-[15px] text-black">
         <button
           type="button"
           onClick={handleCalculatePoints}
@@ -232,12 +241,13 @@ const [
           <input
             id="redeem-points"
             type="number"
-            min="0"
+            // min="0"
+            placeholder="Enter Points to Redeem"
             max={maxAvailableToRedeem}
             value={redeemPoints}
             onChange={handlePointsChange}
             disabled={!hasCalculatedPoints}
-            className="h-7 w-full border border-[#dedede] bg-white px-2 text-[11px] outline-none disabled:cursor-not-allowed disabled:bg-[#f2f2f2] disabled:text-[#9a9a9a]"
+            className="h-9 w-full border border-kiosk-secondary focus:border focus:border-black bg-white px-2 text-[11px] outline-none disabled:cursor-not-allowed disabled:bg-[#f2f2f2] disabled:text-[#9a9a9a]"
           />
           {redeemPointsError && (
             <p className="mt-1 text-[10px] leading-4 text-red-600">
@@ -250,7 +260,7 @@ const [
             disabled={
               !hasCalculatedPoints ||
               Boolean(redeemPointsError) ||
-              redeemSessionHCS20PointsLoading
+              redeemSessionHCS20PointsLoading || !redeemPoints
             }
             className="mt-2 w-full bg-kiosk-secondary py-1 text-center text-[16px] uppercase hover:bg-kiosk-primary disabled:cursor-not-allowed disabled:opacity-60"
           >
@@ -332,6 +342,8 @@ const [
         </div>
       )}
     </div>
+    </div>
+
   );
 };
 

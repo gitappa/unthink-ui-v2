@@ -290,7 +290,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       const email = isEmail ? value : "";
       const res = await authAPIs.GuestRegisterAPICall({
         emailId: email,
-        store: current_store_name,
+        store: current_store_name,  
         phone,
       });
       const responseData = res?.data?.data || {};
@@ -410,7 +410,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
           return;
         }
 
-        const resp = await requestSigninWithLink(kioskEmail, kioskPhone);
+        const resp = await requestSigninWithLink({email:kioskEmail, phone:kioskPhone});
         const signinToken = resp?.signin_token || resp?.data?.signin_token;
         const signinUserName = resp?.data?.user_name || resp?.user_name;
 

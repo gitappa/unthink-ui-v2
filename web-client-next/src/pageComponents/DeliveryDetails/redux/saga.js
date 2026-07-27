@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { message } from "antd";
+import { message, notification } from "antd";
 import {
   CheckSessionHCS20PointsApiCall,
   ClaimStorePointsApiCall,
@@ -251,24 +251,28 @@ function* redeemSessionHCS20PointsSaga(action) {
   const { redeemPayload, claimPayload, checkoutRefreshPayload } = action.payload || {};
 
   try {
-    const redeemResponse = yield call(
-      RedeemSessionHCS20PointsApiCall,
-      redeemPayload
-    );
-    const redeemResponseData = redeemResponse?.data;
-    const pointsSmartContractTransactionId =
-      getTransactionId(redeemResponseData) || "";
-    
-    yield put(
-      redeemSessionHCS20PointsSuccess({
-        requestPayload: redeemPayload,
-        response: redeemResponseData,
-      })
-    );
+    let pointsSmartContractTransactionId = "";
+
+    if (redeemPayload?.recipientId) {
+      const redeemResponse = yield call(
+        RedeemSessionHCS20PointsApiCall,
+        redeemPayload
+      );
+      const redeemResponseData = redeemResponse?.data;
+      pointsSmartContractTransactionId =
+        getTransactionId(redeemResponseData) || "";
+
+      yield put(
+        redeemSessionHCS20PointsSuccess({
+          requestPayload: redeemPayload,
+          response: redeemResponseData,
+        })
+      );
+    }
 
     const finalClaimPayload = {
       ...claimPayload,
-      points_smart_contract_transactionId: pointsSmartContractTransactionId,
+      points_smart_contract_transactionId: pointsSmartContractTransactionId || '',
 
 
   metadata: {
@@ -295,7 +299,8 @@ function* redeemSessionHCS20PointsSaga(action) {
         checkoutRefreshPayload?.store_name
       ) {
         yield put(checkoutUpdatePoints(checkoutRefreshPayload));
-      }
+        notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
+      } 
     } catch (claimError) {
       console.error("Error claiming store points:", {
         status: claimError.response?.status,
