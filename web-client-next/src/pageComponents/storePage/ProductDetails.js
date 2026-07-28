@@ -472,7 +472,7 @@ useEffect(()=>{
       product_lists: [],
       collection_name: "my cart",
       type: "system",
-      user_id: authUserId || getTTid(),
+      user_id: kioskLogin?.user_id || authUserId || getTTid(),
       path: mycartcollectionpath,
     };
     dispatch(addToCart(payload));
@@ -950,8 +950,8 @@ useEffect(()=>{
                     </h1>
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
-                        {productDetails?.user_id === authUser?.user_id ||
-                        productDetails?.brand === authUser?.user_name ? (
+                        {(productDetails?.user_id === authUser?.user_id ||
+                        productDetails?.brand === authUser?.user_name )  && isUserLogin ? (
                           <button
                             className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
