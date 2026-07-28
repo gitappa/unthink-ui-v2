@@ -43,6 +43,8 @@ const SwiftlyMobileHeader = ({
     state.store.data,
     state.auth.user.data,
   ]);
+  // console.log(storeData.display_store_name);
+  
   const userInitials = useMemo(() => {
     const displayName =
       authUser?.user_name || authUser?.emailId || "User";
@@ -94,7 +96,7 @@ const SwiftlyMobileHeader = ({
       >
         <div className={styles.logoContainer}>
           <span className={styles.logoText} onClick={() => navigate(PATH_ROOT)}>
-            {is_store_instance && current_store_name.length >15 ? current_store_name.slice(0,15)+ '...'  : current_store_name}
+            {is_store_instance && current_store_name.length >15 ? storeData?.display_store_name?.slice(0,15)+'...' || current_store_name.slice(0,15)+ '...'  : current_store_name}
           </span> 
         </div>
         <div className="flex items-center gap-2.5">

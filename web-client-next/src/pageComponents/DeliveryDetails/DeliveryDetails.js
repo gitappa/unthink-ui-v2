@@ -296,6 +296,7 @@ const DeliveryDetails = () => {
             const mergedProductsArray = Object.values(mergedProducts);
 
             const payload = {
+              is_display_amount: true,
               products: mergedProductsArray,
               product_lists: [],
               collection_name: "my cart",

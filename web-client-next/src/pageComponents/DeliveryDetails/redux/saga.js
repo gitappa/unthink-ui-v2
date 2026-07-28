@@ -167,19 +167,25 @@ function* fetchEarningPointsSaga(action) {
 function* checkoutUpdatePointsSaga(action) {
   try {
     const { userDID, claimpoints,...checkoutPayload } = action.payload || {};
-    const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload); 
-    const data = response?.data?.data ?? response?.data;
-    const currentCheckoutEarnedPoints = Number(data?.total_earned) || 0;
+    let currentCheckoutEarnedPoints;
+    let current_checkout_earned_points
+    if(claimpoints){
 
-    yield put(checkoutUpdatePointsSuccess(data));
+      const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload); 
+      const data = response?.data?.data ?? response?.data;
+      current_checkout_earned_points?.current_checkout_earned_points
+       currentCheckoutEarnedPoints = Number(data?.total_earned) || 0;
+      yield put(checkoutUpdatePointsSuccess(data));
+    }
 
     if (userDID && currentCheckoutEarnedPoints > 0) {
       const sessionHCS20Payload = {
         recipientId: userDID,
         pointsAmount: currentCheckoutEarnedPoints,
       };
-if(!claimpoints) return;
-      try {
+// if(!claimpoints) return;
+try {
+        if(current_checkout_earned_points){
         const hcs20Response = yield call(
           SendSessionHCS20PointsApiCall,
           sessionHCS20Payload
@@ -190,6 +196,7 @@ if(!claimpoints) return;
             response: hcs20Response?.data,
           })
         );
+      }
 
         const sessionHCS20BalancePayload = {
           recipientId: userDID,
@@ -248,7 +255,7 @@ const getTransactionId = (responseData) =>{
 }
 
 function* redeemSessionHCS20PointsSaga(action) {
-  const { redeemPayload, claimPayload, checkoutRefreshPayload } = action.payload || {};
+  const { redeemPayload, claimPayload,  } = action.payload || {};
 
   try {
     let pointsSmartContractTransactionId = "";
@@ -294,13 +301,13 @@ function* redeemSessionHCS20PointsSaga(action) {
         })
       );
 
-      if (
-        checkoutRefreshPayload?.user_id &&
-        checkoutRefreshPayload?.store_name
-      ) {
-        yield put(checkoutUpdatePoints(checkoutRefreshPayload));
+      // if (
+      //   checkoutRefreshPayload?.user_id &&
+      //   checkoutRefreshPayload?.store_name
+      // ) {
+      //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
         notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
-      } 
+      // } 
     } catch (claimError) {
       console.error("Error claiming store points:", {
         status: claimError.response?.status,

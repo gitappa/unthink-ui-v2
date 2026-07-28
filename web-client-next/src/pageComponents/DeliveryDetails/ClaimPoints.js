@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkoutUpdatePoints,
+  fetchEarningPoints,
   redeemSessionHCS20Points,
 } from "./redux/action";
 import { current_store_name } from "../../constants/config";
@@ -50,6 +51,8 @@ const [
     checkoutUpdatePointsLoading,
     checkoutUpdatePointsError,
     redeemSessionHCS20PointsLoading,
+    claimStorePointsResponse,
+    earningPoints,
     storeData,
   ] = useSelector((state) => [
     state.cart?.collection,
@@ -59,25 +62,27 @@ const [
     state.cart?.checkoutUpdatePointsLoading,
     state.cart?.checkoutUpdatePointsError,
     state.cart?.redeemSessionHCS20PointsLoading,
+    state.cart?.claimStorePointsResponse,
+    state.cart?.earningPoints,
     state.store.data,
   ]);
-
 
   const userDID = authUser?.userDID;
   const checkoutStoreName = storeData?.store_name || current_store_name;
    const checkoutUserId = routeUserId || authUser?.user_id || authUser?._id;
-  const checkoutPointsData =
-    checkoutUpdatedPoints?.events?.[0] ||
-    checkoutUpdatedPoints?.event ||
-    checkoutUpdatedPoints;
-  const hasCalculatedPoints = Boolean(checkoutPointsData);
+  const pointsData = checkoutPage
+    ? checkoutUpdatedPoints?.events?.[0] ||
+      checkoutUpdatedPoints?.event ||
+      checkoutUpdatedPoints
+    : earningPoints;
+  const hasCalculatedPoints = Boolean(pointsData);
   const totalClaimPoints = getPointValue(
-    checkoutPointsData,
+    pointsData,
     ["total_earned", "total_points", "totalPoints", "points", "earned_points"],
-    checkoutUpdatedPoints?.total_earned || 0
+    pointsData?.available_balance || 0
   );
   const maxAvailableToRedeem = getPointValue(
-    checkoutPointsData,
+    pointsData,
     [
       "max_available_to_redeem",
       "maxAvailableToRedeem",
@@ -85,7 +90,7 @@ const [
       "available_balance",
       "available_points",
     ],
-    checkoutUpdatedPoints?.available_balance || 0
+    pointsData?.available_balance || 0
   );
   const redeemablePoints = Math.min(
     Math.max(Number(redeemPoints) || 0, 0),
@@ -93,10 +98,22 @@ const [
   );
   const appliedPoints = confirmedPoints || redeemablePoints;
   const remainingPoints = getPointValue(
-    checkoutPointsData,
+    pointsData,
     ["available_balance", "remaining_balance", "remainingBalance", "remaining_points"],
     Math.max(totalClaimPoints - appliedPoints, 0)
   );
+  const claimedPointsData = claimStorePointsResponse?.data ?? claimStorePointsResponse;
+  const claimedAvailableBalance = claimStorePointsResponse
+    ? getPointValue(
+        claimedPointsData,
+        ["available_balance", "remaining_balance", "remainingBalance", "remaining_points"],
+        remainingPoints
+      )
+    : null;
+  const displayedAvailableBalance =
+    claimedAvailableBalance ?? maxAvailableToRedeem;
+  const displayedRemainingBalance =
+    claimedAvailableBalance ?? remainingPoints;
  const claimImageUrl =
     storeData?.pdp_settings?.badge_url ||
     storeData?.badge_image_url ||
@@ -126,12 +143,22 @@ const [
       return;
     }
 
+    if (!checkoutPage) {
+      dispatch(
+        fetchEarningPoints({
+          user_id: checkoutUserId.toString(),
+          store_name: checkoutStoreName,
+        })
+      );
+      return;
+    }
+
     dispatch(
       checkoutUpdatePoints({
         user_id: checkoutUserId.toString(),
         store_name: checkoutStoreName,
         userDID,
-        claimpoints: checkoutPage ? true : false,
+        claimpoints: true,
       })
     );
   };
@@ -170,10 +197,10 @@ const [
     setConfirmedPoints(validPoints);
     setPendingRedeemPoints(null);
 
-    const checkoutRefreshPayload = {
-      user_id: checkoutUserId?.toString(),
-      store_name: checkoutStoreName,
-    };
+    // const checkoutRefreshPayload = {
+    //   user_id: checkoutUserId?.toString(),
+    //   store_name: checkoutStoreName,
+    // };
 
     dispatch(
       redeemSessionHCS20Points({
@@ -181,7 +208,7 @@ const [
           redeemPayload: {
             recipientId: userDID,
             pointsAmount: validPoints,
-          },
+                              },
         }),
         claimPayload: {
           user_id: checkoutUserId?.toString(),
@@ -190,25 +217,28 @@ const [
           points_exchanged: validPoints,
           image_url: claimImageUrl,
         },
-        checkoutRefreshPayload,
+        
       })
     );
   };
 
   return (
     <div className="p-5 ">
+    
+    <div className=" flex justify-evenly gap-4 md:flex-row flex-col items-center ">
       { !checkoutPage &&
       
+      <div>
       <div className="flex  items-center gap-2  mb-7 ">
     <IoCartOutline className="text-xl text-kiosk-primary font-semibold md:text-2xl" />
     <p className="text-xl font-semibold md:text-2xl " >Get Voucher At the Counter</p>
       </div>
-        }
-    <div className=" flex justify-center gap-4 md:flex-row flex-col items-center ">
-      { !checkoutPage &&
+
       <div className="">
         <img className="max-w-[300px] lg:max-w-[400px]" src="https://cdn.unthink.ai/img/unthink_ai/Screenshot%202026-07-27%20at%2012.40.53PM_zfiviby.webp" />
       </div>
+      </div>
+
 }
       <div className="mx-auto w-auto sm:w-[400px] lg:w-[500px] text-[15px] text-black">
         <button
@@ -232,7 +262,7 @@ const [
         <div className="mt-3 border-t-2 border-black pt-3 text-center">
           <p className="mt-5 text-[16px]">
             Max Available to redeem:{" "}
-            <span className="ml-2">{maxAvailableToRedeem}</span>
+            <span className="ml-2">{displayedAvailableBalance}</span>
           </p>
         </div>
 
@@ -280,7 +310,7 @@ const [
             {redeemSessionHCS20PointsLoading && (
               <p>Updating final balance....</p>
             )}
-            <p>Remaining balance: {remainingPoints} points</p>
+            <p>Remaining balance: {displayedRemainingBalance} points</p>
           </div>
         )}
 
