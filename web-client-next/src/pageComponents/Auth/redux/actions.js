@@ -29,8 +29,9 @@ import {
   SET_UPDATED_STATUS_USER_COLLECTIONS,
 } from "./constants";
 
-export const getUserInfo = () => ({
+export const getUserInfo = (payload = {}) => ({
   type: GET_USER_INFO,
+  payload,
 });
 
 export const getUserInfoSuccess = (payload, options = {}) => ({
@@ -207,3 +208,4 @@ export const getwishlsitUserCollectionFailure = (error) => ({
   type: GET_WISHLIST_USER_COLLECTION_FAILURE,
   payload: error,
 });
+

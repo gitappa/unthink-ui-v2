@@ -36,9 +36,9 @@ import { current_store_name } from "../../../constants/config";
 // 	sharedUserState,
 // } from "../../collectionPage/redux/selectors"; // REMOVE
 
-export function* getUserInfoData() {
+export function* getUserInfoData(action) {
   try {
-    let { data, status } = yield call(authAPIs.getUserInfoAPICall);
+    let { data, status } = yield call(authAPIs.getUserInfoAPICall, action?.payload);
     if (status === 200 && data?.status_code === 200 && data?.data?.user_id) {
       yield put(
         getUserInfoSuccess(data.data, {
@@ -272,3 +272,4 @@ export default {
   customProductsWatcher,
   // getUserInfoData,
 };
+

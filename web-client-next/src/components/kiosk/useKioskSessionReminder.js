@@ -72,6 +72,7 @@ export default function useKioskSessionReminder({ time } = {}) {
       // clearStorages();
       sessionStorage.removeItem("Kiosk-login");
       notifyKioskLoginChange();
+      window.location.href('/')
     } catch (e) {}
 
  

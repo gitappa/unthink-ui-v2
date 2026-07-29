@@ -73,7 +73,10 @@ import {
   setProductsToAddInWishlist,
 } from "../wishlist/redux/actions";
 import { BsBookmarkPlusFill } from "react-icons/bs";
-import { getwishlistUserCollection, GuestPopUpShow } from "../Auth/redux/actions";
+import {
+  getwishlistUserCollection,
+  GuestPopUpShow,
+} from "../Auth/redux/actions";
 import GuestUserPopUp from "../Auth/GuestUserPopUp";
 import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 import useKioskSessionReminder, {
@@ -132,7 +135,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrImageUrl, setQrImageUrl] = useState("");
   const [qrTargetUrl, setQrTargetUrl] = useState("");
   const [shareContext, setShareContext] = useState("product");
-  
+
   const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
   const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
@@ -161,17 +164,20 @@ const ProductDetails = ({ params, ...props }) => {
   // console.log('productDetails',productDetails);
   const [kioskLogin, setKioskLoginAuth] = useState(null);
 
-  const wishlist =
-  Array.isArray(wishlistCollections)
+  const wishlist = Array.isArray(wishlistCollections)
     ? wishlistCollections
     : wishlistCollections?.product_lists || [];
-const heartRedProduct = wishlist?.find(x=>{ return String(x?.mfr_code).trim() === String(productDetails?.mfr_code).trim()})  
+  const heartRedProduct = wishlist?.find((x) => {
+    return (
+      String(x?.mfr_code).trim() === String(productDetails?.mfr_code).trim()
+    );
+  });
 
-  const showHeartWishlist  =hasKioskAccess ?  kioskLogin && isUserLogin : isUserLogin
-//  console.log('heartRedProduct',heartRedProduct);
-//  console.log('showHeartWishlist',productDetails?.mfr_code);
- 
-
+  const showHeartWishlist = hasKioskAccess
+    ? kioskLogin && isUserLogin
+    : isUserLogin;
+  //  console.log('heartRedProduct',heartRedProduct);
+  //  console.log('showHeartWishlist',productDetails?.mfr_code);
 
   const routeMfrCode = Array.isArray(mfr_code) ? mfr_code[0] : mfr_code;
   const productMfrCode = productDetails?.mfr_code || routeMfrCode;
@@ -242,17 +248,16 @@ const heartRedProduct = wishlist?.find(x=>{ return String(x?.mfr_code).trim() ==
       if (isSave) {
         // Dispatch Redux action to add product to wishlist collection API
         if (productDetails?.mfr_code) {
-                      
-            // let login_userID
-            //      if(kioskLogin){
-            //       login_userID = kioskLogin?.user_id 
-            //     }
-            //     else if (!kioskLogin){
-            //       login_userID= authUserId
-            //     }
-              
-            //     }
-     const login_userID = kioskLogin?.user_id || authUserId;
+          // let login_userID
+          //      if(kioskLogin){
+          //       login_userID = kioskLogin?.user_id
+          //     }
+          //     else if (!kioskLogin){
+          //       login_userID= authUserId
+          //     }
+
+          //     }
+          const login_userID = kioskLogin?.user_id || authUserId;
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
@@ -264,20 +269,20 @@ const heartRedProduct = wishlist?.find(x=>{ return String(x?.mfr_code).trim() ==
               successMessage: "Product added to wishlist successfully!",
               errorMessage:
                 "Failed to add product to wishlist. Please try again.",
-                  callback: () => {
-                  //  console.log("callback executed");
-                  dispatch( 
-                    getwishlistUserCollection({
-                      path: `my_wishlist_${login_userID}`,
-                    }),
-                  );}
+              callback: () => {
+                //  console.log("callback executed");
+                dispatch(
+                  getwishlistUserCollection({
+                    path: `my_wishlist_${login_userID}`,
+                  }),
+                );
+              },
             }),
           );
         }
-        
       }
     },
-    [ 
+    [
       authUser,
       isUserLogin,
       dispatch,
@@ -287,18 +292,16 @@ const heartRedProduct = wishlist?.find(x=>{ return String(x?.mfr_code).trim() ==
       productToWishlistCollection,
     ],
   );
-useEffect(()=>{
-
- if (!isUserLogin) return 
-    if(hasKioskAccess && kioskLogin) {
-        dispatch( 
-          getwishlistUserCollection({
-            path: `my_wishlist_${kioskLogin.user_id}`,
-          }),
-        );
-      }
-       
-  }, [isUserLogin,kioskLogin]);	
+  useEffect(() => {
+    if (!isUserLogin) return;
+    if (hasKioskAccess && kioskLogin) {
+      dispatch(
+        getwishlistUserCollection({
+          path: `my_wishlist_${kioskLogin.user_id}`,
+        }),
+      );
+    }
+  }, [isUserLogin, kioskLogin]);
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
@@ -314,9 +317,12 @@ useEffect(()=>{
             : {};
         // Prefer popup email, then kiosk session email, then logged-in user email.
         const kioskEmail = email || currentKiosk?.email;
-        const kioksPhone = phone;
+        const kioksPhone = phone || currentKiosk?.phone;
         if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
-          const resp = await requestSigninWithLink({email:kioskEmail, phone:kioksPhone});
+          const resp = await requestSigninWithLink({
+            email: kioskEmail,
+            phone: kioksPhone,
+          });
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -361,10 +367,13 @@ useEffect(()=>{
             ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
             : {};
         const kioskEmail = email || currentKiosk?.email;
-        const kioskPhone =   currentKiosk?.phone;
+        const kioskPhone = currentKiosk?.phone;
 
         if (kioskEmail || kioskPhone) {
-          const resp = await requestSigninWithLink({ email: kioskEmail , phone: kioskPhone });
+          const resp = await requestSigninWithLink({
+            email: kioskEmail,
+            phone: kioskPhone,
+          });
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -747,23 +756,24 @@ useEffect(()=>{
     <div
       className={`relative w-full   pb-20 lg:pb-14 ${hasKioskAccess ? "px-8" : ""} `}
     >
-     
       <div className=" " />
       <div className={`${pdpLayoutStyles.pageWidthContainer} relative`}>
-        <div className={`flex flex-col bg-white w-full self-center ${!hasKioskAccess ?'lg:pt-10 pt-7 ' :''} gap-3.5 lg:gap-8 `}>
+        <div
+          className={`flex flex-col bg-white w-full self-center ${!hasKioskAccess ? "lg:pt-10 pt-7 " : ""} gap-3.5 lg:gap-8 `}
+        >
           {hasKioskAccess && (
-          <div className="flex items-start sticky py-7  z-30 top-0 bg-white">
-            <button
-              className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
-              onClick={handleGoBack}
-            >
-              <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
-                <ArrowLeftOutlined />
-              </span>
-              <span className="capitalize">Go back</span>
-            </button>
-            <AuthInput styles={"mb-0 w-fit pr-7"} />
-           </div>
+            <div className="flex items-start sticky py-7  z-30 top-0 bg-white">
+              <button
+                className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
+                onClick={handleGoBack}
+              >
+                <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
+                  <ArrowLeftOutlined />
+                </span>
+                <span className="capitalize">Go back</span>
+              </button>
+              <AuthInput styles={"mb-0 w-fit pr-7"} />
+            </div>
           )}
           {/* <Breadcrumbs pdppage={true} /> */}
 
@@ -951,7 +961,8 @@ useEffect(()=>{
                     <div className="flex justify-between items-center gap-3 shrink-0">
                       <div className="flex gap-3 justify-end items-start">
                         {(productDetails?.user_id === authUser?.user_id ||
-                        productDetails?.brand === authUser?.user_name )  && isUserLogin ? (
+                          productDetails?.brand === authUser?.user_name) &&
+                        isUserLogin ? (
                           <button
                             className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
                             title="Edit product details"
@@ -970,23 +981,23 @@ useEffect(()=>{
                         }
                         title="Add to wishlist"
                       >
-                     {heartRedProduct  && showHeartWishlist  ? (
-  <FaHeart
-  className="text-red-500"
-    style={{
-      width: 24,
-      height: 24,
-    }}
-  />
-) : (
-  <FaRegHeart
-    style={{
-      color: "black",
-      width: 24,
-      height: 24,
-    }}
-  />
-)}
+                        {heartRedProduct && showHeartWishlist ? (
+                          <FaHeart
+                            className="text-red-500"
+                            style={{
+                              width: 24,
+                              height: 24,
+                            }}
+                          />
+                        ) : (
+                          <FaRegHeart
+                            style={{
+                              color: "black",
+                              width: 24,
+                              height: 24,
+                            }}
+                          />
+                        )}
                       </button>
 
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
