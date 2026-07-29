@@ -38,13 +38,13 @@ import { is_kiosk } from "../../constants/config";
 const CollectionPage = ({ params }) => {
   // console.log(params);
   const dispatch = useDispatch();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isTagsShowMoreActive, setIsTagsShowMoreActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [onMfrCode,setOnMfrCode] = useState(null);
+  const [onMfrCode, setOnMfrCode] = useState(null);
   // console.log("onMfrCode",onMfrCode);
-  
+
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
@@ -131,8 +131,8 @@ const CollectionPage = ({ params }) => {
 
   useEffect(() => {
     if (params?.collection_name) {
-      console.log('itsworkiing');
-      
+      console.log("itsworkiing");
+
       dispatch(
         getInfluencerCollection({
           // collection_id: params.collection_name,
@@ -184,15 +184,18 @@ const CollectionPage = ({ params }) => {
 
       try {
         const kioskUser = JSON.parse(
-          sessionStorage.getItem("Kiosk-login") ||   "{}",
-        )  ;
-        const kioskLoginEmail = kioskUser?.email ;
+          sessionStorage.getItem("Kiosk-login") || "{}",
+        );
+        const kioskLoginEmail = kioskUser?.email;
         const kioskLoginPhone = kioskUser?.phone;
-        console.log("kioskLoginEmail",kioskLoginEmail);
-        console.log("kioskLoginPhone",kioskLoginPhone);
+        console.log("kioskLoginEmail", kioskLoginEmail);
+        console.log("kioskLoginPhone", kioskLoginPhone);
 
         if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
-          const resp = await requestSigninWithLink({email:kioskLoginEmail,phone:kioskLoginPhone});
+          const resp = await requestSigninWithLink({
+            email: kioskLoginEmail,
+            phone: kioskLoginPhone,
+          });
           const signin_token = resp?.signin_token || resp?.data?.signin_token;
 
           if (signin_token) {
@@ -226,10 +229,11 @@ const CollectionPage = ({ params }) => {
     () =>
       buildKioskAutoLoginUrls({
         targetPath: collectionPagePath,
-        pageParam: `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
-          /\/+/,
-          "/",
-        ),
+        pageParam:
+          `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
+            /\/+/,
+            "/",
+          ),
         fallbackQrUrl: qrCodeGeneratorURL,
         errorLabel: "collection auto-login",
       }),
@@ -305,7 +309,7 @@ const CollectionPage = ({ params }) => {
       if (productOrMfrCode && typeof productOrMfrCode === "object") {
         setOnMfrCode(productOrMfrCode);
       }
-      
+
       if (!productMfrCode) return;
 
       const productDetailsPagePath = getProductDetailsPagePath(productMfrCode);
@@ -325,20 +329,27 @@ const CollectionPage = ({ params }) => {
     [buildKioskAutoLoginUrls],
   );
 
-  const buildCartAutoLoginUrls = useCallback(async () => {
-    const urls = await buildKioskAutoLoginUrls({
-      targetPath: "?page=cart",
-      pageParam: "?page=cart",
-      errorLabel: "cart auto-login",
-    });
+  const buildCartAutoLoginUrls = useCallback(
+    async (product) => {
+      if (product && typeof product === "object") {
+        setOnMfrCode(product);
+      }
 
-    if (urls) {
-      setSharePageUrl(urls.shareUrl);
-      setQrUrl(urls.qrUrl);
-      setShareContext("cart");
-      setShowShareProductDetails(true);
-    }
-  }, [buildKioskAutoLoginUrls]);
+      const urls = await buildKioskAutoLoginUrls({
+        targetPath: "?page=cart",
+        pageParam: "?page=cart",
+        errorLabel: "cart auto-login",
+      });
+
+      if (urls) {
+        setSharePageUrl(urls.shareUrl);
+        setQrUrl(urls.qrUrl);
+        setShareContext("cart");
+        setShowShareProductDetails(true);
+      }
+    },
+    [buildKioskAutoLoginUrls],
+  );
 
   if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
     return (
@@ -349,23 +360,21 @@ const CollectionPage = ({ params }) => {
   }
   return (
     <div className="p-8 pt-6 md:p-12 bg-white min-h-screen">
-      
       <div
         className="sticky top-0 py-2 mx-1 bg-white
        z-20 "
       >
         <div className="flex items-start mb-2 ">
-
-        <button
-        className="group text-gray-500 flex w-fit   gap-2 rounded-full button-kiosk font-medium   transition "
-        onClick={() => navigate('/')}
-      >
-        <span className="   flex transition group-hover:-translate-x-0.5">
-          <ArrowLeftOutlined />
-        </span>
-        <span className="capitalize">Go back</span>
-      </button>
-      <AuthInput styles={'mb-0 w-fit'} />
+          <button
+            className="group text-gray-500 flex w-fit   gap-2 rounded-full button-kiosk font-medium   transition "
+            onClick={() => navigate("/")}
+          >
+            <span className="   flex transition group-hover:-translate-x-0.5">
+              <ArrowLeftOutlined />
+            </span>
+            <span className="capitalize">Go back</span>
+          </button>
+          <AuthInput styles={"mb-0 w-fit"} />
         </div>
 
         {/* Header */}
@@ -383,7 +392,6 @@ const CollectionPage = ({ params }) => {
             </p>
           </div>
           <div className="relative flex flex-col gap-3  items-end  ">
-            
             {showShareProductDetails && (
               <ShareOptions
                 url={sharePageUrl}
@@ -408,7 +416,11 @@ const CollectionPage = ({ params }) => {
                       ? "Scan to open your cart on mobile"
                       : "Scan to Try On  (Then tap the camera icon on your phone)"
                 }
-                subHeaderText={shareContext === "product" ? onMfrCode?.name : singleCollectionKiosk?.collection_name}
+                subHeaderText={
+                  shareContext === "collection"
+                    ? singleCollectionKiosk?.collection_name
+                    : onMfrCode?.name
+                }
                 removeheaderColleciton
               />
             )}

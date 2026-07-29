@@ -68,6 +68,7 @@ const VirtualTryOnModal = ({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isCameraStarting, setIsCameraStarting] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
+  const [cameraFacingMode, setCameraFacingMode] = useState("user");
   const videoRef = useRef(null);
 
   const uploadedImage = uploadedImages?.[0];
@@ -168,7 +169,7 @@ const VirtualTryOnModal = ({
     },
   };
 
-  const handleOpenCamera = async () => {
+  const startCamera = async (facingMode = cameraFacingMode) => {
     if (
       typeof navigator === "undefined" ||
       !navigator.mediaDevices?.getUserMedia
@@ -182,10 +183,22 @@ const VirtualTryOnModal = ({
 
     try {
       setIsCameraStarting(true);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: { facingMode: "user" },
-      });
+      stopCameraStream();
+
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: { facingMode: { exact: facingMode } },
+        });
+      } catch (exactModeError) {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: { facingMode },
+        });
+      }
+
+      setCameraFacingMode(facingMode);
       setCameraStream(stream);
       setIsCameraOpen(true);
     } catch (error) {
@@ -195,11 +208,19 @@ const VirtualTryOnModal = ({
         description:
           error?.name === "NotAllowedError"
             ? "Please allow camera permission and try again."
-            : "Unable to open the camera. Please try again.",
+            : "Unable to open the selected camera. Please try another camera.",
       });
     } finally {
       setIsCameraStarting(false);
     }
+  };
+
+  const handleOpenCamera = () => {
+    startCamera(cameraFacingMode);
+  };
+
+  const handleSwitchCamera = () => {
+    startCamera(cameraFacingMode === "user" ? "environment" : "user");
   };
 
   const handleCaptureCameraImage = () => {
@@ -428,6 +449,15 @@ const VirtualTryOnModal = ({
                   </button>
                   <button
                     type="button"
+                    onClick={handleSwitchCamera}
+                    disabled={isCameraStarting}
+                    className={getVTOCancelButtonClass(hasKioskAccess)}
+                  >
+                    {isCameraStarting ? "Switching..." : "Switch Camera"}
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={handleCaptureCameraImage}
                     className={getVTOPrimaryButtonClass(hasKioskAccess)}
                   >
@@ -520,3 +550,7 @@ const VirtualTryOnModal = ({
 };
 
 export default VirtualTryOnModal;
+
+
+
+
