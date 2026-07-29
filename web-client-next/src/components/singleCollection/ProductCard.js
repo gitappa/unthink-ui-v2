@@ -34,7 +34,10 @@ import {
   setProductsToAddInWishlist,
   closeWishlistModal,
 } from "../../pageComponents/wishlist/redux/actions";
-import { getwishlistUserCollection, GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
+import {
+  getwishlistUserCollection,
+  GuestPopUpShow,
+} from "../../pageComponents/Auth/redux/actions";
 import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
 import {
@@ -166,7 +169,7 @@ const ProductCard = ({
   onGuestPopupOpen,
   onKioskTryonClick,
   onKioskCartClick,
-  source
+  source,
 }) => {
   const navigate = useNavigate();
   // console.log("hideAddToWishlist", hideAddToWishlist);
@@ -210,7 +213,7 @@ const ProductCard = ({
     isUserLogin,
     collections,
     singleCollections,
-    wishlistCollections
+    wishlistCollections,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -234,8 +237,10 @@ const ProductCard = ({
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
-const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code === product.mfr_code)
-// console.log('colllectionssd',KioskLoginAuth);
+  const heartRedProduct = wishlistCollections?.product_lists?.find(
+    (x) => x.mfr_code === product.mfr_code,
+  );
+  // console.log('colllectionssd',KioskLoginAuth);
 
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
@@ -309,7 +314,7 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
     [product, collection_id, allowEdit],
   );
   // console.log(product);
- 
+
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
     if (enableClickTracking) {
@@ -445,31 +450,29 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
     }
 
     await callHandpickedAPI(kioskLogin?.user_id || authUserId || getTTid());
-     if(isUserLogin  ){
-      let login_userID
-      if(kioskLogin){
-        login_userID = kioskLogin?.user_id 
+    if (isUserLogin) {
+      let login_userID;
+      if (kioskLogin) {
+        login_userID = kioskLogin?.user_id;
+      } else if (!kioskLogin) {
+        login_userID = authUserId;
       }
-      else if (!kioskLogin){
-        login_userID= authUserId
-      }
-				dispatch( 
-					getwishlistUserCollection({
-						path: `my_wishlist_${login_userID}`,
-					}),
-				);
-      }
+      dispatch(
+        getwishlistUserCollection({
+          path: `my_wishlist_${login_userID}`,
+        }),
+      );
+    }
   };
-  
-  
-// useEffect(()=>{
-//  if (!kioskUserLogin) return 
-// 				dispatch( 
-// 					getwishlistUserCollection({
-// 						path: `my_wishlist_${kioskUserLogin}`,
-// 					}),
-// 				);
-// },[kioskUserLogin])
+
+  // useEffect(()=>{
+  //  if (!kioskUserLogin) return
+  // 				dispatch(
+  // 					getwishlistUserCollection({
+  // 						path: `my_wishlist_${kioskUserLogin}`,
+  // 					}),
+  // 				);
+  // },[kioskUserLogin])
   const checkoutPayment = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -512,11 +515,11 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
       // alert("Payment initiation failed. Please try again.");
     }
   };
-// console.log('source',source);
+  // console.log('source',source);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-// console.log('source',source);
+    // console.log('source',source);
 
     if (!product?.mfr_code) return;
 
@@ -528,7 +531,6 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
         product: {
           mfr_code: product.mfr_code,
           tagged_by: product.tagged_by || [],
-         
         },
         qty: Number(count),
       });
@@ -537,15 +539,15 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
     }
     const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
     let collectionpayload;
-    if (source === 'COLLECTION'){
-        collectionpayload = {
-        id:collection_id,
-        name:collection_name,
-        path:collection_path
-      }
+    if (source === "COLLECTION") {
+      collectionpayload = {
+        id: collection_id,
+        name: collection_name,
+        path: collection_path,
+      };
       // console.log('collectionpayload',collectionpayload);
     }
-    
+
     const payload = {
       is_display_amount: true,
       products: [
@@ -553,9 +555,9 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
           mfr_code: product.mfr_code,
           tagged_by: product.tagged_by || [],
           qty: Number(count),
-           source:source,
-           collection:collectionpayload,
-          event_id:storeData?.event_id
+          source: source,
+          collection: collectionpayload,
+          event_id: storeData?.event_id,
         },
       ],
       product_lists: [],
@@ -566,7 +568,6 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
       path: `my_cart_${cartUserId}`,
     };
     dispatch(addToCart(payload));
-   
   };
 
   const handleGoToCart = (event) => {
@@ -574,7 +575,7 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
     event.preventDefault();
 
     if (hasKioskAccess && KioskLoginAuth?.user_id && onKioskCartClick) {
-      onKioskCartClick();
+      onKioskCartClick(product);
       return;
     }
 
@@ -1364,15 +1365,17 @@ const heartRedProduct = wishlistCollections?.product_lists?.find(x=>x.mfr_code =
                   onClick={addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
-                    {heartRedProduct ? <FaHeart  className="text-red-500"  /> : 
-                    <img
-                      alt="Add to wishlist"
-                      className={styles["add_to_wishlist_icon"]}
-                      src={getStaticImageSrc(heart)}
-                      height={20}
-                      width={20}
-                    />
-                  }
+                    {heartRedProduct ? (
+                      <FaHeart className="text-red-500" />
+                    ) : (
+                      <img
+                        alt="Add to wishlist"
+                        className={styles["add_to_wishlist_icon"]}
+                        src={getStaticImageSrc(heart)}
+                        height={20}
+                        width={20}
+                      />
+                    )}
                   </button>
                 </div>
               )}

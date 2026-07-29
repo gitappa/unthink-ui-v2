@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkoutUpdatePoints,
@@ -8,6 +8,7 @@ import {
 import { current_store_name } from "../../constants/config";
 import { useRouter } from "next/router";
 import { IoCartOutline } from "react-icons/io5";
+import { getUserInfo } from "../Auth/redux/actions";
 
 const DEFAULT_NFT_INSTANCE_ID = "GIVA loyalty points";
 
@@ -66,6 +67,14 @@ const [
     state.cart?.earningPoints,
     state.store.data,
   ]);
+  useEffect(() => {
+    if (!routeUserId) {
+      return;
+    }
+
+    dispatch(getUserInfo({ user_id: routeUserId }));
+  }, [dispatch, routeUserId]);
+  
 
   const userDID = authUser?.userDID;
   const checkoutStoreName = storeData?.store_name || current_store_name;
@@ -148,6 +157,8 @@ const [
         fetchEarningPoints({
           user_id: checkoutUserId.toString(),
           store_name: checkoutStoreName,
+          userDID,
+          claimpoints: true,
         })
       );
       return;
@@ -225,11 +236,11 @@ const [
   return (
     <div className="p-5 ">
     
-    <div className=" flex justify-evenly gap-4 md:flex-row flex-col items-center ">
+    <div className={`flex w-full flex-col items-center gap-4 md:grid ${!checkoutPage ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
       { !checkoutPage &&
       
-      <div>
-      <div className="flex  items-center gap-2  mb-7 ">
+      <div className="flex w-full flex-col items-center">
+      <div className="mb-7 flex items-center gap-2">
     <IoCartOutline className="text-xl text-kiosk-primary font-semibold md:text-2xl" />
     <p className="text-xl font-semibold md:text-2xl " >Get Voucher At the Counter</p>
       </div>
@@ -240,7 +251,7 @@ const [
       </div>
 
 }
-      <div className="mx-auto w-auto sm:w-[400px] lg:w-[500px] text-[15px] text-black">
+      <div className="mx-auto w-full max-w-[500px] text-[15px] text-black md:justify-self-center">
         <button
           type="button"
           onClick={handleCalculatePoints}
@@ -383,3 +394,7 @@ const [
 };
 
 export default ClaimPoints;
+
+
+
+

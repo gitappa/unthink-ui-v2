@@ -51,6 +51,81 @@ import {
 
 
 // ✅ ADD TO CART Saga
+const getEarnedPoints = (data = {}) =>
+  Number(
+    data?.current_checkout_earned_points ??
+      data?.total_earned ??
+      data?.total_points ??
+      data?.points ??
+      0
+  ) || 0;
+
+function* syncSessionHCS20Points({ userDID, pointsAmount, shouldSendPoints }) {
+  if (!userDID || pointsAmount <= 0) {
+    return;
+  }
+
+  const sessionHCS20Payload = {
+    recipientId: userDID,
+    pointsAmount,
+  };
+
+  try {
+    // if (shouldSendPoints) {
+    //   const hcs20Response = yield call(
+    //     SendSessionHCS20PointsApiCall,
+    //     sessionHCS20Payload
+    //   );
+    //   yield put(
+    //     sendSessionHCS20PointsSuccess({
+    //       requestPayload: sessionHCS20Payload,
+    //       response: hcs20Response?.data,
+    //     })
+    //   );
+    // }
+
+    const sessionHCS20BalancePayload = {
+      recipientId: userDID,
+    };
+
+    try {
+      const hcs20BalanceResponse = yield call(
+        CheckSessionHCS20PointsApiCall,
+        sessionHCS20BalancePayload
+      );
+      yield put(
+        checkSessionHCS20PointsSuccess({
+          requestPayload: sessionHCS20BalancePayload,
+          response: hcs20BalanceResponse?.data,
+        })
+      );
+    } catch (hcs20BalanceError) {
+      console.error("Error checking session HCS20 points:", {
+        status: hcs20BalanceError.response?.status,
+        data: hcs20BalanceError.response?.data || hcs20BalanceError.message,
+        payload: sessionHCS20BalancePayload,
+      });
+      yield put(
+        checkSessionHCS20PointsFailure({
+          requestPayload: sessionHCS20BalancePayload,
+          error: hcs20BalanceError.response?.data || hcs20BalanceError,
+        })
+      );
+    }
+  } catch (hcs20Error) {
+    console.error("Error sending session HCS20 points:", {
+      status: hcs20Error.response?.status,
+      data: hcs20Error.response?.data || hcs20Error.message,
+      payload: sessionHCS20Payload,
+    });
+    yield put(
+      sendSessionHCS20PointsFailure({
+        requestPayload: sessionHCS20Payload,
+        error: hcs20Error.response?.data || hcs20Error,
+      })
+    );
+  }
+}
 function* addToCartSaga(action) {
   try {
     const payload = {
@@ -150,14 +225,19 @@ function* createLoyaltyBadgeSaga(action) {
 
 function* fetchEarningPointsSaga(action) {
   try {
+    const { userDID, claimpoints, ...earningPayload } = action.payload || {};
     const response = yield call(EarningPointsApiCall, {
-      user_id: action.payload?.user_id,
-      store_name: action.payload?.store_name,
+      user_id: earningPayload?.user_id,
+      store_name: earningPayload?.store_name,
     });
     const data = response?.data?.data ?? response?.data;
-//  console.log('dfdbfd',data);
- 
+
     yield put(fetchEarningPointsSuccess(data));
+    yield call(syncSessionHCS20Points, {
+      userDID,
+      pointsAmount: getEarnedPoints(data),
+      shouldSendPoints: Boolean(claimpoints),
+    });
   } catch (error) {
     console.error("Error fetching earning points:", error.response?.data || error);
     yield put(fetchEarningPointsFailure(error.response?.data || error));
@@ -349,3 +429,6 @@ export function* cartSaga() {
 export default {
   cartSaga
 };
+
+
+
