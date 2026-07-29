@@ -249,11 +249,13 @@ function* checkoutUpdatePointsSaga(action) {
     const { userDID, claimpoints,...checkoutPayload } = action.payload || {};
     let currentCheckoutEarnedPoints;
     let current_checkout_earned_points
+    // console.log('currentCheckoutEarnedPoints',currentCheckoutEarnedPoints);
+    
     if(claimpoints){
 
       const response = yield call(CheckoutUpdatePointsApiCall, checkoutPayload); 
       const data = response?.data?.data ?? response?.data;
-      current_checkout_earned_points?.current_checkout_earned_points
+      current_checkout_earned_points =  data?.current_checkout_earned_points
        currentCheckoutEarnedPoints = Number(data?.total_earned) || 0;
       yield put(checkoutUpdatePointsSuccess(data));
     }
@@ -336,11 +338,10 @@ const getTransactionId = (responseData) =>{
 
 function* redeemSessionHCS20PointsSaga(action) {
   const { redeemPayload, claimPayload,  } = action.payload || {};
+  let pointsSmartContractTransactionId = "";
 
-  try {
-    let pointsSmartContractTransactionId = "";
-
-    if (redeemPayload?.recipientId) {
+  if (redeemPayload?.recipientId) {
+    try {
       const redeemResponse = yield call(
         RedeemSessionHCS20PointsApiCall,
         redeemPayload
@@ -355,11 +356,24 @@ function* redeemSessionHCS20PointsSaga(action) {
           response: redeemResponseData,
         })
       );
+    } catch (error) {
+      console.error("Error redeeming checkout points:", {
+        status: error.response?.status,
+        data: error.response?.data || error.message,
+        payload: action.payload,
+      });
+      yield put(
+        redeemSessionHCS20PointsFailure({
+          requestPayload: redeemPayload,
+          error: error.response?.data || error,
+        })
+      );
     }
+  }
 
-    const finalClaimPayload = {
-      ...claimPayload,
-      points_smart_contract_transactionId: pointsSmartContractTransactionId || '',
+  const finalClaimPayload = {
+    ...claimPayload,
+    points_smart_contract_transactionId: pointsSmartContractTransactionId || '',
 
 
   metadata: {
@@ -369,53 +383,39 @@ function* redeemSessionHCS20PointsSaga(action) {
     store_specific: true
   }
 
-    };
+  };
 
-    try {
-      const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
+  try {
+    const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
 
-      yield put(
-        claimStorePointsSuccess({
-          requestPayload: finalClaimPayload,
-          response: claimResponse?.data,
-        })
-      );
+    yield put(
+      claimStorePointsSuccess({
+        requestPayload: finalClaimPayload,
+        response: claimResponse?.data,
+      })
+    );
 
-      // if (
-      //   checkoutRefreshPayload?.user_id &&
-      //   checkoutRefreshPayload?.store_name
-      // ) {
-      //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
-        notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
-      // } 
-    } catch (claimError) {
-      console.error("Error claiming store points:", {
-        status: claimError.response?.status,
-        data: claimError.response?.data || claimError.message,
-        payload: finalClaimPayload,
-      });
-      yield put(
-        claimStorePointsFailure({
-          requestPayload: finalClaimPayload,
-          error: claimError.response?.data || claimError,
-        })
-      );
-    }
-  } catch (error) {
-    console.error("Error redeeming checkout points:", {
-      status: error.response?.status,
-      data: error.response?.data || error.message,
-      payload: action.payload,
+    // if (
+    //   checkoutRefreshPayload?.user_id &&
+    //   checkoutRefreshPayload?.store_name
+    // ) {
+    //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
+    notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
+    // } 
+  } catch (claimError) {
+    console.error("Error claiming store points:", {
+      status: claimError.response?.status,
+      data: claimError.response?.data || claimError.message,
+      payload: finalClaimPayload,
     });
     yield put(
-      redeemSessionHCS20PointsFailure({
-        requestPayload: redeemPayload,
-        error: error.response?.data || error,
+      claimStorePointsFailure({
+        requestPayload: finalClaimPayload,
+        error: claimError.response?.data || claimError,
       })
     );
   }
 }
-
 // ✅ Export all sagas (important for Object.values in rootSaga)
 export function* cartSaga() {
   yield takeLatest(ADD_TO_CART, addToCartSaga);
