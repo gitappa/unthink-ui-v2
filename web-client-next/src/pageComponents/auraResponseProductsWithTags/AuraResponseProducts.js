@@ -58,8 +58,10 @@ import {
 	getUserInfo,
 	getUserInfoSuccess,
 	GuestPopUpShow,
+	getwishlistUserCollection,
 } from "../Auth/redux/actions";
 import GuestPopUp from "../Auth/GuestPopUp";
+import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 import {
 	FaRegArrowAltCircleRight,
 	FaRegArrowAltCircleLeft,
@@ -159,6 +161,8 @@ const [notData,setNotData] = useState(null)
 	const dispatch = useDispatch();
 	const { sendMessage } = useChat();
 	const guestActionRef = useRef(null);
+	const skipWishlistStateAfterGuestRef = useRef(false);
+	const pendingWishlistProductAfterGuestRef = useRef(null);
 	const checked = useRef([]);
 // console.log('thisishtechecked',checked);
 
@@ -563,7 +567,7 @@ const [notData,setNotData] = useState(null)
 
 	const onAddSelectedProductsToCollection = useCallback(
 		(e =null,options ={}) => {
-			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null } = options;
+			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null, product: productToAdd = null, skipWishlistStateAfterGuest = false } = options;
 
 			if (e?.preventDefault) {
 				e?.preventDefault();
@@ -572,6 +576,12 @@ const [notData,setNotData] = useState(null)
 
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
 			guestActionRef.current = isSave ? "save" : "share";
+			if (!isGuestSubmit) {
+				skipWishlistStateAfterGuestRef.current = !!skipWishlistStateAfterGuest;
+				pendingWishlistProductAfterGuestRef.current = skipWishlistStateAfterGuest
+					? productToAdd
+					: null;
+			}
 
 			const isSkipPopUp = isSkip && guestActionRef.current === "share";
 
@@ -584,9 +594,12 @@ const [notData,setNotData] = useState(null)
 				return;
 			}
 
-			const SelectedProductsData = allProductList.filter((p) =>
-				selectedProducts.includes(p.mfr_code)
-			);
+			const productForWishlist = productToAdd || pendingWishlistProductAfterGuestRef.current;
+			const SelectedProductsData = productForWishlist?.mfr_code
+				? [productForWishlist]
+				: allProductList.filter((p) =>
+					selectedProducts.includes(p.mfr_code)
+				);
 
 			let data = { tags: [], tagged_show_filters: {}, keyword_tag_map: {} };
 
@@ -616,6 +629,39 @@ const [notData,setNotData] = useState(null)
 			};
 
 			if (isSave) {
+				if (isGuestSubmit && skipWishlistStateAfterGuestRef.current) {
+					skipWishlistStateAfterGuestRef.current = false;
+					pendingWishlistProductAfterGuestRef.current = null;
+					const selectedProduct = SelectedProductsData[0];
+					const loginUserId = userId || userData?.user_id || authUser?.user_id;
+
+					if (selectedProduct?.mfr_code && loginUserId) {
+						dispatch(
+							addProductToWishlistCollection({
+								mfr_code: selectedProduct.mfr_code,
+								product_name: selectedProduct.name,
+								product_image: selectedProduct.image,
+								store: storeData?.store_name || "dothelook",
+								user_id: loginUserId,
+								eventId: storeData?.event_id,
+								successMessage: "Product added to wishlist successfully!",
+								errorMessage:
+									"Failed to add product to wishlist. Please try again.",
+								callback: () => {
+									dispatch(
+										getwishlistUserCollection({
+											path: `my_wishlist_${loginUserId}`,
+										}),
+									);
+								},
+							}),
+						);
+					}
+
+					handleResetSelectProduct();
+					return;
+				}
+
 				dispatch(
 					setProductsToAddInWishlist(SelectedProductsData, {
 						...createWishlistData,
@@ -794,6 +840,8 @@ setNotData(newOptionalFilters)
 			}
 
 			if (email || phone) {
+				// console.log('Hewllo World',tid);
+				
 				try {
 					const res = await authAPIs.GuestRegisterAPICall({
 						emailId: email,
@@ -804,6 +852,7 @@ setNotData(newOptionalFilters)
 
 					const { data } = res;
 					const user_id = data.data.user_id;
+// console.log('user_id',user_id);
 
 					if (res.data.status_code === 200) {
 						dispatch(GuestPopUpShow(false));
@@ -832,7 +881,7 @@ setNotData(newOptionalFilters)
 						// 	expires: SIGN_IN_EXPIRE_DAYS,
 						// });
 						if (guestActionRef.current === "save") {
-							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true });
+							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true, userId: user_id });
 						} else if (guestActionRef.current === "share") {
 							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true ,userId:data?.data?.user_id});
 						}
@@ -888,7 +937,12 @@ setNotData(newOptionalFilters)
 		registerSelectActions,
 	]);
 
-	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || isLoading || showChatLoader;
+	const cachedProductsToRender = productsCache[currentTag] || [];
+	const productsToRender = cachedProductsToRender.length
+		? cachedProductsToRender
+		: chatProductsDataToShow;
+	const hasProductsToRender = productsToRender.length > 0;
+	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || ((isLoading || showChatLoader) && !hasProductsToRender);
 
 	return (
 		<>
@@ -991,7 +1045,7 @@ setNotData(newOptionalFilters)
 							) : null}
 						</>
 					) : null}
-					{isLoading || showChatLoader ? (
+					{(isLoading || showChatLoader) && !hasProductsToRender ? (
 						<div className="flex flex-col items-center justify-center w-full py-20 gap-4 animate-pulse">
 							<Spin
 								indicator={
@@ -1015,7 +1069,7 @@ setNotData(newOptionalFilters)
 											? 'md:grid-cols-3'
 											: 'md:grid-cols-3 lg:grid-cols-4'
 									}`}>
-								{(productsCache[currentTag] || chatProductsDataToShow)?.map((product) => (
+								{productsToRender.map((product) => (
 									<ProductCard
 										key={product.mfr_code}
 										product={product}
