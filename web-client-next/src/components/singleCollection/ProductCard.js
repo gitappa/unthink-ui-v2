@@ -473,6 +473,22 @@ const ProductCard = ({
   // 					}),
   // 				);
   // },[kioskUserLogin])
+  const handleGuestWishlistClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!onAddSelectedProductsToCollection) {
+      dispatch(GuestPopUpShow(true));
+      return;
+    }
+
+    if (source === "SEARCH") {
+      onAddSelectedProductsToCollection(event, { isSave: true, product, skipWishlistStateAfterGuest: true });
+      return;
+    }
+
+    onAddSelectedProductsToCollection(event, product);
+  };
   const checkoutPayment = async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -848,7 +864,7 @@ const ProductCard = ({
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
           onClick={(e) => {
-            if (setSelectValue) {
+            if ( setSelectValue) {
               e.stopPropagation();
               setSelectValue(!isSelected);
             }
@@ -920,6 +936,7 @@ const ProductCard = ({
                   className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault()
                     handleProductClick({ open });
                   }}
                 >
@@ -1393,7 +1410,7 @@ const ProductCard = ({
               {/* {!hideAddToWishlist && ( */}
               <div
                 className={styles["product-menu-wishlist"]}
-                onClick={(e) => onAddSelectedProductsToCollection(e, product)}
+                onClick={handleGuestWishlistClick}
               >
                 <button className={`${styles["product-heart-button"]}`}>
                   <img
