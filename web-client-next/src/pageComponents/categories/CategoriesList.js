@@ -172,19 +172,19 @@ const CategoriesList = ({
 						}
 					} else {
 						const starred = !infUser.starred;
-						const payload = {
-							query: {
-								user_id: [infUser.key],
-							},
-							starred,
-						};
-						const response = await profileAPIs.starUserAPICall({ payload });
-						if (response.data.status_code === 200) {
-							message.success(
-								starred
-									? "User has been marked as starred"
-									: "User has been un-starred"
-							);
+						// const payload = {
+						// 	query: {
+						// 		user_id: [infUser.key],
+						// 	},
+						// 	starred,
+						// };
+						// const response = await profileAPIs.starUserAPICall({ payload });
+						// if (response.data.status_code === 200) {
+						// 	message.success(
+						// 		starred
+						// 			? "User has been marked as starred"
+						// 			: "User has been un-starred"
+						// 	);
 							dispatch(
 								updateCategoriesDataInfluencerWidgetStarred(
 									infUser.key,
@@ -192,9 +192,9 @@ const CategoriesList = ({
 								)
 							);
 							fnFetchCategories();
-						} else {
-							message.error("Unable to update. Please try again later");
-						}
+						// } else {
+						// 	message.error("Unable to update. Please try again later");
+						// }
 					}
 				} catch (error) {
 					message.error("Unable to update. Please try again later");

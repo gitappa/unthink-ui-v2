@@ -64,6 +64,7 @@ import SignupSuccess from "./SignupSuccess";
 
 const initialFormValue = {
 	email: "",
+	phone: "",
 	password: "",
 	cPassword: "",
 };
@@ -231,18 +232,21 @@ export default function SignInFormSection() {
 		}
 
 		selectedIdpHintSignIn = "";
-		const { email, password } = values;
+		const { password } = values;
+		const email = values.email?.trim();
+		const phone = values.phone?.trim();
 		setShowProcessingLoader(true);
 		try {
 			const res = await authAPIs.signInAPICall({
 				email,
+				phone,
 				password,
 			});
 			if (res.data?.status_code) {
 				if (
 					res.data.status_code === 200 &&
 					res.data.data?.user_id &&
-					res.data.data?.emailId
+					(res.data.data?.emailId || res.data.data?.phone)
 				) {
 					handleUserSignInSuccess(res.data.data.user_id, res.data.data.emailId);
 					// navigate(PATH_ROOT);
@@ -269,10 +273,10 @@ export default function SignInFormSection() {
 	const onResetPasswordRequest = async () => {
 		try {
 			setShowProcessingLoader(true);
-			form.validateFields(["email"]);
-			if (form.getFieldValue("email")) {
+			const email = form.getFieldValue("email")?.trim();
+			if (email) {
 				const res = await authAPIs.resetPasswordRequestAPICall({
-					email: form.getFieldValue("email"),
+					email,
 				});
 				if (res.data.status_code === 200) {
 					setSuccessState({
@@ -285,6 +289,13 @@ export default function SignInFormSection() {
 					if (res.data.status_desc) setHasError(res.data.status_desc);
 					if (res.data.err_code) setHasErrorCode(res.data.err_code);
 				}
+			} else {
+				form.setFields([
+					{
+						name: "email",
+						errors: ["Please enter your email to reset password"],
+					},
+				]);
 			}
 		} catch (error) {
 				notification["error"]({
@@ -301,10 +312,13 @@ export default function SignInFormSection() {
 		try {
 			setHasError(() => "");
 			setShowProcessingLoader(true);
-			form.validateFields(["email"]);
-			if (form.getFieldValue("email")) {
+			await form.validateFields(["email", "phone"]);
+			const email = form.getFieldValue("email")?.trim();
+			const phone = form.getFieldValue("phone")?.trim();
+			if (email || phone) {
 				const res = await authAPIs.signInWithLinkRequestAPICall({
-					email: form.getFieldValue("email"),
+					email,
+					phone,
 				});
 				if (res.data.status_code === 200) {
 					setSuccessState({
@@ -537,15 +551,55 @@ export default function SignInFormSection() {
 								autoComplete='off'>
 								<Form.Item
 									name='email'
+									dependencies={["phone"]}
 									rules={[
 										{
-											required: true,
-											message: "Please enter your email!",
+											validator: (_, value) => {
+												const email = value?.trim();
+												const phone = form.getFieldValue("phone")?.trim();
+
+												if (email || phone) {
+													return Promise.resolve();
+												}
+
+												return Promise.reject(
+													new Error("Please enter your email or phone number!")
+												);
+											},
 										},
 									]}>
 									<Input
 										className={styles.input}
 										placeholder='Enter your email'
+									/>
+								</Form.Item>
+								<Form.Item
+									name='phone'
+									dependencies={["email"]}
+									rules={[
+										{
+											validator: (_, value) => {
+												const phone = value?.trim();
+												const email = form.getFieldValue("email")?.trim();
+
+												if (email || phone) {
+													return Promise.resolve();
+												}
+
+												return Promise.reject(
+													new Error("Please enter your email or phone number!")
+												);
+											},
+										},
+										{
+											pattern: /^[0-9+\s()-]*$/,
+											message: "Please enter a valid phone number!",
+										},
+									]}>
+									<Input
+										className={styles.input}
+										placeholder='Enter your phone number'
+										type='tel'
 									/>
 								</Form.Item>
 								{isSignInWithPasswordActive && (
