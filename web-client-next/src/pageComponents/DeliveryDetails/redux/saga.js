@@ -8,6 +8,7 @@ import {
   CreateBadgeApiCall,
   EarningPointsApiCall,
   RedeemSessionHCS20PointsApiCall,
+  RemoveCartApiCall,
   SendSessionHCS20PointsApiCall,
 } from "../../../helper/serverAPIs";
 import { collectionQRCodeGenerator } from "../../../helper/utils";
@@ -394,6 +395,13 @@ function* redeemSessionHCS20PointsSaga(action) {
         response: claimResponse?.data,
       })
     );
+    // console.log('claimResponse',claimResponse);
+    
+    const rawClaimResponseData = claimResponse?.data?.data ?? claimResponse?.data ?? {};
+    const claimResponseData = Array.isArray(rawClaimResponseData)
+      ? rawClaimResponseData[0] ?? {}
+      : rawClaimResponseData;
+
 
     // if (
     //   checkoutRefreshPayload?.user_id &&
@@ -401,6 +409,25 @@ function* redeemSessionHCS20PointsSaga(action) {
     // ) {
     //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
     notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
+    const removeCartPayload = {
+      collection_name: "my cart",
+      type: "system",
+      user_id: claimResponseData?.user_id ?? finalClaimPayload?.user_id,
+      store:
+        claimResponseData?.store_name ??
+        claimResponseData?.store ??
+        finalClaimPayload?.store_name,
+    };
+
+    try {
+      yield call(RemoveCartApiCall, removeCartPayload);
+    } catch (removeCartError) {
+      console.error("Error removing redeemed cart:", {
+        status: removeCartError.response?.status,
+        data: removeCartError.response?.data || removeCartError.message,
+        payload: removeCartPayload,
+      });
+    }
     // } 
   } catch (claimError) {
     console.error("Error claiming store points:", {
@@ -429,6 +456,3 @@ export function* cartSaga() {
 export default {
   cartSaga
 };
-
-
-

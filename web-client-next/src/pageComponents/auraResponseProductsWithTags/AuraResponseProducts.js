@@ -13,6 +13,7 @@ import {
 	CloseOutlined,
 	CloseCircleOutlined,
 	PlusOutlined,
+	CheckSquareOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -845,7 +846,7 @@ setNotData(newOptionalFilters)
 				try {
 					const res = await authAPIs.GuestRegisterAPICall({
 						emailId: email,
-						user_id: tid,
+						// user_id: tid,
 						store,
 						phone,
 					});
@@ -978,69 +979,67 @@ setNotData(newOptionalFilters)
 							) : null}
 
 
-							{chatProductsDataToShow.length && !isMobile && enableSelectProduct ? (
-								<div className="flex flex-row items-center gap-4 mb-6 w-full box-border transition-all">
-									<div className="flex items-center flex-wrap gap-2 leading-[2.75rem]">
-										<div className="flex items-center gap-2">
-											<div
-												className="border border-gray-400 rounded-md px-2 py-1 flex items-center gap-2 cursor-pointer select-none"
-												onClick={() => {
-													if (enableSelectProduct) handleResetSelectProduct();
-													else setEnableSelectProduct(true);
-												}}
+							{chatProductsDataToShow.length && !isMobile ? (
+								<div className="flex flex-row items-center justify-start gap-3 mb-5 w-full box-border transition-all">
+									{enableSelectProduct ? (
+										<>
+											<button
+												type="button"
+												className="min-h-10 rounded-xl border border-[#d9d6ff] bg-white px-3 py-2 text-sm font-semibold text-[#2f3652] shadow-sm transition-all hover:border-secondary hover:text-secondary hover:shadow-[0_6px_18px_rgba(114,104,236,0.14)] flex items-center gap-2"
+												onClick={onSelectAllChange}
+												title="Select all products"
 											>
-												<span className="text-xs md:text-base">
-													{enableSelectProduct ? `${selectedProducts.length} selected` : "Select"}
-												</span>
 												<Checkbox
 													className="text-xs md:text-base"
-													onChange={(e) => {
-														e.stopPropagation();
-														onSelectAllChange();
-													}}
-													onClick={(e) => {
-														e.stopPropagation();
-													}}
+													onClick={(e) => e.stopPropagation()}
+													onChange={onSelectAllChange}
 													checked={
 														selectedProducts.length > 0 &&
 														selectedProducts.length === chatProductsDataToShow.length
 													}
 												/>
-											</div>
-										</div>
-										{enableSelectProduct && (
-											<p
-												onClick={() => handleResetSelectProduct()}
-												className="text-brand font-medium ml-2 underline cursor-pointer"
-												role='button'>
-												Clear
-											</p>
-										)}
-									</div>
-									<div className="flex flex-wrap gap-2">
-										{is_store_instance && (
-											<div className="flex items-center justify-center">
+												<span>{selectedProducts.length} selected</span>
+											</button>
+											{is_store_instance ? (
 												<button
-													className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
+													type="button"
+													className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-white shadow-[0_6px_18px_rgba(114,104,236,0.2)] transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:bg-[#f2f1fd] disabled:text-[#a3a0bd] disabled:shadow-none"
 													onClick={(e) =>
 														onAddSelectedProductsToCollection(e, { isSave: true })
 													}
+													disabled={!selectedProducts.length}
 													title='Select and add products to collection'>
 													Save
 												</button>
-											</div>
-										)}
-										<div className="flex items-center justify-between">
+											) : null}
 											<button
-												className="rounded-md shadow-md px-4 py-1 text-white font-medium bg-secondary hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
+												type="button"
+												className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-white shadow-[0_6px_18px_rgba(114,104,236,0.2)] transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:bg-[#f2f1fd] disabled:text-[#a3a0bd] disabled:shadow-none"
 												onClick={(e) =>
 													onAddSelectedProductsToCollection(e, { isShare: true })
 												}
+												disabled={!selectedProducts.length}
 												title='Select products and share published collection'>
 												Share
 											</button>
-										</div>
-									</div>
+											<button
+												type="button"
+												onClick={handleResetSelectProduct}
+												className="min-h-10 rounded-xl border border-[#d9d6ff] bg-white px-4 py-2 text-sm font-semibold text-[#2f3652] transition-all hover:border-secondary hover:text-secondary">
+												Cancel
+											</button>
+										</>
+									) : (
+										<button
+											type="button"
+											className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-bold text-white shadow-[0_6px_18px_rgba(114,104,236,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_9px_24px_rgba(114,104,236,0.28)] flex items-center gap-2"
+											onClick={() => setEnableSelectProduct(true)}
+											title="Click and select multiple products"
+										>
+											<CheckSquareOutlined />
+											<span>Select</span>
+										</button>
+									)}
 								</div>
 							) : null}
 						</>
