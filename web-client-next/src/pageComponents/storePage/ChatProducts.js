@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox, Tooltip, Upload, Spin } from "antd";
-import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined, MenuOutlined, FolderOutlined } from "@ant-design/icons";
+import { ReloadOutlined, ArrowUpOutlined, ArrowLeftOutlined, SearchOutlined, CloudUploadOutlined, HistoryOutlined, PlusOutlined, MessageOutlined, FormOutlined, CloseOutlined, Loading3QuartersOutlined, MenuOutlined, FolderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 
 import {
   openWishlistModal,
@@ -747,7 +747,12 @@ const ChatProducts = ({
             <div className={styles["chat-products-selection-controls"]}>
               {enableSelectProduct ? (
                 <div className={styles["chat-products-selected-items"]}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <button
+                    type="button"
+                    className={styles["chat-products-select-all-button"]}
+                    onClick={onSelectAllChange}
+                    title="Select all products"
+                  >
                     <Checkbox
                       indeterminate={
                         selectedProducts.length > 0 &&
@@ -758,16 +763,12 @@ const ChatProducts = ({
                         selectedProducts.length ===
                         chatProductsDataToShow.length
                       }
+                      onClick={(event) => event.stopPropagation()}
                     />
-                    <div
-                      className={styles["chat-products-checkbox-group"]}
-                      style={{ padding: "0.25rem 0.75rem", cursor: "pointer", border: "1px solid #9e9e9e", borderRadius: "0.375rem" }}
-                      onClick={onSelectAllChange}
-                    >
-                      <span style={{ fontSize: "1rem", fontWeight: "500" }}>{selectedProducts.length} Selected</span>
-                    </div>
-                  </div>
-                  <p
+                    <span>{selectedProducts.length} Selected</span>
+                  </button>
+                  <button
+                    type="button"
                     onClick={
                       selectedProducts.length
                         ? onAddSelectedProductsToCollection
@@ -778,28 +779,29 @@ const ChatProducts = ({
                       : styles["chat-products-action-button-disabled"]
                       }`}
                     title="Click to add selected products in collection"
-                    role="button"
+                    disabled={!selectedProducts.length}
                   >
                     Add to {WISHLIST_TITLE}
-                  </p>
+                  </button>
 
-                  <p
+                  <button
+                    type="button"
                     onClick={() => handleResetSelectProduct()}
                     className={`${styles["chat-products-action-text"]} ${styles["chat-products-action-button"]}`}
-                    role="button"
                   >
                     Cancel
-                  </p>
+                  </button>
                 </div>
               ) : (
-                <p
+                <button
+                  type="button"
                   className={styles["chat-products-select-prompt"]}
-                  role="link"
                   onClick={() => setEnableSelectProduct(true)}
                   title="Click and select multiple products to add to collection"
                 >
-                  Select and add multiple products to collection
-                </p>
+                  <CheckSquareOutlined />
+                  <span>Select Products</span>
+                </button>
               )}
             </div>
           ) : null}

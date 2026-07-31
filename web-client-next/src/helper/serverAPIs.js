@@ -151,7 +151,7 @@ const lookBook =
 
 const updateHandpickedProductsUrl =
   "/user/collections/handpicked_product_list/";
-
+const removeCartUrl ='/user/collections/remove_products/'
 const signupAPICall = ({ email, user_name, iCode, password, ...rest }) => {
   const url = `${auraYfretUserCollBaseUrl}${signupUrl}`;
   const payload = {
@@ -249,13 +249,20 @@ const GetStartedSendMailAPICall = ({
   });
 };
 
-const signInAPICall = ({ email, password }) => {
+const signInAPICall = ({ email, phone, password }) => {
   const url = `${auraYfretUserCollBaseUrl}${signInUrl}`;
   const payload = {
-    user_name: email,
     password: password,
     store: current_store_name,
   };
+
+  if (email?.trim()) {
+    payload.user_name = email.trim();
+  }
+
+  if (phone?.trim()) {
+    payload.phone = phone.trim();
+  }
 
   return apiInstance({
     url,
@@ -345,11 +352,17 @@ const resetPasswordRequestAPICall = ({ email }) => {
   });
 };
 
-const signInWithLinkRequestAPICall = ({ email }) => {
+const signInWithLinkRequestAPICall = ({ email, phone }) => {
   const url = `${auraYfretUserCollBaseUrl}${signInWithLinkRequestUrl}`;
-  const params = {
-    emailId: email,
-  };
+  const params = {};
+
+  if (email?.trim()) {
+    params.emailId = email.trim();
+  }
+
+  if (phone?.trim()) {
+    params.phone = phone.trim();
+  }
 
   return apiInstance({
     url,
@@ -1625,5 +1638,15 @@ export const CreateBadgeApiCall = ({name ,points, badge_image_url,qr_page_url}) 
       qr_page_url,
     },
     responseType: "blob",
+  }); 
+};
+export const RemoveCartApiCall = ( data={} ) => {
+  const url = `${auraYfretUserCollBaseUrl}${removeCartUrl}`;
+// console.log("URL:", name, points, badge_image_url);
+  return apiInstance({
+    url,
+    method: "delete",
+    data
+     
   }); 
 };
