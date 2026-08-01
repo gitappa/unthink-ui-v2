@@ -242,6 +242,7 @@ const ProductDetails = ({ params, ...props }) => {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
+        setPendingGuestAction(null)
         return;
       }
 
@@ -415,6 +416,7 @@ const ProductDetails = ({ params, ...props }) => {
     if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
+      setPendingGuestAction(null)
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
       return;

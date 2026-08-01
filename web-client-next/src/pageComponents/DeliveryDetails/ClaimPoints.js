@@ -43,7 +43,7 @@ const ClaimPoints = ({
   const [pendingRedeemPoints, setPendingRedeemPoints] = useState(null);
   const routeUserId = getRouteValue(router.query.user_id);
   // console.log('redeemPoints',redeemPoints);
-  
+
 const [
     collection,
     loading,
@@ -54,6 +54,7 @@ const [
     redeemSessionHCS20PointsLoading,
     claimStorePointsResponse,
     earningPoints,
+    earningPointsLoading,
     storeData,
   ] = useSelector((state) => [
     state.cart?.collection,
@@ -65,6 +66,7 @@ const [
     state.cart?.redeemSessionHCS20PointsLoading,
     state.cart?.claimStorePointsResponse,
     state.cart?.earningPoints,
+    state.cart?.earningPointsLoading,
     state.store.data,
   ]);
   useEffect(() => {
@@ -74,8 +76,11 @@ const [
 
     dispatch(getUserInfo({ user_id: routeUserId }));
   }, [dispatch, routeUserId]);
-  
 
+
+  const pointsLoading = checkoutPage
+    ? checkoutUpdatePointsLoading
+    : earningPointsLoading;
   const userDID = authUser?.userDID;
   const checkoutStoreName = storeData?.store_name || current_store_name;
    const checkoutUserId = routeUserId || authUser?.user_id || authUser?._id;
@@ -88,7 +93,7 @@ const [
   const totalClaimPoints = getPointValue(
     pointsData,
     ["total_earned", "total_points", "totalPoints", "points", "earned_points"],
-    pointsData?.available_balance || 0
+    pointsData?.available_balance
   );
   const maxAvailableToRedeem = getPointValue(
     pointsData,
@@ -99,7 +104,7 @@ const [
       "available_balance",
       "available_points",
     ],
-    pointsData?.available_balance || 0
+    pointsData?.available_balance
   );
   const redeemablePoints = Math.min(
     Math.max(Number(redeemPoints) || 0, 0),
@@ -120,7 +125,9 @@ const [
       )
     : null;
   const displayedAvailableBalance =
-    claimedAvailableBalance ?? maxAvailableToRedeem;
+    hasCalculatedPoints || claimedAvailableBalance !== null
+      ? claimedAvailableBalance ?? maxAvailableToRedeem
+      : "";
   const displayedRemainingBalance =
     claimedAvailableBalance ?? remainingPoints;
  const claimImageUrl =
@@ -228,17 +235,17 @@ const [
           points_exchanged: validPoints,
           image_url: claimImageUrl,
         },
-        
+
       })
     );
   };
 
   return (
     <div className="p-5 ">
-    
+
     <div className={`flex w-full flex-col items-center gap-4 md:grid ${!checkoutPage ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
       { !checkoutPage &&
-      
+
       <div className="flex w-full flex-col items-center">
       <div className="mb-7 flex items-center gap-2">
     <IoCartOutline className="text-xl text-kiosk-primary font-semibold md:text-2xl" />
@@ -255,16 +262,16 @@ const [
         <button
           type="button"
           onClick={handleCalculatePoints}
-          disabled={checkoutUpdatePointsLoading}
+          disabled={pointsLoading}
           className="w-full bg-kiosk-secondary py-1 text-center text-[16px] uppercase hover:bg-kiosk-primary disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {checkoutUpdatePointsLoading
-            ? "CALCULATING POINTS"
-            : "CALCULATE POINTS"}
+          {pointsLoading
+            ? checkoutPage ? "CALCULATING POINTS" : "FETCHING POINTS"
+            : checkoutPage ? "CALCULATE POINTS" : "FETCH POINTS"}
         </button>
-        {checkoutUpdatePointsLoading && (
+        {pointsLoading && (
           <div className="px-3 py-2 leading-6">
-            <p>Calculating points at checkout....</p>
+            <p>{checkoutPage ? "Calculating points at checkout...." : "Fetching points...."}</p>
             <p>Reading rules..</p>
             <p>Checking for points per product........</p>
           </div>
@@ -394,7 +401,3 @@ const [
 };
 
 export default ClaimPoints;
-
-
-
-
