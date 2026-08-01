@@ -508,7 +508,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       </div>
 
       {status && (
-        <div className="absolute top-12 pt-0.5 right-1 text-xs text-red-500">
+        <div className="absolute top-12 pt-0.5  z-30 right-1 text-xs text-red-500">
           {status}
         </div>
       )}
