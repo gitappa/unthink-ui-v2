@@ -131,8 +131,9 @@ const CategoriesList = ({
 
 				try {
 					dispatch(registerAppLoader("handleStarInfluencerUnderCategories"));
+console.log('infUser',infUser);
 
-					if (is_store_instance && infUser.emailId && infUser.user_name) {
+					if (is_store_instance && (infUser?.emailId || infUser?.phone)  && infUser.user_name) {
 						const starred = !seller_list.includes(infUser.emailId);
 
 						let sellerList;

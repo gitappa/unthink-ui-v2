@@ -6,9 +6,12 @@ import {
 import { GET_CREATOR_COLLECTIONS } from "./constants";
 import { collectionAPIs } from "../../../helper/serverAPIs";
 
-function* fetchCreatorCollectionSaga() {
+function* fetchCreatorCollectionSaga(action) {
     try {
-        const response = yield call(collectionAPIs.fetchCreatorCollectionAPICall);
+        const response = yield call(
+            collectionAPIs.fetchCreatorCollectionAPICall,
+            action.payload,
+        );
         yield put(getCreatorCollectionSuccess(response.data));
     } catch (error) {
         yield put(getCreatorCollectionFailure(error.message));
