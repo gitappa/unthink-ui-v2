@@ -6,6 +6,7 @@ import { clearStorages } from "../../helper/utils";
 import { getUserCollectionsReset } from "../../pageComponents/Auth/redux/actions";
 import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
 import timer_clock from "../../images/kiosk/timer_clock.png";
+import { useRouter } from "next/router";
 
 const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
 
@@ -65,18 +66,15 @@ export default function useKioskSessionReminder({ time } = {}) {
     setShowSessionPopup(false);
     startSessionTimer();
   }, [startSessionTimer]);
-
+    const router = useRouter()
   const handleLogout = useCallback(async () => {
 
     try {
       // clearStorages();
       sessionStorage.removeItem("Kiosk-login");
       notifyKioskLoginChange();
-      window.location.href('/')
+      router.replace('/')
     } catch (e) {}
-
- 
-
     try {
       dispatch(getUserCollectionsReset());
       dispatch(fetchCategoriesReset());

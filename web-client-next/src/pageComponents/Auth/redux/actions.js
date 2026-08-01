@@ -178,8 +178,9 @@ export const GuestPopUpShow = (show) => ({
   payload: show,
 });
 
-export const getCreatorCollection = () => ({
+export const getCreatorCollection = (payload = {}) => ({
   type: GET_CREATOR_COLLECTIONS,
+  payload,
 });
 
 // Action on success
@@ -208,4 +209,3 @@ export const getwishlsitUserCollectionFailure = (error) => ({
   type: GET_WISHLIST_USER_COLLECTION_FAILURE,
   payload: error,
 });
-

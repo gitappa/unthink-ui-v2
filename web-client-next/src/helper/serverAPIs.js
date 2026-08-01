@@ -506,12 +506,13 @@ const fetchCollectionsAPICall = (params = {}) => {
 };
 
 // creator flow collection
-const fetchCreatorCollectionAPICall = () => {
+const fetchCreatorCollectionAPICall = (payload = {}) => {
   const url = `${auraYfretUserCollBaseUrl}${fetchCreatorCollectionsURL}`;
 
   const data = {
     store: current_store_name,
     status: PUBLISHED,
+    ...payload,
   };
 
   return apiInstance({
