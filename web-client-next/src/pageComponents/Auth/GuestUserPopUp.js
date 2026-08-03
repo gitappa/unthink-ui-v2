@@ -3,9 +3,10 @@ import { notification } from "antd";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import GuestPopUp from "./GuestPopUp";
-import { GuestPopUpShow } from "./redux/actions";
+import { getUserInfo, GuestPopUpShow } from "./redux/actions";
 import { authAPIs } from "../../helper/serverAPIs";
-import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
+import { COOKIE_TT_ID, KIOSK_LOGIN_CHANGE_EVENT, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
+import { setCookie } from "../../helper/utils";
 
 const DEFAULT_GUEST_COOKIE_EXPIRE_DAYS = 7;
 
@@ -18,6 +19,7 @@ function GuestUserPopUp({
   onClose,
   persistKioskLogin = false,
   cookieExpireDays = DEFAULT_GUEST_COOKIE_EXPIRE_DAYS,
+  isUserLogin,
 }) {
   const dispatch = useDispatch();
   const isGuestPopUpShow = useSelector(
@@ -98,6 +100,8 @@ function GuestUserPopUp({
           phone,
         });
         const userId = res?.data?.data?.user_id;
+        // console.log('userId',userId);
+        
         const registeredUserName =
           res?.data?.data?.user_name ||
           res?.data?.data?.name;
@@ -115,6 +119,10 @@ function GuestUserPopUp({
               }),
             );
             window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
+          }
+          if(!isUserLogin){
+            setCookie(COOKIE_TT_ID, userId, SIGN_IN_EXPIRE_DAYS);
+            dispatch(getUserInfo());
           }
           notification.success({
             message: "Login Successfully",
