@@ -1,655 +1,655 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./authPage.module.scss";
 import {
-	Input,
-	Form,
-	notification,
-	Result,
-	Button,
-	Spin,
-	Tooltip,
-	Alert,
+  Input,
+  Form,
+  notification,
+  Result,
+  Button,
+  Spin,
+  Tooltip,
+  Alert,
 } from "antd";
 import {
-	EyeInvisibleOutlined,
-	EyeOutlined,
-	LoadingOutlined,
-	InfoCircleOutlined,
-	MailFilled,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+  InfoCircleOutlined,
+  MailFilled,
 } from "@ant-design/icons";
 
 import { authAPIs } from "../../helper/serverAPIs";
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useNavigate } from "../../helper/useNavigate";
-import { 
-	getIdpLoginMethod,
-	getIsSellerLoggedIn,
-	setCookie,
-	setIdpSignInMethod,
-	AdminCheck,
+import {
+  getIdpLoginMethod,
+  getIsSellerLoggedIn,
+  setCookie,
+  setIdpSignInMethod,
+  AdminCheck,
 } from "../../helper/utils";
 import {
-	COOKIE_TT_ID,
-	ERR_CODE_USER_NOT_VERIFIED,
-	LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION,
-	PATH_CREATE_COLLECTION,
-	PATH_ROOT,
-	PATH_STORE,
-	ROUTES,
-	SIGN_IN_EXPIRE_DAYS,
+  COOKIE_TT_ID,
+  ERR_CODE_USER_NOT_VERIFIED,
+  LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION,
+  PATH_CREATE_COLLECTION,
+  PATH_ROOT,
+  PATH_STORE,
+  ROUTES,
+  SIGN_IN_EXPIRE_DAYS,
 } from "../../constants/codes";
 import { userSignInSetLocal, setUserId } from "../../helper/getTrackerInfo";
 import { getUserInfo } from "./redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRecommendations } from "../recommendations/redux/actions";
 import {
-	adminUserId,
-	current_store_name,
-	enable_venly,
-	isStagingEnv,
-	is_store_instance,
-	venlyChainSecretType,
+  adminUserId,
+  current_store_name,
+  enable_venly,
+  isStagingEnv,
+  is_store_instance,
+  venlyChainSecretType,
 } from "../../constants/config";
 import googleIcon from "../../images/staticpageimages/googleIcon.svg";
 import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
 import twitterIcon from "../../images/staticpageimages/twitterIcon.png";
 import {
-	checkUserRegisteredWithoutVenlyAndSave,
-	logoutVenlyUser,
-	venlyGetAccount,
-	venlyRetrieveUserInfo,
+  checkUserRegisteredWithoutVenlyAndSave,
+  logoutVenlyUser,
+  venlyGetAccount,
+  venlyRetrieveUserInfo,
 } from "../../helper/venlyUtils";
 import SignupSuccess from "./SignupSuccess";
 
 const initialFormValue = {
-	email: "",
-	phone: "",
-	password: "",
-	cPassword: "",
+  email: "",
+  phone: "",
+  password: "",
+  cPassword: "",
 };
 
 let selectedIdpHintSignIn = "";
 
- 
 export default function SignInFormSection() {
-  const router = useRouter(); 
- const redirectOnSuccessSignIn = (isSellerLoggedIn, userData, redirectPage) => {
- 
-	try {
-		// 1️⃣ PRIORITY REDIRECT (works for all users)
-		if (redirectPage === "my-products") {
-			router.push("/my-products");
-			return;
-		}
-		if (redirectPage === "create-collection") {
-		 
-			
-			router.replace("/create-collection");
-			return;
-		}
-		// 2️⃣ Normal old logic
-		if (is_store_instance) {
-			// First time user → go to welcome page
-			if (
-				userData &&
-				!(userData.first_name || userData.filters) &&
-				!(userData.attribution?.sammoon?.total_collections > 0)
-			) {
+  const router = useRouter();
+  const redirectOnSuccessSignIn = (
+    isSellerLoggedIn,
+    userData,
+    redirectPage,
+  ) => {
+    try {
+      // 1️⃣ PRIORITY REDIRECT (works for all users)
+      if (redirectPage === "my-products") {
+        router.push("/my-products");
+        return;
+      }
+      if (redirectPage === "create-collection") {
+        router.replace("/create-collection");
+        return;
+      }
+      // 2️⃣ Normal old logic
+      if (is_store_instance) {
+        // First time user → go to welcome page
+        if (
+          userData &&
+          !(userData.first_name || userData.filters) &&
+          !(userData.attribution?.sammoon?.total_collections > 0)
+        ) {
+          router.push(PATH_ROOT);
+          return;
+        }
 
+        // Seller but not visited create collection
+        if (
+          isSellerLoggedIn &&
+          !localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
+        ) {
+          router.push(PATH_CREATE_COLLECTION);
+          return;
+        }
+        // Default
+        if (userData) {
+          router.push(PATH_ROOT);
+        }
+        return;
+      }
 
-				router.push(PATH_ROOT);
-				return;
-			}
+      // Not store instance but already visited collection
+      if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
+        router.push(PATH_STORE);
+        return;
+      }
 
-			// Seller but not visited create collection
-			if (
-				isSellerLoggedIn &&
-				!localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
-			) {
-				router.push(PATH_CREATE_COLLECTION);
-				return;
-			}
-			// Default
-			if(userData){
-			router.push(PATH_ROOT);
-			}
-			return;
-		}
+      // Default for non-store
+      // router.push(PATH_CREATE_COLLECTION);
+    } catch (error) {
+      is_store_instance ? router.push(PATH_ROOT) : router.push(PATH_STORE);
+    }
+  };
 
-		// Not store instance but already visited collection
-		if (localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)) {
-			router.push(PATH_STORE);
-			return;
-		}
+  // const router = useRouter();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const params = new URLSearchParams(router.asPath.split("?")[1] || "");
+  const redirectPage = params.get("page");
 
-		// Default for non-store
-		// router.push(PATH_CREATE_COLLECTION);
+  const [hasError, setHasError] = useState("");
+  const [isSignInWithPasswordActive, setIsSignInWithPasswordActive] =
+    useState(true);
+  const [hasErrorCode, setHasErrorCode] = useState("");
 
-	} catch (error) {
+  const [successState, setSuccessState] = useState({
+    showSuccess: false,
+    showVerificationMailSent: false,
+    showSignInLinkMailSent: false,
+    showResetPasswordLinkMailSent: false,
+  });
+  const [showProcessingLoader, setShowProcessingLoader] = useState(false);
 
-		is_store_instance ? router.push(PATH_ROOT) : router.push(PATH_STORE);
-	}
-};
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const UserData = useSelector((state) => state.auth.user.data);
+  const [storeData] = useSelector((state) => [state.store.data]);
 
+  const {
+    my_products_enable: isMyProductsEnable,
+    seller_list: storeSellerList,
+    admin_list: admin_list,
+  } = storeData;
 
+  useEffect(() => {
+    setHasError("");
+  }, [isSignInWithPasswordActive]);
 
-	// const router = useRouter();
-	const navigate = useNavigate();
-	const [form] = Form.useForm();
-	const params = new URLSearchParams(router.asPath.split('?')[1] || '');
-	const redirectPage = params.get("page");
+  useEffect(() => {
+    selectedIdpHintSignIn = getIdpLoginMethod();
+  }, []);
 
+  const isAdminLoggedIn = AdminCheck(
+    user?.data,
+    current_store_name,
+    adminUserId,
+    admin_list,
+  );
 
-	const [hasError, setHasError] = useState("");
-	const [isSignInWithPasswordActive, setIsSignInWithPasswordActive] =
-		useState(true);
-	const [hasErrorCode, setHasErrorCode] = useState("");
+  const isSellerLoggedIn = useMemo(
+    () =>
+      (isAdminLoggedIn ||
+        getIsSellerLoggedIn(storeSellerList, user?.data.emailId)) &&
+      isMyProductsEnable,
+    [isAdminLoggedIn, isMyProductsEnable, storeSellerList, user?.data.emailId],
+  );
 
-	const [successState, setSuccessState] = useState({
-		showSuccess: false,
-		showVerificationMailSent: false,
-		showSignInLinkMailSent: false,
-		showResetPasswordLinkMailSent: false,
-	});
-	const [showProcessingLoader, setShowProcessingLoader] = useState(false);
+  useEffect(() => {
+    if (user.isUserLogin) {
+      setIdpSignInMethod(selectedIdpHintSignIn); // store sign in method to show message when user comes back again to sign in
+      redirectOnSuccessSignIn(isSellerLoggedIn, user.data, redirectPage);
 
-	const dispatch = useDispatch();
-	const { user } = useSelector((state) => state.auth);
-	const UserData = useSelector((state) =>  state.auth.user.data)
-	const [storeData] = useSelector((state) => [state.store.data]);
- 
+      // if (!(user.data?.first_name || user.data.filters)) {
+      // 	navigate(WELCOME);
+      // } else {
+      // 	is_store_instance ? navigate("/") : navigate("/store/");
+      // }
+    }
+  }, [user.isUserLogin, UserData]);
 
-	const {
-		my_products_enable: isMyProductsEnable,
-		seller_list: storeSellerList,
-		admin_list: admin_list
-	} = storeData;
+  const handleUserSignInSuccess = (userId, emailId) => {
+    // START
+    userSignInSetLocal(userId, emailId);
+    // END
+    dispatch(getUserInfo());
+    dispatch(fetchRecommendations());
+    // onSuccessSignIn(); // handled with useEffect // REMOVE
+    notification["success"]({
+      // redirect user to store page using useEffect
+      message: "Sign In Success!",
+      duration: 3,
+    });
+    resetErrorCode();
+    setUserId(userId); // set login user id
+  };
 
-	useEffect(() => {
-		setHasError("");
-	}, [isSignInWithPasswordActive]);
+  const resetErrorCode = () => {
+    setHasError("");
+    setHasErrorCode("");
+  };
 
-	useEffect(() => {
-		selectedIdpHintSignIn = getIdpLoginMethod();
-	}, []);
+  const onFinish = async (values) => {
+    if (!isSignInWithPasswordActive) {
+      // to continue with get link on mail and stop the password form submit
+      onSignInWithLinkRequest();
+      return;
+    }
 
+    selectedIdpHintSignIn = "";
+    const { password } = values;
+    const email = values.email?.trim();
+    const phone = values.phone?.trim();
+    setShowProcessingLoader(true);
+    try {
+      const res = await authAPIs.signInAPICall({
+        email,
+        phone,
+        password,
+      });
+      if (res.data?.status_code) {
+        if (
+          res.data.status_code === 200 &&
+          res.data.data?.user_id &&
+          (res.data.data?.emailId || res.data.data?.phone)
+        ) {
+          handleUserSignInSuccess(res.data.data.user_id, res.data.data.emailId);
+          // navigate(PATH_ROOT);
+          resetErrorCode();
+        } else {
+          if (res.data.status_desc) setHasError(res.data.status_desc);
+          if (res.data.err_code) setHasErrorCode(res.data.err_code);
+        }
+      }
+    } catch (e) {
+      setHasError("Failed to sign in");
+      notification["error"]({
+        message: e.response?.data.status_desc,
+      });
+    }
+    setShowProcessingLoader(false);
+  };
 
-	const isAdminLoggedIn = AdminCheck(user?.data, current_store_name, adminUserId, admin_list);
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
 
- 
+  const onResetPasswordRequest = async () => {
+    try {
+      setShowProcessingLoader(true);
+      const email = form.getFieldValue("email")?.trim();
+      if (email) {
+        const res = await authAPIs.resetPasswordRequestAPICall({
+          email,
+        });
+        if (res.data.status_code === 200) {
+          setSuccessState({
+            ...successState,
+            showSuccess: true,
+            showResetPasswordLinkMailSent: true,
+          });
+          resetErrorCode();
+        } else {
+          if (res.data.status_desc) setHasError(res.data.status_desc);
+          if (res.data.err_code) setHasErrorCode(res.data.err_code);
+        }
+      } else {
+        form.setFields([
+          {
+            name: "email",
+            errors: ["Please enter your email to reset password"],
+          },
+        ]);
+      }
+    } catch (error) {
+      notification["error"]({
+        message: error.response.data.status_desc,
+      });
+    } finally {
+      setShowProcessingLoader(false);
+    }
+  };
 
+  const onSignInWithLinkRequest = async () => {
+    try {
+      setHasError(() => "");
+      setShowProcessingLoader(true);
+      await form.validateFields(["email", "phone"]);
+      const email = form.getFieldValue("email")?.trim();
+      const phone = form.getFieldValue("phone")?.trim();
+      if (email || phone) {
+        const res = await authAPIs.signInWithLinkRequestAPICall({
+          email,
+          phone,
+        });
+        if (res.data.status_code === 200) {
+          setSuccessState({
+            ...successState,
+            showSuccess: true,
+            showSignInLinkMailSent: true,
+          });
+          resetErrorCode();
+          setUserId(res.data.data.user_id); // set login user id
+        } else {
+          if (res.data.status_desc) setHasError(() => res.data.status_desc);
+          if (res.data.err_code) setHasErrorCode(res.data.err_code);
+        }
+      }
+    } catch (error) {
+      notification["error"]({
+        message: error.response.data.status_desc,
+      });
+      setHasError(() => "Unable to process, Please try again after sometime");
+    } finally {
+      setShowProcessingLoader(false);
+    }
+  };
 
-	const isSellerLoggedIn = useMemo(
-		() =>
-			(isAdminLoggedIn ||
-				getIsSellerLoggedIn(storeSellerList, user?.data.emailId)) &&
-			isMyProductsEnable,
-		[isAdminLoggedIn, isMyProductsEnable, storeSellerList, user?.data.emailId]
-	);
+  const onResendVerificationMail = async () => {
+    try {
+      setShowProcessingLoader(true);
+      form.validateFields(["email"]);
+      if (form.getFieldValue("email")) {
+        const res = await authAPIs.resendVerificationMail({
+          email: form.getFieldValue("email"),
+        });
+        if (res.data.status_code === 200) {
+          setSuccessState({
+            ...successState,
+            showSuccess: true,
+            showVerificationMailSent: true,
+          });
+          resetErrorCode();
+        } else {
+          if (res.data.status_desc) setHasError(res.data.status_desc);
+          if (res.data.err_code) setHasErrorCode(res.data.err_code);
+        }
+      }
+    } catch (error) {
+    } finally {
+      setShowProcessingLoader(false);
+    }
+  };
 
-	useEffect(() => {
-		if (user.isUserLogin) {
-			setIdpSignInMethod(selectedIdpHintSignIn); // store sign in method to show message when user comes back again to sign in
-			redirectOnSuccessSignIn(isSellerLoggedIn, user.data, redirectPage);
-			 
-			// if (!(user.data?.first_name || user.data.filters)) {
-			// 	navigate(WELCOME);
-			// } else {
-			// 	is_store_instance ? navigate("/") : navigate("/store/");
-			// }
-		}
-	}, [user.isUserLogin,UserData]);
+  // keeping the venly sessions
+  // useEffect(() => {
+  // 	try {
+  // 		if (window.venlyConnect?.auth) {
+  // 			logoutVenlyUser();
+  // 		}
+  // 	} catch {
+  // 		console.log("wallet error");
+  // 	}
+  // }, [window.venlyConnect]);
 
-	const handleUserSignInSuccess = (userId, emailId) => {
-		// START
-		userSignInSetLocal(userId, emailId);
-		// END
-		dispatch(getUserInfo());
-		dispatch(fetchRecommendations());
-		// onSuccessSignIn(); // handled with useEffect // REMOVE
-		notification["success"]({
-			// redirect user to store page using useEffect
-			message: "Sign In Success!",
-			duration: 3,
-		});
-		resetErrorCode();
-		setUserId(userId); // set login user id
-	};
+  // const connectToVenly = (idpHint) => {
+  // 	selectedIdpHintSignIn = idpHint;
+  // 	try {
+  // 		// Check if a user is authenticated. If not, show the Sign In form
+  // 		venlyGetAccount(idpHint, venlyChainSecretType).then(async (result) => {
+  // 			if (
+  // 				result &&
+  // 				result.isAuthenticated &&
+  // 				result.auth &&
+  // 				result.auth.subject
+  // 			) {
+  // 				setShowProcessingLoader(true);
+  // 				const venlyUserInfo = await venlyRetrieveUserInfo();
+  // 				if (venlyUserInfo && venlyUserInfo.email) {
+  // 					const isUserRegistered =
+  // 						await checkUserRegisteredWithoutVenlyAndSave(
+  // 							venlyUserInfo.email,
+  // 							handleUserSignInSuccess,
+  // 							() => setHasError("user not exists!")
+  // 						);
+  // 					if (!isUserRegistered) {
+  // 						const res = await authAPIs.signInWithVenlyAPICall(
+  // 							result.auth.subject
+  // 						);
 
-	const resetErrorCode = () => {
-		setHasError("");
-		setHasErrorCode("");
-	};
+  // 						if (
+  // 							res?.data?.status_code === 200 &&
+  // 							res?.data?.data?.user_id &&
+  // 							res?.data?.data?.emailId
+  // 						) {
+  // 							handleUserSignInSuccess(
+  // 								res.data.data.user_id,
+  // 								res.data.data.emailId
+  // 							);
+  // 						} else if (
+  // 							[
+  // 								"we couldn't find data matching to this user ",
+  // 								"we couldn't find data matching to this userId ",
+  // 							].includes(res?.data?.status_desc)
+  // 						) {
+  // 							navigate("/signup");
+  // 						}
+  // 					}
+  // 				}
+  // 				setShowProcessingLoader(false);
+  // 			}
 
-	const onFinish = async (values) => {
+  // 			// window.venlyConnect.flows.authenticate({ idpHint }).then((result) =>
+  // 			// return result.authenticated(async (auth) => {});
 
-		if (!isSignInWithPasswordActive) {
-			
-			// to continue with get link on mail and stop the password form submit
-			onSignInWithLinkRequest();
-			return;
-		}
+  // 			// .notAuthenticated(() => {
+  // 			// 	notification.warning({ message: "Wallet disconnected" });
+  // 			// });
+  // 		});
+  // 	} catch (error) {}
+  // };
 
-		selectedIdpHintSignIn = "";
-		const { password } = values;
-		const email = values.email?.trim();
-		const phone = values.phone?.trim();
-		setShowProcessingLoader(true);
-		try {
-			const res = await authAPIs.signInAPICall({
-				email,
-				phone,
-				password,
-			});
-			if (res.data?.status_code) {
-				if (
-					res.data.status_code === 200 &&
-					res.data.data?.user_id &&
-					(res.data.data?.emailId || res.data.data?.phone)
-				) {
-					handleUserSignInSuccess(res.data.data.user_id, res.data.data.emailId);
-					// navigate(PATH_ROOT);
-					resetErrorCode();
-				} else {
-					if (res.data.status_desc) setHasError(res.data.status_desc);
-					if (res.data.err_code) setHasErrorCode(res.data.err_code);
-				}
-			}
-		} catch(e) {
-			setHasError("Failed to sign in");
-			notification["error"]({
-			message: e.response?.data.status_desc,
-		})
-			
-		}
-		setShowProcessingLoader(false);
-	};
+  // HIDDEN VENLY from sign in for now
+  // const greetingMessage = useMemo(() => {
+  // 	switch (getIdpLoginMethod()) {
+  // 		case "password":
+  // 			return "It looks like you signed in with Venly the last time! Use the same method to sign in again.";
 
-	const onFinishFailed = (errorInfo) => {
-		console.log("Failed:", errorInfo);
-	};
+  // 		case "google":
+  // 			return "It looks like you signed in with Google the last time! Use the same method to sign in again.";
 
-	const onResetPasswordRequest = async () => {
-		try {
-			setShowProcessingLoader(true);
-			const email = form.getFieldValue("email")?.trim();
-			if (email) {
-				const res = await authAPIs.resetPasswordRequestAPICall({
-					email,
-				});
-				if (res.data.status_code === 200) {
-					setSuccessState({
-						...successState,
-						showSuccess: true,
-						showResetPasswordLinkMailSent: true,
-					});
-					resetErrorCode();
-				} else {
-					if (res.data.status_desc) setHasError(res.data.status_desc);
-					if (res.data.err_code) setHasErrorCode(res.data.err_code);
-				}
-			} else {
-				form.setFields([
-					{
-						name: "email",
-						errors: ["Please enter your email to reset password"],
-					},
-				]);
-			}
-		} catch (error) {
-				notification["error"]({
-			message: error.response.data.status_desc,
-		})
-		} finally {
-			setShowProcessingLoader(false);
-		}
-	};
+  // 		case "facebook":
+  // 			return "Looks like you signed in with Facebook before, try that to sign in again";
 
-	const onSignInWithLinkRequest = async () => {
+  // 		case "twitter":
+  // 			return "Looks like you signed in with Twitter before, try that to sign in again";
 
+  // 		default:
+  // 			break;
+  // 	}
 
-		try {
-			setHasError(() => "");
-			setShowProcessingLoader(true);
-			await form.validateFields(["email", "phone"]);
-			const email = form.getFieldValue("email")?.trim();
-			const phone = form.getFieldValue("phone")?.trim();
-			if (email || phone) {
-				const res = await authAPIs.signInWithLinkRequestAPICall({
-					email,
-					phone,
-				});
-				if (res.data.status_code === 200) {
-					setSuccessState({
-						...successState,
-						showSuccess: true,
-						showSignInLinkMailSent: true,
-					});
-					resetErrorCode();
-					setUserId(res.data.data.user_id); // set login user id
-				} else {
-					if (res.data.status_desc) setHasError(() => res.data.status_desc);
-					if (res.data.err_code) setHasErrorCode(res.data.err_code);
-				}
-			}
-		} catch (error) {
-			notification["error"]({
-			message: error.response.data.status_desc})			
-			setHasError(() => "Unable to process, Please try again after sometime");
-		} finally {
-			setShowProcessingLoader(false);
-		}
-	};
+  // 	return "";
+  // }, []);
 
-	const onResendVerificationMail = async () => {
-		try {
-			setShowProcessingLoader(true);
-			form.validateFields(["email"]);
-			if (form.getFieldValue("email")) {
-				const res = await authAPIs.resendVerificationMail({
-					email: form.getFieldValue("email"),
-				});
-				if (res.data.status_code === 200) {
-					setSuccessState({
-						...successState,
-						showSuccess: true,
-						showVerificationMailSent: true,
-					});
-					resetErrorCode();
-				} else {
-					if (res.data.status_desc) setHasError(res.data.status_desc);
-					if (res.data.err_code) setHasErrorCode(res.data.err_code);
-				}
-			}
-		} catch (error) {
-		} finally {
-			setShowProcessingLoader(false);
-		}
-	};
+  const SuccessMessage = () => {
+    const [email, setEmail] = useState("");
 
-	// keeping the venly sessions
-	// useEffect(() => {
-	// 	try {
-	// 		if (window.venlyConnect?.auth) {
-	// 			logoutVenlyUser();
-	// 		}
-	// 	} catch {
-	// 		console.log("wallet error");
-	// 	}
-	// }, [window.venlyConnect]);
+    useEffect(() => {
+      // Get email only on client side to avoid hydration mismatch
+      setEmail(form.getFieldValue("email") || "");
+    }, []);
 
-	// const connectToVenly = (idpHint) => {
-	// 	selectedIdpHintSignIn = idpHint;
-	// 	try {
-	// 		// Check if a user is authenticated. If not, show the Sign In form
-	// 		venlyGetAccount(idpHint, venlyChainSecretType).then(async (result) => {
-	// 			if (
-	// 				result &&
-	// 				result.isAuthenticated &&
-	// 				result.auth &&
-	// 				result.auth.subject
-	// 			) {
-	// 				setShowProcessingLoader(true);
-	// 				const venlyUserInfo = await venlyRetrieveUserInfo();
-	// 				if (venlyUserInfo && venlyUserInfo.email) {
-	// 					const isUserRegistered =
-	// 						await checkUserRegisteredWithoutVenlyAndSave(
-	// 							venlyUserInfo.email,
-	// 							handleUserSignInSuccess,
-	// 							() => setHasError("user not exists!")
-	// 						);
-	// 					if (!isUserRegistered) {
-	// 						const res = await authAPIs.signInWithVenlyAPICall(
-	// 							result.auth.subject
-	// 						);
-
-	// 						if (
-	// 							res?.data?.status_code === 200 &&
-	// 							res?.data?.data?.user_id &&
-	// 							res?.data?.data?.emailId
-	// 						) {
-	// 							handleUserSignInSuccess(
-	// 								res.data.data.user_id,
-	// 								res.data.data.emailId
-	// 							);
-	// 						} else if (
-	// 							[
-	// 								"we couldn't find data matching to this user ",
-	// 								"we couldn't find data matching to this userId ",
-	// 							].includes(res?.data?.status_desc)
-	// 						) {
-	// 							navigate("/signup");
-	// 						}
-	// 					}
-	// 				}
-	// 				setShowProcessingLoader(false);
-	// 			}
-
-	// 			// window.venlyConnect.flows.authenticate({ idpHint }).then((result) =>
-	// 			// return result.authenticated(async (auth) => {});
-
-	// 			// .notAuthenticated(() => {
-	// 			// 	notification.warning({ message: "Wallet disconnected" });
-	// 			// });
-	// 		});
-	// 	} catch (error) {}
-	// };
-
-	// HIDDEN VENLY from sign in for now
-	// const greetingMessage = useMemo(() => {
-	// 	switch (getIdpLoginMethod()) {
-	// 		case "password":
-	// 			return "It looks like you signed in with Venly the last time! Use the same method to sign in again.";
-
-	// 		case "google":
-	// 			return "It looks like you signed in with Google the last time! Use the same method to sign in again.";
-
-	// 		case "facebook":
-	// 			return "Looks like you signed in with Facebook before, try that to sign in again";
-
-	// 		case "twitter":
-	// 			return "Looks like you signed in with Twitter before, try that to sign in again";
-
-	// 		default:
-	// 			break;
-	// 	}
-
-	// 	return "";
-	// }, []);
-
-	const SuccessMessage = () => {
-		const [email, setEmail] = useState("");
-
-		useEffect(() => {
-			// Get email only on client side to avoid hydration mismatch
-			setEmail(form.getFieldValue("email") || "");
-		}, []);
-
-		if (successState.showVerificationMailSent) {
-			return (
-				<div>
-					{/* // used tp show the verification mail sent screen */}
-					<SignupSuccess
-						email={email}
-					// showSignInButton // remove because it is already on sign in page
-					/>
-				</div>
-			);
-		} else if (successState.showSignInLinkMailSent) {
-			return (
-				<div>
-					<Result
-						className={styles.resultContainer}
-						status='success'
-						title={
-							<span className={styles.textWhite}>
-								We have sent a link to {email}, please use that to sign in to
-								your account.
-							</span>
-						}
-						subTitle={
-							<div className={`${styles.textWhite} ${styles.mt3}`}>
-								{/* <p>
+    if (successState.showVerificationMailSent) {
+      return (
+        <div>
+          {/* // used tp show the verification mail sent screen */}
+          <SignupSuccess
+            email={email}
+            // showSignInButton // remove because it is already on sign in page
+          />
+        </div>
+      );
+    } else if (successState.showSignInLinkMailSent) {
+      return (
+        <div>
+          <Result
+            className={styles.resultContainer}
+            status="success"
+            title={
+              <span className={styles.textWhite}>
+                We have sent a link to {email}, please use that to sign in to
+                your account.
+              </span>
+            }
+            subTitle={
+              <div className={`${styles.textWhite} ${styles.mt3}`}>
+                {/* <p>
 									Please click on the link that has just been sent to your email
 									account for quick Sign In without password.
 								</p> */}
-							</div>
-						}
-					/>
-				</div>
-			);
-		} else if (successState.showResetPasswordLinkMailSent) {
-			return (
-				<div>
-					<Result
-						className={styles.resultContainer}
-						status='success'
-						title={<span className={styles.textWhite}>Success!</span>}
-						subTitle={
-							<div className={styles.textWhite}>
-								<p style={{ margin: 0 }}>
-									A reset password link has been sent to your Email Account.
-								</p>
-								<p>
-									Please click on the link that has just been sent to your email
-									account to reset your password.
-								</p>
-							</div>
-						}
-					/>
-				</div>
-			);
-		}
+              </div>
+            }
+          />
+        </div>
+      );
+    } else if (successState.showResetPasswordLinkMailSent) {
+      return (
+        <div>
+          <Result
+            className={styles.resultContainer}
+            status="success"
+            title={<span className={styles.textWhite}>Success!</span>}
+            subTitle={
+              <div className={styles.textWhite}>
+                <p style={{ margin: 0 }}>
+                  A reset password link has been sent to your Email Account.
+                </p>
+                <p>
+                  Please click on the link that has just been sent to your email
+                  account to reset your password.
+                </p>
+              </div>
+            }
+          />
+        </div>
+      );
+    }
 
-		return null;
-	};
+    return null;
+  };
 
-	return (
-		<div className={styles.root}>
-			{!successState.showSuccess ? (
-				<div className={` ${styles.contact_us_container} ${styles.container}`}>
-					<div className={`contact_us_inner_container ${styles.innerContainer}`}>
-						<h1 className={styles.heading}>
-							Welcome Back
-						</h1>
-						{/* HIDDEN VENLY from sign in for now */}
-						{/* {greetingMessage ? (
+  return (
+    <div className={styles.root}>
+      {!successState.showSuccess ? (
+        <div className={` ${styles.contact_us_container} ${styles.container}`}>
+          <div
+            className={`contact_us_inner_container ${styles.innerContainer}`}
+          >
+            <h1 className={styles.heading}>Welcome Back</h1>
+            {/* HIDDEN VENLY from sign in for now */}
+            {/* {greetingMessage ? (
 							<Alert
 								message={greetingMessage}
 								type='info'
 								className='max-w-xl-1 mt-4 mx-auto rounded-md w-max text-base'
 							/>
 						) : null} */}
-						<div className={styles.formWrapper}>
-							<Form
-								name='signIn'
-								form={form}
-								initialValues={initialFormValue}
-								onFinish={onFinish}
-								onFinishFailed={onFinishFailed}
-								autoComplete='off'>
-								<Form.Item
-									name='email'
-									dependencies={["phone"]}
-									rules={[
-										{
-											validator: (_, value) => {
-												const email = value?.trim();
-												const phone = form.getFieldValue("phone")?.trim();
+            <div className={styles.formWrapper}>
+              <Form
+                name="signIn"
+                form={form}
+                initialValues={initialFormValue}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+              >
+				<div className="md:flex items-center w-full gap-2.5">
+                <Form.Item
+				className="w-full"
+                  name="email"
+                  dependencies={["phone"]}
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        const email = value?.trim();
+                        const phone = form.getFieldValue("phone")?.trim();
 
-												if (email || phone) {
-													return Promise.resolve();
-												}
+                        if (email || phone) {
+                          return Promise.resolve();
+                        }
 
-												return Promise.reject(
-													new Error("Please enter your email or phone number!")
-												);
-											},
-										},
-									]}>
-									<Input
-										className={styles.input}
-										placeholder='Enter your email'
-									/>
-								</Form.Item>
-								<Form.Item
-									name='phone'
-									dependencies={["email"]}
-									rules={[
-										{
-											validator: (_, value) => {
-												const phone = value?.trim();
-												const email = form.getFieldValue("email")?.trim();
+                        return Promise.reject(
+                          new Error("Please enter your email or phone number!"),
+                        );
+                      },
+                    },
+                  ]}
+                >
+                  <Input
+                    className={styles.input}
+                    placeholder="Enter your email"
+                  />
+                </Form.Item>
+                <Form.Item
+				className="w-full"
 
-												if (email || phone) {
-													return Promise.resolve();
-												}
+                  name="phone"
+                  dependencies={["email"]}
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        const phone = value?.trim();
+                        const email = form.getFieldValue("email")?.trim();
 
-												return Promise.reject(
-													new Error("Please enter your email or phone number!")
-												);
-											},
-										},
-										{
-											pattern: /^[0-9+\s()-]*$/,
-											message: "Please enter a valid phone number!",
-										},
-									]}>
-									<Input
-										className={styles.input}
-										placeholder='Enter your phone number'
-										type='tel'
-									/>
-								</Form.Item>
-								{isSignInWithPasswordActive && (
-									<>
-										<Form.Item
-											name='password'
-											rules={[
-												{
-													required: true,
-													message: "Please enter your Password!",
-												},
-											]}
-											className=''>
-											<Input.Password
-												className={styles.input}
-												placeholder='Enter your password'
-												iconRender={(visible) =>
-													visible ? (
-														<EyeOutlined style={{ color: "black" }} />
-													) : (
-														<EyeInvisibleOutlined style={{ color: "black" }} />
-													)
-												}
-											/>
-										</Form.Item>
-										<div className={styles.actionsContainer}>
-											{!!hasError && (
-												<div className=''>
-													{/* {hasErrorCode === ERR_CODE_USER_NOT_VERIFIED && ( */}
-													<Button
-														htmlType='button'
-														size='large'
-														type='link'
-														className={styles.resendButton}
-														onClick={onResendVerificationMail}
-														title='Click here to resend the verification mail'>
-														Resend verification mail
-													</Button>
-													{/* )} */}
-												</div>
-											)}
-											<p
-												className={styles.resetPasswordText}
-												onClick={onResetPasswordRequest}>
-												Reset Password
-											</p>
-										</div>
-									</>
-								)}
-								{/* {!!hasError && (
+                        if (email || phone) {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject(
+                          new Error("Please enter your email or phone number!"),
+                        );
+                      },
+                    },
+                    {
+                      pattern: /^[0-9+\s()-]*$/,
+                      message: "Please enter a valid phone number!",
+                    },
+                  ]}
+                >
+                  <Input
+                    className={styles.input}
+                    placeholder="Enter your phone number"
+                    type="tel"
+                  />
+                </Form.Item>
+				</div>
+                {isSignInWithPasswordActive && (
+                  <>
+                    <Form.Item
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter your Password!",
+                        },
+                      ]}
+                      className=""
+                    >
+                      <Input.Password
+                        className={styles.input}
+                        placeholder="Enter your password"
+                        iconRender={(visible) =>
+                          visible ? (
+                            <EyeOutlined style={{ color: "black" }} />
+                          ) : (
+                            <EyeInvisibleOutlined style={{ color: "black" }} />
+                          )
+                        }
+                      />
+                    </Form.Item>
+                    <div className={styles.actionsContainer}>
+                      {!!hasError && (
+                        <div className="">
+                          {/* {hasErrorCode === ERR_CODE_USER_NOT_VERIFIED && ( */}
+                          <Button
+                            htmlType="button"
+                            size="large"
+                            type="link"
+                            className={styles.resendButton}
+                            onClick={onResendVerificationMail}
+                            title="Click here to resend the verification mail"
+                          >
+                            Resend verification mail
+                          </Button>
+                          {/* )} */}
+                        </div>
+                      )}
+                      <p
+                        className={styles.resetPasswordText}
+                        onClick={onResetPasswordRequest}
+                      >
+                        Reset Password
+                      </p>
+                    </div>
+                  </>
+                )}
+                {/* {!!hasError && (
 									<div className={styles.alertWrapper}>
 										<p className='text-red-500 h-5'>{hasError}</p>
 										<Alert
@@ -660,61 +660,65 @@ export default function SignInFormSection() {
 									</div>
 								)} */}
 
-								<Form.Item>
-									<div className={styles.submitButtonContainer}>
-										{isSignInWithPasswordActive ? (
-											<Button
-												htmlType='submit'
-												size='large'
-												className={`loading-button ${styles.signInButton}`}>
-												Sign In
-											</Button>
-										) : (
-											<Button
-												htmlType='button'
-												size='large'
-												className={`loading-button ${styles.signInLinkButton}`}
-												onClick={() => setIsSignInWithPasswordActive(true)}>
-												Sign In with password	
-											</Button>
-										)}
+                <Form.Item>
+                  <div className={styles.submitButtonContainer}>
+                    {isSignInWithPasswordActive ? (
+                      <Button
+                        htmlType="submit"
+                        size="large"
+                        className={`loading-button ${styles.signInButton}`}
+                      >
+                        Sign In
+                      </Button>
+                    ) : (
+                      <Button
+                        htmlType="button"
+                        size="large"
+                        className={`loading-button ${styles.signInLinkButton}`}
+                        onClick={() => setIsSignInWithPasswordActive(true)}
+                      >
+                        Sign In with password
+                      </Button>
+                    )}
 
-										<div className={styles.submitButtonContainer}>
-											<p className={styles.orText}>Or</p>
-										</div>
+                    <div className={styles.submitButtonContainer}>
+                      <p className={styles.orText}>Or</p>
+                    </div>
 
-										{isSignInWithPasswordActive ? (
-											<div className={styles.flex}>
-												<Button
-													htmlType='button'
-													size='large'
-													className={`loading-button ${styles.signInLinkButton}`}
-													onClick={() => setIsSignInWithPasswordActive(false)}>
-													Get a sign-in link via email
-												</Button>
-												{/* <p
+                    {isSignInWithPasswordActive ? (
+                      <div className={styles.flex}>
+                        <Button
+                          htmlType="button"
+                          size="large"
+                          className={`loading-button ${styles.signInLinkButton}`}
+                          onClick={() => setIsSignInWithPasswordActive(false)}
+                        >
+                          Get a sign-in link via email
+                        </Button>
+                        {/* <p
 													className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'
 													onClick={() => setIsSignInWithPasswordActive(false)}>
 													Get a sign-in link via email
 												</p> */}
-											</div>
-										) : (
-											<div className={styles.flex}>
-												<Button
-													htmlType='submit'
-													size='large'
-													className={`loading-button ${styles.signInLinkButton}`}>
-													Get a sign-in link via email
-												</Button>
+                      </div>
+                    ) : (
+                      <div className={styles.flex}>
+                        <Button
+                          htmlType="submit"
+                          size="large"
+                          className={`loading-button ${styles.signInLinkButton}`}
+                        >
+                          Get a sign-in link via email
+                        </Button>
 
-												{/* <p className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'>
+                        {/* <p className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'>
 													Sign In with password
 												</p> */}
-											</div>
-										)}
+                      </div>
+                    )}
 
-										{/* HIDDEN VENLY from sign in */}
-										{/* {enable_venly && (
+                    {/* HIDDEN VENLY from sign in */}
+                    {/* {enable_venly && (
 											<div className={styles.venlyContainer}>
 												<p className={styles.orText}>Or</p>
 												<div className={styles.venlyButtonContainer}>
@@ -777,9 +781,9 @@ export default function SignInFormSection() {
 												</div>
 											</div>
 										)} */}
-									</div>
-								</Form.Item>
-								{/* <div className={styles.signinLinkContainer}>
+                  </div>
+                </Form.Item>
+                {/* <div className={styles.signinLinkContainer}>
 									<Link className={styles.signinLink} href='/signup'>
 										New User?{" "}
 										<span className={styles.signinSpan}>
@@ -787,18 +791,20 @@ export default function SignInFormSection() {
 										</span>
 									</Link>
 								</div> */}
-							</Form>
-						</div>
-					</div>
-				</div>
-			) : (
-				<SuccessMessage />
-			)}
-			{showProcessingLoader && (
-				<div className={styles.loaderOverlay}>
-					<Spin indicator={<LoadingOutlined className={styles.loaderIcon} spin />} />
-				</div>
-			)}
-		</div>
-	);
+              </Form>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <SuccessMessage />
+      )}
+      {showProcessingLoader && (
+        <div className={styles.loaderOverlay}>
+          <Spin
+            indicator={<LoadingOutlined className={styles.loaderIcon} spin />}
+          />
+        </div>
+      )}
+    </div>
+  );
 }

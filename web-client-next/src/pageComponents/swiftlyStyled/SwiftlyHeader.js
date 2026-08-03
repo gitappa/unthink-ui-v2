@@ -229,7 +229,7 @@ const SwiftlyHeader = ({
                 Collections
               </button>
 
-              {currentUser?.emailId ? (
+              {currentUser?.emailId || currentUser?.phone ? (
                 <Tooltip title="My Wishlist">
                   <FaRegHeart
                     style={{
