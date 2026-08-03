@@ -238,7 +238,11 @@ const ProductDetails = ({ params, ...props }) => {
 
       const kioskLoginUserId = kioskLogin?.user_id;
 
-      if (isSave && !kioskLoginUserId && !isGuestSubmit && hasKioskAccess) {
+      if (
+        isSave &&
+        !isGuestSubmit &&
+        (!isUserLogin || (hasKioskAccess && !kioskLoginUserId))
+      ) {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
@@ -258,7 +262,7 @@ const ProductDetails = ({ params, ...props }) => {
           //     }
 
           //     }
-          const login_userID = kioskLogin?.user_id || authUserId;
+          const login_userID = userId || kioskLoginUserId || authUserId;
           dispatch(
             addProductToWishlistCollection({
               mfr_code: productDetails?.mfr_code,
@@ -287,6 +291,8 @@ const ProductDetails = ({ params, ...props }) => {
       authUser,
       isUserLogin,
       dispatch,
+      hasKioskAccess,
+      authUserId,
       kioskLogin?.user_id,
       storeData,
       productDetails,
@@ -1539,6 +1545,7 @@ const ProductDetails = ({ params, ...props }) => {
         isOpen={isPopupShow}
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name}
+        isUserLogin ={isUserLogin}
         persistKioskLogin
         onSuccess={async ({ userId, email, phone }) => {
           if (pendingGuestAction?.type === "cart") {

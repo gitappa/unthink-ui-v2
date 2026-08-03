@@ -6,3 +6,4 @@ lg:text-lg md:text-base text-sm  - button
 
 try-kiosk222@yopmail.com
 -178160276779721
+giva_indiranagar2_hs@unthink.ai

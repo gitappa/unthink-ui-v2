@@ -134,19 +134,19 @@ const CategoriesList = ({
 console.log('infUser',infUser);
 
 					if (is_store_instance && (infUser?.emailId || infUser?.phone)  && infUser.user_name) {
-						const starred = !seller_list.includes(infUser.emailId);
+						const starred = !seller_list.includes(infUser?.emailId ||infUser?.phone);
 
 						let sellerList;
 						let associateSeller;
 						// let newSellerDetails = { ...sellerDetails };
 						if (starred) {
-							sellerList = seller_list.concat(infUser.emailId);
-							associateSeller = associate_seller.concat(infUser.emailId);
+							sellerList = seller_list.concat(infUser?.emailId ||infUser?.phone );
+							associateSeller = associate_seller.concat(infUser?.emailId ||infUser?.phone  );
 							// newSellerDetails[infUser.user_name] = infUser.sellerDetails;
 						} else {
-							sellerList = seller_list.filter((s) => s !== infUser.emailId);
+							sellerList = seller_list.filter((s) => s !== (infUser?.emailId ||infUser?.phone) );
 							associateSeller = associate_seller.filter(
-								(a) => a !== infUser.emailId
+								(a) => a !== (infUser?.emailId ||infUser?.phone )
 							);
 							// newSellerDetails[infUser.user_name] = undefined;
 						}
@@ -335,7 +335,7 @@ console.log('infUser',infUser);
 															categoryData={data}
 															starred={
 																is_store_instance
-																	? seller_list.includes(data.emailId)
+																	? seller_list.includes(data?.emailId || data?.phone)
 																	: data.starred
 															}
 															isCreator={creators.includes(data.emailId)}
