@@ -15,6 +15,7 @@ import {
 } from "@ant-design/icons";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
 import { message } from "antd";
+import { useRouter } from "next/router";
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
 
 const INITIAL_COLLECTION_QR_STATE = {
@@ -38,7 +39,7 @@ const KIOSK_COLLECTION_ACTIONS = [
     key: "cart",
     label: "Cart",
     pathPrefix: "my_cart",
-    modalTitle: "Cart QR",
+    modalTitle: "My Cart ",
     emptyMessage: "No items in the cart. Please add items to your cart.",
   },
   {
@@ -189,6 +190,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
   const [kioskLogin, setKioskLogin] = useState(null);
   const kiosklogin = getStoredKioskLoginUserId();
   // console.log('kioskLogin',kioskLogin);
+  const router = useRouter()
   
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -216,6 +218,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       setStatus("");
       setIsDropdownOpen(false);
       syncKioskLogin(null);
+      router.replace('/')
       // notifyKioskLoginChange();
     },
     [syncKioskLogin],
