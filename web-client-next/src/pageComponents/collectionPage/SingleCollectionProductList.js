@@ -378,6 +378,7 @@ const url = window.location.pathname === '/my-profile/'
 
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [pendingProductsToAdd, setPendingProductsToAdd] = useState([]);
+  const [pendingAddOptions, setPendingAddOptions] = useState({});
 
   // console.log("isPopupShow", isPopupShow);
 
@@ -405,13 +406,14 @@ const url = window.location.pathname === '/my-profile/'
     ],
   );
 
-  const onAddSelectedProductsToCollection = (e, product) => {
+  const onAddSelectedProductsToCollection = async (e, product, options = {}) => {
     e?.stopPropagation();
     const productsToAdd = resolveProductsToAdd(product);
     const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
     // const isGuestUserSkip = Cookies.get('isGuestSkip') === 'true';
     if (!isUserLogin && !isUserLoginCokkies) {
       setPendingProductsToAdd(productsToAdd);
+      setPendingAddOptions(options);
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
       return;
@@ -423,9 +425,19 @@ const url = window.location.pathname === '/my-profile/'
 
     if (!finalProductsToAdd.length) return;
 
-    dispatch(openWishlistModal());
+    const finalOptions = {
+      ...pendingAddOptions,
+      ...options,
+    };
+
+    if (finalOptions.addToHandpickedWishlist) {
+      await finalOptions.addToHandpickedWishlist(finalOptions.context);
+    } else {
+      dispatch(openWishlistModal());
+    }
     dispatch(setProductsToAddInWishlist(finalProductsToAdd));
     setPendingProductsToAdd([]);
+    setPendingAddOptions({});
     if (isUserLoginCokkies) {
       // dispatch(setIsCreateWishlist(true));
     }
@@ -466,6 +478,7 @@ const url = window.location.pathname === '/my-profile/'
     dispatch(GuestPopUpShow(false));
     setIsPopupShow(false);
     setPendingProductsToAdd([]);
+    setPendingAddOptions({});
   };
 
   const handleGuestSubmit = useCallback(
@@ -496,7 +509,7 @@ const url = window.location.pathname === '/my-profile/'
         try {
           const res = await authAPIs.GuestRegisterAPICall({
             emailId: email,
-            user_id: tid,
+            // user_id: tid,
             store,
             phone,
           });
@@ -513,7 +526,9 @@ const url = window.location.pathname === '/my-profile/'
             });
             // Cookies.set('isGuestSkip', false, { expires: GUESTSKIP_EXPIRE_HOURS / 24 });
             setIsPopupShow(false);
-            onAddSelectedProductsToCollection();
+            onAddSelectedProductsToCollection(null, null, {
+              context: { userId: user_id },
+            });
           }
         } catch (error) {
           console.log(error);

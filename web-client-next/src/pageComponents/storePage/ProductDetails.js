@@ -456,12 +456,9 @@ const ProductDetails = ({ params, ...props }) => {
       localStorage.removeItem(`pdp_image`);
     };
   }, [mfr_code]);
-
-  const cardItem = useMemo(() => {
-    return collection?.product_lists?.find(
-      (item) => item.mfr_code === productDetails?.mfr_code,
-    );
-  }, [collection, productDetails]);
+  const cardItem = collection?.product_lists?.find(
+  item => item.mfr_code === productDetails?.mfr_code
+);
   // console.log('cardItem',productDetails);
 
   useEffect(() => {
@@ -470,30 +467,30 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [dispatch, mycartcollectionpath]);
 
-  const updateCartQuantity = (newQty) => {
-    if (hasKioskAccess && !kioskLogin?.user_id) {
-      // console.log('hello world');
-      setIsPopupShow(true);
-      setPendingGuestAction({ type: "cart", productDetails } || null);
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-    const payload = {
-      products: [
-        {
-          mfr_code: productDetails.mfr_code,
-          tagged_by: productDetails?.tagged_by || [],
-          qty: newQty,
-        },
-      ],
-      product_lists: [],
-      collection_name: "my cart",
-      type: "system",
-      user_id: kioskLogin?.user_id || authUserId || getTTid(),
-      path: mycartcollectionpath,
-    };
-    dispatch(addToCart(payload));
-  };
+  // const updateCartQuantity = (newQty) => {
+  //   if (hasKioskAccess && !kioskLogin?.user_id) {
+  //     // console.log('hello world');
+  //     setIsPopupShow(true);
+  //     setPendingGuestAction({ type: "cart", productDetails } || null);
+  //     dispatch(GuestPopUpShow(true));
+  //     return;
+  //   }
+  //   const payload = {
+  //     products: [
+  //       {
+  //         mfr_code: productDetails.mfr_code,
+  //         tagged_by: productDetails?.tagged_by || [],
+  //         qty: newQty,
+  //       },
+  //     ],
+  //     product_lists: [],
+  //     collection_name: "my cart",
+  //     type: "system",
+  //     user_id: kioskLogin?.user_id || authUserId || getTTid(),
+  //     path: mycartcollectionpath,
+  //   };
+  //   dispatch(addToCart(payload));
+  // };
 
   const brandsDetails = useMemo(
     () => sellerDetails[productDetails?.brand],
@@ -654,44 +651,48 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [productDetails, pdploader]);
 
-  const handleAddToCart = (e) => {
-    e?.stopPropagation();
-    // console.log('hello world');
-
+  const handleCartAction = (qty = 1, userIdOverride = null) => {
     if (!productDetails?.mfr_code) return;
 
+    const numericQty = Number(qty);
+    const normalizedQty = Number.isFinite(numericQty)
+      ? Math.max(numericQty, 0)
+      : 1;
+
     const kioskLogin = getStoredKioskLogin();
+    const kioskUserId = userIdOverride || kioskLogin?.user_id;
 
-    if (hasKioskAccess && !kioskLogin?.user_id) {
-      // console.log('hello world');
+    if (hasKioskAccess && !kioskUserId) {
       setIsPopupShow(true);
-      setPendingGuestAction({ type: "cart", productDetails } || null);
-
+      setPendingGuestAction({
+        type: "cart",
+        productDetails,
+        qty: normalizedQty,
+      });
       dispatch(GuestPopUpShow(true));
       return;
     }
-    const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
-    console.log("hello world");
 
-    const payload = {
-      is_display_amount: true,
-      products: [
-        {
-          mfr_code: productDetails.mfr_code,
-          tagged_by: productDetails.tagged_by || [],
-          qty: cardItem?.qty + 1 || 1,
-        },
-      ],
-      product_lists: [],
-      collection_name: "my cart",
-      type: "system",
-      user_id: cartUserId,
-      // collection_id: mycartcollectionid,
-      path: `my_cart_${cartUserId}`,
-    };
-    dispatch(addToCart(payload));
+    const cartUserId = kioskUserId || authUserId || getTTid();
+
+    dispatch(
+      addToCart({
+        is_display_amount: true,
+        products: [
+          {
+            mfr_code: productDetails.mfr_code,
+            tagged_by: productDetails?.tagged_by || [],
+            qty: normalizedQty,
+          },
+        ],
+        product_lists: [],
+        collection_name: "my cart",
+        type: "system",
+        user_id: cartUserId,
+        path: `my_cart_${cartUserId}`,
+      })
+    );
   };
-
   const checkoutPayment = async (e) => {
     e.preventDefault();
     const location =
@@ -1149,7 +1150,7 @@ const ProductDetails = ({ params, ...props }) => {
                             <button
                               className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
                               onClick={() => {
-                                updateCartQuantity(cardItem?.qty - 1);
+                                handleCartAction((cardItem?.qty || 0) - 1);
                               }}
                             >
                               -
@@ -1160,7 +1161,7 @@ const ProductDetails = ({ params, ...props }) => {
                             <button
                               className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
                               onClick={() => {
-                                updateCartQuantity(cardItem?.qty + 1 || 1);
+                                handleCartAction((cardItem?.qty || 0) + 1);
                               }}
                             >
                               +
@@ -1168,7 +1169,7 @@ const ProductDetails = ({ params, ...props }) => {
                           </div>
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
-                              onClick={handleAddToCart}
+                              onClick={() => handleCartAction((cardItem?.qty || 0) + 1)}
                               className={` h-full px-6 ${hasKioskAccess ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
@@ -1549,7 +1550,7 @@ const ProductDetails = ({ params, ...props }) => {
         persistKioskLogin
         onSuccess={async ({ userId, email, phone }) => {
           if (pendingGuestAction?.type === "cart") {
-            handleAddToCart();
+            handleCartAction(pendingGuestAction.qty, userId);
             setPendingGuestAction(null);
             return;
           }
