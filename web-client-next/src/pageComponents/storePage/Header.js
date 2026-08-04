@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Image, Dropdown, Menu, Typography, notification } from "antd";
+import { Image, Dropdown, Menu, Typography, notification} from "antd";
 import {
   // MenuOutlined,
   CloseOutlined,
@@ -373,10 +373,19 @@ const Header = ({
     dispatch(
       getUserCollections({
         path: `my_wishlist_${currentUser?.user_id}`,
-        callback: (collections) => {
-          router.push(
-            `/influencer/${currentUser.user_name}/${collections[0]._id}`,
-          );
+        callback: (collections) => {          
+            if (!collections.length) {
+           notification.warning({
+            message: "No wishlist found",
+            
+          });
+          
+          return;
+        }
+
+        router.push(
+          `/influencer/${currentUser.user_name}/${collections[0]._id}`,
+        );      
         },
       }),
     );

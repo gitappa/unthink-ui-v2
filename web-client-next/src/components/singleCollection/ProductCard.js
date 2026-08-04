@@ -240,6 +240,9 @@ const ProductCard = ({
   const heartRedProduct = wishlistCollections?.product_lists?.find(
     (x) => x.mfr_code === product.mfr_code,
   );
+//   useEffect(() => {
+//   console.log("wishlistCollections", wishlistCollections);
+// }, [wishlistCollections]);
   // console.log('colllectionssd',KioskLoginAuth);
 
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
@@ -392,13 +395,18 @@ const ProductCard = ({
 
   const callHandpickedAPI = useCallback(
     async (userId) => {
+      if (!userId) {
+        notification.error({ message: "Unable to add to wishlist" });
+        return null;
+      }
+
       const payload = {
         collection_type: "my_wishlist_collection",
         status: "published",
         collection_name: "my wishlist",
         user_id: userId,
         store: storeData?.store_name || "dothelook",
-        Event_id: "dothelookwebpage_447990",
+        Event_id: storeData?.event_id || "dothelookwebpage_447990",
         product_lists: [
           {
             mfr_code: product.mfr_code,
@@ -418,7 +426,7 @@ const ProductCard = ({
         return null;
       }
     },
-    [product, storeData?.store_name],
+    [product, storeData?.event_id, storeData?.store_name],
   );
 
   useEffect(() => {
@@ -483,11 +491,33 @@ const ProductCard = ({
     }
 
     if (source === "SEARCH") {
-      onAddSelectedProductsToCollection(event, { isSave: true, product, skipWishlistStateAfterGuest: true });
+      onAddSelectedProductsToCollection(
+        event,
+        { isSave: true, product, skipWishlistStateAfterGuest: true },
+        {
+          addToHandpickedWishlist: ({ userId } = {}) => {
+            const latestKioskLogin = getKioskLogin();
+            return callHandpickedAPI(
+              userId || latestKioskLogin?.user_id || authUserId || getTTid(),
+            );
+          },
+        },
+      );
       return;
     }
 
-    onAddSelectedProductsToCollection(event, product);
+    onAddSelectedProductsToCollection(
+      event,
+      product,
+      {
+        addToHandpickedWishlist: ({ userId } = {}) => {
+          const latestKioskLogin = getKioskLogin();
+          return callHandpickedAPI(
+            userId || latestKioskLogin?.user_id || authUserId || getTTid(),
+          );
+        },
+      },
+    );
   };
   const checkoutPayment = async (e) => {
     e.stopPropagation();
