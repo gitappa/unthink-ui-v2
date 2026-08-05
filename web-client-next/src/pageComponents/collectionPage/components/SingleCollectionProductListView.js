@@ -122,7 +122,7 @@ const SingleCollectionProductListView = ({
 }) => {
   // console.log('sharePageUrl');
   // console.log('profile_image',profile_image);
-  // console.log('Owner',Owner);
+  // console.log('Owner',productsData);
   
   // console.log('hellopw',Owner && (window.location.pathname === '/my-profile/' || window.location.pathname === `/influencer/${user_name}/`) );
   
