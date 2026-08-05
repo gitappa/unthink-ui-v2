@@ -10,6 +10,8 @@ import { notification, Typography } from "antd";
 import { IoBagHandleOutline } from "react-icons/io5";
 import styles from "./ProductCard.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { deleteWishlist } from "../../pageComponents/wishlistActions/deleteWishlist/redux/actions";
+
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   HeartOutlined,
@@ -98,6 +100,7 @@ import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import { FaCartArrowDown } from "react-icons/fa";
+import { removeFromWishlist } from "../../pageComponents/wishlistActions/removeFromWishlist/redux/actions";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -240,6 +243,7 @@ const ProductCard = ({
   const heartRedProduct = wishlistCollections?.product_lists?.find(
     (x) => x.mfr_code === product.mfr_code,
   );
+
 //   useEffect(() => {
 //   console.log("wishlistCollections", wishlistCollections);
 // }, [wishlistCollections]);
@@ -444,12 +448,44 @@ const ProductCard = ({
     isGuestPopUpShow,
     pendingWishlistAction,
   ]);
+    const kioskLogin = getKioskLogin();
+
+  const handleDeletePlistClick = () => {
+    // const collectionIdToDelete =
+    //   collection_id ||
+    //   singleCollections?._id;
+
+    // if (!collectionIdToDelete) {
+    //   notification.error({ message: `Unable to delete ${WISHLIST_TITLE}` });
+    //   return;
+    // }
+
+    dispatch(
+      removeFromWishlist({
+        products: [product.mfr_code],
+        // _id: collectionIdToDelete,
+        collection_name:'my wishlist',
+        type: "system",
+        successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
+        errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
+        removeCollectionFromUserCollections: true,
+        wishlistCallBack: true,
+        user_id:kioskLogin?.user_id || authUserId || getTTid(),
+        store: current_store_name,
+        clearSelectedCollectionData: true, // clearing selected collection data and id to close collection details sidebar
+      }),
+    );
+    // dispatch(
+    //     getwishlistUserCollection({
+    //       path: `my_wishlist_${authUserId || getTTid()}`,
+    //     }),
+    //   );
+  };
 
   const addToWishlistClick = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const kioskLogin = getKioskLogin();
 
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
@@ -1409,11 +1445,11 @@ const ProductCard = ({
               {!hideAddToWishlist && (
                 <div
                   className={styles["product-menu-wishlist"]}
-                  onClick={addToWishlistClick}
+                  onClick={heartRedProduct ? handleDeletePlistClick :addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
                     {heartRedProduct ? (
-                      <FaHeart className="text-red-500" />
+                      <FaHeart className="text-red-500"  />
                     ) : (
                       <img
                         alt="Add to wishlist"
