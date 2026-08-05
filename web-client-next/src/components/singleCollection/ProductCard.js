@@ -915,6 +915,11 @@ const ProductCard = ({
           : auramodel
             ? `${styles["product-wrapper-medium-single"]} ml-0`
             : styles["product-wrapper-medium-single"];
+  const showCustomProductsMenu =
+    isCustomProductsPage &&
+    widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+    !showWishlistModal &&
+    !enableSelect;
 
   return (
     <div
@@ -1244,32 +1249,31 @@ const ProductCard = ({
                   </span>
                 </div>
               )}
-              {/* {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                !showWishlistModal && (
-                  <Image
-                    src={more}
-                    alt="More options"
-                    height={20}
-                    width={20}
-                    onClick={(e) => {
-                      setMenuIcon(true);
-                      e.stopPropagation();
-                    }}
-                    className={
-                      styles[
-                        size === "small"
-                          ? "product-menu-dropdown-small"
-                          : (!hideAddToWishlist ||
-                                (widgetType ===
-                                  PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                  showStar)) &&
-                              !showWishlistModal
-                            ? "product-menu-icon"
-                            : "product-menu-icon"
-                      ]
-                    }
-                  />
-                )} */}
+              {showCustomProductsMenu && (
+                <img
+                  src={getStaticImageSrc(more)}
+                  alt="More options"
+                  height={32}
+                  width={32}
+                  onClick={(e) => {
+                    setMenuIcon(true);
+                    e.stopPropagation();
+                  }}
+                  className={
+                    styles[
+                      size === "small"
+                        ? "product-menu-dropdown-small"
+                        : (!hideAddToWishlist ||
+                              (widgetType ===
+                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                showStar)) &&
+                            !showWishlistModal
+                          ? "product-menu-icon"
+                          : "product-menu-icon"
+                    ]
+                  }
+                />
+              )}
               {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
                 <div
                   className={` ${styles["remove-icon"]}`}
@@ -1304,7 +1308,7 @@ const ProductCard = ({
                     </p>
                   </div>
                 )}
-              {menuIcon && (
+              {menuIcon && showCustomProductsMenu && (
                 <div
                   ref={menuRef}
                   onClick={(e) => e.stopPropagation()}
@@ -1329,7 +1333,10 @@ const ProductCard = ({
                       >
                         <div
                           className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
-                          onClick={removeFromWishlistClick}
+                          onClick={(e) => {
+                            removeFromWishlistClick(e);
+                            setMenuIcon(false);
+                          }}
                         >
                           <p
                             className={`${styles["remove-icon-circle"]} ${
@@ -1369,7 +1376,10 @@ const ProductCard = ({
                   {enableCopyFeature && (
                     <div
                       className={styles["product-menu-item"]}
-                      onClick={handleCopyClick}
+                      onClick={(e) => {
+                        handleCopyClick(e);
+                        setMenuIcon(false);
+                      }}
                     >
                       <div
                         className={`${styles["menu-item-circle"]} ${
@@ -1383,17 +1393,16 @@ const ProductCard = ({
                       <p className={styles["text-gray"]}>Copy</p>
                     </div>
                   )}
-                  {isAdminLoggedIn && isCustomProductsPage && (
+                  {isCustomProductsPage && allowEdit && (
                     <div
                       className={styles["product-menu-item"]}
                       onClick={(e) => {
-                        handleProductClick();
-                        e.stopPropagation();
+                        handleEditClick(e);
+                        setMenuIcon(false);
                       }}
                     >
                       <p
                         className={`${styles["product-cart-button"]} ${styles["product-cart-icon2"]} ${size === "small" ? styles["product-cart-icon-small"] : styles["product-cart-icon-lg"]}`}
-                        onClick={(e) => e.stopPropagation()}
                         style={{ backgroundColor: "#f8f6f4" }}
                       >
                         <FiEdit
