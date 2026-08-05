@@ -120,10 +120,10 @@ function GuestUserPopUp({
             );
             window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
           }
-          if(!isUserLogin){
-            setCookie(COOKIE_TT_ID, userId, SIGN_IN_EXPIRE_DAYS);
-            dispatch(getUserInfo());
-          }
+          // if(!isUserLogin){
+          //   setCookie(COOKIE_TT_ID, userId, SIGN_IN_EXPIRE_DAYS);
+          //   dispatch(getUserInfo());
+          // }
           notification.success({
             message: "Login Successfully",
           });
