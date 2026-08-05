@@ -244,6 +244,42 @@ const ProductCard = ({
     (x) => x.mfr_code === product.mfr_code,
   );
 
+  const currentCollectionForCard = useMemo(() => {
+    if (collection_id && singleCollections?._id === collection_id) {
+      return singleCollections;
+    }
+
+    const collectionFromList = collection_id
+      ? collections?.find((item) => item._id === collection_id)
+      : null;
+
+    if (collectionFromList) {
+      return collectionFromList;
+    }
+
+    if (blogCollectionPage?.collection_name) {
+      return blogCollectionPage;
+    }
+
+    if (collection_name) {
+      return { collection_name };
+    }
+
+    return singleCollections;
+  }, [
+    blogCollectionPage,
+    collection_id,
+    collection_name,
+    collections,
+    singleCollections,
+  ]);
+
+  const currentCollectionName = currentCollectionForCard?.collection_name
+    ?.trim()
+    ?.toLowerCase();
+  const isMyWishlistCollection = currentCollectionName === "my wishlist";
+  const isMyTryonsCollection = currentCollectionName === "my tryons";
+
 //   useEffect(() => {
 //   console.log("wishlistCollections", wishlistCollections);
 // }, [wishlistCollections]);
@@ -716,23 +752,13 @@ const ProductCard = ({
   );
 
   useEffect(() => {
-    const currentCollection =
-      singleCollections?._id === collection_id
-        ? singleCollections
-        : collections?.find((item) => item._id === collection_id);
-
     setCollectionTryonStatement(
-      currentCollection?.tryon_statement ? currentCollection : null,
+      currentCollectionForCard?.tryon_statement ? currentCollectionForCard : null,
     );
-  }, [singleCollections, collections, collection_id]);
+  }, [currentCollectionForCard]);
 
-  const currentVtoCollection =
-    singleCollections?._id === collection_id
-      ? singleCollections
-      : collections?.find((item) => item._id === collection_id);
-
-  const Collection_vto = currentVtoCollection?.tryon_type
-    ? currentVtoCollection
+  const Collection_vto = currentCollectionForCard?.tryon_type
+    ? currentCollectionForCard
     : null;
   // console.log('Collection_vto',Collection_vto );
 
@@ -959,7 +985,7 @@ const ProductCard = ({
               widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
               !showWishlistModal &&
               product?.custom_product !== false &&
-              singleCollections?.collection_name !== "my tryons" && (
+              !isMyTryonsCollection && (
                 <div
                   className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
                   onClick={(e) => {
@@ -1449,12 +1475,14 @@ const ProductCard = ({
           !showWishlistModal &&
           !enableSelect &&
           product?.custom_product !== false &&
-          singleCollections?.collection_name !== "my wishlist" && (
+          !isMyWishlistCollection && (
             <div className={styles["product-menu-item"]}>
               {!hideAddToWishlist && (
                 <div
                   className={styles["product-menu-wishlist"]}
-                  onClick={heartRedProduct ? handleDeletePlistClick :addToWishlistClick}
+                  onClick={
+                    heartRedProduct ? handleDeletePlistClick : addToWishlistClick
+                  }
                 >
                   <button className={`${styles["product-heart-button"]}`}>
                     {heartRedProduct ? (
