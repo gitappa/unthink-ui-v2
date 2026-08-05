@@ -10,6 +10,8 @@ import { notification, Typography } from "antd";
 import { IoBagHandleOutline } from "react-icons/io5";
 import styles from "./ProductCard.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { deleteWishlist } from "../../pageComponents/wishlistActions/deleteWishlist/redux/actions";
+
 // import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   HeartOutlined,
@@ -98,6 +100,7 @@ import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import { FaCartArrowDown } from "react-icons/fa";
+import { removeFromWishlist } from "../../pageComponents/wishlistActions/removeFromWishlist/redux/actions";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -240,6 +243,7 @@ const ProductCard = ({
   const heartRedProduct = wishlistCollections?.product_lists?.find(
     (x) => x.mfr_code === product.mfr_code,
   );
+
 //   useEffect(() => {
 //   console.log("wishlistCollections", wishlistCollections);
 // }, [wishlistCollections]);
@@ -444,12 +448,44 @@ const ProductCard = ({
     isGuestPopUpShow,
     pendingWishlistAction,
   ]);
+    const kioskLogin = getKioskLogin();
+
+  const handleDeletePlistClick = () => {
+    // const collectionIdToDelete =
+    //   collection_id ||
+    //   singleCollections?._id;
+
+    // if (!collectionIdToDelete) {
+    //   notification.error({ message: `Unable to delete ${WISHLIST_TITLE}` });
+    //   return;
+    // }
+
+    dispatch(
+      removeFromWishlist({
+        products: [product.mfr_code],
+        // _id: collectionIdToDelete,
+        collection_name:'my wishlist',
+        type: "system",
+        successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
+        errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
+        removeCollectionFromUserCollections: true,
+        wishlistCallBack: true,
+        user_id:kioskLogin?.user_id || authUserId || getTTid(),
+        store: current_store_name,
+        clearSelectedCollectionData: true, // clearing selected collection data and id to close collection details sidebar
+      }),
+    );
+    // dispatch(
+    //     getwishlistUserCollection({
+    //       path: `my_wishlist_${authUserId || getTTid()}`,
+    //     }),
+    //   );
+  };
 
   const addToWishlistClick = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const kioskLogin = getKioskLogin();
 
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
@@ -879,6 +915,11 @@ const ProductCard = ({
           : auramodel
             ? `${styles["product-wrapper-medium-single"]} ml-0`
             : styles["product-wrapper-medium-single"];
+  const showCustomProductsMenu =
+    isCustomProductsPage &&
+    widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+    !showWishlistModal &&
+    !enableSelect;
 
   return (
     <div
@@ -1208,32 +1249,31 @@ const ProductCard = ({
                   </span>
                 </div>
               )}
-              {/* {widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                !showWishlistModal && (
-                  <Image
-                    src={more}
-                    alt="More options"
-                    height={20}
-                    width={20}
-                    onClick={(e) => {
-                      setMenuIcon(true);
-                      e.stopPropagation();
-                    }}
-                    className={
-                      styles[
-                        size === "small"
-                          ? "product-menu-dropdown-small"
-                          : (!hideAddToWishlist ||
-                                (widgetType ===
-                                  PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                  showStar)) &&
-                              !showWishlistModal
-                            ? "product-menu-icon"
-                            : "product-menu-icon"
-                      ]
-                    }
-                  />
-                )} */}
+              {showCustomProductsMenu && (
+                <img
+                  src={getStaticImageSrc(more)}
+                  alt="More options"
+                  height={32}
+                  width={32}
+                  onClick={(e) => {
+                    setMenuIcon(true);
+                    e.stopPropagation();
+                  }}
+                  className={
+                    styles[
+                      size === "small"
+                        ? "product-menu-dropdown-small"
+                        : (!hideAddToWishlist ||
+                              (widgetType ===
+                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
+                                showStar)) &&
+                            !showWishlistModal
+                          ? "product-menu-icon"
+                          : "product-menu-icon"
+                    ]
+                  }
+                />
+              )}
               {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
                 <div
                   className={` ${styles["remove-icon"]}`}
@@ -1268,7 +1308,7 @@ const ProductCard = ({
                     </p>
                   </div>
                 )}
-              {menuIcon && (
+              {menuIcon && showCustomProductsMenu && (
                 <div
                   ref={menuRef}
                   onClick={(e) => e.stopPropagation()}
@@ -1293,7 +1333,10 @@ const ProductCard = ({
                       >
                         <div
                           className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
-                          onClick={removeFromWishlistClick}
+                          onClick={(e) => {
+                            removeFromWishlistClick(e);
+                            setMenuIcon(false);
+                          }}
                         >
                           <p
                             className={`${styles["remove-icon-circle"]} ${
@@ -1333,7 +1376,10 @@ const ProductCard = ({
                   {enableCopyFeature && (
                     <div
                       className={styles["product-menu-item"]}
-                      onClick={handleCopyClick}
+                      onClick={(e) => {
+                        handleCopyClick(e);
+                        setMenuIcon(false);
+                      }}
                     >
                       <div
                         className={`${styles["menu-item-circle"]} ${
@@ -1347,17 +1393,16 @@ const ProductCard = ({
                       <p className={styles["text-gray"]}>Copy</p>
                     </div>
                   )}
-                  {isAdminLoggedIn && isCustomProductsPage && (
+                  {isCustomProductsPage && allowEdit && (
                     <div
                       className={styles["product-menu-item"]}
                       onClick={(e) => {
-                        handleProductClick();
-                        e.stopPropagation();
+                        handleEditClick(e);
+                        setMenuIcon(false);
                       }}
                     >
                       <p
                         className={`${styles["product-cart-button"]} ${styles["product-cart-icon2"]} ${size === "small" ? styles["product-cart-icon-small"] : styles["product-cart-icon-lg"]}`}
-                        onClick={(e) => e.stopPropagation()}
                         style={{ backgroundColor: "#f8f6f4" }}
                       >
                         <FiEdit
@@ -1409,11 +1454,11 @@ const ProductCard = ({
               {!hideAddToWishlist && (
                 <div
                   className={styles["product-menu-wishlist"]}
-                  onClick={addToWishlistClick}
+                  onClick={heartRedProduct ? handleDeletePlistClick :addToWishlistClick}
                 >
                   <button className={`${styles["product-heart-button"]}`}>
                     {heartRedProduct ? (
-                      <FaHeart className="text-red-500" />
+                      <FaHeart className="text-red-500"  />
                     ) : (
                       <img
                         alt="Add to wishlist"

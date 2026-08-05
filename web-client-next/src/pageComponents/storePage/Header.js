@@ -85,7 +85,6 @@ import Leaderboard from "../leaderboard";
 import { logoutVenlyUser, openVenlyWallet } from "../../helper/venlyUtils";
 // import PageLoader from "../../components/Loader/PageLoader";
 import {
-  getUserCollections,
   getUserCollectionsReset,
   getUserInfo,
 } from "../Auth/redux/actions";
@@ -95,7 +94,7 @@ import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
 import { THEME_ALL } from "../../constants/themeCodes";
 import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
-import { collectionAPIs } from "../../helper/serverAPIs";
+import { fetchMyTryonsCollection, fetchMyWishlistCollection } from "./redux/action";
 
 const { Text } = Typography;
 
@@ -333,25 +332,8 @@ const Header = ({
     [isUserLogin],
   );
 
-  const handleVtoFetch = async () => {
-    const payload = {
-      collection_name: "my tryons",
-      user_id: authUser?.user_id,
-      type: "system",
-      callback: (response) => {        
-      if (response?.length > 0) {
-        router.push(
-          `/influencer/${authUser.user_name}/${response[0]._id}`
-        );
-      } else {
-        notification.warning({
-          message: "No Try ons Collections found.",
-        });
-      }
-    },
-    };
-    dispatch(getUserCollections(payload));
-    
+  const handleVtoFetch = () => {
+    dispatch(fetchMyTryonsCollection({ authUser, router }));
   };
   const viewLeaderboardEnabled = useMemo(
     () =>
@@ -370,25 +352,7 @@ const Header = ({
   // 	[associate_seller, currentUser.emailId]
   // );
   const myWishlistClick = () => {
-    dispatch(
-      getUserCollections({
-        path: `my_wishlist_${currentUser?.user_id}`,
-        callback: (collections) => {          
-            if (!collections.length) {
-           notification.warning({
-            message: "No wishlist found",
-            
-          });
-          
-          return;
-        }
-
-        router.push(
-          `/influencer/${currentUser.user_name}/${collections[0]._id}`,
-        );      
-        },
-      }),
-    );
+    dispatch(fetchMyWishlistCollection({ currentUser, router }));
   };
   const getHeaderProfileMenuItems = () => {
     const items = [];
@@ -1080,3 +1044,4 @@ const Header = ({
 };
 
 export default Header;
+
