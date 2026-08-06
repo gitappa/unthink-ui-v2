@@ -18,12 +18,15 @@ import {
   filterProductListBySelectedTags,
   getBlogCollectionPagePath,
   getCurrentPath,
+  getEditCollectionPagePath,
   setCookie,
+  getTTid,
 } from "../../helper/utils";
 import {
   COLLECTION_COVER_IMG_SIZE_900_900,
   COOKIE_TT_ID,
   SIGN_IN_EXPIRE_DAYS,
+  WISHLIST_TITLE,
 } from "../../constants/codes";
 import { addToWishlist } from "../wishlistActions/addToWishlist/redux/actions";
 import { current_store_name, super_admin } from "../../constants/config";
@@ -36,6 +39,8 @@ import Cookies from "js-cookie";
 import SingleCollectionProductListView from "./components/SingleCollectionProductListView";
 import { updateWishlist } from "../wishlistActions/updateWishlist/redux/actions";
 import { notification } from "antd";
+import { addToCart } from "../DeliveryDetails/redux/action";
+import { removeFromWishlist } from "../wishlistActions/removeFromWishlist/redux/actions";
 import CropAndResizeImageModal from "../cropAndResizeImageModal/CropAndResizeImageModal";
 
 const tagsMinSizeForShowMore = 5;
@@ -94,6 +99,7 @@ const url = window.location.pathname === '/my-profile/'
 
   const dispatch = useDispatch();
   const navigate = useCallback((path) => router.push(path), [router]);
+
 
   const [isGuestPopUpShow, singleCollection, influencerCollections,influencer] =
     useSelector((state) => [
@@ -430,6 +436,67 @@ const url = window.location.pathname === '/my-profile/'
       ...options,
     };
 
+    const selectedProductPayload = finalProductsToAdd.map((item) => ({
+      mfr_code: item.mfr_code,
+      tagged_by: item.tagged_by || [],
+    }));
+    const actionUserId = finalOptions.context?.userId || authUser?.user_id || getTTid();
+
+    if (finalOptions.action === "cart") {
+      dispatch(
+        addToCart({
+          is_display_amount: true,
+          products: selectedProductPayload.map((item) => ({
+            ...item,
+            qty: 1,
+            source: "COLLECTION",
+            collection: {
+              id: blogCollectionPage?._id,
+              name: blogCollectionPage?.collection_name,
+              path: blogCollectionPage?.path,
+            },
+          })),
+          product_lists: [],
+          collection_name: "my cart",
+          type: "system",
+          user_id: actionUserId,
+          path: `my_cart_${actionUserId}`,
+        }),
+      );
+      handleResetSelectProduct();
+      return;
+    }
+
+    if (finalOptions.action === "wishlist") {
+      dispatch(
+        addToWishlist({
+          products: selectedProductPayload,
+          product_lists: [],
+          collection_name: "my wishlist",
+          type: "system",
+          user_id: actionUserId,
+          successMessage: `${WISHLIST_TITLE} updated successfully`,
+          errorMessage: `Failed to update ${WISHLIST_TITLE}`,
+        }),
+      );
+      handleResetSelectProduct();
+      return;
+    }
+    if (finalOptions.action === "Delete") {
+      const collectionIdToUpdate = singleCollection?._id || blogCollectionPage?._id;
+     dispatch(
+      removeFromWishlist({
+        _id: collectionIdToUpdate,
+        products: selectedProducts,
+        successMessage: "Products deleted successfully",
+        errorMessage: "Failed to delete products",
+        removeFromUserCollections: true,
+      }),
+    );
+      handleResetSelectProduct();
+      return;
+    }
+
     if (finalOptions.addToHandpickedWishlist) {
       await finalOptions.addToHandpickedWishlist(finalOptions.context);
     } else {
@@ -635,7 +702,7 @@ const url = window.location.pathname === '/my-profile/'
       }));
 
       const addToWishlistPayload = {
-        _id: singleCollection._id,
+        _id: collectionIdToUpdate,
         products: productsToShowcase,
         fetchUserCollection: true, // fetch collection after success add to collection
         showcase: true, // flag to know it is showcase action
@@ -831,6 +898,19 @@ const url = window.location.pathname === '/my-profile/'
   const [admin_list ] = useSelector((state) => [ state.store.data.admin_list ]);
         const Owner = authUser?.user_name === singleCollection?.user_name  
         const Adminlist =  authUser?.user_name === super_admin
+
+  const isSystemEditableCollection = ["my wishlist", "my tryons"].includes(
+    (blogCollectionPage?.collection_name || singleCollection?.collection_name || "").toLowerCase(),
+  );
+  const canEditSystemCollection =
+    !!isUserLogin && isSystemEditableCollection && (Owner || Adminlist);
+
+  const handleEditSystemCollection = useCallback(() => {
+    const collectionId = blogCollectionPage?._id || singleCollection?._id;
+    if (collectionId) {
+      navigate(getEditCollectionPagePath(collectionId));
+    }
+  }, [blogCollectionPage?._id, navigate, singleCollection?._id]);
         // console.log('singleCollectionusername', authUser?.role);
         
   const handleUploadedDataChange = useCallback(
@@ -1025,6 +1105,8 @@ const url = window.location.pathname === '/my-profile/'
       Adminlist={Adminlist}
       Owner={Owner}
       handleCoverImageUpload={handleCoverImageUpload}
+      canEditSystemCollection={canEditSystemCollection}
+      onEditSystemCollection={handleEditSystemCollection}
     />
     </>
 

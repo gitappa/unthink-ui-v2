@@ -54,13 +54,13 @@ const ActionWrapper = ({ children }) => {
 		}
 	}, [authUser]);
 
+	const CartuserId = getStoredKioskLoginUserId() || authUser?.user_id || getTTid();
 	useEffect(() => {
-		const userId = getStoredKioskLoginUserId() || authUser?.user_id || getTTid();
-		if (userId) {
-			const mycartcollectionpath = `my_cart_${userId}`;
+		if (CartuserId) {
+			const mycartcollectionpath = `my_cart_${CartuserId}`;
 			dispatch(fetchCart(mycartcollectionpath));
 		}
-	}, [authUser?.user_id, dispatch]);
+	}, [CartuserId, dispatch]);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;

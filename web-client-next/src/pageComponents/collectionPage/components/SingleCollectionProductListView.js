@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button, Checkbox, Collapse, notification, Select, Upload } from "antd";
+import { Button, Checkbox, Collapse, Dropdown, notification, Select, Upload } from "antd";
 import ReactPlayer from "react-player/lazy";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -34,7 +34,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import { profileAPIs } from "../../../helper/serverAPIs";
-import { EditOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined, DeleteOutlined, DownOutlined, EditOutlined, HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { FiEdit } from "react-icons/fi";
 const { Option } = Select;
 SwiperCore.use([FreeMode]);
@@ -119,6 +119,8 @@ const SingleCollectionProductListView = ({
   Owner,
   Adminlist,
   handleCoverImageUpload,
+  canEditSystemCollection,
+  onEditSystemCollection,
 }) => {
   // console.log('sharePageUrl');
   // console.log('profile_image',profile_image);
@@ -133,6 +135,35 @@ const SingleCollectionProductListView = ({
       authUser.user_name === super_admin,
     [authUser.user_name],
   );
+
+  const selectedProductsActionItems = [
+    {
+      key: "collection",
+      icon: <AppstoreAddOutlined />,
+      label: "Add to collection",
+    },
+    {
+      key: "wishlist",
+      icon: <HeartOutlined />,
+      label: `Add to Wishlist`,
+    },
+    {
+      key: "cart",
+      icon: <ShoppingCartOutlined />,
+      label: "Add to cart",
+    },
+    {
+      key: "Delete",
+      icon: <DeleteOutlined />,
+      label: "Delete",
+    },
+  ];
+
+  const handleSelectedProductsAction = ({ key }) => {
+    if (!selectedProducts.length) return;
+
+    onAddSelectedProductsToCollection(null, null, { action: key });
+  };
 
   const renderProductsList = ({
     list,
@@ -561,6 +592,13 @@ const SingleCollectionProductListView = ({
             </p>
           </div>
         )}
+        {canEditSystemCollection && (
+          <EditOutlined
+            title="Edit Collection"
+            className={styles.editIconContainer}
+            onClick={onEditSystemCollection}
+          />
+        )}
       {((activeTab === "products" || !isSingleCollectionSharedPage) &&
         blogCollectionPage.collection_name && (
           <>
@@ -799,23 +837,27 @@ const SingleCollectionProductListView = ({
                                     {selectedProducts.length} Selected
                                   </Checkbox>
                                 </div>
-                                <p
-                                  onClick={
-                                    selectedProducts.length
-                                      ? () =>
-                                          onAddSelectedProductsToCollection()
-                                      : null
-                                  }
-                                  className={`${
-                                    selectedProducts.length
-                                      ? styles.addToTextActive
-                                      : styles.addToTextDisabled
-                                  } ${styles.addToText}`}
-                                  title="Click to add selected products in collection"
-                                  role="button"
+                                <Dropdown
+                                  menu={{
+                                    items: selectedProductsActionItems,
+                                    onClick: handleSelectedProductsAction,
+                                  }}
+                                  disabled={!selectedProducts.length}
+                                  trigger={["click"]}
                                 >
-                                  Add to {WISHLIST_TITLE}
-                                </p>
+                                  <button
+                                    type="button"
+                                    className={`${
+                                      selectedProducts.length
+                                        ? styles.addToTextActive
+                                        : styles.addToTextDisabled
+                                    } ${styles.addToText} ${styles.addToMenuButton}`}
+                                    title="Click to add selected products"
+                                    disabled={!selectedProducts.length}
+                                  >
+                                    Add to <DownOutlined className={styles.addToMenuIcon} />
+                                  </button>
+                                </Dropdown>
 
                                 <p
                                   onClick={() => handleResetSelectProduct()}
@@ -832,7 +874,7 @@ const SingleCollectionProductListView = ({
                                 onClick={() => setEnableSelectProduct(true)}
                                 title="Click and select multiple products to add to collection"
                               >
-                                Add to Collection
+                                Action
                               </p>
                             )}
                           </div>
