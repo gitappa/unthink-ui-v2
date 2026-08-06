@@ -152,11 +152,15 @@ const SingleCollectionProductListView = ({
       icon: <ShoppingCartOutlined />,
       label: "Add to cart",
     },
-    {
-      key: "Delete",
-      icon: <DeleteOutlined />,
-      label: "Delete",
-    },
+    ...(Owner
+      ? [
+          {
+            key: "Delete",
+            icon: <DeleteOutlined />,
+            label: "Delete",
+          },
+        ]
+      : []),
   ];
 
   const handleSelectedProductsAction = ({ key }) => {
