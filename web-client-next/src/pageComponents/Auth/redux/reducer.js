@@ -150,9 +150,25 @@ const userReducer = (state = userInitialState, action = {}) => {
 			const collection = newState.collections.data.find((cl) => cl._id === _id);
 
 			if (collection && products) {
-				collection.product_lists = collection.product_lists.filter(
-					(p) => !products.includes(p.mfr_code)
-				);
+				newState.collections.data = newState.collections.data.map((cl) => {
+					if (cl._id !== _id) return cl;
+
+					return {
+						...cl,
+						product_lists: (cl.product_lists || []).filter(
+							(p) => !products.includes(p.mfr_code)
+						),
+					};
+				});
+			}
+
+			if (newState.singleCollections.data?._id === _id && products) {
+				newState.singleCollections.data = {
+					...newState.singleCollections.data,
+					product_lists: (newState.singleCollections.data.product_lists || []).filter(
+						(p) => !products.includes(p.mfr_code)
+					),
+				};
 			}
 
 			return newState;
