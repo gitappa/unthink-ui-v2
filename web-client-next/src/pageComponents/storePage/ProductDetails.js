@@ -1546,7 +1546,7 @@ const ProductDetails = ({ params, ...props }) => {
         isOpen={isPopupShow}
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name}
-        isUserLogin ={isUserLogin}
+        isUserLogin ={ !isUserLogin ? true : false}
         persistKioskLogin
         onSuccess={async ({ userId, email, phone }) => {
           if (pendingGuestAction?.type === "cart") {
