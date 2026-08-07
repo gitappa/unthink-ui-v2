@@ -343,7 +343,7 @@ const DeliveryDetails = () => {
 
   return (
     <>
-      <div className="mt-14 ">
+      <div className=" ">
         <div className="text-4xl lg:text-4xl font-semibold flex flex-col items-center mb-14 text-center">
           <span>CART</span>
         </div>
