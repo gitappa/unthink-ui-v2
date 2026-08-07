@@ -57,10 +57,10 @@ const Index = ({ ...props }) => {
         useEffect(()=>{
             if(LoginData ||kioskLogin ){
                 if(hasKioskAccess){
-                    dispatch(fetchCart(kioskLogin))
+                    dispatch(fetchCart(`my_cart_${kioskLogin}`))
                     return
                 }
-                dispatch(fetchCart(LoginData))
+                dispatch(fetchCart(`my_cart_${LoginData}`))
             }
         },[LoginData ,kioskLogin, hasKioskAccess, dispatch])
 

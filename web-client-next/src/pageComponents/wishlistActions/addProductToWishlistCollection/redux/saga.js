@@ -19,7 +19,8 @@ function* addProductToWishlistCollectionSaga(action) {
     store,
     eventId,
     user_id,
-    callback
+    callback,
+    product_lists,
   } = action.payload;
 
   try {
@@ -45,7 +46,11 @@ function* addProductToWishlistCollectionSaga(action) {
       user_id,
       store: store || "dothelook",
       Event_id: eventId,
-      product_lists: [
+      product_lists:product_lists ? product_lists.map((item) => ({
+    mfr_code: item.mfr_code,
+    name: item.name,
+    image: item.image,
+  })) :  [
         {
           mfr_code,
           name: product_name,

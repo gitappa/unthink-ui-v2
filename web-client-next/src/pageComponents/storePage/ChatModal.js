@@ -313,7 +313,10 @@ const ChatModal = ({
   // });
 
   const handleTryAgainClick = () => {
-    const metadata = { ...chatInputMetadata };
+    const metadata = {
+      ...chatInputMetadata,
+      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
+    };
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
@@ -648,7 +651,10 @@ const ChatModal = ({
   const handleSubmitChatInput = () => {
 
     setIsImageLoading(true);
-    const metadata = { ...chatInputMetadata };
+    const metadata = {
+      ...chatInputMetadata,
+      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
+    };
     setIsFollowUpQuery(true)
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
