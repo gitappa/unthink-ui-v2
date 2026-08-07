@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button, Checkbox, Collapse, Dropdown, notification, Select, Upload } from "antd";
+import { Button, Collapse, notification, Select, Upload } from "antd";
 import ReactPlayer from "react-player/lazy";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -34,8 +34,11 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import SwiperCore, { FreeMode } from "swiper";
 import { profileAPIs } from "../../../helper/serverAPIs";
-import { AppstoreAddOutlined, DeleteOutlined, DownOutlined, EditOutlined, HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { FiEdit } from "react-icons/fi";
+import SelectedProductsActionBar, {
+  SELECTED_PRODUCTS_ACTIONS,
+} from "../../shared/SelectedProductsActionBar";
 const { Option } = Select;
 SwiperCore.use([FreeMode]);
 
@@ -136,31 +139,11 @@ const SingleCollectionProductListView = ({
     [authUser.user_name],
   );
 
-  const selectedProductsActionItems = [
-    {
-      key: "collection",
-      icon: <AppstoreAddOutlined />,
-      label: "Add to collection",
-    },
-    {
-      key: "wishlist",
-      icon: <HeartOutlined />,
-      label: `Add to Wishlist`,
-    },
-    {
-      key: "cart",
-      icon: <ShoppingCartOutlined />,
-      label: "Add to cart",
-    },
-    ...(Owner
-      ? [
-          {
-            key: "Delete",
-            icon: <DeleteOutlined />,
-            label: "Delete",
-          },
-        ]
-      : []),
+  const selectedProductsActions = [
+    SELECTED_PRODUCTS_ACTIONS.COLLECTION,
+    SELECTED_PRODUCTS_ACTIONS.WISHLIST,
+    SELECTED_PRODUCTS_ACTIONS.CART,
+    ...(Owner ? [SELECTED_PRODUCTS_ACTIONS.DELETE] : []),
   ];
 
   const handleSelectedProductsAction = ({ key }) => {
@@ -827,59 +810,42 @@ const SingleCollectionProductListView = ({
                         >
                           <div className={styles.selectBarLeft}>
                             {enableSelectProduct ? (
-                              <div className={styles.selectCheckRow}>
-                                <div className={styles.selectCheckBorder}>
-                                  <Checkbox
-                                    className={`${styles.checkboxText} checkbox_singleCollection`}
-                                    indeterminate={
-                                      isTagProductSelected &&
-                                      !isTagProductsAllSelected
-                                    }
-                                    onChange={onSelectAllChange}
-                                    checked={isTagProductsAllSelected}
-                                  >
-                                    {selectedProducts.length} Selected
-                                  </Checkbox>
-                                </div>
-                                <Dropdown
-                                  menu={{
-                                    items: selectedProductsActionItems,
-                                    onClick: handleSelectedProductsAction,
-                                  }}
-                                  disabled={!selectedProducts.length}
-                                  trigger={["click"]}
-                                >
-                                  <button
-                                    type="button"
-                                    className={`${
-                                      selectedProducts.length
-                                        ? styles.addToTextActive
-                                        : styles.addToTextDisabled
-                                    } ${styles.addToText} ${styles.addToMenuButton}`}
-                                    title="Click to add selected products"
-                                    disabled={!selectedProducts.length}
-                                  >
-                                    Actions <DownOutlined className={styles.addToMenuIcon} />
-                                  </button>
-                                </Dropdown>
-
-                                <p
-                                  onClick={() => handleResetSelectProduct()}
-                                  className={styles.cancelText}
-                                  role="button"
-                                >
-                                  Cancel
-                                </p>
-                              </div>
+                              <SelectedProductsActionBar
+                                actions={selectedProductsActions}
+                                selectedCount={selectedProducts.length}
+                                isSelectMode={enableSelectProduct}
+                                isIndeterminate={
+                                  isTagProductSelected &&
+                                  !isTagProductsAllSelected
+                                }
+                                isAllSelected={isTagProductsAllSelected}
+                                onSelectAllChange={onSelectAllChange}
+                                onCancel={handleResetSelectProduct}
+                                onAction={handleSelectedProductsAction}
+                                classNames={{
+                                  wrapper: styles.selectCheckRow,
+                                  checkboxWrapper: styles.selectCheckBorder,
+                                  checkbox: `${styles.checkboxText} checkbox_singleCollection`,
+                                  dropdownActive: styles.addToTextActive,
+                                  dropdownDisabled: styles.addToTextDisabled,
+                                  dropdownButton: `${styles.addToText} ${styles.addToMenuButton}`,
+                                  dropdownIcon: styles.addToMenuIcon,
+                                  cancelText: styles.cancelText,
+                                }}
+                              />
                             ) : (
-                              <p
-                                className={styles.addToCollectionBtn}
-                                role="link"
-                                onClick={() => setEnableSelectProduct(true)}
-                                title="Click and select multiple products to add to collection"
-                              >
-                                Select
-                              </p>
+                              <SelectedProductsActionBar
+                                isSelectMode={enableSelectProduct}
+                                onStartSelect={() => setEnableSelectProduct(true)}
+                                labels={{
+                                  selectTitle:
+                                    "Click and select multiple products to add to collection",
+                                }}
+                                classNames={{
+                                  selectButton: styles.addToCollectionBtn,
+                                  selectButtonRole: "link",
+                                }}
+                              />
                             )}
                           </div>
 
