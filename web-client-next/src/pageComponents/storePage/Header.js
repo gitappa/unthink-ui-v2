@@ -21,10 +21,7 @@ import ChatContainer from "./ChatContainer";
 import MobileChat from "./MobileChat";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import { openWishlistModal } from "../wishlist/redux/actions";
-import {
-  fetchCategoriesReset,
-  openMenuItem,
-} from "../categories/redux/actions";
+import { openMenuItem } from "../categories/redux/actions";
 // import trackApi from "../../track/api";
 import {
   btHeaderOptions,
@@ -47,15 +44,11 @@ import {
   PATH_STORE,
   STORE_USER_NAME_HEROESVILLAINS,
   STORE_USER_NAME_SWIFTLYSTYLED,
-  SIGN_IN_EXPIRE_DAYS,
   STORE_USER_NAME_DOTHELOOK,
 } from "../../constants/codes";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
-  checkAndGenerateUserId,
-  clearStorages,
-  generateSessionId,
   // getBlogCollectionPagePath,
   makeBodyOverflowHidden,
   makeBodyOverflowUnset,
@@ -82,14 +75,9 @@ import SwiftlyHeader from "../swiftlyStyled/SwiftlyHeader";
 import SwiftlyMobileHeader from "../swiftlyStyled/SwiftlyMobileHeader";
 import { UserProfileMenu } from "./UserProfileMenu";
 import Leaderboard from "../leaderboard";
-import { logoutVenlyUser, openVenlyWallet } from "../../helper/venlyUtils";
+import { openVenlyWallet } from "../../helper/venlyUtils";
 // import PageLoader from "../../components/Loader/PageLoader";
-import {
-  getUserCollectionsReset,
-  getUserInfo,
-} from "../Auth/redux/actions";
 import { connectVenlyWallet } from "../earnedRewardModal/redux/actions";
-import Cookies from "js-cookie";
 import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
 import { THEME_ALL } from "../../constants/themeCodes";
@@ -237,27 +225,8 @@ const Header = ({
   };
 
   const onSignOut = () => {
-    Cookies.set("isGuestLoggedIn", false, { expires: SIGN_IN_EXPIRE_DAYS });
-    localStorage.removeItem("adminRolePopupShown", "false");
-    // Cookies.set('isGuestSkip', false, { expires: SIGN_IN_EXPIRE_DAYS });
-    clearStorages();
-    checkAndGenerateUserId(); // generating user id again for guest user after sign out
-    generateSessionId(); // generating new session id for guest user after sign out
-    // trackApi(); // generate the new user_id for the guest user and add it in the cookie/storage as tid
     showMenu && setShowMenu(false);
-    try {
-      logoutVenlyUser();
-    } catch {
-      console.log("wallet error");
-    }
-
-    dispatch(getUserCollectionsReset());
-
-    setTimeout(() => {
-      dispatch(getUserInfo());
-      navigate(is_store_instance ? "/" : "/store");
-      dispatch(fetchCategoriesReset()); // clearing fetched categories
-    }, 0);
+    router.push("/signout");
   };
 
   const aura_header_theme = config.aura_header_theme;
@@ -1044,4 +1013,3 @@ const Header = ({
 };
 
 export default Header;
-
