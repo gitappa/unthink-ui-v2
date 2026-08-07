@@ -7,13 +7,12 @@ import React, {
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, Spin, Input, Checkbox, Button, Modal, message, Tooltip } from "antd";
+import { Select, Spin, Input, Button, Modal, message, Tooltip } from "antd";
 import {
 	Loading3QuartersOutlined,
 	CloseOutlined,
 	CloseCircleOutlined,
 	PlusOutlined,
-	CheckSquareOutlined,
 } from "@ant-design/icons";
 import {
 	clearSuggestionsSelectedAdditionalTag,
@@ -39,6 +38,7 @@ import {
 	isEmpty,
 	removeEmptyItems,
 	setCookie,
+	getTTid,
 } from "../../helper/utils";
 import {
 	CHAT_TYPES_KEYS,
@@ -49,7 +49,6 @@ import {
 	FETCH_COLLECTIONS_PRODUCT_LIMIT,
 	GUESTSKIP_EXPIRE_HOURS,
 	SIGN_IN_EXPIRE_DAYS,
-	WISHLIST_TITLE,
 } from "../../constants/codes";
 import filterIcon from "../../images/filter_outline.svg";
 import Cookies from "js-cookie";
@@ -74,6 +73,11 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import WishListModal from "../wishlist/WishListModal";
 import { useUserData } from "../../context/UserDataContext";
+import { dispatchSelectedProductsAction } from "../shared/selectedProductsActions";
+import SelectedProductsActionBar, {
+	SELECTED_PRODUCTS_ACTIONS,
+} from "../shared/SelectedProductsActionBar";
+import singleCollectionStyles from "../../components/singleCollection/collectionDetails.module.scss";
 
 SwiperCore.use([FreeMode, Navigation]);
 
@@ -566,9 +570,28 @@ const [notData,setNotData] = useState(null)
 		setEnableSelectProduct(true);
 	};
 
+	const selectedProductsActions = useMemo(
+		() => [
+			...(is_store_instance ? [SELECTED_PRODUCTS_ACTIONS.SAVE] : []),
+			{
+				key: SELECTED_PRODUCTS_ACTIONS.WISHLIST,
+				title: "Add selected products to wishlist",
+			},
+			{
+				key: SELECTED_PRODUCTS_ACTIONS.CART,
+				title: "Add selected products to cart",
+			},
+			{
+				key: SELECTED_PRODUCTS_ACTIONS.SHARE,
+				title: "Select products and share published collection",
+			},
+		],
+		[],
+	);
+
 	const onAddSelectedProductsToCollection = useCallback(
 		(e =null,options ={}) => {
-			const { isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null, product: productToAdd = null, skipWishlistStateAfterGuest = false } = options;
+			const { action = "", isSave = false, isShare = false, isSkip = false, isGuestSubmit = false,userId = null, product: productToAdd = null, skipWishlistStateAfterGuest = false } = options;
 
 			if (e?.preventDefault) {
 				e?.preventDefault();
@@ -576,7 +599,8 @@ const [notData,setNotData] = useState(null)
 			}
 
 			const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
-			guestActionRef.current = isSave ? "save" : "share";
+			const isReusableSelectedProductsAction = ["cart", "wishlist"].includes(action);
+			guestActionRef.current = isSave ? "save" : isShare ? "share" : action;
 			if (!isGuestSubmit) {
 				skipWishlistStateAfterGuestRef.current = !!skipWishlistStateAfterGuest;
 				pendingWishlistProductAfterGuestRef.current = skipWishlistStateAfterGuest
@@ -590,7 +614,7 @@ const [notData,setNotData] = useState(null)
 				dispatch(GuestPopUpShow(true));
 				return;
 			}
-			else if (isSave && !isUserLogin && !isUserLoginCokkies && !isGuestSubmit) {
+			else if ((isSave || isReusableSelectedProductsAction) && !isUserLogin && !isUserLoginCokkies && !isGuestSubmit) {
 				dispatch(GuestPopUpShow(true));
 				return;
 			}
@@ -628,6 +652,23 @@ const [notData,setNotData] = useState(null)
 				...data,
 				user_id:userId || userData?.user_id || authUser?.user_id
 			};
+
+			if (isReusableSelectedProductsAction) {
+				const actionUserId = userId || userData?.user_id || authUser?.user_id || getTTid();
+				const isHandledSelectedProductsAction = dispatchSelectedProductsAction({
+					action,
+					dispatch,
+					products: SelectedProductsData,
+					selectedProducts,
+					userId: actionUserId,
+					source: "SEARCH",
+					onComplete: handleResetSelectProduct,
+				});
+
+				if (isHandledSelectedProductsAction) {
+					return;
+				}
+			}
 
 			if (isSave) {
 				if (isGuestSubmit && skipWishlistStateAfterGuestRef.current) {
@@ -692,10 +733,35 @@ const [notData,setNotData] = useState(null)
 			chatMessage,
 			widgetHeader,
 			widgetImage,
-			authUser.status,
-			chatImageUrl
+			authUser?.user_id,
+			chatImageUrl,
+			dispatch,
+			handleResetSelectProduct,
+			storeData?.event_id,
+			storeData?.store_name,
+			userData?.user_id,
 		]
 	);
+
+	const handleSelectedProductsAction = useCallback(
+		(item, e) => {
+			if (!selectedProducts.length) return;
+
+			if (item.key === SELECTED_PRODUCTS_ACTIONS.SAVE) {
+				onAddSelectedProductsToCollection(e, { isSave: true });
+				return;
+			}
+
+			if (item.key === SELECTED_PRODUCTS_ACTIONS.SHARE) {
+				onAddSelectedProductsToCollection(e, { isShare: true });
+				return;
+			}
+
+			onAddSelectedProductsToCollection(e, { action: item.key });
+		},
+		[selectedProducts.length, onAddSelectedProductsToCollection],
+	);
+
 	const onFiltersChange = (name, value) => {
 		const newFilters = { ...filters, [name]: value };
 		// console.log('newOptionalFilters',newFilters);
@@ -869,7 +935,7 @@ setNotData(newOptionalFilters)
 								console.error(e);
 							}
 						}
-						else if (guestActionRef.current === "save") {
+						else if (guestActionRef.current === "save" || ["cart", "wishlist"].includes(guestActionRef.current)) {
 							dispatch(GuestPopUpShow(false));
 
 							setCookie(COOKIE_TT_ID, user_id, SIGN_IN_EXPIRE_DAYS);
@@ -885,6 +951,8 @@ setNotData(newOptionalFilters)
 							onAddSelectedProductsToCollection(null, { isSave: true, isGuestSubmit: true, userId: user_id });
 						} else if (guestActionRef.current === "share") {
 							onAddSelectedProductsToCollection(null, { isShare: true, isGuestSubmit: true ,userId:data?.data?.user_id});
+						} else if (["cart", "wishlist"].includes(guestActionRef.current)) {
+							onAddSelectedProductsToCollection(null, { action: guestActionRef.current, isGuestSubmit: true, userId: user_id });
 						}
 					}
 				} catch (error) {
@@ -980,66 +1048,55 @@ setNotData(newOptionalFilters)
 
 
 							{chatProductsDataToShow.length && !isMobile ? (
-								<div className="flex flex-row items-center justify-start gap-3 mb-5 w-full box-border transition-all">
+								<div
+									className={`${singleCollectionStyles.selectBarRow} ${
+										enableSelectProduct
+											? singleCollectionStyles.selectBarRowWithCol
+											: singleCollectionStyles.selectBarRowDefault
+									} mb-5`}
+								>
+									<div className={singleCollectionStyles.selectBarLeft}>
 									{enableSelectProduct ? (
-										<>
-											<button
-												type="button"
-												className="min-h-10 rounded-xl border border-[#d9d6ff] bg-white px-3 py-2 text-sm font-semibold text-[#2f3652] shadow-sm transition-all hover:border-secondary hover:text-secondary hover:shadow-[0_6px_18px_rgba(114,104,236,0.14)] flex items-center gap-2"
-												onClick={onSelectAllChange}
-												title="Select all products"
-											>
-												<Checkbox
-													className="text-xs md:text-base"
-													onClick={(e) => e.stopPropagation()}
-													onChange={onSelectAllChange}
-													checked={
-														selectedProducts.length > 0 &&
-														selectedProducts.length === chatProductsDataToShow.length
-													}
-												/>
-												<span>{selectedProducts.length} selected</span>
-											</button>
-											{is_store_instance ? (
-												<button
-													type="button"
-													className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-white shadow-[0_6px_18px_rgba(114,104,236,0.2)] transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:bg-[#f2f1fd] disabled:text-[#a3a0bd] disabled:shadow-none"
-													onClick={(e) =>
-														onAddSelectedProductsToCollection(e, { isSave: true })
-													}
-													disabled={!selectedProducts.length}
-													title='Select and add products to collection'>
-													Save
-												</button>
-											) : null}
-											<button
-												type="button"
-												className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-white shadow-[0_6px_18px_rgba(114,104,236,0.2)] transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:bg-[#f2f1fd] disabled:text-[#a3a0bd] disabled:shadow-none"
-												onClick={(e) =>
-													onAddSelectedProductsToCollection(e, { isShare: true })
-												}
-												disabled={!selectedProducts.length}
-												title='Select products and share published collection'>
-												Share
-											</button>
-											<button
-												type="button"
-												onClick={handleResetSelectProduct}
-												className="min-h-10 rounded-xl border border-[#d9d6ff] bg-white px-4 py-2 text-sm font-semibold text-[#2f3652] transition-all hover:border-secondary hover:text-secondary">
-												Cancel
-											</button>
-										</>
+										<SelectedProductsActionBar
+											actions={selectedProductsActions}
+											selectedCount={selectedProducts.length}
+											isSelectMode={enableSelectProduct}
+											isIndeterminate={
+												selectedProducts.length > 0 &&
+												selectedProducts.length < chatProductsDataToShow.length
+											}
+											isAllSelected={
+												selectedProducts.length > 0 &&
+												selectedProducts.length === chatProductsDataToShow.length
+											}
+											onSelectAllChange={onSelectAllChange}
+											onCancel={handleResetSelectProduct}
+											onAction={handleSelectedProductsAction}
+											classNames={{
+												wrapper: singleCollectionStyles.selectCheckRow,
+												checkboxWrapper: singleCollectionStyles.selectCheckBorder,
+												checkbox: `${singleCollectionStyles.checkboxText} checkbox_singleCollection`,
+												dropdownActive: singleCollectionStyles.addToTextActive,
+												dropdownDisabled: singleCollectionStyles.addToTextDisabled,
+												dropdownButton: `${singleCollectionStyles.addToText} ${singleCollectionStyles.addToMenuButton}`,
+												dropdownIcon: singleCollectionStyles.addToMenuIcon,
+												cancelText: singleCollectionStyles.cancelText,
+											}}
+										/>
 									) : (
-										<button
-											type="button"
-											className="min-h-10 rounded-xl bg-secondary px-4 py-2 text-sm font-bold text-white shadow-[0_6px_18px_rgba(114,104,236,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_9px_24px_rgba(114,104,236,0.28)] flex items-center gap-2"
-											onClick={() => setEnableSelectProduct(true)}
-											title="Click and select multiple products"
-										>
-											<CheckSquareOutlined />
-											<span>Select</span>
-										</button>
+										<SelectedProductsActionBar
+											isSelectMode={enableSelectProduct}
+											onStartSelect={() => setEnableSelectProduct(true)}
+											labels={{
+												selectTitle: "Click and select multiple products",
+											}}
+											classNames={{
+												selectButton: singleCollectionStyles.addToCollectionBtn,
+												selectButtonRole: "link",
+											}}
+										/>
 									)}
+									</div>
 								</div>
 							) : null}
 						</>

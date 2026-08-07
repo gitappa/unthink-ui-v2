@@ -13,7 +13,7 @@ export const access_key =
 export const auraYfretUserCollBaseUrl =
 	process.env.NEXT_PUBLIC_AURA_YFRET_USER_COLL_BASE_URL;
 export const webbotNFTServiceBaseUrl =
-	process.env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL;  
+	process.env.NEXT_PUBLIC_WEBBOT_NFT_SERVICE__BASE_URL;
 // export const realtimeAIBaseUrl =
 // 	process.env.NEXT_PUBLIC_REALTIME_AI_BASE_URL ||
 // "https://realtimeapplication-dlwl6keu2q-uc.a.run.app";
@@ -32,8 +32,8 @@ export const instance_logo = process.env.NEXT_PUBLIC_INSTANCE_LOGO;
 export const home_page_url = process.env.NEXT_PUBLIC_HOME_PAGE_URL;
 export const aura_header_theme = process.env.NEXT_PUBLIC_AURA_HEADER_THEME;
 
- 
- 
+
+
 // enabled view similar products if true
 export const enable_view_similar_products =
 	process.env.NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS;
@@ -66,3 +66,5 @@ export const pdp_page_enabled = process.env.NEXT_PUBLIC_PDP_PAGE_ENABLED === "tr
 export const current_store_name = process.env.NEXT_PUBLIC_CURRENT_STORE_NAME;
 export const current_store_id = process.env.NEXT_PUBLIC_CURRENT_STORE_ID;
 export const payment_url = process.env.NEXT_PUBLIC_PAYMENT_URL;
+export const event_app_api_base_url =
+	process.env.NEXT_PUBLIC_EVENT_APP_API_BASE_URL;

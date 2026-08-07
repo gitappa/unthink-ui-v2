@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import {
   getUserInfo,
-  getwishlistUserCollection,
   GuestPopUpShow,
 } from "../Auth/redux/actions";
 import {
@@ -27,7 +26,6 @@ import {
   COLLECTION_COVER_IMG_SIZE_900_900,
   COOKIE_TT_ID,
   SIGN_IN_EXPIRE_DAYS,
-  WISHLIST_TITLE,
 } from "../../constants/codes";
 import { addToWishlist } from "../wishlistActions/addToWishlist/redux/actions";
 import { current_store_name, super_admin } from "../../constants/config";
@@ -40,10 +38,8 @@ import Cookies from "js-cookie";
 import SingleCollectionProductListView from "./components/SingleCollectionProductListView";
 import { updateWishlist } from "../wishlistActions/updateWishlist/redux/actions";
 import { notification } from "antd";
-import { addToCart } from "../DeliveryDetails/redux/action";
-import { removeFromWishlist } from "../wishlistActions/removeFromWishlist/redux/actions";
 import CropAndResizeImageModal from "../cropAndResizeImageModal/CropAndResizeImageModal";
-import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+import { dispatchSelectedProductsAction } from "../shared/selectedProductsActions";
 
 const tagsMinSizeForShowMore = 5;
 
@@ -438,70 +434,25 @@ const url = window.location.pathname === '/my-profile/'
       ...options,
     };
 
-    const selectedProductPayload = finalProductsToAdd.map((item) => ({
-      mfr_code: item.mfr_code,
-      tagged_by: item.tagged_by || [],
-      name: item.name,
-      image: item.image,
-    }));
     const actionUserId = finalOptions.context?.userId || authUser?.user_id || getTTid();
 
-    if (finalOptions.action === "cart") {
-      dispatch(
-        addToCart({
-          is_display_amount: true,
-          products: selectedProductPayload.map((item) => ({
-            ...item,
-            qty: 1,
-            source: "COLLECTION",
-            collection: {
-              id: blogCollectionPage?._id,
-              name: blogCollectionPage?.collection_name,
-              path: blogCollectionPage?.path,
-            },
-          })),
-          product_lists: [],
-          collection_name: "my cart",
-          type: "system",
-          user_id: actionUserId,
-          path: `my_cart_${actionUserId}`,
-        }),
-      );
-      handleResetSelectProduct();
-      return;
-    }
+    const isHandledSelectedProductsAction = dispatchSelectedProductsAction({
+      action: finalOptions.action,
+      dispatch,
+      products: finalProductsToAdd,
+      selectedProducts,
+      userId: actionUserId,
+      source: "COLLECTION",
+      collection: {
+        id: blogCollectionPage?._id,
+        name: blogCollectionPage?.collection_name,
+        path: blogCollectionPage?.path,
+      },
+      collectionId: singleCollection?._id || blogCollectionPage?._id,
+      onComplete: handleResetSelectProduct,
+    });
 
-    if (finalOptions.action === "wishlist") {
-      dispatch(
-        addProductToWishlistCollection({
-          product_lists: selectedProductPayload,
-          user_id: actionUserId,
-          successMessage: `${WISHLIST_TITLE} updated successfully`,
-          errorMessage: `Failed to update ${WISHLIST_TITLE}`,
-            callback:(()=>{
-                  dispatch(
-                  getwishlistUserCollection({
-                    path: `my_wishlist_${actionUserId}`,
-                  }),
-                );
-                })
-        }),
-      );
-      handleResetSelectProduct();
-      return;
-    }
-    if (finalOptions.action === "Delete") {
-      const collectionIdToUpdate = singleCollection?._id || blogCollectionPage?._id;
-     dispatch(
-      removeFromWishlist({
-        _id: collectionIdToUpdate,
-        products: selectedProducts,
-        successMessage: "Products deleted successfully",
-        errorMessage: "Failed to delete products",
-        removeFromUserCollections: true,
-      }),
-    );
-      handleResetSelectProduct();
+    if (isHandledSelectedProductsAction) {
       return;
     }
 
