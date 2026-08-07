@@ -1149,7 +1149,7 @@ useEffect(()=>{
 					isMyProfilePage ||
 					isCustomProductsPage ||
 					isStorePage ||
-					breadcrumbTheme) ? (
+					breadcrumbTheme || isCartPage ) ? (
 				<Breadcrumbs
 					isRootPage={isRootPage}
 					isCollectionPage={isCollectionPage}
