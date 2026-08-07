@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import {
   getUserInfo,
+  getwishlistUserCollection,
   GuestPopUpShow,
 } from "../Auth/redux/actions";
 import {
@@ -42,6 +43,7 @@ import { notification } from "antd";
 import { addToCart } from "../DeliveryDetails/redux/action";
 import { removeFromWishlist } from "../wishlistActions/removeFromWishlist/redux/actions";
 import CropAndResizeImageModal from "../cropAndResizeImageModal/CropAndResizeImageModal";
+import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
 
 const tagsMinSizeForShowMore = 5;
 
@@ -439,6 +441,8 @@ const url = window.location.pathname === '/my-profile/'
     const selectedProductPayload = finalProductsToAdd.map((item) => ({
       mfr_code: item.mfr_code,
       tagged_by: item.tagged_by || [],
+      name: item.name,
+      image: item.image,
     }));
     const actionUserId = finalOptions.context?.userId || authUser?.user_id || getTTid();
 
@@ -469,14 +473,18 @@ const url = window.location.pathname === '/my-profile/'
 
     if (finalOptions.action === "wishlist") {
       dispatch(
-        addToWishlist({
-          products: selectedProductPayload,
-          product_lists: [],
-          collection_name: "my wishlist",
-          type: "system",
+        addProductToWishlistCollection({
+          product_lists: selectedProductPayload,
           user_id: actionUserId,
           successMessage: `${WISHLIST_TITLE} updated successfully`,
           errorMessage: `Failed to update ${WISHLIST_TITLE}`,
+            callback:(()=>{
+                  dispatch(
+                  getwishlistUserCollection({
+                    path: `my_wishlist_${actionUserId}`,
+                  }),
+                );
+                })
         }),
       );
       handleResetSelectProduct();

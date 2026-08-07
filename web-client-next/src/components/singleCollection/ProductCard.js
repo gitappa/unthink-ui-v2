@@ -101,6 +101,7 @@ import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import { FaCartArrowDown } from "react-icons/fa";
 import { removeFromWishlist } from "../../pageComponents/wishlistActions/removeFromWishlist/redux/actions";
+import { addProductToWishlistCollection } from "../../pageComponents/wishlistActions/addProductToWishlistCollection/redux/actions";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -441,30 +442,24 @@ const ProductCard = ({
       }
 
       const payload = {
-        collection_type: "my_wishlist_collection",
-        status: "published",
-        collection_name: "my wishlist",
-        user_id: userId,
+         user_id: userId,
         store: storeData?.store_name || "dothelook",
         Event_id: storeData?.event_id || "dothelookwebpage_447990",
-        product_lists: [
-          {
+       
             mfr_code: product.mfr_code,
-            name: product.name,
-            image: product.image,
-          },
-        ],
+            product_name: product.name,
+            product_image: product.image,
+              callback:(()=>{
+        dispatch(
+        getwishlistUserCollection({
+          path: `my_wishlist_${userId}`,
+        }),
+      );
+      })
+         
       };
-
-      try {
-        const response =
-          await collectionPageAPIs.createWishlistHandpickedAPICall(payload);
-        notification.success({ message: "Added to wishlist!" });
-        return response;
-      } catch (err) {
-        notification.error({ message: "Failed to add to wishlist" });
-        return null;
-      }
+    
+      dispatch(addProductToWishlistCollection(payload));
     },
     [product, storeData?.event_id, storeData?.store_name],
   );
@@ -529,20 +524,7 @@ const ProductCard = ({
       return;
     }
 
-    await callHandpickedAPI(kioskLogin?.user_id || authUserId || getTTid());
-    if (isUserLogin) {
-      let login_userID;
-      if (kioskLogin) {
-        login_userID = kioskLogin?.user_id;
-      } else if (!kioskLogin) {
-        login_userID = authUserId;
-      }
-      dispatch(
-        getwishlistUserCollection({
-          path: `my_wishlist_${login_userID}`,
-        }),
-      );
-    }
+     callHandpickedAPI(kioskLogin?.user_id || authUserId );
   };
 
   // useEffect(()=>{
