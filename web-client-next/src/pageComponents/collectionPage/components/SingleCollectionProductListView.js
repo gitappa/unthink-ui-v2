@@ -859,7 +859,7 @@ const SingleCollectionProductListView = ({
                                     title="Click to add selected products"
                                     disabled={!selectedProducts.length}
                                   >
-                                    Add to <DownOutlined className={styles.addToMenuIcon} />
+                                    Actions <DownOutlined className={styles.addToMenuIcon} />
                                   </button>
                                 </Dropdown>
 
@@ -878,7 +878,7 @@ const SingleCollectionProductListView = ({
                                 onClick={() => setEnableSelectProduct(true)}
                                 title="Click and select multiple products to add to collection"
                               >
-                                Action
+                                Select
                               </p>
                             )}
                           </div>
