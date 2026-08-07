@@ -6,6 +6,7 @@ import {
   CHAT_SEARCH_OPTION_ID,
   CHAT_SEARCH_TYPES,
   CHAT_TYPE_CHAT,
+  CHAT_TYPES_KEYS,
   PARAM_SEARCH_TEXT,
   STORE_USER_NAME_BUDGETTRAVEL,
   STORE_USER_NAME_DOTHELOOK,
@@ -42,6 +43,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     auraChatSetting,
     widgetHeaderRequest,
     selectedSearchOption,
+    chatImageUrl,
     searchOptions,
     admin_list,
     storeData,
@@ -54,6 +56,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     state.chatV2.auraChatSetting,
     state.chatV2.widgetHeaderRequest,
     state.chatV2.activeSearchOption || {},
+    state.chatV2[CHAT_TYPES_KEYS[CHAT_TYPE_CHAT].chatImageUrl],
     state.store.data.searchOptions || [],
     state.store.data.admin_list,
     state.store.data,
@@ -156,19 +159,18 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     }
   }, [auraSearchText, user?.data?.user_id, userDataSent]);
 
-  // console.log();
-
   const chatInputMetadata = useMemo(
     () => ({
       searchOptionId: activeSearchOption?.id,
       follow_qn:activeSearchOption.follow_up_search_enable  ?  isFollowUpQuery : false,
+      followup_image_url:isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl :undefined,
       aura_text_ss: isSendSSTemplates && !isEmpty(auraChatSetting.aura_text_ss) ? auraChatSetting.aura_text_ss : undefined,
       aura_text_stl: isSendSTLTemplates && !isEmpty(auraChatSetting.aura_text_stl) ? auraChatSetting.aura_text_stl : undefined,
       aura_text_ctl: isSendCTLTemplates && !isEmpty(auraChatSetting.aura_text_ctl) ? auraChatSetting.aura_text_ctl : undefined,
       aura_image_stl: isSendSTLTemplates && !isEmpty(auraChatSetting.aura_image_stl) ? auraChatSetting.aura_image_stl : undefined,
       aura_image_ctl: isSendCTLTemplates && !isEmpty(auraChatSetting.aura_image_ctl) ? auraChatSetting.aura_image_ctl : undefined,
     }),
-    [showSettings, activeSearchOption?.id, JSON.stringify(auraChatSetting), isSendSTLTemplates, isSendCTLTemplates, auraChatSetting, isFollowUpQuery]
+    [showSettings, activeSearchOption?.id, JSON.stringify(auraChatSetting), isSendSTLTemplates, isSendCTLTemplates, auraChatSetting, isFollowUpQuery, chatImageUrl]
   );
   const router = useRouter();
   const isHomePage = router.pathname === "/";
