@@ -6,7 +6,7 @@ import { Spin } from "antd";
 import { SIGN_IN_EXPIRE_DAYS } from "../src/constants/codes";
 import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../src/helper/utils";
 import { logoutVenlyUser } from "../src/helper/venlyUtils";
-import { getUserCollectionsReset, getUserInfo } from "../src/pageComponents/Auth/redux/actions";
+import { getUserCollectionsReset, getUserInfo, getUserInfoSuccess } from "../src/pageComponents/Auth/redux/actions";
 import { is_store_instance } from "../src/constants/config";
 import { fetchCategoriesReset } from "../src/pageComponents/categories/redux/actions";
 
@@ -36,17 +36,22 @@ const SignOut = () => {
         }
 
         // Reset Redux state
+        dispatch(getUserInfoSuccess({}));
         dispatch(getUserCollectionsReset());
         dispatch(fetchCategoriesReset());
 
         setTimeout(() => {
           dispatch(getUserInfo());
           // Redirect to home or store page
-          router.push(is_store_instance ? "/" : "/store");
+          const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+          const redirect = params ? params.get("redirect") : null;
+          router.push(redirect || (is_store_instance ? "/" : "/store"));
         }, 2000);
       } catch (error) {
         console.log("Sign out error:", error);
-        router.push(is_store_instance ? "/" : "/store");
+        const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+        const redirect = params ? params.get("redirect") : null;
+        router.push(redirect || (is_store_instance ? "/" : "/store"));
       }
     };
 
@@ -93,7 +98,11 @@ const SignOut = () => {
           <p className="text-sm text-gray-600">
             If you are not redirected automatically,{" "}
             <button
-              onClick={() => router.push(is_store_instance ? "/" : "/store")}
+              onClick={() => {
+                const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+                const redirect = params ? params.get("redirect") : null;
+                router.push(redirect || (is_store_instance ? "/" : "/store"));
+              }}
               className="text-red-600 font-semibold hover:text-red-700 transition-colors underline"
             >
               click here

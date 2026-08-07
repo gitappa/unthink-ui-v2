@@ -1,0 +1,69 @@
+import React from "react";
+import { FiActivity, FiBarChart2, FiUsers } from "react-icons/fi";
+
+import { aura_header_theme } from "../../../constants/config";
+import ChatContainer from "../../storePage/ChatContainer";
+import StoreAssistantRealtimeFeed from "../realtimeFeed/StoreAssistantRealtimeFeed";
+import StoreAssistantUploadMedia from "../uploadMedia/StoreAssistantUploadMedia";
+import styles from "../StoreAssistantDashboard.module.scss";
+
+const PlaceholderPanel = ({ icon: Icon, title, description, children }) => (
+  <section className={styles.placeholderPanel}>
+    <div className={styles.placeholderIcon}><Icon /></div>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    {children}
+  </section>
+);
+
+const StoreAssistantOutlet = ({ activeTab, settings }) => {
+  if (activeTab === "aura_search") {
+    return (
+      <section className={styles.auraOutlet}>
+        <ChatContainer
+          isAuraChatPage
+          renderInline
+          config={{ aura_header_theme }}
+        />
+      </section>
+    );
+  }
+
+  if (activeTab === "upload_media") {
+    return <StoreAssistantUploadMedia />;
+  }
+
+  if (activeTab === "realtime_feed") {
+    return <StoreAssistantRealtimeFeed settings={settings} />;
+  }
+
+  if (activeTab === "customers") {
+    return (
+      <PlaceholderPanel
+        icon={FiUsers}
+        title="My Customers"
+        description="Customer lookup, recent sessions, and customer profile previews will be added here."
+      />
+    );
+  }
+
+  if (activeTab === "stats") {
+    return (
+      <PlaceholderPanel
+        icon={FiBarChart2}
+        title="Stats"
+        description="Assistant activity, collections created, uploads, and customer engagement metrics will be added here."
+      />
+    );
+  }
+
+  return (
+    <PlaceholderPanel
+      icon={FiActivity}
+      title="Select a tool"
+      description="Choose Aura Search, Upload Media, Real-time Feed, or an event from the assistant menu."
+    />
+  );
+};
+
+export default StoreAssistantOutlet;

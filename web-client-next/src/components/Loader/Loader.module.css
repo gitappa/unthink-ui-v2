@@ -45,3 +45,19 @@
     border-radius: 9999px;
     /* rounded-full */
 }
+
+.simpleLoader {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    border: 3px solid rgba(17, 24, 39, 0.12);
+    border-top-color: #111827;
+    border-radius: 9999px;
+    animation: simpleLoaderSpin 0.8s linear infinite;
+}
+
+@keyframes simpleLoaderSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}

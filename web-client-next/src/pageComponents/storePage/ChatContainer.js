@@ -33,7 +33,7 @@ import { useRouter } from "next/router";
 
 const defaultHiMessage = "Hi";
 
-const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBTInstance, isAuraChatPage = false }) => {
+const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBTInstance, isAuraChatPage = false, renderInline = false }) => {
   const [
     user,
     userDataSent,
@@ -251,7 +251,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
 
   return (
     <>
-      {storeData?.is_searchOptions_enabled ? (
+      {!renderInline && storeData?.is_searchOptions_enabled ? (
         <div className={`${!isNotHomePage ? 'hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2' : 'hidden'} `}>
           <Chat
             handleMicrophoneClick={handleMicrophoneClick}
@@ -268,10 +268,11 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
             isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
           />
         </div>
-      ) : (
+      ) : !renderInline ? (
         <div className="hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2" />
-      )}
-      {portalTarget && shouldShowChatModal && isNotHomePage ? createPortal(chatModalLayer, portalTarget) : null}
+      ) : null}
+      {renderInline && shouldShowChatModal ? chatModalLayer : null}
+      {!renderInline && portalTarget && shouldShowChatModal && isNotHomePage ? createPortal(chatModalLayer, portalTarget) : null}
     </>
   );
 };
