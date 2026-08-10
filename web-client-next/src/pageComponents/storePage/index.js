@@ -1357,6 +1357,7 @@ useEffect(()=>{
 										selectedSortOption={selectedSortOption}
 										handleSortOptionChange={handleSortOptionChange}
 										isPageOwner={isPageOwner}
+										storeData={storeData}
 									/>
 								)}
 							</>
