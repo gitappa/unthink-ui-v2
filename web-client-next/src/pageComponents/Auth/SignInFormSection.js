@@ -101,13 +101,13 @@ export default function SignInFormSection() {
         }
 
         // Seller but not visited create collection
-        if (
-          isSellerLoggedIn &&
-          !localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
-        ) {
-          router.push(PATH_CREATE_COLLECTION);
-          return;
-        }
+        // if (
+        //   isSellerLoggedIn &&
+        //   !localStorage.getItem(LOCAL_STORAGE_USER_VISITED_CREATE_COLLECTION)
+        // ) {
+        //   router.push(PATH_CREATE_COLLECTION);
+        //   return;
+        // }
         // Default
         if (userData) {
           router.push(PATH_ROOT);

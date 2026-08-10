@@ -663,6 +663,7 @@ const [notData,setNotData] = useState(null)
 					userId: actionUserId,
 					source: "SEARCH",
 					onComplete: handleResetSelectProduct,
+					store_name: storeData?.store_name ,
 				});
 
 				if (isHandledSelectedProductsAction) {
@@ -683,7 +684,7 @@ const [notData,setNotData] = useState(null)
 								mfr_code: selectedProduct.mfr_code,
 								product_name: selectedProduct.name,
 								product_image: selectedProduct.image,
-								store: storeData?.store_name || "dothelook",
+								store:  storeData?.store_name || "dothelook",
 								user_id: loginUserId,
 								eventId: storeData?.event_id,
 								successMessage: "Product added to wishlist successfully!",

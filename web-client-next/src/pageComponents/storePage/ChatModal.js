@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
-import { Tooltip, Image, Upload, Spin, Checkbox } from "antd";
+import { Tooltip, Image, Upload, Spin, Checkbox, notification } from "antd";
 import {
   CloseCircleFilled,
   CloseOutlined,
@@ -88,6 +88,7 @@ import AuraInputBox from "./AuraInputBox";
 import Recommendations from "../recommendations/Recommendations";
 import { KioskSearchOptions } from "../kioskSearchOptions/KioskSearchOptions";
 import { socket, SocketContext } from "../../context/socketV2";
+import CameraCapture from "../../components/shared/CameraCapture";
 import upload_icon from "./Images/upload_icon.png";
 import page_info from "./Images/page_info.png";
 
@@ -571,26 +572,50 @@ const ChatModal = ({
 
   const getImageSrc = (image) => image?.src || image;
 
+  const handleUploadChatImage = useCallback(
+    async (file) => {
+      if (!file) return;
+
+      try {
+        setIsUploadingImage(true);
+        const response = await profileAPIs.uploadImage({ file });
+        const imageUrl = response?.data?.data?.[0]?.url;
+
+        if (imageUrl) {
+          dispatch(setChatImageUrl(imageUrl, chatTypeKey));
+          // Close panel after upload - the pill will show in the main input
+          setIsFigmaUploadPanelOpen(false);
+          return;
+        }
+
+        notification.error({
+          message: "Image Upload Failed",
+          description: "Something went wrong. Please try again.",
+        });
+      } catch (error) {
+        dispatch(setShowChatLoader(false, chatTypeKey)); // stop loader on aura search is any error
+        notification.error({
+          message: "Image Upload Failed",
+          description:
+            error?.response?.data?.message || "Unexpected error occurred",
+        });
+      } finally {
+        setIsUploadingImage(false);
+      }
+    },
+    [chatTypeKey, dispatch],
+  );
+
   const uploadImageProps = {
     accept: "image/*",
     multiple: false,
-    customRequest: async (info) => {
+    customRequest: async ({ file, onSuccess, onError }) => {
       try {
-        setIsUploadingImage(true);
-        if (info?.file) {
-          const response = await profileAPIs.uploadImage({
-            file: info.file,
-          });
-          if (response?.data?.data[0]) {
-            dispatch(setChatImageUrl(response?.data?.data[0].url, chatTypeKey));
-            // Close panel after upload - the pill will show in the main input
-            setIsFigmaUploadPanelOpen(false);
-          }
-        }
+        await handleUploadChatImage(file);
+        onSuccess?.("ok");
       } catch (error) {
-        dispatch(setShowChatLoader(false, chatTypeKey)); // stop loader on aura search is any error
+        onError?.(error);
       }
-      setIsUploadingImage(false);
     },
   };
 
@@ -1583,80 +1608,137 @@ const ChatModal = ({
                                             />
                                           </div>
                                         ) : (
-                                          <>
-                                            <Dragger
-                                              className={
-                                                styles["chatmodal-figma-upload-dragger"]
-                                              }
-                                              {...uploadImageProps}
-                                              name="image_url"
-                                              showUploadList={false}
-                                            >
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-icon"
-                                                  ]
-                                                }
-                                              >
-                                                <PictureOutlined />
-                                              </p>
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-text"
-                                                  ]
-                                                }
-                                              >
-                                                <span>Click to upload</span> or drag and
-                                                drop
-                                              </p>
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-hint"
-                                                  ]
-                                                }
-                                              >
-                                                JPG, JPEG, PNG less than 1MB
-                                              </p>
-                                            </Dragger>
-                                            <div
-                                              className={
-                                                styles["chatmodal-figma-upload-or"]
-                                              }
-                                            >
-                                              or
-                                            </div>
-                                            <div
-                                              className={
-                                                styles[
-                                                "chatmodal-figma-upload-url-section"
-                                                ]
-                                              }
-                                            >
-                                              <label
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-url-label"
-                                                  ]
-                                                }
-                                              >
-                                                Image URL
-                                              </label>
-                                              <input
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-url-input"
-                                                  ]
-                                                }
-                                                placeholder="Or Enter Image URL"
-                                                type="text"
-                                                value={chatImageUrl}
-                                                onChange={handleFigmaImageUrlChange}
-                                              />
-                                            </div>
-                                          </>
+                                          <CameraCapture
+                                            onCapture={handleUploadChatImage}
+                                            switchButtonLabel="Switch"
+                                            switchingButtonLabel="Switching"
+                                            panelClassName={
+                                              styles[
+                                              "chatmodal-camera-capture-panel"
+                                              ]
+                                            }
+                                            videoClassName={
+                                              styles["chatmodal-camera-preview"]
+                                            }
+                                            actionsClassName={
+                                              styles["chatmodal-camera-actions"]
+                                            }
+                                            secondaryButtonClassName={
+                                              styles[
+                                              "chatmodal-camera-secondary-button"
+                                              ]
+                                            }
+                                            primaryButtonClassName={
+                                              styles[
+                                              "chatmodal-camera-primary-button"
+                                              ]
+                                            }
+                                            renderIdle={({
+                                              openCamera,
+                                              isCameraStarting,
+                                              CameraIcon,
+                                              LoadingIcon,
+                                            }) => (
+                                              <>
+                                                <Dragger
+                                                  className={
+                                                    styles["chatmodal-figma-upload-dragger"]
+                                                  }
+                                                  {...uploadImageProps}
+                                                  name="image_url"
+                                                  showUploadList={false}
+                                                >
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-icon"
+                                                      ]
+                                                    }
+                                                  >
+                                                    <PictureOutlined />
+                                                  </p>
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-text"
+                                                      ]
+                                                    }
+                                                  >
+                                                    <span>Click to upload</span> or drag and
+                                                    drop
+                                                  </p>
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-hint"
+                                                      ]
+                                                    }
+                                                  >
+                                                    JPG, JPEG, PNG less than 1MB
+                                                  </p>
+                                                </Dragger>
+                                                <div
+                                                  className={
+                                                    styles["chatmodal-figma-upload-or"]
+                                                  }
+                                                >
+                                                  or
+                                                </div>
+                                                <button
+                                                  type="button"
+                                                  onClick={openCamera}
+                                                  disabled={isCameraStarting}
+                                                  className={
+                                                    styles[
+                                                    "chatmodal-camera-open-button"
+                                                    ]
+                                                  }
+                                                >
+                                                  {isCameraStarting ? (
+                                                    <LoadingIcon />
+                                                  ) : (
+                                                    <CameraIcon />
+                                                  )}
+                                                  Take Photo
+                                                </button>
+                                                <div
+                                                  className={
+                                                    styles["chatmodal-figma-upload-or"]
+                                                  }
+                                                >
+                                                  or
+                                                </div>
+                                                <div
+                                                  className={
+                                                    styles[
+                                                    "chatmodal-figma-upload-url-section"
+                                                    ]
+                                                  }
+                                                >
+                                                  <label
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-url-label"
+                                                      ]
+                                                    }
+                                                  >
+                                                    Image URL
+                                                  </label>
+                                                  <input
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-url-input"
+                                                      ]
+                                                    }
+                                                    placeholder="Or Enter Image URL"
+                                                    type="text"
+                                                    value={chatImageUrl}
+                                                    onChange={handleFigmaImageUrlChange}
+                                                  />
+                                                </div>
+                                              </>
+                                            )}
+                                          />
                                         )}
                                       </div>
                                     )}
@@ -2141,6 +2223,3 @@ const ChatModal = ({
 };
 
 export default ChatModal;
-
-
-

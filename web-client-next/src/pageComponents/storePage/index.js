@@ -472,6 +472,35 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			) || {},
 		[pageUserCollections, collection_id, collection_path, allCollectionData]
 	);
+
+	const isCurrentSingleCollectionReady = useMemo(() => {
+		if (!isSingleCollectionSharedPage) return true;
+		if (!currentSingleCollection?._id) return false;
+
+		const isCurrentRouteCollection =
+			(collection_id && currentSingleCollection._id === collection_id) ||
+			(collection_path && currentSingleCollection.path === collection_path);
+
+		const isSingleCollectionDetailForRoute =
+			(collection_id && singleCollections?._id === collection_id) ||
+			(collection_path && singleCollections?.path === collection_path);
+
+		return (
+			!!isCurrentRouteCollection &&
+			(!!currentSingleCollection.detailed ||
+				(!!isSingleCollectionDetailForRoute && !!singleCollections?.detailed))
+		);
+	}, [
+		isSingleCollectionSharedPage,
+		currentSingleCollection?._id,
+		currentSingleCollection?.path,
+		currentSingleCollection?.detailed,
+		singleCollections?._id,
+		singleCollections?.path,
+		singleCollections?.detailed,
+		collection_id,
+		collection_path,
+	]);
  
 
 
@@ -1307,7 +1336,7 @@ useEffect(()=>{
 								)}
 
 								{/* collection page content [collection details and product list]   */}
-								{isSingleCollectionSharedPage && currentSingleCollection && (
+								{isSingleCollectionSharedPage && isCurrentSingleCollectionReady && (
 									// <CollectionPageContent collection_name={collection_name} />
 									<SingleCollectionProductList
 										sharePageUrl={sharePageUrl}
@@ -1328,6 +1357,7 @@ useEffect(()=>{
 										selectedSortOption={selectedSortOption}
 										handleSortOptionChange={handleSortOptionChange}
 										isPageOwner={isPageOwner}
+										storeData={storeData}
 									/>
 								)}
 							</>

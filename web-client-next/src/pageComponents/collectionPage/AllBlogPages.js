@@ -173,6 +173,7 @@ const AllBlogPages = ({
 						}
 						selectedSortOption={selectedSortOption}
 						handleSortOptionChange={handleSortOptionChange}
+						
 					/>
 				))}
 			</div>
