@@ -32,17 +32,37 @@ const PageDetailsComponent = ({
   isSamskaraInstance,
   isHeroesVillainsInstance,
   collectionsBy,
-  isCollectionPage
+  isCollectionPage,
+  collection_id,
+collection_path,
 }) => {
-  const [storeData, isGuestUser, singleCollections, influencerCollections] =
+  const [
+    storeData,
+    isGuestUser,
+    singleCollections,
+    influencerCollections,
+    authUserCollectionsFetching,
+    influencerCollectionsFetching,
+  ] =
     useSelector((state) => [
       state.store.data,
       state.auth.user.userNotFound,
       state.auth.user.singleCollections.data,
       state.auth.user.data,
+      state.auth.user.collections.isFetching,
+      state.influencer.collections.isFetching,
     ]);
-const publish = singleCollections.status === 'published'
-	const userId = influencerCollections.user_id === singleCollections.user_id
+    const isSingleCollectionForRoute =
+  (collection_id && singleCollections?._id === collection_id) ||
+  (collection_path && singleCollections?.path === collection_path);
+  
+    const collectionForCheck = currentSingleCollection?._id
+  ? currentSingleCollection
+  : isSingleCollectionForRoute ? singleCollections : {};
+const publish = collectionForCheck.status === 'published'
+	const userId = influencerCollections.user_id === collectionForCheck.user_id
+  
+
   const {
     my_products_enable: isMyProductsEnable,
     seller_list: storeSellerList,
@@ -123,8 +143,11 @@ const publish = singleCollections.status === 'published'
       });
     }
   }, [enablePageViewTracking, pageUser.user_id, isSingleCollectionSharedPage]);
-
-  if (isPageLoading ) {
+const isSingleCollectionFetching =
+  isSingleCollectionSharedPage &&
+  !isPageOwner &&
+  (authUserCollectionsFetching || influencerCollectionsFetching);
+  if (isPageLoading || isSingleCollectionFetching) {
     return (
    <div className='lg:container lg:mx-auto'>
 				<div className='max-w-6xl-1 lg:max-w-3xl-2 2xl:max-w-6xl-2 mx-auto'>
@@ -144,18 +167,17 @@ const publish = singleCollections.status === 'published'
 			</div>
     );
   }
-	if (!userId && !publish && isSingleCollectionSharedPage && !isPageOwner ) {
+	// if (!userId && !publish && isSingleCollectionSharedPage && !isPageOwner && !authUserCollectionsFetching) {
 	 
-		return <BlogPageNotFound />
-	}
+	// 	return <BlogPageNotFound />
+	// }
 
-  if (isSingleCollectionSharedPage && !isPageLoading  && !isPageOwner) {
-    if (!currentSingleCollection._id) {
+  if (isSingleCollectionSharedPage   && !isPageOwner ) {
+    if (!collectionForCheck._id) {
       // UPDATE // RE_CHECK LOGIC OR KEEP IT
       return <BlogPageNotFound />;
     }
-  } else {
-    if (!pageUser.user_id && !isPageLoading && !isPageOwner) {
+  else if (!userId && !publish) {
       return <UserNotFound />;
     }
   }
