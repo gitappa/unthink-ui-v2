@@ -1,6 +1,7 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Head from 'next/head';
 import { Helmet } from 'react-helmet';
+import Router from 'next/router';
 
 // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
 import 'antd/dist/reset.css';
@@ -46,9 +47,20 @@ import {
   current_store_name,
 } from '../src/constants/config';
 import { UserDataProvider } from '../src/context/UserDataContext';
+import styles from './_app.module.css';
+
+const RouteLoader = () => (
+  <div className={styles.routeLoaderOverlay}>
+    <div className={styles.routeLoaderPanel}>
+      <span className={styles.routeLoaderSpinner} />
+      <p>Loading...</p>
+    </div>
+  </div>
+);
 
 function MyApp({ Component, pageProps }) {
   const [mounted, setMounted] = useState(false);
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
 
   // Use useLayoutEffect to set mounted state before browser paints
   useLayoutEffect(() => {
@@ -59,6 +71,23 @@ function MyApp({ Component, pageProps }) {
 
     // Initialize app tracker
     appTracker.onVisit();
+  }, []);
+
+  useEffect(() => {
+    const handleRouteChangeStart = (url) => {
+      if (url !== Router.asPath) setIsRouteLoading(true);
+    };
+    const handleRouteChangeEnd = () => setIsRouteLoading(false);
+
+    Router.events.on('routeChangeStart', handleRouteChangeStart);
+    Router.events.on('routeChangeComplete', handleRouteChangeEnd);
+    Router.events.on('routeChangeError', handleRouteChangeEnd);
+
+    return () => {
+      Router.events.off('routeChangeStart', handleRouteChangeStart);
+      Router.events.off('routeChangeComplete', handleRouteChangeEnd);
+      Router.events.off('routeChangeError', handleRouteChangeEnd);
+    };
   }, []);
 
   // Determine font styling based on store
@@ -92,6 +121,7 @@ function MyApp({ Component, pageProps }) {
                 <UserDataProvider>
                 {mounted ? (
                   <>
+                    {isRouteLoading ? <RouteLoader /> : null}
                     <AppLoaderComponent />
                     <AppMessageModal />
                     <ProductDetailsCopyModalComponent />

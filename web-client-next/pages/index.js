@@ -1,8 +1,9 @@
 // old : used Brands as a home page
 // new : using RootStatic as a home page
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
 import { aura_header_theme, is_store_instance } from "../src/constants/config";
 import Footer from "../src/pageComponents/staticHomePage/Footer";
@@ -17,6 +18,8 @@ import { fetchCart } from "../src/pageComponents/DeliveryDetails/redux/action";
 import { getStoredKioskLoginUserId } from "../src/helper/utils";
 import { getTTid } from "../src/helper/getTrackerInfo";
 import KioskRoot from "../src/pageComponents/kiosk/KioskRoot";
+import { normalizeStoreAssistantSettings } from "../src/pageComponents/storeAssistant/utils/normalizeStoreAssistantSettings";
+import { hasStoreAssistantAccess } from "../src/pageComponents/storeAssistant/utils/storeAssistantAccess";
 
 // Dynamically import StorePage to avoid hydration issues
 const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
@@ -27,6 +30,7 @@ const SharedPage = dynamic(() => import("../src/pageComponents/storePage"), {
 });
 
 const Index = ({ ...props }) => {
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
     // Call ALL hooks at the top level
     const [isUserLogin, authUser, storeData] = useSelector((state) => [
@@ -48,10 +52,26 @@ const Index = ({ ...props }) => {
         authUser,
     });
 
-    const storeAss = isUserLogin &&
-        storeData?.store_assistant_list?.find(
-            (data) => authUser?.emailId === data,
-        );
+    const storeAssistantSettings = useMemo(
+        () => normalizeStoreAssistantSettings(storeData?.store_assistant_settings),
+        [storeData?.store_assistant_settings]
+    );
+
+    const hasStoreAssistantDashboardAccess = useMemo(
+        () => hasStoreAssistantAccess({
+            isUserLogin,
+            authUser,
+            settings: storeAssistantSettings,
+            storeAssistantList: storeData?.store_assistant_list,
+        }),
+        [authUser, isUserLogin, storeAssistantSettings, storeData?.store_assistant_list]
+    );
+
+    useEffect(() => {
+        if (!mounted || hasKioskAccess || !hasStoreAssistantDashboardAccess) return;
+        router.replace("/store-assistant");
+    }, [hasKioskAccess, hasStoreAssistantDashboardAccess, mounted, router]);
+
         const  kioskLogin =getStoredKioskLoginUserId() 
         const LoginData =  authUser?.user_id || getTTid()
         useEffect(()=>{
@@ -64,10 +84,13 @@ const Index = ({ ...props }) => {
             }
         },[LoginData ,kioskLogin, hasKioskAccess, dispatch])
 
-    // console.log('storeAss', storeAss);
     // Now we can do conditionals
     if (is_store_instance && !mounted) {
         return null; // Don't render anything until mounted on client
+    }
+
+    if (mounted && !hasKioskAccess && hasStoreAssistantDashboardAccess) {
+        return null;
     }
 
     return (

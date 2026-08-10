@@ -1,9 +1,8 @@
 import React from "react";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import styles from "./Loader.module.css";
 
 const Loader = () => {
-	return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+	return <span className={styles.simpleLoader} aria-label="Loading" />;
 };
 
 export default Loader;
