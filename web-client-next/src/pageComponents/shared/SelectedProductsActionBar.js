@@ -48,17 +48,30 @@ const defaultActionConfig = {
   },
 };
 
-export const getSelectedProductsActionItems = (actions = []) =>
-  actions
-    .map((action) =>
-      typeof action === "string"
-        ? defaultActionConfig[action]
-        : {
-            ...defaultActionConfig[action.key],
-            ...action,
-          },
-    )
+const getActionKey = (action) =>
+  typeof action === "string" ? action : action?.key;
+
+export const getSelectedProductsActionItems = (actions = []) => {
+  const shouldHideIcons = actions.some((action) =>
+    [SELECTED_PRODUCTS_ACTIONS.SAVE, SELECTED_PRODUCTS_ACTIONS.SHARE].includes(
+      getActionKey(action),
+    ),
+  );
+
+  return actions
+    .map((action) => {
+      const item =
+        typeof action === "string"
+          ? defaultActionConfig[action]
+          : {
+              ...defaultActionConfig[action.key],
+              ...action,
+            };
+
+      return shouldHideIcons && item ? { ...item, icon: null } : item;
+    })
     .filter(Boolean);
+};
 
 const renderButtonContent = (item) => (
   <>

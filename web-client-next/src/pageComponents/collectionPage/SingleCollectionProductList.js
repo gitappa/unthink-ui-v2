@@ -78,6 +78,7 @@ const SingleCollectionProductList = ({
   sharePageUrl = `${window.location.host}${ sharepageUrls(pageUser,blogCollectionPage)} `,
   isRootPage = true,
   isMyProfilePage,
+  storeData
 }) => {
    const [cropAndResizeImageData, setCropAndResizeImageData] = useState({
      isOpen: false,
@@ -448,6 +449,7 @@ const url = window.location.pathname === '/my-profile/'
         name: blogCollectionPage?.collection_name,
         path: blogCollectionPage?.path,
       },
+      store_name: storeData?.store_name || current_store_name,
       collectionId: singleCollection?._id || blogCollectionPage?._id,
       onComplete: handleResetSelectProduct,
     });
