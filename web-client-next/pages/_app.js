@@ -1,53 +1,53 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import Head from 'next/head';
-import { Helmet } from 'react-helmet';
-import Router from 'next/router';
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import Head from "next/head";
+import { Helmet } from "react-helmet";
+import Router from "next/router";
 
 // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
-import 'antd/dist/reset.css';
+import "antd/dist/reset.css";
 
 // Import Tailwind CSS first (must be before SCSS that uses @layer)
-import '../src/style/global.css';
+import "../src/style/global.css";
 // Then import SCSS utilities that extend Tailwind
-import '../src/style/index.module.scss';
-import '../src/pageComponents/swiftlyStyled/pageContents/mainContent.scss';
-import '../src/libs/index.css';
+import "../src/style/index.module.scss";
+import "../src/pageComponents/swiftlyStyled/pageContents/mainContent.scss";
+import "../src/libs/index.css";
 // Import custom Ant Design modal and carousel styles
-import '../src/pageComponents/Home/Popup.css';
+import "../src/pageComponents/Home/Popup.css";
 
 // Import context and state wrappers
-import ReduxWrapper from '../src/state/reduxWrapper';
-import ActionWrapper from '../src/state/actionWrapper';
-import ContextWrapper from '../src/context/contextWrapper';
-import { ThemeContextWrapper } from '../src/context/themeContext';
+import ReduxWrapper from "../src/state/reduxWrapper";
+import ActionWrapper from "../src/state/actionWrapper";
+import ContextWrapper from "../src/context/contextWrapper";
+import { ThemeContextWrapper } from "../src/context/themeContext";
 
 // Import modal components directly (no dynamic imports to avoid hydration issues)
-import ProductDetailsCopyModalComponent from '../src/pageComponents/productDetailsCopyModal';
-import CollectionShareModalComponent from '../src/pageComponents/collectionShareModal';
-import AppLoaderComponent from '../src/pageComponents/appLoader';
-import AppMessageModal from '../src/pageComponents/appMessageModal';
-import EarnedRewardModal from '../src/pageComponents/earnedRewardModal';
-import AiExtractionDataModal from '../src/pageComponents/aiExtractionDataModal';
-import CustomProductModal from '../src/pageComponents/customProductModal';
-import AutoCreateCollectionModal from '../src/pageComponents/autoCreateCollectionModal';
+import ProductDetailsCopyModalComponent from "../src/pageComponents/productDetailsCopyModal";
+import CollectionShareModalComponent from "../src/pageComponents/collectionShareModal";
+import AppLoaderComponent from "../src/pageComponents/appLoader";
+import AppMessageModal from "../src/pageComponents/appMessageModal";
+import EarnedRewardModal from "../src/pageComponents/earnedRewardModal";
+import AiExtractionDataModal from "../src/pageComponents/aiExtractionDataModal";
+import CustomProductModal from "../src/pageComponents/customProductModal";
+import AutoCreateCollectionModal from "../src/pageComponents/autoCreateCollectionModal";
 
 // Import utilities
-import appTracker from '../src/helper/webTracker/appTracker';
-import { checkAndGenerateUserId, generateSessionId } from '../src/helper/utils';
+import appTracker from "../src/helper/webTracker/appTracker";
+import { checkAndGenerateUserId, generateSessionId } from "../src/helper/utils";
 import {
   STORE_USER_NAME_BUDGETTRAVEL,
   STORE_USER_NAME_DOTHELOOK,
   STORE_USER_NAME_HEROESVILLAINS,
   STORE_USER_NAME_SAMSKARA,
   STORE_USER_NAME_SWIFTLYSTYLED,
-} from '../src/constants/codes';
+} from "../src/constants/codes";
 import {
   access_key,
   is_store_instance,
   current_store_name,
-} from '../src/constants/config';
-import { UserDataProvider } from '../src/context/UserDataContext';
-import styles from './_app.module.css';
+} from "../src/constants/config";
+import { UserDataProvider } from "../src/context/UserDataContext";
+import styles from "./_app.module.css";
 
 const RouteLoader = () => (
   <div className={styles.routeLoaderOverlay}>
@@ -79,21 +79,21 @@ function MyApp({ Component, pageProps }) {
     };
     const handleRouteChangeEnd = () => setIsRouteLoading(false);
 
-    Router.events.on('routeChangeStart', handleRouteChangeStart);
-    Router.events.on('routeChangeComplete', handleRouteChangeEnd);
-    Router.events.on('routeChangeError', handleRouteChangeEnd);
+    Router.events.on("routeChangeStart", handleRouteChangeStart);
+    Router.events.on("routeChangeComplete", handleRouteChangeEnd);
+    Router.events.on("routeChangeError", handleRouteChangeEnd);
 
     return () => {
-      Router.events.off('routeChangeStart', handleRouteChangeStart);
-      Router.events.off('routeChangeComplete', handleRouteChangeEnd);
-      Router.events.off('routeChangeError', handleRouteChangeEnd);
+      Router.events.off("routeChangeStart", handleRouteChangeStart);
+      Router.events.off("routeChangeComplete", handleRouteChangeEnd);
+      Router.events.off("routeChangeError", handleRouteChangeEnd);
     };
   }, []);
 
   // Determine font styling based on store
   const fontStyle = is_store_instance
     ? current_store_name === STORE_USER_NAME_SAMSKARA
-      ? { fontFamily: 'sans-serif' }
+      ? { fontFamily: "sans-serif" }
       : current_store_name === STORE_USER_NAME_HEROESVILLAINS
         ? { fontFamily: '"Crimson Text", serif' }
         : {}
@@ -102,15 +102,19 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <title>Unthink</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
           content="Reach audiences of publishers, creators, and influencers"
         />
-        <meta name="og:title" content="Unthink" />
-        <meta name="og:image" content="/unthink-logo.png" />
-        <meta name="og:description" content="Reach audiences of publishers, creators, and influencers" />
+        <meta property="og:title" content="Unthink" />
+        <meta property="og:image" content="/unthink-logo.png" />
+        <meta
+          property="og:description"
+          content="Reach audiences of publishers, creators, and influencers"
+        />
       </Head>
 
       <div style={fontStyle} suppressHydrationWarning>
@@ -119,20 +123,20 @@ function MyApp({ Component, pageProps }) {
             <ActionWrapper>
               <ContextWrapper>
                 <UserDataProvider>
-                {mounted ? (
-                  <>
-                    {isRouteLoading ? <RouteLoader /> : null}
-                    <AppLoaderComponent />
-                    <AppMessageModal />
-                    <ProductDetailsCopyModalComponent />
-                    <CollectionShareModalComponent />
-                    <EarnedRewardModal />
-                    <AiExtractionDataModal />
-                    <CustomProductModal />
-                    <AutoCreateCollectionModal />
-                  </>
-                ) : null}
-                <Component {...pageProps} />
+                  {mounted ? (
+                    <>
+                      {isRouteLoading ? <RouteLoader /> : null}
+                      <AppLoaderComponent />
+                      <AppMessageModal />
+                      <ProductDetailsCopyModalComponent />
+                      <CollectionShareModalComponent />
+                      <EarnedRewardModal />
+                      <AiExtractionDataModal />
+                      <CustomProductModal />
+                      <AutoCreateCollectionModal />
+                    </>
+                  ) : null}
+                  <Component {...pageProps} />
                 </UserDataProvider>
               </ContextWrapper>
             </ActionWrapper>

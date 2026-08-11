@@ -53,6 +53,9 @@ const ChatProducts = ({
   upload_icon,
   page_info,
   uploadImageProps,
+  chatImagePreviewUrl,
+  isUploadingImage,
+  handleClearChatImage,
   handleGoBack,
   layoutMode,
   setLayoutMode,
@@ -1156,6 +1159,9 @@ const ChatProducts = ({
                                 isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
                                 uploadImageProps={uploadImageProps}
                                 chatImageUrl={chatImageUrl}
+                                chatImagePreviewUrl={chatImagePreviewUrl}
+                                isUploadingImage={isUploadingImage}
+                                handleClearChatImage={handleClearChatImage}
                                 activeSearchOption={activeSearchOption}
                                 chatTypeKey={chatTypeKey}
                                 inputRef={inputRef}
@@ -1382,6 +1388,9 @@ const ChatProducts = ({
                         isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
                         uploadImageProps={uploadImageProps}
                         chatImageUrl={chatImageUrl}
+                        chatImagePreviewUrl={chatImagePreviewUrl}
+                        isUploadingImage={isUploadingImage}
+                        handleClearChatImage={handleClearChatImage}
                         activeSearchOption={activeSearchOption}
                         chatTypeKey={chatTypeKey}
                         inputRef={inputRef}

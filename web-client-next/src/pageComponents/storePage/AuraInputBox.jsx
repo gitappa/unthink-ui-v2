@@ -7,6 +7,7 @@ import {
   HistoryOutlined,
   PlusOutlined,
   ArrowUpOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import styles from "./ChatProducts.module.css";
 
@@ -19,6 +20,9 @@ const AuraInputBox = ({
   isCompleteTheLookOptionActive = false,
   uploadImageProps = {},
   chatImageUrl = "",
+  chatImagePreviewUrl = "",
+  isUploadingImage = false,
+  handleClearChatImage = () => { },
   activeSearchOption = {},
   chatTypeKey = "",
   inputRef = null,
@@ -36,6 +40,12 @@ const AuraInputBox = ({
   isMobile = false,
   isDrawer = false,
 }) => {
+  const previewImageUrl = chatImagePreviewUrl || chatImageUrl;
+  const isSubmitDisabled = showChatLoader ||
+    isUploadingImage ||
+    (isShopALookOptionActive
+      ? !chatImageUrl
+      : !localChatMessage && !chatImageUrl);
 
   // console.log('chatHistory',chatHistory.length >2);
 
@@ -123,6 +133,27 @@ const AuraInputBox = ({
           }`}
       >
         <div className={styles["chat-products-bottom-input-row-wrapper"]}>
+          {previewImageUrl && (
+            <div className={styles["chat-products-bottom-image-preview-row"]}>
+              <div className={styles["chat-products-bottom-image-preview"]}>
+                <img src={previewImageUrl} alt="Uploaded preview" />
+                {isUploadingImage && (
+                  <div className={styles["chat-products-bottom-image-preview-loader"]}>
+                    <LoadingOutlined />
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className={styles["chat-products-bottom-image-preview-remove"]}
+                  onClick={handleClearChatImage}
+                  aria-label="Remove uploaded image"
+                  disabled={showChatLoader || isUploadingImage}
+                >
+                  <CloseCircleFilled />
+                </button>
+              </div>
+            </div>
+          )}
 
           <textarea
             id={isDrawer ? `chat_search_input_bottom_${chatTypeKey}_drawer` : `chat_search_input_bottom_${chatTypeKey}`}
@@ -136,7 +167,7 @@ const AuraInputBox = ({
             name="chat_message"
             value={localChatMessage}
             onChange={handleInputChange}
-            onKeyDown={handlePromptKeyDown}
+            onKeyDown={onTextareaKeyDown}
             className={`${isDrawer ? "w-full !min-h-[38px] !max-h-[120px] !text-sm !font-medium !leading-relaxed !py-1 !px-0 !text-[#1a1a1a] !bg-transparent !border-none !outline-none !resize-none placeholder:!text-[#8a8fa3] placeholder:!text-[13px] placeholder:!font-normal" : `${styles["chat-products-bottom-input"]} w-full border-none outline-none bg-transparent text-[#1a1a1a] font-medium text-base leading-6 pt-1 pb-1`} ${activeSearchOption?.allow_image_search ? "" : "  "} ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
               ? styles["chat-products-bottom-input-shop-theme"]
               : ""
@@ -149,21 +180,12 @@ const AuraInputBox = ({
               className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5  ${styles["chat-products-bottom-submit"]} shrink-0 ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
                 ? styles["chat-products-bottom-submit-shop-theme"]
                 : ""
-                } ${(
-                  isShopALookOptionActive
-                    ? !chatImageUrl
-                    : !localChatMessage && !chatImageUrl
-                )
+                } ${isSubmitDisabled
                   ? styles["chat-products-bottom-submit-disabled"]
                   : ""
                 }`}
               onClick={handleSubmitChatInput}
-              disabled={
-                showChatLoader ||
-                (isShopALookOptionActive
-                  ? !chatImageUrl
-                  : !localChatMessage && !chatImageUrl)
-              }
+              disabled={isSubmitDisabled}
             >
               <ArrowUpOutlined />
             </button>
@@ -176,13 +198,14 @@ const AuraInputBox = ({
                   <div
                     className={styles["chat-products-bottom-plus-upload-container"]}
                   >
-                    <Upload {...uploadImageProps} showUploadList={false}>
+                    <Upload {...uploadImageProps} showUploadList={false} disabled={isUploadingImage || showChatLoader}>
                       <button
                         type="button"
                         className={`${styles["chat-products-bottom-plus-btn"]} ${chatImageUrl ? " text-black" : ""}`}
                         title="Upload image"
+                        disabled={isUploadingImage || showChatLoader}
                       >
-                        <PlusOutlined />
+                        {isUploadingImage ? <LoadingOutlined /> : <PlusOutlined />}
                       </button>
                     </Upload>
                   </div>
@@ -217,21 +240,12 @@ const AuraInputBox = ({
                   className={`${styles["chat-products-bottom-submit"]} shrink-0 ${isShopByThemeOptionActive || isCompleteTheLookOptionActive
                     ? styles["chat-products-bottom-submit-shop-theme"]
                     : ""
-                    } ${(
-                      isShopALookOptionActive
-                        ? !chatImageUrl
-                        : !localChatMessage && !chatImageUrl
-                    )
+                    } ${isSubmitDisabled
                       ? styles["chat-products-bottom-submit-disabled"]
                       : ""
                     }`}
                   onClick={handleSubmitChatInput}
-                  disabled={
-                    showChatLoader ||
-                    (isShopALookOptionActive
-                      ? !chatImageUrl
-                      : !localChatMessage && !chatImageUrl)
-                  }
+                  disabled={isSubmitDisabled}
                 >
                   <ArrowUpOutlined />
                 </button>
@@ -246,6 +260,3 @@ const AuraInputBox = ({
 };
 
 export default AuraInputBox;
-
-
-

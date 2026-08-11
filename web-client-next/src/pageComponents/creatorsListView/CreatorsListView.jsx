@@ -27,7 +27,8 @@ const CreatorsListView = ({ pageUser }) => {
 								<div className='text-center'>
 									<div className='px-2 lg:px-4.5'>
 										<img
-											src={getFinalImageUrl(inf.profile_image) || defaultAvatar}
+											src={getFinalImageUrl(inf.profile_image) || defaultAvatar} 
+											alt="Profile image"
 											className='h-auto w-full aspect-square object-cover rounded-full'
 										/>
 									</div>
@@ -39,6 +40,7 @@ const CreatorsListView = ({ pageUser }) => {
 								<div className='px-2 lg:px-4.5'>
 									<img
 										src={getFinalImageUrl(inf.profile_image) || defaultAvatar}
+										alt="Profile image"
 										className='h-auto w-full aspect-square object-cover rounded-full'
 									/>
 								</div>
