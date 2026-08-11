@@ -284,7 +284,7 @@ const Chat = ({
           onClick={() => {
             router.push("/search");
             showAuraIntro && dispatch(setShowAuraIntro(false));
-            onChatClick && onChatClick();
+            // onChatClick && onChatClick();
           }}>
           {isBTNormalUserLoggedIn ? (
             <div className="h-10">

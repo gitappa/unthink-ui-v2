@@ -28,7 +28,7 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaHeart, FaMinus, FaRegBookmark } from "react-icons/fa6";
+import { FaHeart, FaMinus, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
   setRemoveFromFavorites,
@@ -1470,13 +1470,14 @@ const ProductCard = ({
                     {heartRedProduct ? (
                       <FaHeart className="text-red-500"  />
                     ) : (
-                      <img
-                        alt="Add to wishlist"
-                        className={styles["add_to_wishlist_icon"]}
-                        src={getStaticImageSrc(heart)}
-                        height={20}
-                        width={20}
-                      />
+                      // <img
+                      //   alt="Add to wishlist"
+                      //   className={styles["add_to_wishlist_icon"]}
+                      //   src={getStaticImageSrc(heart)}
+                      //   height={20}
+                      //   width={20}
+                      // />
+                      <FaRegHeart />
                     )}
                   </button>
                 </div>
@@ -1498,13 +1499,14 @@ const ProductCard = ({
                 onClick={handleGuestWishlistClick}
               >
                 <button className={`${styles["product-heart-button"]}`}>
-                  <img
+                  {/* <img
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={getStaticImageSrc(heart)}
                     height={20}
                     width={20}
-                  />
+                  /> */}
+                  <FaRegHeart />
                 </button>
               </div>
               {/* )} */}

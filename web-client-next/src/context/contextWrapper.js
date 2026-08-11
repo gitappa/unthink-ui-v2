@@ -86,7 +86,7 @@ const ContextWrapper = ({ children }) => {
 		}
 		socket.emit("client", {
 			text: message ? updateSocketMessageWithPrefix(message) : undefined,
-			image_url: image_url || undefined,
+			image_url: image_url ?? "",
 			mute,
 			metadata,
 			userMetadata,

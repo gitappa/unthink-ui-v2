@@ -99,7 +99,6 @@ const ChatModal = ({
   streaming,
   submitChatInput,
   // submitImageUrl,
-  onChatClick,
   onStopRecording,
   disabledOutSideClick = false,
   showSettings,
@@ -172,6 +171,7 @@ const ChatModal = ({
 
   const [showUploadImage, setShowUploadImage] = useState(true);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [chatImagePreviewUrl, setChatImagePreviewUrl] = useState("");
   const [isFigmaUploadPanelOpen, setIsFigmaUploadPanelOpen] = useState(false);
   const [isSearchOptionManuallySelected, setIsSearchOptionManuallySelected] =
     useState(false);
@@ -209,12 +209,32 @@ const ChatModal = ({
   }, []);
 
   const dispatch = useDispatch();
-
-  const modalRef = useRef(null);
   const figmaUploadPanelRef = useRef(null);
   const openMobileSidebarRef = useRef(null);
+  const chatImagePreviewObjectUrlRef = useRef("");
 
   const { sendMessage } = useChat();
+
+  const clearLocalChatImagePreview = useCallback(() => {
+    if (chatImagePreviewObjectUrlRef.current) {
+      URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+      chatImagePreviewObjectUrlRef.current = "";
+    }
+    setChatImagePreviewUrl("");
+  }, []);
+
+  const handleClearChatImage = useCallback(() => {
+    clearLocalChatImagePreview();
+    dispatch(setChatImageUrl("", chatTypeKey));
+  }, [chatTypeKey, clearLocalChatImagePreview, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      if (chatImagePreviewObjectUrlRef.current) {
+        URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+      }
+    };
+  }, []);
 
   const closeChatModal = () => {
     if (streaming) {
@@ -223,6 +243,7 @@ const ChatModal = ({
     sessionStorage.removeItem("widgetHeader");
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    handleClearChatImage();
     setIsSearchOptionManuallySelected(false);
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
@@ -237,7 +258,7 @@ const ChatModal = ({
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
     dispatch(resetAuraSearchResponse());
-    dispatch(setChatImageUrl("", chatTypeKey));
+    handleClearChatImage();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
@@ -254,7 +275,7 @@ const ChatModal = ({
     setIsSearchOptionManuallySelected(true);
     setIsSearchOptionsVisible(false);
     dispatch(resetAuraSearchResponse());
-    dispatch(setChatImageUrl("", chatTypeKey));
+    handleClearChatImage();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false);
@@ -314,10 +335,7 @@ const ChatModal = ({
   // });
 
   const handleTryAgainClick = () => {
-    const metadata = {
-      ...chatInputMetadata,
-      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
-    };
+    const metadata = { ...chatInputMetadata };
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
@@ -339,7 +357,9 @@ const ChatModal = ({
     inputRef?.current?.focus();
     setLocalChatMessage(chatMessage);
     chatMessage && dispatch(setChatMessage(chatMessage, chatTypeKey));
-    dispatch(setChatImageUrl(chatImage));
+    clearLocalChatImagePreview();
+    setChatImagePreviewUrl(chatImage || "");
+    dispatch(setChatImageUrl(chatImage, chatTypeKey));
   };
 
   const handleSetSearchOption = useCallback(
@@ -576,23 +596,39 @@ const ChatModal = ({
     async (file) => {
       if (!file) return;
 
+      if (typeof URL !== "undefined" && typeof Blob !== "undefined" && file instanceof Blob) {
+        if (chatImagePreviewObjectUrlRef.current) {
+          URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+        }
+        const objectUrl = URL.createObjectURL(file);
+        chatImagePreviewObjectUrlRef.current = objectUrl;
+        setChatImagePreviewUrl(objectUrl);
+      }
+
       try {
         setIsUploadingImage(true);
+        dispatch(setChatImageUrl("", chatTypeKey));
         const response = await profileAPIs.uploadImage({ file });
         const imageUrl = response?.data?.data?.[0]?.url;
 
         if (imageUrl) {
+          clearLocalChatImagePreview();
+          setChatImagePreviewUrl(imageUrl);
           dispatch(setChatImageUrl(imageUrl, chatTypeKey));
           // Close panel after upload - the pill will show in the main input
           setIsFigmaUploadPanelOpen(false);
           return;
         }
 
+        clearLocalChatImagePreview();
+        dispatch(setChatImageUrl("", chatTypeKey));
         notification.error({
           message: "Image Upload Failed",
           description: "Something went wrong. Please try again.",
         });
       } catch (error) {
+        clearLocalChatImagePreview();
+        dispatch(setChatImageUrl("", chatTypeKey));
         dispatch(setShowChatLoader(false, chatTypeKey)); // stop loader on aura search is any error
         notification.error({
           message: "Image Upload Failed",
@@ -603,7 +639,7 @@ const ChatModal = ({
         setIsUploadingImage(false);
       }
     },
-    [chatTypeKey, dispatch],
+    [chatTypeKey, clearLocalChatImagePreview, dispatch],
   );
 
   const uploadImageProps = {
@@ -642,7 +678,7 @@ const ChatModal = ({
   }, 300);
 
   const handleUploadImageModeChange = () => {
-    dispatch(setChatImageUrl("", chatTypeKey));
+    handleClearChatImage();
     setShowUploadImage((value) => !value);
   };
 
@@ -653,6 +689,8 @@ const ChatModal = ({
   };
 
   const handleFigmaImageUrlChange = (e) => {
+    clearLocalChatImagePreview();
+    setChatImagePreviewUrl(e.target.value);
     dispatch(setChatImageUrl(e.target.value, chatTypeKey));
   };
 
@@ -674,12 +712,24 @@ const ChatModal = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleSubmitChatInput = () => {
+    if (isUploadingImage) {
+      notification.info({
+        message: "Image Uploading",
+        description: "Please wait until the image is ready.",
+      });
+      return;
+    }
 
     setIsImageLoading(true);
-    const metadata = {
-      ...chatInputMetadata,
-      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
-    };
+    const metadata = { ...chatInputMetadata };
+    const previousImageUrl = submittedPromptPreview.imageUrl || "";
+
+    if (isFollowUpQuery && activeSearchOption?.allow_image_search) {
+      metadata.followup_image_url = previousImageUrl;
+    } else {
+      delete metadata.followup_image_url;
+    }
+
     setIsFollowUpQuery(true)
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
@@ -725,23 +775,31 @@ const ChatModal = ({
         isFollowUpQuery &&
         activeSearchOption?.id === "smart_search";
 
-      // Condition 2 → shop_look image send
+      // Condition 2 → shop_a_look image send
       const sendImageShopLook =
         chatImageUrl && activeSearchOption?.id === "shop_a_look";
 
-      // Condition 2 → shop_look image send
+      // Condition 3 → complete_the_look image send
       const sendImageCompleteLook =
         chatImageUrl && activeSearchOption?.id === "complete_the_look";
 
+      const sendAllowedImageSearch =
+        chatImageUrl && activeSearchOption?.allow_image_search;
+
       // Final image value to send
       const finalImageToSend =
-        sendImageSmartSearch || sendImageShopLook || sendImageCompleteLook
+        (
+          sendAllowedImageSearch ||
+          sendImageSmartSearch ||
+          sendImageShopLook ||
+          sendImageCompleteLook
+        )
           ? chatImageUrl
           : undefined;
 
       submitChatInput(
         localChatMessage,
-        finalImageToSend, // <--- image sent only in the two valid cases
+        finalImageToSend || "",
         metadata,
         userMetadata,
       );
@@ -749,6 +807,7 @@ const ChatModal = ({
       dispatch(setAuraHelperMessage(activeSearchOption?.search_message));
       dispatch(setAuraSreverImage(""));
       dispatch(setOverlayCoordinates([]));
+      handleClearChatImage();
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
       // setLocalChatMessage('')
@@ -821,7 +880,7 @@ const ChatModal = ({
         localChatMessage,
         chatImageUrl && (isFollowUpQuery || chatImageUrl)
           ? chatImageUrl
-          : undefined,
+          : "",
         metadata,
         userMetadata,
       );
@@ -847,14 +906,13 @@ const ChatModal = ({
     const metadata = {
       keyword_tag_map: keyWord_tagMap || [],
       store: current_store_name,
-      image_url: chatImageUrl || "",
       search_type: activeSearchOption?.id || "",
       description: widgetHeader || "",
       generate_overlay_enable: true,
     };
     sendSocketClientMessage({
       message: localChatMessage || chatHistory[chatHistory.length - 1],
-      chatImageUrl,
+      image_url: chatImageUrl || "",
       metadata,
       userMetadata: null,
       mute: true,
@@ -914,7 +972,7 @@ const ChatModal = ({
 
   // when image changed clear all fields
   const handleChangeImageConfirm = () => {
-    dispatch(setChatImageUrl("", chatTypeKey));
+    handleClearChatImage();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setRegenarateImage(false);
@@ -934,7 +992,7 @@ const ChatModal = ({
     <div
       className={`${styles["chatmodal-modal-container"]} ${getCurrentTheme()} ${isShowShopLookSplitLayout ? styles["chatmodal-modal-container-fixed"] : ""} ${shouldCenterModalContent ? "justify-center" : ""} `}
       id="chatmodal_modal_container"
-      ref={modalRef}
+      // ref={modalRef}
     >
       {/* hide close icon for AuraChatPage */}
       {!isAuraChatPage ? (
@@ -1984,6 +2042,9 @@ const ChatModal = ({
               upload_icon={upload_icon}
               page_info={page_info}
               uploadImageProps={uploadImageProps}
+              chatImagePreviewUrl={chatImagePreviewUrl}
+              isUploadingImage={isUploadingImage}
+              handleClearChatImage={handleClearChatImage}
               handleGoBack={handleGoBack}
               layoutMode={layoutMode}
               setLayoutMode={setLayoutMode}
@@ -2091,6 +2152,11 @@ const ChatModal = ({
                   handlePromptUtilityClick={handlePromptUtilityClick}
                   page_info={page_info}
                   handleSubmitChatInput={handleSubmitChatInput}
+                  uploadImageProps={uploadImageProps}
+                  chatImageUrl={chatImageUrl}
+                  chatImagePreviewUrl={chatImagePreviewUrl}
+                  isUploadingImage={isUploadingImage}
+                  handleClearChatImage={handleClearChatImage}
                   chatHistory={chatHistory}
                   hideActions={true}
                   isMobile={true}
