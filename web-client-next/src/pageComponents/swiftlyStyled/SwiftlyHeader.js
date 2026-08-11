@@ -210,6 +210,7 @@ const SwiftlyHeader = ({
             <div className={styles.collections}>
               {storeData?.is_droppWallet_connect_enabled && (
                 <Tooltip title="Wallet">
+                  <button>
                   <Image
                     src={walletIcon}
                     style={{ filter: "brightness(0) opacity(0.7)" }}
@@ -219,6 +220,7 @@ const SwiftlyHeader = ({
                     width={24}
                     className={styles.walletIcon}
                   />
+                  </button>
                 </Tooltip>
               )}
               <button
@@ -231,6 +233,7 @@ const SwiftlyHeader = ({
 
               {currentUser?.emailId || currentUser?.phone ? (
                 <Tooltip title="My Wishlist">
+                  <button>
                   <FaRegHeart
                     style={{
                       filter: themeCodes.header.fills
@@ -240,10 +243,12 @@ const SwiftlyHeader = ({
                     onClick={myWishlistClick}
                     className={styles.wishlistIcon}
                   />
+                  </button>
                 </Tooltip>
               ) : null}
               {isUserLogin && (
                 <Tooltip title="My Try Ons">
+                  {/* <button> */}
                   <Image
                     src={tryOnIcon}
                     alt="Try on"
@@ -254,11 +259,13 @@ const SwiftlyHeader = ({
                       handleVtoFetch();
                     }}
                   />
+                  {/* </button> */}
                 </Tooltip>
               )}
               {storeData?.pdp_settings?.is_add_to_cart_button && (
                 <Tooltip title="My Cart">
                   <Link href="/cart" className={`${styles.cartLink} relative`}>
+                  <button>
                     <FiShoppingCart
                       className={styles.cartIcon}
                       style={{ filter: "brightness(0) opacity(0.7)" }}
@@ -266,6 +273,7 @@ const SwiftlyHeader = ({
                     <span className="absolute -top-[6px] -right-[10px] bg-[var(--color-alert)] text-white rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none">
                       {cartItemCount}
                     </span>
+                  </button>
                   </Link>
                 </Tooltip>
               )}

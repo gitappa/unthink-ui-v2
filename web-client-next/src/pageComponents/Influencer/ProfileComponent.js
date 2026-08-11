@@ -59,6 +59,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 						<Image
 							src={isShowBanner ?  getFinalImageUrl(pageUser.cover_image) :profilebanner.src }
 							preview={false}
+							alt="Profile banner"
 							width={"100%"}
 							className={styles['banner-image']}
 						/>
@@ -68,13 +69,14 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 							{instance_logo ? (
 								<Image
 									src={instance_logo}
+									alt="Logo"
 									width={100}
 									preview={false}
 									className={styles['logo-image']}
 									onClick={() => home_page_url && navigate(home_page_url)}
 								/>
 							) : !is_store_instance ? (
-								<Image src={unthink_favicon} width={29} preview={false} />
+								<Image src={unthink_favicon} alt="Unthink favicon" width={29} preview={false} />
 							) : null}
 						</div>
 						<div className="absolute bottom-16 right-8 bg-white p-1 rounded-10">
@@ -89,6 +91,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 											className={styles['powered-by-link']}>
 											<Image
 												src={unthink_black_log.src}
+												  alt="Powered by Unthink"
 												preview={false}
 												height={unthink_black_log.height}
 												width={96}
@@ -128,6 +131,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 											<Image
 												className={styles['share-icon']}
 												src={share_icon}
+												alt="Share icon"
 												preview={false}
 												onClick={() => setShowShareProfile(!showShareProfile)}
 											/>
@@ -150,6 +154,7 @@ const DummyImg ='https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%
 							preview={false}
 							className={styles['profile-image']}
 							width={"100%"}
+							alt="Profile image"
 						/>
 					</div>
 					<div className={styles['profile-content']}>
