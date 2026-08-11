@@ -6,6 +6,7 @@ import {
   webbotNFTServiceBaseUrl,
   current_store_name,
   adminUserId,
+  event_app_api_base_url,
   // realtimeAIBaseUrl,
 } from "../constants/config";
 import { getSid, getTTid, isDebugCookie } from "./getTrackerInfo";
@@ -135,12 +136,9 @@ const earningPoints = '/user/earnings/by_store/'
 const createBadge = '/user/earnings/generate_loyalty_badge/'
 const checkoutUpdatePoints = "/user/earnings/checkout_update_points/";
 const claimStorePoints = "/user/earnings/claim_store/";
-const sendSessionHCS20Points =
-  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/send-sessionhcs20-points";
-const checkSessionHCS20Points =
-  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/check-sessionhcs20-points";
-const redeemSessionHCS20Points =
-  "https://unthinkadminconsole-314035436999.us-central1.run.app/api/redeem-sessionhcs20-points";
+const sendSessionHCS20Points = `/send-sessionhcs20-points`;
+const checkSessionHCS20Points =   `/check-sessionhcs20-points`;
+const redeemSessionHCS20Points =   `/redeem-sessionhcs20-points`;
 //KIOSK
 const socialMedia =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
@@ -1598,22 +1596,25 @@ export const CheckoutUpdatePointsApiCall = (data = {}) => {
   });
 };
 export const SendSessionHCS20PointsApiCall = (data = {}) => {
+  const url = `${event_app_api_base_url}${sendSessionHCS20Points}`;
   return apiInstance({
-    url: sendSessionHCS20Points,
+    url,
     method: "post",
     data,
   });
 };
 export const CheckSessionHCS20PointsApiCall = (data = {}) => {
+  const url = `${event_app_api_base_url}${checkSessionHCS20Points}`;
   return apiInstance({
-    url: checkSessionHCS20Points,
+    url,
     method: "post",
     data,
   });
 };
 export const RedeemSessionHCS20PointsApiCall = (data = {}) => {
+  const url = `${event_app_api_base_url}${redeemSessionHCS20Points}`;
   return apiInstance({
-    url: redeemSessionHCS20Points,
+    url,
     method: "post",
     data,
   });
