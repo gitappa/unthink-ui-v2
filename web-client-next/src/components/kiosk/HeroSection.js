@@ -190,6 +190,7 @@ const HeroSection = ({ storeData, collectiondata }) => {
                             height={176}
                             alt={product.name || `slide-${idx}`}
                             className="h-full w-full rounded-lg object-contain"
+                            loading="lazy"
                             onClick={(event) => {
                               event.stopPropagation();
                               router.push(`/product/${product.mfr_code}`);

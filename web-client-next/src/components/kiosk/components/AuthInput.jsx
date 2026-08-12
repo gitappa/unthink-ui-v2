@@ -216,6 +216,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       }
       if (resetInput) setEmailPhone("");
       setStatus("");
+      sessionStorage.removeItem('selectedTag')
       setIsDropdownOpen(false);
       syncKioskLogin(null);
       router.replace('/')
@@ -469,8 +470,10 @@ const AuthInput = ({ onLoginChange, styles }) => {
     >
       <div
         className={`flex items-center w-full  bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
-          kioskLogin ? "w-fit justify-start  " : "justify-end  " 
+          kioskLogin ? "w-fit justify-start cursor-pointer " : "justify-end  " 
         }`}
+        onClick={kioskLogin ? handleUserButtonClick : undefined}
+
       >
         {!kioskLogin && (
           <input
@@ -483,12 +486,12 @@ const AuthInput = ({ onLoginChange, styles }) => {
           />
         )}
         <button
-          onClick={handleUserButtonClick}
           disabled={isSubmitting}
           title={kioskLogin ? "Open user menu" : "Login"}
           className={`${kioskLogin ? "mr-2" : "ml-2"} bg-black text-white p-2 rounded-full flex items-center justify-center w-8 h-8 ${
             isSubmitting ? "cursor-not-allowed opacity-60" : ""
           }`}
+          onClick={!kioskLogin ? handleUserButtonClick : undefined}
         >
           <svg
             viewBox="0 0 24 24"
