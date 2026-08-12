@@ -3,8 +3,8 @@ import { sortableContainer, sortableElement } from "react-sortable-hoc";
 import { arrayMoveImmutable, arrayMoveMutable } from "array-move";
 import styles from "./SortableContainer.module.css";
 
-const SortableContainerWrapper = sortableContainer(({ children }) => {
-	return <ul>{children}</ul>;
+const SortableContainerWrapper = sortableContainer(({ children, className }) => {
+	return <ul className={className}>{children}</ul>;
 });
 
 export default function SortableContainer({
