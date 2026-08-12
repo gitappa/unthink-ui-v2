@@ -25,19 +25,26 @@ const TAB_META = {
     description: "Help shoppers with the virtual stylist.",
     icon: FiSearch,
   },
-  upload_media: {
-    key: "upload_media",
-    label: "Upload Media",
-    shortLabel: "Upload",
-    description: "Upload styling photos and product media.",
-    icon: FiUploadCloud,
-  },
   realtime_feed: {
     key: "realtime_feed",
     label: "Real-time Feed",
     shortLabel: "Feed",
     description: "Track live customer and event activity.",
     icon: FiRadio,
+  },
+  lookbooks: {
+    key: "lookbooks",
+    label: "LookBooks",
+    shortLabel: "Books",
+    description: "Control which lookbooks appear in kiosk.",
+    icon: FiBookOpen,
+  },
+  upload_media: {
+    key: "upload_media",
+    label: "Upload Media",
+    shortLabel: "Upload",
+    description: "Upload styling photos and product media.",
+    icon: FiUploadCloud,
   },
 };
 
