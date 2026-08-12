@@ -25,7 +25,7 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
   return (
     <div className=" flex justify-center items-start  gap-3 ">
       {/* Banner Section */}
-      <div className="rounded-3xl max-h-[600px]  w-full bg-gradient-to-r from-kiosk-primary to-kiosk-secondary px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
+      <div className="rounded-3xl max-h-[600px]  w-full bg-kiosk-support px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
         {/* dark overlay so content reads on top of image */}
         <div className="   rounded-3xl pointer-events-none z-0" />
         <div className="w-full mx-auto relative z-10 h-full ">
@@ -56,15 +56,16 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
               className="kiosk-banner-swiper w-full"
             > */}
               {displayedProducts.map((product) => (
-                <div
+                <div className="cursor-pointer"
                   key={product.collection_id}
+                    onClick={() => handleNavCollection(product)}
+
                   
                 >
                   <div className="h-auto bg-white rounded-t-xl">
 
                   <div
-                    className={`relative overflow-hidden rounded-t-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out cursor-pointer h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
-                    onClick={() => handleNavCollection(product)}
+                    className={`relative overflow-hidden rounded-t-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out  h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
                   >
                     {product.cover_image && (
                       <>
@@ -72,6 +73,7 @@ const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
                         src={product.cover_image}
                         className="shadow-lg h-full object-contain m-auto w-full transition-transform duration-500 ease-out"
                         alt={product.collection_name || product.cover_image}
+                        loading="lazy"
                       />
                       
                       </>

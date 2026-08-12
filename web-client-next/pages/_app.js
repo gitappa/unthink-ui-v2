@@ -1,7 +1,7 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import Head from "next/head";
-import { Helmet } from "react-helmet";
-import Router from "next/router";
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import Head from 'next/head';
+import { Helmet } from 'react-helmet';
+import Router from 'next/router';
 
 // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
 import "antd/dist/reset.css";
@@ -45,9 +45,9 @@ import {
   access_key,
   is_store_instance,
   current_store_name,
-} from "../src/constants/config";
-import { UserDataProvider } from "../src/context/UserDataContext";
-import styles from "./_app.module.css";
+} from '../src/constants/config';
+import { UserDataProvider } from '../src/context/UserDataContext';
+import styles from './_app.module.css';
 
 const RouteLoader = () => (
   <div className={styles.routeLoaderOverlay}>
@@ -79,14 +79,14 @@ function MyApp({ Component, pageProps }) {
     };
     const handleRouteChangeEnd = () => setIsRouteLoading(false);
 
-    Router.events.on("routeChangeStart", handleRouteChangeStart);
-    Router.events.on("routeChangeComplete", handleRouteChangeEnd);
-    Router.events.on("routeChangeError", handleRouteChangeEnd);
+    Router.events.on('routeChangeStart', handleRouteChangeStart);
+    Router.events.on('routeChangeComplete', handleRouteChangeEnd);
+    Router.events.on('routeChangeError', handleRouteChangeEnd);
 
     return () => {
-      Router.events.off("routeChangeStart", handleRouteChangeStart);
-      Router.events.off("routeChangeComplete", handleRouteChangeEnd);
-      Router.events.off("routeChangeError", handleRouteChangeEnd);
+      Router.events.off('routeChangeStart', handleRouteChangeStart);
+      Router.events.off('routeChangeComplete', handleRouteChangeEnd);
+      Router.events.off('routeChangeError', handleRouteChangeEnd);
     };
   }, []);
 
@@ -123,20 +123,20 @@ function MyApp({ Component, pageProps }) {
             <ActionWrapper>
               <ContextWrapper>
                 <UserDataProvider>
-                  {mounted ? (
-                    <>
-                      {isRouteLoading ? <RouteLoader /> : null}
-                      <AppLoaderComponent />
-                      <AppMessageModal />
-                      <ProductDetailsCopyModalComponent />
-                      <CollectionShareModalComponent />
-                      <EarnedRewardModal />
-                      <AiExtractionDataModal />
-                      <CustomProductModal />
-                      <AutoCreateCollectionModal />
-                    </>
-                  ) : null}
-                  <Component {...pageProps} />
+                {mounted ? (
+                  <>
+                    {isRouteLoading ? <RouteLoader /> : null}
+                    <AppLoaderComponent />
+                    <AppMessageModal />
+                    <ProductDetailsCopyModalComponent />
+                    <CollectionShareModalComponent />
+                    <EarnedRewardModal />
+                    <AiExtractionDataModal />
+                    <CustomProductModal />
+                    <AutoCreateCollectionModal />
+                  </>
+                ) : null}
+                <Component {...pageProps} />
                 </UserDataProvider>
               </ContextWrapper>
             </ActionWrapper>
