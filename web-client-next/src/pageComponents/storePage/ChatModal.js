@@ -179,6 +179,7 @@ const ChatModal = ({
     message: "",
     imageUrl: "",
   });
+  const [firstSubmittedImageUrl, setFirstSubmittedImageUrl] = useState("");
   const [isSearchOptionsVisible, setIsSearchOptionsVisible] = useState(true);
   const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
@@ -228,6 +229,11 @@ const ChatModal = ({
     dispatch(setChatImageUrl("", chatTypeKey));
   }, [chatTypeKey, clearLocalChatImagePreview, dispatch]);
 
+  const resetChatImageState = useCallback(() => {
+    handleClearChatImage();
+    setFirstSubmittedImageUrl("");
+  }, [handleClearChatImage]);
+
   useEffect(() => {
     return () => {
       if (chatImagePreviewObjectUrlRef.current) {
@@ -243,7 +249,7 @@ const ChatModal = ({
     sessionStorage.removeItem("widgetHeader");
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
-    handleClearChatImage();
+    resetChatImageState();
     setIsSearchOptionManuallySelected(false);
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
@@ -258,7 +264,7 @@ const ChatModal = ({
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
     dispatch(resetAuraSearchResponse());
-    handleClearChatImage();
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
@@ -275,7 +281,7 @@ const ChatModal = ({
     setIsSearchOptionManuallySelected(true);
     setIsSearchOptionsVisible(false);
     dispatch(resetAuraSearchResponse());
-    handleClearChatImage();
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false);
@@ -359,6 +365,7 @@ const ChatModal = ({
     chatMessage && dispatch(setChatMessage(chatMessage, chatTypeKey));
     clearLocalChatImagePreview();
     setChatImagePreviewUrl(chatImage || "");
+    setFirstSubmittedImageUrl("");
     dispatch(setChatImageUrl(chatImage, chatTypeKey));
   };
 
@@ -368,6 +375,7 @@ const ChatModal = ({
       setLocalChatMessage("");
       sessionStorage.removeItem('widgetHeaderRequestHistory')
       setSubmittedPromptPreview({ message: "", imageUrl: "" });
+      resetChatImageState();
       sessionStorage.removeItem("widgetHeader");
       if (option.id === CHAT_SEARCH_OPTION_ID.trending_collections) {
         dispatch(setShowChatModal(false));
@@ -723,9 +731,19 @@ const ChatModal = ({
     setIsImageLoading(true);
     const metadata = { ...chatInputMetadata };
     const previousImageUrl = submittedPromptPreview.imageUrl || "";
+    const isImageFollowUp =
+      isFollowUpQuery && activeSearchOption?.allow_image_search;
+    const primaryImageUrl =
+      firstSubmittedImageUrl ||
+      previousImageUrl ||
+      (!isImageFollowUp ? chatImageUrl : "");
+    const followUpImageUrl =
+      isImageFollowUp && primaryImageUrl && chatImageUrl && chatImageUrl !== primaryImageUrl
+        ? chatImageUrl
+        : "";
 
-    if (isFollowUpQuery && activeSearchOption?.allow_image_search) {
-      metadata.followup_image_url = previousImageUrl;
+    if (followUpImageUrl) {
+      metadata.followup_image_url = followUpImageUrl;
     } else {
       delete metadata.followup_image_url;
     }
@@ -764,11 +782,6 @@ const ChatModal = ({
     dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
-      setSubmittedPromptPreview({
-        message: localChatMessage || "",
-        imageUrl: chatImageUrl || "",
-      });
-
       // Condition 1 → smart_search follow-up image send
       const sendImageSmartSearch =
         chatImageUrl &&
@@ -785,17 +798,31 @@ const ChatModal = ({
 
       const sendAllowedImageSearch =
         chatImageUrl && activeSearchOption?.allow_image_search;
+      const shouldSendCurrentImage =
+        sendAllowedImageSearch ||
+        sendImageSmartSearch ||
+        sendImageShopLook ||
+        sendImageCompleteLook;
 
       // Final image value to send
       const finalImageToSend =
-        (
-          sendAllowedImageSearch ||
-          sendImageSmartSearch ||
-          sendImageShopLook ||
-          sendImageCompleteLook
-        )
-          ? chatImageUrl
-          : undefined;
+        isImageFollowUp && primaryImageUrl
+          ? primaryImageUrl
+          : shouldSendCurrentImage
+            ? chatImageUrl
+            : undefined;
+
+      const nextFirstSubmittedImageUrl =
+        firstSubmittedImageUrl || finalImageToSend || "";
+
+      if (!firstSubmittedImageUrl && finalImageToSend) {
+        setFirstSubmittedImageUrl(finalImageToSend);
+      }
+
+      setSubmittedPromptPreview({
+        message: localChatMessage || "",
+        imageUrl: nextFirstSubmittedImageUrl,
+      });
 
       submitChatInput(
         localChatMessage,
@@ -972,7 +999,7 @@ const ChatModal = ({
 
   // when image changed clear all fields
   const handleChangeImageConfirm = () => {
-    handleClearChatImage();
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setRegenarateImage(false);
