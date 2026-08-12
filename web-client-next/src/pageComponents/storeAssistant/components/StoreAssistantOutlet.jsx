@@ -5,6 +5,7 @@ import { aura_header_theme } from "../../../constants/config";
 import ChatContainer from "../../storePage/ChatContainer";
 import StoreAssistantRealtimeFeed from "../realtimeFeed/StoreAssistantRealtimeFeed";
 import StoreAssistantUploadMedia from "../uploadMedia/StoreAssistantUploadMedia";
+import StoreAssistantLookBooks from "../lookBooks/StoreAssistantLookBooks";
 import styles from "../StoreAssistantDashboard.module.scss";
 
 const PlaceholderPanel = ({ icon: Icon, title, description, children }) => (
@@ -35,6 +36,10 @@ const StoreAssistantOutlet = ({ activeTab, settings }) => {
 
   if (activeTab === "realtime_feed") {
     return <StoreAssistantRealtimeFeed settings={settings} />;
+  }
+
+  if (activeTab === "lookbooks") {
+    return <StoreAssistantLookBooks />;
   }
 
   if (activeTab === "customers") {
