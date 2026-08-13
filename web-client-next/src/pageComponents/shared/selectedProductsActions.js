@@ -22,6 +22,7 @@ export const dispatchSelectedProductsAction = ({
   collection,
   collectionId,
   onComplete,
+  store_name
 }) => {
   const selectedProductPayload = buildSelectedProductPayload(products);
 
@@ -55,6 +56,7 @@ export const dispatchSelectedProductsAction = ({
       addProductToWishlistCollection({
         product_lists: selectedProductPayload,
         user_id: userId,
+        store:store_name,
         successMessage: `${WISHLIST_TITLE} updated successfully`,
         errorMessage: `Failed to update ${WISHLIST_TITLE}`,
         callback: () => {

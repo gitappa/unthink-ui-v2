@@ -53,6 +53,9 @@ const ChatProducts = ({
   upload_icon,
   page_info,
   uploadImageProps,
+  chatImagePreviewUrl,
+  isUploadingImage,
+  handleClearChatImage,
   handleGoBack,
   layoutMode,
   setLayoutMode,
@@ -985,16 +988,14 @@ const ChatProducts = ({
                             <span>Loading image...</span>
                           </div>
                         </div>
-                      ) : (
+                      ) : auraServerImage ? (
                         <div
                           className={`${styles["chat-products-shop-look-image-wrapper"]} `}
                         >
                           <div
-                            className={`${styles["chat-products-shop-look-image-inner"]} ${regenarateImage && !auraServerImage
-                              ? "hidden"
-                              : "block"
-                              }`}
-                          >                              <img
+                            className={`${styles["chat-products-shop-look-image-inner"]} block`}
+                          >
+                            <img
                               src={auraServerImage}
                               alt="PreviewImage"
                               className={`${styles["chat-products-shop-look-image"]}`}
@@ -1025,26 +1026,19 @@ const ChatProducts = ({
                                 );
                               })}
                           </div>
-                          {isFollowUpQuery &&
-                            isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
-                            regenarateImage ? (
-                            <>
-
-
-                              <button className="chatmodal-figma-change-btn  "
-
-
-                                onClick={handleRegenrateImage}
-                              >
-                                <ReloadOutlined
-                                />
-                                Regenerate Image
-                              </button>
-                            </>
-                          ) : null}
                         </div>
-                      )
-                      }
+                      ) : null}
+                      {isFollowUpQuery &&
+                        isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
+                        regenarateImage ? (
+                        <button
+                          className="chatmodal-figma-change-btn"
+                          onClick={handleRegenrateImage}
+                        >
+                          <ReloadOutlined />
+                          Regenerate Image
+                        </button>
+                      ) : null}
                       {isFollowUpQuery &&
                         isShowFollowUpSearch && chatHistory.length >= 2 && (shopLookPreviewImage || auraServerImage) &&
                         regenarateImage ? (
@@ -1156,6 +1150,9 @@ const ChatProducts = ({
                                 isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
                                 uploadImageProps={uploadImageProps}
                                 chatImageUrl={chatImageUrl}
+                                chatImagePreviewUrl={chatImagePreviewUrl}
+                                isUploadingImage={isUploadingImage}
+                                handleClearChatImage={handleClearChatImage}
                                 activeSearchOption={activeSearchOption}
                                 chatTypeKey={chatTypeKey}
                                 inputRef={inputRef}
@@ -1382,6 +1379,9 @@ const ChatProducts = ({
                         isCompleteTheLookOptionActive={isCompleteTheLookOptionActive}
                         uploadImageProps={uploadImageProps}
                         chatImageUrl={chatImageUrl}
+                        chatImagePreviewUrl={chatImagePreviewUrl}
+                        isUploadingImage={isUploadingImage}
+                        handleClearChatImage={handleClearChatImage}
                         activeSearchOption={activeSearchOption}
                         chatTypeKey={chatTypeKey}
                         inputRef={inputRef}

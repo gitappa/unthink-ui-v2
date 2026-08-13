@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
-import { Tooltip, Image, Upload, Spin, Checkbox } from "antd";
+import { Tooltip, Image, Upload, Spin, Checkbox, notification } from "antd";
 import {
   CloseCircleFilled,
   CloseOutlined,
@@ -88,6 +88,7 @@ import AuraInputBox from "./AuraInputBox";
 import Recommendations from "../recommendations/Recommendations";
 import { KioskSearchOptions } from "../kioskSearchOptions/KioskSearchOptions";
 import { socket, SocketContext } from "../../context/socketV2";
+import CameraCapture from "../../components/shared/CameraCapture";
 import upload_icon from "./Images/upload_icon.png";
 import page_info from "./Images/page_info.png";
 
@@ -98,7 +99,6 @@ const ChatModal = ({
   streaming,
   submitChatInput,
   // submitImageUrl,
-  onChatClick,
   onStopRecording,
   disabledOutSideClick = false,
   showSettings,
@@ -171,6 +171,7 @@ const ChatModal = ({
 
   const [showUploadImage, setShowUploadImage] = useState(true);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [chatImagePreviewUrl, setChatImagePreviewUrl] = useState("");
   const [isFigmaUploadPanelOpen, setIsFigmaUploadPanelOpen] = useState(false);
   const [isSearchOptionManuallySelected, setIsSearchOptionManuallySelected] =
     useState(false);
@@ -178,6 +179,7 @@ const ChatModal = ({
     message: "",
     imageUrl: "",
   });
+  const [firstSubmittedImageUrl, setFirstSubmittedImageUrl] = useState("");
   const [isSearchOptionsVisible, setIsSearchOptionsVisible] = useState(true);
   const [layoutMode, setLayoutMode] = useState("both"); // "left", "both", "right"
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
@@ -208,12 +210,37 @@ const ChatModal = ({
   }, []);
 
   const dispatch = useDispatch();
-
-  const modalRef = useRef(null);
   const figmaUploadPanelRef = useRef(null);
   const openMobileSidebarRef = useRef(null);
+  const chatImagePreviewObjectUrlRef = useRef("");
 
   const { sendMessage } = useChat();
+
+  const clearLocalChatImagePreview = useCallback(() => {
+    if (chatImagePreviewObjectUrlRef.current) {
+      URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+      chatImagePreviewObjectUrlRef.current = "";
+    }
+    setChatImagePreviewUrl("");
+  }, []);
+
+  const handleClearChatImage = useCallback(() => {
+    clearLocalChatImagePreview();
+    dispatch(setChatImageUrl("", chatTypeKey));
+  }, [chatTypeKey, clearLocalChatImagePreview, dispatch]);
+
+  const resetChatImageState = useCallback(() => {
+    handleClearChatImage();
+    setFirstSubmittedImageUrl("");
+  }, [handleClearChatImage]);
+
+  useEffect(() => {
+    return () => {
+      if (chatImagePreviewObjectUrlRef.current) {
+        URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+      }
+    };
+  }, []);
 
   const closeChatModal = () => {
     if (streaming) {
@@ -222,6 +249,7 @@ const ChatModal = ({
     sessionStorage.removeItem("widgetHeader");
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    resetChatImageState();
     setIsSearchOptionManuallySelected(false);
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
@@ -236,7 +264,7 @@ const ChatModal = ({
     setIsSearchOptionsVisible(true);
     dispatch(setActiveSearchOption({})); // Reset active search option
     dispatch(resetAuraSearchResponse());
-    dispatch(setChatImageUrl("", chatTypeKey));
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false)
@@ -253,7 +281,7 @@ const ChatModal = ({
     setIsSearchOptionManuallySelected(true);
     setIsSearchOptionsVisible(false);
     dispatch(resetAuraSearchResponse());
-    dispatch(setChatImageUrl("", chatTypeKey));
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false);
@@ -313,10 +341,7 @@ const ChatModal = ({
   // });
 
   const handleTryAgainClick = () => {
-    const metadata = {
-      ...chatInputMetadata,
-      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
-    };
+    const metadata = { ...chatInputMetadata };
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
     };
@@ -338,7 +363,10 @@ const ChatModal = ({
     inputRef?.current?.focus();
     setLocalChatMessage(chatMessage);
     chatMessage && dispatch(setChatMessage(chatMessage, chatTypeKey));
-    dispatch(setChatImageUrl(chatImage));
+    clearLocalChatImagePreview();
+    setChatImagePreviewUrl(chatImage || "");
+    setFirstSubmittedImageUrl("");
+    dispatch(setChatImageUrl(chatImage, chatTypeKey));
   };
 
   const handleSetSearchOption = useCallback(
@@ -347,6 +375,7 @@ const ChatModal = ({
       setLocalChatMessage("");
       sessionStorage.removeItem('widgetHeaderRequestHistory')
       setSubmittedPromptPreview({ message: "", imageUrl: "" });
+      resetChatImageState();
       sessionStorage.removeItem("widgetHeader");
       if (option.id === CHAT_SEARCH_OPTION_ID.trending_collections) {
         dispatch(setShowChatModal(false));
@@ -571,26 +600,66 @@ const ChatModal = ({
 
   const getImageSrc = (image) => image?.src || image;
 
+  const handleUploadChatImage = useCallback(
+    async (file) => {
+      if (!file) return;
+
+      if (typeof URL !== "undefined" && typeof Blob !== "undefined" && file instanceof Blob) {
+        if (chatImagePreviewObjectUrlRef.current) {
+          URL.revokeObjectURL(chatImagePreviewObjectUrlRef.current);
+        }
+        const objectUrl = URL.createObjectURL(file);
+        chatImagePreviewObjectUrlRef.current = objectUrl;
+        setChatImagePreviewUrl(objectUrl);
+      }
+
+      try {
+        setIsUploadingImage(true);
+        dispatch(setChatImageUrl("", chatTypeKey));
+        const response = await profileAPIs.uploadImage({ file });
+        const imageUrl = response?.data?.data?.[0]?.url;
+
+        if (imageUrl) {
+          clearLocalChatImagePreview();
+          setChatImagePreviewUrl(imageUrl);
+          dispatch(setChatImageUrl(imageUrl, chatTypeKey));
+          // Close panel after upload - the pill will show in the main input
+          setIsFigmaUploadPanelOpen(false);
+          return;
+        }
+
+        clearLocalChatImagePreview();
+        dispatch(setChatImageUrl("", chatTypeKey));
+        notification.error({
+          message: "Image Upload Failed",
+          description: "Something went wrong. Please try again.",
+        });
+      } catch (error) {
+        clearLocalChatImagePreview();
+        dispatch(setChatImageUrl("", chatTypeKey));
+        dispatch(setShowChatLoader(false, chatTypeKey)); // stop loader on aura search is any error
+        notification.error({
+          message: "Image Upload Failed",
+          description:
+            error?.response?.data?.message || "Unexpected error occurred",
+        });
+      } finally {
+        setIsUploadingImage(false);
+      }
+    },
+    [chatTypeKey, clearLocalChatImagePreview, dispatch],
+  );
+
   const uploadImageProps = {
     accept: "image/*",
     multiple: false,
-    customRequest: async (info) => {
+    customRequest: async ({ file, onSuccess, onError }) => {
       try {
-        setIsUploadingImage(true);
-        if (info?.file) {
-          const response = await profileAPIs.uploadImage({
-            file: info.file,
-          });
-          if (response?.data?.data[0]) {
-            dispatch(setChatImageUrl(response?.data?.data[0].url, chatTypeKey));
-            // Close panel after upload - the pill will show in the main input
-            setIsFigmaUploadPanelOpen(false);
-          }
-        }
+        await handleUploadChatImage(file);
+        onSuccess?.("ok");
       } catch (error) {
-        dispatch(setShowChatLoader(false, chatTypeKey)); // stop loader on aura search is any error
+        onError?.(error);
       }
-      setIsUploadingImage(false);
     },
   };
 
@@ -617,7 +686,7 @@ const ChatModal = ({
   }, 300);
 
   const handleUploadImageModeChange = () => {
-    dispatch(setChatImageUrl("", chatTypeKey));
+    handleClearChatImage();
     setShowUploadImage((value) => !value);
   };
 
@@ -628,6 +697,8 @@ const ChatModal = ({
   };
 
   const handleFigmaImageUrlChange = (e) => {
+    clearLocalChatImagePreview();
+    setChatImagePreviewUrl(e.target.value);
     dispatch(setChatImageUrl(e.target.value, chatTypeKey));
   };
 
@@ -649,12 +720,34 @@ const ChatModal = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleSubmitChatInput = () => {
+    if (isUploadingImage) {
+      notification.info({
+        message: "Image Uploading",
+        description: "Please wait until the image is ready.",
+      });
+      return;
+    }
 
     setIsImageLoading(true);
-    const metadata = {
-      ...chatInputMetadata,
-      followup_image_url: isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl : undefined,
-    };
+    const metadata = { ...chatInputMetadata };
+    const previousImageUrl = submittedPromptPreview.imageUrl || "";
+    const isImageFollowUp =
+      isFollowUpQuery && activeSearchOption?.allow_image_search;
+    const primaryImageUrl =
+      firstSubmittedImageUrl ||
+      previousImageUrl ||
+      (!isImageFollowUp ? chatImageUrl : "");
+    const followUpImageUrl =
+      isImageFollowUp && primaryImageUrl && chatImageUrl && chatImageUrl !== primaryImageUrl
+        ? chatImageUrl
+        : "";
+
+    if (followUpImageUrl) {
+      metadata.followup_image_url = followUpImageUrl;
+    } else {
+      delete metadata.followup_image_url;
+    }
+
     setIsFollowUpQuery(true)
     const userMetadata = {
       brand: authUser?.filters?.[current_store_name]?.strict?.brand || [],
@@ -689,34 +782,51 @@ const ChatModal = ({
     dispatch(chatHistoryAction(JSON.parse(sessionStorage.getItem('widgetHeaderRequestHistory'))));
 
     if (localChatMessage || chatImageUrl) {
-      setSubmittedPromptPreview({
-        message: localChatMessage || "",
-        imageUrl: chatImageUrl || "",
-      });
-
       // Condition 1 → smart_search follow-up image send
       const sendImageSmartSearch =
         chatImageUrl &&
         isFollowUpQuery &&
         activeSearchOption?.id === "smart_search";
 
-      // Condition 2 → shop_look image send
+      // Condition 2 → shop_a_look image send
       const sendImageShopLook =
         chatImageUrl && activeSearchOption?.id === "shop_a_look";
 
-      // Condition 2 → shop_look image send
+      // Condition 3 → complete_the_look image send
       const sendImageCompleteLook =
         chatImageUrl && activeSearchOption?.id === "complete_the_look";
 
+      const sendAllowedImageSearch =
+        chatImageUrl && activeSearchOption?.allow_image_search;
+      const shouldSendCurrentImage =
+        sendAllowedImageSearch ||
+        sendImageSmartSearch ||
+        sendImageShopLook ||
+        sendImageCompleteLook;
+
       // Final image value to send
       const finalImageToSend =
-        sendImageSmartSearch || sendImageShopLook || sendImageCompleteLook
-          ? chatImageUrl
-          : undefined;
+        isImageFollowUp && primaryImageUrl
+          ? primaryImageUrl
+          : shouldSendCurrentImage
+            ? chatImageUrl
+            : undefined;
+
+      const nextFirstSubmittedImageUrl =
+        firstSubmittedImageUrl || finalImageToSend || "";
+
+      if (!firstSubmittedImageUrl && finalImageToSend) {
+        setFirstSubmittedImageUrl(finalImageToSend);
+      }
+
+      setSubmittedPromptPreview({
+        message: localChatMessage || "",
+        imageUrl: nextFirstSubmittedImageUrl,
+      });
 
       submitChatInput(
         localChatMessage,
-        finalImageToSend, // <--- image sent only in the two valid cases
+        finalImageToSend || "",
         metadata,
         userMetadata,
       );
@@ -724,6 +834,7 @@ const ChatModal = ({
       dispatch(setAuraHelperMessage(activeSearchOption?.search_message));
       dispatch(setAuraSreverImage(""));
       dispatch(setOverlayCoordinates([]));
+      handleClearChatImage();
       setIsFigmaUploadPanelOpen(false);
       setIsSearchPopupOpen(false);
       // setLocalChatMessage('')
@@ -796,7 +907,7 @@ const ChatModal = ({
         localChatMessage,
         chatImageUrl && (isFollowUpQuery || chatImageUrl)
           ? chatImageUrl
-          : undefined,
+          : "",
         metadata,
         userMetadata,
       );
@@ -822,14 +933,13 @@ const ChatModal = ({
     const metadata = {
       keyword_tag_map: keyWord_tagMap || [],
       store: current_store_name,
-      image_url: chatImageUrl || "",
       search_type: activeSearchOption?.id || "",
       description: widgetHeader || "",
       generate_overlay_enable: true,
     };
     sendSocketClientMessage({
       message: localChatMessage || chatHistory[chatHistory.length - 1],
-      chatImageUrl,
+      image_url: chatImageUrl || "",
       metadata,
       userMetadata: null,
       mute: true,
@@ -889,7 +999,7 @@ const ChatModal = ({
 
   // when image changed clear all fields
   const handleChangeImageConfirm = () => {
-    dispatch(setChatImageUrl("", chatTypeKey));
+    resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setRegenarateImage(false);
@@ -909,7 +1019,7 @@ const ChatModal = ({
     <div
       className={`${styles["chatmodal-modal-container"]} ${getCurrentTheme()} ${isShowShopLookSplitLayout ? styles["chatmodal-modal-container-fixed"] : ""} ${shouldCenterModalContent ? "justify-center" : ""} `}
       id="chatmodal_modal_container"
-      ref={modalRef}
+      // ref={modalRef}
     >
       {/* hide close icon for AuraChatPage */}
       {!isAuraChatPage ? (
@@ -1583,80 +1693,137 @@ const ChatModal = ({
                                             />
                                           </div>
                                         ) : (
-                                          <>
-                                            <Dragger
-                                              className={
-                                                styles["chatmodal-figma-upload-dragger"]
-                                              }
-                                              {...uploadImageProps}
-                                              name="image_url"
-                                              showUploadList={false}
-                                            >
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-icon"
-                                                  ]
-                                                }
-                                              >
-                                                <PictureOutlined />
-                                              </p>
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-text"
-                                                  ]
-                                                }
-                                              >
-                                                <span>Click to upload</span> or drag and
-                                                drop
-                                              </p>
-                                              <p
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-dragger-hint"
-                                                  ]
-                                                }
-                                              >
-                                                JPG, JPEG, PNG less than 1MB
-                                              </p>
-                                            </Dragger>
-                                            <div
-                                              className={
-                                                styles["chatmodal-figma-upload-or"]
-                                              }
-                                            >
-                                              or
-                                            </div>
-                                            <div
-                                              className={
-                                                styles[
-                                                "chatmodal-figma-upload-url-section"
-                                                ]
-                                              }
-                                            >
-                                              <label
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-url-label"
-                                                  ]
-                                                }
-                                              >
-                                                Image URL
-                                              </label>
-                                              <input
-                                                className={
-                                                  styles[
-                                                  "chatmodal-figma-upload-url-input"
-                                                  ]
-                                                }
-                                                placeholder="Or Enter Image URL"
-                                                type="text"
-                                                value={chatImageUrl}
-                                                onChange={handleFigmaImageUrlChange}
-                                              />
-                                            </div>
-                                          </>
+                                          <CameraCapture
+                                            onCapture={handleUploadChatImage}
+                                            switchButtonLabel="Switch"
+                                            switchingButtonLabel="Switching"
+                                            panelClassName={
+                                              styles[
+                                              "chatmodal-camera-capture-panel"
+                                              ]
+                                            }
+                                            videoClassName={
+                                              styles["chatmodal-camera-preview"]
+                                            }
+                                            actionsClassName={
+                                              styles["chatmodal-camera-actions"]
+                                            }
+                                            secondaryButtonClassName={
+                                              styles[
+                                              "chatmodal-camera-secondary-button"
+                                              ]
+                                            }
+                                            primaryButtonClassName={
+                                              styles[
+                                              "chatmodal-camera-primary-button"
+                                              ]
+                                            }
+                                            renderIdle={({
+                                              openCamera,
+                                              isCameraStarting,
+                                              CameraIcon,
+                                              LoadingIcon,
+                                            }) => (
+                                              <>
+                                                <Dragger
+                                                  className={
+                                                    styles["chatmodal-figma-upload-dragger"]
+                                                  }
+                                                  {...uploadImageProps}
+                                                  name="image_url"
+                                                  showUploadList={false}
+                                                >
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-icon"
+                                                      ]
+                                                    }
+                                                  >
+                                                    <PictureOutlined />
+                                                  </p>
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-text"
+                                                      ]
+                                                    }
+                                                  >
+                                                    <span>Click to upload</span> or drag and
+                                                    drop
+                                                  </p>
+                                                  <p
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-dragger-hint"
+                                                      ]
+                                                    }
+                                                  >
+                                                    JPG, JPEG, PNG less than 1MB
+                                                  </p>
+                                                </Dragger>
+                                                <div
+                                                  className={
+                                                    styles["chatmodal-figma-upload-or"]
+                                                  }
+                                                >
+                                                  or
+                                                </div>
+                                                <button
+                                                  type="button"
+                                                  onClick={openCamera}
+                                                  disabled={isCameraStarting}
+                                                  className={
+                                                    styles[
+                                                    "chatmodal-camera-open-button"
+                                                    ]
+                                                  }
+                                                >
+                                                  {isCameraStarting ? (
+                                                    <LoadingIcon />
+                                                  ) : (
+                                                    <CameraIcon />
+                                                  )}
+                                                  Take Photo
+                                                </button>
+                                                <div
+                                                  className={
+                                                    styles["chatmodal-figma-upload-or"]
+                                                  }
+                                                >
+                                                  or
+                                                </div>
+                                                <div
+                                                  className={
+                                                    styles[
+                                                    "chatmodal-figma-upload-url-section"
+                                                    ]
+                                                  }
+                                                >
+                                                  <label
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-url-label"
+                                                      ]
+                                                    }
+                                                  >
+                                                    Image URL
+                                                  </label>
+                                                  <input
+                                                    className={
+                                                      styles[
+                                                      "chatmodal-figma-upload-url-input"
+                                                      ]
+                                                    }
+                                                    placeholder="Or Enter Image URL"
+                                                    type="text"
+                                                    value={chatImageUrl}
+                                                    onChange={handleFigmaImageUrlChange}
+                                                  />
+                                                </div>
+                                              </>
+                                            )}
+                                          />
                                         )}
                                       </div>
                                     )}
@@ -1902,6 +2069,9 @@ const ChatModal = ({
               upload_icon={upload_icon}
               page_info={page_info}
               uploadImageProps={uploadImageProps}
+              chatImagePreviewUrl={chatImagePreviewUrl}
+              isUploadingImage={isUploadingImage}
+              handleClearChatImage={handleClearChatImage}
               handleGoBack={handleGoBack}
               layoutMode={layoutMode}
               setLayoutMode={setLayoutMode}
@@ -2009,6 +2179,11 @@ const ChatModal = ({
                   handlePromptUtilityClick={handlePromptUtilityClick}
                   page_info={page_info}
                   handleSubmitChatInput={handleSubmitChatInput}
+                  uploadImageProps={uploadImageProps}
+                  chatImageUrl={chatImageUrl}
+                  chatImagePreviewUrl={chatImagePreviewUrl}
+                  isUploadingImage={isUploadingImage}
+                  handleClearChatImage={handleClearChatImage}
                   chatHistory={chatHistory}
                   hideActions={true}
                   isMobile={true}
@@ -2141,6 +2316,3 @@ const ChatModal = ({
 };
 
 export default ChatModal;
-
-
-

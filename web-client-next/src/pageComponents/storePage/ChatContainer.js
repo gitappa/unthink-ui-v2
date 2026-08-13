@@ -33,7 +33,7 @@ import { useRouter } from "next/router";
 
 const defaultHiMessage = "Hi";
 
-const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBTInstance, isAuraChatPage = false }) => {
+const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBTInstance, isAuraChatPage = false, renderInline = false }) => {
   const [
     user,
     userDataSent,
@@ -124,7 +124,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
         setMessage(normalizedMessage || "");
         sendMessage(
           shouldSendMessageText ? normalizedMessage : undefined,
-          chatImageUrl && isFollowUpQuery ? "" : chatImageUrl,
+          chatImageUrl ?? "",
           metadata,
           userMetadata,
           imageGenerate,
@@ -163,7 +163,6 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
     () => ({
       searchOptionId: activeSearchOption?.id,
       follow_qn:activeSearchOption.follow_up_search_enable  ?  isFollowUpQuery : false,
-      followup_image_url:isFollowUpQuery && activeSearchOption?.allow_image_search ? chatImageUrl :undefined,
       aura_text_ss: isSendSSTemplates && !isEmpty(auraChatSetting.aura_text_ss) ? auraChatSetting.aura_text_ss : undefined,
       aura_text_stl: isSendSTLTemplates && !isEmpty(auraChatSetting.aura_text_stl) ? auraChatSetting.aura_text_stl : undefined,
       aura_text_ctl: isSendCTLTemplates && !isEmpty(auraChatSetting.aura_text_ctl) ? auraChatSetting.aura_text_ctl : undefined,
@@ -221,7 +220,6 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
           handleMicrophoneClick={handleMicrophoneClick}
           streaming={streaming}
           submitChatInput={submitChatInput}
-          onChatClick={onChatClick}
           onStopRecording={onStopRecording}
           disabledOutSideClick={disabledOutSideClick}
           showSettings={showSettings}
@@ -251,7 +249,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
 
   return (
     <>
-      {storeData?.is_searchOptions_enabled ? (
+      {!renderInline && storeData?.is_searchOptions_enabled ? (
         <div className={`${!isNotHomePage ? 'hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2' : 'hidden'} `}>
           <Chat
             handleMicrophoneClick={handleMicrophoneClick}
@@ -268,10 +266,11 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
             isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
           />
         </div>
-      ) : (
+      ) : !renderInline ? (
         <div className="hidden lg:flex justify-center items-center gap-2 mx-1 lg:gap-3 lg:w-[542px] xl:w-1/2" />
-      )}
-      {portalTarget && shouldShowChatModal && isNotHomePage ? createPortal(chatModalLayer, portalTarget) : null}
+      ) : null}
+      {renderInline && shouldShowChatModal ? chatModalLayer : null}
+      {!renderInline && portalTarget && shouldShowChatModal && isNotHomePage ? createPortal(chatModalLayer, portalTarget) : null}
     </>
   );
 };

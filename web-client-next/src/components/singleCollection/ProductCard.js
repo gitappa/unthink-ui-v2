@@ -28,7 +28,7 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaHeart, FaMinus, FaRegBookmark } from "react-icons/fa6";
+import { FaHeart, FaMinus, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
   setRemoveFromFavorites,
@@ -937,7 +937,7 @@ const ProductCard = ({
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
-        // onClick={handleProductClick}
+        onClick={() => hasKioskAccess ? navigate(`/product/${product.mfr_code}`) : null}
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
@@ -1009,7 +1009,7 @@ const ProductCard = ({
                 </div>
               )}
             {!enableSelect &&
-              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !hasKioskAccess &&
               !showWishlistModal && (
                 <div
                   className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
@@ -1458,25 +1458,26 @@ const ProductCard = ({
           !enableSelect &&
           product?.custom_product !== false &&
           !isMyWishlistCollection && (
-            <div className={styles["product-menu-item"]}>
+            <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
               {!hideAddToWishlist && (
                 <div
-                  className={styles["product-menu-wishlist"]}
+                  className={` absolute ${hasKioskAccess ? 'right-3 top-3.5' : 'right-[15px] top-[55px] '}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]`}
                   onClick={
                     heartRedProduct ? handleDeletePlistClick : addToWishlistClick
                   }
                 >
-                  <button className={`${styles["product-heart-button"]}`}>
+                  <button className="box-border flex h-8 w-8 items-center justify-center rounded-full bg-white p-0 shadow-[0px_2px_12px_rgba(0,0,0,0.1)] min-[1000px]:transition-all min-[1000px]:duration-200 min-[1000px]:ease-in-out min-[1000px]:hover:bg-[#f5f5f5] min-[1000px]:hover:shadow-[0px_4px_16px_rgba(0,0,0,0.15)] max-[1024px]:p-1">
                     {heartRedProduct ? (
                       <FaHeart className="text-red-500"  />
                     ) : (
-                      <img
-                        alt="Add to wishlist"
-                        className={styles["add_to_wishlist_icon"]}
-                        src={getStaticImageSrc(heart)}
-                        height={20}
-                        width={20}
-                      />
+                      // <img
+                      //   alt="Add to wishlist"
+                      //   className={styles["add_to_wishlist_icon"]}
+                      //   src={getStaticImageSrc(heart)}
+                      //   height={20}
+                      //   width={20}
+                      // />
+                      <FaRegHeart />
                     )}
                   </button>
                 </div>
@@ -1491,20 +1492,21 @@ const ProductCard = ({
           size === "medium" &&
           !showWishlistModal &&
           !enableSelect && (
-            <div className={styles["product-menu-item"]}>
+            <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
               {/* {!hideAddToWishlist && ( */}
               <div
-                className={styles["product-menu-wishlist"]}
+                className="absolute right-[15px] top-[55px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]"
                 onClick={handleGuestWishlistClick}
               >
-                <button className={`${styles["product-heart-button"]}`}>
-                  <img
+                <button className="box-border flex h-8 w-8 items-center justify-center rounded-full bg-white p-0 shadow-[0px_2px_12px_rgba(0,0,0,0.1)] min-[1000px]:transition-all min-[1000px]:duration-200 min-[1000px]:ease-in-out min-[1000px]:hover:bg-[#f5f5f5] min-[1000px]:hover:shadow-[0px_4px_16px_rgba(0,0,0,0.15)] max-[1024px]:p-1">
+                  {/* <img
                     alt="Add to collection"
                     className={styles["add_to_wishlist_icon"]}
                     src={getStaticImageSrc(heart)}
                     height={20}
                     width={20}
-                  />
+                  /> */}
+                  <FaRegHeart />
                 </button>
               </div>
               {/* )} */}
