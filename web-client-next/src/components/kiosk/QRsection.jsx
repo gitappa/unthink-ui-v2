@@ -9,7 +9,6 @@ const QRsection = ({ showTags, storeData }) => {
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
   const data = storeData.kiosk_settings?.tabs;
-  // data.push(storeData.kiosk_settings?.tab1,storeData.kiosk_settings?.tab2,storeData.kiosk_settings?.tab3,storeData.kiosk_settings?.tab4);
   React.useEffect(() => {
     const item = data.find((item) => item?.label === showTags);
     setFetchedData(item || null);
@@ -31,12 +30,18 @@ const QRsection = ({ showTags, storeData }) => {
   ) {
     return (
       <div className="w-[272px] shrink-0 h-screen ">
-        <div className="relative  rounded-[16px] border border-white/80 bg-[linear-gradient(180deg,#fff1f6_0%,#f8f8f8_34%,#f1f1f1_100%)] px-[18px] pb-[24px] pt-[18px] shadow-[0_0_22px_rgba(236,126,153,0.42),0_18px_36px_rgba(15,23,42,0.26),inset_0_0_22px_rgba(255,255,255,0.95)]">
+        <div className="relative  rounded-[16px] border border-white/80 px-[18px] pb-[24px] pt-[18px] shadow-[0_0_0_1px_rgba(253,237,222,0.9),0_0_34px_rgba(253,237,222,0.95),0_18px_36px_rgba(15,23,42,0.26),inset_0_0_20px_rgba(253,237,222,0.95)]">
           <div
-            className="absolute -top-[7px] right-2.5  -translate-x-1/2
- w-5 h-5 bg-[#fff1f6]
- border-l border-t border-white
- rotate-45 z-20"
+            className='absolute -top-[9px] right-2.5 -translate-x-1/2
+         w-5 h-5 rotate-45
+         border-l border-t border-white
+         overflow-hidden z-20
+         before:absolute
+         before:inset-x-0
+         before:top-0
+         before:h-[50%]
+         before:bg-kiosk-support'
+          //  style={{ background: "linear-gradient(to bottom, var(--color-kiosk-support) 0 60%, transparent 50% 100%)" }}
           ></div>
 
           <div className="relative z-10 flex h-full flex-col items-center">

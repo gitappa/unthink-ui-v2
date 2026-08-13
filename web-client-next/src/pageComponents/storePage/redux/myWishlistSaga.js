@@ -37,8 +37,8 @@ function* fetchMyWishlistCollectionSaga(action) {
     );
 
     const collections = data.data || [];
-
-    if (status !== 200 || !collections.length) {
+    // console.log('collections',collections.product_lists?.length)
+    if (status !== 200 || !collections?.product_lists?.length) {
       showNoWishlistWarning();
       return;
     }
@@ -72,7 +72,7 @@ function* fetchMyTryonsCollectionSaga(action) {
 
     const collections = data.data || [];
 
-    if (status !== 200 || !collections.length) {
+    if (status !== 200 || !collections?.product_lists?.length) {
       showNoTryonsWarning();
       return;
     }

@@ -48,6 +48,11 @@ const CollectionPage = ({ params }) => {
   const singleCollectionKiosk = useSelector(
     (state) => state.auth.user.singleCollections.data,
   ); // Update based on your Redux store structure
+  const requestedCollectionPath = params?.collection_name;
+  const currentCollection =
+    singleCollectionKiosk?.path === requestedCollectionPath
+      ? singleCollectionKiosk
+      : null;
   const [isUserLogin, storeData, isGuestPopUpShow] = useSelector((state) => [
     state.auth.user.isUserLogin,
     state.store.data,
@@ -60,22 +65,22 @@ const CollectionPage = ({ params }) => {
   }, []);
 
   const productsData = useMemo(() => {
-    if (!singleCollectionKiosk?.product_lists) return [];
+    if (!currentCollection?.product_lists) return [];
 
-    let list = filterAvailableProductList(singleCollectionKiosk.product_lists);
+    let list = filterAvailableProductList(currentCollection.product_lists);
 
     if (selectedTags.length) {
       list = filterProductListBySelectedTags(
         list,
         selectedTags,
-        singleCollectionKiosk.tag_map,
+        currentCollection.tag_map,
       );
     }
 
     return list;
   }, [
-    singleCollectionKiosk?.product_lists,
-    singleCollectionKiosk?.tag_map,
+    currentCollection?.product_lists,
+    currentCollection?.tag_map,
     selectedTags,
   ]);
   // console.log('productsData',useSelector(userInfo));
@@ -92,21 +97,21 @@ const CollectionPage = ({ params }) => {
     useKioskSessionReminder({ time: 60 * 1000 });
 
   const collectionPagePath = useMemo(() => {
-    if (!singleCollectionKiosk) return "";
+    if (!currentCollection) return "";
     try {
       return getBlogCollectionPagePath(
-        singleCollectionKiosk.user_name,
-        singleCollectionKiosk.path,
-        singleCollectionKiosk._id,
-        singleCollectionKiosk.user_id,
-        singleCollectionKiosk.status,
-        singleCollectionKiosk.hosted_stores,
-        singleCollectionKiosk.collection_theme,
+        currentCollection.user_name,
+        currentCollection.path,
+        currentCollection._id,
+        currentCollection.user_id,
+        currentCollection.status,
+        currentCollection.hosted_stores,
+        currentCollection.collection_theme,
       );
     } catch (e) {
       return "";
     }
-  }, [singleCollectionKiosk]);
+  }, [currentCollection]);
 
   const qrCodeGeneratorURL = useMemo(() => {
     if (!collectionPagePath) return "";
@@ -123,27 +128,32 @@ const CollectionPage = ({ params }) => {
   // console.log("singleCollectionKiosk", singleCollectionKiosk.product_lists);
   const tagsToShow = useMemo(() => {
     const allTag = ["All"];
-    const allTags = singleCollectionKiosk.tags
-      ? allTag.concat(singleCollectionKiosk.tags)
+    const allTags = currentCollection?.tags
+      ? allTag.concat(currentCollection.tags)
       : allTag;
     return isTagsShowMoreActive ? allTags : allTags;
-  }, [singleCollectionKiosk.tags, isTagsShowMoreActive]);
+  }, [currentCollection?.tags, isTagsShowMoreActive]);
 
   useEffect(() => {
-    if (params?.collection_name) {
-      console.log("itsworkiing");
+    setActiveCategory("All");
+    setSelectedTags([]);
+    setShowShareProductDetails(false);
+    setSharePageUrl("");
+    setQrUrl("");
+    setShareContext("collection");
 
+    if (requestedCollectionPath) {
       dispatch(
         getInfluencerCollection({
           // collection_id: params.collection_name,
-          path: params.collection_name,
+          path: requestedCollectionPath,
           isStoreHomePage: false,
           product_sort_by: undefined,
           product_sort_order: undefined,
         }),
       );
     }
-  }, [params?.collection_name, dispatch]);
+  }, [requestedCollectionPath, dispatch]);
   //   console.log('colleztctionData',singleCollectionKiosk);
   const productCardKiosk = (productdata) => {
     // console.log(productdata);
@@ -230,7 +240,7 @@ const CollectionPage = ({ params }) => {
       buildKioskAutoLoginUrls({
         targetPath: collectionPagePath,
         pageParam:
-          `?page=collections/${singleCollectionKiosk?.path || ""}`.replace(
+          `?page=collections/${currentCollection?.path || ""}`.replace(
             /\/+/,
             "/",
           ),
@@ -241,7 +251,7 @@ const CollectionPage = ({ params }) => {
       buildKioskAutoLoginUrls,
       collectionPagePath,
       qrCodeGeneratorURL,
-      singleCollectionKiosk?.path,
+      currentCollection?.path,
     ],
   );
 
@@ -351,7 +361,7 @@ const CollectionPage = ({ params }) => {
     [buildKioskAutoLoginUrls],
   );
 
-  if (!singleCollectionKiosk || singleCollectionKiosk.length === 0) {
+  if (!currentCollection) {
     return (
       <div className="min-h-screen flex mt-3 justify-center">
         <Spin size="large" className="pink-spinner" />
@@ -384,11 +394,11 @@ const CollectionPage = ({ params }) => {
         </p> */}
           <div>
             <h1 className="h1-kiosk font-bold text-black mb-0 lg:mb-2">
-              {singleCollectionKiosk.collection_name}
+              {currentCollection.collection_name}
             </h1>
 
             <p className="text-gray-500 text-base lg:mb-0 mb-2">
-              {singleCollectionKiosk?.product_lists?.length} pieces
+              {currentCollection?.product_lists?.length} pieces
             </p>
           </div>
           <div className="relative flex flex-col gap-3  items-end  ">
@@ -407,7 +417,7 @@ const CollectionPage = ({ params }) => {
                 }}
                 isOpen={showShareProductDetails}
                 qrCodeGeneratorURL={qrUrl}
-                collection={singleCollectionKiosk}
+                collection={currentCollection}
                 fromCollection={fromCollection}
                 kioskHeader={
                   shareContext === "collection"
@@ -418,7 +428,7 @@ const CollectionPage = ({ params }) => {
                 }
                 subHeaderText={
                   shareContext === "collection"
-                    ? singleCollectionKiosk?.collection_name
+                    ? currentCollection?.collection_name
                     : onMfrCode?.name
                 }
                 removeheaderColleciton
@@ -468,15 +478,11 @@ const CollectionPage = ({ params }) => {
           </div>
         ))}
       </div>
-      {/* <BannerImage
-        src={profilebanner?.src}
-        alt="profilebanner"
-        className="lg:mt-11 mt-5"
-      /> */}
+
       <GuestUserPopUp
         isOpen={isPopupShow || isGuestPopUpShow}
         setIsOpen={setIsPopupShow}
-        storeName={storeData?.store_name || singleCollectionKiosk?.store_name}
+        storeName={storeData?.store_name || currentCollection?.store_name}
         persistKioskLogin
         onSuccess={async ({ userId }) => {
           if (pendingGuestAction?.type === "cart" && userId) {

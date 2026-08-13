@@ -613,14 +613,24 @@
   font-size: 12px;
 }
 
+.chat-products-description-collapsed-no-image {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+}
+
 @media (min-width: 768px) {
-  .chat-products-description-collapsed {
+  .chat-products-description-collapsed,
+  .chat-products-description-collapsed-no-image {
     font-size: 14px;
   }
 }
 
 @media (min-width: 1025px) {
-  .chat-products-description-collapsed {
+  .chat-products-description-collapsed,
+  .chat-products-description-collapsed-no-image {
     font-size: 16px;
   }
 }
