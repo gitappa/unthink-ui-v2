@@ -115,7 +115,7 @@ const PRODUCT_BUY_BUTTON_CLASS =
 const PRODUCT_BUY_BUTTON_SMALL_CLASS =
   "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-[5px] py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[var(--color-secondary)]";
 const KIOSKCLASS =
-  "group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium";
+  "group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm button-kiosk-card text-black hover:bg-kiosk-primary  hover:text-white font-medium";
 const KIOSK_CART_ICON_CLASS =
   "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
 const getProductBuyButtonClass = (size, hasKioskAccess) =>

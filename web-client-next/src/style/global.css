@@ -103,9 +103,16 @@
   .button-kiosk {
     @apply !text-sm md:!text-base lg:!text-lg;
   }
+  .button-kiosk-card{
+   background: linear-gradient(92.32deg,#ffb9c7 12.41%,#ffe5ea 99.21%);
+  }
+  .button-kiosk-card:hover {
+  background: --(var(--color-hover-primary));
+  color: white;
+}
 }
 @theme{
-  --color-kiosk-primary:#FFB9C7;
+  --color-kiosk-primary:#E9718BFF;
   --color-kiosk-secondary:#FFE3E8;
   --color-kiosk-support:#FDEDDE;
   --color-hover-primary:#e9718b;
