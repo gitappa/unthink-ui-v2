@@ -102,7 +102,7 @@ const KioskHome = ({ props }) => {
       {/* Tag Buttons (pill-style tabs) */}
       <div className="flex items-center mb-3">
         <div className="w-full  flex items-center mx-auto">
-          <div className="flex items-center rounded-full bg-kiosk-secondary w-full p-1">
+          <div className="flex items-center rounded-full bg-kiosk-primary w-full p-1">
             {Tags.map((tag, i) => (
               <button
                 key={i}
@@ -114,7 +114,7 @@ const KioskHome = ({ props }) => {
                 className={`flex-1 text-center button-kiosk px-3 md:px-5 py-2 font-semibold transition rounded-full ${
                   showTags === tag
                     ? "bg-white text-black shadow-md"
-                    : "text-gray-600 hover:text-black"
+                    : "text-white hover:text-black"
                 } ${i > 0 ? "border-l border-gray-400" : ""}`}
               >
                 {tag}

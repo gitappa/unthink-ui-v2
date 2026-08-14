@@ -1,135 +1,109 @@
 import { useRouter } from "next/router";
-import React, { useRef } from "react";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import React from "react";
 import QRsection from "./QRsection";
 
-const BannerKisok = ({ products, Tags, lookBooks ,storeData}) => {
+const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   const router = useRouter();
-  const swiperRef = useRef(null);
 
   const trendingProducts = (products || [])
-    .filter((x) => x.cover_image && x.path)
- 
+    .filter((x) => x.cover_image && x.path);
+
   const lookBooksProducts = (lookBooks || [])
-    .filter((x) => x.cover_image && x.path)
-    
+    .filter((x) => x.cover_image && x.path);
+
   const displayedProducts =
-    Tags === "#Trending" ? trendingProducts.slice(0,trendingProducts.length >= 12 ? 12 : trendingProducts.length >= 9 ? 9 : 6 ) : lookBooksProducts.slice(0,lookBooksProducts.length > 12 ? 12 :lookBooksProducts.length >= 9 ? 9 : 6);
+    Tags === "#Trending"
+      ? trendingProducts.slice(0, 8)
+      : lookBooksProducts.slice(0, 8);
   //  console.log('displayedProducts',lookBooksProducts.length);
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
+
+  const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
+    [displayedProducts[columnIndex], displayedProducts[columnIndex + 4]].filter(
+      Boolean,
+    ),
+  );
+
+  const tileStyles = [
+    ["h-[258px]", "h-[245px]"],
+    ["h-[227px]", "h-[288px]"],
+    ["h-[258px]", "h-[251px]"],
+    ["h-[227px]", "h-[288px]"],
+  ];
+
   return (
-    <div className=" flex justify-center items-start  gap-3 ">
+    <div className="flex items-start justify-center gap-3">
       {/* Banner Section */}
-      <div className="rounded-3xl max-h-[600px]  w-full bg-kiosk-support px-3 py-2 md:py-6 md:px-7.5 overflow-hidden relative ">
-        {/* dark overlay so content reads on top of image */}
-        <div className="   rounded-3xl pointer-events-none z-0" />
-        <div className="w-full mx-auto relative z-10 h-full ">
-          <div className="relative grid max-h-[calc(600px-1rem)] grid-cols-3 gap-4 overflow-y-auto pr-1 md:max-h-[calc(600px-3rem)]">
-            {/* <Swiper
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-              }}
-              slidesPerView={2}
-              spaceBetween={20}
-              speed={700}
-              loop={displayedProducts.length > 3}
-              watchOverflow={true}
-              grabCursor={true}
-              threshold={8}
-              resistanceRatio={0.75}
-              touchRatio={0.9}
-              breakpoints={{
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 20,
-                },
-                1280: {
-                  slidesPerView: 3,
-                  spaceBetween: 20,
-                },
-              }}
-              className="kiosk-banner-swiper w-full"
-            > */}
-              {displayedProducts.map((product) => (
-                <div className="cursor-pointer"
-                  key={product.collection_id}
-                    onClick={() => handleNavCollection(product)}
-
-                  
-                >
-                  <div className="h-auto bg-white rounded-t-xl">
-
+      <div className="relative max-h-[600px] w-full overflow-hidden rounded-[18px] bg-white p-2 md:p-5">
+        <div className="relative z-10 h-full w-full">
+          <div className="relative grid max-h-[calc(600px-1rem)] grid-cols-2 gap-4 overflow-y-auto pr-1 md:hidden">
+            {displayedProducts.map((product) => (
+              <button
+                type="button"
+                className="group relative cursor-pointer overflow-hidden rounded-[10px] bg-[#5c1722] text-left shadow-sm transition-transform duration-300 ease-out active:scale-[0.99]"
+                key={product.collection_id}
+                onClick={() => handleNavCollection(product)}
+              >
+                <div className="relative h-[130px] w-full overflow-hidden sm:h-[170px] md:h-[229px]">
+                  {product.cover_image && (
+                    <img
+                      src={product.cover_image}
+                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
+                      alt={product.collection_name || product.cover_image}
+                      loading="lazy"
+                    />
+                  )}
                   <div
-                    className={`relative overflow-hidden rounded-t-xl opacity-90 m-auto w-full hover:opacity-100 hover:scale-[1.015] transition-all duration-500 ease-out  h-40 sm:h-48 md:h-56 lg:h-[275px]  `}
-                  >
-                    {product.cover_image && (
-                      <>
-                      <img
-                        src={product.cover_image}
-                        className="shadow-lg h-full object-contain m-auto w-full transition-transform duration-500 ease-out"
-                        alt={product.collection_name || product.cover_image}
-                        loading="lazy"
-                      />
-                      
-                      </>
-                    )}
-                  </div>
-                  </div>
-<div className="  bottom-0 left-0.5 bg-white/20 backdrop-blur-md border-t border-white/30 w-full rounded-b-lg px-2 py-1 shadow-[0_-8px_24px_rgba(0,0,0,0.18)]">
-                        <p className="truncate text-center text-lg font-medium text-black drop-shadow-sm">
-                          {product.collection_name || "Untitled collection"} 
-                        </p>
-                      </div>
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
+                  />
+                  <p className="absolute inset-x-0 bottom-3 px-3 text-center text-[18px] font-extrabold uppercase leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)] md:text-[19px]">
+                    {product.collection_name || "Untitled collection"}
+                  </p>
                 </div>
-              ))}
-            {/* </Swiper> */}
-
-            {/* {displayedProducts.length > 3 && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Previous collections"
-                  className="absolute left-0 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-300 ease-out hover:shadow-xl active:scale-95 md:h-10 md:w-10"
-                  onClick={() => swiperRef.current?.slidePrev(700)}
-                >
-                  <MdOutlineKeyboardArrowLeft className="text-2xl" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next collections"
-                  className="absolute right-0 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-300 ease-out hover:shadow-xl active:scale-95 md:h-10 md:w-10"
-                  onClick={() => swiperRef.current?.slideNext(700)}
-                >
-                  <MdOutlineKeyboardArrowLeft className="rotate-180 text-2xl" />
-                </button>
-              </>
-            )} */}
-            {/* <style jsx global>{`
-              .kiosk-banner-swiper .swiper-wrapper {
-                transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-                will-change: transform;
-              }
-
-              .kiosk-banner-swiper .swiper-slide {
-                backface-visibility: hidden;
-                transform: translateZ(0);
-              }
-            `}</style> */}
+              </button>
+            ))}
           </div>
-        </div>
-
-        {/* Decorative Element */}
-        <div className="absolute top-0 right-0 w-48 h-48 opacity-10 pointer-events-none">
-          <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-transparent rounded-full"></div>
+          <div className="relative hidden max-h-[calc(600px-2.5rem)] grid-cols-4 gap-5 overflow-hidden md:grid">
+            {desktopColumns.map((columnProducts, columnIndex) => (
+              <div className="flex min-w-0 flex-col gap-[22px]" key={columnIndex}>
+                {columnProducts.map((product, productIndex) => (
+                  <button
+                    type="button"
+                    className="group relative cursor-pointer overflow-hidden rounded-[10px] bg-[#5c1722] text-left shadow-sm transition-transform duration-300 ease-out active:scale-[0.99]"
+                    key={product.collection_id}
+                    onClick={() => handleNavCollection(product)}
+                  >
+                    <div
+                      className={`relative w-full overflow-hidden ${tileStyles[columnIndex][productIndex]}`}
+                    >
+                      {product.cover_image && (
+                        <img
+                          src={product.cover_image}
+                          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
+                          alt={product.collection_name || product.cover_image}
+                          loading="lazy"
+                        />
+                      )}
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
+                      />
+                      <p className="absolute inset-x-0 bottom-3 px-3 text-center text-base font-extrabold uppercase leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]">
+                        {product.collection_name || "Untitled collection"}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <QRsection showTags={Tags} storeData={storeData} />
-
     </div>
   );
 };
