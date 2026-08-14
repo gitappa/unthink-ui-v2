@@ -391,12 +391,13 @@ const AuthInput = ({ onLoginChange, styles }) => {
       try {
         const response = await collectionAPIs.fetchCollectionsAPICall(fetchParams);
         const collection = getFetchedCollection(response, collectionPath);
-
+        // console.log('collection',collection);
+        
         const hasCollectionData = action.key === "tryon"
           ? Boolean(collection)
           : getCollectionProductCount(collection) > 0;
 
-        if (!collection || !hasCollectionData) {
+        if (!collection?.product_list || !hasCollectionData) {
           setQrState((prev) => ({
             ...prev,
             isLoading: false,
