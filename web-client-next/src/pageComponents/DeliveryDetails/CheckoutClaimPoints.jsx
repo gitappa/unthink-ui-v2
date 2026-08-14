@@ -110,7 +110,7 @@ const CheckoutClaimPoints = () => {
                       />
                     )}
                     <div>
-                      <p className="font-medium whitespace-nowrap overflow-hidden ">
+                      <p className="font-medium  overflow-hidden ">
                          ({product.name || product.mfr_code || "Item"})
                       </p>
                       <p className="text-gray-500">Qty {product.qty}</p>
