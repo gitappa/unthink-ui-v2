@@ -226,7 +226,7 @@ const [
           redeemPayload: {
             recipientId: userDID,
             pointsAmount: validPoints,
-                              },
+          },
         }),
         claimPayload: {
           user_id: checkoutUserId?.toString(),
@@ -235,6 +235,8 @@ const [
           points_exchanged: validPoints,
           image_url: claimImageUrl,
         },
+        eventId:storeData?.event_id,
+        ischeckoutPage: checkoutPage,
 
       })
     );
