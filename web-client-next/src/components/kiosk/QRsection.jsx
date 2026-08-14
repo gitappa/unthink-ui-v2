@@ -70,7 +70,7 @@ const QRsection = ({ showTags, storeData }) => {
                 "Scan to pick up your digital cartq"}
             </p>
 
-            <div className="relative my-[30px] w-full rounded-[8px] bg-[#f5aaad] px-[18px] py-[18px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]">
+            <div className="relative my-[30px] w-full rounded-[8px] bg-kiosk-primary px-[18px] py-[18px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]">
               <div
                 aria-hidden="true"
                 className="absolute -left-[7px] top-[16px] flex flex-col gap-[7px]"
