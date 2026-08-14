@@ -10,6 +10,7 @@ import {
   RedeemSessionHCS20PointsApiCall,
   RemoveCartApiCall,
   SendSessionHCS20PointsApiCall,
+  SmartContractApiCall,
 } from "../../../helper/serverAPIs";
 import { collectionQRCodeGenerator } from "../../../helper/utils";
 
@@ -338,11 +339,42 @@ const getTransactionId = (responseData) =>{
 }
 
 function* redeemSessionHCS20PointsSaga(action) {
-  const { redeemPayload, claimPayload,  } = action.payload || {};
+  const { redeemPayload, claimPayload, eventId,ischeckoutPage } = action.payload || {};
   let pointsSmartContractTransactionId = "";
+    const finalClaimPayload = {
+    ...claimPayload,
+    points_smart_contract_transactionId:  '',
+    metadata: {
+    type: "GIVA-loyalty-points",
+    trait_type: "points",
+    store_specific: true
+  }
+  };
 
   if (redeemPayload?.recipientId) {
     try {
+       const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
+
+    yield put(
+      claimStorePointsSuccess({
+        requestPayload: finalClaimPayload,
+        response: claimResponse?.data,
+      })
+    );
+    // console.log('claimResponse',claimResponse);
+    
+    const rawClaimResponseData = claimResponse?.data?.data ?? claimResponse?.data ?? {};
+    const claimResponseData = Array.isArray(rawClaimResponseData)
+      ? rawClaimResponseData[0] ?? {}
+      : rawClaimResponseData;
+
+
+    // if (
+    //   checkoutRefreshPayload?.user_id &&
+    //   checkoutRefreshPayload?.store_name
+    // ) {
+    //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
+    notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
       const redeemResponse = yield call(
         RedeemSessionHCS20PointsApiCall,
         redeemPayload
@@ -372,53 +404,25 @@ function* redeemSessionHCS20PointsSaga(action) {
     }
   }
 
-  const finalClaimPayload = {
-    ...claimPayload,
-    points_smart_contract_transactionId: pointsSmartContractTransactionId || '',
-
-
-  metadata: {
-    type: "GIVA-loyalty-points",
-    //"mint_number": 42,
-    trait_type: "points",
-    store_specific: true
-  }
-
-  };
+  
 
   try {
-    const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
+     const contractPayload = {
+        user_id:claimPayload?.user_id ,
+         store_name: claimPayload?.store_name,
+        event_id: eventId || '',
+       points_smart_contract_transactionId:pointsSmartContractTransactionId || '' //optional if to be be passed with points summary
 
-    yield put(
-      claimStorePointsSuccess({
-        requestPayload: finalClaimPayload,
-        response: claimResponse?.data,
-      })
-    );
-    // console.log('claimResponse',claimResponse);
-    
-    const rawClaimResponseData = claimResponse?.data?.data ?? claimResponse?.data ?? {};
-    const claimResponseData = Array.isArray(rawClaimResponseData)
-      ? rawClaimResponseData[0] ?? {}
-      : rawClaimResponseData;
-
-
-    // if (
-    //   checkoutRefreshPayload?.user_id &&
-    //   checkoutRefreshPayload?.store_name
-    // ) {
-    //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
-    notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
+    }
+    yield call(SmartContractApiCall, contractPayload);
+   
     const removeCartPayload = {
       collection_name: "my cart",
       type: "system",
-      user_id: claimResponseData?.user_id ?? finalClaimPayload?.user_id,
-      store:
-        claimResponseData?.store_name ??
-        claimResponseData?.store ??
-        finalClaimPayload?.store_name,
+      user_id: claimPayload?.user_id  ,
+      store:claimPayload?.store_name,
     };
-
+    if(ischeckoutPage){
     try {
       yield call(RemoveCartApiCall, removeCartPayload);
     } catch (removeCartError) {
@@ -428,7 +432,7 @@ function* redeemSessionHCS20PointsSaga(action) {
         payload: removeCartPayload,
       });
     }
-    // } 
+    } 
   } catch (claimError) {
     console.error("Error claiming store points:", {
       status: claimError.response?.status,

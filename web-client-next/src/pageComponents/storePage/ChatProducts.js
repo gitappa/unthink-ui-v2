@@ -1029,7 +1029,7 @@ const ChatProducts = ({
                         </div>
                       ) : null}
                       {isFollowUpQuery &&
-                        isShowFollowUpSearch && !shopLookPreviewImage && !auraServerImage &&
+                        isShowFollowUpSearch && chatHistory.length >= 2 && (shopLookPreviewImage || auraServerImage) &&
                         regenarateImage ? (
                         <button
                           className="chatmodal-figma-change-btn"
@@ -1038,22 +1038,6 @@ const ChatProducts = ({
                           <ReloadOutlined />
                           Regenerate Image
                         </button>
-                      ) : null}
-                      {isFollowUpQuery &&
-                        isShowFollowUpSearch && chatHistory.length >= 2 && (shopLookPreviewImage || auraServerImage) &&
-                        regenarateImage ? (
-                        <>
-
-                          <button className="chatmodal-figma-change-btn"
-
-
-                            onClick={handleRegenrateImage}
-                          >
-                            <ReloadOutlined
-                            />
-                            Regenerate Image
-                          </button>
-                        </>
                       ) : null}
                       {(widgetHeader || shopLookKeywords.length > 0) ? (
                         <div>
@@ -1080,7 +1064,11 @@ const ChatProducts = ({
                                 </div>
                               ) : (
                                 <div
-                                  className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded ? styles["chat-products-description-collapsed"] : ""}`}
+                                  className={`${styles["chat-products-shop-look-description-text"]} ${!isDescriptionExpanded
+                                    ? (!shopLookPreviewImage && !auraServerImage
+                                      ? styles["chat-products-description-collapsed-no-image"]
+                                      : styles["chat-products-description-collapsed"])
+                                    : ""}`}
                                   dangerouslySetInnerHTML={{ __html: widgetHeader }}
                                 />
                               )}

@@ -139,6 +139,7 @@ const claimStorePoints = "/user/earnings/claim_store/";
 const sendSessionHCS20Points = `/send-sessionhcs20-points`;
 const checkSessionHCS20Points =   `/check-sessionhcs20-points`;
 const redeemSessionHCS20Points =   `/redeem-sessionhcs20-points`;
+const smartContractTransaction = "/user/earnings/create_or_update/";
 //KIOSK
 const socialMedia =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
@@ -1640,6 +1641,16 @@ export const CreateBadgeApiCall = ({name ,points, badge_image_url,qr_page_url}) 
       qr_page_url,
     },
     responseType: "blob",
+  }); 
+};
+export const SmartContractApiCall = (data = {}) => {
+  const url = `${auraYfretUserCollBaseUrl}${smartContractTransaction}`;
+// console.log("URL:", name, points, badge_image_url);
+  return apiInstance({
+    url,
+    method: "post",
+    data,
+    // responseType: "blob",
   }); 
 };
 export const RemoveCartApiCall = ( data={} ) => {
