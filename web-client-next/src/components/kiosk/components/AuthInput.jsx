@@ -395,7 +395,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         
         const hasCollectionData = getCollectionProductCount(collection) > 0;
 
-        if (!collection.product_list || !hasCollectionData) {
+        if (!collection.product_lists || !hasCollectionData) {
           setQrState((prev) => ({
             ...prev,
             isLoading: false,
