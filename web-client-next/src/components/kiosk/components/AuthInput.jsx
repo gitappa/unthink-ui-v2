@@ -111,7 +111,7 @@ const buildCollectionVerifyPageParam = (
 ) => {
   const collectionId = collection?._id 
   const userName = collection?.user_name || fallbackUserName || kioskLogin?.user_name;
-    if(collection.collection_name === "my cart"){
+    if(collection?.collection_name === "my cart"){
       return `?page=cart`;
     }
   if (userName && collectionId) {
@@ -393,11 +393,9 @@ const AuthInput = ({ onLoginChange, styles }) => {
         const collection = getFetchedCollection(response, collectionPath);
         // console.log('collection',collection);
         
-        const hasCollectionData = action.key === "tryon"
-          ? Boolean(collection)
-          : getCollectionProductCount(collection) > 0;
+        const hasCollectionData = getCollectionProductCount(collection) > 0;
 
-        if (!collection?.product_list || !hasCollectionData) {
+        if (!collection.product_list || !hasCollectionData) {
           setQrState((prev) => ({
             ...prev,
             isLoading: false,
