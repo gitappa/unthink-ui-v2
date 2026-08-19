@@ -27,6 +27,15 @@ const UploadedMediaCard = ({ media, onDelete }) => {
         {media.event_id ? <p>Event: {media.event_id}</p> : null}
         {mediaId ? <small>ID: {mediaId}</small> : null}
       </div> */}
+      {(media.title || media.description) ? (
+        <div className={styles.mediaMeta}>
+          <div>
+            <span>{mediaType}</span>
+          </div>
+          {media.title ? <strong>{media.title}</strong> : null}
+          {media.description ? <p>{media.description}</p> : null}
+        </div>
+      ) : null}
       <div className={styles.mediaActions}>
         <button type="button" onClick={() => onDelete(media)}><FiTrash2 /> Delete</button>
       </div>
