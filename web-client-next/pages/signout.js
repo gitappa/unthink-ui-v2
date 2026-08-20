@@ -6,9 +6,11 @@ import { Spin } from "antd";
 import { SIGN_IN_EXPIRE_DAYS } from "../src/constants/codes";
 import { checkAndGenerateUserId, clearStorages, generateSessionId } from "../src/helper/utils";
 import { logoutVenlyUser } from "../src/helper/venlyUtils";
-import { getUserCollectionsReset, getUserInfo, getUserInfoSuccess } from "../src/pageComponents/Auth/redux/actions";
+import { getUserCollectionsReset, getUserInfo, getUserInfoSuccess, getWishlistUserCollectionReset } from "../src/pageComponents/Auth/redux/actions";
 import { is_store_instance } from "../src/constants/config";
 import { fetchCategoriesReset } from "../src/pageComponents/categories/redux/actions";
+import { clearInfluencerCollections } from "../src/pageComponents/Influencer/redux/actions";
+import { fetchCartReset } from "../src/pageComponents/DeliveryDetails/redux/action";
 
 const SignOut = () => {
   const router = useRouter();
@@ -38,6 +40,9 @@ const SignOut = () => {
         // Reset Redux state
         dispatch(getUserInfoSuccess({}));
         dispatch(getUserCollectionsReset());
+        dispatch(getWishlistUserCollectionReset());
+        dispatch(fetchCartReset());
+        dispatch(clearInfluencerCollections());
         dispatch(fetchCategoriesReset());
 
         setTimeout(() => {
@@ -46,6 +51,7 @@ const SignOut = () => {
           const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
           const redirect = params ? params.get("redirect") : null;
           router.push(redirect || (is_store_instance ? "/" : "/store"));
+
         }, 2000);
       } catch (error) {
         console.log("Sign out error:", error);

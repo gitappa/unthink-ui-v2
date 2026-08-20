@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Typography } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,8 +11,9 @@ import carousel_arrow_icon from "../../images/carousel_arrow_icon.png";
 
 import styles from './Carousal.module.scss';
 import cssStyles from './CarouselContainer.module.css';
-import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
+
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const { Text } = Typography;
 SwiperCore.use([FreeMode, Mousewheel]);

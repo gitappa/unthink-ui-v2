@@ -100,7 +100,13 @@ function* fetchCollection(action) {
 	} = action.payload;
 
 	// const view = getCollectionPageView(user_id === authUserId, isStoreHomePage);
-
+ const cachedCollection = yield select(
+      (state) => state.influencer.collections.cache?.[path]
+    );
+	if (cachedCollection) {
+      yield put(getInfluencerCollectionSuccess(cachedCollection, path));
+      return;
+    }
 	const params = {
 		user_id,
 		collection_id,
@@ -126,7 +132,7 @@ function* fetchCollection(action) {
 					detailed: true,
 				}
 				: {};
-			yield put(getInfluencerCollectionSuccess(collData));
+			yield put(getInfluencerCollectionSuccess(collData,path));
 			yield put(getSingleUserCollectionSuccess(collData));
 		} else {
 			yield put(getInfluencerCollectionFailure());

@@ -4,8 +4,10 @@ import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import KioskHome from "./KioskHome";
 import { useRouter } from "next/router";
 import CollectionPage from "../../components/kiosk/CollectionPage";
-import { getwishlistUserCollection } from "../Auth/redux/actions";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
+import { getStoredKioskLogin } from "../../helper/utils";
+import { getwishlistUserCollection, getWishlistUserCollectionReset } from "../Auth/redux/actions";
+import { fetchCart, fetchCartReset } from "../DeliveryDetails/redux/action";
 
 const KioskRoot = (props) => {
   const router = useRouter();
@@ -24,15 +26,7 @@ const KioskRoot = (props) => {
     authUser,
   });
 
-  const getKioskLogin = useCallback(() => {
-    if (typeof window === "undefined") return null;
-
-    try {
-      return JSON.parse(window.sessionStorage.getItem("Kiosk-login") || "null");
-    } catch (error) {
-      return null;
-    }
-  }, []);
+  const getKioskLogin = useCallback(() => getStoredKioskLogin(), []);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(() => getKioskLogin());
 
   const syncKioskLogin = useCallback(() => {
@@ -40,26 +34,30 @@ const KioskRoot = (props) => {
     setKioskLoginAuth(login);
   }, [getKioskLogin]);
 
-  const kioskUserLogin = getKioskLogin()?.user_id;
-  // console.log('kioskUserLogin',kioskUserLogin);
-   
-  useEffect(() => { 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    syncKioskLogin();
     window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
 
     return () => {
       window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
     };
-  }, [syncKioskLogin]);
+  }, [router.asPath, syncKioskLogin]);
   useEffect(() => {
-    // console.log('running');
-    
+    if (!KioskLoginAuth?.user_id) {
+      dispatch(getWishlistUserCollectionReset());
+      dispatch(fetchCartReset());
+      return;
+    }
     dispatch(
       getwishlistUserCollection({
-        path: `my_wishlist_${KioskLoginAuth?.user_id}`,
+        path: `my_wishlist_${KioskLoginAuth.user_id}`,
       }),
     );
-  }, [kioskUserLogin]);
-  // params={{ collection_name }}
+    dispatch(fetchCart(`my_cart_${KioskLoginAuth.user_id}`));
+  }, [KioskLoginAuth?.user_id, dispatch]);
+
   return (
     <div>
       {isRootPage && <KioskHome />}

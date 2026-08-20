@@ -1,42 +1,96 @@
 import React from "react";
-import { sortableContainer, sortableElement } from "react-sortable-hoc";
+import {
+	DndContext,
+	PointerSensor,
+	closestCenter,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	SortableContext,
+	useSortable,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { arrayMoveImmutable, arrayMoveMutable } from "array-move";
 import styles from "./SortableContainer.module.css";
 
-const SortableContainerWrapper = sortableContainer(({ children, className }) => {
-	return <ul className={className}>{children}</ul>;
-});
+const getItemId = (value, uniqueKey) => String(uniqueKey ? value[uniqueKey] : value);
+
+const SortableItem = ({
+	id,
+	value,
+	ItemComponent,
+	disabled,
+	selectedProducts,
+	onSelectProductClick,
+	...rest
+}) => {
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id, disabled });
+
+	const handleSelectProduct = (e) => {
+		e.stopPropagation();
+		onSelectProductClick && onSelectProductClick(value._id);
+	};
+
+	return (
+		<li
+			ref={setNodeRef}
+			className={styles.sortableListItem}
+			style={{
+				transform: CSS.Transform.toString(transform),
+				transition,
+				opacity: isDragging ? 0.7 : undefined,
+			}}
+			{...attributes}
+			{...listeners}
+		>
+			<ItemComponent
+				value={value}
+				{...rest}
+				isSelected={selectedProducts.includes(value._id)}
+				handleSelectProduct={handleSelectProduct}
+			/>
+		</li>
+	);
+};
 
 export default function SortableContainer({
 	enableSelectProduct,
 	onSelectProductClick,
-	selectedProducts,
+	selectedProducts = [],
 	items,
 	onSortEnd,
 	ItemComponent,
-	sortableProps = {}, // to send extra params in react-sortable sortableContainer
+	sortableProps = {},
 	useMoveMutable = false,
 	uniqueKey, // unique key in the items list
 	...rest // extra common props to send in item component
 }) {
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 6,
+			},
+		})
+	);
+	const itemIds = items?.map((value) => getItemId(value, uniqueKey)) || [];
+	const disabled = sortableProps.disabled || enableSelectProduct;
 
-	const SortableItem = sortableElement(({ value, setSelectValue, isSelected }) => {
+	const onSortEndFn = ({ active, over }) => {
+		if (!over || active.id === over.id) return;
 
-		const handleSelectProduct = (e) => {
-			e.stopPropagation();
-			setSelectValue && setSelectValue(value._id);
-		};
+		const oldIndex = itemIds.indexOf(active.id);
+		const newIndex = itemIds.indexOf(over.id);
+		if (oldIndex < 0 || newIndex < 0) return;
 
-		return (
-			<>
-				<li className={styles.sortableListItem}>
-					<ItemComponent value={value} {...rest} isSelected={isSelected} handleSelectProduct={handleSelectProduct} />
-				</li>
-			</>
-		);
-	});
-
-	const onSortEndFn = ({ oldIndex, newIndex }) => {
 		if (useMoveMutable) {
 			arrayMoveMutable(items, oldIndex, newIndex);
 			onSortEnd();
@@ -46,18 +100,28 @@ export default function SortableContainer({
 	};
 
 	return (
-		<SortableContainerWrapper onSortEnd={onSortEndFn} {...sortableProps}>
-			{items?.map((value, index) => (
-				<SortableItem
-					key={`item-${uniqueKey ? value[uniqueKey] : value}`}
-					index={index}
-					value={value}
-					setSelectValue={() =>
-						onSelectProductClick(value._id)
-					}
-					isSelected={selectedProducts.includes(value._id)}
-				/>
-			))}
-		</SortableContainerWrapper>
+		<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onSortEndFn}>
+			<SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+				<ul className={sortableProps.className}>
+					{items?.map((value) => {
+						const id = getItemId(value, uniqueKey);
+
+						return (
+							<SortableItem
+								key={`item-${id}`}
+								id={id}
+								value={value}
+								ItemComponent={ItemComponent}
+								disabled={disabled}
+								enableSelectProduct={enableSelectProduct}
+								onSelectProductClick={onSelectProductClick}
+								selectedProducts={selectedProducts}
+								{...rest}
+							/>
+						);
+					})}
+				</ul>
+			</SortableContext>
+		</DndContext>
 	);
 }

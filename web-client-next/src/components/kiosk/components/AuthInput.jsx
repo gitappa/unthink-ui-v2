@@ -16,6 +16,10 @@ import {
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
 import { message } from "antd";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { getWishlistUserCollectionReset } from "../../../pageComponents/Auth/redux/actions";
+import { fetchCartReset } from "../../../pageComponents/DeliveryDetails/redux/action";
+import { clearInfluencerCollections } from "../../../pageComponents/Influencer/redux/actions";
 const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
 
 const INITIAL_COLLECTION_QR_STATE = {
@@ -86,7 +90,7 @@ const getCollectionListFromResponse = (response) => {
 
 const getCollectionProductCount = (collection) => {
   const productLists =
-    collection?.product_lists || collection?.product_list || collection?.products;
+    collection?.product_lists 
 
   return Array.isArray(productLists) ? productLists.filter(Boolean).length : 0;
 };
@@ -185,6 +189,7 @@ const renderCollectionActionIcon = (actionKey) => {
 };
 
 const AuthInput = ({ onLoginChange, styles }) => {
+  const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [emailPhone, setEmailPhone] = useState("");
   const [kioskLogin, setKioskLogin] = useState(null);
@@ -219,10 +224,13 @@ const AuthInput = ({ onLoginChange, styles }) => {
       sessionStorage.removeItem('selectedTag')
       setIsDropdownOpen(false);
       syncKioskLogin(null);
+      dispatch(getWishlistUserCollectionReset());
+      dispatch(fetchCartReset());
+      dispatch(clearInfluencerCollections());
       router.replace('/')
       // notifyKioskLoginChange();
     },
-    [syncKioskLogin],
+    [dispatch, router, syncKioskLogin],
   );
 
  useEffect(() => {
@@ -244,10 +252,24 @@ const AuthInput = ({ onLoginChange, styles }) => {
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+    const handleKioskLoginChange = () => {
+      const storedLogin = getStoredKioskLogin();
+
+      if (!storedLogin) {
+        setEmailPhone("");
+        setStatus("");
+        setIsDropdownOpen(false);
+      } else {
+        setEmailPhone(getGuestLoginName(storedLogin) || "");
+      }
+
+      syncKioskLogin(storedLogin);
+    };
+
+    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
 
     return () => {
-      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
     };
   }, [syncKioskLogin]);
 
@@ -391,7 +413,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       try {
         const response = await collectionAPIs.fetchCollectionsAPICall(fetchParams);
         const collection = getFetchedCollection(response, collectionPath);
-        // console.log('collection',collection);
+        // console.log('collection',collection.product_lists);
         
         const hasCollectionData = getCollectionProductCount(collection) > 0;
 

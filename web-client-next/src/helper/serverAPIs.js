@@ -316,10 +316,12 @@ const getUserInfoAPICall = (payload = {}) => {
 
   if (payload.user_id) {
     params.user_id = payload.user_id;
-  } else if (payload.user_name) {
+  }
+   else if (payload.user_name) {
     params.user_name = payload.user_name;
     params.store = current_store_name;
-  } else if (payload.emailId) {
+  } 
+  else if (payload.emailId) {
     params.emailId = payload.emailId;
   } else {
     params.user_id = getTTid();

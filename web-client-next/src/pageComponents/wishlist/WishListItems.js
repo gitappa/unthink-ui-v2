@@ -5,7 +5,6 @@ import {
 	StarFilled,
 	UserOutlined,
 } from "@ant-design/icons";
-import { SortableHandle } from "react-sortable-hoc";
 import styles from "./WishListItems.module.css";
 
 import SortableContainer from "../../components/SortableContainer";
@@ -40,7 +39,7 @@ const WishListItems = ({
 		onWishlistSort(wishlistData);
 	};
 
-	const DragHandle = SortableHandle(() => (
+	const DragHandle = () => (
 		<div className={styles.dragHandleContainer}>
 			{/* <div
 				className='w-4 h-2'
@@ -56,7 +55,7 @@ const WishListItems = ({
 				width={20}
 			/>
 		</div>
-	));
+	);
 
 	const SortableWishlistItem = ({ value: wishlist, handleSelectProduct, isSelected }) => {
 
@@ -138,7 +137,7 @@ const WishListItems = ({
 				useMoveMutable
 				uniqueKey='_id'
 				sortableProps={{
-					useDragHandle: true,
+					disabled: hideSorting,
 				}}
 				enableSelectProduct={enableSelectProduct}
 				onSelectProductClick={onSelectProductClick}
