@@ -142,7 +142,7 @@ const redeemSessionHCS20Points =   `/redeem-sessionhcs20-points`;
 const smartContractTransaction = "/user/earnings/create_or_update/";
 //KIOSK
 const socialMedia =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based&summary=true`;
 const trending =
   `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true`;
 const lookBook =
@@ -316,10 +316,12 @@ const getUserInfoAPICall = (payload = {}) => {
 
   if (payload.user_id) {
     params.user_id = payload.user_id;
-  } else if (payload.user_name) {
+  }
+   else if (payload.user_name) {
     params.user_name = payload.user_name;
     params.store = current_store_name;
-  } else if (payload.emailId) {
+  } 
+  else if (payload.emailId) {
     params.emailId = payload.emailId;
   } else {
     params.user_id = getTTid();

@@ -71,8 +71,9 @@ function* fetchMyTryonsCollectionSaga(action) {
     );
 
     const collections = data.data || [];
+// console.log(collections[0]?.product_lists?.length);
 
-    if (status !== 200 || !collections?.product_lists?.length) {
+    if (status !== 200 || !collections[0]?.product_lists?.length) {
       showNoTryonsWarning();
       return;
     }

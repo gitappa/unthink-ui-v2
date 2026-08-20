@@ -17,6 +17,7 @@ import {
   GET_USER_INFO_SUCCESS,
   GET_WISHLIST_USER_COLLECTION,
   GET_WISHLIST_USER_COLLECTION_FAILURE,
+  GET_WISHLIST_USER_COLLECTION_RESET,
   GET_WISHLIST_USER_COLLECTION_SUCCESS,
   GUEST_POPUP_SHOW,
   IS_SAVING_USER_INFO,
@@ -208,4 +209,8 @@ export const getwishlsitUserCollectionSuccess = (payload) => ({
 export const getwishlsitUserCollectionFailure = (error) => ({
   type: GET_WISHLIST_USER_COLLECTION_FAILURE,
   payload: error,
+});
+
+export const getWishlistUserCollectionReset = () => ({
+  type: GET_WISHLIST_USER_COLLECTION_RESET,
 });

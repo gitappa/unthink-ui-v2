@@ -9,7 +9,7 @@ import { aura_header_theme, is_store_instance } from "../src/constants/config";
 import Footer from "../src/pageComponents/staticHomePage/Footer";
 import Header from "../src/pageComponents/staticHomePage/Header";
 import RootStatic from "../src/pageComponents/staticHomePage/RootStatic";
-import { ROUTES } from "../src/constants/codes";
+import { KIOSK_LOGIN_CHANGE_EVENT, ROUTES } from "../src/constants/codes";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import KioskHome from "../src/pageComponents/kiosk/KioskHome";
@@ -37,6 +37,7 @@ const Index = ({ ...props }) => {
         state.auth.user.isUserLogin,  
         state.auth.user.data,
         state.store.data,
+        
     ]);
     const dispatch = useDispatch()
 
@@ -72,17 +73,6 @@ const Index = ({ ...props }) => {
         router.replace("/store-assistant");
     }, [hasKioskAccess, hasStoreAssistantDashboardAccess, mounted, router]);
 
-        const  kioskLogin =getStoredKioskLoginUserId() 
-        const LoginData =  authUser?.user_id || getTTid()
-        useEffect(()=>{
-            if(LoginData ||kioskLogin ){
-                if(hasKioskAccess){
-                    dispatch(fetchCart(`my_cart_${kioskLogin}`))
-                    return
-                }
-                dispatch(fetchCart(`my_cart_${LoginData}`))
-            }
-        },[LoginData ,kioskLogin, hasKioskAccess, dispatch])
 
     // Now we can do conditionals
     if (is_store_instance && !mounted) {

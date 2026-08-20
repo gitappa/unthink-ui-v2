@@ -281,9 +281,9 @@ const ProductCard = ({
   const isMyWishlistCollection = currentCollectionName === "my wishlist";
   const isMyTryonsCollection = currentCollectionName === "my tryons";
 
-//   useEffect(() => {
-//   console.log("wishlistCollections", wishlistCollections);
-// }, [wishlistCollections]);
+  //   useEffect(() => {
+  //   console.log("wishlistCollections", wishlistCollections);
+  // }, [wishlistCollections]);
   // console.log('colllectionssd',KioskLoginAuth);
 
   // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
@@ -442,23 +442,22 @@ const ProductCard = ({
       }
 
       const payload = {
-         user_id: userId,
+        user_id: userId,
         store: storeData?.store_name || "dothelook",
         Event_id: storeData?.event_id || "dothelookwebpage_447990",
-       
-            mfr_code: product.mfr_code,
-            product_name: product.name,
-            product_image: product.image,
-              callback:(()=>{
-        dispatch(
-        getwishlistUserCollection({
-          path: `my_wishlist_${userId}`,
-        }),
-      );
-      })
-         
+
+        mfr_code: product.mfr_code,
+        product_name: product.name,
+        product_image: product.image,
+        callback: () => {
+          dispatch(
+            getwishlistUserCollection({
+              path: `my_wishlist_${userId}`,
+            }),
+          );
+        },
       };
-    
+
       dispatch(addProductToWishlistCollection(payload));
     },
     [product, storeData?.event_id, storeData?.store_name],
@@ -479,9 +478,9 @@ const ProductCard = ({
     isGuestPopUpShow,
     pendingWishlistAction,
   ]);
-    const kioskLogin = getKioskLogin();
+  const kioskLogin = getKioskLogin();
 
-  const handleDeletePlistClick = () => {
+  const handleDeletePlistClick = (e) => {
     // const collectionIdToDelete =
     //   collection_id ||
     //   singleCollections?._id;
@@ -490,18 +489,19 @@ const ProductCard = ({
     //   notification.error({ message: `Unable to delete ${WISHLIST_TITLE}` });
     //   return;
     // }
-
+    e.preventDefault();
+    e.stopPropagation();
     dispatch(
       removeFromWishlist({
         products: [product.mfr_code],
         // _id: collectionIdToDelete,
-        collection_name:'my wishlist',
+        collection_name: "my wishlist",
         type: "system",
         successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
         errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
         removeCollectionFromUserCollections: true,
         wishlistCallBack: true,
-        user_id:kioskLogin?.user_id || authUserId || getTTid(),
+        user_id: kioskLogin?.user_id || authUserId || getTTid(),
         store: current_store_name,
         clearSelectedCollectionData: true, // clearing selected collection data and id to close collection details sidebar
       }),
@@ -517,14 +517,13 @@ const ProductCard = ({
     event.preventDefault();
     event.stopPropagation();
 
-
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
       dispatch(GuestPopUpShow(true));
       return;
     }
 
-     callHandpickedAPI(kioskLogin?.user_id || authUserId );
+    callHandpickedAPI(kioskLogin?.user_id || authUserId);
   };
 
   // useEffect(()=>{
@@ -560,18 +559,14 @@ const ProductCard = ({
       return;
     }
 
-    onAddSelectedProductsToCollection(
-      event,
-      product,
-      {
-        addToHandpickedWishlist: ({ userId } = {}) => {
-          const latestKioskLogin = getKioskLogin();
-          return callHandpickedAPI(
-            userId || latestKioskLogin?.user_id || authUserId || getTTid(),
-          );
-        },
+    onAddSelectedProductsToCollection(event, product, {
+      addToHandpickedWishlist: ({ userId } = {}) => {
+        const latestKioskLogin = getKioskLogin();
+        return callHandpickedAPI(
+          userId || latestKioskLogin?.user_id || authUserId || getTTid(),
+        );
       },
-    );
+    });
   };
   const checkoutPayment = async (e) => {
     e.stopPropagation();
@@ -735,7 +730,9 @@ const ProductCard = ({
 
   useEffect(() => {
     setCollectionTryonStatement(
-      currentCollectionForCard?.tryon_statement ? currentCollectionForCard : null,
+      currentCollectionForCard?.tryon_statement
+        ? currentCollectionForCard
+        : null,
     );
   }, [currentCollectionForCard]);
 
@@ -937,13 +934,15 @@ const ProductCard = ({
       <div
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
-        onClick={() => hasKioskAccess ? navigate(`/product/${product.mfr_code}`) : null}
+        onClick={() =>
+          hasKioskAccess ? navigate(`/product/${product.mfr_code}`) : null
+        }
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
           onClick={(e) => {
-            if ( setSelectValue) {
+            if (setSelectValue) {
               e.stopPropagation();
               setSelectValue(!isSelected);
             }
@@ -1009,13 +1008,14 @@ const ProductCard = ({
                 </div>
               )}
             {!enableSelect &&
-              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !hasKioskAccess &&
+              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
+              !hasKioskAccess &&
               !showWishlistModal && (
                 <div
                   className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    e.preventDefault()
+                    e.preventDefault();
                     handleProductClick({ open });
                   }}
                 >
@@ -1461,14 +1461,16 @@ const ProductCard = ({
             <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
               {!hideAddToWishlist && (
                 <div
-                  className={` absolute ${hasKioskAccess ? 'right-3 top-3.5' : 'right-[15px] top-[55px] '}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]`}
+                  className={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[55px] "}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]`}
                   onClick={
-                    heartRedProduct ? handleDeletePlistClick : addToWishlistClick
+                    heartRedProduct
+                      ? handleDeletePlistClick
+                      : addToWishlistClick
                   }
                 >
                   <button className="box-border flex h-8 w-8 items-center justify-center rounded-full bg-white p-0 shadow-[0px_2px_12px_rgba(0,0,0,0.1)] min-[1000px]:transition-all min-[1000px]:duration-200 min-[1000px]:ease-in-out min-[1000px]:hover:bg-[#f5f5f5] min-[1000px]:hover:shadow-[0px_4px_16px_rgba(0,0,0,0.15)] max-[1024px]:p-1">
                     {heartRedProduct ? (
-                      <FaHeart className="text-red-500"  />
+                      <FaHeart className="text-red-500" />
                     ) : (
                       // <img
                       //   alt="Add to wishlist"

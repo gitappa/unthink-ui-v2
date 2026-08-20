@@ -18,15 +18,14 @@ const LoggedInInfo = ({ userInfo }) => {
 export default LoggedInInfo;
 
 export const useKioskAccess = ({ isUserLogin, storeData, authUser }) => {
-  const hasKioskAccess =
-    isUserLogin &&
-    storeData?.kiosk_list?.some((data) => authUser?.emailId === data);
+   
 
-  // useEffect(() => {
-  //   if (!isUserLogin && typeof window !== "undefined") {
-  //     sessionStorage.removeItem("Kiosk-login");
-  //   }
-  // }, [isUserLogin]);
+  if (!authUser?.emailId || !Array.isArray(storeData?.kiosk_list) || !isUserLogin) {
+    return null;
+  }
 
-  return !!hasKioskAccess;
+  const hasAccess = storeData.kiosk_list.includes(authUser.emailId);
+
+
+  return hasAccess;
 };

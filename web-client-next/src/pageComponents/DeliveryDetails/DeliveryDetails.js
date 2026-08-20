@@ -56,11 +56,6 @@ const DeliveryDetails = () => {
     }));
   }, [collection]);
 
-  useEffect(() => {
-    if (mycartcollectionpath) {
-      dispatch(fetchCart(mycartcollectionpath));
-    }
-  }, [dispatch, mycartcollectionpath]);
 
   const handleRemove = (products) => {
     const payload = {

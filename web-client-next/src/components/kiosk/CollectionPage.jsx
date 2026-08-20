@@ -44,11 +44,13 @@ const CollectionPage = ({ params }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [onMfrCode, setOnMfrCode] = useState(null);
   // console.log("onMfrCode",onMfrCode);
+  const requestedCollectionPath = params?.collection_name;
 
   const singleCollectionKiosk = useSelector(
-    (state) => state.auth.user.singleCollections.data,
+    (state) => state.influencer.collections.cache?.[requestedCollectionPath],
   ); // Update based on your Redux store structure
-  const requestedCollectionPath = params?.collection_name;
+  // console.log('singleCollectionKiosk',singleCollectionKiosk);
+  
   const currentCollection =
     singleCollectionKiosk?.path === requestedCollectionPath
       ? singleCollectionKiosk
@@ -141,8 +143,8 @@ const CollectionPage = ({ params }) => {
     setSharePageUrl("");
     setQrUrl("");
     setShareContext("collection");
-
-    if (requestedCollectionPath) {
+    if(!requestedCollectionPath) return 
+    if (!singleCollectionKiosk) {
       dispatch(
         getInfluencerCollection({
           // collection_id: params.collection_name,
@@ -153,7 +155,7 @@ const CollectionPage = ({ params }) => {
         }),
       );
     }
-  }, [requestedCollectionPath, dispatch]);
+  }, [requestedCollectionPath, singleCollectionKiosk,dispatch]);
   //   console.log('colleztctionData',singleCollectionKiosk);
   const productCardKiosk = (productdata) => {
     // console.log(productdata);

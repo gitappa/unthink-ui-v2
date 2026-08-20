@@ -102,12 +102,9 @@ const nextConfig = {
 
   // Enable standalone output for Docker builds
   output: 'standalone',
-
-  transpilePackages: [
-    '@hashgraph/hedera-wallet-connect',
-    '@hashgraph/sdk',
-    '@hashgraph/proto'
-  ],
 };
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

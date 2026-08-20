@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useNavigate } from "../../helper/useNavigate";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,7 +51,6 @@ import {
 
 import styles from "./collectionDetails.module.scss";
 import cssStyles from "./CollectionDetails.module.css";
-import ReactPlayer from "react-player";
 import SingleCollectionProductList from "../../pageComponents/collectionPage/SingleCollectionProductList";
 import { toggleShowMore } from "../../pageComponents/collectionPage/redux/actions";
 import CarousalContainer from "../carousel/CarouselContainer";
@@ -60,6 +60,7 @@ import { MdOutlineFileUpload } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 
 const { Dragger } = Upload;
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const CollectionDetails = ({
   sharePageUrl,
