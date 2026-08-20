@@ -28,10 +28,10 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   );
 
   const tileStyles = [
-    ["h-[258px]", "h-[245px]"],
-    ["h-[227px]", "h-[288px]"],
-    ["h-[258px]", "h-[251px]"],
-    ["h-[227px]", "h-[288px]"],
+    ["h-[268px]", "h-[237px]"],
+    ["h-[237px]", "h-[268px]"],
+    ["h-[268px]", "h-[237px]"],
+    ["h-[237px]", "h-[268px]"],
   ];
 
   return (
@@ -43,11 +43,11 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
             {displayedProducts.map((product) => (
               <button
                 type="button"
-                className="group relative cursor-pointer overflow-hidden rounded-[10px] bg-[#5c1722] text-left shadow-sm transition-transform duration-300 ease-out active:scale-[0.99]"
+                className="group flex h-[184px] cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-[#eeeeee] text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99]"
                 key={product.collection_id}
                 onClick={() => handleNavCollection(product)}
               >
-                <div className="relative h-[130px] w-full overflow-hidden sm:h-[170px] md:h-[229px]">
+                <div className="relative min-h-0 w-full flex-1 overflow-hidden rounded-t-[10px] bg-[#ead8bd]">
                   {product.cover_image && (
                     <img
                       src={product.cover_image}
@@ -56,11 +56,9 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                       loading="lazy"
                     />
                   )}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
-                  />
-                  <p className="absolute inset-x-0 bottom-3 px-3 text-center text-[18px] font-extrabold uppercase leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)] md:text-[19px]">
+                </div>
+                <div className="flex h-[38px] shrink-0 items-center justify-center bg-[#eeeeee] px-2">
+                  <p className="max-w-full truncate whitespace-nowrap text-center text-[18px] font-semibold leading-none text-black">
                     {product.collection_name || "Untitled collection"}
                   </p>
                 </div>
@@ -73,13 +71,11 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                 {columnProducts.map((product, productIndex) => (
                   <button
                     type="button"
-                    className="group relative cursor-pointer overflow-hidden rounded-[10px] bg-[#5c1722] text-left shadow-sm transition-transform duration-300 ease-out active:scale-[0.99]"
+                    className={`group flex cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-[#eeeeee] text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99] ${tileStyles[columnIndex][productIndex]}`}
                     key={product.collection_id}
                     onClick={() => handleNavCollection(product)}
                   >
-                    <div
-                      className={`relative w-full overflow-hidden ${tileStyles[columnIndex][productIndex]}`}
-                    >
+                    <div className="relative min-h-0 w-full flex-1 overflow-hidden rounded-t-[10px] bg-[#ead8bd]">
                       {product.cover_image && (
                         <img
                           src={product.cover_image}
@@ -88,11 +84,9 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                           loading="lazy"
                         />
                       )}
-                      <div
-                        aria-hidden="true"
-                        className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
-                      />
-                      <p className="absolute inset-x-0 bottom-3 px-3 text-center text-base font-extrabold uppercase leading-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]">
+                    </div>
+                    <div className="flex h-[38px] shrink-0 items-center justify-center bg-[#eeeeee] px-2">
+                      <p className="max-w-full truncate whitespace-nowrap text-center py-1 text-[18px] font-semibold leading-none text-black">
                         {product.collection_name || "Untitled collection"}
                       </p>
                     </div>
