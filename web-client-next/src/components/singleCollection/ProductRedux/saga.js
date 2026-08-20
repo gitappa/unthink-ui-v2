@@ -11,12 +11,13 @@ function* fetchProductDetailsSaga(action) {
     // console.log('sss');
     
   try {
-    const { mfr_code, image } = action.payload;
+    const { mfr_code, image, cache } = action.payload;
  
     const res = yield call(
       customProductsAPIs.fetchProductDetailsAPICall,
       mfr_code,
-      image
+      image,
+      cache
     );
   // console.log('fdsfdsffds',image);
 

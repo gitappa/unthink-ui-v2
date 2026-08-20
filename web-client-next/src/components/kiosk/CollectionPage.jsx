@@ -33,7 +33,7 @@ import { loggedInInfo } from "../../pageComponents/Auth/redux/selector";
 import { useNavigate } from "../../helper/useNavigate";
 import AuthInput from "./components/AuthInput";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
-import { is_kiosk } from "../../constants/config";
+import { current_store_name, is_kiosk } from "../../constants/config";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -149,6 +149,8 @@ const CollectionPage = ({ params }) => {
         getInfluencerCollection({
           // collection_id: params.collection_name,
           path: requestedCollectionPath,
+          store: current_store_name,
+          cache: true,
           isStoreHomePage: false,
           product_sort_by: undefined,
           product_sort_order: undefined,

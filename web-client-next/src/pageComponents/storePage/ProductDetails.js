@@ -438,8 +438,8 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem("pdp_image") || "";
     // console.log('storedImage',storedImage);
 
-    dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
-  }, [mfr_code, dispatch]);
+    dispatch(fetchProductDetails({ mfr_code, image: storedImage, cache: hasKioskAccess }));
+  }, [mfr_code, dispatch, hasKioskAccess]);
 
   useEffect(() => {
     if (!mfr_code) return;

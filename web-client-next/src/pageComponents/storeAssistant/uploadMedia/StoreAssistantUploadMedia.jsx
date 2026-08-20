@@ -20,11 +20,14 @@ import {
 import UploadedMediaCard from "./UploadedMediaCard";
 import styles from "./StoreAssistantUploadMedia.module.scss";
 
+const getSelectedMediaItemId = (file, index) =>
+  `${file.name}-${file.size}-${file.lastModified}-${index}`;
+
 const StoreAssistantUploadMedia = () => {
   const [authUser, storeData] = useSelector((state) => [state.auth.user.data, state.store.data]);
   const storeName = getStoreName(storeData);
   const identity = useMemo(() => getMediaIdentity(authUser), [authUser]);
-  const [files, setFiles] = useState([]);
+  const [selectedMediaItems, setSelectedMediaItems] = useState([]);
   const [previewItems, setPreviewItems] = useState([]);
   const [mediaTypeFilter, setMediaTypeFilter] = useState("");
   const [mediaList, setMediaList] = useState([]);
@@ -55,10 +58,10 @@ const StoreAssistantUploadMedia = () => {
   }, [loadMedia]);
 
   useEffect(() => {
-    const nextPreviewItems = files.map((selectedFile) => ({
-      file: selectedFile,
-      url: URL.createObjectURL(selectedFile),
-      mediaType: getMediaTypeFromFile(selectedFile),
+    const nextPreviewItems = selectedMediaItems.map((item) => ({
+      ...item,
+      url: URL.createObjectURL(item.file),
+      mediaType: getMediaTypeFromFile(item.file),
     }));
 
     setPreviewItems(nextPreviewItems);
@@ -66,19 +69,34 @@ const StoreAssistantUploadMedia = () => {
     return () => {
       nextPreviewItems.forEach((item) => URL.revokeObjectURL(item.url));
     };
-  }, [files]);
+  }, [selectedMediaItems]);
 
   const onFilesSelected = (fileList) => {
-    setFiles(Array.from(fileList || []));
+    setSelectedMediaItems(
+      Array.from(fileList || []).map((file, index) => ({
+        id: getSelectedMediaItemId(file, index),
+        file,
+        title: "",
+        description: "",
+      }))
+    );
   };
 
-  const removeSelectedFile = (fileToRemove) => {
-    setFiles((currentFiles) => currentFiles.filter((selectedFile) => selectedFile !== fileToRemove));
+  const removeSelectedFile = (itemId) => {
+    setSelectedMediaItems((currentItems) => currentItems.filter((item) => item.id !== itemId));
+  };
+
+  const updateSelectedMediaMetadata = (itemId, field, value) => {
+    setSelectedMediaItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId ? { ...item, [field]: value } : item
+      )
+    );
   };
 
   const onUploadSubmit = async (event) => {
     event.preventDefault();
-    if (files.length === 0) {
+    if (selectedMediaItems.length === 0) {
       notification.warning({ message: "Select media files first" });
       return;
     }
@@ -88,15 +106,16 @@ const StoreAssistantUploadMedia = () => {
     }
 
     setUploading(true);
-    setUploadProgress({ current: 0, total: files.length });
+    setUploadProgress({ current: 0, total: selectedMediaItems.length });
     let successCount = 0;
     let failedCount = 0;
 
     try {
-      for (let index = 0; index < files.length; index += 1) {
-        const selectedFile = files[index];
+      for (let index = 0; index < selectedMediaItems.length; index += 1) {
+        const selectedItem = selectedMediaItems[index];
+        const selectedFile = selectedItem.file;
         const mediaType = getMediaTypeFromFile(selectedFile);
-        setUploadProgress({ current: index + 1, total: files.length });
+        setUploadProgress({ current: index + 1, total: selectedMediaItems.length });
 
         try {
           const uploadResponse = mediaType === "video"
@@ -114,6 +133,8 @@ const StoreAssistantUploadMedia = () => {
             platform: "",
             source: "store_assistant",
             event_id: "",
+            title: selectedItem.title.trim(),
+            description: selectedItem.description.trim(),
           });
           successCount += 1;
         } catch (error) {
@@ -123,7 +144,7 @@ const StoreAssistantUploadMedia = () => {
 
       if (successCount > 0) {
         notification.success({ message: `${successCount} media file${successCount === 1 ? "" : "s"} uploaded` });
-        setFiles([]);
+        setSelectedMediaItems([]);
       }
       if (failedCount > 0) {
         notification.error({ message: `${failedCount} media file${failedCount === 1 ? "" : "s"} failed to upload` });
@@ -165,7 +186,7 @@ const StoreAssistantUploadMedia = () => {
       <form className={styles.uploadForm} onSubmit={onUploadSubmit}>
         <label className={styles.filePicker}>
           <FiUploadCloud />
-          <span>{files.length ? `${files.length} file${files.length === 1 ? "" : "s"} selected` : "Choose images or videos"}</span>
+          <span>{selectedMediaItems.length ? `${selectedMediaItems.length} file${selectedMediaItems.length === 1 ? "" : "s"} selected` : "Choose images or videos"}</span>
           <input
             type="file"
             accept="image/*,video/*"
@@ -173,17 +194,17 @@ const StoreAssistantUploadMedia = () => {
             onChange={(event) => onFilesSelected(event.target.files)}
           />
         </label>
-        <button type="submit" disabled={uploading || files.length === 0}>
+        <button type="submit" disabled={uploading || selectedMediaItems.length === 0}>
           {uploading
             ? `Uploading ${uploadProgress.current} of ${uploadProgress.total}`
-            : `Upload ${files.length || ""} Media`}
+            : `Upload ${selectedMediaItems.length || ""} Media`}
         </button>
       </form>
 
       {previewItems.length > 0 ? (
         <div className={styles.selectedPreviewGrid}>
           {previewItems.map((item) => (
-            <article key={item.url} className={styles.selectedPreviewCard}>
+            <article key={item.id} className={styles.selectedPreviewCard}>
               <div className={styles.selectedPreviewMedia}>
                 {item.mediaType === "video" ? (
                   <video src={item.url} controls preload="metadata" />
@@ -195,7 +216,28 @@ const StoreAssistantUploadMedia = () => {
                 <strong>{item.file.name}</strong>
                 <span>{item.mediaType} · {(item.file.size / (1024 * 1024)).toFixed(2)} MB</span>
               </div>
-              <button type="button" onClick={() => removeSelectedFile(item.file)} disabled={uploading}>Remove</button>
+              <div className={styles.selectedMetadataFields}>
+                <label>
+                  Title <small>optional</small>
+                  <input
+                    type="text"
+                    value={item.title}
+                    placeholder="Add media title"
+                    disabled={uploading}
+                    onChange={(event) => updateSelectedMediaMetadata(item.id, "title", event.target.value)}
+                  />
+                </label>
+                <label>
+                  Description <small>optional</small>
+                  <textarea
+                    value={item.description}
+                    placeholder="Add a short description"
+                    disabled={uploading}
+                    onChange={(event) => updateSelectedMediaMetadata(item.id, "description", event.target.value)}
+                  />
+                </label>
+              </div>
+              <button type="button" onClick={() => removeSelectedFile(item.id)} disabled={uploading}>Remove</button>
             </article>
           ))}
         </div>
