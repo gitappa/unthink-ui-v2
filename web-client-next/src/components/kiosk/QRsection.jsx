@@ -1,18 +1,16 @@
-import React, { useMemo } from "react";
+import React from "react";
 import KioskQRCard from "./KioskQRCard";
 import cart from "../../images/kiosk/cart.png";
+import gift from "../../images/kiosk/gift.png";
+import rewardImage from "../../images/image.png";
 import { collectionQRCodeGenerator } from "../../helper/utils";
 const QRsection = ({ showTags, storeData }) => {
-  const [fetchedData, setFetchedData] = React.useState(null);
-  console.log("fetchedData", fetchedData);
-
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
-  const data = storeData.kiosk_settings?.tabs;
-  React.useEffect(() => {
-    const item = data.find((item) => item?.label === showTags);
-    setFetchedData(item || null);
-  }, [showTags, storeData]);
+  const fetchedData = React.useMemo(() => {
+    const data = storeData?.kiosk_settings?.tabs || [];
+    return data.find((item) => item?.label === showTags) || null;
+  }, [showTags, storeData?.kiosk_settings?.tabs]);
 
   const shareQrCodeImage = (sharePageUrl) => {
     try {
@@ -28,90 +26,78 @@ const QRsection = ({ showTags, storeData }) => {
     showTags === "#Trending" ||
     showTags === "Look Books"
   ) {
+    const qrImage =
+      shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
+
     return (
-      <div className="w-[272px] shrink-0 h-screen ">
-        <div className="relative  rounded-[16px] border border-white/80 px-[18px] pb-[24px] pt-[18px] shadow-[0_0_0_1px_rgba(253,237,222,0.9),0_0_34px_rgba(253,237,222,0.95),0_18px_36px_rgba(15,23,42,0.26),inset_0_0_20px_rgba(253,237,222,0.95)]">
-          <div
-            className='absolute -top-[9px] right-2.5 -translate-x-1/2
-         w-5 h-5 rotate-45
-         border-l border-t border-white
-         overflow-hidden z-20
-         before:absolute
-         before:inset-x-0
-         before:top-0
-         before:h-[50%]
-         before:bg-kiosk-support'
-          //  style={{ background: "linear-gradient(to bottom, var(--color-kiosk-support) 0 60%, transparent 50% 100%)" }}
-          ></div>
-
-          <div className="relative z-10 flex h-full flex-col items-center">
-            <div className="flex w-full items-center pt-8  justify-center gap-[10px]">
-              <img
-                src={fetchedData?.title_icon || cart.src}
-                className="w-[50%]"
-                alt="cart"
-              />
-
-              <div className="p-2.5 w-full  bg-white rounded">
-                <div className="flex h-auto w-fit m-auto   items-center justify-center bg-[#a98b3d]  shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_3px_8px_rgba(0,0,0,0.08)]">
-                  <img
-                    src={
-                      shareQrCodeImage(fetchedData?.event_app_list[0]) || qr1
-                    }
-                    alt="Digital cart QR"
-                    className="h-full w-full object-contain mix-blend-lighten"
-                  />
-                </div>
-              </div>
+      <div className="w-[292px] shrink-0">
+        <div className="rounded-[20px] bg-[#f8f2f5] px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
+          <div className="rounded-[16px] bg-white px-[14px] py-5 shadow-[0_7px_10px_rgba(0,0,0,0.22)]">
+            <div className="flex items-center justify-center gap-[16px]">             
+              
+                <h3 className="text-xl text-center font-extrabold leading-[1.15] text-[#202020]">
+                 {fetchedData?.tag_line || 'Shop & Play with GIVA '} 
+                </h3>              
+             
             </div>
-
-            <p className="mt-[26px] text-center text-[28px] font-normal leading-[1.4] text-[#252525]">
-              {fetchedData?.event_message ||
-                "Scan to pick up your digital cartq"}
-            </p>
-
-            <div className="relative my-[30px] w-full rounded-[8px] bg-kiosk-primary px-[18px] py-[18px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]">
-              <div
-                aria-hidden="true"
-                className="absolute -left-[7px] top-[16px] flex flex-col gap-[7px]"
-              >
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <span
-                    key={`left-${index}`}
-                    className="h-[6px] w-[9px] rounded-full bg-[#f0f0f0]"
-                  />
-                ))}
-              </div>
-              <div
-                aria-hidden="true"
-                className="absolute -right-[7px] top-[16px] flex flex-col gap-[7px]"
-              >
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <span
-                    key={`right-${index}`}
-                    className="h-[6px] w-[9px] rounded-full bg-[#f0f0f0]"
-                  />
-                ))}
-              </div>
-              <div className="flex h-[88px] items-center justify-center rounded-[8px] bg-[#f2f2f2] px-4 shadow-[inset_0_0_14px_rgba(0,0,0,0.05)]">
-                <span className="whitespace-nowrap text-[52px] font-extrabold leading-none text-[#555555]">
-                  {fetchedData?.offer_message || "Rs 500"}
-                </span>
-              </div>
-            </div>
-
-            <p className="mt-0 whitespace-nowrap text-center text-[28px] font-normal leading-none text-[#252525]">
-             {fetchedData?.tag_line || "Shop & Play to earn!"}
-            </p>
           </div>
-          <img
-            src={
-              fetchedData?.offer_image ||
-              "https://www.giva.co/cdn/shop/files/logo__3.png?v=1752672324&width=100"
-            }
-            alt="offer_image"
-            className="p-4 m-auto mt-3"
-          />
+
+          <div className="mt-[14px] rounded-[14px] bg-white px-[12px] pb-[24px] pt-[14px] shadow-[0_5px_9px_rgba(0,0,0,0.2)]">
+            <div className="flex items-center gap-[12px]">
+              <div className="flex relative h-[70px] w-[74px] shrink-0 items-center justify-center overflow-hidden">
+                <img
+                  src={fetchedData?.title_icon || cart.src}
+                  className="max-h-full max-w-full object-contain"
+                  alt={fetchedData?.title_icon || "Cart Icon"}
+                />
+                {/* <p className=" h-[70px] w-[74px] bg-kiosk-primary absolute top-0 left-0 "></p> */}
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-[16px] font-extrabold leading-[1.15] text-[#202020]">
+                  {fetchedData?.event_message || "GIVA AI Assistant"}
+                </h3>
+                <p className="mt-[8px] text-[14px] font-medium leading-[1.2] text-[#777777]">
+                  Get personalized jewelry picks made for you.
+                </p>
+              </div>
+            </div>
+
+         
+
+            <div className="mx-auto mt-[16px] flex h-[134px] w-[134px] items-center justify-center border-[3px] border-kiosk-primary bg-white">
+              <img
+                src={qrImage}
+                alt="GIVA AI Assistant QR"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          </div>
+
+          <div className="mt-[40px] rounded-[14px] bg-white px-[16px] pb-[16px] pt-[12px] shadow-[0_5px_9px_rgba(0,0,0,0.2)]">
+            <div className="flex items-center gap-[14px]">
+              <img
+                src={gift.src}
+                className="h-[52px] w-[52px] shrink-0 object-contain"
+                alt=""
+              />
+              <h3 className="text-center text-[16px] font-extrabold leading-[1.15] text-[#202020]">
+               {fetchedData?.offer_message || "Special Offer!"}
+              </h3>
+            </div>
+            {/* <div className="mx-auto mt-[12px] flex h-[46px] w-[202px] flex-col items-center justify-center rounded-[10px] bg-[#ffeef4]">
+              <span className="text-[12px] font-medium leading-none text-[#202020]">
+                Earn up to
+              </span>
+              <span className="mt-[3px] text-[25px] font-extrabold leading-none text-[#ff5685]">
+                ₹1000
+              </span>
+            </div> */}
+            <img
+              src={fetchedData?.offer_image}
+              alt={fetchedData?.offer_image || "Offer Image"}
+              className="mt-[12px] object-contain m-auto"
+            />
+          </div>
         </div>
       </div>
     );
