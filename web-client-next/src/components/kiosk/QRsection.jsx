@@ -57,7 +57,7 @@ const QRsection = ({ showTags, storeData }) => {
                   {fetchedData?.event_message || "GIVA AI Assistant"}
                 </h3>
                 <p className="mt-[8px] text-[14px] font-medium leading-[1.2] text-[#777777]">
-                  Get personalized jewelry picks made for you.
+                  {fetchedData?.event_description || "Get personalized jewelry picks made for you."}
                 </p>
               </div>
             </div>
