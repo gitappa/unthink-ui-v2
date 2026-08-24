@@ -14,10 +14,11 @@ import {
 
 const initialState = {
 	data: {},
-	isFetching: false,
+	isFetching: false, 
 	error: false,
 	collections: {
 		data: [],
+		cache: {},
 		isFetching: false,
 		count: "",
 	},
@@ -25,7 +26,15 @@ const initialState = {
 
 const reducer = (state = initialState, action = {}) => {
 	const payload = action.payload;
-	const newState = { ...state };
+	const newState = {
+		...state,
+		collections: {
+			...state.collections,
+			cache: {
+				...state.collections.cache,
+			},
+		},
+	};
 	switch (action.type) {
 		case GET_INFLUENCER_INFO:
 			newState.data = {};
@@ -62,9 +71,13 @@ const reducer = (state = initialState, action = {}) => {
 		// single collection
 		case GET_INFLUENCER_COLLECTION:
 			newState.collections.isFetching = true;
+			
 			return newState;
 		case GET_INFLUENCER_COLLECTION_SUCCESS:
 			const { _id } = payload;
+			if (action.path){
+				newState.collections.cache[action.path] = payload; // cache single collection data for the path
+			}
 			if (_id) {
 				const collIndex = newState.collections.data.findIndex(
 					(i) => i._id === _id
@@ -101,10 +114,7 @@ const reducer = (state = initialState, action = {}) => {
 			return newState;
 		// New case: Clear influencer collections
 		case CLEAR_INFLUENCER_COLLECTIONS:
-			newState.collections.data = [];
-			newState.collections.isFetching = false;
-			newState.collections.params = null; // Optional: Clear any params if necessary
-			return newState;
+			return initialState;
 		default:
 			return state;
 	}

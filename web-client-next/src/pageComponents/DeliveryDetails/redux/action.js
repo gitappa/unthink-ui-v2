@@ -4,6 +4,7 @@ import {
 	ADD_TO_CART_SUCCESS,
 	FETCH_CART,
 	FETCH_CART_FAILURE,
+	FETCH_CART_RESET,
 	FETCH_CART_SUCCESS,
 	REMOVE_FROM_CART,
 	REMOVE_FROM_CART_FAILURE,
@@ -58,6 +59,10 @@ export const fetchCartSuccess = (data) => ({
 export const fetchCartFailure = (error) => ({
 	type: FETCH_CART_FAILURE,
 	payload: error,
+});
+
+export const fetchCartReset = () => ({
+	type: FETCH_CART_RESET,
 });
 // Remove cart item
 export const removeFromCart = (payload) => ({

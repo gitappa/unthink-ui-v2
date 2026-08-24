@@ -55,9 +55,10 @@ export const getInfluencerCollection = (payload) => ({
 	payload,
 });
 
-export const getInfluencerCollectionSuccess = (payload) => ({
+export const getInfluencerCollectionSuccess = (payload,path) => ({
 	type: GET_INFLUENCER_COLLECTION_SUCCESS,
 	payload,
+	path,
 });
 
 export const getInfluencerCollectionFailure = (payload) => ({

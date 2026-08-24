@@ -12,14 +12,10 @@ import { Spin } from "antd";
 import { ArrowLeftOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 
-import Header from "./Header.js";
 // import ProfileCollection from "../Influencer/ProfileCollection";
 // import ChatProducts from "./ChatProducts";
 import useWindowSize from "../../helper/useWindowSize.js";
 import useTheme from "../../hooks/chat/useTheme.js";
-import Recommendations from "../recommendations/Recommendations.js";
-import WishListModal from "../wishlist/WishListModal.js";
-import SimilarProducts from "../similarProducts/SimilarProducts.js";
 import {
 	CHAT_TYPE_CHAT,
 	FETCH_COLLECTIONS_PRODUCT_LIMIT,
@@ -34,6 +30,7 @@ import {
 	PRODUCT_SORT_OPTIONS_MY_PRODUCTS,
 	STORE_USER_NAME_DOTHELOOK,
 	STORE_USER_NAME_FASHIONDEMO,
+	KIOSK_LOGIN_CHANGE_EVENT,
 
 	// STORE_USER_NAME_TAKEWALKS,
 } from "../../constants/codes.js";
@@ -60,13 +57,8 @@ import {
 } from "../../constants/config.js";
 import AllBlogPages from "../collectionPage/AllBlogPages.js";
 import PageDetailsComponent from "./PageDetails.js";
-import ProductDetails from "./ProductDetails.js";
-import QAndAComponent from "../../components/QAndAComponent/QAndAComponent.js";
-import CollectionCarouselContainer from "../Influencer/CollectionCarouselContainer.js";
 import { fetchCategories, openMenuItem } from "../categories/redux/actions.js";
-import SingleCollectionProductList from "../collectionPage/SingleCollectionProductList.js";
 import CreatorsListView from "../creatorsListView/CreatorsListView.jsx";
-import MaintenancePage from "../MaintenancePage.jsx";
 import Breadcrumbs from "./Breadcrumbs.js";
 import {
 	checkIsFavoriteCollection,
@@ -80,6 +72,7 @@ import {
 	getIsStorePage,
 	AdminCheck,
 	setCookie,
+	getStoredKioskLoginUserId,
 } from "../../helper/utils.js";
 import { gTagCollectionPageView } from "../../helper/webTracker/gtag.js";
 
@@ -93,16 +86,65 @@ import {
 import styles from './storePage.module.scss';
 import SwiftlyStyledIndex from "../swiftlyStyled/index.js";
 import { fetchCustomProducts } from "../customProducts/redux/actions.js";
-import AdminInfluencerPopup from "../../components/AdminInfluencerPopup/AdminInfluencerPopup.js";
 import Cookies from "js-cookie";
-import DeliveryDetails from "../DeliveryDetails/DeliveryDetails.js";
 import FailureUrl from "../../components/singleCollection/FailureUrl.js";
 import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
-import DroppWallet from "../../components/DroppWallet.js";
-import MyPoints from "../DeliveryDetails/MyPoints.jsx";
-import ChatContainer from "./ChatContainer.js";
 import { setShowChatModal } from "../../hooks/chat/redux/actions.js";
 import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo.jsx";
+import { fetchCart } from "../DeliveryDetails/redux/action.js";
+
+const DroppWallet = dynamic(() => import("../../components/DroppWallet.js"), {
+	ssr: false,
+});
+const Header = dynamic(() => import("./Header.js"), {
+	ssr: false,
+});
+const QAndAComponent = dynamic(() => import("../../components/QAndAComponent/QAndAComponent.js"), {
+	ssr: false,
+});
+const CollectionCarouselContainer = dynamic(() => import("../Influencer/CollectionCarouselContainer.js"), {
+	ssr: false,
+});
+const MaintenancePage = dynamic(() => import("../MaintenancePage.jsx"), {
+	ssr: false,
+});
+const AdminInfluencerPopup = dynamic(() => import("../../components/AdminInfluencerPopup/AdminInfluencerPopup.js"), {
+	ssr: false,
+});
+const DeliveryDetails = dynamic(() => import("../DeliveryDetails/DeliveryDetails.js"), {
+	ssr: false,
+});
+const MyPoints = dynamic(() => import("../DeliveryDetails/MyPoints.jsx"), {
+	ssr: false,
+});
+const ChatContainer = dynamic(() => import("./ChatContainer.js"), {
+	ssr: false,
+});
+const ProductDetails = dynamic(() => import("./ProductDetails.js"), {
+	ssr: false,
+	loading: () => (
+		<div className={styles.loadingIndicator}>
+			<Spin />
+		</div>
+	),
+});
+const SingleCollectionProductList = dynamic(() => import("../collectionPage/SingleCollectionProductList.js"), {
+	ssr: false,
+	loading: () => (
+		<div className={styles.loadingIndicator}>
+			<Spin />
+		</div>
+	),
+});
+const Recommendations = dynamic(() => import("../recommendations/Recommendations.js"), {
+	ssr: false,
+});
+const WishListModal = dynamic(() => import("../wishlist/WishListModal.js"), {
+	ssr: false,
+});
+const SimilarProducts = dynamic(() => import("../similarProducts/SimilarProducts.js"), {
+	ssr: false,
+});
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -335,7 +377,61 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 		() => is_store_instance && isRootPage && !!shared_profile_on_root,
 		[is_store_instance, isRootPage, shared_profile_on_root]
 	);
+	
+	
+	  const hasKioskAccess = useKioskAccess({
+		isUserLogin,
+		storeData,
+		authUser,
+	});
+	  const [kioskLogin, setKioskLogin] = useState(getStoredKioskLoginUserId());
+			console.log('kioskLogin',kioskLogin);
+		  useEffect(() => {
+	  const handleKioskLoginChange = () => {
+		setKioskLogin(getStoredKioskLoginUserId());
+	  };
+	
+	  window.addEventListener(
+		KIOSK_LOGIN_CHANGE_EVENT,
+		handleKioskLoginChange
+	  );
+	
+	  return () => {
+		window.removeEventListener(
+		  KIOSK_LOGIN_CHANGE_EVENT,
+		  handleKioskLoginChange
+		);
+	  };
+	}, []);
+ 		const LoginData =  authUser?.user_id || getTTid()
+		useEffect(()=>{
+			if (hasKioskAccess === null) return;
+			if(LoginData ||kioskLogin ){
+				console.log('dsasdfds',kioskLogin);
+				
+				if(hasKioskAccess && kioskLogin && window.location.pathname.startsWith('/product') ){
+					console.log('iam working ')
+				    dispatch(fetchCart(`my_cart_${kioskLogin}`))
+					 dispatch(
+        getwishlistUserCollection({
+          path: `my_wishlist_${kioskLogin}`,
+        }),
+      );
+				    return
+				} 
 
+				else if(!hasKioskAccess ){
+				    console.log("Fetching cart for user:", hasKioskAccess);
+				    dispatch(fetchCart(`my_cart_${LoginData}`))
+					dispatch( 
+					getwishlistUserCollection({
+						path: `my_wishlist_${authUser.user_id}`,
+					}),
+				);
+				    return
+				}
+			}
+		},[LoginData ,kioskLogin, hasKioskAccess, dispatch])
 
 	const user_name = useMemo(
 		() =>
@@ -460,6 +556,8 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	const [ipp, setIpp] = useState(10)
 	const [allCollectionData, setAllCollectionData] = useState(pageUserCollections); // working 
 	const [isLoading, setIsLoading] = useState(false);
+	const lastInfluencerInfoRequestRef = useRef("");
+	const lastInfluencerCollectionsRequestRef = useRef("");
 
  
 
@@ -546,6 +644,9 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				((user_name && influencerUser.user_name !== user_name) ||
 					(user_id && user_id !== influencerUser.user_id))
 			) {
+				// const requestKey = JSON.stringify({ user_name, user_id });
+				// if (lastInfluencerInfoRequestRef.current === requestKey) return;
+				// lastInfluencerInfoRequestRef.current = requestKey;
 				dispatch(clearInfluencerCollections());
 				dispatch(getInfluencerInfo({ user_name, user_id }));
 			}
@@ -553,8 +654,8 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	}, [
 		user_name,
 		user_id,
-		authUser.user_name,
-		influencerUser,
+		influencerUser.user_name,
+		influencerUser.user_id,
 		influencerUserIsFetching,
 		influencerUserError,
 	]);
@@ -648,34 +749,38 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			(influencerUser.user_name || influencerUser.user_id) &&
 			!isSingleCollectionSharedPage
 		) {
+			const requestPayload = {
+				user_id:
+					!page_params?.collection_theme && influencerUser.user_id
+						? influencerUser.user_id
+						: undefined,
+				isStoreHomePage,
+				collection_theme:
+					page_params?.collection_theme &&
+						page_params?.collection_theme !== THEME_ALL
+						? page_params.collection_theme
+						: undefined,
+				product_limits: 8,
+				ipp: ipp,
+				current_page: currentPage
+			};
+			const requestKey = JSON.stringify(requestPayload);
+			if (lastInfluencerCollectionsRequestRef.current === requestKey) return;
+			lastInfluencerCollectionsRequestRef.current = requestKey;
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
 
-			dispatch(
-				getInfluencerCollections({
-					user_id:
-						!page_params?.collection_theme && influencerUser.user_id
-							? influencerUser.user_id
-							: undefined,
-					isStoreHomePage,
-					collection_theme:
-						page_params?.collection_theme &&
-							page_params?.collection_theme !== THEME_ALL
-							? page_params.collection_theme
-							: undefined,
-					product_limits: 8,
-					ipp: ipp,
-					current_page: currentPage
-				})
-			);
+			dispatch(getInfluencerCollections(requestPayload));
 		}
 	}, [
-		influencerUser,
 		isSharedPage,
+		isSingleCollectionSharedPage,
+		influencerUser.user_name,
 		influencerUser.user_id,
 		page_params?.collection_theme,
 		currentPage,
-		isRootPage
+		ipp,
+		isStoreHomePage
 	]);
 
 
@@ -683,31 +788,37 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 		if (
 			(!isRootPage && (isThemePage  || isCollectionReviewPage))
 		) {
+			const requestPayload = {
+				user_id:
+					influencerUser.user_id && !page_params?.collection_theme && !authUser
+						? influencerUser.user_id
+						: undefined,
+				isStoreHomePage,
+				collection_theme:
+					page_params?.collection_theme &&
+						page_params?.collection_theme !== THEME_ALL
+						? page_params.collection_theme
+						: undefined,
+				product_limits: 10,
+				ipp: ipp,
+				current_page: currentPage
+			};
+			const requestKey = JSON.stringify(requestPayload);
+			if (lastInfluencerCollectionsRequestRef.current === requestKey) return;
+			lastInfluencerCollectionsRequestRef.current = requestKey;
 			// Clear previous collection data before fetching new data
 			dispatch(clearInfluencerCollections());
-			dispatch(
-				getInfluencerCollections({
-					user_id:
-						influencerUser.user_id && !page_params?.collection_theme && !authUser
-							? influencerUser.user_id
-							: undefined,
-					isStoreHomePage,
-					collection_theme:
-						page_params?.collection_theme &&
-							page_params?.collection_theme !== THEME_ALL
-							? page_params.collection_theme
-							: undefined,
-					product_limits: 10,
-					ipp: ipp,
-					current_page: currentPage
-				})
-			)
+			dispatch(getInfluencerCollections(requestPayload))
 		}
 	}, [
 		currentPage,
 		isThemePage,
 		isRootPage,
 		isCollectionReviewPage,
+		influencerUser.user_id,
+		page_params?.collection_theme,
+		ipp,
+		isStoreHomePage
 	]);
 
 	useEffect(() => {
@@ -737,10 +848,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			sessionStorage.removeItem("widgetHeader");
 		}
 	}, [isRootPage]);
-	const KioskLogin =
-		typeof window !== "undefined"
-			? sessionStorage.getItem("Kiosk-login") || null
-			: null;
+	
 	const isAuthAdminLoggedIn = useMemo(
 		() =>
 			is_store_instance &&
@@ -868,21 +976,17 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 			sessionStorage.setItem("clickPage", "unthink_collection");
 		}
 	}, [showWishlistModal]);
-   const hasKioskAccess = useKioskAccess({
-		isUserLogin,
-		storeData,
-		authUser,
-	});
  
-useEffect(()=>{
+ 
+// useEffect(()=>{
 
- if (!isUserLogin && hasKioskAccess ) return;			
-				dispatch( 
-					getwishlistUserCollection({
-						path: `my_wishlist_${authUser.user_id}`,
-					}),
-				);
-},[isUserLogin])
+//  if (!isUserLogin || hasKioskAccess ) return;			
+// 				dispatch( 
+// 					getwishlistUserCollection({
+// 						path: `my_wishlist_${authUser.user_id}`,
+// 					}),
+// 				);
+// },[isUserLogin])
 
 	useEffect(() => {
 		if (isSingleCollectionSharedPage && currentSingleCollection._id) {
@@ -1119,15 +1223,15 @@ useEffect(()=>{
 		[isSellerLoggedIn, pageUser]
 	);
 
-	const handleCheck = () => {
+	const handleCheck = useCallback(() => {
 
 		const isGuestLoggedIn = Cookies.get("isGuestLoggedIn")
 	 
 
 		if (isGuestLoggedIn == "true") {
-			dispatch(getUserInfo());
+			// dispatch(getUserInfo());
 		}
-	};
+	}, [dispatch]);
 
 	// Set window.unthink and handleAuraClose only on client side
 	useEffect(() => {

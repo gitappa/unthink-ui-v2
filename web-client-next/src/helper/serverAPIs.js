@@ -142,11 +142,11 @@ const redeemSessionHCS20Points =   `/redeem-sessionhcs20-points`;
 const smartContractTransaction = "/user/earnings/create_or_update/";
 //KIOSK
 const socialMedia =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=video_based&summary=true&cache=true`;
 const trending =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&collection_type=trending&store=${current_store_name}&starred=true&summary=true&cache=true`;
 const lookBook =
-  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=lookbook_based&summary=true`;
+  `/user/collections/fetch_collections/?user_id=${adminUserId}&product_limits=12&view=public&store=${current_store_name}&starred=true&generated_by=lookbook_based&summary=true&cache=true`;
 
 const updateHandpickedProductsUrl =
   "/user/collections/handpicked_product_list/";
@@ -316,10 +316,12 @@ const getUserInfoAPICall = (payload = {}) => {
 
   if (payload.user_id) {
     params.user_id = payload.user_id;
-  } else if (payload.user_name) {
+  }
+   else if (payload.user_name) {
     params.user_name = payload.user_name;
     params.store = current_store_name;
-  } else if (payload.emailId) {
+  } 
+  else if (payload.emailId) {
     params.emailId = payload.emailId;
   } else {
     params.user_id = getTTid();
@@ -1396,7 +1398,7 @@ const fetchCustomProductsAPICall = (filters = {}) => {
   });
 };
 
-const fetchProductDetailsAPICall = (mfr_code, image) => {
+const fetchProductDetailsAPICall = (mfr_code, image, cache = false) => {
   // console.log('fdsfdsffds',image);
   
   const url = `${auraYfretUserCollBaseUrl}${fetchCustomProductsUrl}`;
@@ -1404,6 +1406,10 @@ const fetchProductDetailsAPICall = (mfr_code, image) => {
     mfr_code,
     image: decodeURIComponent(image),
   };
+
+  if (cache) {
+    params.cache = true;
+  }
 
   return apiInstance({
     url,

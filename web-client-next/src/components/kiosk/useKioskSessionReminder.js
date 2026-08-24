@@ -3,8 +3,10 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { clearStorages } from "../../helper/utils";
-import { getUserCollectionsReset } from "../../pageComponents/Auth/redux/actions";
+import { getUserCollectionsReset, getWishlistUserCollectionReset } from "../../pageComponents/Auth/redux/actions";
 import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
+import { clearInfluencerCollections } from "../../pageComponents/Influencer/redux/actions";
+import { fetchCartReset } from "../../pageComponents/DeliveryDetails/redux/action";
 import timer_clock from "../../images/kiosk/timer_clock.png";
 import { useRouter } from "next/router";
 
@@ -77,7 +79,10 @@ export default function useKioskSessionReminder({ time } = {}) {
     } catch (e) {}
     try {
       dispatch(getUserCollectionsReset());
+      dispatch(getWishlistUserCollectionReset());
+      dispatch(fetchCartReset());
       dispatch(fetchCategoriesReset());
+      dispatch(clearInfluencerCollections());
     } catch (e) {}
 
     setShowSessionPopup(false);
@@ -85,7 +90,7 @@ export default function useKioskSessionReminder({ time } = {}) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-  }, [dispatch]);
+  }, [dispatch, router]);
 
   return {
     showSessionPopup,

@@ -54,14 +54,6 @@ const ActionWrapper = ({ children }) => {
 		}
 	}, [authUser]);
 
-	const CartuserId = getStoredKioskLoginUserId() || authUser?.user_id || getTTid();
-	useEffect(() => {
-		if (CartuserId) {
-			const mycartcollectionpath = `my_cart_${CartuserId}`;
-			dispatch(fetchCart(mycartcollectionpath));
-		}
-	}, [CartuserId, dispatch]);
-
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 

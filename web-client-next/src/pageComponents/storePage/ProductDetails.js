@@ -299,16 +299,7 @@ const ProductDetails = ({ params, ...props }) => {
       productToWishlistCollection,
     ],
   );
-  useEffect(() => {
-    if (!isUserLogin) return;
-    if (hasKioskAccess && kioskLogin) {
-      dispatch(
-        getwishlistUserCollection({
-          path: `my_wishlist_${kioskLogin.user_id}`,
-        }),
-      );
-    }
-  }, [isUserLogin, kioskLogin]);
+
   // ============ END GUEST POPUP HOOKS ============
 
   const buildShareAutoLoginLink = useCallback(
@@ -447,8 +438,8 @@ const ProductDetails = ({ params, ...props }) => {
     const storedImage = localStorage.getItem("pdp_image") || "";
     // console.log('storedImage',storedImage);
 
-    dispatch(fetchProductDetails({ mfr_code, image: storedImage }));
-  }, [mfr_code, dispatch]);
+    dispatch(fetchProductDetails({ mfr_code, image: storedImage, cache: hasKioskAccess }));
+  }, [mfr_code, dispatch, hasKioskAccess]);
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -460,12 +451,6 @@ const ProductDetails = ({ params, ...props }) => {
   item => item.mfr_code === productDetails?.mfr_code
 );
   // console.log('cardItem',productDetails);
-
-  useEffect(() => {
-    if (mycartcollectionpath) {
-      dispatch(fetchCart(mycartcollectionpath));
-    }
-  }, [dispatch, mycartcollectionpath]);
 
   // const updateCartQuantity = (newQty) => {
   //   if (hasKioskAccess && !kioskLogin?.user_id) {

@@ -5,6 +5,7 @@ import {
 	FETCH_CART,
 	FETCH_CART_SUCCESS,
 	FETCH_CART_FAILURE,
+	FETCH_CART_RESET,
 	REMOVE_FROM_CART,
 	REMOVE_FROM_CART_SUCCESS,
 	REMOVE_FROM_CART_FAILURE,
@@ -85,6 +86,13 @@ export const cartReducer = (state = initialState, action) => {
 				...state,
 				loading: false,
 				error: action.payload,
+			};
+		case FETCH_CART_RESET:
+			return {
+				...state,
+				loading: false,
+				collection: null,
+				error: null,
 			};
 		case REMOVE_FROM_CART:
 			return {

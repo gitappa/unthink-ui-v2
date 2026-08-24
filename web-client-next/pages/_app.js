@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Head from 'next/head';
-import { Helmet } from 'react-helmet';
+import dynamic from 'next/dynamic';
 import Router from 'next/router';
 
 // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
@@ -21,15 +21,14 @@ import ActionWrapper from "../src/state/actionWrapper";
 import ContextWrapper from "../src/context/contextWrapper";
 import { ThemeContextWrapper } from "../src/context/themeContext";
 
-// Import modal components directly (no dynamic imports to avoid hydration issues)
-import ProductDetailsCopyModalComponent from "../src/pageComponents/productDetailsCopyModal";
-import CollectionShareModalComponent from "../src/pageComponents/collectionShareModal";
-import AppLoaderComponent from "../src/pageComponents/appLoader";
-import AppMessageModal from "../src/pageComponents/appMessageModal";
-import EarnedRewardModal from "../src/pageComponents/earnedRewardModal";
-import AiExtractionDataModal from "../src/pageComponents/aiExtractionDataModal";
-import CustomProductModal from "../src/pageComponents/customProductModal";
-import AutoCreateCollectionModal from "../src/pageComponents/autoCreateCollectionModal";
+const ProductDetailsCopyModalComponent = dynamic(() => import("../src/pageComponents/productDetailsCopyModal"), { ssr: false });
+const CollectionShareModalComponent = dynamic(() => import("../src/pageComponents/collectionShareModal"), { ssr: false });
+const AppLoaderComponent = dynamic(() => import("../src/pageComponents/appLoader"), { ssr: false });
+const AppMessageModal = dynamic(() => import("../src/pageComponents/appMessageModal"), { ssr: false });
+const EarnedRewardModal = dynamic(() => import("../src/pageComponents/earnedRewardModal"), { ssr: false });
+const AiExtractionDataModal = dynamic(() => import("../src/pageComponents/aiExtractionDataModal"), { ssr: false });
+const CustomProductModal = dynamic(() => import("../src/pageComponents/customProductModal"), { ssr: false });
+const AutoCreateCollectionModal = dynamic(() => import("../src/pageComponents/autoCreateCollectionModal"), { ssr: false });
 
 // Import utilities
 import appTracker from "../src/helper/webTracker/appTracker";
@@ -41,11 +40,7 @@ import {
   STORE_USER_NAME_SAMSKARA,
   STORE_USER_NAME_SWIFTLYSTYLED,
 } from "../src/constants/codes";
-import {
-  access_key,
-  is_store_instance,
-  current_store_name,
-} from '../src/constants/config';
+import { is_store_instance, current_store_name } from '../src/constants/config';
 import { UserDataProvider } from '../src/context/UserDataContext';
 import styles from './_app.module.css';
 

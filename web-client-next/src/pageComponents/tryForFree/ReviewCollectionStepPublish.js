@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 import {
   Upload,
@@ -56,7 +57,6 @@ import star_ai_icon from "../../images/unthink_star_ai_icon.svg";
 
 import CropAndResizeImageModal from "../cropAndResizeImageModal/CropAndResizeImageModal";
 import ReviewCollectionContainerWrapper from "./ReviewCollectionContainerWrapper";
-import ReactPlayer from "react-player";
 import { getUserCollection } from "../Auth/redux/actions";
 // import listening_avatar from "../../images/videos/listening_avatar.gif";
 import Cookies from "js-cookie";
@@ -66,6 +66,7 @@ import styles from "./tryForFree.module.scss";
 const { Dragger } = Upload;
 
 const { Option } = Select;
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const defaultPostPageFormData = {
   collection_name: "",
