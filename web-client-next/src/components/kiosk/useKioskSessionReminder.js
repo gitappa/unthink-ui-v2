@@ -83,6 +83,8 @@ export default function useKioskSessionReminder({ time } = {}) {
       dispatch(fetchCartReset());
       dispatch(fetchCategoriesReset());
       dispatch(clearInfluencerCollections());
+      sessionStorage.removeItem("plp-scroll");
+    sessionStorage.removeItem("plp-collection");
     } catch (e) {}
 
     setShowSessionPopup(false);

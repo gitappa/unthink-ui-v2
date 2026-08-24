@@ -112,7 +112,7 @@ const SwiftlyMobileHeader = ({
           <button
             type="button"
             className={styles.searchButton}
-            onClick={() => dispatch(setShowChatModal(true))}
+            // onClick={() => dispatch(setShowChatModal(true))}
             aria-label="Search"
           >
             <img
