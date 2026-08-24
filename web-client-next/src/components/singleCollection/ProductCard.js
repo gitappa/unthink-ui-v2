@@ -935,7 +935,7 @@ const ProductCard = ({
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
         onClick={() =>
-          hasKioskAccess ? navigate(`/product/${product.mfr_code}`) : null
+          hasKioskAccess ? (sessionStorage.setItem("plp-scroll", String(window.scrollY)),sessionStorage.setItem("plp-collection", singleCollections?.path), navigate(`/product/${product.mfr_code}`)) : null
         }
       >
         {/* add div wrapper for show buy now on hover (exclude product header) */}

@@ -9,9 +9,9 @@ const AuraChatPage = ({ isAuraChatPage, serverData }) => {
   const dispatch = useDispatch();
   const showChatModal = useSelector((state) => state.chatV2.showChatModal);
 
-  useEffect(() => {
-    dispatch(setShowChatModal(true));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setShowChatModal(true));
+  // }, [dispatch]);
 
   if (!showChatModal) return null;
 
