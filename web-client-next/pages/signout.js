@@ -44,6 +44,8 @@ const SignOut = () => {
         dispatch(fetchCartReset());
         dispatch(clearInfluencerCollections());
         dispatch(fetchCategoriesReset());
+        sessionStorage.removeItem("plp-scroll");
+        sessionStorage.removeItem("plp-collection");
 
         setTimeout(() => {
           dispatch(getUserInfo());

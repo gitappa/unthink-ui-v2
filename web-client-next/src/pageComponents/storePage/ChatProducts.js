@@ -1098,7 +1098,7 @@ const ChatProducts = ({
                                     ))}
                                   </div>
                                 ) : null}
-                                <div className=" w-full">
+                                <div className=" w-full hidden">
 
                                   {isShowTryAgain && (
                                     <div className="w-full md:w-72 m-auto">

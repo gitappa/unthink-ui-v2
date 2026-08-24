@@ -1048,7 +1048,7 @@ setNotData(newOptionalFilters)
 							) : null}
 
 
-							{chatProductsDataToShow.length && !isMobile ? (
+							{chatProductsDataToShow.length  ? (
 								<div
 									className={`${singleCollectionStyles.selectBarRow} ${
 										enableSelectProduct

@@ -60,7 +60,7 @@ const CollectionPage = ({ params }) => {
     state.store.data,
     state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
-  const userInfo = useSelector(loggedInInfo);
+ 
   const handleTagClick = useCallback((value) => {
     setActiveCategory(value);
     setSelectedTags(value === "All" ? [] : [value]);
@@ -86,6 +86,26 @@ const CollectionPage = ({ params }) => {
     selectedTags,
   ]);
   // console.log('productsData',useSelector(userInfo));
+useEffect(() => {
+  const savedScroll = sessionStorage.getItem("plp-scroll");
+  const savedCollection = sessionStorage.getItem("plp-collection");
+
+  if (
+    savedScroll &&
+    savedCollection === currentCollection?.path &&
+    productsData.length > 0
+  ) {
+    requestAnimationFrame(() => {
+      window.scrollTo(0, Number(savedScroll));
+    });
+  } else {
+    sessionStorage.removeItem("plp-scroll");
+    sessionStorage.removeItem("plp-collection");
+  }
+}, [currentCollection?.path, productsData]);
+
+
+
 
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
