@@ -11,7 +11,7 @@ cd web-client-next
 ## 2. Install Dependencies
 
 ```bash
-npm install --force
+npm install 
 ```
 
 ## 3. Start the Development Server
@@ -33,5 +33,4 @@ http://localhost:3000
 ## 📌 Notes
 
 * Make sure you have Node.js installed on your system.
-* Use `--force` only if you encounter dependency issues.
 * If the port is already in use, the app may run on a different port.
