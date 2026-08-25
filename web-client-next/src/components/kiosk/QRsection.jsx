@@ -31,7 +31,7 @@ const QRsection = ({ showTags, storeData }) => {
 
     return (
       <div className="w-[272px] shrink-0">
-        <div className="rounded-[20px] bg-[#f8f2f5] px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
+        <div className="rounded-[20px] flex lg:block bg-giva-away-primary px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
           <div className="rounded-[16px] bg-white px-[14px] py-5 shadow-[0_7px_10px_rgba(0,0,0,0.22)]">
             <div className="flex items-center justify-center gap-[16px]">             
               

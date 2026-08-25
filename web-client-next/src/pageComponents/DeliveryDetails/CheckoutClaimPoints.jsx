@@ -91,7 +91,7 @@ const CheckoutClaimPoints = () => {
                   key={`${product.mfr_code || product.product_id || index}`}
                   className="flex items-start justify-between gap-4"
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="lg:flex items-start gap-3">
                     {(
                       product.image ||
                       product.product_image ||

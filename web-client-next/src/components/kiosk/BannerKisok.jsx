@@ -35,7 +35,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   ];
 
   return (
-    <div className="flex items-start justify-center gap-3">
+    <div className="lg:flex items-start justify-center gap-3">
       {/* Banner Section */}
       <div className="relative max-h-[600px] w-full overflow-hidden rounded-[18px] bg-white p-2 md:p-5">
         <div className="relative z-10 h-full w-full">
@@ -43,7 +43,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
             {displayedProducts.map((product) => (
               <button
                 type="button"
-                className="group flex h-[184px] cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-[#eeeeee] text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99]"
+                className="group flex h-[184px] cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-kiosk-support text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99]"
                 key={product.collection_id}
                 onClick={() => handleNavCollection(product)}
               >
@@ -57,7 +57,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                     />
                   )}
                 </div>
-                <div className="flex h-[38px] shrink-0 items-center justify-center bg-[#eeeeee] px-2">
+                <div className="flex h-[38px] shrink-0 items-center justify-center bg-kiosk-support px-2">
                   <p className="max-w-full truncate whitespace-nowrap text-center text-[18px] font-semibold leading-none text-black">
                     {product.collection_name || "Untitled collection"}
                   </p>
@@ -71,7 +71,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                 {columnProducts.map((product, productIndex) => (
                   <button
                     type="button"
-                    className={`group flex cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-[#eeeeee] text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99] ${tileStyles[columnIndex][productIndex]}`}
+                    className={`group flex cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-kiosk-support text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99] ${tileStyles[columnIndex][productIndex]}`}
                     key={product.collection_id}
                     onClick={() => handleNavCollection(product)}
                   >
@@ -85,7 +85,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                         />
                       )}
                     </div>
-                    <div className="flex h-[38px] shrink-0 items-center justify-center bg-[#eeeeee] px-2">
+                    <div className="flex h-[38px] shrink-0 items-center justify-center bg-kiosk-support px-2">
                       <p className="max-w-full truncate whitespace-nowrap text-center py-1 text-[18px] font-semibold leading-none text-black">
                         {product.collection_name || "Untitled collection"}
                       </p>

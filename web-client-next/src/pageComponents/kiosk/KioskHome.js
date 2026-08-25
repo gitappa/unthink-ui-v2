@@ -121,11 +121,11 @@ const KioskHome = ({ props }) => {
               </button>
             ))}
           </div>
-          <AuthInput styles="min-w-[272px] max-w-[272px]" />
+          <AuthInput styles="lg:min-w-[272px] lg:max-w-[272px]" />
         </div>
       </div>
       <div
-        className={`flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
+        className={`lg:flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
       >
         {showTags === "Social Media" && (
           <>
