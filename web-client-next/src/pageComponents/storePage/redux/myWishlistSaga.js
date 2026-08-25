@@ -22,10 +22,10 @@ function* fetchMyWishlistCollectionSaga(action) {
   try {
     const { currentUser, router } = action.payload || {};
 
-    if (!currentUser?.user_id || !currentUser?.user_name) {
-      showNoWishlistWarning();
-      return;
-    }
+    // if (!currentUser?.user_id || !currentUser?.user_name) {
+    //   showNoWishlistWarning();
+    //   return;
+    // }
 
     const params = {
       path: `my_wishlist_${currentUser.user_id}`,
@@ -35,15 +35,15 @@ function* fetchMyWishlistCollectionSaga(action) {
       collectionAPIs.fetchCollectionsAPICall,
       params,
     );
-
-    const collections = data.data || [];
+    // console.log('data',data)
+    const collections = data.data?.[0] || [];
     // console.log('collections',collections.product_lists?.length)
     if (status !== 200 || !collections?.product_lists?.length) {
       showNoWishlistWarning();
       return;
     }
 
-    router.push(`/influencer/${currentUser.user_name}/${collections[0]._id}`);
+    router.push(`/influencer/${currentUser.user_name}/${collections._id}`);
   } catch (err) {
     console.error(err);
     showNoWishlistWarning();

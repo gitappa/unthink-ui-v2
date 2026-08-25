@@ -869,7 +869,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 					getUserCollections({
 						product_limits: FETCH_COLLECTIONS_PRODUCT_LIMIT,
 						summary: true,
-						kisokuser_id:KioskLogin
+						kisokuser_id:kioskLogin
 					})
 				);
 			}

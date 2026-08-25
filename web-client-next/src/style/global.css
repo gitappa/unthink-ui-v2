@@ -112,12 +112,11 @@
 }
 }
 @theme{
-  --color-kiosk-primary:#E9718BFF;
-  --color-kiosk-secondary:#FFE3E8;
-  --color-kiosk-support:#FDEDDE;
-  --color-hover-primary:#e9718b;
-  --color-common:#F2F2F2;
-  --color-kiosk-tertiary:#FAC6B6;
+  --color-kiosk-primary:#B63753;
+  --color-kiosk-secondary:#DCB4B3;
+  --color-kiosk-support:#eeeeee;
+  --color-hover-primary:#B63753;
+  --color-giva-away-primary:#f8f2f5;
 }
 /* Remove border from Ant Design select components */
 button {
