@@ -541,6 +541,10 @@ export const clearStorages = () => {
 	sessionStorage.removeItem('selectedTag')
 	// window.location.href = shared_profile_on_root ? "/" : "/store"; // removed reload page on logout
 };
+export const clearStoragesKiosk = () => {
+	sessionStorage.removeItem("Kiosk-login");
+	sessionStorage.removeItem("selectedTag");
+};
 
 export const getIsStoreInstance = () =>
 	is_store_instance ||

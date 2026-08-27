@@ -63,13 +63,24 @@ import {
 import SignupSuccess from "./SignupSuccess";
 
 const initialFormValue = {
-  email: "",
-  phone: "",
+  contact: "",
   password: "",
   cPassword: "",
 };
 
 let selectedIdpHintSignIn = "";
+
+const getContactPayload = (contact = "") => {
+  const normalizedContact = String(contact || "").trim();
+
+  if (!normalizedContact) {
+    return { email: "", phone: "" };
+  }
+
+  return normalizedContact.includes("@")
+    ? { email: normalizedContact, phone: "" }
+    : { email: "", phone: normalizedContact };
+};
 
 export default function SignInFormSection() {
   const router = useRouter();
@@ -224,8 +235,7 @@ export default function SignInFormSection() {
 
     selectedIdpHintSignIn = "";
     const { password } = values;
-    const email = values.email?.trim();
-    const phone = values.phone?.trim();
+    const { email, phone } = getContactPayload(values.contact);
     setShowProcessingLoader(true);
     try {
       const res = await authAPIs.signInAPICall({
@@ -263,7 +273,7 @@ export default function SignInFormSection() {
   const onResetPasswordRequest = async () => {
     try {
       setShowProcessingLoader(true);
-      const email = form.getFieldValue("email")?.trim();
+      const { email } = getContactPayload(form.getFieldValue("contact"));
       if (email) {
         const res = await authAPIs.resetPasswordRequestAPICall({
           email,
@@ -282,14 +292,14 @@ export default function SignInFormSection() {
       } else {
         form.setFields([
           {
-            name: "email",
+            name: "contact",
             errors: ["Please enter your email to reset password"],
           },
         ]);
       }
     } catch (error) {
       notification["error"]({
-        message: error.response.data.status_desc,
+        message: error.response?.data?.status_desc || "Failed to reset password",
       });
     } finally {
       setShowProcessingLoader(false);
@@ -300,9 +310,8 @@ export default function SignInFormSection() {
     try {
       setHasError(() => "");
       setShowProcessingLoader(true);
-      await form.validateFields(["email", "phone"]);
-      const email = form.getFieldValue("email")?.trim();
-      const phone = form.getFieldValue("phone")?.trim();
+      await form.validateFields(["contact"]);
+      const { email, phone } = getContactPayload(form.getFieldValue("contact"));
       if (email || phone) {
         const res = await authAPIs.signInWithLinkRequestAPICall({
           email,
@@ -322,9 +331,11 @@ export default function SignInFormSection() {
         }
       }
     } catch (error) {
-      notification["error"]({
-        message: error.response.data.status_desc,
-      });
+      if (error.response?.data?.status_desc) {
+        notification["error"]({
+          message: error.response.data.status_desc,
+        });
+      }
       setHasError(() => "Unable to process, Please try again after sometime");
     } finally {
       setShowProcessingLoader(false);
@@ -334,10 +345,11 @@ export default function SignInFormSection() {
   const onResendVerificationMail = async () => {
     try {
       setShowProcessingLoader(true);
-      form.validateFields(["email"]);
-      if (form.getFieldValue("email")) {
+      await form.validateFields(["contact"]);
+      const { email } = getContactPayload(form.getFieldValue("contact"));
+      if (email) {
         const res = await authAPIs.resendVerificationMail({
-          email: form.getFieldValue("email"),
+          email,
         });
         if (res.data.status_code === 200) {
           setSuccessState({
@@ -448,11 +460,11 @@ export default function SignInFormSection() {
   // }, []);
 
   const SuccessMessage = () => {
-    const [email, setEmail] = useState("");
+    const [contact, setContact] = useState("");
 
     useEffect(() => {
-      // Get email only on client side to avoid hydration mismatch
-      setEmail(form.getFieldValue("email") || "");
+      // Get contact only on client side to avoid hydration mismatch
+      setContact(form.getFieldValue("contact") || "");
     }, []);
 
     if (successState.showVerificationMailSent) {
@@ -460,7 +472,7 @@ export default function SignInFormSection() {
         <div>
           {/* // used tp show the verification mail sent screen */}
           <SignupSuccess
-            email={email}
+            email={contact}
             // showSignInButton // remove because it is already on sign in page
           />
         </div>
@@ -473,7 +485,7 @@ export default function SignInFormSection() {
             status="success"
             title={
               <span className={styles.textWhite}>
-                We have sent a link to {email}, please use that to sign in to
+                We have sent a link to {contact}, please use that to sign in to
                 your account.
               </span>
             }
@@ -539,18 +551,15 @@ export default function SignInFormSection() {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
               >
-				<div className="md:flex items-center w-full gap-2.5">
                 <Form.Item
-				className="w-full"
-                  name="email"
-                  dependencies={["phone"]}
+                  className="w-full"
+                  name="contact"
                   rules={[
                     {
                       validator: (_, value) => {
-                        const email = value?.trim();
-                        const phone = form.getFieldValue("phone")?.trim();
+                        const contact = value?.trim();
 
-                        if (email || phone) {
+                        if (contact) {
                           return Promise.resolve();
                         }
 
@@ -563,42 +572,9 @@ export default function SignInFormSection() {
                 >
                   <Input
                     className={styles.input}
-                    placeholder="Enter your email"
+                    placeholder="Enter your email or phone number"
                   />
                 </Form.Item>
-                <Form.Item
-				className="w-full"
-
-                  name="phone"
-                  dependencies={["email"]}
-                  rules={[
-                    {
-                      validator: (_, value) => {
-                        const phone = value?.trim();
-                        const email = form.getFieldValue("email")?.trim();
-
-                        if (email || phone) {
-                          return Promise.resolve();
-                        }
-
-                        return Promise.reject(
-                          new Error("Please enter your email or phone number!"),
-                        );
-                      },
-                    },
-                    {
-                      pattern: /^[0-9+\s()-]*$/,
-                      message: "Please enter a valid phone number!",
-                    },
-                  ]}
-                >
-                  <Input
-                    className={styles.input}
-                    placeholder="Enter your phone number"
-                    type="tel"
-                  />
-                </Form.Item>
-				</div>
                 {isSignInWithPasswordActive && (
                   <>
                     <Form.Item
@@ -693,12 +669,12 @@ export default function SignInFormSection() {
                           className={`loading-button ${styles.signInLinkButton}`}
                           onClick={() => setIsSignInWithPasswordActive(false)}
                         >
-                          Get a sign-in link via email
+                          Get a sign-in link
                         </Button>
                         {/* <p
 													className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'
 													onClick={() => setIsSignInWithPasswordActive(false)}>
-													Get a sign-in link via email
+													Get a sign-in link
 												</p> */}
                       </div>
                     ) : (
@@ -708,7 +684,7 @@ export default function SignInFormSection() {
                           size="large"
                           className={`loading-button ${styles.signInLinkButton}`}
                         >
-                          Get a sign-in link via email
+                          Get a sign-in link
                         </Button>
 
                         {/* <p className='text-blue-107 text-base text-right ml-auto mb-0 cursor-pointer'>

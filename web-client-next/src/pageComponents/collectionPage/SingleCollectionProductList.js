@@ -125,6 +125,7 @@ const url = window.location.pathname === '/my-profile/'
 
   const [selectedTags, setSelectedTags] = useState([]);
   const initializedFor = useRef(null);
+  const shouldRedirectWhenProductsEmpty = useRef(false);
 
   const tagsShowMoreEnabled = useMemo(
     () =>
@@ -317,12 +318,35 @@ const url = window.location.pathname === '/my-profile/'
 
   const handleResetSelectProduct = useCallback(
     // reset select product feature // unselect every products
-    () => {
+    ({ redirectIfEmpty = false } = {}) => {
+      console.log('Hello world');
+      
       setEnableSelectProduct(false);
       setSelectedProducts([]);
+      shouldRedirectWhenProductsEmpty.current = redirectIfEmpty;
+     
     },
     [],
   );
+
+  useEffect(() => {
+    if (!shouldRedirectWhenProductsEmpty.current) return;
+
+    const productLists = isSingleCollectionSharedPage
+      ? singleCollection?.product_lists || blogCollectionPage?.product_lists
+      : blogCollectionPage?.product_lists || singleCollection?.product_lists;
+
+    if (!Array.isArray(productLists)) return;
+    if (productLists.length > 0) return;
+
+    shouldRedirectWhenProductsEmpty.current = false;
+    router.replace("/");
+  }, [
+    blogCollectionPage?.product_lists,
+    isSingleCollectionSharedPage,
+    router,
+    singleCollection?.product_lists,
+  ]);
 
   const handleSetSelectedProducts = useCallback(
     ({ add = [], remove = [] }) => {
@@ -451,7 +475,10 @@ const url = window.location.pathname === '/my-profile/'
       },
       store_name: storeData?.store_name || current_store_name,
       collectionId: singleCollection?._id || blogCollectionPage?._id,
-      onComplete: handleResetSelectProduct,
+      onComplete: () =>
+        handleResetSelectProduct({
+          redirectIfEmpty: finalOptions.action === "Delete",
+        }),
     });
 
     if (isHandledSelectedProductsAction) {

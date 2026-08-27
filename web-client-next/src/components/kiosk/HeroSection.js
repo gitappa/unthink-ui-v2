@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import { current_store_name } from "../../constants/config";
+import { collectionQRCodeGenerator } from "../../helper/utils";
 
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 const HeroProductSwiper = dynamic(() => import("./HeroProductSwiper"), {
@@ -10,29 +13,19 @@ const HeroProductSwiper = dynamic(() => import("./HeroProductSwiper"), {
 const HeroSection = ({ storeData, collectiondata }) => {
   const router = useRouter();
 
-  // const collectiondata = useMemo(() => {
-  //   return products?.find((data) => data?.video_url && data?.path && data?.status === 'published' );
-  // }, [products]);
-  // console.log('collectiondatas', collectiondata);
-  // console.log('collectiondata',collectiondata);
-
-  // useEffect(() => {
-  //   const fetchSocialMedia = async () => {
-  //     try {
-
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchSocialMedia();
-  // }, []);
 
   // const videoUrlRaw = "https://www.youtube.com/watch?v=hrAOIj01B6E";
   const thumbnailImage =
     collectiondata?.thumbnail_image || collectiondata?.image;
   const [isClient, setIsClient] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  const collectionPagePath = collectiondata?.path
+    ? `/kioskcollections/${collectiondata.path}`
+    : "";
+  const collectionQRCodeUrl =
+    isClient && collectionPagePath
+      ? collectionQRCodeGenerator(collectionPagePath)
+      : "";
 
   useEffect(() => {
     // mark client after mount to avoid running client-only effects on SSR
@@ -136,6 +129,25 @@ const HeroSection = ({ storeData, collectiondata }) => {
               style={{ position: "relative", zIndex: 10 }}
               className="flex items-stretch gap-3 overflow-hidden rounded-xl pb-2"
             >
+              {current_store_name === 'giva_neeladri_hs' && 
+                 <div key="collection-qr" className="flex-none">
+                <div
+                  className="h-44 w-50 rounded-xl shadow-lg flex items-center justify-center p-4"
+                  style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
+                >
+                  {collectionQRCodeUrl && (
+                    <Image
+                      src={collectionQRCodeUrl}
+                      alt={`${collectiondata?.collection_name || "Collection"} QR code`}
+                      width={160}
+                      height={160}
+                      unoptimized
+                      className="h-full w-full object-contain"
+                    />
+                  )}
+                </div>
+              </div>
+              }
               <div key="collection-info" className="flex-none">
                 <div
                   className="h-44 w-50 rounded-xl shadow-lg flex items-center justify-center p-4"

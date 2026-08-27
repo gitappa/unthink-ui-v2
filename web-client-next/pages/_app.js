@@ -97,7 +97,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Unthink</title>
+        <title>{current_store_name}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
