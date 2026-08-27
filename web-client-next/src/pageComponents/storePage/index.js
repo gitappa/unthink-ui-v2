@@ -405,12 +405,12 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	}, []);
  		const LoginData =  authUser?.user_id || getTTid()
 		useEffect(()=>{
-			if (hasKioskAccess === null) return;
+			// console.log('hasKioskAccess',hasKioskAccess);
+			
+			// if (hasKioskAccess === null) return;
 			if(LoginData ||kioskLogin ){
-				console.log('dsasdfds',kioskLogin);
-				
 				if(hasKioskAccess && kioskLogin && window.location.pathname.startsWith('/product') ){
-					console.log('iam working ')
+					// console.log('iam working ')
 				    dispatch(fetchCart(`my_cart_${kioskLogin}`))
 					 dispatch(
         getwishlistUserCollection({
@@ -421,7 +421,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				} 
 
 				else if(!hasKioskAccess ){
-				    console.log("Fetching cart for user:", hasKioskAccess);
+				    // console.log("Fetching cart for user:", hasKioskAccess);
 				    dispatch(fetchCart(`my_cart_${LoginData}`))
 					dispatch( 
 					getwishlistUserCollection({

@@ -473,7 +473,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         setQrState((prev) => ({
           ...prev,
           isLoading: false,
-          message: `Unable to create ${action.label.toLowerCase()} QR.`,
+          message: `${action.emptyMessage}`,
         }));
       } finally {
         setActiveCollectionAction("");
@@ -490,8 +490,8 @@ const AuthInput = ({ onLoginChange, styles }) => {
       className={`flex justify-end items-center    ${styles ? styles : " "} gap-4 relative ml-auto`}
     >
       <div
-        className={`flex items-center w-full  bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm ${
-          kioskLogin ? "w-fit justify-start cursor-pointer " : "justify-end  " 
+        className={`flex items-center w-full  bg-white border border-gray-200 rounded-full pl-2 pr-4 py-2 shadow-sm ${
+          kioskLogin ? "w-fit justify-start cursor-pointer " : "justify-evenly   " 
         }`}
         onClick={kioskLogin ? handleUserButtonClick : undefined}
 

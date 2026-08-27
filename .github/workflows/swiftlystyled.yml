@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-
           NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
           NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
           NEXT_PUBLIC_GA_TRACKING_ID: "G-BEB892DM6D"

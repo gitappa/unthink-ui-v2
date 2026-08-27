@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import HeroSection from "../../components/kiosk/HeroSection";
 import BannerKisok from "../../components/kiosk/BannerKisok";
-import QRsection from "../../components/kiosk/QRsection";
+import KioskPromoSection from "../../components/kiosk/KioskPromoSection";
 import { Spin } from "antd";
 import useKioskSessionReminder, {
   KioskSessionPopup,
@@ -16,10 +16,13 @@ import {
 } from "../../helper/serverAPIs";
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
+
+const KIOSK_TAGS = ["Social Media", "Look Books", "#Trending"];
 
 const KioskHome = ({ props }) => {
   const userInfo = useSelector((state) => state.auth.user.data);
-  const Tags = ["Social Media", "Look Books", "#Trending"];
+  const Tags = KIOSK_TAGS;
   const [showTags, setShowTags] = useState(
     sessionStorage.getItem("selectedTag") || Tags[0],
   );
@@ -42,6 +45,26 @@ const KioskHome = ({ props }) => {
   // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const handleKioskLoginChange = () => {
+      if (sessionStorage.getItem("Kiosk-login")) return;
+
+      sessionStorage.removeItem("selectedTag");
+      setShowTags(Tags[0]);
+    };
+
+    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
+
+    return () => {
+      window.removeEventListener(
+        KIOSK_LOGIN_CHANGE_EVENT,
+        handleKioskLoginChange,
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const fetchSocialMedia = async () => {
@@ -135,7 +158,7 @@ const KioskHome = ({ props }) => {
                 collectiondata={collectiondata}
               />
             </div>
-            <QRsection storeData={storeData} showTags={showTags} />
+            <KioskPromoSection storeData={storeData} showTags={showTags} />
           </>
         )}
       </div>

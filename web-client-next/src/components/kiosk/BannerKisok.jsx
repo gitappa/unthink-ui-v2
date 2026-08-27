@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import QRsection from "./QRsection";
+import KioskPromoSection from "./KioskPromoSection";
 
 const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   const router = useRouter();
@@ -97,7 +97,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
           </div>
         </div>
       </div>
-      <QRsection showTags={Tags} storeData={storeData} />
+      <KioskPromoSection showTags={Tags} storeData={storeData} />
     </div>
   );
 };
