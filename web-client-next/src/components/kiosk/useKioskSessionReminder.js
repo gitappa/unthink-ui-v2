@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
-import { clearStorages } from "../../helper/utils";
+import { clearStoragesKiosk } from "../../helper/utils";
 import { getUserCollectionsReset, getWishlistUserCollectionReset } from "../../pageComponents/Auth/redux/actions";
 import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
 import { clearInfluencerCollections } from "../../pageComponents/Influencer/redux/actions";
@@ -73,7 +73,7 @@ export default function useKioskSessionReminder({ time } = {}) {
 
     try {
       // clearStorages();
-      sessionStorage.removeItem("Kiosk-login");
+      clearStoragesKiosk();
       notifyKioskLoginChange();
       router.replace('/')
     } catch (e) {}

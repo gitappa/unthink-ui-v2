@@ -187,6 +187,12 @@ useEffect(() => {
         bannerImage
         enableKioskGuestPopup
         onGuestPopupOpen={(action) => {
+          if (action === "") {
+            setPendingGuestAction(null);
+            setOnMfrCode(null);
+            return;
+          }
+
           if (action?.product) {
             setOnMfrCode(action.product);
           }

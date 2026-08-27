@@ -1,10 +1,11 @@
 import React from "react";
-import KioskQRCard from "./KioskQRCard";
+import KioskPromoCard from "./KioskPromoCard";
 import cart from "../../images/kiosk/cart.png";
 import gift from "../../images/kiosk/gift.png";
-import rewardImage from "../../images/image.png";
 import { collectionQRCodeGenerator } from "../../helper/utils";
-const QRsection = ({ showTags, storeData }) => {
+import { current_store_name } from "../../constants/config";
+
+const KioskPromoSection = ({ showTags, storeData }) => {
   const qr1 =
     "https://aurastage.unthink.ai/settings/build_qrcode/?page_url=https://unthink-ui-next-stage-ui-v2-314035436999.us-central1.run.app/collections/testing-product-detail-page-173081113277330";
   const fetchedData = React.useMemo(() => {
@@ -19,18 +20,15 @@ const QRsection = ({ showTags, storeData }) => {
       console.log(e);
     }
   };
-
-  // console.log('data',data)
+const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
   if (
-    showTags === "Social Media" ||
-    showTags === "#Trending" ||
-    showTags === "Look Books"
+    current_store_name === 'giva_indiranagar2_hs'
   ) {
-    const qrImage =
-      shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
+    
 
     return (
-      <div className="w-[272px] shrink-0">
+      <>
+      <div className="w-[272px] hidden lg:block shrink-0">
         <div className="rounded-[20px] flex lg:block bg-giva-away-primary px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
           <div className="rounded-[16px] bg-white px-[14px] py-5 shadow-[0_7px_10px_rgba(0,0,0,0.22)]">
             <div className="flex items-center justify-center gap-[16px]">             
@@ -100,35 +98,27 @@ const QRsection = ({ showTags, storeData }) => {
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="w-full mt-4 pb-4">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-        <KioskQRCard
-          title="Loyalty Rewards"
-          subtitle="Scan to join our loyalty program and start collecting points instantly."
-          qrSrc={qr1}
-          badgeText="POINTS ONLY"
-          badgeColor="emerald"
-          icon="star"
-          showTags={showTags}
-        />
-
-        <KioskQRCard
-          title="Giva Giveaway"
-          subtitle="Scan to register for our weekly sweepstakes for exciting prizes."
-          qrSrc={qr1}
-          badgeText="GIVEAWAY ENTRY"
-          badgeColor="red"
-          icon="gift"
-          showTags={showTags}
-          space
-        />
+ 
+    <div className="w-full block lg:hidden mt-4 pb-4">
+      <div className="">
+       <KioskPromoCard
+        variant="promo"
+        title={fetchedData?.tag_line || "Shop & Play with GIVA "}
+        subtitle={
+          fetchedData?.event_description ||
+          "Get personalized jewelry picks made for you."
+        }
+        eventTitle={fetchedData?.event_message || "GIVA AI Assistant"}
+        qrSrc={qrImage}
+        titleIcon={fetchedData?.title_icon || cart.src}
+        giftIcon={gift.src}
+        offerMessage={fetchedData?.offer_message || "Special Offer!"}
+        offerImage={fetchedData?.offer_image}
+      />
       </div>
     </div>
+      </>
   );
 };
-
-export default QRsection;
+}
+export default KioskPromoSection;

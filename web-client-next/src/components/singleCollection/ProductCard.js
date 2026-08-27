@@ -28,7 +28,7 @@ import {
 import { LuCopy } from "react-icons/lu";
 import { FiEdit, FiShoppingCart } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
-import { FaHeart, FaMinus, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
+import { FaMinus, FaRegBookmark } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import {
   setRemoveFromFavorites,
@@ -100,8 +100,8 @@ import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import { FaCartArrowDown } from "react-icons/fa";
-import { removeFromWishlist } from "../../pageComponents/wishlistActions/removeFromWishlist/redux/actions";
 import { addProductToWishlistCollection } from "../../pageComponents/wishlistActions/addProductToWishlistCollection/redux/actions";
+import WishlistHeartButton from "../../pageComponents/storePage/CardComponents/WishlistHeartButton";
 const { Text } = Typography;
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -170,7 +170,7 @@ const ProductCard = ({
   bannerImage,
   enableKioskGuestPopup = false,
   setOnMfrCode,
-  onGuestPopupOpen,
+  onGuestPopupOpen = () => {},
   onKioskTryonClick,
   onKioskCartClick,
   source,
@@ -480,42 +480,10 @@ const ProductCard = ({
   ]);
   const kioskLogin = getKioskLogin();
 
-  const handleDeletePlistClick = (e) => {
-    // const collectionIdToDelete =
-    //   collection_id ||
-    //   singleCollections?._id;
-
-    // if (!collectionIdToDelete) {
-    //   notification.error({ message: `Unable to delete ${WISHLIST_TITLE}` });
-    //   return;
-    // }
-    e.preventDefault();
-    e.stopPropagation();
-    dispatch(
-      removeFromWishlist({
-        products: [product.mfr_code],
-        // _id: collectionIdToDelete,
-        collection_name: "my wishlist",
-        type: "system",
-        successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
-        errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
-        removeCollectionFromUserCollections: true,
-        wishlistCallBack: true,
-        user_id: kioskLogin?.user_id || authUserId || getTTid(),
-        store: current_store_name,
-        clearSelectedCollectionData: true, // clearing selected collection data and id to close collection details sidebar
-      }),
-    );
-    // dispatch(
-    //     getwishlistUserCollection({
-    //       path: `my_wishlist_${authUserId || getTTid()}`,
-    //     }),
-    //   );
-  };
-
   const addToWishlistClick = async (event) => {
     event.preventDefault();
     event.stopPropagation();
+    onGuestPopupOpen("");
 
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
       setPendingWishlistAction(true);
@@ -1460,29 +1428,13 @@ const ProductCard = ({
           !isMyWishlistCollection && (
             <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
               {!hideAddToWishlist && (
-                <div
-                  className={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[55px] "}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]`}
-                  onClick={
-                    heartRedProduct
-                      ? handleDeletePlistClick
-                      : addToWishlistClick
-                  }
-                >
-                  <button className="box-border flex h-8 w-8 items-center justify-center rounded-full bg-white p-0 shadow-[0px_2px_12px_rgba(0,0,0,0.1)] min-[1000px]:transition-all min-[1000px]:duration-200 min-[1000px]:ease-in-out min-[1000px]:hover:bg-[#f5f5f5] min-[1000px]:hover:shadow-[0px_4px_16px_rgba(0,0,0,0.15)] max-[1024px]:p-1">
-                    {heartRedProduct ? (
-                      <FaHeart className="text-red-500" />
-                    ) : (
-                      // <img
-                      //   alt="Add to wishlist"
-                      //   className={styles["add_to_wishlist_icon"]}
-                      //   src={getStaticImageSrc(heart)}
-                      //   height={20}
-                      //   width={20}
-                      // />
-                      <FaRegHeart />
-                    )}
-                  </button>
-                </div>
+                <WishlistHeartButton
+                  isActive={!!heartRedProduct}
+                  containerClassName={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[55px] max-[1024px]:top-[45px]"}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px]  max-[1024px]:z-[30]`}
+                  onAdd={addToWishlistClick}
+                  productMfrCode={product?.mfr_code}
+                  userId={kioskLogin?.user_id || authUserId || getTTid()}
+                />
               )}
             </div>
           )}
@@ -1496,21 +1448,10 @@ const ProductCard = ({
           !enableSelect && (
             <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
               {/* {!hideAddToWishlist && ( */}
-              <div
-                className="absolute right-[15px] top-[55px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]"
-                onClick={handleGuestWishlistClick}
-              >
-                <button className="box-border flex h-8 w-8 items-center justify-center rounded-full bg-white p-0 shadow-[0px_2px_12px_rgba(0,0,0,0.1)] min-[1000px]:transition-all min-[1000px]:duration-200 min-[1000px]:ease-in-out min-[1000px]:hover:bg-[#f5f5f5] min-[1000px]:hover:shadow-[0px_4px_16px_rgba(0,0,0,0.15)] max-[1024px]:p-1">
-                  {/* <img
-                    alt="Add to collection"
-                    className={styles["add_to_wishlist_icon"]}
-                    src={getStaticImageSrc(heart)}
-                    height={20}
-                    width={20}
-                  /> */}
-                  <FaRegHeart />
-                </button>
-              </div>
+              <WishlistHeartButton
+                containerClassName="absolute right-[15px] top-[55px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]"
+                onAdd={handleGuestWishlistClick}
+              />
               {/* )} */}
             </div>
           )}

@@ -82,13 +82,13 @@ import { addProductToWishlistCollection } from "../wishlistActions/addProductToW
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
-import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import LoggedInInfo, {
   useKioskAccess,
 } from "../../components/kiosk/components/LoggedInInfo";
 import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 import Breadcrumbs from "./Breadcrumbs";
 import AuthInput from "../../components/kiosk/components/AuthInput";
+import WishlistHeartButton from "./CardComponents/WishlistHeartButton";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -966,33 +966,20 @@ const ProductDetails = ({ params, ...props }) => {
                           </button>
                         ) : null}
                       </div>
-                      <button
-                        className="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-support text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
-                        onClick={() =>
+                      <WishlistHeartButton
+                        isActive={!!(heartRedProduct && showHeartWishlist)}
+                        buttonClassName="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-support text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+                        onAdd={() =>
                           onAddSelectedProductsToCollection(null, {
                             isSave: true,
                           })
                         }
+                        productMfrCode={productDetails?.mfr_code}
+                        userId={kioskLogin?.user_id || authUserId || getTTid()}
                         title="Add to wishlist"
-                      >
-                        {heartRedProduct && showHeartWishlist ? (
-                          <FaHeart
-                            className="text-red-500"
-                            style={{
-                              width: 24,
-                              height: 24,
-                            }}
-                          />
-                        ) : (
-                          <FaRegHeart
-                            style={{
-                              color: "black",
-                              width: 24,
-                              height: 24,
-                            }}
-                          />
-                        )}
-                      </button>
+                        activeIconClassName="h-6 w-6 text-red-500"
+                        inactiveIconClassName="h-6 w-6 text-black"
+                      />
 
                       <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
                         {showShareProductDetails && (
