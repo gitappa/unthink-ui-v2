@@ -681,7 +681,7 @@ export const getCollectionNameToShow = (collection) =>
 
 export const filterAvailableProductList = (pList) => pList;
 
-export const getIsSellerLoggedIn = (storeSellerList = [], emailId = "") =>
+export const getIsSellerLoggedIn = (storeSellerList = [], emailId ) =>
 	storeSellerList.includes(emailId);
 
 export const filterProductList = (pList, filters) => {
