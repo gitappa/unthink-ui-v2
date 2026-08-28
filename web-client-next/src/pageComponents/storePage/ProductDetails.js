@@ -1112,7 +1112,7 @@ const ProductDetails = ({ params, ...props }) => {
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
                             <button
                               onClick={() => handleCartAction((cardItem?.qty || 0) + 1)}
-                              className={` h-full px-6 ${hasKioskAccess ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-primary hover:text-white font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
+                              className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
                             </button>
