@@ -89,6 +89,7 @@ import { loggedInInfo, userInfo } from "../Auth/redux/selector";
 import Breadcrumbs from "./Breadcrumbs";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 import WishlistHeartButton from "./CardComponents/WishlistHeartButton";
+import GoBack from "../../components/common/GoBack";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -540,29 +541,6 @@ const ProductDetails = ({ params, ...props }) => {
     },
     [productDetails],
   );
-  const handleGoBack = () => {
-    // if (typeof window === "undefined") {
-    //   navigate(PATH_ROOT);
-    //   return;
-    // }
-    //  console.log('handleGoBack',window.navigation.entries())
-    if (window?.history?.length > 2) {
-      window.history.back();
-    }
-    // window.history.back()
-    // const storedReturnPath = window.sessionStorage.getItem(
-    //   PDP_RETURN_PATH_STORAGE_KEY,
-    // );
-    // const returnPath = isValidProductReturnPath(storedReturnPath)
-    //   ? storedReturnPath
-    //   : PATH_ROOT;
-    // navigate(storedReturnPath)
-
-    // window.sessionStorage.removeItem(PDP_RETURN_PATH_STORAGE_KEY);
-    // router.push(returnPath).catch(() => {
-    //   window.location.assign(returnPath);
-    // });
-  };
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
@@ -756,16 +734,8 @@ const ProductDetails = ({ params, ...props }) => {
           className={`flex flex-col bg-white w-full self-center ${!hasKioskAccess ? "lg:pt-10 pt-7 " : ""} gap-3.5 lg:gap-8 `}
         >
           {hasKioskAccess && (
-            <div className="flex items-start sticky py-7  z-30 top-0 bg-white">
-              <button
-                className="group flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-[#222f44]   transition "
-                onClick={handleGoBack}
-              >
-                <span className="text-lg leading-none flex transition group-hover:-translate-x-0.5">
-                  <ArrowLeftOutlined />
-                </span>
-                <span className="capitalize">Go back</span>
-              </button>
+            <div className="flex h-12  items-start sticky py-7  z-30 top-0 bg-white">
+              <GoBack />
               <AuthInput styles={"mb-0 w-fit pr-7"} />
             </div>
           )}

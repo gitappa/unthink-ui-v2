@@ -251,21 +251,6 @@ const Header = ({
     }
   };
 
-  const headerCreateMenu = [
-    {
-      key: "create_collection",
-      className: styles.headerMenuItemPy2,
-      label: (
-        <Link
-          className={styles.headerMenuLinkText}
-          href={PATH_CREATE_COLLECTION}
-        >
-          COLLECTION
-        </Link>
-      ),
-    },
-  ];
-
   const isAdminLoggedIn = AdminCheck(
     currentUser,
     current_store_name,
@@ -276,7 +261,7 @@ const Header = ({
   const isSellerLoggedIn = useMemo(
     () =>
       (isAdminLoggedIn ||
-        getIsSellerLoggedIn(storeSellerList, currentUser.emailId)) &&
+        getIsSellerLoggedIn(storeSellerList,currentUser.emailId || currentUser?.phone)) &&
       isMyProductsEnable,
     [isAdminLoggedIn, isMyProductsEnable, storeSellerList, currentUser.emailId],
   );
