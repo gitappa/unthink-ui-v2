@@ -17,8 +17,10 @@ import {
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
+import { current_store_name } from "../../constants/config";
 
 const KIOSK_TAGS = ["Social Media", "Look Books", "#Trending"];
+const GIVA_NEELADRI_TAB_ROTATION_DELAY = 60 * 1000;
 
 const KioskHome = ({ props }) => {
   const userInfo = useSelector((state) => state.auth.user.data);
@@ -107,6 +109,22 @@ const KioskHome = ({ props }) => {
 
     return () => clearInterval(timer);
   }, [rotationDelay, socialMediaData.length]);
+
+  useEffect(() => {
+    if (current_store_name !== "giva_neeladri_hs") return undefined;
+
+    const timer = setInterval(() => {
+      setShowTags((currentTag) => {
+        const currentTagIndex = Tags.indexOf(currentTag);
+        const nextTag = Tags[(currentTagIndex + 1) % Tags.length];
+
+        sessionStorage.setItem("selectedTag", nextTag);
+        return nextTag;
+      });
+    }, GIVA_NEELADRI_TAB_ROTATION_DELAY);
+
+    return () => clearInterval(timer);
+  }, [Tags]);
 
   // KioskSessionPopup is rendered in JSX below using showSessionPopup
 
