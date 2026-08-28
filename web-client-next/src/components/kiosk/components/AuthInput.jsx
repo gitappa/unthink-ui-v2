@@ -391,7 +391,10 @@ const AuthInput = ({ onLoginChange, styles }) => {
         setStatus("Login is required");
         return;
       }
-
+      if(action.key === 'cart'){
+			  router.push('/cart')
+			  return
+	  	}
       const collectionPath = action.pathPrefix ? `${action.pathPrefix}_${userId}` : "";
       const fetchParams = action.getFetchParams
         ? action.getFetchParams(userId)
@@ -409,6 +412,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         isLoading: true,
         title: action.modalTitle,
       });
+		
 
       try {
         const response = await collectionAPIs.fetchCollectionsAPICall(fetchParams);

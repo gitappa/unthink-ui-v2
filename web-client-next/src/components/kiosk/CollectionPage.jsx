@@ -6,7 +6,7 @@ import {
   filterAvailableProductList,
   filterProductListBySelectedTags,
 } from "../../helper/utils";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+
 import Cookies from "js-cookie";
 import profilebanner from "../../images/package.jpg";
 import { Spin } from "antd";
@@ -34,6 +34,7 @@ import { useNavigate } from "../../helper/useNavigate";
 import AuthInput from "./components/AuthInput";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import { current_store_name, is_kiosk } from "../../constants/config";
+import GoBack from "../common/GoBack";
 
 const CollectionPage = ({ params }) => {
   // console.log(params);
@@ -200,7 +201,7 @@ useEffect(() => {
           setIsPopupShow(true);
         }}
         onKioskTryonClick={buildVtoProductAutoLoginUrls}
-        onKioskCartClick={buildCartAutoLoginUrls}
+        // onKioskCartClick={buildCartAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}
       />
     );
@@ -369,27 +370,7 @@ useEffect(() => {
     [buildKioskAutoLoginUrls],
   );
 
-  const buildCartAutoLoginUrls = useCallback(
-    async (product) => {
-      if (product && typeof product === "object") {
-        setOnMfrCode(product);
-      }
-
-      const urls = await buildKioskAutoLoginUrls({
-        targetPath: "?page=cart",
-        pageParam: "?page=cart",
-        errorLabel: "cart auto-login",
-      });
-
-      if (urls) {
-        setSharePageUrl(urls.shareUrl);
-        setQrUrl(urls.qrUrl);
-        setShareContext("cart");
-        setShowShareProductDetails(true);
-      }
-    },
-    [buildKioskAutoLoginUrls],
-  );
+ 
 
   if (!currentCollection) {
     return (
@@ -405,15 +386,7 @@ useEffect(() => {
        z-20 "
       >
         <div className="flex items-start mb-2 ">
-          <button
-            className="group text-gray-500 flex w-fit   gap-2 rounded-full button-kiosk font-medium   transition "
-            onClick={() => navigate("/")}
-          >
-            <span className="   flex transition group-hover:-translate-x-0.5">
-              <ArrowLeftOutlined />
-            </span>
-            <span className="capitalize">Go back</span>
-          </button>
+         <GoBack />
           <AuthInput styles={"mb-0 w-fit"} />
         </div>
 
@@ -569,7 +542,6 @@ useEffect(() => {
           onLogout={handleLogout}
         />
       )}
-      {/* <LoggedInInfo userInfo={userInfo} /> */}
     </div>
   );
 };

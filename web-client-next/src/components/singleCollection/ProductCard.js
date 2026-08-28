@@ -172,7 +172,6 @@ const ProductCard = ({
   setOnMfrCode,
   onGuestPopupOpen = () => {},
   onKioskTryonClick,
-  onKioskCartClick,
   source,
 }) => {
   const navigate = useNavigate();
@@ -636,12 +635,6 @@ const ProductCard = ({
   const handleGoToCart = (event) => {
     event.stopPropagation();
     event.preventDefault();
-
-    if (hasKioskAccess && KioskLoginAuth?.user_id && onKioskCartClick) {
-      onKioskCartClick(product);
-      return;
-    }
-
     router.push("/cart");
   };
 
@@ -1596,12 +1589,7 @@ const ProductCard = ({
                     className={`${getProductBuyButtonClass(size, hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
                     onClick={cartCollection ? handleGoToCart : handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
-                  >
-                    {/* <img
-                      src={ shopping}
-                      alt="Add to cart"
-                      height={20}
-                      width={20} */}
+                  >                  
                     {cartCollection ? (
                       <FaCartArrowDown
                         className={

@@ -14,7 +14,7 @@ import GuestPopUp from "../Auth/GuestPopUp";
 import { COOKIE_TT_ID, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
-import { collectionQRCodeGenerator, setCookie } from "../../helper/utils";
+import { collectionQRCodeGenerator, getStoredKioskLoginUserId, setCookie } from "../../helper/utils";
 import Modal from "../../components/modal/Modal";
 
 const DeliveryDetails = () => {
@@ -41,7 +41,8 @@ const DeliveryDetails = () => {
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [isCheckoutClaimQrModalOpen, setIsCheckoutClaimQrModalOpen] =
     useState(false);
-  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
+    const  kioskUser_id =getStoredKioskLoginUserId()
+  const mycartcollectionpath = `${ kioskUser_id || authUserId || getTTid()}`;
   const shouldShowCheckoutClaimQr =
     authUserId && storeData?.store_name === "giva_indiranagar2_hs";
   const checkoutClaimMessage =
@@ -79,8 +80,8 @@ const DeliveryDetails = () => {
       product_lists: [],
       collection_name: "my cart",
       type: "system",
-      user_id: authUserId || getTTid(),
-      path: mycartcollectionpath,
+      user_id: mycartcollectionpath,
+      path:`my_cart_${ mycartcollectionpath}`,
     };
     dispatch(addToCart(payload));
   };
