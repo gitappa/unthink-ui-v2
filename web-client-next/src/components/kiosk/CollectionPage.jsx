@@ -461,7 +461,7 @@ useEffect(() => {
               className={`${
                 activeCategory === tag
                   ? "bg-black text-white"
-                  : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                  : "bg-kiosk-gray text-gray-600 "
               } lg:px-5 px-3 py-2 lg:py-3 rounded-full font-semibold text-[12px] lg:text-sm transition duration-200`}
             >
               {tag}
