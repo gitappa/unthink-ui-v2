@@ -4,7 +4,6 @@
     /* margin: 0;
     padding: 0; */
     box-sizing: border-box;
-
 }
 
 body {
@@ -13,7 +12,7 @@ body {
     /* color: black; */
     min-height: 100vh;
     overflow-x: hidden;
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 body::-webkit-scrollbar {
   width: 6px;
@@ -36,9 +35,6 @@ body::-webkit-scrollbar-thumb:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-button {
-  cursor: pointer;
 }
 
 /* Abstract Background Pattern mimic */
