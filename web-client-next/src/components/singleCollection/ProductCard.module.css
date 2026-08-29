@@ -1094,12 +1094,7 @@
 .product-price-container-height {
   min-height: 2rem;
 }
-
-.product-price-display {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
+ 
 
 .product-price-text {
   color: #e7000b;

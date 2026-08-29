@@ -124,6 +124,8 @@ const getProductBuyButtonClass = (size, hasKioskAccess) =>
     : hasKioskAccess
       ? KIOSKCLASS
       : PRODUCT_BUY_BUTTON_CLASS;
+const getDisabledProductBuyButtonClass = (size, hasKioskAccess) =>
+  getProductBuyButtonClass(size, hasKioskAccess).replace("cursor-pointer", "");
 const getStaticImageSrc = (image) => image?.src || image;
 
 const ProductCard = ({
@@ -432,6 +434,7 @@ const ProductCard = ({
     product?.listprice &&
     +product?.listprice > +product?.price &&
     getPercentage(product.listprice, product.price);
+  const isOutOfStock = String(product?.avlble ?? "").trim() === "0";
 
   const callHandpickedAPI = useCallback(
     async (userId) => {
@@ -1509,7 +1512,7 @@ const ProductCard = ({
           <div
             className={`${styles["product-price-container"]} ${product?.price || product?.listprice ? styles["product-price-container-height"] : styles["product-price-container-height"]}`}
           >
-            <div className={styles["product-price-display"]}>
+            <div className={`${styles["product-price-display"]} ${isOutOfStock ? 'hidden' : ''}`}>
               <span
                 className={`${styles["product-price-text"]} ${size === "small" ? styles["product-price-text-small"] : styles["product-price-text-medium"]}`}
               >
@@ -1562,6 +1565,7 @@ const ProductCard = ({
                     className={getProductBuyButtonClass(size, hasKioskAccess)}
                     onClick={checkoutPayment}
                     disabled={!product?.price && !product?.listprice}
+                    
                   >
                     <img
                       style={{
@@ -1586,15 +1590,17 @@ const ProductCard = ({
                   </button>
                 ) : (
                   <button
-                    className={`${getProductBuyButtonClass(size, hasKioskAccess)} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
-                    onClick={cartCollection ? handleGoToCart : handleAddToCart}
+                    className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? 'bg-secondary product-out-of-stock-button' : ''} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
+                    onClick={ isOutOfStock ? null : cartCollection ? handleGoToCart : handleAddToCart}
                     disabled={!product?.price && !product?.listprice}
                   >                  
                     {cartCollection ? (
                       <FaCartArrowDown
                         className={
-                          showWishlistModal || size === "small"
-                            ? styles["product-cart-icon-small"]
+                          isOutOfStock
+                            ? 'hidden'
+                            : showWishlistModal || size === "small"
+                              ? styles["product-cart-icon-small"]
                             : hasKioskAccess
                               ? KIOSK_CART_ICON_CLASS
                               : "h-4 w-4 md:h-5 md:w-5"
@@ -1603,15 +1609,17 @@ const ProductCard = ({
                     ) : (
                       <FiShoppingCart
                         className={
-                          showWishlistModal || size === "small"
-                            ? styles["product-cart-icon-small"]
+                          isOutOfStock
+                            ? 'hidden'
+                            : showWishlistModal || size === "small"
+                              ? styles["product-cart-icon-small"]
                             : hasKioskAccess
                               ? KIOSK_CART_ICON_CLASS
                               : "h-4 w-4 md:h-5 md:w-5"
                         }
                       />
                     )}
-                    {cartCollection ? " Go to Cart " : " Add to Cart"}
+                    {isOutOfStock ? 'Out of Stock' : cartCollection ? " Go to Cart " : " Add to Cart"}
                   </button>
                 )}
               </>
