@@ -38,6 +38,8 @@
   border-color: var(--color-brand);
 }
 
+
+
 .bg-lightgray-102 {
   background-color: var(--color-gray-light-2);
 }
@@ -531,4 +533,10 @@ p {
 }
 .ChatModal_chatmodal-figma-upload-popover__6x2OU .ant-upload  {
   padding: 0px !important;
+}
+ 
+
+button.product-out-of-stock-button,
+button.product-out-of-stock-button * {
+  cursor: not-allowed ;
 }
