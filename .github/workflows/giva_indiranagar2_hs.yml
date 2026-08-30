@@ -14,6 +14,7 @@ jobs:
     env:
       NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
       NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
+      NEXT_PUBLIC_GA_TRACKING_ID: "G-F45Z58XW4Y"
       NEXT_PUBLIC_STAGING_ENV: "false"
       NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
       NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "giva_indiranagar2_hs"
