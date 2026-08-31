@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Head from 'next/head';
+import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
 
@@ -40,7 +41,7 @@ import {
   STORE_USER_NAME_SAMSKARA,
   STORE_USER_NAME_SWIFTLYSTYLED,
 } from "../src/constants/codes";
-import { is_store_instance, current_store_name } from '../src/constants/config';
+import { is_store_instance, current_store_name, GA_TRACKING_ID } from '../src/constants/config';
 import { UserDataProvider } from '../src/context/UserDataContext';
 import styles from './_app.module.css';
 
@@ -111,6 +112,23 @@ function MyApp({ Component, pageProps }) {
           content="Reach audiences of publishers, creators, and influencers"
         />
       </Head>
+
+      {GA_TRACKING_ID ? (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_TRACKING_ID}');
+            `}
+          </Script>
+        </>
+      ) : null}
 
       <div style={fontStyle} suppressHydrationWarning>
         <ThemeContextWrapper>
