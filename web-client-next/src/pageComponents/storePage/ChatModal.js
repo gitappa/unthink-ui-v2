@@ -197,7 +197,9 @@ const ChatModal = ({
       const isSame = 
         prev.enableSelectProduct === actions.enableSelectProduct &&
         prev.selectedProducts?.length === actions.selectedProducts?.length &&
-        prev.chatProductsDataToShow?.length === actions.chatProductsDataToShow?.length;
+        prev.chatProductsDataToShow?.length === actions.chatProductsDataToShow?.length &&
+        prev.isTagProductSelected === actions.isTagProductSelected &&
+        prev.isTagProductsAllSelected === actions.isTagProductsAllSelected;
         
       if (isSame) {
         // Prevent infinite loop by returning the same reference if UI state hasn't changed.
@@ -1133,16 +1135,13 @@ const ChatModal = ({
                         <div className="flex items-center gap-2">
                           <Checkbox
                             indeterminate={
-                              selectActions.selectedProducts.length > 0 &&
-                              selectActions.selectedProducts.length < selectActions.chatProductsDataToShow.length
+                              selectActions.isTagProductSelected &&
+                              !selectActions.isTagProductsAllSelected
                             }
                             onChange={(e) => {
                               selectActions.onSelectAllChange();
                             }}
-                            checked={
-                              selectActions.selectedProducts.length > 0 &&
-                              selectActions.selectedProducts.length === selectActions.chatProductsDataToShow.length
-                            }
+                            checked={selectActions.isTagProductsAllSelected}
                           />
                           <span className="text-xs font-semibold text-[#384467]">
                             {selectActions.selectedProducts.length} selected
