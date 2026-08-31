@@ -414,6 +414,34 @@ const [notData,setNotData] = useState(null)
 		authUser.user_name,
 	]);
 
+	const cachedProductsToRender = productsCache[currentTag] || [];
+	const productsToRender = cachedProductsToRender.length
+		? cachedProductsToRender
+		: chatProductsDataToShow;
+	const productsToRenderCodes = useMemo(
+		() => productsToRender.map((product) => product.mfr_code).filter(Boolean),
+		[productsToRender],
+	);
+	const hasProductsToRender = productsToRender.length > 0;
+	const selectedProductsDataSource = useMemo(() => {
+		const productMap = new Map();
+		[
+			...(allProductList || []),
+			...productsToRender,
+			...RecomChatProductsDataToShow,
+			...moreProductsDataToShow,
+		].forEach((product) => {
+			if (product?.mfr_code) {
+				productMap.set(product.mfr_code, product);
+			}
+		});
+		return Array.from(productMap.values());
+	}, [
+		allProductList,
+		productsToRender,
+		RecomChatProductsDataToShow,
+		moreProductsDataToShow,
+	]);
 
 	const enableFilters = useMemo(
 		() =>
@@ -436,21 +464,19 @@ const [notData,setNotData] = useState(null)
 	);
 
 	const isTagProductsAllSelected = useMemo(() => {
-		if (chatProductsDataToShow) {
-			return chatProductsDataToShow.every((item) =>
-				selectedProducts.includes(item.mfr_code)
-			);
-		}
-	}, [chatProductsDataToShow, selectedProducts]);
+		return (
+			productsToRenderCodes.length > 0 &&
+			productsToRenderCodes.every((mfrCode) =>
+				selectedProducts.includes(mfrCode)
+			)
+		);
+	}, [productsToRenderCodes, selectedProducts]);
 
 	const isTagProductSelected = useMemo(() => {
-		if (chatProductsDataToShow) {
-			return chatProductsDataToShow.some((item) =>
-				selectedProducts.includes(item.mfr_code)
-			);
-		}
-		return false;
-	}, [chatProductsDataToShow, selectedProducts]);
+		return productsToRenderCodes.some((mfrCode) =>
+			selectedProducts.includes(mfrCode)
+		);
+	}, [productsToRenderCodes, selectedProducts]);
 
 	const handleResetSelectProduct = useCallback(() => {
 		setEnableSelectProduct(false);
@@ -459,27 +485,36 @@ const [notData,setNotData] = useState(null)
 
 	const handleSetSelectedProducts = useCallback(
 		({ add = [], remove = [] }) => {
-			const products = selectedProducts;
-			const allProducts = allProductList?.map((p) => p.mfr_code);
-			products.push(...add);
-			const filteredRemoveProducts = products.filter(
-				(p) => !remove.includes(p)
-			);
-			const uniqueSelectedProducts = filteredRemoveProducts.filter(
-				(p, index) => filteredRemoveProducts.indexOf(p) === index
-			);
-			setSelectedProducts(
-				uniqueSelectedProducts.filter((p) => allProducts.includes(p))
-			);
+			const allProducts = selectedProductsDataSource.map((p) => p.mfr_code);
+			setSelectedProducts((currentSelectedProducts) => {
+				const filteredRemoveProducts = [...currentSelectedProducts, ...add].filter(
+					(p) => !remove.includes(p)
+				);
+				const uniqueSelectedProducts = filteredRemoveProducts.filter(
+					(p, index) => filteredRemoveProducts.indexOf(p) === index
+				);
+				const nextSelectedProducts = uniqueSelectedProducts.filter((p) =>
+					allProducts.includes(p)
+				);
+
+				if (
+					nextSelectedProducts.length === currentSelectedProducts.length &&
+					nextSelectedProducts.every((p, index) => p === currentSelectedProducts[index])
+				) {
+					return currentSelectedProducts;
+				}
+
+				return nextSelectedProducts;
+			});
 		},
-		[selectedProducts, allProductList]
+		[selectedProductsDataSource]
 	);
 
 	useEffect(() => {
 		if (selectedProducts) {
 			handleSetSelectedProducts({});
 		}
-	}, [allProductList]);
+	}, [handleSetSelectedProducts, selectedProducts]);
 
 	// Update the useEffect that handles cache updates:
 	useEffect(() => {
@@ -557,13 +592,18 @@ const [notData,setNotData] = useState(null)
 	};
 
 	const onSelectAllChange = useCallback(() => {
-		if (selectedProducts.length < chatProductsDataToShow.length) {
-			setSelectedProducts(chatProductsDataToShow.map((i) => i.mfr_code));
+		if (!isTagProductsAllSelected) {
+			setSelectedProducts((prevSelected) => [
+				...new Set([...prevSelected, ...productsToRenderCodes]),
+			]);
 			setEnableSelectProduct(true);
 		} else {
-			setSelectedProducts([]);
+			const productsToRenderCodeSet = new Set(productsToRenderCodes);
+			setSelectedProducts((prevSelected) =>
+				prevSelected.filter((mfrCode) => !productsToRenderCodeSet.has(mfrCode))
+			);
 		}
-	}, [selectedProducts.length, chatProductsDataToShow]);
+	}, [isTagProductsAllSelected, productsToRenderCodes]);
 
 	const handleSaveOrShareClick = () => {
 		onSelectAllChange();
@@ -622,7 +662,7 @@ const [notData,setNotData] = useState(null)
 			const productForWishlist = productToAdd || pendingWishlistProductAfterGuestRef.current;
 			const SelectedProductsData = productForWishlist?.mfr_code
 				? [productForWishlist]
-				: allProductList.filter((p) =>
+				: selectedProductsDataSource.filter((p) =>
 					selectedProducts.includes(p.mfr_code)
 				);
 
@@ -729,7 +769,7 @@ const [notData,setNotData] = useState(null)
 		[
 			isUserLogin,
 			selectedProducts,
-			allProductList,
+			selectedProductsDataSource,
 			suggestionsProducts,
 			chatMessage,
 			widgetHeader,
@@ -983,7 +1023,9 @@ setNotData(newOptionalFilters)
 			registerSelectActions({
 				enableSelectProduct,
 				selectedProducts,
-				chatProductsDataToShow,
+				chatProductsDataToShow: productsToRender,
+				isTagProductSelected,
+				isTagProductsAllSelected,
 				is_store_instance,
 				handleResetSelectProduct,
 				setEnableSelectProduct,
@@ -999,7 +1041,9 @@ setNotData(newOptionalFilters)
 	}, [
 		enableSelectProduct,
 		selectedProducts,
-		chatProductsDataToShow,
+		productsToRender,
+		isTagProductSelected,
+		isTagProductsAllSelected,
 		is_store_instance,
 		handleResetSelectProduct,
 		onSelectAllChange,
@@ -1007,11 +1051,6 @@ setNotData(newOptionalFilters)
 		registerSelectActions,
 	]);
 
-	const cachedProductsToRender = productsCache[currentTag] || [];
-	const productsToRender = cachedProductsToRender.length
-		? cachedProductsToRender
-		: chatProductsDataToShow;
-	const hasProductsToRender = productsToRender.length > 0;
 	const isCurrentTagLoading = (tag && !suggestionsProducts?.[tag]) || ((isLoading || showChatLoader) && !hasProductsToRender);
 
 	return (
@@ -1063,13 +1102,10 @@ setNotData(newOptionalFilters)
 											selectedCount={selectedProducts.length}
 											isSelectMode={enableSelectProduct}
 											isIndeterminate={
-												selectedProducts.length > 0 &&
-												selectedProducts.length < chatProductsDataToShow.length
+												isTagProductSelected &&
+												!isTagProductsAllSelected
 											}
-											isAllSelected={
-												selectedProducts.length > 0 &&
-												selectedProducts.length === chatProductsDataToShow.length
-											}
+											isAllSelected={isTagProductsAllSelected}
 											onSelectAllChange={onSelectAllChange}
 											onCancel={handleResetSelectProduct}
 											onAction={handleSelectedProductsAction}

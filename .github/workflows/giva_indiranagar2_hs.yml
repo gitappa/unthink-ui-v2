@@ -18,6 +18,7 @@ jobs:
       NEXT_PUBLIC_STAGING_ENV: "false"
       NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
       NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "giva_indiranagar2_hs"
+      NEXT_PUBLIC_GA_TRACKING_ID: "G-F45Z58XW4Y"
       NEXT_PUBLIC_AURA_HEADER_THEME: "light"
       NEXT_PUBLIC_SHARED_PROFILE_ON_ROOT: "giva_indiranagar2_hs"
       NEXT_PUBLIC_CURRENT_STORE_NAME: "giva_indiranagar2_hs"
