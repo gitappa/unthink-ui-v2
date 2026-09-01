@@ -13,7 +13,7 @@ jobs:
       NODE_OPTIONS: "--max_old_space_size=4096"
       NEXT_PUBLIC_BACKEND_URL: "https://webbot-image-sync-314035436999.us-central1.run.app"
       NEXT_PUBLIC_ACCESS_KEY: "e191921352124a06a09bb811a86a5c3a"
-    #   GA_TRACKING_ID: "G-9EC2DPDL44"
+      GA_TRACKING_ID: "G-9EC2DPDL44"
       NEXT_PUBLIC_STAGING_ENV: "false"
       NEXT_PUBLIC_IS_KIOSK_ENABLED: "false"
       NEXT_PUBLIC_SUPER_ADMIN_USER_NAME: "dfwstyle"
