@@ -33,7 +33,7 @@ const Tooltip = ({
 			) : null}
 		</div>
 	);
-
+console.log('Helo World')
 	return (
 		<Popover
 			placement={placement}
