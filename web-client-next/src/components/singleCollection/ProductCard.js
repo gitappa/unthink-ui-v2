@@ -6,79 +6,31 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { notification, Typography } from "antd";
-import { IoBagHandleOutline } from "react-icons/io5";
+import { notification } from "antd";
 import styles from "./ProductCard.module.css";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { deleteWishlist } from "../../pageComponents/wishlistActions/deleteWishlist/redux/actions";
 
-// import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
-  HeartOutlined,
   CloseCircleOutlined,
   CopyOutlined,
-  StarFilled,
   StarOutlined,
   EditFilled,
-  CopyTwoTone,
-  CopyrightCircleFilled,
-  CopyFilled,
-  EyeOutlined,
 } from "@ant-design/icons";
-import { LuCopy } from "react-icons/lu";
-import { FiEdit, FiShoppingCart } from "react-icons/fi";
-import { BsThreeDots } from "react-icons/bs";
-import { FaMinus, FaRegBookmark } from "react-icons/fa6";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
-import {
-  setRemoveFromFavorites,
-  openWishlistModal,
-  setProductsToAddInWishlist,
-  closeWishlistModal,
-} from "../../pageComponents/wishlist/redux/actions";
+import { closeWishlistModal } from "../../pageComponents/wishlist/redux/actions";
 import {
   getwishlistUserCollection,
   GuestPopUpShow,
 } from "../../pageComponents/Auth/redux/actions";
-import { RxCross2 } from "react-icons/rx";
 import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
-import {
-  adminUserId,
-  current_store_id,
-  current_store_name,
-  enable_view_similar_products,
-  payment_url,
-  pdp_page_enabled,
-} from "../../constants/config";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
-import { addToWishlist } from "../../pageComponents/wishlistActions/addToWishlist/redux/actions";
-import { getCurrentUserFavoriteCollection } from "../../pageComponents/Auth/redux/selector";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
   addSidInProductUrl,
-  AdminCheck,
   cleanImage,
   getCurrentTheme,
-  getFinalImageUrl,
-  getPercentage,
-  // URLAddParam,
 } from "../../helper/utils";
-import appTracker from "../../helper/webTracker/appTracker";
-import {
-  defaultFavoriteColl,
-  KIOSK_LOGIN_CHANGE_EVENT,
-  PRODUCT_DUMMY_URL,
-  WISHLIST_TITLE,
-} from "../../constants/codes";
-import camera from "./images/Card/camera.svg";
-import heart from "./images/Card/heart.svg";
-import more from "./images/Card/more.svg";
-import shopping from "./images/Card/shopping-bag3.svg";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 
-import openInNewTabIcon from "../../images/open_in_new_tab.svg";
-
-import Link from "next/link";
-import { useNavigate } from "../../helper/useNavigate";
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import useTheme from "../../hooks/chat/useTheme";
 import {
@@ -86,47 +38,24 @@ import {
   gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
-import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
-import axios from "axios";
 import VirtualTryOnModal from "./VirtualTryOnModal";
-import {
-  customProductsAPIs,
-  collectionPageAPIs,
-} from "../../helper/serverAPIs";
-import { PDPloader } from "../../pageComponents/storePage/redux/action";
-import buyicon from "./images/buy1.svg";
 import { vtoIconState } from "./redux/actions";
-import { fetchProductDetails } from "./ProductRedux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
-import { FaCartArrowDown } from "react-icons/fa";
 import { addProductToWishlistCollection } from "../../pageComponents/wishlistActions/addProductToWishlistCollection/redux/actions";
-import WishlistHeartButton from "../../pageComponents/storePage/CardComponents/WishlistHeartButton";
-const { Text } = Typography;
+import {
+  getCollectionFlags,
+  getCurrentCollectionForCard,
+  shouldEnableViewSimilar,
+} from "../../helper/product/productCardHelpers";
+import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
+import ProductCardHeader from "../ProductCard/ProductCardHeader";
+import ProductCardFooter from "../ProductCard/ProductCardFooter";
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
   DEFAULT: "default",
   ACTION_COVER: "actionCover",
 };
-
-const PRODUCT_BUY_BUTTON_CLASS =
-  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-px py-[5px] text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-[var(--color-secondary)] md:px-1.5 md:py-3 md:text-base";
-
-const PRODUCT_BUY_BUTTON_SMALL_CLASS =
-  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-[5px] py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[var(--color-secondary)]";
-const KIOSKCLASS =
-  "group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm button-kiosk-card text-black hover:bg-kiosk-primary  hover:text-white font-medium";
-const KIOSK_CART_ICON_CLASS =
-  "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
-const getProductBuyButtonClass = (size, hasKioskAccess) =>
-  size === "small"
-    ? PRODUCT_BUY_BUTTON_SMALL_CLASS
-    : hasKioskAccess
-      ? KIOSKCLASS
-      : PRODUCT_BUY_BUTTON_CLASS;
-const getDisabledProductBuyButtonClass = (size, hasKioskAccess) =>
-  getProductBuyButtonClass(size, hasKioskAccess).replace("cursor-pointer", "");
-const getStaticImageSrc = (image) => image?.src || image;
 
 const ProductCard = ({
   product,
@@ -139,12 +68,9 @@ const ProductCard = ({
   hideViewSimilar = false,
   hideAddToWishlist = false,
   enableHoverShowcase = false,
-  hideBuyNow = false,
   showRemoveIcon = false,
   enableCopyFeature = true,
   size = "medium", // small, medium
-  height = "h-340", // need to send tailwind class for height,
-  wishlist,
   onRemoveIconClick,
   buyNowTitle = "Buy Now",
   buyNowSubTitle,
@@ -157,29 +83,21 @@ const ProductCard = ({
   widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
   onEditClick,
   onStarClick,
-  openProductDetails = true,
   allowEdit = false,
-  wishlistGeneratedBy,
   collection_name,
   collection_path,
-  collection_status,
   localChatMessage,
   blogCollectionPage,
   collectionCards,
   onAddSelectedProductsToCollection,
   isSingleCollectionSharedPage,
   auramodel,
-  bannerImage,
   enableKioskGuestPopup = false,
   setOnMfrCode,
   onGuestPopupOpen = () => {},
   onKioskTryonClick,
   source,
 }) => {
-  const navigate = useNavigate();
-  // console.log("hideAddToWishlist", hideAddToWishlist);
-  // console.log('qzssddsdsds',product);
-  const [clickedMfrCode, setClickedMfrCode] = useState(null);
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
@@ -187,12 +105,9 @@ const ProductCard = ({
   const isGuestPopUpShow = useSelector(
     (state) => state.GuestPopUpReducer.isGuestPopUpShow,
   );
-  // console.log('clickedMfrCode',clickedMfrCode);
 
   const menuRef = useRef(null);
   const router = useRouter();
-
-  // console.log('collectionCards',product);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -213,7 +128,6 @@ const ProductCard = ({
     showWishlistModal,
     store_id,
     authUser,
-    customProductsData,
     ButtonClick,
     isUserLogin,
     collections,
@@ -226,18 +140,16 @@ const ProductCard = ({
     state.appState.wishlist.showWishlistModal,
     state.store.data.store_id,
     state.auth.user.data,
-    state.auth.customProducts.data.data || [],
     state.VtoIconReducer.ButtonClick,
     state?.auth?.user?.isUserLogin,
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
     state.auth.user.wishlistCollections,
   ]);
-  const { collection, loading } = useSelector((state) => state.cart);
+  const { collection } = useSelector((state) => state.cart);
   const cartCollection = collection?.product_lists
-    .map((arr) => arr?.mfr_code)
+    ?.map((arr) => arr?.mfr_code)
     .find((arr) => arr === product.mfr_code);
-  // console.log('cartCollection',cartCollection );
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
@@ -246,50 +158,29 @@ const ProductCard = ({
     (x) => x.mfr_code === product.mfr_code,
   );
 
-  const currentCollectionForCard = useMemo(() => {
-    if (collection_id && singleCollections?._id === collection_id) {
-      return singleCollections;
-    }
+  const currentCollectionForCard = useMemo(
+    () =>
+      getCurrentCollectionForCard({
+        blogCollectionPage,
+        collectionId: collection_id,
+        collectionName: collection_name,
+        collections,
+        singleCollections,
+      }),
+    [
+      blogCollectionPage,
+      collection_id,
+      collection_name,
+      collections,
+      singleCollections,
+    ],
+  );
 
-    const collectionFromList = collection_id
-      ? collections?.find((item) => item._id === collection_id)
-      : null;
+  const { isMyWishlistCollection, isMyTryonsCollection } = getCollectionFlags(
+    currentCollectionForCard,
+  );
 
-    if (collectionFromList) {
-      return collectionFromList;
-    }
-
-    if (blogCollectionPage?.collection_name) {
-      return blogCollectionPage;
-    }
-
-    if (collection_name) {
-      return { collection_name };
-    }
-
-    return singleCollections;
-  }, [
-    blogCollectionPage,
-    collection_id,
-    collection_name,
-    collections,
-    singleCollections,
-  ]);
-
-  const currentCollectionName = currentCollectionForCard?.collection_name
-    ?.trim()
-    ?.toLowerCase();
-  const isMyWishlistCollection = currentCollectionName === "my wishlist";
-  const isMyTryonsCollection = currentCollectionName === "my tryons";
-
-  //   useEffect(() => {
-  //   console.log("wishlistCollections", wishlistCollections);
-  // }, [wishlistCollections]);
-  // console.log('colllectionssd',KioskLoginAuth);
-
-  // console.log('singleCollections',singleCollections?.collection_name === 'my tryons');
   const getKioskLogin = useCallback(() => {
-    //  console.log("Raw:", sessionStorage.getItem("Kiosk-login"));
     if (typeof window === "undefined") return null;
 
     try {
@@ -301,50 +192,28 @@ const ProductCard = ({
 
   const syncKioskLogin = useCallback(() => {
     const login = getKioskLogin();
-    // console.log("login:", login);
     setKioskLoginAuth(login);
   }, [getKioskLogin]);
 
   useEffect(() => {
-    syncKioskLogin(); // Get initial value
+    syncKioskLogin();
     window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
 
     return () => {
       window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
     };
   }, [syncKioskLogin]);
-  // console.log('KioskLoginAuth',KioskLoginAuth);
 
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
     storeData,
     authUser,
   });
-  const { admin_list: admin_list } = storeData;
-  // pdp_settings
-  const isAdminLoggedIn = AdminCheck(
-    authUser,
-    current_store_name,
-    adminUserId,
-    admin_list,
-  );
-  // console.log('storeData',storeData.pdp_settings.is_add_to_cart_button);
-  const favoriteColl =
-    useSelector(getCurrentUserFavoriteCollection) || defaultFavoriteColl;
-  const [count, setCount] = useState(1);
-  // console.log("counttttt",count);
-
   const enableViewSimilar = useMemo(() => {
-    return enable_view_similar_products === "false" ? false : !hideViewSimilar;
-  }, [enable_view_similar_products, hideViewSimilar]);
+    return shouldEnableViewSimilar(hideViewSimilar);
+  }, [hideViewSimilar]);
 
-  const isProductUrlAvailable =
-    product.url && product.url !== PRODUCT_DUMMY_URL;
-
-  const currencySymbol = useMemo(
-    () => (product?.currency_symbol ? product.currency_symbol : "&#36;"),
-    [product?.currency_symbol],
-  );
+  const productHasUrl = isProductUrlAvailable(product);
 
   const handleOpenProductModal = useCallback(
     (allowEdit) => {
@@ -356,9 +225,8 @@ const ProductCard = ({
         }),
       );
     },
-    [product, collection_id, allowEdit],
+    [dispatch, product, collection_id],
   );
-  // console.log(product);
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
@@ -391,7 +259,6 @@ const ProductCard = ({
     } else {
       // GTAG CONFIGURATION
       // START
-      // console.log(blogCollectionPage);
       // I commented this code for causing some trubles in the navigation
       gTagCollectionProductClick({
         mft_code: product?.mfr_code,
@@ -407,9 +274,7 @@ const ProductCard = ({
         collection_id: blogCollectionPage?.collection_id || "",
         collection_name: blogCollectionPage?.collection_name,
       });
-      // END
     }
-    // console.log('Hello World');
 
     const cleaned = cleanImage(product?.image);
     if (cleaned) {
@@ -420,7 +285,6 @@ const ProductCard = ({
     } else if (hasKioskAccess) {
       router.push(`/product/${product.mfr_code}`);
     }
-    // router.push(`/product/${product.mfr_code}`); // new: redirect on productDetails page on product click
     if (showChatModal) {
       dispatch(setShowChatModal(false));
     }
@@ -428,13 +292,6 @@ const ProductCard = ({
       dispatch(closeWishlistModal());
     }
   };
-
-  const discountPer =
-    product?.price &&
-    product?.listprice &&
-    +product?.listprice > +product?.price &&
-    getPercentage(product.listprice, product.price);
-  const isOutOfStock = String(product?.avlble ?? "").trim() === "0";
 
   const callHandpickedAPI = useCallback(
     async (userId) => {
@@ -462,7 +319,7 @@ const ProductCard = ({
 
       dispatch(addProductToWishlistCollection(payload));
     },
-    [product, storeData?.event_id, storeData?.store_name],
+    [dispatch, product, storeData?.event_id, storeData?.store_name],
   );
 
   useEffect(() => {
@@ -496,14 +353,6 @@ const ProductCard = ({
     callHandpickedAPI(kioskLogin?.user_id || authUserId);
   };
 
-  // useEffect(()=>{
-  //  if (!kioskUserLogin) return
-  // 				dispatch(
-  // 					getwishlistUserCollection({
-  // 						path: `my_wishlist_${kioskUserLogin}`,
-  // 					}),
-  // 				);
-  // },[kioskUserLogin])
   const handleGuestWishlistClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -538,103 +387,6 @@ const ProductCard = ({
       },
     });
   };
-  const checkoutPayment = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const location = window.location.origin;
-
-    const payload = {
-      amount: product?.price || product?.listprice || 0, // MANDATORY
-      currency: "USD", // MANDATORY
-      thumbnail: product.image,
-      user_id: authUserId || getTTid(),
-      store_id: store_id,
-      service_id: `Product_${product.mfr_code}`,
-      emailId: authUser.emailId || null,
-      successUrl: `${location}/successpayment`,
-      failureUrl: `${location}/failedpayment`,
-      additional_details: {
-        mfr_code: product.mfr_code,
-      },
-      title: product.name,
-    };
-
-    try {
-      const res = await axios.post(
-        `${payment_url}/api/payments/checkout`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      // console.log("Checkout response:", res.data.redirectUrl);
-      // 🔁 If API returns payment URL
-      if (res?.data?.redirectUrl) {
-        window.location.href = res.data.redirectUrl;
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      // alert("Payment initiation failed. Please try again.");
-    }
-  };
-  // console.log('source',source);
-
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    // console.log('source',source);
-
-    if (!product?.mfr_code) return;
-
-    const kioskLogin = getKioskLogin();
-
-    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin?.user_id) {
-      onGuestPopupOpen?.({
-        type: "cart",
-        product: {
-          mfr_code: product.mfr_code,
-          tagged_by: product.tagged_by || [],
-        },
-        qty: Number(count),
-      });
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-    const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
-    let collectionpayload;
-    if (source === "COLLECTION") {
-      collectionpayload = {
-        id: collection_id,
-        name: collection_name,
-        path: collection_path,
-      };
-      // console.log('collectionpayload',collectionpayload);
-    }
-
-    const payload = {
-      is_display_amount: true,
-      products: [
-        {
-          mfr_code: product.mfr_code,
-          tagged_by: product.tagged_by || [],
-          qty: Number(count),
-          source: source,
-          collection: collectionpayload,
-          event_id: storeData?.event_id,
-        },
-      ],
-      product_lists: [],
-      collection_name: "my cart",
-      type: "system",
-      user_id: cartUserId,
-      // collection_id: mycartcollectionid,
-      path: `my_cart_${cartUserId}`,
-    };
-    dispatch(addToCart(payload));
-  };
-
   const handleGoToCart = (event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -703,176 +455,6 @@ const ProductCard = ({
   const Collection_vto = currentCollectionForCard?.tryon_type
     ? currentCollectionForCard
     : null;
-  // console.log('Collection_vto',Collection_vto );
-
-  // const image_try = `Using the provided images: product image and person image/person body part or person image, create a photorealistic composite showing the product applied to or held or wore by the person as described below. Positioning and scale: Understand the image of product and also how it will look if used/wore/held by person and understand physics, place or make it like person has wore the product naturally on the appropriate body part or held or wore. Size and perspective should match the body part so the product appears physically plausible and proportional. If there are multiple products, choose only one whichever you like or whichever looks prominent (only one).  few product are not meant to be wore, in that time make sure person is holding naturally Lighting and color match: match the product's color, highlights, reflections, and shadow direction to the person photo. Preserve soft shadows where the product meets skin or clothing. Integration details: ensure natural contact and occlusion - adjust fabric folds, subtle skin indentation, and cast shadows to imply weight and contact. Preserve identity: do not alter the person's face, skin tone, or any identifiable features. Keep hair, tattoos, scars, and jewelry unchanged unless explicitly asked. Preserve product look: do not alter the product look. Camera and realism: produce a high-resolution, photorealistic image consistent with the person photo camera angle. Use photographic terms: camera/lens suggestion e.g., '50mm, shallow depth of field' if you want a particular look. Negative instructions: Do not add any new people or faces. Do not change the person's identity, skin tone, or facial features. Do not show the product floating or misaligned. Do not use body part which is found along with product, ignore it. Do not put product in inappropriate place.`;
-
-  // const fetchProductDetails = async () => {
-  //   dispatch(PDPloader(true));
-  //   console.log(product?.image);
-
-  //   try {
-  //     const products =
-  //       await customProductsAPIs.fetchProductDetailsAPICall(clickedMfrCode,product?.image);
-
-  //   } catch (e) {
-  //     console.log(e);
-  //   } finally {
-  //     dispatch(PDPloader(false));
-  //   }
-  // };
-
-  const savedProduct = (p) => {
-    return customProductsData.find((item) => item.mfr_code === p);
-  };
-
-  useEffect(() => {
-    if (!clickedMfrCode) return;
-
-    const result = savedProduct(clickedMfrCode);
-    if (clickedMfrCode) {
-      // const cleaned = cleanImage(product?.image);
-      // if (cleaned) {
-      //   localStorage.setItem(`pdp_image`, cleaned);
-      // }
-      // saveProductDetailsReturnPath();
-      // console.log('navigating to Product page');
-      // router.push(`/product/${clickedMfrCode}`);
-
-      // fetchProductDetails();
-      setClickedMfrCode(null);
-    }
-  }, [clickedMfrCode]);
-  // console.log(widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
-  const containerRef = useRef(null);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const productCardAttributes = useMemo(() => {
-    const attributes = storeData?.pdp_settings?.product_card_attributes || [];
-    // console.log('attributes',attributes);
-
-    const normalizeKey = (value) =>
-      String(value || "")
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "_");
-
-    const getAttributeConfig = (attribute) => {
-      if (typeof attribute === "string") {
-        return {
-          key: attribute,
-          label: attribute.replace(/_/g, " ").trim(),
-        };
-      }
-
-      if (!attribute || typeof attribute !== "object") return null;
-
-      const key =
-        attribute.key ||
-        attribute.value ||
-        attribute.name ||
-        attribute.field ||
-        attribute.attribute ||
-        attribute.attribute_name;
-
-      if (!key) return null;
-
-      return {
-        key,
-        label:
-          attribute.label ||
-          attribute.title ||
-          attribute.display_name ||
-          String(key).replace(/_/g, " ").trim(),
-      };
-    };
-
-    const getProductValue = (attributeKey) => {
-      if (!product || !attributeKey) return undefined;
-      if (Object.prototype.hasOwnProperty.call(product, attributeKey)) {
-        return product[attributeKey];
-      }
-
-      const normalizedAttributeKey = normalizeKey(attributeKey);
-      const productKey = Object.keys(product).find(
-        (key) => normalizeKey(key) === normalizedAttributeKey,
-      );
-
-      return productKey ? product[productKey] : undefined;
-    };
-
-    const formatValue = (value) => {
-      if (Array.isArray(value)) {
-        return value
-          .map((item) =>
-            String(item ?? "")
-              .replace(/,+$/, "")
-              .trim(),
-          )
-          .filter(Boolean)
-          .join(", ");
-      }
-
-      return String(value ?? "")
-        .replace(/,+$/, "")
-        .trim();
-    };
-
-    return attributes
-      .map(getAttributeConfig)
-      .filter(Boolean)
-      .map((attribute) => ({
-        ...attribute,
-        value: formatValue(getProductValue(attribute.key)),
-      }))
-      .filter((attribute) => attribute.value.length > 0);
-  }, [product, storeData?.pdp_settings?.product_card_attributes]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const checkOverflow = () => {
-      setIsOverflowing(el.scrollWidth > el.clientWidth);
-    };
-
-    checkOverflow();
-    window.addEventListener("resize", checkOverflow);
-
-    return () => window.removeEventListener("resize", checkOverflow);
-  }, []);
-  // const useloginPopup =(e)=>{
-  //   e.preventDefault()
-  //   e.stopPropagation()
-  //    if (hideAddToWishlist ) {
-  //     console.log('hwllo ');
-
-  //         // setIsPopupShow(true);
-  //         dispatch(GuestPopUpShow(true));
-  //         return;
-  //       }
-  //     console.log('hwllo');
-  // }
-  //  const onAddSelectedProductsToCollection =(e)=>{
-  //   e?.preventDefault()
-  //   e?.stopPropagation()
-  //    if (hideAddToWishlist ) {
-  //     console.log('hwllo ');
-
-  //         // setIsPopupShow(true);
-  //         dispatch(GuestPopUpShow(true));
-  //         return;
-  //       }
-  //     console.log('hwllo');
-  // }
-  // const {
-  //   handleGuestSubmit,
-  //   errors,
-  //   handleGuestSkip,
-  //   guestChange,
-  //   guestData,
-  //   setIsPopupShow
-  // } = useGuestPopUtils(dispatch, hideAddToWishlist, onAddSelectedProductsToCollection);
-  // console.log('isAuraModelPage',isAuraModelPage);
 
   const productWrapperSizeClass =
     size === "small"
@@ -889,6 +471,29 @@ const ProductCard = ({
     widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
     !showWishlistModal &&
     !enableSelect;
+  const showProductStarAction =
+    showStar &&
+    (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT ||
+      widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
+  const cartSourceCollection =
+    source === "COLLECTION"
+      ? {
+          id: collection_id,
+          name: collection_name,
+          path: collection_path,
+        }
+      : undefined;
+  const handleCartGuestRequired = ({ product: cartProduct, qty }) => {
+    onGuestPopupOpen?.({
+      type: "cart",
+      product: {
+        mfr_code: cartProduct.mfr_code,
+        tagged_by: cartProduct.tagged_by || [],
+      },
+      qty,
+    });
+    dispatch(GuestPopUpShow(true));
+  };
 
   return (
     <div
@@ -899,732 +504,94 @@ const ProductCard = ({
         className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
         onClick={() =>
-          hasKioskAccess ? (sessionStorage.setItem("plp-scroll", String(window.scrollY)),sessionStorage.setItem("plp-collection", singleCollections?.path), navigate(`/product/${product.mfr_code}`)) : null
+          hasKioskAccess
+            ? (sessionStorage.setItem("plp-scroll", String(window.scrollY)),
+              sessionStorage.setItem("plp-collection", singleCollections?.path),
+              router.push(`/product/${product.mfr_code}`))
+            : null
         }
       >
-        {/* add div wrapper for show buy now on hover (exclude product header) */}
-        <div
-          className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
-          onClick={(e) => {
-            if (setSelectValue) {
-              e.stopPropagation();
-              setSelectValue(!isSelected);
+        <ProductCardHeader
+          product={product}
+          size={size}
+          isCustomProductsPage={isCustomProductsPage}
+          storeData={storeData}
+          enableSelect={enableSelect}
+          setSelectValue={setSelectValue}
+          isSelected={isSelected}
+          isActionCoverWidget={
+            widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+          }
+          isDefaultWidget={widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT}
+          showWishlistModal={showWishlistModal}
+          isMyTryonsCollection={isMyTryonsCollection}
+          hasKioskAccess={hasKioskAccess}
+          enableKioskGuestPopup={enableKioskGuestPopup}
+          kioskLoginAuth={KioskLoginAuth}
+          onGuestPopupOpen={onGuestPopupOpen}
+          onKioskTryonClick={onKioskTryonClick}
+          setOnMfrCode={setOnMfrCode}
+          onVtoClick={(mfrCode) => {
+            if (mfrCode) {
+              dispatch(vtoIconState(mfrCode));
+              return;
             }
+            dispatch(GuestPopUpShow(true));
           }}
-        >
-          {/* SOLD Badge */}
-          {product?.avlble === 0 && (
-            <div className={styles["product-sold-badge"]}>SOLD</div>
-          )}
-          <div style={{ width: "100%" }}>
-            <img
-              src={getFinalImageUrl(product.image)}
-              alt={product.name || "Product image"}
-              width="100%"
-              className={`${styles["product-image"]} ${size === "small" ? styles["product-image-small"] : styles["product-image-medium"]}`}
-              loading="lazy"
-            />
-            {!isCustomProductsPage &&
-              storeData.is_tryon_enabled &&
-              !enableSelect &&
-              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-              !showWishlistModal &&
-              product?.custom_product !== false &&
-              !isMyTryonsCollection && (
-                <div
-                  className={`${size === "small" ? styles["product-vto-item-small"] : styles["product-vto-item"]}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const mfrCode = product?.mfr_code;
-                    setOnMfrCode?.(product);
-                    if (hasKioskAccess && enableKioskGuestPopup) {
-                      if (!KioskLoginAuth) {
-                        // setIsPopupShow(true);
-                        // setGuestPopupAction("vto");
-                        onGuestPopupOpen?.({
-                          type: "vto",
-                          mfrCode,
-                          product,
-                        });
-                        dispatch(GuestPopUpShow(true));
-                        return;
-                      }
-
-                      if (mfrCode && onKioskTryonClick) {
-                        onKioskTryonClick(product);
-                        return;
-                      }
-                    }
-                    if (mfrCode) {
-                      dispatch(vtoIconState(mfrCode));
-                    }
-                  }}
-                  title="Try on with virtual camera"
-                >
-                  <img
-                    height={20}
-                    width={20}
-                    alt="Try on with camera"
-                    className={`${styles["product-vto-icon"]}`}
-                    src={getStaticImageSrc(camera)}
-                  />
-                  <p>Try On</p>
-                </div>
-              )}
-            {!enableSelect &&
-              widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-              !hasKioskAccess &&
-              !showWishlistModal && (
-                <div
-                  className={`${size === "small" ? styles["product-view-btn-small"] : styles["product-view-btn"]}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    handleProductClick({ open });
-                  }}
-                >
-                  <EyeOutlined className={styles["product-view-icon-eye"]} />
-                </div>
-              )}
-          </div>
-
-          <div
-            className={styles["product-overlay"]}
-            style={{ background: themeCodes.productCard.hover_bg }}
-          >
-            <>
-              {!enableSelect ? (
-                <h1
-                  className={`${styles["product-buy-now"]} ${size === "small" ? styles["product-buy-now-small"] : styles["product-buy-now-medium"]} product_buy_now ${styles["product-action-buttons-container"]}`}
-                >
-                  {isProductUrlAvailable ? buyNowTitle : null}
-                  {isProductUrlAvailable ? (
-                    <img
-                      src={getStaticImageSrc(openInNewTabIcon)}
-                      alt="open"
-                      width={20}
-                      height={20}
-                      className={styles["product-buy-now-icon"]}
-                    />
-                  ) : null}
-                </h1>
-              ) : null}
-              {product.brand && (
-                <h1
-                  className={`${styles["product-brand-text"]} ${size === "small" ? "" : styles["product-brand-text-base"]}`}
-                >
-                  {buyNowSubTitle || `From ${product.brand}`}{" "}
-                </h1>
-              )}
-              {(storeData?.pdp_settings?.is_buy_button ||
-                storeData?.pdp_settings?.is_add_to_cart_button) && (
-                <>
-                  {storeData?.pdp_settings?.is_buy_button ? (
-                    <button
-                      className={getProductBuyButtonClass(size, hasKioskAccess)}
-                      onClick={checkoutPayment}
-                    >
-                      Buy Now
-                    </button>
-                  ) : (
-                    <button
-                      className={styles["product-add-cart-button-header"]}
-                    >
-                      Add to Cart
-                    </button>
-                  )}
-                </>
-              )}
-            </>
-            {!enableSelect ? (
-              <div className={styles["product-overlay-actions"]}>
-                {enableHoverShowcase && (
-                  <div className={styles["product-action-group"]}>
-                    <button
-                      className={styles["product-star-button"]}
-                      role={onStarClick ? "button" : "img"}
-                      onClick={handleStarClick}
-                    >
-                      {product.starred ? (
-                        <StarFilled
-                          className={styles["product-star-icon-filled"]}
-                        />
-                      ) : (
-                        <StarOutlined className={styles["product-star-icon"]} />
-                      )}
-                      <span className={styles["product-action-label"]}>
-                        Showcase
-                      </span>
-                    </button>
-                  </div>
-                )}
-                <div className={styles["product-button-group"]}>
-                  {!hideAddToWishlist && (
-                    <div
-                      className={styles["product-wishlist-button"]}
-                      onClick={addToWishlistClick}
-                    >
-                      <HeartOutlined
-                        className={styles["product-wishlist-icon"]}
-                      />
-                      <span className={styles["product-wishlist-label"]}>
-                        Add to {WISHLIST_TITLE}
-                      </span>
-                    </div>
-                  )}
-                  {enableCopyFeature && (
-                    <CopyOutlined
-                      onClick={handleCopyClick}
-                      className={styles["product-copy-icon"]}
-                    />
-                  )}
-                  {/* <Link to='/cart'> */}
-                  {storeData?.pdp_settings?.is_add_to_cart_button && (
-                    <p
-                      className={styles["product-add-cart-button"]}
-                      style={{ zIndex: 10000 }}
-                      onClick={(e) => handleAddToCart(e)}
-                    >
-                      Add to Cart
-                    </p>
-                  )}
-                  {/* </Link> */}
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          {/* Action Buttons */}
-          {!enableSelect && (
-            <div className={styles["product-showcase-button-main"]}>
-              <div>
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                showStar ? (
-                  <button
-                    className={`${styles["product-star-action-button"]}`}
-                    tabindex="-1"
-                    role={onStarClick ? "button" : "img"}
-                    onClick={handleStarClick}
-                  >
-                    {product.starred ? (
-                      <StarFilled className={styles["icon-filled"]} />
-                    ) : (
-                      <StarOutlined className={styles["icon-outlined"]} />
-                    )}
-                    <span
-                      className={`${styles["showcase-text"]} showcase-btn-text`}
-                    >
-                      Showcase
-                    </span>
-                  </button>
-                ) : null}
-                {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                showStar ? (
-                  <button
-                    className={`${styles["product-star-action-button"]}`}
-                    tabindex="-1"
-                    role={onStarClick ? "button" : "img"}
-                    onClick={handleStarClick}
-                  >
-                    {product.starred ? (
-                      <StarFilled className={styles["icon-filled"]} />
-                    ) : (
-                      <StarOutlined className={styles["icon-outlined"]} />
-                    )}
-                    <span
-                      className={`${styles["showcase-text"]} showcase-btn-text`}
-                    >
-                      Showcase
-                    </span>
-                  </button>
-                ) : null}
-                {/* {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar && (
-										<button
-											onClick={handleStarClick}
-											role={onStarClick ? "button" : "img"}
-											className={`${styles['product-star-default-button']} ${product.starred ? "" : "border-gray-300"} ${onStarClick ? "cursor-pointer" : "cursor-default"}`}>
-											{product.starred ? (
-
-												<StarFilled className='text-lg text-yellow-500' />
-											) : (
-												<StarOutlined className='text-lg text-gray-600' />
-											)}
-
-										</button>
-									)} */}
-              </div>
-            </div>
-          )}
-        </div>
-        {/* {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && !enableSelect &&
-          showRemoveIcon && (
-            <div
-              className={`   gap-${size === "small" ? "2" : "3"
-                }`}>
-              <div
-                className={`${styles['remove-icon-wrapper']} flex product_remove_icon`}
-                onClick={removeFromWishlistClick}>
-                <p style={{color:'#f8f6f4'}}
-                  className={`${styles['remove-icon-circle']} ${size === "small"
-                    ? styles['icon-circle-small']
-                    : styles['icon-circle-medium']
-                    }`}>
-                  <RxCross2 style={{color:'#f8f6f4'}}/>
-                </p>
-
-              </div>
-            </div>
-          )} */}
-        {/* product card header */}
-        <div
-          className={`${styles["header-container"]} ${
-            enableViewSimilar ||
-            (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-              showRemoveIcon) ||
-            enableSelect
-              ? styles["flex-reverse"]
-              : ""
-          } ${
-            size === "small" ? styles["header-small"] : styles["header-medium"]
-          }`}
-        >
-          {/* reversed contents for hover css */}
-
-          {enableSelect && product?.custom_product !== false ? (
-            <div
-              className={`${styles["product-remove-icon-container"]} ${size === "small" ? styles["product-remove-icon-container-small"] : ""}`}
-            >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onClick={handleSelectProduct}
-                onChange={() => {}} // fix onchange handler warning
-                className={`${styles[size === "small" ? "product-checkbox-small" : "product-checkbox-large"]}`}
-              />
-            </div>
-          ) : (
-            <>
-              {enableViewSimilar && (
-                <div
-                  className={styles["product-view-similar"]}
-                  onClick={onSimilarClick}
-                >
-                  <img
-                    src="/images/view_similar_icon.svg"
-                    alt="view similar"
-                    width={24}
-                    height={24}
-                    className={styles["product-view-similar-icon"]}
-                  />
-                  <span className={styles["product-view-similar-text"]}>
-                    View Similar
-                  </span>
-                </div>
-              )}
-              {showCustomProductsMenu && (
-                <img
-                  src={getStaticImageSrc(more)}
-                  alt="More options"
-                  height={32}
-                  width={32}
-                  onClick={(e) => {
-                    setMenuIcon(true);
-                    e.stopPropagation();
-                  }}
-                  className={
-                    styles[
-                      size === "small"
-                        ? "product-menu-dropdown-small"
-                        : (!hideAddToWishlist ||
-                              (widgetType ===
-                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                showStar)) &&
-                            !showWishlistModal
-                          ? "product-menu-icon"
-                          : "product-menu-icon"
-                    ]
-                  }
-                />
-              )}
-              {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER && (
-                <div
-                  className={` ${styles["remove-icon"]}`}
-                  onClick={removeFromWishlistClick}
-                >
-                  <p
-                    className={`${styles["remove-icon-circle"]} ${
-                      size === "small"
-                        ? styles["icon-circle-small"]
-                        : styles["icon-circle-medium"]
-                    }`}
-                  >
-                    <RxCross2 />
-                  </p>
-                  {/* <p className={styles['text-gray']}>Remove</p> */}
-                </div>
-              )}
-              {showWishlistModal &&
-                widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && (
-                  <div
-                    className={` ${styles["remove-icon"]}`}
-                    onClick={removeFromWishlistClick}
-                  >
-                    <p
-                      className={`${styles["remove-icon-circle"]} ${
-                        size === "small"
-                          ? styles["icon-circle-small"]
-                          : "hidden"
-                      }`}
-                    >
-                      <RxCross2 />
-                    </p>
-                  </div>
-                )}
-              {menuIcon && showCustomProductsMenu && (
-                <div
-                  ref={menuRef}
-                  onClick={(e) => e.stopPropagation()}
-                  className={
-                    styles[
-                      size === "small"
-                        ? "product-menu-dropdown-mini"
-                        : (!hideAddToWishlist ||
-                              (widgetType ===
-                                PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                                showStar)) &&
-                            !showWishlistModal
-                          ? "product-menu-dropdown"
-                          : "product-menu-dropdown" ///use dropdown2
-                    ]
-                  }
-                >
-                  {widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT &&
-                    showRemoveIcon && (
-                      <div
-                        className={`    gap-${size === "small" ? "2" : "3"}`}
-                      >
-                        <div
-                          className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
-                          onClick={(e) => {
-                            removeFromWishlistClick(e);
-                            setMenuIcon(false);
-                          }}
-                        >
-                          <p
-                            className={`${styles["remove-icon-circle"]} ${
-                              size === "small"
-                                ? styles["icon-circle-small"]
-                                : styles["icon-circle-medium"]
-                            }`}
-                          >
-                            <RxCross2 />
-                          </p>
-                          <p className={styles["text-gray"]}>Remove</p>
-                        </div>
-                      </div>
-                    )}
-                  {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-                    showRemoveIcon && (
-                      <div
-                        className={`    gap-${size === "small" ? "2" : "3"}`}
-                      >
-                        <div
-                          className={`${styles["remove-icon-wrapper"]} ${styles["product-menu-item"]}`}
-                          onClick={removeFromWishlistClick}
-                        >
-                          <p
-                            className={`${styles["remove-icon-circle"]} ${
-                              size === "small"
-                                ? styles["icon-circle-small"]
-                                : styles["icon-circle-medium"]
-                            }`}
-                          >
-                            <RxCross2 />
-                          </p>
-                          <p className={styles["text-gray"]}>Remove</p>
-                        </div>
-                      </div>
-                    )}
-                  {enableCopyFeature && (
-                    <div
-                      className={styles["product-menu-item"]}
-                      onClick={(e) => {
-                        handleCopyClick(e);
-                        setMenuIcon(false);
-                      }}
-                    >
-                      <div
-                        className={`${styles["menu-item-circle"]} ${
-                          size === "small"
-                            ? styles["icon-circle-small"]
-                            : styles["icon-circle-medium"]
-                        }`}
-                      >
-                        <LuCopy className={styles.copyIcon} />
-                      </div>
-                      <p className={styles["text-gray"]}>Copy</p>
-                    </div>
-                  )}
-                  {isCustomProductsPage && allowEdit && (
-                    <div
-                      className={styles["product-menu-item"]}
-                      onClick={(e) => {
-                        handleEditClick(e);
-                        setMenuIcon(false);
-                      }}
-                    >
-                      <p
-                        className={`${styles["product-cart-button"]} ${styles["product-cart-icon2"]} ${size === "small" ? styles["product-cart-icon-small"] : styles["product-cart-icon-lg"]}`}
-                        style={{ backgroundColor: "#f8f6f4" }}
-                      >
-                        <FiEdit
-                          style={{
-                            color: "#9a9b9b",
-                            backgroundColor: "#f8f6f4",
-                          }}
-                          className={styles["product-cart-icon-smalls"]}
-                        />
-                      </p>
-                      <p className={styles["text-gray"]}>Edit</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-
-          <div
-            // ${enableViewSimilar && "w-3/4"} // removed class name
-            className={`product-name overflow-hidden product_details_container`}
-          >
-            {/* <div className='flex'>
-							<Text
-								ellipsis={{ tooltip: product.name }}
-								className={`m-0 text-sm ${size === "small" ? "lg:text-sm" : "lg:text-xl"
-									} overflow-hidden overflow-ellipsis whitespace-nowrap product_name tracking-tighter-0.2`}>
-								{product.name}
-							</Text>
-						</div> */}
-            {/* REMOVE */}
-            {/* <h1 className='m-0 text-xs lg:text-sm overflow-hidden overflow-ellipsis whitespace-nowrap capitalize product_attribute'>
-							{(product.color?.length &&
-								(typeof product.color === "string"
-									? product.color
-									: product.color[0])) ||
-								null}
-						</h1> */}
-          </div>
-        </div>
-
-        {(!hideAddToWishlist ||
-          (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT && showStar)) &&
-          !showWishlistModal &&
-          !enableSelect &&
-          product?.custom_product !== false &&
-          !isMyWishlistCollection && (
-            <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
-              {!hideAddToWishlist && (
-                <WishlistHeartButton
-                  isActive={!!heartRedProduct}
-                  containerClassName={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[55px] max-[1024px]:top-[45px]"}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px]  max-[1024px]:z-[30]`}
-                  onAdd={addToWishlistClick}
-                  productMfrCode={product?.mfr_code}
-                  userId={kioskLogin?.user_id || authUserId || getTTid()}
-                />
-              )}
-            </div>
-          )}
-
-        {/* without login  */}
-
-        {hideAddToWishlist &&
-          !isUserLogin &&
-          size === "medium" &&
-          !showWishlistModal &&
-          !enableSelect && (
-            <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
-              {/* {!hideAddToWishlist && ( */}
-              <WishlistHeartButton
-                containerClassName="absolute right-[15px] top-[55px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]"
-                onAdd={handleGuestWishlistClick}
-              />
-              {/* )} */}
-            </div>
-          )}
-        {/* { isGuestPopUpShow && (
-              <GuestPopUp
-                handleGuestSubmit={handleGuestSubmit}
-                errors={errors}
-                handleGuestSkip={handleGuestSkip}
-                guestChange={guestChange}
-                guestData={guestData}
-                setIsPopupShow={setIsPopupShow}
-              />
-            )} */}
-
-        {/* product footer */}
-        <div
-          className={`${styles["product-footer-main"]} ${size === "small" ? styles["product-footer-main-small"] : styles["product-footer-main-medium"]}`}
-        >
-          {/* Product Name */}
-          <div className={styles["product-name-section"]}>
-            {/* Brand Info */}
-            <p className={styles["product-brand-footer-text"]}>
-              {" "}
-              <span>{product?.brand || "\u00A0"}</span>
-            </p>
-
-            <Text
-              ellipsis={{ tooltip: product.name }}
-              className={styles["product-name-text"]}
-            >
-              {product.name || "\u00A0"}
-            </Text>
-          </div>
-
-          {productCardAttributes.length > 0 ? (
-            <div
-              className={`${styles.tagsContainerWrapper} ${
-                isOverflowing ? styles.isOverflowing : ""
-              }`}
-            >
-              <Swiper
-                ref={containerRef}
-                spaceBetween={8}
-                slidesPerView={"auto"}
-                freeMode={true}
-                className={styles.tagscontainer}
-              >
-                {productCardAttributes.map((attribute) => (
-                  <SwiperSlide key={attribute.key} style={{ width: "auto" }}>
-                    <span className={styles.smalltags}>
-                      {attribute.label}: {attribute.value}
-                    </span>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          ) : (
-            <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>
-          )}
-
-          {/* Price Section */}
-          <div
-            className={`${styles["product-price-container"]} ${product?.price || product?.listprice ? styles["product-price-container-height"] : styles["product-price-container-height"]}`}
-          >
-            <div className={`${styles["product-price-display"]} ${isOutOfStock ? 'hidden' : ''}`}>
-              <span
-                className={`${styles["product-price-text"]} ${size === "small" ? styles["product-price-text-small"] : styles["product-price-text-medium"]}`}
-              >
-                {product?.price || product?.listprice ? (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: `${currencySymbol}${product.price || product.listprice}`,
-                    }}
-                  />
-                ) : null}
-              </span>
-
-              {product?.price > 0 &&
-                product?.listprice > product?.price &&
-                discountPer > 0 && (
-                  <>
-                    <span className={styles["product-listprice-text"]}>
-                      <span
-                        className={styles["product-listprice-value"]}
-                        dangerouslySetInnerHTML={{
-                          __html: `${currencySymbol}${product.listprice}`,
-                        }}
-                      />
-                    </span>
-                    <span className={styles["product-discount-badge-text"]}>
-                      {(discountPer && `${discountPer}% OFF`) || null}
-                    </span>
-                  </>
-                )}
-            </div>
-          </div>
-          {(storeData?.pdp_settings?.is_buy_button ||
-            storeData?.pdp_settings?.is_add_to_cart_button) &&
-            !isCustomProductsPage && (
-              <>
-                {storeData?.pdp_settings?.is_buy_button ? (
-                  <button
-                    style={{
-                      background:
-                        !product?.price && !product?.listprice
-                          ? "#F2F1FD"
-                          : "#9690F0",
-                      cursor:
-                        !product?.price && !product?.listprice
-                          ? "not-allowed"
-                          : "pointer",
-                      color:
-                        !product?.price && !product?.listprice ? "#616161" : "",
-                    }}
-                    className={getProductBuyButtonClass(size, hasKioskAccess)}
-                    onClick={checkoutPayment}
-                    disabled={!product?.price && !product?.listprice}
-                    
-                  >
-                    <img
-                      style={{
-                        filter:
-                          !product?.price && !product?.listprice
-                            ? "brightness(0) saturate(100%) invert(38%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(95%)"
-                            : "",
-                      }}
-                      src={getStaticImageSrc(shopping)}
-                      alt="Buy now"
-                      height={20}
-                      width={20}
-                      className={
-                        showWishlistModal || size === "small"
-                          ? styles["product-cart-icon-small"]
-                          : hasKioskAccess
-                            ? KIOSK_CART_ICON_CLASS
-                            : "h-4 w-4 md:h-5 md:w-5"
-                      }
-                    />
-                    Buy Now
-                  </button>
-                ) : (
-                  <button
-                    className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? 'bg-secondary product-out-of-stock-button' : ''} ${!product?.price && !product?.listprice ? "hidden" : ""}`}
-                    onClick={ isOutOfStock ? null : cartCollection ? handleGoToCart : handleAddToCart}
-                    disabled={!product?.price && !product?.listprice}
-                  >                  
-                    {cartCollection ? (
-                      <FaCartArrowDown
-                        className={
-                          isOutOfStock
-                            ? 'hidden'
-                            : showWishlistModal || size === "small"
-                              ? styles["product-cart-icon-small"]
-                            : hasKioskAccess
-                              ? KIOSK_CART_ICON_CLASS
-                              : "h-4 w-4 md:h-5 md:w-5"
-                        }
-                      />
-                    ) : (
-                      <FiShoppingCart
-                        className={
-                          isOutOfStock
-                            ? 'hidden'
-                            : showWishlistModal || size === "small"
-                              ? styles["product-cart-icon-small"]
-                            : hasKioskAccess
-                              ? KIOSK_CART_ICON_CLASS
-                              : "h-4 w-4 md:h-5 md:w-5"
-                        }
-                      />
-                    )}
-                    {isOutOfStock ? 'Out of Stock' : cartCollection ? " Go to Cart " : " Add to Cart"}
-                  </button>
-                )}
-              </>
-            )}
-        </div>
+          handleProductClick={handleProductClick}
+          themeCodes={themeCodes}
+          productHasUrl={productHasUrl}
+          buyNowTitle={buyNowTitle}
+          buyNowSubTitle={buyNowSubTitle}
+          enableHoverShowcase={enableHoverShowcase}
+          onStarClick={onStarClick}
+          handleStarClick={handleStarClick}
+          hideAddToWishlist={hideAddToWishlist}
+          addToWishlistClick={addToWishlistClick}
+          enableCopyFeature={enableCopyFeature}
+          handleCopyClick={handleCopyClick}
+          authUserId={authUserId}
+          getKioskLogin={getKioskLogin}
+          handleCartGuestRequired={handleCartGuestRequired}
+          source={source}
+          cartSourceCollection={cartSourceCollection}
+          showProductStarAction={showProductStarAction}
+          enableViewSimilar={enableViewSimilar}
+          showRemoveIcon={showRemoveIcon}
+          handleSelectProduct={handleSelectProduct}
+          onSimilarClick={onSimilarClick}
+          showCustomProductsMenu={showCustomProductsMenu}
+          setMenuIcon={setMenuIcon}
+          menuIcon={menuIcon}
+          menuRef={menuRef}
+          removeFromWishlistClick={removeFromWishlistClick}
+          allowEdit={allowEdit}
+          handleEditClick={handleEditClick}
+          isMyWishlistCollection={isMyWishlistCollection}
+          heartRedProduct={heartRedProduct}
+          kioskLogin={kioskLogin}
+          isUserLogin={isUserLogin}
+          handleGuestWishlistClick={handleGuestWishlistClick}
+          showStar={showStar}
+        />
+        <ProductCardFooter
+          product={product}
+          size={size}
+          storeData={storeData}
+          isCustomProductsPage={isCustomProductsPage}
+          authUserId={authUserId}
+          authUser={authUser}
+          storeId={store_id}
+          hasKioskAccess={hasKioskAccess}
+          showWishlistModal={showWishlistModal}
+          getKioskLogin={getKioskLogin}
+          enableKioskGuestPopup={enableKioskGuestPopup}
+          onCartGuestRequired={handleCartGuestRequired}
+          source={source}
+          cartSourceCollection={cartSourceCollection}
+          cartCollection={cartCollection}
+          onGoToCart={handleGoToCart}
+        />
       </div>
 
       <VirtualTryOnModal
@@ -1656,7 +623,6 @@ const ProductCard = ({
         saveUserId={KioskLoginAuth?.user_id || authUser?.user_id || null}
       />
 
-      {/* // REMOVE // remove chin section integration and flag // not required */}
       {showChinSection && (
         <div className={styles["product-chin-section"]}>
           <StarOutlined
@@ -1688,23 +654,11 @@ const ProductCard = ({
           <div
             className={`${styles["product-action-cover-container"]} ${size === "small" ? styles["product-action-cover-container-small"] : styles["product-action-cover-container-medium"]}`}
           >
-            {/* <div>
-              {showRemoveIcon ? (
-                <button
-                  className={styles['product-action-cover-remove-button']}
-                  onClick={(e) => removeFromWishlistClick(e)}>
-                  <RxCross2 className={`${styles['product-action-cover-remove-icon']} ${size === "small" ? styles['product-action-cover-remove-icon-small'] : styles['product-action-cover-remove-icon-medium']}`} />
-                  <span className={styles['product-action-cover-remove-text']}>
-                    Remove
-                  </span>
-                </button>
-              ) : null}
-            </div> */}
             <div>
               {showEdit ? (
                 <button
                   className={styles["product-action-cover-edit-button"]}
-                  tabindex="-1"
+                  tabIndex="-1"
                   role="button"
                   onClick={handleEditClick}
                 >
