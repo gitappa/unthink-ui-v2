@@ -6,7 +6,7 @@ const GoBack = () => {
   return (
      <button
             className="group text-gray-500 flex w-fit   gap-2 rounded-full button-kiosk font-medium   transition "
-            onClick={() => router.push("/")}
+            onClick={() => router.back()}
           >
             <span className="   flex transition group-hover:-translate-x-0.5">
               <ArrowLeftOutlined />
