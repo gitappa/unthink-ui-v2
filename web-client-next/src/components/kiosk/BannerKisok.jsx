@@ -13,19 +13,25 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
 
   const displayedProducts =
     Tags === "#Trending"
-      ? trendingProducts.slice(0, 8)
-      : lookBooksProducts.slice(0, 8);
-  //  console.log('displayedProducts',lookBooksProducts.length);
+      ? trendingProducts
+      : lookBooksProducts
+   console.log('displayedProducts',trendingProducts.length);
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
 
-  const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
-    [displayedProducts[columnIndex], displayedProducts[columnIndex + 4]].filter(
-      Boolean,
-    ),
-  );
+  const desktopProducts = displayedProducts.slice(
+  0,
+  Math.floor(displayedProducts.length / 4) * 4,
+);
+
+const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
+  desktopProducts.filter((_, index) => index % 4 === columnIndex),
+);
+
+  console.log('desktopColumns',desktopColumns);
+  
 
   const tileStyles = [
     ["h-[268px]", "h-[237px]"],
@@ -37,7 +43,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   return (
     <div className="lg:flex items-start justify-center gap-3">
       {/* Banner Section */}
-      <div className="relative max-h-[600px] w-full overflow-hidden rounded-[18px] bg-white p-2 md:p-5">
+      <div className="relative max-h-[600px] w-full  rounded-[18px] bg-white p-2 md:p-5">
         <div className="relative z-10 h-full w-full">
           <div className="relative grid max-h-[calc(600px-1rem)] grid-cols-2 gap-4 overflow-y-auto pr-1 md:hidden">
             {displayedProducts.map((product) => (
@@ -65,7 +71,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
               </button>
             ))}
           </div>
-          <div className="relative hidden max-h-[calc(600px-2.5rem)] grid-cols-4 gap-5 overflow-hidden md:grid">
+          <div className="relative hidden max-h-[calc(600px-2.5rem)] grid-cols-4 p-1 gap-5 overflow-auto md:grid">
             {desktopColumns.map((columnProducts, columnIndex) => (
               <div className="flex min-w-0 flex-col gap-[22px]" key={columnIndex}>
                 {columnProducts.map((product, productIndex) => (
