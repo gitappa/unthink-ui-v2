@@ -8,16 +8,11 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { message, notification } from "antd";
 import Image from "next/image";
-import {
-  CopyOutlined,
-  EditOutlined,
-  ArrowLeftOutlined,
-} from "@ant-design/icons";
+import { CopyOutlined, EditOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useNavigate } from "../../helper/useNavigate";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { openProductModal } from "../customProductModal/redux/actions";
 import {
@@ -52,22 +47,18 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import Addmore from "../../images/addmore2.svg";
 import SwiperCore, { FreeMode } from "swiper";
-import { addToCart, fetchCart } from "../DeliveryDetails/redux/action";
+import { fetchCart } from "../DeliveryDetails/redux/action";
 import { getTTid } from "../../helper/getTrackerInfo";
-import axios from "axios";
-import { auraYfretUserCollBaseUrl, payment_url } from "../../constants/config";
+import { auraYfretUserCollBaseUrl } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import { vtoIconState } from "../../components/singleCollection/redux/actions";
-// import camera from "../../components/singleCollection/images/Card/Aiicon.svg";
 import Modal from "../../components/modal/Modal";
 import VirtualTryOnModal from "../../components/singleCollection/VirtualTryOnModal";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import BannerImage from "../../components/kiosk/BannerImage";
-import profilebanner from "../../images/package.jpg";
 import {
   openWishlistModal,
   setProductsToAddInWishlist,
@@ -82,18 +73,18 @@ import { addProductToWishlistCollection } from "../wishlistActions/addProductToW
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../../components/kiosk/useKioskSessionReminder";
-import LoggedInInfo, {
-  useKioskAccess,
-} from "../../components/kiosk/components/LoggedInInfo";
-import { loggedInInfo, userInfo } from "../Auth/redux/selector";
-import Breadcrumbs from "./Breadcrumbs";
+import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 import WishlistHeartButton from "./CardComponents/WishlistHeartButton";
 import GoBack from "../../components/common/GoBack";
+import AddToCartButton, {
+  addProductToCart,
+} from "../../components/common/AddToCartButton";
+import BuyNowButton from "../../components/common/BuyNowButton";
+import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const mfr_code = params?.mfr_code || router?.query?.mfr_code;
   const { collection, loading } = useSelector((state) => state.cart);
@@ -121,7 +112,6 @@ const ProductDetails = ({ params, ...props }) => {
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
   ]);
-  // console.log("productToWishlistCollection", wishlistCollections);
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
@@ -129,7 +119,6 @@ const ProductDetails = ({ params, ...props }) => {
   ]);
   const [storeData] = useSelector((state) => [state.store.data]);
   const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
-  const mycartcollectionpath = `my_cart_${authUserId || getTTid()}`;
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -143,7 +132,6 @@ const ProductDetails = ({ params, ...props }) => {
   const [additionalimg, setAdditionalImg] = useState(null);
   const [showAllFields, setShowAllFields] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  const userInfo = useSelector(loggedInInfo);
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
     storeData,
@@ -151,7 +139,7 @@ const ProductDetails = ({ params, ...props }) => {
   });
 
   const savedProductDetails = useMemo(
-    () => productDetail?.find((item) => item.mfr_code === mfr_code), // find selected product details from redux
+    () => productDetail?.find((item) => item.mfr_code === mfr_code),
     [productDetail],
   );
 
@@ -162,7 +150,6 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-  // console.log('productDetails',productDetails);
   const [kioskLogin, setKioskLoginAuth] = useState(null);
 
   const wishlist = Array.isArray(wishlistCollections)
@@ -177,8 +164,6 @@ const ProductDetails = ({ params, ...props }) => {
   const showHeartWishlist = hasKioskAccess
     ? kioskLogin && isUserLogin
     : isUserLogin;
-  //  console.log('heartRedProduct',heartRedProduct);
-  //  console.log('showHeartWishlist',productDetails?.mfr_code);
 
   const routeMfrCode = Array.isArray(mfr_code) ? mfr_code[0] : mfr_code;
   const productMfrCode = productDetails?.mfr_code || routeMfrCode;
@@ -187,31 +172,22 @@ const ProductDetails = ({ params, ...props }) => {
     () => (productMfrCode ? getProductDetailsPagePath(productMfrCode) : ""),
     [productMfrCode],
   );
-  // console.log('productDetailsPagePath',productDetailsPagePath);
 
-  // session reminder popup state and timer ref
   const { showSessionPopup, handleStayLoggedIn, handleLogout } =
     useKioskSessionReminder({ time: 500 * 1000 });
 
-  // ============ GUEST POPUP HOOKS - MUST BE HERE (before any early returns) ============
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
   const [pendingGuestAction, setPendingGuestAction] = useState(null);
-  // console.log('pendingGuestAction',pendingGuestAction);
-
-  // console.log('kioskLogin',kioskLogin);
 
   useEffect(() => {
     const handleKioskLoginChange = () => {
       const kioskLogin = sessionStorage.getItem("Kiosk-login");
 
       try {
-        const parsed = setKioskLoginAuth(
-          kioskLogin ? JSON.parse(kioskLogin) : null,
-        );
-        // console.log("Updated:", parsed);
+        setKioskLoginAuth(kioskLogin ? JSON.parse(kioskLogin) : null);
       } catch {
-        console.log("Invalid JSON");
+        setKioskLoginAuth(null);
       }
     };
     handleKioskLoginChange();
@@ -252,17 +228,7 @@ const ProductDetails = ({ params, ...props }) => {
       }
 
       if (isSave) {
-        // Dispatch Redux action to add product to wishlist collection API
         if (productDetails?.mfr_code) {
-          // let login_userID
-          //      if(kioskLogin){
-          //       login_userID = kioskLogin?.user_id
-          //     }
-          //     else if (!kioskLogin){
-          //       login_userID= authUserId
-          //     }
-
-          //     }
           const login_userID = userId || kioskLoginUserId || authUserId;
           dispatch(
             addProductToWishlistCollection({
@@ -276,7 +242,6 @@ const ProductDetails = ({ params, ...props }) => {
               errorMessage:
                 "Failed to add product to wishlist. Please try again.",
               callback: () => {
-                //  console.log("callback executed");
                 dispatch(
                   getwishlistUserCollection({
                     path: `my_wishlist_${login_userID}`,
@@ -301,8 +266,6 @@ const ProductDetails = ({ params, ...props }) => {
     ],
   );
 
-  // ============ END GUEST POPUP HOOKS ============
-
   const buildShareAutoLoginLink = useCallback(
     async ({ userId = null, email = null, phone } = {}) => {
       const kioskLoginUserId = userId || kioskLogin?.user_id;
@@ -314,7 +277,6 @@ const ProductDetails = ({ params, ...props }) => {
           typeof window !== "undefined"
             ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
             : {};
-        // Prefer popup email, then kiosk session email, then logged-in user email.
         const kioskEmail = email || currentKiosk?.email;
         const kioksPhone = phone || currentKiosk?.phone;
         if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
@@ -327,13 +289,10 @@ const ProductDetails = ({ params, ...props }) => {
           if (signin_token) {
             const decrypted = decryptSigninToken(signin_token);
             if (decrypted) {
-              // Build verify link to current product page
               const pageParam = `?page=product/${productMfrCode}`;
               const verifyLink = buildVerifyUrl(decrypted, pageParam);
-              // console.log('verifyLink',verifyLink);
 
               const fullVerifyUrl = `${origin}${verifyLink}`;
-              console.log("fullVerifyUrl", fullVerifyUrl);
 
               setSharePageUrl(fullVerifyUrl);
               setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
@@ -437,9 +396,14 @@ const ProductDetails = ({ params, ...props }) => {
   useEffect(() => {
     if (!mfr_code) return;
     const storedImage = localStorage.getItem("pdp_image") || "";
-    // console.log('storedImage',storedImage);
 
-    dispatch(fetchProductDetails({ mfr_code, image: storedImage, cache: hasKioskAccess }));
+    dispatch(
+      fetchProductDetails({
+        mfr_code,
+        image: storedImage,
+        cache: hasKioskAccess,
+      }),
+    );
   }, [mfr_code, dispatch, hasKioskAccess]);
 
   useEffect(() => {
@@ -449,34 +413,8 @@ const ProductDetails = ({ params, ...props }) => {
     };
   }, [mfr_code]);
   const cardItem = collection?.product_lists?.find(
-  item => item.mfr_code === productDetails?.mfr_code
-);
-  // console.log('cardItem',productDetails);
-
-  // const updateCartQuantity = (newQty) => {
-  //   if (hasKioskAccess && !kioskLogin?.user_id) {
-  //     // console.log('hello world');
-  //     setIsPopupShow(true);
-  //     setPendingGuestAction({ type: "cart", productDetails } || null);
-  //     dispatch(GuestPopUpShow(true));
-  //     return;
-  //   }
-  //   const payload = {
-  //     products: [
-  //       {
-  //         mfr_code: productDetails.mfr_code,
-  //         tagged_by: productDetails?.tagged_by || [],
-  //         qty: newQty,
-  //       },
-  //     ],
-  //     product_lists: [],
-  //     collection_name: "my cart",
-  //     type: "system",
-  //     user_id: kioskLogin?.user_id || authUserId || getTTid(),
-  //     path: mycartcollectionpath,
-  //   };
-  //   dispatch(addToCart(payload));
-  // };
+    (item) => item.mfr_code === productDetails?.mfr_code,
+  );
 
   const brandsDetails = useMemo(
     () => sellerDetails[productDetails?.brand],
@@ -547,8 +485,6 @@ const ProductDetails = ({ params, ...props }) => {
     [productDetailsPagePath],
   );
 
-  console.log("productDetailsPagePath", sharePageUrl);
-
   useEffect(() => {
     if (
       hasKioskAccess ||
@@ -570,26 +506,13 @@ const ProductDetails = ({ params, ...props }) => {
       return qrCodeGeneratorURL;
     }
   }, [sharePageUrl, qrCodeGeneratorURL]);
-  // console.log('shareQrCodeImage',shareQrCodeImage);
 
   const fieldsToDisplay =
     storeData?.pdp_settings?.product_page_attributes || [];
-  // console.log('fieldsToDisplay',fieldsToDisplay);
 
-  // scroll for tags
-
-  const swiperRef = useRef(null); // To store Swiper instance
   const thumbnailSwiperRef = useRef(null);
 
-  const [isOverflowing, setIsOverflowing] = useState(false);
   const [isThumbnailOverflowing, setIsThumbnailOverflowing] = useState(false);
-
-  const checkOverflow = () => {
-    if (swiperRef.current && swiperRef.current.wrapperEl) {
-      const { scrollWidth, clientWidth } = swiperRef.current.wrapperEl;
-      setIsOverflowing(scrollWidth > clientWidth);
-    }
-  };
 
   const checkThumbnailOverflow = () => {
     if (thumbnailSwiperRef.current && thumbnailSwiperRef.current.wrapperEl) {
@@ -599,12 +522,10 @@ const ProductDetails = ({ params, ...props }) => {
   };
 
   useEffect(() => {
-    checkOverflow();
     checkThumbnailOverflow();
 
     if (typeof window !== "undefined") {
       const handleResize = () => {
-        checkOverflow();
         checkThumbnailOverflow();
       };
       window.addEventListener("resize", handleResize);
@@ -617,11 +538,7 @@ const ProductDetails = ({ params, ...props }) => {
   const handleCartAction = (qty = 1, userIdOverride = null) => {
     if (!productDetails?.mfr_code) return;
 
-    const numericQty = Number(qty);
-    const normalizedQty = Number.isFinite(numericQty)
-      ? Math.max(numericQty, 0)
-      : 1;
-
+    const normalizedQty = getNormalizedCartQty(qty);
     const kioskLogin = getStoredKioskLogin();
     const kioskUserId = userIdOverride || kioskLogin?.user_id;
 
@@ -638,69 +555,13 @@ const ProductDetails = ({ params, ...props }) => {
 
     const cartUserId = kioskUserId || authUserId || getTTid();
 
-    dispatch(
-      addToCart({
-        is_display_amount: true,
-        products: [
-          {
-            mfr_code: productDetails.mfr_code,
-            tagged_by: productDetails?.tagged_by || [],
-            qty: normalizedQty,
-          },
-        ],
-        product_lists: [],
-        collection_name: "my cart",
-        type: "system",
-        user_id: cartUserId,
-        path: `my_cart_${cartUserId}`,
-      })
-    );
+    addProductToCart({
+      dispatch,
+      product: productDetails,
+      qty: normalizedQty,
+      userId: cartUserId,
+    });
   };
-  const checkoutPayment = async (e) => {
-    e.preventDefault();
-    const location =
-      typeof window !== "undefined" ? window.location.origin : "";
-
-    e.stopPropagation();
-    const payload = {
-      amount: productDetails?.price || productDetails?.listprice || 0, // MANDATORY
-      currency: "USD", // MANDATORY
-      thumbnail: productDetails.image,
-      user_id: authUserId || getTTid(),
-      store_id: store_id,
-      service_id: `Product_${productDetails.mfr_code}`,
-      emailId: authUser.emailId || null,
-      successUrl: `${location}/successpayment`,
-      failureUrl: `${location}/failedpayment`,
-      additional_details: {
-        mfr_code: productDetails.mfr_code,
-      },
-      title: productDetails.name,
-    };
-
-    try {
-      const res = await axios.post(
-        `${payment_url}/api/payments/checkout`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      // If API returns payment URL
-      if (res?.data?.redirectUrl) {
-        if (typeof window !== "undefined") {
-          window.location.href = res.data.redirectUrl;
-        }
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      // alert("Payment initiation failed. Please try again.");
-    }
-  };
-
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
   }
@@ -739,12 +600,10 @@ const ProductDetails = ({ params, ...props }) => {
               <AuthInput styles={"mb-0 w-fit pr-7"} />
             </div>
           )}
-          {/* <Breadcrumbs pdppage={true} /> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
               <div className="w-full  lg:w-full   mx-auto border-2 border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
-                {/* <div className="h-[300px] sm:h-[420px] lg:h-[500px]  rounded-2xl bg-white/70   overflow-hidden"> */}
                 <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-590">
                   {!isEmpty(productDetails?.image || fetchProductImage) ? (
                     <div className="relative">
@@ -770,7 +629,6 @@ const ProductDetails = ({ params, ...props }) => {
                             const mfrCode = productDetails?.mfr_code;
 
                             if (!kioskLogin && hasKioskAccess) {
-                              // console.log("hello world");
                               setIsPopupShow(true);
                               setGuestPopupAction("vto");
                               dispatch(GuestPopUpShow(true));
@@ -778,8 +636,6 @@ const ProductDetails = ({ params, ...props }) => {
                             }
 
                             if (hasKioskAccess && !isMobile && kioskLogin) {
-                              // console.log('hello world');
-
                               await buildProductAutoLoginQr({ mfrCode });
                               return;
                             }
@@ -807,20 +663,6 @@ const ProductDetails = ({ params, ...props }) => {
                     </div>
                   ) : null}
                 </div>
-                {/* <div className="flex items-center gap-3 mb-3 lg:mb-4">
-                      <Image
-                        height={24}
-                        width={24}
-                        alt="Try on with camera"
-                        className="cursor-pointer"
-                        src={camera}
-                      />
-                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
-                    </div>
-                    <p>
-                      Scan the QR code with your phone to try this piece on
-                      virtually.
-                    </p> */}
                 {productDetails?.additional_image &&
                 productDetails?.additional_image.length > 0 ? (
                   <div className="relative mt-4">
@@ -976,7 +818,6 @@ const ProductDetails = ({ params, ...props }) => {
                             subHeaderText={productDetails?.name}
                           />
                         )}
-                        {/* {sharePageUrl && ( */}
                         <button
                           className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-support bg-white hover:bg-[#f2eeff]"
                           onClick={handleShareClick}
@@ -987,7 +828,6 @@ const ProductDetails = ({ params, ...props }) => {
                             preview={false}
                           />
                         </button>
-                        {/* // )} */}
                       </div>
                     </div>
                   </div>
@@ -1007,7 +847,6 @@ const ProductDetails = ({ params, ...props }) => {
                       {productDetails?.price &&
                       +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
-                          {/* MRP{" "} */}
                           <span
                             className="line-through"
                             dangerouslySetInnerHTML={{
@@ -1034,17 +873,6 @@ const ProductDetails = ({ params, ...props }) => {
                   </div>
                 </div>
 
-                {/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
-                  <div className="">
-                    <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
-                      About {brandsDetails.brandName}
-                    </span>
-                    <p className="text-sm sm:text-[15px] lg:text-base text-[#364152] leading-7">
-                      {brandsDetails.brandDescription}
-                    </p>
-                  </div>
-                ) : null} */}
-
                 {!brandsDetails && productDetails?.brand ? (
                   <div className=" mt-5">
                     <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
@@ -1058,9 +886,6 @@ const ProductDetails = ({ params, ...props }) => {
 
                 {brandsDetails?.paymentMethod ? (
                   <div className="lg:mt-8 mt-4">
-                    {/* <div className="text-base sm:text-lg font-semibold leading-loose mb-2 text-[#182438]">
-                      Payment Link
-                    </div> */}
                     <div className="grid gap-2">
                       {brandsDetails.paymentMethod
                         .split(",")
@@ -1110,12 +935,26 @@ const ProductDetails = ({ params, ...props }) => {
                             </button>
                           </div>
                           <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
-                            <button
-                              onClick={() => handleCartAction((cardItem?.qty || 0) + 1)}
+                            <AddToCartButton
+                              product={productDetails}
+                              qty={(cardItem?.qty || 0) + 1}
+                              authUserId={authUserId}
+                              getKioskLogin={getStoredKioskLogin}
+                              hasKioskAccess={hasKioskAccess}
+                              onGuestRequired={({ qty }) => {
+                                setIsPopupShow(true);
+                                setPendingGuestAction({
+                                  type: "cart",
+                                  productDetails,
+                                  qty,
+                                });
+                                dispatch(GuestPopUpShow(true));
+                              }}
+                              disabled={false}
                               className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
                             >
                               Add to Cart
-                            </button>
+                            </AddToCartButton>
                           </div>
                         </div>
                       )}
@@ -1135,7 +974,11 @@ const ProductDetails = ({ params, ...props }) => {
                             Buy
                           </a>
                         ) : (
-                          <button
+                          <BuyNowButton
+                            product={productDetails}
+                            authUserId={authUserId}
+                            authUser={authUser}
+                            storeId={store_id}
                             className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
                             disabled={
                               !productDetails?.price &&
@@ -1149,23 +992,13 @@ const ProductDetails = ({ params, ...props }) => {
                                   ? "not-allowed"
                                   : "",
                             }}
-                            onClick={checkoutPayment}
                           >
                             Buy
-                          </button>
+                          </BuyNowButton>
                         ))}
                     </div>
                   </div>
                 )}
-
-                {/* {productDetails?.product_tag?.length > 0 && (
-                  <div className="flex items-center gap-4 justify-between border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mt-2">
-                    <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase ">
-                      Products Tag
-                    </p>
-                    <p>{productDetails?.product_tag.join(",")}</p>
-                  </div>
-                )} */}
 
                 {fieldsToDisplay?.map((field, index) => {
                   const fieldsWithData = fieldsToDisplay.filter(
@@ -1199,119 +1032,13 @@ const ProductDetails = ({ params, ...props }) => {
                     {showAllFields ? "Show Less" : "Show More"}
                   </button>
                 )}
-                {/* {productDetails?.product_tag?.length > 0 && (
-                  <div className="flex items-center gap-4 justify-between ">
-                    <p className="text-[#9F9FA9] text-base lg:text-lg font-semibold uppercase">
-                      Products Tag
-                    </p>
-                    <p>{productDetails?.product_tag.join(",")}</p>
-                  </div>
-                )} */}
                 {productDetails?.description && (
                   <div className="">
-                    {/* <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Product Description
-                    </div> */}
                     <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
                       {productDetails.description}
                     </div>
                   </div>
                 )}
-                {/* {storeData?.is_tryon_enabled &&
-                  <div
-                    className=" py-6 px-6 font-medium text-sm sm:text-base rounded-xl shadow-sm   bg-[#FAFAFA] cursor-pointer hover:shadow-md transition mt-6 lg:mt-7 mb-8"
-                    onClick={(e) => {
-                      dispatch(vtoIconState(productDetails?.mfr_code || true));
-                      e.stopPropagation();
-                    }}
-                  >
-                    <div className="flex items-center gap-3 mb-3 lg:mb-4">
-                      <Image
-                        height={24}
-                        width={24}
-                        alt="Try on with camera"
-                        className="cursor-pointer"
-                        src={camera}
-                      />
-                      <p className="font-semibold text-lg lg:text-xl-1">Virtual Try On</p>
-                    </div>
-                    <p>
-                      Scan the QR code with your phone to try this piece on
-                      virtually.
-                    </p>
-                  </div>
-                } */}
-                {/* <div className="">
-                  <div className="text-base sm:text-lg font-semibold mb-1 leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                    keywords
-                  </div>
-                  <div className="flex flex-wrap gap-2 my-5">
-                    {productDetails?.product_tag &&
-                      productDetails?.product_tag.length > 0 &&
-                      productDetails?.product_tag.map((tag, index) => (
-                        <div
-                          key={`${tag}-${index}`}
-                          className="rounded-full flex items-center whitespace-nowrap border border-[#ddd6ff] h-8 px-3 sm:px-4 font-medium text-xs md:text-sm leading-none text-[#374151] bg-white"
-                        >
-                          {tag}
-                        </div>
-                      ))}
-                  </div> */}
-
-                {/* <div className="relative w-full">
-                    <Swiper
-                      slidesPerView="auto"
-                      spaceBetween={10}
-                      preventClicks={false}
-                      preventClicksPropagation={false}
-                      freeMode={true}
-                      onSwiper={(swiper) => (swiperRef.current = swiper)}
-                      className="pb-1 pr-10 mr-5 pl-4 lg:pl-6"
-                    >
-                      {fieldsToDisplay.map((field) =>
-                        productDetails?.[field]?.length > 0 ? (
-                          <SwiperSlide key={field} style={{ width: "auto" }}>
-                            <div
-                              className="rounded-full flex items-center whitespace-nowrap border border-[#ddd6ff] h-8 px-3 sm:px-4 font-medium text-xs md:text-sm leading-none text-[#334155] bg-white"
-                              title={field}
-                            >
-                              <span className="font-semibold">{field} : </span>{" "}
-                              {Array.isArray(productDetails?.[field])
-                                ? productDetails?.[field]?.join(", ")
-                                : productDetails?.[field]}
-                            </div>
-                          </SwiperSlide>
-                        ) : null,
-                      )}
-                    </Swiper>
-                    {isOverflowing && (
-                      <>
-                        <div
-                          className="absolute right-0 h-8 w-8 lg:h-10 lg:w-10 top-0 lg:-top-1 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center"
-                          style={{ cursor: "pointer", zIndex: 10 }}
-                          onClick={() => {
-                            if (swiperRef.current) {
-                              swiperRef.current.slideNext();
-                            }
-                          }}
-                        >
-                          <MdOutlineKeyboardArrowLeft className="transform rotate-180 text-xl text-[#1f2c3b]" />
-                        </div>
-                        <div
-                          className="absolute h-8 w-8 lg:h-10 lg:w-10 top-0 lg:-top-1 -left-4 lg:-left-3.5 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center"
-                          style={{ cursor: "pointer", zIndex: 10 }}
-                          onClick={() => {
-                            if (swiperRef.current) {
-                              swiperRef.current.slidePrev();
-                            }
-                          }}
-                        >
-                          <MdOutlineKeyboardArrowLeft className="text-xl text-[#1f2c3b]" />
-                        </div>
-                      </>
-                    )}
-                  </div> */}
-                {/* </div> */}
                 {brandsDetails?.couponCode ? (
                   <div className="">
                     <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
@@ -1343,14 +1070,12 @@ const ProductDetails = ({ params, ...props }) => {
                   <div className="mt-6 border-t border-[#e7edf5] pt-4">
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
                       <div className="flex items-center gap-2">
-                        {/* <span className="h-2 w-2 rounded-full bg-[#2b3d56]" /> */}
                         <p
                           className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]"
                           onClick={() => setDropDown(!dropDown)}
                         >
                           Contact Details
                         </p>
-                        {/* <p >kughbiuhb</p> */}
                         {brandsDetails?.shippingDetails ||
                           brandsDetails?.paymentDetails ||
                           brandsDetails?.info ||
@@ -1476,13 +1201,6 @@ const ProductDetails = ({ params, ...props }) => {
             )}
           </div>
         </div>
-        {/* {hasKioskAccess && (
-          <BannerImage
-            src={profilebanner.src}
-            alt="profilebanner"
-            className="mt-4"
-          />
-        )} */}
       </div>
       <GuestUserPopUp
         isOpen={isPopupShow}
@@ -1533,7 +1251,6 @@ const ProductDetails = ({ params, ...props }) => {
         }}
         onSkip={() => setGuestPopupAction(null)}
       />
-      {/* QR Modal shown after wishlist creation */}
       <Modal
         headerText="Scan to open collection"
         isOpen={qrModalOpen}
@@ -1572,25 +1289,12 @@ const ProductDetails = ({ params, ...props }) => {
           )}
         </div>
       </Modal>
-      {/* Floating button to open QR modal if present (helps if automatic modal didn't appear) */}
-      {/* {qrTargetUrl && (
-        <button
-          onClick={() => setQrModalOpen(true)}
-          className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg"
-          aria-label="Show QR"
-        >
-          Show QR
-        </button>
-      )} */}
       {showSessionPopup && (
         <KioskSessionPopup
           onStay={handleStayLoggedIn}
           onLogout={handleLogout}
         />
       )}
-      {/* {hasKioskAccess &&
-        <LoggedInInfo userInfo={userInfo} />
-      } */}
     </div>
   );
 };
