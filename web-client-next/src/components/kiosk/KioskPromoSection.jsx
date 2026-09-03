@@ -62,7 +62,7 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
 
          
 
-            <div className="mx-auto mt-[16px] flex h-[134px] w-[134px] items-center justify-center border-[3px] border-kiosk-primary bg-white">
+            <div className="mx-auto mt-[16px] flex h-[200px] w-[205px] items-center justify-center border-[3px] border-kiosk-primary bg-white">
               <img
                 src={qrImage}
                 alt="GIVA AI Assistant QR"
