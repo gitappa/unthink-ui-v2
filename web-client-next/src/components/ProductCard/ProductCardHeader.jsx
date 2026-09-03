@@ -46,29 +46,27 @@ const ProductCardHeader = ({
   enableHoverShowcase,
   onStarClick,
   hideAddToWishlist,
-  addToWishlistClick,
   enableCopyFeature,
   authUserId,
   getKioskLogin,
   handleCartGuestRequired,
   source,
+  onAddSelectedProductsToCollection,
   cartSourceCollection,
   showProductStarAction,
   enableViewSimilar,
   showRemoveIcon,
-  handleSelectProduct,
   showCustomProductsMenu,
   setMenuIcon,
   menuIcon,
   menuRef,
-  removeFromWishlistClick,
+  onRemoveIconClick,
   allowEdit,
   onEditClick,
   isMyWishlistCollection,
   heartRedProduct,
   kioskLogin,
   isUserLogin,
-  handleGuestWishlistClick,
   showStar,
 }) => {
   const handleStarClick = useCallback(
@@ -77,6 +75,26 @@ const ProductCardHeader = ({
       onStarClick && onStarClick();
     },
     [onStarClick],
+  );
+
+  const removeFromWishlistClick = useCallback(
+    (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      if (onRemoveIconClick) {
+        onRemoveIconClick(product.mfr_code);
+      }
+    },
+    [onRemoveIconClick, product?.mfr_code],
+  );
+
+  const handleSelectProduct = useCallback(
+    (e) => {
+      e.stopPropagation();
+      setSelectValue && setSelectValue(!isSelected);
+    },
+    [isSelected, setSelectValue],
   );
 
   return (
@@ -272,8 +290,14 @@ const ProductCardHeader = ({
             <WishlistHeartButton
               isActive={!!heartRedProduct}
               containerClassName={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[55px] max-[1024px]:top-[45px]"}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px]  max-[1024px]:z-[30]`}
-              onAdd={addToWishlistClick}
+              product={product}
               productMfrCode={product?.mfr_code}
+              storeData={storeData}
+              authUserId={authUserId}
+              hasKioskAccess={hasKioskAccess}
+              enableKioskGuestPopup={enableKioskGuestPopup}
+              getKioskLogin={getKioskLogin}
+              onGuestPopupOpen={onGuestPopupOpen}
               userId={kioskLogin?.user_id || authUserId || getTTid()}
             />
           )}
@@ -288,7 +312,14 @@ const ProductCardHeader = ({
         <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
           <WishlistHeartButton
             containerClassName="absolute right-[15px] top-[55px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[45px] max-[1024px]:z-[30]"
-            onAdd={handleGuestWishlistClick}
+            product={product}
+            productMfrCode={product?.mfr_code}
+            storeData={storeData}
+            authUserId={authUserId}
+            getKioskLogin={getKioskLogin}
+            onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+            source={source}
+            useGuestWishlistFlow
           />
         </div>
       )}

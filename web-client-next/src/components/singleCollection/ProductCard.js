@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { notification } from "antd";
 import styles from "./ProductCard.module.css";
 
 import {
@@ -18,7 +17,6 @@ import {
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import { closeWishlistModal } from "../../pageComponents/wishlist/redux/actions";
 import {
-  getwishlistUserCollection,
   GuestPopUpShow,
 } from "../../pageComponents/Auth/redux/actions";
 import {
@@ -39,7 +37,6 @@ import VirtualTryOnModal from "./VirtualTryOnModal";
 import { vtoIconState } from "./redux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
-import { addProductToWishlistCollection } from "../../pageComponents/wishlistActions/addProductToWishlistCollection/redux/actions";
 import {
   getCollectionFlags,
   getCurrentCollectionForCard,
@@ -97,10 +94,6 @@ const ProductCard = ({
   const dispatch = useDispatch();
   const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
-  const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
-  const isGuestPopUpShow = useSelector(
-    (state) => state.GuestPopUpReducer.isGuestPopUpShow,
-  );
 
   const menuRef = useRef(null);
   const router = useRouter();
@@ -276,108 +269,7 @@ const ProductCard = ({
     }
   };
 
-  const callHandpickedAPI = useCallback(
-    async (userId) => {
-      if (!userId) {
-        notification.error({ message: "Unable to add to wishlist" });
-        return null;
-      }
-
-      const payload = {
-        user_id: userId,
-        store: storeData?.store_name || "dothelook",
-        Event_id: storeData?.event_id || "dothelookwebpage_447990",
-
-        mfr_code: product.mfr_code,
-        product_name: product.name,
-        product_image: product.image,
-        callback: () => {
-          dispatch(
-            getwishlistUserCollection({
-              path: `my_wishlist_${userId}`,
-            }),
-          );
-        },
-      };
-
-      dispatch(addProductToWishlistCollection(payload));
-    },
-    [dispatch, product, storeData?.event_id, storeData?.store_name],
-  );
-
-  useEffect(() => {
-    if (!pendingWishlistAction || isGuestPopUpShow) return;
-
-    const kioskLogin = getKioskLogin();
-    setPendingWishlistAction(false);
-
-    if (kioskLogin?.user_id) {
-      callHandpickedAPI(kioskLogin.user_id);
-    }
-  }, [
-    callHandpickedAPI,
-    getKioskLogin,
-    isGuestPopUpShow,
-    pendingWishlistAction,
-  ]);
   const kioskLogin = getKioskLogin();
-
-  const addToWishlistClick = async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    onGuestPopupOpen("");
-
-    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin) {
-      setPendingWishlistAction(true);
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-
-    callHandpickedAPI(kioskLogin?.user_id || authUserId);
-  };
-
-  const handleGuestWishlistClick = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (!onAddSelectedProductsToCollection) {
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-
-    if (source === "SEARCH") {
-      onAddSelectedProductsToCollection(
-        event,
-        { isSave: true, product, skipWishlistStateAfterGuest: true },
-        {
-          addToHandpickedWishlist: ({ userId } = {}) => {
-            const latestKioskLogin = getKioskLogin();
-            return callHandpickedAPI(
-              userId || latestKioskLogin?.user_id || authUserId || getTTid(),
-            );
-          },
-        },
-      );
-      return;
-    }
-
-    onAddSelectedProductsToCollection(event, product, {
-      addToHandpickedWishlist: ({ userId } = {}) => {
-        const latestKioskLogin = getKioskLogin();
-        return callHandpickedAPI(
-          userId || latestKioskLogin?.user_id || authUserId || getTTid(),
-        );
-      },
-    });
-  };
-
-
-  
-
-  const handleSelectProduct = (e) => {
-    e.stopPropagation();
-    setSelectValue && setSelectValue(!isSelected);
-  };
 
   useEffect(() => {
     setCollectionTryonStatement(
@@ -482,29 +374,27 @@ const ProductCard = ({
           enableHoverShowcase={enableHoverShowcase}
           onStarClick={onStarClick}
           hideAddToWishlist={hideAddToWishlist}
-          addToWishlistClick={addToWishlistClick}
           enableCopyFeature={enableCopyFeature}
           authUserId={authUserId}
           getKioskLogin={getKioskLogin}
           handleCartGuestRequired={handleCartGuestRequired}
           source={source}
+          onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
           cartSourceCollection={cartSourceCollection}
           showProductStarAction={showProductStarAction}
           enableViewSimilar={enableViewSimilar}
           showRemoveIcon={showRemoveIcon}
-          handleSelectProduct={handleSelectProduct}
           showCustomProductsMenu={showCustomProductsMenu}
           setMenuIcon={setMenuIcon}
           menuIcon={menuIcon}
           menuRef={menuRef}
-          removeFromWishlistClick={removeFromWishlistClick}
+          onRemoveIconClick={onRemoveIconClick}
           allowEdit={allowEdit}
           onEditClick={onEditClick}
           isMyWishlistCollection={isMyWishlistCollection}
           heartRedProduct={heartRedProduct}
           kioskLogin={kioskLogin}
           isUserLogin={isUserLogin}
-          handleGuestWishlistClick={handleGuestWishlistClick}
           showStar={showStar}
         />
         <ProductCardFooter
