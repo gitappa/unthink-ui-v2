@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   CopyOutlined,
   EyeOutlined,
@@ -20,6 +20,7 @@ import styles from "../singleCollection/ProductCard.module.css";
 
 const ProductCardHeader = ({
   product,
+  collectionId,
   size,
   isCustomProductsPage,
   storeData,
@@ -44,11 +45,9 @@ const ProductCardHeader = ({
   buyNowSubTitle,
   enableHoverShowcase,
   onStarClick,
-  handleStarClick,
   hideAddToWishlist,
   addToWishlistClick,
   enableCopyFeature,
-  handleCopyClick,
   authUserId,
   getKioskLogin,
   handleCartGuestRequired,
@@ -58,21 +57,29 @@ const ProductCardHeader = ({
   enableViewSimilar,
   showRemoveIcon,
   handleSelectProduct,
-  onSimilarClick,
   showCustomProductsMenu,
   setMenuIcon,
   menuIcon,
   menuRef,
   removeFromWishlistClick,
   allowEdit,
-  handleEditClick,
+  onEditClick,
   isMyWishlistCollection,
   heartRedProduct,
   kioskLogin,
   isUserLogin,
   handleGuestWishlistClick,
   showStar,
-}) => (
+}) => {
+  const handleStarClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onStarClick && onStarClick();
+    },
+    [onStarClick],
+  );
+
+  return (
   <>
     <div
       className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
@@ -234,6 +241,8 @@ const ProductCardHeader = ({
             hideOnMedium
           />
           <ProductMenuButton
+            product={product}
+            collectionId={collectionId}
             showCustomProductsMenu={showCustomProductsMenu}
             size={size}
             menuIcon={menuIcon}
@@ -243,10 +252,9 @@ const ProductCardHeader = ({
             showRemoveIcon={showRemoveIcon}
             removeFromWishlistClick={removeFromWishlistClick}
             enableCopyFeature={enableCopyFeature}
-            handleCopyClick={handleCopyClick}
             isCustomProductsPage={isCustomProductsPage}
             allowEdit={allowEdit}
-            handleEditClick={handleEditClick}
+            onEditClick={onEditClick}
           />
         </>
       )}
@@ -285,6 +293,7 @@ const ProductCardHeader = ({
         </div>
       )}
   </>
-);
+  );
+};
 
 export default ProductCardHeader;

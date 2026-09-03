@@ -3,7 +3,6 @@ import peopleReducer from "../people/redux/reducer";
 import recommendationReducer from "../recommendations/redux/reducer";
 import wishlistReducer from "../wishlist/redux/reducer";
 import rewardsReducer from "../rewards/redux/reducer";
-import similarProductsReducer from "../similarProducts/redux/reducer";
 import carouselReducer from "../../components/carousel/redux/reducer";
 import appLoaderReducer from "../appLoader/redux/reducer";
 import appMessageModalReducer from "../appMessageModal/redux/reducer";
@@ -15,7 +14,6 @@ const appStateReducer = combineReducers({
 	wishlist: wishlistReducer,
 	people: peopleReducer,
 	rewards: rewardsReducer,
-	similarProducts: similarProductsReducer,
 	carousel: carouselReducer,
 	appLoader: appLoaderReducer,
 	appMessageModal: appMessageModalReducer,

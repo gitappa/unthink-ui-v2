@@ -5,6 +5,7 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
+import { useRouter } from "next/router";
 
 export const addProductToCart = ({
   dispatch,
@@ -53,7 +54,6 @@ const AddToCartButton = ({
   collection,
   eventId,
   cartCollection,
-  onGoToCart,
   isOutOfStock = false,
   disabled,
   className,
@@ -64,17 +64,25 @@ const AddToCartButton = ({
   type = "button",
 }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const isDisabled = disabled ?? (!product?.price && !product?.listprice);
   const normalizedQty = getNormalizedCartQty(qty);
 
+  
+  const handleGoToCart = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    router.push("/cart");
+  };
   const handleAddToCart = (event) => {
     event?.stopPropagation?.();
     event?.preventDefault?.();
 
     if (isOutOfStock) return;
 
-    if (cartCollection && onGoToCart) {
-      onGoToCart(event);
+    if (cartCollection && handleGoToCart) {
+      console.log("handleGoToCart", handleGoToCart);
+      handleGoToCart(event);
       return;
     }
 

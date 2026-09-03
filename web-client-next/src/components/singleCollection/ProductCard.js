@@ -21,9 +21,6 @@ import {
   getwishlistUserCollection,
   GuestPopUpShow,
 } from "../../pageComponents/Auth/redux/actions";
-import { fetchSimilarProducts } from "../../pageComponents/similarProducts/redux/actions";
-import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
-import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
   addSidInProductUrl,
   cleanImage,
@@ -79,7 +76,6 @@ const ProductCard = ({
   setSelectValue,
   showEdit = false,
   showStar = false,
-  showChinSection = false, // REMOVE
   widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
   onEditClick,
   onStarClick,
@@ -214,19 +210,6 @@ const ProductCard = ({
   }, [hideViewSimilar]);
 
   const productHasUrl = isProductUrlAvailable(product);
-
-  const handleOpenProductModal = useCallback(
-    (allowEdit) => {
-      dispatch(
-        openProductModal({
-          payload: product,
-          collectionId: collection_id,
-          allowEdit,
-        }),
-      );
-    },
-    [dispatch, product, collection_id],
-  );
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
@@ -387,62 +370,14 @@ const ProductCard = ({
       },
     });
   };
-  const handleGoToCart = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    router.push("/cart");
-  };
 
-  const onSimilarClick = (event) => {
-    event.stopPropagation();
-    dispatch(
-      fetchSimilarProducts({
-        mfr_code: product.mfr_code,
-        name: product.name,
-        errorMessage: "Unable to fetch similar products",
-      }),
-    );
-  };
 
-  const removeFromWishlistClick = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-
-    if (onRemoveIconClick) {
-      onRemoveIconClick(product.mfr_code);
-    }
-  };
+  
 
   const handleSelectProduct = (e) => {
     e.stopPropagation();
     setSelectValue && setSelectValue(!isSelected);
   };
-
-  const handleCopyClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    product && dispatch(openProductDetailsCopyModal(product));
-  };
-
-  const handleEditClick = useCallback(
-    (e) => {
-      e.stopPropagation();
-      if (onEditClick) {
-        onEditClick();
-      } else {
-        handleOpenProductModal(true);
-      }
-    },
-    [onEditClick, handleOpenProductModal],
-  );
-
-  const handleStarClick = useCallback(
-    (e) => {
-      e.stopPropagation();
-      onStarClick && onStarClick();
-    },
-    [onStarClick],
-  );
 
   useEffect(() => {
     setCollectionTryonStatement(
@@ -501,7 +436,7 @@ const ProductCard = ({
       className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${productWrapperSizeClass}`}
     >
       <div
-        className={`${styles["product-container"]} ${showChinSection ? styles["product-container-top-rounded"] : styles["product-container-all-rounded"]}`}
+        className={`${styles["product-container"]} ${  styles["product-container-all-rounded"]}`}
         style={{ cursor: enableSelect ? "pointer" : "default" }}
         onClick={() =>
           hasKioskAccess
@@ -513,6 +448,7 @@ const ProductCard = ({
       >
         <ProductCardHeader
           product={product}
+          collectionId={collection_id}
           size={size}
           isCustomProductsPage={isCustomProductsPage}
           storeData={storeData}
@@ -545,11 +481,9 @@ const ProductCard = ({
           buyNowSubTitle={buyNowSubTitle}
           enableHoverShowcase={enableHoverShowcase}
           onStarClick={onStarClick}
-          handleStarClick={handleStarClick}
           hideAddToWishlist={hideAddToWishlist}
           addToWishlistClick={addToWishlistClick}
           enableCopyFeature={enableCopyFeature}
-          handleCopyClick={handleCopyClick}
           authUserId={authUserId}
           getKioskLogin={getKioskLogin}
           handleCartGuestRequired={handleCartGuestRequired}
@@ -559,14 +493,13 @@ const ProductCard = ({
           enableViewSimilar={enableViewSimilar}
           showRemoveIcon={showRemoveIcon}
           handleSelectProduct={handleSelectProduct}
-          onSimilarClick={onSimilarClick}
           showCustomProductsMenu={showCustomProductsMenu}
           setMenuIcon={setMenuIcon}
           menuIcon={menuIcon}
           menuRef={menuRef}
           removeFromWishlistClick={removeFromWishlistClick}
           allowEdit={allowEdit}
-          handleEditClick={handleEditClick}
+          onEditClick={onEditClick}
           isMyWishlistCollection={isMyWishlistCollection}
           heartRedProduct={heartRedProduct}
           kioskLogin={kioskLogin}
@@ -590,7 +523,7 @@ const ProductCard = ({
           source={source}
           cartSourceCollection={cartSourceCollection}
           cartCollection={cartCollection}
-          onGoToCart={handleGoToCart}
+          
         />
       </div>
 
@@ -622,57 +555,6 @@ const ProductCard = ({
         eventId={storeData?.event_id || null}
         saveUserId={KioskLoginAuth?.user_id || authUser?.user_id || null}
       />
-
-      {showChinSection && (
-        <div className={styles["product-chin-section"]}>
-          <StarOutlined
-            height="fit-content"
-            onClick={handleStarClick}
-            role={onStarClick ? "button" : "img"}
-            className={`${styles["product-chin-star-icon"]} ${size === "small" ? styles["product-chin-star-icon-small"] : styles["product-chin-star-icon-medium"]} ${product.starred ? styles["product-chin-star-icon-filled"] : styles["product-chin-star-icon-default"]} ${onStarClick ? styles["product-chin-star-icon-clickable"] : styles["product-chin-star-icon-not-clickable"]}`}
-          />
-          {enableCopyFeature && (
-            <div
-              className={styles["product-chin-copy-button"]}
-              onClick={handleCopyClick}
-            >
-              <CopyOutlined className={styles["product-chin-copy-icon"]} />
-            </div>
-          )}
-          <div
-            className={styles["product-chin-remove-button"]}
-            onClick={removeFromWishlistClick}
-          >
-            <CloseCircleOutlined
-              className={styles["product-chin-remove-icon"]}
-            />
-          </div>
-        </div>
-      )}
-      {widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
-        (showEdit || showStar || showRemoveIcon) && (
-          <div
-            className={`${styles["product-action-cover-container"]} ${size === "small" ? styles["product-action-cover-container-small"] : styles["product-action-cover-container-medium"]}`}
-          >
-            <div>
-              {showEdit ? (
-                <button
-                  className={styles["product-action-cover-edit-button"]}
-                  tabIndex="-1"
-                  role="button"
-                  onClick={handleEditClick}
-                >
-                  <EditFilled
-                    className={styles["product-action-cover-edit-icon"]}
-                  />
-                  <span className={styles["product-action-cover-edit-text"]}>
-                    Edit
-                  </span>
-                </button>
-              ) : null}
-            </div>
-          </div>
-        )}
     </div>
   );
 };

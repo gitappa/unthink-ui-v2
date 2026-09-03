@@ -34,7 +34,6 @@ const ProductCardFooter = ({
   source,
   cartSourceCollection,
   cartCollection,
-  onGoToCart,
 }) => {
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -191,7 +190,6 @@ const ProductCardFooter = ({
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
                 cartCollection={cartCollection}
-                onGoToCart={onGoToCart}
                 isOutOfStock={isOutOfStock}
                 className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
                 disabled={!hasProductPrice}
