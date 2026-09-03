@@ -58,6 +58,7 @@ jobs:
           --tag us-central1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/unthink-ui-v2/unthink-ui-next-giva-indiranagar2-hs-ui-v2 \
           --build-arg NEXT_PUBLIC_BACKEND_URL=${{ env.NEXT_PUBLIC_BACKEND_URL }} \
           --build-arg NEXT_PUBLIC_ACCESS_KEY=${{ env.NEXT_PUBLIC_ACCESS_KEY }} \
+          --build-arg NEXT_PUBLIC_GA_TRACKING_ID=${{ env.NEXT_PUBLIC_GA_TRACKING_ID }} \
           --build-arg NEXT_PUBLIC_STAGING_ENV=${{ env.NEXT_PUBLIC_STAGING_ENV }} \
           --build-arg NEXT_PUBLIC_IS_KIOSK_ENABLED=${{ env.NEXT_PUBLIC_IS_KIOSK_ENABLED }} \
           --build-arg NEXT_PUBLIC_SUPER_ADMIN_USER_NAME=${{ env.NEXT_PUBLIC_SUPER_ADMIN_USER_NAME }} \
