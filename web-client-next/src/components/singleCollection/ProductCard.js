@@ -43,8 +43,9 @@ import {
   shouldEnableViewSimilar,
 } from "../../helper/product/productCardHelpers";
 import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
-import ProductCardHeader from "../ProductCard/ProductCardHeader";
 import ProductCardFooter from "../ProductCard/ProductCardFooter";
+import { ProductCardHeaderTop } from "../ProductCard/ProductCardHeaderTop";
+import ProductCardHeaderBottom from "../ProductCard/ProductCardHeaderBottom";
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
   DEFAULT: "default",
@@ -322,6 +323,42 @@ const ProductCard = ({
     dispatch(GuestPopUpShow(true));
   };
 
+  const handleVtoClick = (mfrCode) => {
+    if (mfrCode) {
+      dispatch(vtoIconState(mfrCode));
+      return;
+    }
+    dispatch(GuestPopUpShow(true));
+  };
+
+  const kioskConfig = {
+    hasAccess: hasKioskAccess,
+    login: kioskLogin,
+    loginAuth: KioskLoginAuth,
+    enableGuestPopup: enableKioskGuestPopup,
+    getLogin: getKioskLogin,
+    onGuestPopupOpen,
+    onTryonClick: onKioskTryonClick,
+  };
+  const wishlistConfig = {
+    showModal: showWishlistModal,
+    hideAddButton: hideAddToWishlist,
+    heartRedProduct,
+  };
+  const headerTopCallbacks = {
+    onProductClick: handleProductClick,
+    onSetSelectValue: setSelectValue,
+    onSetMenuIcon: setMenuIcon,
+    onEditClick,
+    onRemoveIconClick,
+    onAddSelectedProductsToCollection,
+  };
+  const headerBottomCallbacks = {
+    onSetMfrCode: setOnMfrCode,
+    onVtoClick: handleVtoClick,
+    onStarClick,
+  };
+
   return (
     <div
       style={{ backgroundColor: showWishlistModal ? "white" : "" }}
@@ -338,65 +375,63 @@ const ProductCard = ({
             : null
         }
       >
-        <ProductCardHeader
-          product={product}
-          collectionId={collection_id}
-          size={size}
-          isCustomProductsPage={isCustomProductsPage}
-          storeData={storeData}
-          enableSelect={enableSelect}
-          setSelectValue={setSelectValue}
-          isSelected={isSelected}
-          isActionCoverWidget={
-            widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
-          }
-          isDefaultWidget={widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT}
-          showWishlistModal={showWishlistModal}
-          isMyTryonsCollection={isMyTryonsCollection}
-          hasKioskAccess={hasKioskAccess}
-          enableKioskGuestPopup={enableKioskGuestPopup}
-          kioskLoginAuth={KioskLoginAuth}
-          onGuestPopupOpen={onGuestPopupOpen}
-          onKioskTryonClick={onKioskTryonClick}
-          setOnMfrCode={setOnMfrCode}
-          onVtoClick={(mfrCode) => {
-            if (mfrCode) {
-              dispatch(vtoIconState(mfrCode));
-              return;
+        <div
+          className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
+          onClick={(e) => {
+            if (setSelectValue) {
+              e.stopPropagation();
+              setSelectValue(!isSelected);
             }
-            dispatch(GuestPopUpShow(true));
           }}
-          handleProductClick={handleProductClick}
-          themeCodes={themeCodes}
-          productHasUrl={productHasUrl}
-          buyNowTitle={buyNowTitle}
-          buyNowSubTitle={buyNowSubTitle}
-          enableHoverShowcase={enableHoverShowcase}
-          onStarClick={onStarClick}
-          hideAddToWishlist={hideAddToWishlist}
-          enableCopyFeature={enableCopyFeature}
-          authUserId={authUserId}
-          getKioskLogin={getKioskLogin}
-          handleCartGuestRequired={handleCartGuestRequired}
-          source={source}
-          onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-          cartSourceCollection={cartSourceCollection}
-          showProductStarAction={showProductStarAction}
-          enableViewSimilar={enableViewSimilar}
-          showRemoveIcon={showRemoveIcon}
-          showCustomProductsMenu={showCustomProductsMenu}
-          setMenuIcon={setMenuIcon}
-          menuIcon={menuIcon}
-          menuRef={menuRef}
-          onRemoveIconClick={onRemoveIconClick}
-          allowEdit={allowEdit}
-          onEditClick={onEditClick}
-          isMyWishlistCollection={isMyWishlistCollection}
-          heartRedProduct={heartRedProduct}
-          kioskLogin={kioskLogin}
-          isUserLogin={isUserLogin}
-          showStar={showStar}
-        />
+        >
+          <ProductCardHeaderTop
+            product={product}
+            collectionId={collection_id}
+            size={size}
+            isCustomProductsPage={isCustomProductsPage}
+            storeData={storeData}
+            enableSelect={enableSelect}
+            setSelectValue={setSelectValue}
+            isSelected={isSelected}
+            isActionCoverWidget={
+              widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+            }
+            isDefaultWidget={widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT}
+            kiosk={kioskConfig}
+            wishlist={wishlistConfig}
+            callbacks={headerTopCallbacks}
+            enableCopyFeature={enableCopyFeature}
+            authUserId={authUserId}
+            source={source}
+            enableViewSimilar={enableViewSimilar}
+            showRemoveIcon={showRemoveIcon}
+            showCustomProductsMenu={showCustomProductsMenu}
+            menuIcon={menuIcon}
+            menuRef={menuRef}
+            allowEdit={allowEdit}
+            isMyWishlistCollection={isMyWishlistCollection}
+            isUserLogin={isUserLogin}
+            showStar={showStar}
+          />
+          <ProductCardHeaderBottom
+            product={product}
+            size={size}
+            isCustomProductsPage={isCustomProductsPage}
+            storeData={storeData}
+            enableSelect={enableSelect}
+            isActionCoverWidget={
+              widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+            }
+            kiosk={kioskConfig}
+            wishlist={wishlistConfig}
+            isMyTryonsCollection={isMyTryonsCollection}
+            callbacks={headerBottomCallbacks}
+            themeCodes={themeCodes}
+            productHasUrl={productHasUrl}
+            buyNowTitle={buyNowTitle}
+            showProductStarAction={showProductStarAction}
+          />
+        </div>
         <ProductCardFooter
           product={product}
           size={size}
