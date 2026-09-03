@@ -8,12 +8,8 @@ import ProductRemoveAction from "./ProductRemoveAction";
 import styles from "../singleCollection/ProductCard.module.css";
 
 export const ProductCardHeaderTop = ({
-  product,
+  productCard = {},
   collectionId,
-  size,
-  isCustomProductsPage,
-  storeData,
-  enableSelect,
   isSelected,
   isActionCoverWidget,
   isDefaultWidget,
@@ -21,7 +17,7 @@ export const ProductCardHeaderTop = ({
   wishlist = {},
   callbacks = {},
   enableCopyFeature,
-  authUserId,
+  user = {},
   source,
   enableViewSimilar,
   showRemoveIcon,
@@ -30,9 +26,11 @@ export const ProductCardHeaderTop = ({
   menuRef,
   allowEdit,
   isMyWishlistCollection,
-  isUserLogin,
   showStar,
 }) => {
+  const { authUserId, isLoggedIn: isUserLogin } = user;
+  const { product, size, isCustomProductsPage, storeData, enableSelect } =
+    productCard;
   const {
     hasAccess: hasKioskAccess,
     login: kioskLogin,
@@ -43,8 +41,11 @@ export const ProductCardHeaderTop = ({
   const {
     showModal: showWishlistModal,
     hideAddButton: hideAddToWishlist,
-    heartRedProduct,
+    collections: wishlistCollections,
   } = wishlist;
+  const heartRedProduct = wishlistCollections?.product_lists?.find(
+    (x) => x.mfr_code === product.mfr_code,
+  );
   const {
     onProductClick: handleProductClick,
     onSetSelectValue: setSelectValue,

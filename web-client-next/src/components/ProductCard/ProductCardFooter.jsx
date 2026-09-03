@@ -19,22 +19,25 @@ import styles from "../singleCollection/ProductCard.module.css";
 const { Text } = Typography;
 
 const ProductCardFooter = ({
-  product,
-  size,
-  storeData,
-  isCustomProductsPage,
-  authUserId,
-  authUser,
-  storeId,
-  hasKioskAccess,
-  showWishlistModal,
-  getKioskLogin,
-  enableKioskGuestPopup,
-  onCartGuestRequired,
-  source,
-  cartSourceCollection,
-  cartCollection,
+  productCard = {},
+  user = {},
+  kiosk = {},
+  wishlist = {},
+  cart = {},
 }) => {
+  const { product, size, storeData, isCustomProductsPage } = productCard;
+  const { authUserId, authUser, storeId, source } = user;
+  const {
+    hasAccess: hasKioskAccess,
+    getLogin: getKioskLogin,
+    enableGuestPopup: enableKioskGuestPopup,
+  } = kiosk;
+  const { showModal: showWishlistModal } = wishlist;
+  const {
+    onGuestRequired: onCartGuestRequired,
+    sourceCollection: cartSourceCollection,
+    collection: cartCollection,
+  } = cart;
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 

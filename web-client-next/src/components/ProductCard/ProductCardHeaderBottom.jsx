@@ -4,23 +4,21 @@ import { getStaticImageSrc } from "../../helper/product/productCardHelpers";
 import camera from "../singleCollection/images/Card/camera.svg";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import styles from "../singleCollection/ProductCard.module.css";
+import useTheme from "../../hooks/chat/useTheme";
 
  const ProductCardHeaderBottom = ({
-  product,
-  size,
-  isCustomProductsPage,
-  storeData,
-  enableSelect,
+  productCard = {},
   isActionCoverWidget,
   kiosk = {},
   wishlist = {},
   callbacks = {},
   isMyTryonsCollection,
-  themeCodes,
   productHasUrl,
   buyNowTitle,
   showProductStarAction,
 }) => {
+  const { product, size, isCustomProductsPage, storeData, enableSelect } =
+    productCard;
   const {
     hasAccess: hasKioskAccess,
     loginAuth: kioskLoginAuth,
@@ -30,7 +28,7 @@ import styles from "../singleCollection/ProductCard.module.css";
   } = kiosk;
   const { showModal: showWishlistModal } = wishlist;
   const { onSetMfrCode: setOnMfrCode, onVtoClick, onStarClick } = callbacks;
-
+    const { themeCodes } = useTheme();
   const handleStarClick = useCallback(
     (e) => {
       e.stopPropagation();

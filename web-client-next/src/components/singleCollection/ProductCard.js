@@ -93,7 +93,6 @@ const ProductCard = ({
   source,
 }) => {
   const dispatch = useDispatch();
-  const { themeCodes } = useTheme();
   const [menuIcon, setMenuIcon] = useState(false);
 
   const menuRef = useRef(null);
@@ -144,10 +143,6 @@ const ProductCard = ({
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
-  const heartRedProduct = wishlistCollections?.product_lists?.find(
-    (x) => x.mfr_code === product.mfr_code,
-  );
-
   const currentCollectionForCard = useMemo(
     () =>
       getCurrentCollectionForCard({
@@ -343,7 +338,26 @@ const ProductCard = ({
   const wishlistConfig = {
     showModal: showWishlistModal,
     hideAddButton: hideAddToWishlist,
-    heartRedProduct,
+    collections: wishlistCollections,
+  };
+  const productCardConfig = {
+    product,
+    size,
+    isCustomProductsPage,
+    storeData,
+    enableSelect,
+  };
+  const userConfig = {
+    authUserId,
+    authUser,
+    storeId: store_id,
+    source,
+    isLoggedIn: isUserLogin,
+  };
+  const cartConfig = {
+    onGuestRequired: handleCartGuestRequired,
+    sourceCollection: cartSourceCollection,
+    collection: cartCollection,
   };
   const headerTopCallbacks = {
     onProductClick: handleProductClick,
@@ -385,13 +399,8 @@ const ProductCard = ({
           }}
         >
           <ProductCardHeaderTop
-            product={product}
+            productCard={productCardConfig}
             collectionId={collection_id}
-            size={size}
-            isCustomProductsPage={isCustomProductsPage}
-            storeData={storeData}
-            enableSelect={enableSelect}
-            setSelectValue={setSelectValue}
             isSelected={isSelected}
             isActionCoverWidget={
               widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
@@ -401,7 +410,7 @@ const ProductCard = ({
             wishlist={wishlistConfig}
             callbacks={headerTopCallbacks}
             enableCopyFeature={enableCopyFeature}
-            authUserId={authUserId}
+            user={userConfig}
             source={source}
             enableViewSimilar={enableViewSimilar}
             showRemoveIcon={showRemoveIcon}
@@ -410,15 +419,10 @@ const ProductCard = ({
             menuRef={menuRef}
             allowEdit={allowEdit}
             isMyWishlistCollection={isMyWishlistCollection}
-            isUserLogin={isUserLogin}
             showStar={showStar}
           />
           <ProductCardHeaderBottom
-            product={product}
-            size={size}
-            isCustomProductsPage={isCustomProductsPage}
-            storeData={storeData}
-            enableSelect={enableSelect}
+            productCard={productCardConfig}
             isActionCoverWidget={
               widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
             }
@@ -426,29 +430,17 @@ const ProductCard = ({
             wishlist={wishlistConfig}
             isMyTryonsCollection={isMyTryonsCollection}
             callbacks={headerBottomCallbacks}
-            themeCodes={themeCodes}
             productHasUrl={productHasUrl}
             buyNowTitle={buyNowTitle}
             showProductStarAction={showProductStarAction}
           />
         </div>
         <ProductCardFooter
-          product={product}
-          size={size}
-          storeData={storeData}
-          isCustomProductsPage={isCustomProductsPage}
-          authUserId={authUserId}
-          authUser={authUser}
-          storeId={store_id}
-          hasKioskAccess={hasKioskAccess}
-          showWishlistModal={showWishlistModal}
-          getKioskLogin={getKioskLogin}
-          enableKioskGuestPopup={enableKioskGuestPopup}
-          onCartGuestRequired={handleCartGuestRequired}
-          source={source}
-          cartSourceCollection={cartSourceCollection}
-          cartCollection={cartCollection}
-          
+          productCard={productCardConfig}
+          user={userConfig}
+          kiosk={kioskConfig}
+          wishlist={wishlistConfig}
+          cart={cartConfig}
         />
       </div>
 
