@@ -36,8 +36,10 @@ const ProductCardFooter = ({
   const {
     onGuestRequired: onCartGuestRequired,
     sourceCollection: cartSourceCollection,
-    collection: cartCollection,
+
   } = cart;
+
+
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -192,19 +194,14 @@ const ProductCardFooter = ({
                 source={source}
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
-                cartCollection={cartCollection}
                 isOutOfStock={isOutOfStock}
                 className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
                 disabled={!hasProductPrice}
                 iconClassName={cartIconClassName}
                 showIcon
-              >
-                {isOutOfStock
-                  ? "Out of Stock"
-                  : cartCollection
-                    ? " Go to Cart "
-                    : " Add to Cart"}
-              </AddToCartButton>
+              />
+               
+             
             )}
           </>
         )}

@@ -135,10 +135,7 @@ const ProductCard = ({
     state.auth.user.singleCollections.data,
     state.auth.user.wishlistCollections,
   ]);
-  const { collection } = useSelector((state) => state.cart);
-  const cartCollection = collection?.product_lists
-    ?.map((arr) => arr?.mfr_code)
-    .find((arr) => arr === product.mfr_code);
+  
   const [storeData] = useSelector((state) => [state.store.data]);
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
@@ -357,7 +354,6 @@ const ProductCard = ({
   const cartConfig = {
     onGuestRequired: handleCartGuestRequired,
     sourceCollection: cartSourceCollection,
-    collection: cartCollection,
   };
   const headerTopCallbacks = {
     onProductClick: handleProductClick,
