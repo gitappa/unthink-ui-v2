@@ -40,9 +40,7 @@ import { useRouter } from "next/router";
 import {
   getCollectionFlags,
   getCurrentCollectionForCard,
-  shouldEnableViewSimilar,
 } from "../../helper/product/productCardHelpers";
-import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
 import ProductCardFooter from "../ProductCard/ProductCardFooter";
 import { ProductCardHeaderTop } from "../ProductCard/ProductCardHeaderTop";
 import ProductCardHeaderBottom from "../ProductCard/ProductCardHeaderBottom";
@@ -60,7 +58,6 @@ const ProductCard = ({
   collection_id,
   onProductClick,
   productClickParam = {},
-  hideViewSimilar = false,
   hideAddToWishlist = false,
   enableHoverShowcase = false,
   showRemoveIcon = false,
@@ -98,17 +95,7 @@ const ProductCard = ({
   const menuRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuIcon(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
+ 
 
   const [
     authUserId,
@@ -122,6 +109,7 @@ const ProductCard = ({
     collections,
     singleCollections,
     wishlistCollections,
+    storeData,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -134,11 +122,16 @@ const ProductCard = ({
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
     state.auth.user.wishlistCollections,
+    state.store.data,
   ]);
-  
-  const [storeData] = useSelector((state) => [state.store.data]);
-  const [Collection_tryonStatement, setCollectionTryonStatement] =
-    useState(null);
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
+
+
+  const [Collection_tryonStatement, setCollectionTryonStatement] =  useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
   const currentCollectionForCard = useMemo(
     () =>
@@ -157,10 +150,21 @@ const ProductCard = ({
       singleCollections,
     ],
   );
-
   const { isMyWishlistCollection, isMyTryonsCollection } = getCollectionFlags(
     currentCollectionForCard,
   );
+ useEffect(() => {
+    const handleClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuIcon(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+  
 
   const getKioskLogin = useCallback(() => {
     if (typeof window === "undefined") return null;
@@ -185,17 +189,8 @@ const ProductCard = ({
       window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
     };
   }, [syncKioskLogin]);
-
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
-  const enableViewSimilar = useMemo(() => {
-    return shouldEnableViewSimilar(hideViewSimilar);
-  }, [hideViewSimilar]);
-
-  const productHasUrl = isProductUrlAvailable(product);
+const kioskLogin = getKioskLogin();
+  
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
@@ -251,7 +246,7 @@ const ProductCard = ({
     }
     if (open && !hasKioskAccess) {
       window.open(`/product/${product.mfr_code}`, "_blank");
-    } else if (hasKioskAccess) {
+    } else {
       router.push(`/product/${product.mfr_code}`);
     }
     if (showChatModal) {
@@ -262,7 +257,7 @@ const ProductCard = ({
     }
   };
 
-  const kioskLogin = getKioskLogin();
+  
 
   useEffect(() => {
     setCollectionTryonStatement(
@@ -303,17 +298,6 @@ const ProductCard = ({
           path: collection_path,
         }
       : undefined;
-  const handleCartGuestRequired = ({ product: cartProduct, qty }) => {
-    onGuestPopupOpen?.({
-      type: "cart",
-      product: {
-        mfr_code: cartProduct.mfr_code,
-        tagged_by: cartProduct.tagged_by || [],
-      },
-      qty,
-    });
-    dispatch(GuestPopUpShow(true));
-  };
 
   const handleVtoClick = (mfrCode) => {
     if (mfrCode) {
@@ -352,11 +336,10 @@ const ProductCard = ({
     isLoggedIn: isUserLogin,
   };
   const cartConfig = {
-    onGuestRequired: handleCartGuestRequired,
+    onGuestPopupOpen,
     sourceCollection: cartSourceCollection,
   };
   const headerTopCallbacks = {
-    onProductClick: handleProductClick,
     onSetSelectValue: setSelectValue,
     onSetMenuIcon: setMenuIcon,
     onEditClick,
@@ -368,6 +351,23 @@ const ProductCard = ({
     onVtoClick: handleVtoClick,
     onStarClick,
   };
+  const handleCardClick = (event) => {
+    if (enableSelect) return;
+
+    const interactiveElement = event.target?.closest?.(
+      "a, button, input, select, textarea, [role='button'], div.swiper-wrapper",
+    );
+    if (interactiveElement) return;
+    if(hasKioskAccess){
+    sessionStorage.setItem("plp-scroll", String(window.scrollY));
+    sessionStorage.setItem("plp-collection", singleCollections?.path);
+    handleProductClick({ open: false });
+    }
+
+    const openInNewTab =
+      !hasKioskAccess && window.matchMedia("(min-width: 1024px)").matches;
+    handleProductClick({ open: openInNewTab });
+  };
 
   return (
     <div
@@ -376,19 +376,13 @@ const ProductCard = ({
     >
       <div
         className={`${styles["product-container"]} ${  styles["product-container-all-rounded"]}`}
-        style={{ cursor: enableSelect ? "pointer" : "default" }}
-        onClick={() =>
-          hasKioskAccess
-            ? (sessionStorage.setItem("plp-scroll", String(window.scrollY)),
-              sessionStorage.setItem("plp-collection", singleCollections?.path),
-              router.push(`/product/${product.mfr_code}`))
-            : null
-        }
+        style={{ cursor: "pointer" }}
+        onClick={handleCardClick}
       >
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
           onClick={(e) => {
-            if (setSelectValue) {
+            if (isSelected) {
               e.stopPropagation();
               setSelectValue(!isSelected);
             }
@@ -408,7 +402,6 @@ const ProductCard = ({
             enableCopyFeature={enableCopyFeature}
             user={userConfig}
             source={source}
-            enableViewSimilar={enableViewSimilar}
             showRemoveIcon={showRemoveIcon}
             showCustomProductsMenu={showCustomProductsMenu}
             menuIcon={menuIcon}
@@ -426,7 +419,6 @@ const ProductCard = ({
             wishlist={wishlistConfig}
             isMyTryonsCollection={isMyTryonsCollection}
             callbacks={headerBottomCallbacks}
-            productHasUrl={productHasUrl}
             buyNowTitle={buyNowTitle}
             showProductStarAction={showProductStarAction}
           />

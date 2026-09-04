@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
+import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
 import { useRouter } from "next/router";
@@ -45,11 +46,9 @@ export const addProductToCart = ({
 const AddToCartButton = ({
   product,
   qty = 1,
+  kiosk = {},
   authUserId,
-  getKioskLogin,
-  hasKioskAccess = false,
-  enableKioskGuestPopup = false,
-  onGuestRequired,
+  onGuestPopupOpen,
   source,
   collection,
   eventId,
@@ -66,10 +65,15 @@ const AddToCartButton = ({
   const isDisabled = disabled ?? (!product?.price && !product?.listprice);
   const normalizedQty = getNormalizedCartQty(qty);
   const { collection: cartData } = useSelector((state) => state.cart);
+
   const cartCollection = cartData?.product_lists
     ?.map((arr) => arr?.mfr_code)
     .find((arr) => arr === product?.mfr_code);
-
+  const {
+    hasAccess: hasKioskAccess,
+    getLogin: getKioskLogin,
+    enableGuestPopup: enableKioskGuestPopup,
+  } = kiosk;
   const handleGoToCart = (event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -91,16 +95,16 @@ const AddToCartButton = ({
     const kioskLogin = getKioskLogin?.();
     const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
 
-    if (
-      (hasKioskAccess || enableKioskGuestPopup) &&
-      !kioskLogin?.user_id &&
-      onGuestRequired
-    ) {
-      onGuestRequired({
-        event,
-        product,
+    if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin?.user_id) {
+      onGuestPopupOpen?.({
+        type: "cart",
+        product: {
+          mfr_code: product.mfr_code,
+          tagged_by: product.tagged_by || [],
+        },
         qty: normalizedQty,
       });
+      dispatch(GuestPopUpShow(true));
       return;
     }
 

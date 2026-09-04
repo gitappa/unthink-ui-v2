@@ -4,8 +4,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import AddToCartButton from "../common/AddToCartButton";
 import BuyNowButton from "../common/BuyNowButton";
 import {
-  getDisabledProductBuyButtonClass,
-  getProductBuyButtonClass,
   getProductCardAttributes,
   KIOSK_CART_ICON_CLASS,
 } from "../../helper/product/productCardHelpers";
@@ -14,7 +12,6 @@ import {
   getProductDiscountPercentage,
   isProductOutOfStock,
 } from "../../helper/product/productDisplayHelpers";
-import styles from "../singleCollection/ProductCard.module.css";
 
 const { Text } = Typography;
 
@@ -34,11 +31,9 @@ const ProductCardFooter = ({
   } = kiosk;
   const { showModal: showWishlistModal } = wishlist;
   const {
-    onGuestRequired: onCartGuestRequired,
+    onGuestPopupOpen,
     sourceCollection: cartSourceCollection,
-
   } = cart;
-
 
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -54,14 +49,7 @@ const ProductCardFooter = ({
   );
   const discountPer = getProductDiscountPercentage(product);
   const isOutOfStock = isProductOutOfStock(product);
-  const hasProductPrice = !!(product?.price || product?.listprice);
-
-  const cartIconClassName =
-    showWishlistModal || size === "small"
-      ? styles["product-cart-icon-small"]
-      : hasKioskAccess
-        ? KIOSK_CART_ICON_CLASS
-        : "h-4 w-4 md:h-5 md:w-5";
+  const hasProductPrice = (product?.price ?? product?.listprice) != null;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -79,17 +67,17 @@ const ProductCardFooter = ({
 
   return (
     <div
-      className={`${styles["product-footer-main"]} ${size === "small" ? styles["product-footer-main-small"] : styles["product-footer-main-medium"]}`}
+      className={`box-border flex h-full w-full flex-col px-2 pb-2 pt-0 lg:p-3 ${size === "small" ? "gap-0.5" : ""}`}
     >
-      <div className={styles["product-name-section"]}>
-        <p className={styles["product-brand-footer-text"]}>
+      <div className="flex flex-col gap-0 md:gap-1">
+        <p className="m-0 text-xs uppercase text-neutral-600 md:text-xs">
           {" "}
-          <span>{product?.brand || "\u00A0"}</span>
+          <span className="font-medium">{product?.brand || "\u00A0"}</span>
         </p>
 
         <Text
           ellipsis={{ tooltip: product.name }}
-          className={styles["product-name-text"]}
+          className="m-0 mb-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold text-gray-900 md:text-base"
         >
           {product.name || "\u00A0"}
         </Text>
@@ -97,8 +85,8 @@ const ProductCardFooter = ({
 
       {productCardAttributes.length > 0 ? (
         <div
-          className={`${styles.tagsContainerWrapper} ${
-            isOverflowing ? styles.isOverflowing : ""
+          className={`product-card-tags-wrapper relative overflow-hidden ${
+            isOverflowing ? "is-overflowing" : ""
           }`}
         >
           <Swiper
@@ -106,11 +94,11 @@ const ProductCardFooter = ({
             spaceBetween={8}
             slidesPerView={"auto"}
             freeMode={true}
-            className={styles.tagscontainer}
+            className="flex items-center gap-1 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {productCardAttributes.map((attribute) => (
               <SwiperSlide key={attribute.key} style={{ width: "auto" }}>
-                <span className={styles.smalltags}>
+                <span className="mb-1 mr-1 block whitespace-nowrap rounded-lg bg-gray-100 p-1 text-xs font-medium md:px-2 md:py-1 md:text-sm">
                   {attribute.label}: {attribute.value}
                 </span>
               </SwiperSlide>
@@ -118,24 +106,25 @@ const ProductCardFooter = ({
           </Swiper>
         </div>
       ) : (
-        <div className={`${styles.tagscontainer} p-1`}> &nbsp;</div>
+        <div className="flex items-center gap-1 overflow-x-scroll p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          &nbsp;
+        </div>
       )}
 
-      <div
-        className={`${styles["product-price-container"]} ${hasProductPrice ? styles["product-price-container-height"] : styles["product-price-container-height"]}`}
-      >
-        <div
-          className={`${styles["product-price-display"]} ${isOutOfStock ? "hidden" : ""}`}
-        >
+      <div className="mt-0 flex min-h-7 items-center justify-between gap-2 md:mt-2 md:min-h-8">
+        <div className={isOutOfStock ? "hidden" : ""}>
           <span
-            className={`${styles["product-price-text"]} ${size === "small" ? styles["product-price-text-small"] : styles["product-price-text-medium"]}`}
+            className={`text-red-600 ${
+              size === "small"
+                ? "text-sm font-bold"
+                : "pr-1 text-sm font-extrabold lg:text-xl"
+            }`}
           >
             {hasProductPrice ? (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: `${currencySymbol}${product.price || product.listprice}`,
-                }}
-              />
+              <span>
+                {currencySymbol}
+                {(product.price ?? product.listprice)?.toLocaleString()}
+              </span>
             ) : null}
           </span>
 
@@ -143,15 +132,13 @@ const ProductCardFooter = ({
             product?.listprice > product?.price &&
             discountPer > 0 && (
               <>
-                <span className={styles["product-listprice-text"]}>
-                  <span
-                    className={styles["product-listprice-value"]}
-                    dangerouslySetInnerHTML={{
-                      __html: `${currencySymbol}${product.listprice}`,
-                    }}
-                  />
+                <span className="mt-px text-xs text-slate-400 line-through md:text-sm">
+                  <span className="text-slate-400">
+                    {currencySymbol}
+                    {product?.listprice}
+                  </span>
                 </span>
-                <span className={styles["product-discount-badge-text"]}>
+                <span className="absolute left-4 top-5 rounded-3xl bg-red-500 px-2 py-1 text-xs font-bold text-white">
                   {(discountPer && `${discountPer}% OFF`) || null}
                 </span>
               </>
@@ -169,12 +156,17 @@ const ProductCardFooter = ({
                 authUserId={authUserId}
                 authUser={authUser}
                 storeId={storeId}
-                style={{
-                  background: !hasProductPrice ? "#F2F1FD" : "#9690F0",
-                  cursor: !hasProductPrice ? "not-allowed" : "pointer",
-                  color: !hasProductPrice ? "#616161" : "",
-                }}
-                className={getProductBuyButtonClass(size, hasKioskAccess)}
+                className={`${
+                  size === "small"
+                    ? "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-1.5 py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-secondary"
+                    : hasKioskAccess
+                      ? "button-kiosk-card group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-1.5 text-sm font-medium text-black hover:bg-kiosk-primary hover:text-white"
+                      : "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-secondary md:px-1.5 md:py-3 md:text-base"
+                } ${
+                  !hasProductPrice
+                    ? "!cursor-not-allowed !bg-tertiary !text-neutral-600"
+                    : ""
+                }`}
                 disabled={!hasProductPrice}
                 hasKioskAccess={hasKioskAccess}
                 showStartIcon
@@ -187,21 +179,35 @@ const ProductCardFooter = ({
               <AddToCartButton
                 product={product}
                 authUserId={authUserId}
-                getKioskLogin={getKioskLogin}
-                hasKioskAccess={hasKioskAccess}
-                enableKioskGuestPopup={enableKioskGuestPopup}
-                onGuestRequired={onCartGuestRequired}
+                kiosk={kiosk}
+                onGuestPopupOpen={onGuestPopupOpen}
                 source={source}
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
                 isOutOfStock={isOutOfStock}
-                className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
+                className={`${
+                  isOutOfStock
+                    ? size === "small"
+                      ? "box-border flex items-center justify-center gap-2 rounded-xl bg-brand px-1.5 py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-secondary"
+                      : hasKioskAccess
+                        ? "button-kiosk-card group box-border flex items-center justify-center gap-2 rounded-xl px-px py-1.5 text-sm font-medium text-black hover:bg-kiosk-primary hover:text-white"
+                        : "box-border flex items-center justify-center gap-2 rounded-xl bg-brand px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-secondary md:px-1.5 md:py-3 md:text-base"
+                    : size === "small"
+                      ? "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-1.5 py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-secondary"
+                      : hasKioskAccess
+                        ? "button-kiosk-card group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-1.5 text-sm font-medium text-black hover:bg-kiosk-primary hover:text-white"
+                        : "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-secondary md:px-1.5 md:py-3 md:text-base"
+                } ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
                 disabled={!hasProductPrice}
-                iconClassName={cartIconClassName}
+                iconClassName={
+                  showWishlistModal || size === "small"
+                    ? "h-6 w-6"
+                    : hasKioskAccess
+                      ? 'h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert'
+                      : "h-4 w-4 md:h-5 md:w-5"
+                }
                 showIcon
               />
-               
-             
             )}
           </>
         )}
