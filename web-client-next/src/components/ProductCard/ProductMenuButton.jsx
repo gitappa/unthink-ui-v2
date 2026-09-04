@@ -4,10 +4,8 @@ import { FiEdit } from "react-icons/fi";
 import { LuCopy } from "react-icons/lu";
 import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
-import { getStaticImageSrc } from "../../helper/product/productCardHelpers";
 import ProductRemoveAction from "./ProductRemoveAction";
-import more from "../singleCollection/images/Card/more.svg";
-import styles from "../singleCollection/ProductCard.module.css";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const ProductMenuButton = ({
   product,
@@ -21,7 +19,6 @@ const ProductMenuButton = ({
   showRemoveIcon,
   removeFromWishlistClick,
   enableCopyFeature,
-  isCustomProductsPage,
   allowEdit,
   onEditClick,
 }) => {
@@ -67,32 +64,26 @@ const ProductMenuButton = ({
 
   return (
     <>
-      <img
-        src={getStaticImageSrc(more)}
-        alt="More options"
-        height={32}
-        width={32}
-        onClick={(e) => {
-          setMenuIcon(true);
-          e.stopPropagation();
-        }}
-        className={
-          styles[
-            size === "small" ? "product-menu-dropdown-small" : "product-menu-icon"
-          ]
-        }
-      />
+      <div
+        className="absolute right-2.5 lg:right-4 top-10 z-10 mt-1.5 flex h-8 w-8 cursor-pointer
+       items-center justify-center rounded-full bg-white p-1 
+       text-2xl shadow-md transition-all duration-300 ease-in-out lg:top-12
+        lg:hover:bg-hover-light lg:hover:shadow-lg"
+      >
+        <BsThreeDotsVertical
+          className="h-[18px] w-[18px] object-contain"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuIcon((prev) => !prev);
+          }}
+        />
+      </div>
+
       {menuIcon && (
         <div
           ref={menuRef}
           onClick={(e) => e.stopPropagation()}
-          className={
-            styles[
-              size === "small"
-                ? "product-menu-dropdown-mini"
-                : "product-menu-dropdown"
-            ]
-          }
+          className="absolute right-5 top-16 z-50 flex h-fit w-32 flex-col gap-3 rounded-lg bg-white p-3 shadow-md sm:right-6 md:right-10 md:top-16 lg:right-12 lg:top-[72px] lg:w-36"
         >
           <ProductRemoveAction
             isVisible={isDefaultWidget && showRemoveIcon}
@@ -103,45 +94,30 @@ const ProductMenuButton = ({
           />
           {enableCopyFeature && (
             <div
-              className={styles["product-menu-item"]}
+              className="flex cursor-pointer items-center gap-2 rounded-md transition-all duration-200 max-md:text-sm"
               onClick={(e) => {
                 handleCopyClick(e);
                 setMenuIcon(false);
               }}
             >
-              <div
-                className={`${styles["menu-item-circle"]} ${
-                  size === "small"
-                    ? styles["icon-circle-small"]
-                    : styles["icon-circle-medium"]
-                }`}
-              >
-                <LuCopy className={styles.copyIcon} />
+              <div className="mb-0 flex h-5 w-5 items-center justify-center rounded-full bg-support p-0.5 text-gray-dark lg:h-6 lg:w-6 lg:p-1 lg:text-2xl">
+                <LuCopy className="max-md:h-3 max-md:w-3" />
               </div>
-              <p className={styles["text-gray"]}>Copy</p>
+              <p className="mb-0 text-gray-dark">Copy</p>
             </div>
           )}
-          {isCustomProductsPage && allowEdit && (
+          {allowEdit && (
             <div
-              className={styles["product-menu-item"]}
+              className="flex cursor-pointer items-center gap-2 rounded-md transition-all duration-200 max-md:text-sm"
               onClick={(e) => {
                 handleEditClick(e);
                 setMenuIcon(false);
               }}
             >
-              <p
-                className={`${styles["product-cart-button"]} ${styles["product-cart-icon2"]} ${size === "small" ? styles["product-cart-icon-small"] : styles["product-cart-icon-lg"]}`}
-                style={{ backgroundColor: "#f8f6f4" }}
-              >
-                <FiEdit
-                  style={{
-                    color: "#9a9b9b",
-                    backgroundColor: "#f8f6f4",
-                  }}
-                  className={styles["product-cart-icon-smalls"]}
-                />
+              <p className="flex h-5 w-5 items-center justify-center rounded-lg bg-support text-gray-800 lg:h-6 lg:w-6">
+                <FiEdit className="h-4 w-4 bg-support text-gray-dark max-md:h-3 max-md:w-3" />
               </p>
-              <p className={styles["text-gray"]}>Edit</p>
+              <p className="mb-0 text-gray-dark">Edit</p>
             </div>
           )}
         </div>

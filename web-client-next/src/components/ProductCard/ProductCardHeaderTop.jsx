@@ -1,10 +1,8 @@
 import React, { useCallback } from "react";
 import WishlistHeartButton from "../../pageComponents/storePage/CardComponents/WishlistHeartButton";
-import { getFinalImageUrl } from "../../helper/utils";
 import { getTTid } from "../../helper/getTrackerInfo";
 import ProductMenuButton from "./ProductMenuButton";
 import ProductRemoveAction from "./ProductRemoveAction";
-import styles from "../singleCollection/ProductCard.module.css";
 
 export const ProductCardHeaderTop = ({
   productCard = {},
@@ -74,37 +72,37 @@ export const ProductCardHeaderTop = ({
 
   return (
     <>
-    <div style={{ width: "100%" }}>
+    <div className="w-full">
       <img
-        src={getFinalImageUrl(product.image)}
+        src={product.image}
         alt={product.name || "Product image"}
         width="100%"
-        className={`${styles["product-image"]} ${size === "small" ? styles["product-image-small"] : styles["product-image-medium"]}`}
+        className={`h-44 w-full object-contain ${
+          size === "small"
+            ? "rounded-2xl bg-gray-200 backdrop-blur-md lg:h-44"
+            : "rounded-xl shadow-md lg:h-60"
+        }`}
         loading="lazy"
       />
     </div>
 
-    <div
-      className={`${styles["header-container"]} ${
-         (isDefaultWidget && showRemoveIcon) || enableSelect
-          ? styles["flex-reverse"]
-          : ""
-      } ${size === "small" ? styles["header-small"] : styles["header-medium"]}`}
-    >
-      {enableSelect && product?.custom_product !== false ? (
+    
+      {enableSelect && product?.custom_product !== false && (
         <div
-          className={`${styles["product-remove-icon-container"]} ${size === "small" ? styles["product-remove-icon-container-small"] : ""}`}
+          className={`m-1 flex h-6 w-6 items-center self-baseline box-border lg:pl-0 lg:pt-0 ${size === "small" ? "pl-1 pt-1" : ""}`}
         >
           <input
             type="checkbox"
             checked={isSelected}
             onClick={handleSelectProduct}
             onChange={() => {}}
-            className={`${styles[size === "small" ? "product-checkbox-small" : "product-checkbox-large"]}`}
+            className={`cursor-pointer accent-secondary ${
+              size === "small" ? "lg:h-4 lg:w-4" : "h-6 w-6"
+            }`}
           />
         </div>
-      ) : (
-        <>
+      ) }
+      <>
           <ProductRemoveAction
             isVisible={isActionCoverWidget}
             size={size}
@@ -133,21 +131,21 @@ export const ProductCardHeaderTop = ({
             onEditClick={onEditClick}
           />
         </>
-      )}
-
-      <div className="product-name overflow-hidden product_details_container" />
-    </div>
-
+   
     {(!hideAddToWishlist || (isDefaultWidget && showStar)) &&
       !showWishlistModal &&
       !enableSelect &&
       product?.custom_product !== false &&
       !isMyWishlistCollection && (
-        <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
+        <>
           {!hideAddToWishlist && (
             <WishlistHeartButton
               isActive={!!heartRedProduct}
-              containerClassName={` absolute ${hasKioskAccess ? "right-3 top-3.5" : "right-[15px] top-[15px] max-[1024px]:top-[10px]"}  z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px]  max-[1024px]:z-[30]`}
+              containerClassName={`absolute ${
+                hasKioskAccess
+                  ? "right-3 top-3.5"
+                  : "right-4 top-4 max-lg:top-2.5"
+              } z-40 transition-all duration-300 ease-out max-lg:right-2.5 max-lg:z-30`}
               product={product}
               productMfrCode={product?.mfr_code}
               storeData={storeData}
@@ -159,7 +157,7 @@ export const ProductCardHeaderTop = ({
               userId={kioskLogin?.user_id || authUserId || getTTid()}
             />
           )}
-        </div>
+        </>
       )}
 
     {hideAddToWishlist &&
@@ -167,9 +165,9 @@ export const ProductCardHeaderTop = ({
       size === "medium" &&
       !showWishlistModal &&
       !enableSelect && (
-        <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
+        // <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
           <WishlistHeartButton
-            containerClassName="absolute right-[15px] top-[15px] z-[35] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] max-[1024px]:right-[10px] max-[1024px]:top-[10px] max-[1024px]:z-[30]"
+            containerClassName="absolute right-4 top-4 z-40 transition-all duration-300 ease-out max-lg:right-2.5 max-lg:top-2.5 max-lg:z-30"
             product={product}
             productMfrCode={product?.mfr_code}
             storeData={storeData}
@@ -179,7 +177,7 @@ export const ProductCardHeaderTop = ({
             source={source}
             useGuestWishlistFlow
           />
-        </div>
+        //  </div>
       )}
     </>
   );

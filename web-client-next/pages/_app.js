@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
-
+import '../src/style/antd.css'
 // Ant Design base styles (required for Grid/Row/Col gutters and component alignment)
 import "antd/dist/reset.css";
 
