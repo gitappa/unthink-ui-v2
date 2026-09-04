@@ -934,8 +934,10 @@ const ProductDetails = ({ params, ...props }) => {
                               product={productDetails}
                               qty={(cardItem?.qty || 0) + 1}
                               authUserId={authUserId}
-                              getKioskLogin={getStoredKioskLogin}
-                              hasKioskAccess={hasKioskAccess}
+                              kiosk={{
+                                hasAccess: hasKioskAccess,
+                                getLogin: getStoredKioskLogin,
+                              }}
                               onGuestPopupOpen={({ qty }) => {
                                 setIsPopupShow(true);
                                 setPendingGuestAction({

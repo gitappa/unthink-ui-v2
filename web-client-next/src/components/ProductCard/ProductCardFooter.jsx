@@ -184,9 +184,7 @@ const ProductCardFooter = ({
               <AddToCartButton
                 product={product}
                 authUserId={authUserId}
-                getKioskLogin={getKioskLogin}
-                hasKioskAccess={hasKioskAccess}
-                enableKioskGuestPopup={enableKioskGuestPopup}
+                kiosk={kiosk}
                 onGuestPopupOpen={onGuestPopupOpen}
                 source={source}
                 collection={cartSourceCollection}

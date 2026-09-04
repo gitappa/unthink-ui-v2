@@ -46,10 +46,8 @@ export const addProductToCart = ({
 const AddToCartButton = ({
   product,
   qty = 1,
+  kiosk = {},
   authUserId,
-  getKioskLogin,
-  hasKioskAccess = false,
-  enableKioskGuestPopup = false,
   onGuestPopupOpen,
   source,
   collection,
@@ -67,10 +65,15 @@ const AddToCartButton = ({
   const isDisabled = disabled ?? (!product?.price && !product?.listprice);
   const normalizedQty = getNormalizedCartQty(qty);
   const { collection: cartData } = useSelector((state) => state.cart);
+
   const cartCollection = cartData?.product_lists
     ?.map((arr) => arr?.mfr_code)
     .find((arr) => arr === product?.mfr_code);
-
+  const {
+    hasAccess: hasKioskAccess,
+    getLogin: getKioskLogin,
+    enableGuestPopup: enableKioskGuestPopup,
+  } = kiosk;
   const handleGoToCart = (event) => {
     event.stopPropagation();
     event.preventDefault();
