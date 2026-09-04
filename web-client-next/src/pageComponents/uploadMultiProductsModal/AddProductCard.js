@@ -433,13 +433,10 @@ const AddProductCard = ({
 
 			<div className='grid grid-cols-2 gap-4 mt-3'>
 				<div className='col-span-2'>
-					<p
-						dangerouslySetInnerHTML={{
-							__html: `Currency: ${
-								CURRENCY_SYMBOLS[currency] || CURRENCY_SYMBOLS[CURRENCY_INR]
-							} ${currency}`,
-						}}
-					/>
+					<p>
+						Currency: {CURRENCY_SYMBOLS[currency] || CURRENCY_SYMBOLS[CURRENCY_INR]}{" "}
+						{currency}
+					</p>
 				</div>
 				<div>
 					<label className='text-sm'>List price</label>

@@ -65,8 +65,7 @@ export const getCollectionFlags = (collection) => {
   };
 };
 
-export const shouldEnableViewSimilar = (hideViewSimilar) =>
-  enable_view_similar_products === "false" ? false : !hideViewSimilar;
+
 
 const normalizeAttributeKey = (value) =>
   String(value || "")

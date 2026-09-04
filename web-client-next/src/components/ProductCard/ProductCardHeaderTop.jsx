@@ -18,7 +18,6 @@ export const ProductCardHeaderTop = ({
   enableCopyFeature,
   user = {},
   source,
-  enableViewSimilar,
   showRemoveIcon,
   showCustomProductsMenu,
   menuIcon,
@@ -87,7 +86,7 @@ export const ProductCardHeaderTop = ({
 
     <div
       className={`${styles["header-container"]} ${
-        enableViewSimilar || (isDefaultWidget && showRemoveIcon) || enableSelect
+         (isDefaultWidget && showRemoveIcon) || enableSelect
           ? styles["flex-reverse"]
           : ""
       } ${size === "small" ? styles["header-small"] : styles["header-medium"]}`}

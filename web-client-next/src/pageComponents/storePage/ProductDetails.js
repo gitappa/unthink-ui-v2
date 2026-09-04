@@ -29,6 +29,7 @@ import {
   buildVerifyUrl,
 } from "../../helper/autoLogin";
 import { customProductsAPIs } from "../../helper/serverAPIs";
+import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 
 import ShareOptions from "../shared/shareOptions";
 
@@ -440,9 +441,9 @@ const ProductDetails = ({ params, ...props }) => {
 
   const currencySymbol = useMemo(
     () =>
-      productDetails?.currency_symbol
-        ? productDetails.currency_symbol
-        : CURRENCY_SYMBOLS[currency],
+      normalizeCurrencySymbol(
+        productDetails?.currency_symbol || CURRENCY_SYMBOLS[currency],
+      ),
     [productDetails?.currency_symbol, currency],
   );
 
@@ -834,25 +835,19 @@ const ProductDetails = ({ params, ...props }) => {
 
                   <div className="mt-4 lg:mt-6">
                     <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
-                      {productDetails?.price || productDetails?.listprice ? (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: `${currencySymbol}${
-                              productDetails.price || productDetails.listprice
-                            }`,
-                          }}
-                          className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]"
-                        />
+                      {(productDetails?.price ?? productDetails?.listprice) != null ? (
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]">
+                          {currencySymbol}
+                          {productDetails.price ?? productDetails.listprice}
+                        </span>
                       ) : null}
                       {productDetails?.price &&
                       +productDetails.listprice > +productDetails?.price ? (
                         <span className="text-sm sm:text-base text-[#6b7280]">
-                          <span
-                            className="line-through"
-                            dangerouslySetInnerHTML={{
-                              __html: `${currencySymbol}${productDetails.listprice}`,
-                            }}
-                          />
+                          <span className="line-through">
+                            {currencySymbol}
+                            {productDetails.listprice}
+                          </span>
                         </span>
                       ) : null}
                     </div>

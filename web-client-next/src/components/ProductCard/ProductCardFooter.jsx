@@ -54,7 +54,7 @@ const ProductCardFooter = ({
   );
   const discountPer = getProductDiscountPercentage(product);
   const isOutOfStock = isProductOutOfStock(product);
-  const hasProductPrice = !!(product?.price || product?.listprice);
+  const hasProductPrice = (product?.price ?? product?.listprice) != null;
 
   const cartIconClassName =
     showWishlistModal || size === "small"
@@ -131,11 +131,10 @@ const ProductCardFooter = ({
             className={`${styles["product-price-text"]} ${size === "small" ? styles["product-price-text-small"] : styles["product-price-text-medium"]}`}
           >
             {hasProductPrice ? (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: `${currencySymbol}${product.price || product.listprice}`,
-                }}
-              />
+              <span>
+                {currencySymbol}
+                {(product.price ?? product.listprice)?.toLocaleString()}
+              </span>
             ) : null}
           </span>
 
@@ -144,12 +143,10 @@ const ProductCardFooter = ({
             discountPer > 0 && (
               <>
                 <span className={styles["product-listprice-text"]}>
-                  <span
-                    className={styles["product-listprice-value"]}
-                    dangerouslySetInnerHTML={{
-                      __html: `${currencySymbol}${product.listprice}`,
-                    }}
-                  />
+                  <span className={styles["product-listprice-value"]}>
+                    {currencySymbol}
+                    {product?.listprice}
+                  </span>
                 </span>
                 <span className={styles["product-discount-badge-text"]}>
                   {(discountPer && `${discountPer}% OFF`) || null}
@@ -199,9 +196,7 @@ const ProductCardFooter = ({
                 disabled={!hasProductPrice}
                 iconClassName={cartIconClassName}
                 showIcon
-              />
-               
-             
+              />            
             )}
           </>
         )}

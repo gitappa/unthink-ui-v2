@@ -40,9 +40,7 @@ import { useRouter } from "next/router";
 import {
   getCollectionFlags,
   getCurrentCollectionForCard,
-  shouldEnableViewSimilar,
 } from "../../helper/product/productCardHelpers";
-import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
 import ProductCardFooter from "../ProductCard/ProductCardFooter";
 import { ProductCardHeaderTop } from "../ProductCard/ProductCardHeaderTop";
 import ProductCardHeaderBottom from "../ProductCard/ProductCardHeaderBottom";
@@ -60,7 +58,6 @@ const ProductCard = ({
   collection_id,
   onProductClick,
   productClickParam = {},
-  hideViewSimilar = false,
   hideAddToWishlist = false,
   enableHoverShowcase = false,
   showRemoveIcon = false,
@@ -98,17 +95,7 @@ const ProductCard = ({
   const menuRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuIcon(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
+ 
 
   const [
     authUserId,
@@ -122,6 +109,7 @@ const ProductCard = ({
     collections,
     singleCollections,
     wishlistCollections,
+    storeData,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -134,11 +122,16 @@ const ProductCard = ({
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
     state.auth.user.wishlistCollections,
+    state.store.data,
   ]);
-  
-  const [storeData] = useSelector((state) => [state.store.data]);
-  const [Collection_tryonStatement, setCollectionTryonStatement] =
-    useState(null);
+  const hasKioskAccess = useKioskAccess({
+    isUserLogin,
+    storeData,
+    authUser,
+  });
+
+
+  const [Collection_tryonStatement, setCollectionTryonStatement] =  useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
   const currentCollectionForCard = useMemo(
     () =>
@@ -157,10 +150,21 @@ const ProductCard = ({
       singleCollections,
     ],
   );
-
   const { isMyWishlistCollection, isMyTryonsCollection } = getCollectionFlags(
     currentCollectionForCard,
   );
+ useEffect(() => {
+    const handleClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuIcon(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+  
 
   const getKioskLogin = useCallback(() => {
     if (typeof window === "undefined") return null;
@@ -185,17 +189,8 @@ const ProductCard = ({
       window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
     };
   }, [syncKioskLogin]);
-
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
-  const enableViewSimilar = useMemo(() => {
-    return shouldEnableViewSimilar(hideViewSimilar);
-  }, [hideViewSimilar]);
-
-  const productHasUrl = isProductUrlAvailable(product);
+const kioskLogin = getKioskLogin();
+  
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
@@ -262,7 +257,7 @@ const ProductCard = ({
     }
   };
 
-  const kioskLogin = getKioskLogin();
+  
 
   useEffect(() => {
     setCollectionTryonStatement(
@@ -407,7 +402,6 @@ const ProductCard = ({
             enableCopyFeature={enableCopyFeature}
             user={userConfig}
             source={source}
-            enableViewSimilar={enableViewSimilar}
             showRemoveIcon={showRemoveIcon}
             showCustomProductsMenu={showCustomProductsMenu}
             menuIcon={menuIcon}
@@ -425,7 +419,6 @@ const ProductCard = ({
             wishlist={wishlistConfig}
             isMyTryonsCollection={isMyTryonsCollection}
             callbacks={headerBottomCallbacks}
-            productHasUrl={productHasUrl}
             buyNowTitle={buyNowTitle}
             showProductStarAction={showProductStarAction}
           />

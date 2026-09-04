@@ -5,6 +5,7 @@ import camera from "../singleCollection/images/Card/camera.svg";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import styles from "../singleCollection/ProductCard.module.css";
 import useTheme from "../../hooks/chat/useTheme";
+import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
 
  const ProductCardHeaderBottom = ({
   productCard = {},
@@ -13,7 +14,6 @@ import useTheme from "../../hooks/chat/useTheme";
   wishlist = {},
   callbacks = {},
   isMyTryonsCollection,
-  productHasUrl,
   buyNowTitle,
   showProductStarAction,
 }) => {
@@ -29,6 +29,7 @@ import useTheme from "../../hooks/chat/useTheme";
   const { showModal: showWishlistModal } = wishlist;
   const { onSetMfrCode: setOnMfrCode, onVtoClick, onStarClick } = callbacks;
     const { themeCodes } = useTheme();
+  const productHasUrl = isProductUrlAvailable(product);
   const handleStarClick = useCallback(
     (e) => {
       e.stopPropagation();

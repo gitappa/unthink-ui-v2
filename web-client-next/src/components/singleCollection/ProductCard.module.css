@@ -1033,6 +1033,7 @@
 .product-price-text-medium {
   font-size: 14px;
   font-weight: 800;
+  padding-right: 5px;
 }
 
 @media (min-width: 1024px) {
