@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { FiEdit } from "react-icons/fi";
 import { LuCopy } from "react-icons/lu";
+import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
+import { openProductDetailsCopyModal } from "../../pageComponents/productDetailsCopyModal/redux/actions";
 import { getStaticImageSrc } from "../../helper/product/productCardHelpers";
 import ProductRemoveAction from "./ProductRemoveAction";
 import more from "../singleCollection/images/Card/more.svg";
 import styles from "../singleCollection/ProductCard.module.css";
 
 const ProductMenuButton = ({
+  product,
+  collectionId,
   showCustomProductsMenu,
   size,
   menuIcon,
@@ -16,11 +21,46 @@ const ProductMenuButton = ({
   showRemoveIcon,
   removeFromWishlistClick,
   enableCopyFeature,
-  handleCopyClick,
   isCustomProductsPage,
   allowEdit,
-  handleEditClick,
+  onEditClick,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleOpenProductModal = useCallback(
+    (allowEdit) => {
+      dispatch(
+        openProductModal({
+          payload: product,
+          collectionId,
+          allowEdit,
+        }),
+      );
+    },
+    [dispatch, product, collectionId],
+  );
+
+  const handleEditClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (onEditClick) {
+        onEditClick();
+      } else {
+        handleOpenProductModal(true);
+      }
+    },
+    [onEditClick, handleOpenProductModal],
+  );
+
+  const handleCopyClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      product && dispatch(openProductDetailsCopyModal(product));
+    },
+    [dispatch, product],
+  );
+
   if (!showCustomProductsMenu) {
     return null;
   }

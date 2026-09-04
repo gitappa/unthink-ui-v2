@@ -1,10 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { addToCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
+import { useRouter } from "next/router";
 
 export const addProductToCart = ({
   dispatch,
@@ -52,29 +53,36 @@ const AddToCartButton = ({
   source,
   collection,
   eventId,
-  cartCollection,
-  onGoToCart,
   isOutOfStock = false,
   disabled,
   className,
   iconClassName,
   showIcon = false,
   style,
-  children,  
   type = "button",
 }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const isDisabled = disabled ?? (!product?.price && !product?.listprice);
   const normalizedQty = getNormalizedCartQty(qty);
+  const { collection: cartData } = useSelector((state) => state.cart);
+  const cartCollection = cartData?.product_lists
+    ?.map((arr) => arr?.mfr_code)
+    .find((arr) => arr === product?.mfr_code);
 
+  const handleGoToCart = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    router.push("/cart");
+  };
   const handleAddToCart = (event) => {
     event?.stopPropagation?.();
     event?.preventDefault?.();
 
     if (isOutOfStock) return;
 
-    if (cartCollection && onGoToCart) {
-      onGoToCart(event);
+    if (cartCollection) {
+      handleGoToCart(event);
       return;
     }
 
@@ -122,12 +130,11 @@ const AddToCartButton = ({
       style={style}
     >
       {showIcon ? icon : null}
-      {children ||
-        (isOutOfStock
+      { isOutOfStock
           ? "Out of Stock"
           : cartCollection
             ? " Go to Cart "
-            : " Add to Cart")}
+            : " Add to Cart"}
     </button>
   );
 };

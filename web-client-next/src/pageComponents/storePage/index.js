@@ -142,9 +142,6 @@ const Recommendations = dynamic(() => import("../recommendations/Recommendations
 const WishListModal = dynamic(() => import("../wishlist/WishListModal.js"), {
 	ssr: false,
 });
-const SimilarProducts = dynamic(() => import("../similarProducts/SimilarProducts.js"), {
-	ssr: false,
-});
 
 const PeopleList = dynamic(() => import("../people/PeopleList.js"), {
 	ssr: false,
@@ -1522,14 +1519,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				trackCollectionCampCode={currentSingleCollection.campaign_code}
 				trackCollectionICode={pageUser.influencer_code}
 			/>
-			<SimilarProducts
-				enableClickTracking={isSharedPage || isCollectionPage}
-				pageUser={pageUser}
-				trackCollectionId={currentSingleCollection._id}
-				trackCollectionName={currentSingleCollection.collection_name}
-				trackCollectionCampCode={currentSingleCollection.campaign_code}
-				trackCollectionICode={pageUser.influencer_code}
-			/>
+			
 
 			{/* to create new tailwind classes in build */}
 			<span className={styles.hiddenUtilityClasses} />

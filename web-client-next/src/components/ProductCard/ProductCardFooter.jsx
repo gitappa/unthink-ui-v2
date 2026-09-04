@@ -19,23 +19,27 @@ import styles from "../singleCollection/ProductCard.module.css";
 const { Text } = Typography;
 
 const ProductCardFooter = ({
-  product,
-  size,
-  storeData,
-  isCustomProductsPage,
-  authUserId,
-  authUser,
-  storeId,
-  hasKioskAccess,
-  showWishlistModal,
-  getKioskLogin,
-  enableKioskGuestPopup,
-  onCartGuestRequired,
-  source,
-  cartSourceCollection,
-  cartCollection,
-  onGoToCart,
+  productCard = {},
+  user = {},
+  kiosk = {},
+  wishlist = {},
+  cart = {},
 }) => {
+  const { product, size, storeData, isCustomProductsPage } = productCard;
+  const { authUserId, authUser, storeId, source } = user;
+  const {
+    hasAccess: hasKioskAccess,
+    getLogin: getKioskLogin,
+    enableGuestPopup: enableKioskGuestPopup,
+  } = kiosk;
+  const { showModal: showWishlistModal } = wishlist;
+  const {
+    onGuestRequired: onCartGuestRequired,
+    sourceCollection: cartSourceCollection,
+
+  } = cart;
+
+
   const containerRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -190,20 +194,14 @@ const ProductCardFooter = ({
                 source={source}
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
-                cartCollection={cartCollection}
-                onGoToCart={onGoToCart}
                 isOutOfStock={isOutOfStock}
                 className={`${isOutOfStock ? getDisabledProductBuyButtonClass(size, hasKioskAccess) : getProductBuyButtonClass(size, hasKioskAccess)} ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
                 disabled={!hasProductPrice}
                 iconClassName={cartIconClassName}
                 showIcon
-              >
-                {isOutOfStock
-                  ? "Out of Stock"
-                  : cartCollection
-                    ? " Go to Cart "
-                    : " Add to Cart"}
-              </AddToCartButton>
+              />
+               
+             
             )}
           </>
         )}
