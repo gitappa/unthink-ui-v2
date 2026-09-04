@@ -251,7 +251,7 @@ const ProductCard = ({
     }
     if (open && !hasKioskAccess) {
       window.open(`/product/${product.mfr_code}`, "_blank");
-    } else if (hasKioskAccess) {
+    } else {
       router.push(`/product/${product.mfr_code}`);
     }
     if (showChatModal) {
@@ -303,17 +303,6 @@ const ProductCard = ({
           path: collection_path,
         }
       : undefined;
-  const handleCartGuestRequired = ({ product: cartProduct, qty }) => {
-    onGuestPopupOpen?.({
-      type: "cart",
-      product: {
-        mfr_code: cartProduct.mfr_code,
-        tagged_by: cartProduct.tagged_by || [],
-      },
-      qty,
-    });
-    dispatch(GuestPopUpShow(true));
-  };
 
   const handleVtoClick = (mfrCode) => {
     if (mfrCode) {
@@ -352,11 +341,10 @@ const ProductCard = ({
     isLoggedIn: isUserLogin,
   };
   const cartConfig = {
-    onGuestRequired: handleCartGuestRequired,
+    onGuestPopupOpen,
     sourceCollection: cartSourceCollection,
   };
   const headerTopCallbacks = {
-    onProductClick: handleProductClick,
     onSetSelectValue: setSelectValue,
     onSetMenuIcon: setMenuIcon,
     onEditClick,
@@ -368,6 +356,23 @@ const ProductCard = ({
     onVtoClick: handleVtoClick,
     onStarClick,
   };
+  const handleCardClick = (event) => {
+    if (enableSelect) return;
+
+    const interactiveElement = event.target?.closest?.(
+      "a, button, input, select, textarea, [role='button'], div.swiper-wrapper",
+    );
+    if (interactiveElement) return;
+    if(hasKioskAccess){
+    sessionStorage.setItem("plp-scroll", String(window.scrollY));
+    sessionStorage.setItem("plp-collection", singleCollections?.path);
+    handleProductClick({ open: false });
+    }
+
+    const openInNewTab =
+      !hasKioskAccess && window.matchMedia("(min-width: 1024px)").matches;
+    handleProductClick({ open: openInNewTab });
+  };
 
   return (
     <div
@@ -376,19 +381,13 @@ const ProductCard = ({
     >
       <div
         className={`${styles["product-container"]} ${  styles["product-container-all-rounded"]}`}
-        style={{ cursor: enableSelect ? "pointer" : "default" }}
-        onClick={() =>
-          hasKioskAccess
-            ? (sessionStorage.setItem("plp-scroll", String(window.scrollY)),
-              sessionStorage.setItem("plp-collection", singleCollections?.path),
-              router.push(`/product/${product.mfr_code}`))
-            : null
-        }
+        style={{ cursor: "pointer" }}
+        onClick={handleCardClick}
       >
         <div
           className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
           onClick={(e) => {
-            if (setSelectValue) {
+            if (isSelected) {
               e.stopPropagation();
               setSelectValue(!isSelected);
             }

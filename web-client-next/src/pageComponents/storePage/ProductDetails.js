@@ -941,14 +941,13 @@ const ProductDetails = ({ params, ...props }) => {
                               authUserId={authUserId}
                               getKioskLogin={getStoredKioskLogin}
                               hasKioskAccess={hasKioskAccess}
-                              onGuestRequired={({ qty }) => {
+                              onGuestPopupOpen={({ qty }) => {
                                 setIsPopupShow(true);
                                 setPendingGuestAction({
                                   type: "cart",
                                   productDetails,
                                   qty,
                                 });
-                                dispatch(GuestPopUpShow(true));
                               }}
                               disabled={false}
                               className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}

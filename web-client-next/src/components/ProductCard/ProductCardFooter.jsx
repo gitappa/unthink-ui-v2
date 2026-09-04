@@ -34,7 +34,7 @@ const ProductCardFooter = ({
   } = kiosk;
   const { showModal: showWishlistModal } = wishlist;
   const {
-    onGuestRequired: onCartGuestRequired,
+    onGuestPopupOpen,
     sourceCollection: cartSourceCollection,
 
   } = cart;
@@ -190,7 +190,7 @@ const ProductCardFooter = ({
                 getKioskLogin={getKioskLogin}
                 hasKioskAccess={hasKioskAccess}
                 enableKioskGuestPopup={enableKioskGuestPopup}
-                onGuestRequired={onCartGuestRequired}
+                onGuestPopupOpen={onGuestPopupOpen}
                 source={source}
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
