@@ -97,7 +97,7 @@ const ProductCardFooter = ({
           >
             {productCardAttributes.map((attribute) => (
               <SwiperSlide key={attribute.key} style={{ width: "auto" }}>
-                <span className="mb-1 mr-1 block whitespace-nowrap rounded-lg bg-gray-100 p-1 text-xs font-medium md:px-2 md:py-1 md:text-sm">
+                <span className="mb-1 text-gray-dark mr-1 block whitespace-nowrap rounded-lg bg-gray-100 p-1 text-xs font-medium md:px-2 md:py-1  ">
                   {attribute.label}: {attribute.value}
                 </span>
               </SwiperSlide>
