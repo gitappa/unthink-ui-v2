@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { notification, Upload } from "antd";
 import {
   CloseCircleOutlined,
@@ -10,56 +10,56 @@ import Modal from "../modal/Modal";
 import CameraCapture from "../shared/CameraCapture";
 import { profileAPIs, TryonSaveApiCall, TryOnVto } from "../../helper/serverAPIs";
 import { vtoIconState } from "./redux/actions";
+import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
+import camera from "./images/Card/camera.svg";
 
-const getVTOLoadingSpinnerClass = (hasKioskAccess) =>
-  `animate-spin text-5xl ${hasKioskAccess ? "text-kiosk-primary" : "text-indigo-600"}`;
-
-const getVTOCancelButtonClass = (hasKioskAccess) =>
-  `cursor-pointer rounded-xl border bg-transparent px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-    hasKioskAccess
-      ? "border-kiosk-primary text-black hover:bg-kiosk-secondary/20"
-      : "border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-  }`;
-
-const getVTOPrimaryButtonClass = (hasKioskAccess) =>
-  `cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-    hasKioskAccess
-      ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-hover-kiosk-secondary hover:text-white"
-      : "bg-indigo-600 text-white hover:bg-indigo-700"
-  }`;
-
-const getVTOTextareaClass = (hasKioskAccess) =>
-  `mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:ring-[3px] ${
-    hasKioskAccess
-      ? "focus:border-kiosk-primary focus:ring-kiosk-primary/10"
-      : "focus:border-indigo-600 focus:ring-indigo-600/10"
-  }`;
-
-const getVTOSubmitButtonClass = (hasKioskAccess, loading) =>
-  `mt-5 flex cursor-pointer justify-end rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-    loading
-      ? hasKioskAccess
-        ? "bg-kiosk-secondary text-black hover:opacity-90"
-        : "bg-indigo-300 text-indigo-600 hover:opacity-90"
-      : getVTOPrimaryButtonClass(hasKioskAccess)
-  }`;
-
-const VirtualTryOnModal = ({
-  isOpen,
-  subText,
+export const VirtualTryOnModal = ({
+  size,
+  className = "",
+  isFloating = false,
+  iconClassName = "z-10 h-5 w-5 md:h-5 md:w-5",
+  textClassName = "text-xs font-semibold text-black",
+  product,
+  login,
   hasKioskAccess,
-  productImage,
-  storeName,
-  imageTryonPrompt,
-  tryonType = "tryon",
-  saveProduct,
+  buildProductAutoLoginQr,
+  setIsPopupShow,
+  setGuestPopupAction,
+  enableKioskGuestPopup,
+  onGuestPopupOpen,
+  onKioskTryonClick,
+  setOnMfrCode,
+  onVtoClick,
+  storeData,
+  tryonConfig,
+  subText,
   saveUserId = null,
-  eventId = null,
   kioskEmail = null,
   kioskUserName = null,
   saveText = "Save",
 }) => {
   const dispatch = useDispatch();
+  const ButtonClick = useSelector((state) => state.VtoIconReducer.ButtonClick);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
+  const isOpen = Boolean(storeData && ButtonClick === product?.mfr_code);
+  const modalSubText =
+    subText || tryonConfig?.tryon_statement || storeData?.defult_tryon_statement;
+  const productImage = product?.image;
+  const storeName = storeData?.store_name;
+  const imageTryonPrompt =
+    storeData?.templates?.[tryonConfig?.tryon_type] ||
+    storeData?.templates?.[storeData?.default_tryon_type] ||
+    "";
+  const tryonType = tryonConfig?.tryon_type || "tryon";
+  const eventId = storeData?.event_id || null;
+  const saveProduct = product
+    ? {
+        mfr_code: product?.mfr_code,
+        name: product?.name,
+        image: product?.image || "",
+      }
+    : null;
+
   const [showLoader, setShowLoader] = useState(false);
   const [description, setDescription] = useState("");
   const [vtoResultImageUrl, setVtoResultImageUrl] = useState(null);
@@ -67,8 +67,6 @@ const VirtualTryOnModal = ({
   const [loading, setLoading] = useState(false);
 
   const uploadedImage = uploadedImages?.[0];
-
-  if (!isOpen) return null;
 
   const handleVTOCancel = () => {
     dispatch(vtoIconState(false));
@@ -129,7 +127,7 @@ const VirtualTryOnModal = ({
     event.preventDefault();
 
     const payload = {
-      image_urls: [ uploadedImage,productImage],
+      image_urls: [uploadedImage, productImage],
       store: storeName,
       image_tryon_prompt: imageTryonPrompt || "",
       additional_prompt: description || "",
@@ -208,7 +206,7 @@ const VirtualTryOnModal = ({
         ],
       };
 
-      const responseData = await TryonSaveApiCall(payload);
+      await TryonSaveApiCall(payload);
       notification.success({
         message: "Save Success",
         description: "Collection added successfully",
@@ -225,11 +223,84 @@ const VirtualTryOnModal = ({
     }
   };
 
+  const handleClick = async (event) => {
+    event?.stopPropagation?.();
+    const mfrCode = product?.mfr_code;
+
+    if (setOnMfrCode || onVtoClick || onKioskTryonClick) {
+      setOnMfrCode?.(product);
+      if (!login) {
+        if (hasKioskAccess && enableKioskGuestPopup) {
+          onGuestPopupOpen?.({
+            type: "vto",
+            mfrCode,
+            product,
+          });
+          onVtoClick?.();
+          return;
+        }
+      }
+
+      if (
+        hasKioskAccess &&
+        enableKioskGuestPopup &&
+        mfrCode &&
+        onKioskTryonClick
+      ) {
+        onKioskTryonClick(product);
+        return;
+      }
+
+      if (mfrCode) {
+        onVtoClick?.(mfrCode);
+      }
+      return;
+    }
+
+    if (!login && hasKioskAccess) {
+      setIsPopupShow?.(true);
+      setGuestPopupAction?.("vto");
+      dispatch?.(GuestPopUpShow(true));
+      return;
+    }
+
+    if (hasKioskAccess && !isMobile && login) {
+      await buildProductAutoLoginQr?.({ mfrCode });
+      return;
+    }
+
+    if (mfrCode) {
+      dispatch?.(vtoIconState(mfrCode));
+    }
+  };
+
   return (
+    <>
+      <button
+        className={`${
+          isFloating
+            ? size === "small"
+              ? "absolute bottom-2.5 left-2.5"
+              : "absolute bottom-3 right-3 md:bottom-5 md:right-4"
+            : ""
+        } flex w-fit cursor-pointer flex-row-reverse items-center gap-1 rounded-3xl bg-white px-2 py-1 shadow-md transition-all duration-300 ease-in-out lg:hover:bg-hover-light lg:hover:shadow-lg ${className}`.trim()}
+        onClick={handleClick}
+        title="Try on with virtual camera"
+      >
+        <img
+          height={20}
+          width={20}
+          alt="Try on with camera"
+          className={iconClassName}
+          src={camera}
+        />
+        <p className={textClassName}>Try On</p>
+      </button>
+      {isOpen ? (
     <Modal
       isOpen={isOpen}
       headerText="Virtual Try-On"
-      subText={subText}
+      subText={modalSubText}
       onClose={handleVTOCancel}
       size="md"
     >
@@ -244,14 +315,22 @@ const VirtualTryOnModal = ({
             <button
               type="button"
               onClick={handleVTOCancel}
-              className={getVTOCancelButtonClass(hasKioskAccess)}
+              className={`cursor-pointer rounded-xl border bg-transparent px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                hasKioskAccess
+                  ? "border-kiosk-primary text-black hover:bg-kiosk-secondary/20"
+                  : "border-brand text-brand hover:bg-tertiary"
+              }`}
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleVTODownload}
-              className={getVTOPrimaryButtonClass(hasKioskAccess)}
+              className={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                hasKioskAccess
+                  ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
+                  : "bg-brand text-white hover:bg-secondary"
+              }`}
             >
               Download
             </button>
@@ -259,7 +338,11 @@ const VirtualTryOnModal = ({
               <button
                 type="button"
                 onClick={handleVTOSave}
-                className={getVTOPrimaryButtonClass(hasKioskAccess)}
+                className={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                  hasKioskAccess
+                    ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
+                    : "bg-brand text-white hover:bg-secondary"
+                }`}
               >
                 {saveText}
               </button>
@@ -269,7 +352,9 @@ const VirtualTryOnModal = ({
       ) : loading ? (
         <div className="flex flex-col items-center justify-center gap-4 py-12">
           <LoadingOutlined
-            className={getVTOLoadingSpinnerClass(hasKioskAccess)}
+            className={`animate-spin text-5xl ${
+              hasKioskAccess ? "text-kiosk-primary" : "text-brand"
+            }`}
           />
           <div className="flex flex-col items-center gap-2 text-center">
             <p className="m-0 text-lg font-semibold text-gray-800">
@@ -285,7 +370,9 @@ const VirtualTryOnModal = ({
           <div className="relative flex flex-col items-center justify-center pb-[25px]">
             {showLoader ? (
               <LoadingOutlined
-                className={getVTOLoadingSpinnerClass(hasKioskAccess)}
+                className={`animate-spin text-5xl ${
+                  hasKioskAccess ? "text-kiosk-primary" : "text-brand"
+                }`}
               />
             ) : !uploadedImage ? (
               <div className="relative flex flex-col items-center justify-center pb-[25px]">
@@ -294,8 +381,16 @@ const VirtualTryOnModal = ({
                   panelClassName="relative flex w-full flex-col items-center justify-center pb-[25px]"
                   videoClassName="max-h-80 w-full max-w-sm rounded-xl bg-black object-cover"
                   actionsClassName="mt-4 flex flex-wrap justify-center gap-3"
-                  secondaryButtonClassName={getVTOCancelButtonClass(hasKioskAccess)}
-                  primaryButtonClassName={getVTOPrimaryButtonClass(hasKioskAccess)}
+                  secondaryButtonClassName={`cursor-pointer rounded-xl border bg-transparent px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                    hasKioskAccess
+                      ? "border-kiosk-primary text-black hover:bg-kiosk-secondary/20"
+                      : "border-brand text-brand hover:bg-tertiary"
+                  }`}
+                  primaryButtonClassName={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                    hasKioskAccess
+                      ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
+                      : "bg-brand text-white hover:bg-secondary"
+                  }`}
                   renderIdle={({
                     openCamera,
                     isCameraStarting,
@@ -318,7 +413,7 @@ const VirtualTryOnModal = ({
                       >
                         <p
                           className={`text-[2rem] ${
-                            hasKioskAccess ? "text-kiosk-primary" : "text-indigo-600"
+                            hasKioskAccess ? "text-kiosk-primary" : "text-brand"
                           }`}
                         >
                           <UploadOutlined />
@@ -334,7 +429,7 @@ const VirtualTryOnModal = ({
                         className={`mt-3 flex cursor-pointer items-center gap-2 rounded-xl border px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:opacity-70 md:text-sm ${
                           hasKioskAccess
                             ? "border-kiosk-primary bg-transparent text-black hover:bg-kiosk-secondary/20"
-                            : "border-indigo-600 bg-transparent text-indigo-600 hover:bg-indigo-50"
+                            : "border-brand bg-transparent text-brand hover:bg-tertiary"
                         }`}
                       >
                         {isCameraStarting ? <LoadingIcon /> : <CameraIcon />}
@@ -365,7 +460,11 @@ const VirtualTryOnModal = ({
             Add a prompt for AI (optional)
           </h4>
           <textarea
-            className={getVTOTextareaClass(hasKioskAccess)}
+            className={`mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:ring-[3px] ${
+              hasKioskAccess
+                ? "focus:border-kiosk-primary focus:ring-kiosk-primary/10"
+                : "focus:border-brand focus:ring-brand/10"
+            }`}
             placeholder="Enter description..."
             name="description"
             type="text"
@@ -377,7 +476,15 @@ const VirtualTryOnModal = ({
           <div className="flex justify-end">
             <button
               type="submit"
-              className={getVTOSubmitButtonClass(hasKioskAccess, loading)}
+              className={`mt-5 flex cursor-pointer justify-end rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
+                loading
+                  ? hasKioskAccess
+                    ? "bg-kiosk-secondary text-black hover:opacity-90"
+                    : "bg-secondary text-brand hover:opacity-90"
+                  : hasKioskAccess
+                    ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
+                    : "bg-brand text-white hover:bg-secondary"
+              }`}
             >
               Submit
             </button>
@@ -385,8 +492,9 @@ const VirtualTryOnModal = ({
         </form>
       )}
     </Modal>
+      ) : null}
+    </>
   );
 };
 
 export default VirtualTryOnModal;
-

@@ -33,7 +33,6 @@ import {
   gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
-import VirtualTryOnModal from "./VirtualTryOnModal";
 import { vtoIconState } from "./redux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
@@ -104,7 +103,6 @@ const ProductCard = ({
     showWishlistModal,
     store_id,
     authUser,
-    ButtonClick,
     isUserLogin,
     collections,
     singleCollections,
@@ -117,7 +115,6 @@ const ProductCard = ({
     state.appState.wishlist.showWishlistModal,
     state.store.data.store_id,
     state.auth.user.data,
-    state.VtoIconReducer.ButtonClick,
     state?.auth?.user?.isUserLogin,
     state.auth.user.collections.data,
     state.auth.user.singleCollections.data,
@@ -327,6 +324,8 @@ const kioskLogin = getKioskLogin();
     isCustomProductsPage,
     storeData,
     enableSelect,
+    tryonConfig: Collection_vto || Collection_tryonStatement,
+    saveUserId: KioskLoginAuth?.user_id || authUser?.user_id || null,
   };
   const userConfig = {
     authUserId,
@@ -432,34 +431,6 @@ const kioskLogin = getKioskLogin();
         />
       </div>
 
-      <VirtualTryOnModal
-        isOpen={ButtonClick === product?.mfr_code}
-        subText={
-          Collection_tryonStatement?.tryon_statement
-            ? Collection_tryonStatement?.tryon_statement
-            : storeData?.defult_tryon_statement
-        }
-        hasKioskAccess={hasKioskAccess}
-        productImage={product?.image}
-        storeName={storeData?.store_name}
-        imageTryonPrompt={
-          storeData?.templates?.[Collection_vto?.tryon_type] ||
-          storeData?.templates?.[storeData?.default_tryon_type] ||
-          ""
-        }
-        tryonType={Collection_vto?.tryon_type || "tryon"}
-        saveProduct={
-          product
-            ? {
-                mfr_code: product?.mfr_code,
-                name: product?.name,
-                image: product?.image || "",
-              }
-            : null
-        }
-        eventId={storeData?.event_id || null}
-        saveUserId={KioskLoginAuth?.user_id || authUser?.user_id || null}
-      />
     </div>
   );
 };

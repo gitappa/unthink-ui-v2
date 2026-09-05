@@ -10,7 +10,6 @@ import { message, notification } from "antd";
 import Image from "next/image";
 import { CopyOutlined, EditOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
-import camera from "../../components/singleCollection/images/Card/camera.svg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
@@ -55,9 +54,8 @@ import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
-import { vtoIconState } from "../../components/singleCollection/redux/actions";
 import Modal from "../../components/modal/Modal";
-import VirtualTryOnModal from "../../components/singleCollection/VirtualTryOnModal";
+import { VirtualTryOnModal } from "../../components/singleCollection/VirtualTryOnModal";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import {
@@ -98,7 +96,6 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductImage,
     fetchProductLoading,
     productDetail,
-    ButtonClick,
     productToWishlistCollection,
     wishlistCollections,
   ] = useSelector((state) => [
@@ -109,7 +106,6 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.image,
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
-    state.VtoIconReducer.ButtonClick,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
   ]);
@@ -127,7 +123,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [qrTargetUrl, setQrTargetUrl] = useState("");
   const [shareContext, setShareContext] = useState("product");
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
+ 
   const imageFromQuery = cleanImage(router.query.image);
   const [dropDown, setDropDown] = useState(false);
   const [additionalimg, setAdditionalImg] = useState(null);
@@ -623,43 +619,25 @@ const ProductDetails = ({ params, ...props }) => {
                         </span>
                       ) : null}
                       {storeData?.is_tryon_enabled && (
-                        <button
-                          className="absolute bottom-3 right-3 flex items-center gap-[6px] rounded-[35px] bg-white px-[10px] py-[5px] shadow-[0_2px_12px_rgba(0,0,0,0.1)] group"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            const mfrCode = productDetails?.mfr_code;
-
-                            if (!kioskLogin && hasKioskAccess) {
-                              setIsPopupShow(true);
-                              setGuestPopupAction("vto");
-                              dispatch(GuestPopUpShow(true));
-                              return;
-                            }
-
-                            if (hasKioskAccess && !isMobile && kioskLogin) {
-                              await buildProductAutoLoginQr({ mfrCode });
-                              return;
-                            }
-
-                            if (mfrCode) {
-                              dispatch(vtoIconState(mfrCode));
-                            }
-                          }}
-                          title="Try on with virtual camera"
-                        >
-                          <div className="relative">
-                            <Image
-                              height={18}
-                              width={18}
-                              alt="Try on with camera"
-                              src={camera}
-                              className="group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
-                          <span className="text-whit font-semibold text-xs sm:text-sm whitespace-nowrap">
-                            Try On
-                          </span>
-                        </button>
+                        <VirtualTryOnModal
+                          isFloating
+                          className="group"
+                          product={productDetails}
+                          login={kioskLogin}
+                          hasKioskAccess={hasKioskAccess}
+                          buildProductAutoLoginQr={buildProductAutoLoginQr}
+                          setIsPopupShow={setIsPopupShow}
+                          setGuestPopupAction={setGuestPopupAction}
+                          storeData={storeData}
+                          tryonConfig={collection}
+                          saveUserId={
+                            kioskLogin?.user_id || authUser?.user_id || null
+                          }
+                          kioskEmail={kioskLogin?.email || null}
+                          kioskUserName={kioskLogin?.user_name || null}
+                          iconClassName="h-[18px] w-[18px] transition-transform duration-300 group-hover:scale-110"
+                          textClassName="text-whit text-xs font-semibold whitespace-nowrap sm:text-sm"
+                        />
                       )}
                     </div>
                   ) : null}
@@ -731,33 +709,6 @@ const ProductDetails = ({ params, ...props }) => {
                 ) : null}
               </div>
             </div>
-            <VirtualTryOnModal
-              isOpen={ButtonClick === productDetails?.mfr_code}
-              subText={storeData?.defult_tryon_statement}
-              hasKioskAccess={hasKioskAccess}
-              productImage={productDetails?.image}
-              storeName={storeData?.store_name}
-              imageTryonPrompt={
-                storeData?.templates?.[collection?.tryon_type] ||
-                storeData?.templates?.[storeData?.default_tryon_type] ||
-                ""
-              }
-              tryonType={collection?.tryon_type || "tryon"}
-              saveProduct={
-                productDetails
-                  ? {
-                      mfr_code: productDetails?.mfr_code,
-                      name: productDetails?.name,
-                      image: productDetails?.image || "",
-                    }
-                  : null
-              }
-              saveUserId={kioskLogin?.user_id || authUser?.user_id || null}
-              eventId={storeData?.event_id || null}
-              kioskEmail={kioskLogin?.email || null}
-              kioskUserName={kioskLogin?.user_name || null}
-            />
-
             {productDetails && (
               <div className="flex flex-col  w-full   bg-white/95 ">
                 <div>

@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
-import camera from "../singleCollection/images/Card/camera.svg";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import useTheme from "../../hooks/chat/useTheme";
 import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
+import { VirtualTryOnModal } from "../singleCollection/VirtualTryOnModal";
 
 const ProductCardHeaderBottom = ({
   productCard = {},
@@ -15,8 +15,15 @@ const ProductCardHeaderBottom = ({
   buyNowTitle,
   showProductStarAction,
 }) => {
-  const { product, size, isCustomProductsPage, storeData, enableSelect } =
-    productCard;
+  const {
+    product,
+    size,
+    isCustomProductsPage,
+    storeData,
+    enableSelect,
+    tryonConfig,
+    saveUserId,
+  } = productCard;
   const {
     hasAccess: hasKioskAccess,
     loginAuth: kioskLoginAuth,
@@ -51,51 +58,21 @@ const ProductCardHeaderBottom = ({
         !showWishlistModal &&
         product?.custom_product !== false &&
         !isMyTryonsCollection && (
-          <div
-            className={`absolute flex w-fit cursor-pointer flex-row-reverse items-center rounded-3xl bg-white shadow-md transition-all duration-300 ease-in-out lg:hover:bg-hover-light lg:hover:shadow-lg ${
-              size === "small"
-                ? "bottom-2.5 left-2.5 gap-1 px-2 py-1"
-                : "bottom-3 right-3 gap-1 px-2 py-1 md:bottom-5 md:right-4"
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              const mfrCode = product?.mfr_code;
-              setOnMfrCode?.(product);
-              if (hasKioskAccess && enableKioskGuestPopup) {
-                if (!kioskLoginAuth) {
-                  onGuestPopupOpen?.({
-                    type: "vto",
-                    mfrCode,
-                    product,
-                  });
-                  onVtoClick?.();
-                  return;
-                }
-
-                if (mfrCode && onKioskTryonClick) {
-                  onKioskTryonClick(product);
-                  return;
-                }
-              }
-              if (mfrCode) {
-                onVtoClick?.(mfrCode);
-              }
-            }}
-            title="Try on with virtual camera"
-          >
-            <img
-              height={20}
-              width={20}
-              alt="Try on with camera"
-              className="z-10 h-5 w-5 md:h-5 md:w-5"
-              src={camera}
-            />
-            <p
-              className={`text-xs text-black font-semibold`}
-            >
-              Try On
-            </p>
-          </div>
+          <VirtualTryOnModal
+            isFloating
+            size={size}
+            product={product}
+            login={kioskLoginAuth}
+            hasKioskAccess={hasKioskAccess}
+            enableKioskGuestPopup={enableKioskGuestPopup}
+            onGuestPopupOpen={onGuestPopupOpen}
+            onKioskTryonClick={onKioskTryonClick}
+            setOnMfrCode={setOnMfrCode}
+            onVtoClick={onVtoClick}
+            storeData={storeData}
+            tryonConfig={tryonConfig}
+            saveUserId={saveUserId}
+          />
         )}
 
         {/* now now this funciton future we need  */}
