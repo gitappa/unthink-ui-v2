@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
-import camera from "../singleCollection/images/Card/camera.svg";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import useTheme from "../../hooks/chat/useTheme";
 import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
+import { VirtualTryOnModal } from "../singleCollection/VirtualTryOnModal";
 
 const ProductCardHeaderBottom = ({
   productCard = {},
@@ -15,8 +15,15 @@ const ProductCardHeaderBottom = ({
   buyNowTitle,
   showProductStarAction,
 }) => {
-  const { product, size, isCustomProductsPage, storeData, enableSelect } =
-    productCard;
+  const {
+    product,
+    size,
+    isCustomProductsPage,
+    storeData,
+    enableSelect,
+    tryonConfig,
+    saveUserId,
+  } = productCard;
   const {
     hasAccess: hasKioskAccess,
     loginAuth: kioskLoginAuth,
@@ -39,7 +46,7 @@ const ProductCardHeaderBottom = ({
   return (
     <>
       {product?.avlble === 0 && (
-        <div className="absolute bottom-4 left-4 rounded-3xl bg-red-500 px-2 py-1 text-xs font-bold text-white">
+        <div className="absolute bottom-4 left-3.5 rounded-3xl bg-red px-2 py-1 text-[10px] font-medium text-white">
           SOLD
         </div>
       )}
@@ -51,56 +58,26 @@ const ProductCardHeaderBottom = ({
         !showWishlistModal &&
         product?.custom_product !== false &&
         !isMyTryonsCollection && (
-          <div
-            className={`absolute flex w-fit cursor-pointer flex-row-reverse items-center rounded-3xl bg-white shadow-md transition-all duration-300 ease-in-out lg:hover:bg-gray-100 lg:hover:shadow-lg ${
-              size === "small"
-                ? "bottom-2.5 left-2.5 gap-1 px-2 py-1"
-                : "bottom-3 right-3 gap-1 px-2 py-1 md:bottom-5 md:right-4"
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              const mfrCode = product?.mfr_code;
-              setOnMfrCode?.(product);
-              if (hasKioskAccess && enableKioskGuestPopup) {
-                if (!kioskLoginAuth) {
-                  onGuestPopupOpen?.({
-                    type: "vto",
-                    mfrCode,
-                    product,
-                  });
-                  onVtoClick?.();
-                  return;
-                }
-
-                if (mfrCode && onKioskTryonClick) {
-                  onKioskTryonClick(product);
-                  return;
-                }
-              }
-              if (mfrCode) {
-                onVtoClick?.(mfrCode);
-              }
-            }}
-            title="Try on with virtual camera"
-          >
-            <img
-              height={20}
-              width={20}
-              alt="Try on with camera"
-              className="z-10 h-5 w-5 md:h-5 md:w-5"
-              src={camera}
-            />
-            <p
-              className={`text-xs text-black ${
-                size === "small" ? "font-semibold" : "font-bold"
-              }`}
-            >
-              Try On
-            </p>
-          </div>
+          <VirtualTryOnModal
+            isFloating
+            size={size}
+            product={product}
+            login={kioskLoginAuth}
+            hasKioskAccess={hasKioskAccess}
+            enableKioskGuestPopup={enableKioskGuestPopup}
+            onGuestPopupOpen={onGuestPopupOpen}
+            onKioskTryonClick={onKioskTryonClick}
+            setOnMfrCode={setOnMfrCode}
+            onVtoClick={onVtoClick}
+            storeData={storeData}
+            tryonConfig={tryonConfig}
+            saveUserId={saveUserId}
+          />
         )}
 
-      <div
+        {/* now now this funciton future we need  */}
+
+      {/* <div
         className="absolute top-0 z-10 hidden h-full w-full flex-col items-center justify-center rounded-lg"
         style={{ background: themeCodes.productCard.hover_bg }}
       >
@@ -122,7 +99,7 @@ const ProductCardHeaderBottom = ({
             ) : null}
           </h1>
         ) : null}
-      </div>
+      </div> */}
 
       {!enableSelect && (
         <div className="flex items-center justify-between gap-1 lg:gap-2">
@@ -135,7 +112,7 @@ const ProductCardHeaderBottom = ({
                 onClick={handleStarClick}
               >
                 {product.starred ? (
-                  <StarFilled className="flex text-amber-300" />
+                  <StarFilled className="flex text-star" />
                 ) : (
                   <StarOutlined className="flex text-black" />
                 )}

@@ -22,7 +22,6 @@ export const ProductCardHeaderTop = ({
   menuRef,
   allowEdit,
   isMyWishlistCollection,
-  showStar,
 }) => {
   const { authUserId, isLoggedIn: isUserLogin } = user;
   const { product, size, isCustomProductsPage, storeData, enableSelect } =
@@ -79,7 +78,7 @@ export const ProductCardHeaderTop = ({
         width="100%"
         className={`h-44 w-full object-contain ${
           size === "small"
-            ? "rounded-2xl bg-gray-200 backdrop-blur-md lg:h-44"
+            ? "rounded-2xl bg-gray-light backdrop-blur-md lg:h-44"
             : "rounded-xl shadow-md lg:h-60"
         }`}
         loading="lazy"
@@ -104,12 +103,7 @@ export const ProductCardHeaderTop = ({
       ) }
       <>
           <ProductRemoveAction
-            isVisible={isActionCoverWidget}
-            size={size}
-            onRemove={removeFromWishlistClick}
-          />
-          <ProductRemoveAction
-            isVisible={showWishlistModal && isDefaultWidget}
+            isVisible={showWishlistModal && isDefaultWidget || isActionCoverWidget}
             size={size}
             onRemove={removeFromWishlistClick}
             hideOnMedium
@@ -132,13 +126,12 @@ export const ProductCardHeaderTop = ({
           />
         </>
    
-    {(!hideAddToWishlist || (isDefaultWidget && showStar)) &&
+    {(!hideAddToWishlist || !isUserLogin )&&
       !showWishlistModal &&
       !enableSelect &&
       product?.custom_product !== false &&
       !isMyWishlistCollection && (
-        <>
-          {!hideAddToWishlist && (
+        <>          
             <WishlistHeartButton
               isActive={!!heartRedProduct}
               containerClassName={`absolute ${
@@ -155,14 +148,15 @@ export const ProductCardHeaderTop = ({
               getKioskLogin={getKioskLogin}
               onGuestPopupOpen={onGuestPopupOpen}
               userId={kioskLogin?.user_id || authUserId || getTTid()}
-            />
-          )}
-        </>
-      )}
-
-    {hideAddToWishlist &&
-      !isUserLogin &&
-      size === "medium" &&
+              userLogin={isUserLogin}
+              onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
+              source={source}
+            /> </> )}
+    {/* {hideAddToWishlist &&
+      // !isUserLogin &&
+      // size === "medium" &&
+      product?.custom_product !== false &&
+      !isMyWishlistCollection &&
       !showWishlistModal &&
       !enableSelect && (
         // <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
@@ -175,10 +169,10 @@ export const ProductCardHeaderTop = ({
             getKioskLogin={getKioskLogin}
             onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
             source={source}
-            useGuestWishlistFlow
+            // useGuestWishlistFlow
           />
         //  </div>
-      )}
+      )} */}
     </>
   );
 };

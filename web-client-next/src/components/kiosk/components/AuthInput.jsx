@@ -406,12 +406,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       setIsDropdownOpen(false);
       setStatus("");
       setActiveCollectionAction(action.key);
-      setQrState({
-        ...INITIAL_COLLECTION_QR_STATE,
-        isOpen: true,
-        isLoading: true,
-        title: action.modalTitle,
-      });
+      
 		
 
       try {
@@ -421,7 +416,18 @@ const AuthInput = ({ onLoginChange, styles }) => {
         
         const hasCollectionData = getCollectionProductCount(collection) > 0;
 
-        if (!collection.product_lists || !hasCollectionData) {
+        
+        if ( collection?.product_lists.length > 0  ){
+			  router.push(`/influencer/${kioskLogin?.user_name}/${collection?._id}`)
+			  return
+	  	}
+      setQrState({
+        ...INITIAL_COLLECTION_QR_STATE,
+        isOpen: true,
+        isLoading: true,
+        title: action.modalTitle,
+      });
+      if (!collection?.product_lists || !hasCollectionData) {
           setQrState((prev) => ({
             ...prev,
             isLoading: false,
@@ -430,48 +436,48 @@ const AuthInput = ({ onLoginChange, styles }) => {
           return;
         }
 
-        if (!kioskEmail && !kioskPhone) {
-          setQrState((prev) => ({
-            ...prev,
-            isLoading: false,
-            message: `Email or phone is required to create ${action.label.toLowerCase()} QR.`,
-          }));
-          return;
-        }
+        // if (!kioskEmail && !kioskPhone) {
+        //   setQrState((prev) => ({
+        //     ...prev,
+        //     isLoading: false,
+        //     message: `Email or phone is required to create ${action.label.toLowerCase()} QR.`,
+        //   }));
+        //   return;
+        // }
 
-        const resp = await requestSigninWithLink({email:kioskEmail, phone:kioskPhone});
-        const signinToken = resp?.signin_token || resp?.data?.signin_token;
-        const signinUserName = resp?.data?.user_name || resp?.user_name;
+        // const resp = await requestSigninWithLink({email:kioskEmail, phone:kioskPhone});
+        // const signinToken = resp?.signin_token || resp?.data?.signin_token;
+        // const signinUserName = resp?.data?.user_name || resp?.user_name;
 
-        if (!signinToken) {
-          throw new Error(`Missing ${action.label} signin token`);
-        }
+        // if (!signinToken) {
+        //   throw new Error(`Missing ${action.label} signin token`);
+        // }
 
-        const decrypted = decryptSigninToken(signinToken);
-        if (!decrypted) {
-          throw new Error(`Unable to decode ${action.label} signin token`);
-        }
+        // const decrypted = decryptSigninToken(signinToken);
+        // if (!decrypted) {
+        //   throw new Error(`Unable to decode ${action.label} signin token`);
+        // }
 
-        const pageParam = buildCollectionVerifyPageParam(
-          collection,
-          collectionPath,
-          kioskLogin,
-          signinUserName,
-        );
+        // const pageParam = buildCollectionVerifyPageParam(
+        //   collection,
+        //   collectionPath,
+        //   kioskLogin,
+        //   signinUserName,
+        // );
 
-        if (!pageParam) {
-          throw new Error(`Unable to build ${action.label} page link`);
-        }
+        // if (!pageParam) {
+        //   throw new Error(`Unable to build ${action.label} page link`);
+        // }
 
-        const verifyLink = buildVerifyUrl(decrypted, pageParam);
-        const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
+        // const verifyLink = buildVerifyUrl(decrypted, pageParam);
+        // const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
 
-        setQrState((prev) => ({
-          ...prev,
-          isLoading: false,
-          qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
-          shareUrl: fullVerifyUrl,
-        }));
+        // setQrState((prev) => ({
+        //   ...prev,
+        //   isLoading: false,
+        //   qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
+        //   shareUrl: fullVerifyUrl,
+        // }));
       } catch (error) {
         console.error(`${action.label} QR build failed`, error);
         setQrState((prev) => ({

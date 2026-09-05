@@ -30,13 +30,13 @@ const WishlistHeartButton = ({
   onGuestPopupOpen,
   onAddSelectedProductsToCollection,
   source,
-  useGuestWishlistFlow = false,
   store = current_store_name,
   containerClassName = "",
   buttonClassName = DEFAULT_BUTTON_CLASS,
   activeIconClassName = "text-red-500",
   inactiveIconClassName = "",
   title = "Add to wishlist",
+  userLogin,
 }) => {
   const dispatch = useDispatch();
   const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
@@ -44,7 +44,7 @@ const WishlistHeartButton = ({
   const isGuestPopUpShow = useSelector(
     (state) => state.GuestPopUpReducer.isGuestPopUpShow,
   );
-
+console.log('userLogin',userLogin)
   const callHandpickedAPI = useCallback(
     async (wishlistUserId) => {
       if (!wishlistUserId) {
@@ -151,6 +151,7 @@ const WishlistHeartButton = ({
       event.stopPropagation();
 
       if (!onAddSelectedProductsToCollection) {
+        onGuestPopupOpen?.("");
         dispatch(GuestPopUpShow(true));
         return;
       }
@@ -189,6 +190,7 @@ const WishlistHeartButton = ({
       dispatch,
       getKioskLogin,
       onAddSelectedProductsToCollection,
+      onGuestPopupOpen,
       product,
       source,
     ],
@@ -210,7 +212,7 @@ const WishlistHeartButton = ({
       return;
     }
 
-    if (useGuestWishlistFlow) {
+    if (!userLogin) {
       handleGuestWishlistClick(event);
       return;
     }
