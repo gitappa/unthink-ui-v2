@@ -5,7 +5,6 @@ import AddToCartButton from "../common/AddToCartButton";
 import BuyNowButton from "../common/BuyNowButton";
 import {
   getProductCardAttributes,
-  KIOSK_CART_ICON_CLASS,
 } from "../../helper/product/productCardHelpers";
 import {
   getProductCurrencySymbol,
@@ -114,7 +113,7 @@ const ProductCardFooter = ({
       <div className="mt-0 flex min-h-7 items-center justify-between gap-2 md:mt-2 md:min-h-8">
         <div className={isOutOfStock ? "hidden" : ""}>
           <span
-            className={`text-red-600 ${
+            className={`text-red ${
               size === "small"
                 ? "text-sm font-bold"
                 : "pr-1 text-sm font-extrabold lg:text-xl"
@@ -132,13 +131,13 @@ const ProductCardFooter = ({
             product?.listprice > product?.price &&
             discountPer > 0 && (
               <>
-                <span className="mt-px text-xs text-slate-400 line-through md:text-sm">
-                  <span className="text-slate-400">
+                <span className="mt-px text-xs text-slate line-through md:text-sm">
+                  <span className="text-slate">
                     {currencySymbol}
                     {product?.listprice}
                   </span>
                 </span>
-                <span className="absolute left-4 top-5 rounded-3xl bg-red-500 px-2 py-1 text-xs font-bold text-white">
+                <span className="absolute left-4 top-5 rounded-3xl bg-red px-2 py-1 text-xs font-bold text-white">
                   {(discountPer && `${discountPer}% OFF`) || null}
                 </span>
               </>

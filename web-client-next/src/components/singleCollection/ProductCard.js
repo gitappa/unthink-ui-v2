@@ -371,7 +371,7 @@ const kioskLogin = getKioskLogin();
 
   return (
     <div
-      style={{ backgroundColor: showWishlistModal ? "white" : "" }}
+      // style={{ backgroundColor: showWishlistModal ? "white" : "" }}
       className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${productWrapperSizeClass}`}
     >
       <div

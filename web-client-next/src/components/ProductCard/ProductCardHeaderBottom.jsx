@@ -39,7 +39,7 @@ const ProductCardHeaderBottom = ({
   return (
     <>
       {product?.avlble === 0 && (
-        <div className="absolute bottom-4 left-4 rounded-3xl bg-red-500 px-2 py-1 text-xs font-bold text-white">
+        <div className="absolute bottom-4 left-3.5 rounded-3xl bg-red px-2 py-1 text-[10px] font-medium text-white">
           SOLD
         </div>
       )}
@@ -52,7 +52,7 @@ const ProductCardHeaderBottom = ({
         product?.custom_product !== false &&
         !isMyTryonsCollection && (
           <div
-            className={`absolute flex w-fit cursor-pointer flex-row-reverse items-center rounded-3xl bg-white shadow-md transition-all duration-300 ease-in-out lg:hover:bg-gray-100 lg:hover:shadow-lg ${
+            className={`absolute flex w-fit cursor-pointer flex-row-reverse items-center rounded-3xl bg-white shadow-md transition-all duration-300 ease-in-out lg:hover:bg-hover-light lg:hover:shadow-lg ${
               size === "small"
                 ? "bottom-2.5 left-2.5 gap-1 px-2 py-1"
                 : "bottom-3 right-3 gap-1 px-2 py-1 md:bottom-5 md:right-4"
@@ -91,16 +91,16 @@ const ProductCardHeaderBottom = ({
               src={camera}
             />
             <p
-              className={`text-xs text-black ${
-                size === "small" ? "font-semibold" : "font-bold"
-              }`}
+              className={`text-xs text-black font-semibold`}
             >
               Try On
             </p>
           </div>
         )}
 
-      <div
+        {/* now now this funciton future we need  */}
+
+      {/* <div
         className="absolute top-0 z-10 hidden h-full w-full flex-col items-center justify-center rounded-lg"
         style={{ background: themeCodes.productCard.hover_bg }}
       >
@@ -122,7 +122,7 @@ const ProductCardHeaderBottom = ({
             ) : null}
           </h1>
         ) : null}
-      </div>
+      </div> */}
 
       {!enableSelect && (
         <div className="flex items-center justify-between gap-1 lg:gap-2">
@@ -135,7 +135,7 @@ const ProductCardHeaderBottom = ({
                 onClick={handleStarClick}
               >
                 {product.starred ? (
-                  <StarFilled className="flex text-amber-300" />
+                  <StarFilled className="flex text-star" />
                 ) : (
                   <StarOutlined className="flex text-black" />
                 )}
