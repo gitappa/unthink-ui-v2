@@ -1,8 +1,16 @@
+# syntax=docker/dockerfile:1.7
+
 # Use Node.js to build the Next.js app first
 FROM node:20-alpine AS builder
 WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Accept build arguments for environment variables
+COPY web-client-next/package*.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps --prefer-offline --no-audit --fund=false
+
+# Accept build arguments for environment variables after dependency install
+# so env-only changes do not invalidate the npm ci layer.
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_ACCESS_KEY
 ARG NEXT_PUBLIC_GA_TRACKING_ID
@@ -51,15 +59,15 @@ ENV NEXT_PUBLIC_HOME_PAGE_URL=$NEXT_PUBLIC_HOME_PAGE_URL
 ENV NEXT_PUBLIC_FERNET_SECRET_KEY=$NEXT_PUBLIC_FERNET_SECRET_KEY
 ENV NEXT_PUBLIC_EVENT_APP_API_BASE_URL=$NEXT_PUBLIC_EVENT_APP_API_BASE_URL
 
-COPY web-client-next/package*.json ./
-RUN npm ci --legacy-peer-deps
 COPY web-client-next/ .
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache \
+    npm run build
 
 #### Production server environment
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 # Do not hardcode PORT: Cloud Run sets the `PORT` env var at runtime.
 
 # Copy the standalone Next.js server
