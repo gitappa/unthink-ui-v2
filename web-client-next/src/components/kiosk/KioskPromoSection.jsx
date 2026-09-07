@@ -21,15 +21,15 @@ const KioskPromoSection = ({ showTags, storeData }) => {
     }
   };
 const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
-  if (
-    current_store_name === 'giva_indiranagar2_hs'
-  ) {
+  // if (
+  //   current_store_name === 'giva_indiranagar2_hs'
+  // ) {
     
 
     return (
       <>
-      <div className="w-[272px] hidden lg:block shrink-0">
-        <div className="rounded-[20px] flex lg:block bg-giva-away-primary px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
+      <div className="w-[272px] hidden min-[1025px]:block shrink-0">
+        <div className="rounded-[20px] flex min-[1025px]:block bg-giva-away-primary px-[16px] pb-[16px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
           <div className="rounded-[16px] bg-white px-[14px] py-5 shadow-[0_7px_10px_rgba(0,0,0,0.22)]">
             <div className="flex items-center justify-center gap-[16px]">             
               
@@ -99,7 +99,7 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
         </div>
       </div>
  
-    <div className="w-full block lg:hidden mt-4 pb-4">
+    <div className="w-full block min-[1025px]:hidden mt-4 pb-4">
       <div className="">
        <KioskPromoCard
         variant="promo"
@@ -119,6 +119,6 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
     </div>
       </>
   );
-};
+// };
 }
 export default KioskPromoSection;

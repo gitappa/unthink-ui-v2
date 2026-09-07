@@ -26,6 +26,8 @@
   --color-red:#fb2c36;
   /* price stick color  slate-400 */
   --color-slate: #90a1b9 ;
+  --shadow-product-card: 0px 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-product-card-hover: 0px 8px 32px var(--color-secondary);
 }
 
 :root {
