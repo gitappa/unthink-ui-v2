@@ -13,7 +13,7 @@ const KioskPromoCard = ({
   offerImage,
 }) => {
   return (
-       <div className="w-full shrink-0 md:mt-4 lg:mt-0 lg:w-[272px]">
+       <div className="w-full shrink-0 md:mt-4 min-[1025px]:mt-0 min-[1025px]:w-[272px]">
         <div className="  min-h-[132px] items-center justify-between gap-6 rounded-[12px] bg-white px-10 py-5 shadow-[0_4px_18px_rgba(0,0,0,0.18)] flex ">
           <div className="flex min-w-[225px] items-center gap-8">
             <div className="flex flex-col items-center gap-3">

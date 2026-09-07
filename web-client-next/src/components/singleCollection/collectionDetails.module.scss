@@ -1104,8 +1104,31 @@ svg{
 }
 
 .productItems1Slide {
-  width: auto !important;
+  width: fit-content !important;
   height: auto;
+}
+
+.productItems1Slide :global([class*="product-wrapper-medium2"]) {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (min-width: 824px) and (max-width: 999px) {
+  .productItems1Slide {
+    width: 210px !important;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1270px) {
+  .productItems1Slide {
+    width: 255px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .productItems1Slide {
+    width: 252px !important;
+  }
 }
 
 .productItems1ClipContainer {
@@ -2512,8 +2535,6 @@ color: #99A1AF;
 
 /* Smooth swiper slides animation */
 .productItems1Slide {
-  width: auto !important;
-  height: auto;
   animation: fadeInUp 0.6s ease-out both;
 }
 
