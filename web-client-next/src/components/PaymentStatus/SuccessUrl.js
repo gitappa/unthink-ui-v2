@@ -1,7 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import AuthPage from "../../pageComponents/Auth/AuthPage";
-import UserVerified from "../../pageComponents/Auth/UserVerified";
 import { Result } from "antd";
 import styles from "./StatusUrl.module.css";
 

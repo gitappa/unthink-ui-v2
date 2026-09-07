@@ -8,9 +8,7 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import { closeWishlistModal } from "../../pageComponents/wishlist/redux/actions";
-import {
-  GuestPopUpShow,
-} from "../../pageComponents/Auth/redux/actions";
+import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import {
   addSidInProductUrl,
   cleanImage,
@@ -24,16 +22,16 @@ import {
   gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
-import { vtoIconState } from "./redux/actions";
+import { vtoIconState } from "../singleCollection/redux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import {
   getCollectionFlags,
   getCurrentCollectionForCard,
 } from "../../helper/product/productCardHelpers";
-import ProductCardFooter from "../ProductCard/ProductCardFooter";
-import { ProductCardHeaderTop } from "../ProductCard/ProductCardHeaderTop";
-import ProductCardHeaderBottom from "../ProductCard/ProductCardHeaderBottom";
+import ProductCardFooter from "./ProductCardFooter";
+import { ProductCardHeaderTop } from "./ProductCardHeaderTop";
+import ProductCardHeaderBottom from "./ProductCardHeaderBottom";
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
   DEFAULT: "default",
@@ -49,17 +47,14 @@ const ProductCard = ({
   onProductClick,
   productClickParam = {},
   hideAddToWishlist = false,
-  enableHoverShowcase = false,
   showRemoveIcon = false,
   enableCopyFeature = true,
   size = "medium", // small, medium
   onRemoveIconClick,
   buyNowTitle = "Buy Now",
-  buyNowSubTitle,
   enableSelect,
   isSelected,
   setSelectValue,
-  showEdit = false,
   showStar = false,
   widgetType = PRODUCT_CARD_WIDGET_TYPES.DEFAULT, // default | actionCover
   onEditClick,
@@ -82,8 +77,6 @@ const ProductCard = ({
 
   const menuRef = useRef(null);
   const router = useRouter();
-
- 
 
   const [
     authUserId,
@@ -116,8 +109,8 @@ const ProductCard = ({
     authUser,
   });
 
-
-  const [Collection_tryonStatement, setCollectionTryonStatement] =  useState(null);
+  const [Collection_tryonStatement, setCollectionTryonStatement] =
+    useState(null);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
   const currentCollectionForCard = useMemo(
     () =>
@@ -139,7 +132,7 @@ const ProductCard = ({
   const { isMyWishlistCollection, isMyTryonsCollection } = getCollectionFlags(
     currentCollectionForCard,
   );
- useEffect(() => {
+  useEffect(() => {
     const handleClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuIcon(false);
@@ -150,7 +143,6 @@ const ProductCard = ({
       document.removeEventListener("mousedown", handleClick);
     };
   }, []);
-  
 
   const getKioskLogin = useCallback(() => {
     if (typeof window === "undefined") return null;
@@ -175,8 +167,7 @@ const ProductCard = ({
       window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
     };
   }, [syncKioskLogin]);
-const kioskLogin = getKioskLogin();
-  
+  const kioskLogin = getKioskLogin();
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking
@@ -242,8 +233,6 @@ const kioskLogin = getKioskLogin();
       dispatch(closeWishlistModal());
     }
   };
-
-  
 
   useEffect(() => {
     setCollectionTryonStatement(
@@ -342,10 +331,10 @@ const kioskLogin = getKioskLogin();
       "a, button, input, select, textarea, [role='button'], div.swiper-wrapper",
     );
     if (interactiveElement) return;
-    if(hasKioskAccess){
-    sessionStorage.setItem("plp-scroll", String(window.scrollY));
-    sessionStorage.setItem("plp-collection", singleCollections?.path);
-    handleProductClick({ open: false });
+    if (hasKioskAccess) {
+      sessionStorage.setItem("plp-scroll", String(window.scrollY));
+      sessionStorage.setItem("plp-collection", singleCollections?.path);
+      handleProductClick({ open: false });
     }
 
     const openInNewTab =
@@ -424,7 +413,6 @@ const kioskLogin = getKioskLogin();
           cart={cartConfig}
         />
       </div>
-
     </div>
   );
 };

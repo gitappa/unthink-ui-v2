@@ -5,7 +5,7 @@ import { StarFilled } from "@ant-design/icons";
 import useWindowSize from "../../helper/useWindowSize";
 import ProductCard, {
 	PRODUCT_CARD_WIDGET_TYPES,
-} from "../../components/singleCollection/ProductCard";
+} from "../../components/ProductCard";
 import {
 	IN_PROGRESS,
 	TAGS_TITLE,

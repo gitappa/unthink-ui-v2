@@ -29,7 +29,7 @@ import {
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import { openAutoCreateCollectionModal } from "../autoCreateCollectionModal/redux/actions";
 import { useChat } from "../../hooks/chat/useChat";
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import ProductFiltersTags from "../productFilters/ProductFiltersTags";
 import AdditionalAttributes from "../productFilters/AdditionalAttributes";
 import { current_store_name, is_store_instance } from "../../constants/config";

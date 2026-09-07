@@ -9,7 +9,7 @@ import {
   MdOutlineKeyboardArrowLeft,
 } from "react-icons/md";
 
-import ProductCard from "../../../components/singleCollection/ProductCard";
+import ProductCard from "../../../components/ProductCard";
 import AskAuraCard from "../../../components/singleCollection/AskAuraCard";
 import GuestPopUp from "../../Auth/GuestPopUp";
 import ShareOptions from "../../shared/shareOptions";

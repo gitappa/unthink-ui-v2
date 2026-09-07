@@ -8,7 +8,7 @@ const FailureUrl = () => {
         <div className={`static_page_bg ${styles.statusContainer}`} style={{ minHeight: '100vh' }}>
             <Result
                 className={styles.resultWrapper}
-                status='success'
+                status='error'
                 title={<span className={styles.textWhite}> Payment Failed </span>}
                 subTitle={
                     <>

@@ -147,6 +147,7 @@ export const ProductCardHeaderTop = ({
               enableKioskGuestPopup={enableKioskGuestPopup}
               getKioskLogin={getKioskLogin}
               onGuestPopupOpen={onGuestPopupOpen}
+              onRemoveIconClick={onRemoveIconClick}
               userId={kioskLogin?.user_id || authUserId || getTTid()}
               userLogin={isUserLogin}
               onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}

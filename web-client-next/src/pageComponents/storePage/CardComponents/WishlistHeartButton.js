@@ -18,6 +18,7 @@ const DEFAULT_BUTTON_CLASS =
 const WishlistHeartButton = ({
   isActive = false,
   onClick,
+  onRemoveIconClick,
   onAdd,
   product,
   productMfrCode,
@@ -82,27 +83,42 @@ console.log('userLogin',userLogin)
     ],
   );
 
-  const handleRemove = (event) => {
-    event?.preventDefault();
-    event?.stopPropagation();
+  const removeFromWishlistClick = useCallback(
+    (event) => {
+      event.stopPropagation();
+      event.preventDefault();
 
-    if (!productMfrCode) return;
+      if (onRemoveIconClick) {
+        onRemoveIconClick(product?.mfr_code || productMfrCode);
+        return;
+      }
 
-    dispatch(
-      removeFromWishlist({
-        products: [productMfrCode],
-        collection_name: "my wishlist",
-        type: "system",
-        successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
-        errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
-        removeCollectionFromUserCollections: true,
-        wishlistCallBack: true,
-        user_id: userId || getTTid(),
-        store,
-        clearSelectedCollectionData: true,
-      }),
-    );
-  };
+      if (!productMfrCode) return;
+
+      dispatch(
+        removeFromWishlist({
+          products: [productMfrCode],
+          collection_name: "my wishlist",
+          type: "system",
+          successMessage: `${WISHLIST_TITLE} has been successfully deleted`,
+          errorMessage: `Failed to delete ${WISHLIST_TITLE}, try after sometime`,
+          removeCollectionFromUserCollections: true,
+          wishlistCallBack: true,
+          user_id: userId || getTTid(),
+          store,
+          clearSelectedCollectionData: true,
+        }),
+      );
+    },
+    [
+      dispatch,
+      onRemoveIconClick,
+      product?.mfr_code,
+      productMfrCode,
+      store,
+      userId,
+    ],
+  );
 
   useEffect(() => {
     if (!pendingWishlistAction || isGuestPopUpShow) return;
@@ -203,7 +219,7 @@ console.log('userLogin',userLogin)
     }
 
     if (isActive) {
-      handleRemove(event);
+      removeFromWishlistClick(event);
       return;
     }
 

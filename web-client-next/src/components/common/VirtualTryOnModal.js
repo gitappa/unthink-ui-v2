@@ -9,9 +9,9 @@ import {
 import Modal from "../modal/Modal";
 import CameraCapture from "../shared/CameraCapture";
 import { profileAPIs, TryonSaveApiCall, TryOnVto } from "../../helper/serverAPIs";
-import { vtoIconState } from "./redux/actions";
+import { vtoIconState } from "../singleCollection/redux/actions";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
-import camera from "./images/Card/camera.svg";
+import camera from "../singleCollection/images/Card/camera.svg";
 
 export const VirtualTryOnModal = ({
   size,
