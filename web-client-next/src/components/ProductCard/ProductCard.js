@@ -328,7 +328,7 @@ const ProductCard = ({
     if (enableSelect) return;
 
     const interactiveElement = event.target?.closest?.(
-      "a, button, input, select, textarea, [role='button'], div.swiper-wrapper",
+      "a, button, input, select, textarea, [role='button']",
     );
     if (interactiveElement) return;
     if (hasKioskAccess) {
