@@ -4,7 +4,7 @@ import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 import { isEmpty } from "../../helper/utils";
-import { VirtualTryOnModal } from "../singleCollection/VirtualTryOnModal";
+import { VirtualTryOnModal } from "../common/VirtualTryOnModal";
 
 import "swiper/css";
 import "swiper/css/free-mode";

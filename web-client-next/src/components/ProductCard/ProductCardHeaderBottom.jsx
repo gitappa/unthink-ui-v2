@@ -3,7 +3,7 @@ import { StarFilled, StarOutlined } from "@ant-design/icons";
 import openInNewTabIcon from "../../images/open_in_new_tab.svg";
 import useTheme from "../../hooks/chat/useTheme";
 import { isProductUrlAvailable } from "../../helper/product/productDisplayHelpers";
-import { VirtualTryOnModal } from "../singleCollection/VirtualTryOnModal";
+import { VirtualTryOnModal } from "../common/VirtualTryOnModal";
 
 const ProductCardHeaderBottom = ({
   productCard = {},

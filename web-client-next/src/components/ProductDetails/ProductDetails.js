@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { openProductModal } from "../customProductModal/redux/actions";
+import { openProductModal } from "../../pageComponents/customProductModal/redux/actions";
 import {
   getPercentage,
   collectionQRCodeGenerator,
@@ -27,36 +27,36 @@ import {
   PATH_ROOT,
   STORE_USER_NAME_SAMSKARA,
 } from "../../constants/codes";
-import { fetchCart } from "../DeliveryDetails/redux/action";
+import { fetchCart } from "../../pageComponents/DeliveryDetails/redux/action";
 import { auraYfretUserCollBaseUrl } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
-import { PDPloader } from "./redux/action";
-import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
-import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
-import Modal from "../../components/modal/Modal";
+import { PDPloader } from "../../pageComponents/storePage/redux/action";
+import { RESET_PRODUCT_DETAILS } from "../singleCollection/ProductRedux/constants";
+import { fetchProductDetails } from "../singleCollection/ProductRedux/actions";
+import Modal from "../modal/Modal";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
 import {
   openWishlistModal,
   setProductsToAddInWishlist,
-} from "../wishlist/redux/actions";
+} from "../../pageComponents/wishlist/redux/actions";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import {
   getwishlistUserCollection,
   GuestPopUpShow,
-} from "../Auth/redux/actions";
-import GuestUserPopUp from "../Auth/GuestUserPopUp";
-import { addProductToWishlistCollection } from "../wishlistActions/addProductToWishlistCollection/redux/actions";
+} from "../../pageComponents/Auth/redux/actions";
+import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
+import { addProductToWishlistCollection } from "../../pageComponents/wishlistActions/addProductToWishlistCollection/redux/actions";
 import useKioskSessionReminder, {
   KioskSessionPopup,
-} from "../../components/kiosk/useKioskSessionReminder";
-import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
-import AuthInput from "../../components/kiosk/components/AuthInput";
-import GoBack from "../../components/common/GoBack";
-import ProductGallery from "../../components/ProductDetails/ProductGallery";
-import ProductActions from "../../components/ProductDetails/ProductActions";
-import ProductBrandDetails from "../../components/ProductDetails/ProductBrandDetails";
-import ProductOverview from "../../components/ProductDetails/ProductOverview";
-import ProductInformation from "../../components/ProductDetails/ProductInformation";
+} from "../kiosk/useKioskSessionReminder";
+import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
+import AuthInput from "../kiosk/components/AuthInput";
+import GoBack from "../common/GoBack";
+import ProductGallery from "./ProductGallery";
+import ProductActions from "./ProductActions";
+import ProductBrandDetails from "./ProductBrandDetails";
+import ProductOverview from "./ProductOverview";
+import ProductInformation from "./ProductInformation";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();

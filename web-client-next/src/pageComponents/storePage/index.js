@@ -120,7 +120,7 @@ const MyPoints = dynamic(() => import("../DeliveryDetails/MyPoints.jsx"), {
 const ChatContainer = dynamic(() => import("./ChatContainer.js"), {
 	ssr: false,
 });
-const ProductDetails = dynamic(() => import("./ProductDetails.js"), {
+const ProductDetails = dynamic(() => import("../../components/ProductDetails/ProductDetails.js"), {
 	ssr: false,
 	loading: () => (
 		<div className={styles.loadingIndicator}>
