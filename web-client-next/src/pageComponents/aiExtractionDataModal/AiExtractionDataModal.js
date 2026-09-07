@@ -16,7 +16,7 @@ import { current_store_name } from "../../constants/config";
 
 import styles from "./AiExtractionDataModal.module.css";
 
-const AiExtractionDataModal = ({
+const AiExtractionDataModal = ({ 
 	extractionData,
 	authUser,
 	collectionProperties,
