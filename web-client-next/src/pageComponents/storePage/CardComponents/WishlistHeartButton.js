@@ -257,4 +257,4 @@ console.log('userLogin',userLogin)
   return <div className={containerClassName}>{button}</div>;
 };
 
-export default WishlistHeartButton;
+export default React.memo(WishlistHeartButton);

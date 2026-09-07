@@ -71,7 +71,7 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
             </div>
           </div>
 
-          <div className="mt-[40px] rounded-[14px] bg-white px-[16px] pb-[16px] pt-[12px] shadow-[0_5px_9px_rgba(0,0,0,0.2)]">
+          <div className="mt-[20px] rounded-[14px] bg-white px-[16px] pb-[16px] pt-[12px] shadow-[0_5px_9px_rgba(0,0,0,0.2)]">
             <div className="flex items-center gap-[14px]">
               <img
                 src={gift.src}
