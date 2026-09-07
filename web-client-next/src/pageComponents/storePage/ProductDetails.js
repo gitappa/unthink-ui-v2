@@ -3,24 +3,17 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
-  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { message, notification } from "antd";
-import Image from "next/image";
-import { CopyOutlined, EditOutlined } from "@ant-design/icons";
-import CopyToClipboard from "react-copy-to-clipboard";
+import { notification } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { openProductModal } from "../customProductModal/redux/actions";
 import {
   getPercentage,
   collectionQRCodeGenerator,
   getProductDetailsPagePath,
-  isEmpty,
   cleanImage,
-  getStoredKioskLogin,
 } from "../../helper/utils";
 import {
   requestSigninWithLink,
@@ -28,36 +21,20 @@ import {
   buildVerifyUrl,
 } from "../../helper/autoLogin";
 import { customProductsAPIs } from "../../helper/serverAPIs";
-import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 
-import ShareOptions from "../shared/shareOptions";
-
-import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
-import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
-import share_icon from "../../images/profilePage/share_icon.svg";
 import {
-  CURRENCY_SYMBOLS,
-  CURRENCY_USD,
   KIOSK_LOGIN_CHANGE_EVENT,
   PATH_ROOT,
   STORE_USER_NAME_SAMSKARA,
 } from "../../constants/codes";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import Addmore from "../../images/addmore2.svg";
-import SwiperCore, { FreeMode } from "swiper";
 import { fetchCart } from "../DeliveryDetails/redux/action";
-import { getTTid } from "../../helper/getTrackerInfo";
 import { auraYfretUserCollBaseUrl } from "../../constants/config";
 import { PDPPageSkeleton } from "./ProductDetailsSkeleton";
 import { PDPloader } from "./redux/action";
 import { RESET_PRODUCT_DETAILS } from "../../components/singleCollection/ProductRedux/constants";
 import { fetchProductDetails } from "../../components/singleCollection/ProductRedux/actions";
 import Modal from "../../components/modal/Modal";
-import { VirtualTryOnModal } from "../../components/singleCollection/VirtualTryOnModal";
 import pdpLayoutStyles from "./ProductDetails.module.scss";
-import { RiArrowDropDownLine } from "react-icons/ri";
 import {
   openWishlistModal,
   setProductsToAddInWishlist,
@@ -74,13 +51,12 @@ import useKioskSessionReminder, {
 } from "../../components/kiosk/useKioskSessionReminder";
 import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
-import WishlistHeartButton from "./CardComponents/WishlistHeartButton";
 import GoBack from "../../components/common/GoBack";
-import AddToCartButton, {
-  addProductToCart,
-} from "../../components/common/AddToCartButton";
-import BuyNowButton from "../../components/common/BuyNowButton";
-import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
+import ProductGallery from "../../components/ProductDetails/ProductGallery";
+import ProductActions from "../../components/ProductDetails/ProductActions";
+import ProductBrandDetails from "../../components/ProductDetails/ProductBrandDetails";
+import ProductOverview from "../../components/ProductDetails/ProductOverview";
+import ProductInformation from "../../components/ProductDetails/ProductInformation";
 
 const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
@@ -125,9 +101,6 @@ const ProductDetails = ({ params, ...props }) => {
 
  
   const imageFromQuery = cleanImage(router.query.image);
-  const [dropDown, setDropDown] = useState(false);
-  const [additionalimg, setAdditionalImg] = useState(null);
-  const [showAllFields, setShowAllFields] = useState(false);
   const [sharePageUrl, setSharePageUrl] = useState("");
   const hasKioskAccess = useKioskAccess({
     isUserLogin,
@@ -175,7 +148,6 @@ const ProductDetails = ({ params, ...props }) => {
 
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
-  const [pendingGuestAction, setPendingGuestAction] = useState(null);
 
   useEffect(() => {
     const handleKioskLoginChange = () => {
@@ -220,7 +192,6 @@ const ProductDetails = ({ params, ...props }) => {
         setIsPopupShow(true);
         setGuestPopupAction("save");
         dispatch(GuestPopUpShow(true));
-        setPendingGuestAction(null)
         return;
       }
 
@@ -370,7 +341,6 @@ const ProductDetails = ({ params, ...props }) => {
     if (!kioskLoginUserId && hasKioskAccess) {
       setShowShareProductDetails(false);
       setGuestPopupAction("share");
-      setPendingGuestAction(null)
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
       return;
@@ -385,10 +355,6 @@ const ProductDetails = ({ params, ...props }) => {
     setShareContext("product");
     setShowShareProductDetails((show) => !show);
   }, [buildShareAutoLoginLink, dispatch, kioskLogin?.user_id, hasKioskAccess]);
-
-  const ProductTags = storeData?.catalog_attributes?.find(
-    (att) => att.key === "product_tag",
-  )?.is_display;
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -409,10 +375,6 @@ const ProductDetails = ({ params, ...props }) => {
       localStorage.removeItem(`pdp_image`);
     };
   }, [mfr_code]);
-  const cardItem = collection?.product_lists?.find(
-    (item) => item.mfr_code === productDetails?.mfr_code,
-  );
-
   const brandsDetails = useMemo(
     () => sellerDetails[productDetails?.brand],
     [sellerDetails, productDetails?.brand],
@@ -426,44 +388,6 @@ const ProductDetails = ({ params, ...props }) => {
       getPercentage(productDetails.listprice, productDetails.price),
     [productDetails?.listprice, productDetails?.price],
   );
-
-  const currency = useMemo(
-    () =>
-      productDetails?.currency
-        ? productDetails.currency
-        : brandsDetails?.currency || CURRENCY_USD,
-    [productDetails?.currency, brandsDetails?.currency],
-  );
-
-  const currencySymbol = useMemo(
-    () =>
-      normalizeCurrencySymbol(
-        productDetails?.currency_symbol || CURRENCY_SYMBOLS[currency],
-      ),
-    [productDetails?.currency_symbol, currency],
-  );
-
-  const linkifyText = (description) => {
-    const urlRegex = /(?<=\s|^)(https?:\/\/[^\s]+)/g;
-    const exactUrlRegex = /^https?:\/\/[^\s]+$/;
-    return description.split(urlRegex).map((text, index) => {
-      if (exactUrlRegex.test(text)) {
-        return (
-          <a
-            key={`${text}-${index}`}
-            href={text}
-            target="_blank"
-            rel="noreferrer"
-            className="px-0 text-blue-109"
-          >
-            {text}
-          </a>
-        );
-      } else {
-        return <span key={`${text}-${index}`}>{text}</span>;
-      }
-    });
-  };
 
   const handleOpenProductModal = useCallback(
     (allowEdit) => {
@@ -504,83 +428,9 @@ const ProductDetails = ({ params, ...props }) => {
     }
   }, [sharePageUrl, qrCodeGeneratorURL]);
 
-  const fieldsToDisplay =
-    storeData?.pdp_settings?.product_page_attributes || [];
-
-  const thumbnailSwiperRef = useRef(null);
-
-  const [isThumbnailOverflowing, setIsThumbnailOverflowing] = useState(false);
-
-  const checkThumbnailOverflow = () => {
-    if (thumbnailSwiperRef.current && thumbnailSwiperRef.current.wrapperEl) {
-      const { scrollWidth, clientWidth } = thumbnailSwiperRef.current.wrapperEl;
-      setIsThumbnailOverflowing(scrollWidth > clientWidth);
-    }
-  };
-
-  useEffect(() => {
-    checkThumbnailOverflow();
-
-    if (typeof window !== "undefined") {
-      const handleResize = () => {
-        checkThumbnailOverflow();
-      };
-      window.addEventListener("resize", handleResize);
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }
-  }, [productDetails, pdploader]);
-
-  const handleCartAction = (qty = 1, userIdOverride = null) => {
-    if (!productDetails?.mfr_code) return;
-
-    const normalizedQty = getNormalizedCartQty(qty);
-    const kioskLogin = getStoredKioskLogin();
-    const kioskUserId = userIdOverride || kioskLogin?.user_id;
-
-    if (hasKioskAccess && !kioskUserId) {
-      setIsPopupShow(true);
-      setPendingGuestAction({
-        type: "cart",
-        productDetails,
-        qty: normalizedQty,
-      });
-      dispatch(GuestPopUpShow(true));
-      return;
-    }
-
-    const cartUserId = kioskUserId || authUserId || getTTid();
-
-    addProductToCart({
-      dispatch,
-      product: productDetails,
-      qty: normalizedQty,
-      userId: cartUserId,
-    });
-  };
   if (fetchProductLoading) {
     return <PDPPageSkeleton />;
   }
-
-  const hasContactDetails =
-    brandsDetails?.title ||
-    brandsDetails?.email ||
-    brandsDetails?.contact ||
-    brandsDetails?.instagramUrl ||
-    brandsDetails?.facebookUrl ||
-    brandsDetails?.info ||
-    brandsDetails?.couponCode ||
-    brandsDetails?.paymentDetails ||
-    brandsDetails?.shippingDetails;
-  const Additionalimages = [
-    productDetails?.image,
-    ...(Array.isArray(productDetails?.additional_image)
-      ? productDetails?.additional_image
-      : productDetails?.additional_image
-        ? [productDetails?.additional_image]
-        : []),
-  ];
 
   return (
     <div
@@ -600,550 +450,63 @@ const ProductDetails = ({ params, ...props }) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-6  lg:gap-8 items-start">
             <div className="flex flex-col gap-4 xl:sticky xl:top-6">
-              <div className="w-full  lg:w-full   mx-auto border-2 border-[#f2f2f2] rounded-3xl   p-3 sm:p-4  ">
-                <div className="h-auto rounded-2xl bg-white/70   overflow-hidden max-h-590">
-                  {!isEmpty(productDetails?.image || fetchProductImage) ? (
-                    <div className="relative">
-                      <img
-                        className="w-full h-full object-contain rounded-2xl lg:max-h-590 max-w-640 max-h-[350px] lg:min-h-[590px]"
-                        src={
-                          additionalimg ||
-                          productDetails?.image ||
-                          fetchProductImage
-                        }
-                        alt="Product Image"
-                      />
-                      {discountPer ? (
-                        <span className="text-[12px] font-bold text-white absolute top-[18px] left-[15px] bg-red-500 px-[8px] py-[3px] rounded-[25px]">
-                          {discountPer}% OFF
-                        </span>
-                      ) : null}
-                      {storeData?.is_tryon_enabled && (
-                        <VirtualTryOnModal
-                          isFloating
-                          className="group"
-                          product={productDetails}
-                          login={kioskLogin}
-                          hasKioskAccess={hasKioskAccess}
-                          buildProductAutoLoginQr={buildProductAutoLoginQr}
-                          setIsPopupShow={setIsPopupShow}
-                          setGuestPopupAction={setGuestPopupAction}
-                          storeData={storeData}
-                          tryonConfig={collection}
-                          saveUserId={
-                            kioskLogin?.user_id || authUser?.user_id || null
-                          }
-                          kioskEmail={kioskLogin?.email || null}
-                          kioskUserName={kioskLogin?.user_name || null}
-                          iconClassName="h-[18px] w-[18px] transition-transform duration-300 group-hover:scale-110"
-                          textClassName="text-whit text-xs font-semibold whitespace-nowrap sm:text-sm"
-                        />
-                      )}
-                    </div>
-                  ) : null}
-                </div>
-                {productDetails?.additional_image &&
-                productDetails?.additional_image.length > 0 ? (
-                  <div className="relative mt-4">
-                    <Swiper
-                      modules={[FreeMode]}
-                      freeMode={true}
-                      slidesPerView={"auto"}
-                      spaceBetween={10}
-                      onSwiper={(swiper) => {
-                        thumbnailSwiperRef.current = swiper;
-                        if (swiper?.wrapperEl) {
-                          const { scrollWidth, clientWidth } = swiper.wrapperEl;
-                          setIsThumbnailOverflowing(scrollWidth > clientWidth);
-                        }
-                      }}
-                      className="w-full cursor-pointer"
-                    >
-                      {Additionalimages?.map((img, i) => (
-                        <SwiperSlide key={i} style={{ width: "auto" }}>
-                          <div className="flex">
-                            <Image
-                              src={img}
-                              height={50}
-                              width={50}
-                              className={`w-[110px] h-[120px] rounded-xl border transition ${
-                                additionalimg === img
-                                  ? "border-[#7c74ec] border-2  "
-                                  : "border-[#e8e2ff] hover:border-[#b8a9ff]"
-                              }`}
-                              onClick={() => setAdditionalImg(img)}
-                              alt="product"
-                            />
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-
-                    {isThumbnailOverflowing && (
-                      <>
-                        <button
-                          type="button"
-                          className="absolute -left-2 sm:-left-3 top-1/2 -translate-y-1/2 h-8 w-8 lg:h-10 lg:w-10 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center z-10"
-                          onClick={() => {
-                            if (thumbnailSwiperRef.current) {
-                              thumbnailSwiperRef.current.slidePrev();
-                            }
-                          }}
-                        >
-                          <MdOutlineKeyboardArrowLeft className="text-xl text-[#1f2c3b]" />
-                        </button>
-                        <button
-                          type="button"
-                          className="absolute -right-2 sm:-right-3 top-1/2 -translate-y-1/2 h-8 w-8 lg:h-10 lg:w-10 hover:shadow-lg bg-white border border-[#ddd6ff] rounded-full flex justify-center items-center z-10"
-                          onClick={() => {
-                            if (thumbnailSwiperRef.current) {
-                              thumbnailSwiperRef.current.slideNext();
-                            }
-                          }}
-                        >
-                          <MdOutlineKeyboardArrowLeft className="transform rotate-180 text-xl text-[#1f2c3b]" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                ) : null}
-              </div>
+              <ProductGallery
+                productDetails={productDetails}
+                fetchProductImage={fetchProductImage}
+                discountPer={discountPer}
+                storeData={storeData}
+                kioskLogin={kioskLogin}
+                hasKioskAccess={hasKioskAccess}
+                buildProductAutoLoginQr={buildProductAutoLoginQr}
+                setIsPopupShow={setIsPopupShow}
+                setGuestPopupAction={setGuestPopupAction}
+                collection={collection}
+                authUser={authUser}
+                pdploader={pdploader}
+              />
             </div>
             {productDetails && (
               <div className="flex flex-col  w-full   bg-white/95 ">
-                <div>
-                  <div className="flex justify-between items-start gap-4">
-                    <h1 className="text-xl sm:text-2xl lg:text-[34px] leading-tight font-semibold  text-[#1f2c3b]">
-                      {productDetails?.name}
-                    </h1>
-                    <div className="flex justify-between items-center gap-3 shrink-0">
-                      <div className="flex gap-3 justify-end items-start">
-                        {(productDetails?.user_id === authUser?.user_id ||
-                          productDetails?.brand === authUser?.user_name) &&
-                        isUserLogin ? (
-                          <button
-                            className="h-8 lg:h-10 w-8 lg:w-10 rounded-full border border-[#e0d9ff] text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
-                            title="Edit product details"
-                            onClick={() => handleOpenProductModal(true)}
-                          >
-                            <EditOutlined className="text-xl lg:h-6 lg:w-6 h-5 w-5" />
-                          </button>
-                        ) : null}
-                      </div>
-                      <WishlistHeartButton
-                        isActive={!!(heartRedProduct && showHeartWishlist)}
-                        buttonClassName="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-support text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
-                        onAdd={() =>
-                          onAddSelectedProductsToCollection(null, {
-                            isSave: true,
-                          })
-                        }
-                        productMfrCode={productDetails?.mfr_code}
-                        userId={kioskLogin?.user_id || authUserId || getTTid()}
-                        title="Add to wishlist"
-                        activeIconClassName="h-6 w-6 text-red-500"
-                        inactiveIconClassName="h-6 w-6 text-black"
-                      />
+                <ProductOverview
+                  productDetails={productDetails}
+                  authUser={authUser}
+                  isUserLogin={isUserLogin}
+                  onEditProduct={() => handleOpenProductModal(true)}
+                  heartRedProduct={heartRedProduct}
+                  showHeartWishlist={showHeartWishlist}
+                  onAddToWishlist={() =>
+                    onAddSelectedProductsToCollection(null, {
+                      isSave: true,
+                    })
+                  }
+                  kioskLogin={kioskLogin}
+                  authUserId={authUserId}
+                  showShareProductDetails={showShareProductDetails}
+                  shareContext={shareContext}
+                  sharePageUrl={sharePageUrl}
+                  setShowShareProductDetails={setShowShareProductDetails}
+                  shareQrCodeImage={shareQrCodeImage}
+                  onShareClick={handleShareClick}
+                  brandsDetails={brandsDetails}
+                />
 
-                      <div className="relative flex justify-between  h-8 lg:h-10 w-8 lg:w-10 ">
-                        {showShareProductDetails && (
-                          <ShareOptions
-                            headerText={
-                              shareContext === "product"
-                                ? "Share"
-                                : "Virtual Try-On"
-                            }
-                            url={sharePageUrl}
-                            setShow={setShowShareProductDetails}
-                            onClose={() => setShowShareProductDetails(false)}
-                            isOpen={showShareProductDetails}
-                            qrCodeGeneratorURL={shareQrCodeImage}
-                            true
-                            fromCollection={
-                              shareContext === "vto" || !!kioskLogin
-                            }
-                            kioskHeader={
-                              shareContext === "vto"
-                                ? "Scan to Try On (Then tap the camera icon on your phone)"
-                                : ""
-                            }
-                            subHeaderText={productDetails?.name}
-                          />
-                        )}
-                        <button
-                          className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-support bg-white hover:bg-[#f2eeff]"
-                          onClick={handleShareClick}
-                        >
-                          <img
-                            className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
-                            src={share_icon}
-                            preview={false}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <ProductActions
+                  brandsDetails={brandsDetails}
+                  storeData={storeData}
+                  productDetails={productDetails}
+                  collection={collection}
+                  authUserId={authUserId}
+                  hasKioskAccess={hasKioskAccess}
+                  isUserLogin={isUserLogin}
+                  authUser={authUser}
+                  storeId={store_id}
+                />
 
-                  <div className="mt-4 lg:mt-6">
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
-                      {(productDetails?.price ?? productDetails?.listprice) != null ? (
-                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#101828]">
-                          {currencySymbol}
-                          {productDetails.price ?? productDetails.listprice}
-                        </span>
-                      ) : null}
-                      {productDetails?.price &&
-                      +productDetails.listprice > +productDetails?.price ? (
-                        <span className="text-sm sm:text-base text-[#6b7280]">
-                          <span className="line-through">
-                            {currencySymbol}
-                            {productDetails.listprice}
-                          </span>
-                        </span>
-                      ) : null}
-                    </div>
-
-                    {productDetails?.availability ? (
-                      <span
-                        className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
-                          productDetails.availability === "out stock"
-                            ? "bg-red-100 text-white"
-                            : "bg-green-100 text-green-700"
-                        }`}
-                      >
-                        {productDetails.avlbl === 0
-                          ? "SOLD"
-                          : productDetails.availability}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                {!brandsDetails && productDetails?.brand ? (
-                  <div className=" mt-5">
-                    <span className="text-base sm:text-lg font-semibold leading-loose text-[#182438]">
-                      Brand :
-                    </span>
-                    <span className="ml-1 text-slat-103 text-sm sm:text-[15px] lg:text-base">
-                      {productDetails?.brand}
-                    </span>
-                  </div>
-                ) : null}
-
-                {brandsDetails?.paymentMethod ? (
-                  <div className="lg:mt-8 mt-4">
-                    <div className="grid gap-2">
-                      {brandsDetails.paymentMethod
-                        .split(",")
-                        .map((item, idx) => {
-                          const link = item.trim();
-                          return (
-                            <a
-                              key={`${link}-${idx}`}
-                              style={{ background: "#7c75ec" }}
-                              className=" text-white flex justify-center items-center  py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg   "
-                              target="_blank"
-                              rel="noreferrer"
-                              href={link}
-                            >
-                              Buy Now
-                            </a>
-                          );
-                        })}
-                    </div>
-                  </div>
-                ) : null}
-                {(storeData?.pdp_settings?.is_buy_button ||
-                  storeData?.pdp_settings?.is_add_to_cart_button) && (
-                  <div className="my-8 pb-2">
-                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                      {storeData?.pdp_settings?.is_add_to_cart_button && (
-                        <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
-                          <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-support rounded-xl bg-white">
-                            <button
-                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                              onClick={() => {
-                                handleCartAction((cardItem?.qty || 0) - 1);
-                              }}
-                            >
-                              -
-                            </button>
-                            <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
-                              {cardItem?.qty || 0}
-                            </button>
-                            <button
-                              className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                              onClick={() => {
-                                handleCartAction((cardItem?.qty || 0) + 1);
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
-                          <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
-                            <AddToCartButton
-                              product={productDetails}
-                              qty={(cardItem?.qty || 0) + 1}
-                              authUserId={authUserId}
-                              kiosk={{
-                                hasAccess: hasKioskAccess,
-                                getLogin: getStoredKioskLogin,
-                              }}
-                              onGuestPopupOpen={({ qty }) => {
-                                setIsPopupShow(true);
-                                setPendingGuestAction({
-                                  type: "cart",
-                                  productDetails,
-                                  qty,
-                                });
-                              }}
-                              disabled={false}
-                              className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
-                            >
-                              Add to Cart
-                            </AddToCartButton>
-                          </div>
-                        </div>
-                      )}
-
-                      {storeData?.pdp_settings?.is_buy_button &&
-                        (productDetails?.url &&
-                        productDetails.url !== "dummy_url" ? (
-                          <a
-                            href={productDetails.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline text-white py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition flex justify-center items-center"
-                            style={{
-                              background: "#7c75ec",
-                            }}
-                          >
-                            Buy
-                          </a>
-                        ) : (
-                          <BuyNowButton
-                            product={productDetails}
-                            authUserId={authUserId}
-                            authUser={authUser}
-                            storeId={store_id}
-                            className="inline text-white disabled:opacity-50 disabled:cursor-not-allowed py-2.5 w-36 font-semibold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition"
-                            disabled={
-                              !productDetails?.price &&
-                              !productDetails?.listprice
-                            }
-                            style={{
-                              background: "#7c75ec",
-                              cursor:
-                                !productDetails?.price &&
-                                !productDetails?.listprice
-                                  ? "not-allowed"
-                                  : "",
-                            }}
-                          >
-                            Buy
-                          </BuyNowButton>
-                        ))}
-                    </div>
-                  </div>
-                )}
-
-                {fieldsToDisplay?.map((field, index) => {
-                  const fieldsWithData = fieldsToDisplay.filter(
-                    (f) => productDetails?.[f]?.length > 0 && ProductTags,
-                  );
-                  const fieldIndexInFiltered = fieldsWithData.indexOf(field);
-                  return productDetails?.[field]?.length > 0 && ProductTags
-                    ? (showAllFields || fieldIndexInFiltered < 5) && (
-                        <div className="" key={field}>
-                          <div className="flex justify-between items-center gap-7  border-b-1.5 border-[hsl(240,5%,96%)] pb-3 mb-5">
-                            <p className="text-[#9F9FA9] text-sm  md:text-base lg:text-lg font-semibold uppercase ">
-                              {field}
-                            </p>
-                            <p className="font-normal text-sm  md:text-base text-end">
-                              {Array.isArray(productDetails?.[field])
-                                ? productDetails?.[field]?.join(",")
-                                : productDetails?.[field]}
-                            </p>
-                          </div>
-                        </div>
-                      )
-                    : null;
-                })}
-                {fieldsToDisplay.filter(
-                  (field) => productDetails?.[field]?.length > 0,
-                )?.length > 5 && (
-                  <button
-                    onClick={() => setShowAllFields(!showAllFields)}
-                    className=" text-start text-[#7c74ec] font-semibold text-sm md:text-base hover:text-[#6b63d5] transition"
-                  >
-                    {showAllFields ? "Show Less" : "Show More"}
-                  </button>
-                )}
-                {productDetails?.description && (
-                  <div className="">
-                    <div className="lg:mt-8 mt-4 mb-6 text-sm sm:text-[15px] md:text-base lg:text-lg  leading-7 text-[#334155]">
-                      {productDetails.description}
-                    </div>
-                  </div>
-                )}
-                {brandsDetails?.couponCode ? (
-                  <div className="">
-                    <div className="flex flex-col sm:flex-row sm:items-center my-1.5 gap-2 sm:gap-0 text-sm sm:text-base">
-                      <div className="sm:w-1/4 font-semibold text-[#1f2c3b]">
-                        Coupon Code
-                      </div>
-                      <div className="flex items-center gap-2 rounded-lg border border-[#dccfff] px-3 py-1.5 bg-white">
-                        <p className="text-sm sm:text-base text-[#1f2c3b]">
-                          {brandsDetails.couponCode}
-                        </p>
-                        <CopyToClipboard
-                          text={brandsDetails.couponCode}
-                          onCopy={() => message.success("Copied", 1)}
-                        >
-                          <CopyOutlined
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                            className="text-lg cursor-pointer"
-                          />
-                        </CopyToClipboard>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-
-                {hasContactDetails && (
-                  <div className="mt-6 border-t border-[#e7edf5] pt-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf5] pb-3">
-                      <div className="flex items-center gap-2">
-                        <p
-                          className="text-base sm:text-lg font-semibold cursor-pointer  text-[#182438]"
-                          onClick={() => setDropDown(!dropDown)}
-                        >
-                          Contact Details
-                        </p>
-                        {brandsDetails?.shippingDetails ||
-                          brandsDetails?.paymentDetails ||
-                          brandsDetails?.info ||
-                          brandsDetails?.contact ||
-                          brandsDetails?.email ||
-                          (brandsDetails?.title && (
-                            <RiArrowDropDownLine
-                              onClick={() => setDropDown(!dropDown)}
-                              className={`h-6 w-6 cursor-pointer text-xl transition-transform ${dropDown ? "rotate-180" : ""}`}
-                            />
-                          ))}
-                      </div>
-
-                      {brandsDetails?.instagramUrl ||
-                      brandsDetails?.facebookUrl ? (
-                        <div className="flex items-center gap-2">
-                          {brandsDetails?.instagramUrl && (
-                            <a
-                              href={brandsDetails.instagramUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
-                            >
-                              <Image
-                                src={instagramIcon}
-                                width={18}
-                                height={18}
-                                alt="Instagram"
-                              />
-                            </a>
-                          )}
-                          {brandsDetails?.facebookUrl && (
-                            <a
-                              href={brandsDetails.facebookUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d6e0eb] bg-white transition-transform hover:scale-105"
-                            >
-                              <Image
-                                src={facebookIcon}
-                                width={18}
-                                height={18}
-                                alt="Facebook"
-                              />
-                            </a>
-                          )}
-                        </div>
-                      ) : null}
-                    </div>
-                    {dropDown && (
-                      <div className="mt-4 divide-y divide-[#edf2f7]">
-                        {brandsDetails?.title && (
-                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                              Brand Name
-                            </p>
-                            <p className="font-medium text-[#1f2c3b] break-words">
-                              {brandsDetails.title}
-                            </p>
-                          </div>
-                        )}
-
-                        {brandsDetails?.email && (
-                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                              Brand Email
-                            </p>
-                            <a
-                              className="block p-0 font-medium text-[#334155] break-all hover:underline"
-                              href={`mailto:${brandsDetails.email}`}
-                            >
-                              {brandsDetails.email}
-                            </a>
-                          </div>
-                        )}
-
-                        {brandsDetails?.contact && (
-                          <div className="grid grid-cols-1 sm:grid-cols-[170px_minmax(0,1fr)] gap-1 sm:gap-4 py-3 text-sm sm:text-base">
-                            <p className="text-[11px] sm:text-base font-semibold uppercase tracking-wide text-[#9F9FA9]">
-                              Contact
-                            </p>
-                            <a
-                              className="block p-0 font-medium text-[#334155] hover:underline"
-                              href={`tel:${brandsDetails.contact}`}
-                            >
-                              {brandsDetails.contact}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {brandsDetails?.info && dropDown ? (
-                      <p className="mt-3 text-sm sm:text-base font-semibold text-[#1f2c3b]">
-                        {brandsDetails.info}
-                      </p>
-                    ) : null}
-                  </div>
-                )}
-
-                {brandsDetails?.paymentDetails && dropDown && (
-                  <div className="mt-5 lg:mt-8">
-                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Payment Details
-                    </div>
-                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
-                      {linkifyText(brandsDetails.paymentDetails)}
-                    </div>
-                  </div>
-                )}
-
-                {brandsDetails?.shippingDetails && dropDown && (
-                  <div className="mt-5 lg:mt-8">
-                    <div className="text-base sm:text-lg font-semibold leading-loose border-b border-solid border-[#e3dcff] text-[#182438]">
-                      Shipping Details
-                    </div>
-                    <div className="mt-2 text-sm sm:text-[15px] lg:text-base leading-7 text-[#334155]">
-                      {linkifyText(brandsDetails.shippingDetails)}
-                    </div>
-                  </div>
-                )}
+                <ProductInformation
+                  productDetails={productDetails}
+                  storeData={storeData}
+                />
+                <ProductBrandDetails brandsDetails={brandsDetails} />
               </div>
             )}
           </div>
@@ -1156,11 +519,6 @@ const ProductDetails = ({ params, ...props }) => {
         isUserLogin ={ !isUserLogin ? true : false}
         persistKioskLogin
         onSuccess={async ({ userId, email, phone }) => {
-          if (pendingGuestAction?.type === "cart") {
-            handleCartAction(pendingGuestAction.qty, userId);
-            setPendingGuestAction(null);
-            return;
-          }
           try {
             if (guestPopupAction === "share") {
               const didBuildShareLink = await buildShareAutoLoginLink({
