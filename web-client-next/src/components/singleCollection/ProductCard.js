@@ -6,14 +6,6 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./ProductCard.module.css";
-
-import {
-  CloseCircleOutlined,
-  CopyOutlined,
-  StarOutlined,
-  EditFilled,
-} from "@ant-design/icons";
 import sharedPageTracker from "../../helper/webTracker/sharedPageTracker";
 import { closeWishlistModal } from "../../pageComponents/wishlist/redux/actions";
 import {
@@ -27,7 +19,6 @@ import {
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
-import useTheme from "../../hooks/chat/useTheme";
 import {
   gTagAuraProductClick,
   gTagCollectionProductClick,
@@ -80,8 +71,6 @@ const ProductCard = ({
   blogCollectionPage,
   collectionCards,
   onAddSelectedProductsToCollection,
-  isSingleCollectionSharedPage,
-  auramodel,
   enableKioskGuestPopup = false,
   setOnMfrCode,
   onGuestPopupOpen = () => {},
@@ -268,16 +257,12 @@ const kioskLogin = getKioskLogin();
     ? currentCollectionForCard
     : null;
 
-  const productWrapperSizeClass =
-    size === "small"
-      ? styles["product-wrapper-small"]
-      : collectionCards
-        ? styles["product-wrapper-medium2"]
-        : isSingleCollectionSharedPage
-          ? styles["product-wrapper-medium-single"]
-          : auramodel
-            ? `${styles["product-wrapper-medium-single"]} ml-0`
-            : styles["product-wrapper-medium-single"];
+  const productWrapperBaseClass =
+    "box-content h-full overflow-y-hidden rounded-[20px] shadow-product-card transition-all duration-300 ease-in-out will-change-[box-shadow,transform] hover:shadow-product-card-hover min-[1440px]:rounded-3xl";
+  const productWrapperActionCoverClass =
+    widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER
+      ? "flex flex-col rounded-xl"
+      : "";
   const showCustomProductsMenu =
     isCustomProductsPage &&
     widgetType !== PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER &&
@@ -370,16 +355,25 @@ const kioskLogin = getKioskLogin();
 
   return (
     <div
-      // style={{ backgroundColor: showWishlistModal ? "white" : "" }}
-      className={`${styles["product-wrapper"]} ${getCurrentTheme()} ${widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER ? styles["product-wrapper-action-cover"] : ""} ${productWrapperSizeClass}`}
+      className={`${productWrapperBaseClass} ${getCurrentTheme()} ${productWrapperActionCoverClass} ${
+        size === "small"
+          ? "product-wrapper-small my-[7px] w-40 lg:w-[190px]"
+          : collectionCards
+            ? "product-wrapper-medium2 max-[499px]:w-[170px] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] will-change-[box-shadow,transform] min-[500px]:max-[639px]:w-[230px] min-[640px]:max-[699px]:w-[210px] min-[700px]:max-[823px]:w-[300px] min-[1000px]:hover:shadow-product-card-hover"
+            : "product-wrapper-medium-single mx-auto w-full max-w-[330px] max-[768px]:max-w-full min-[835px]:max-w-[325px] min-[1271px]:max-[1439px]:max-w-[278px] min-[1440px]:max-w-80"
+      }`}
     >
       <div
-        className={`${styles["product-container"]} ${  styles["product-container-all-rounded"]}`}
+        className="relative flex h-full shrink-0 cursor-pointer flex-col overflow-hidden rounded-xl bg-white"
         style={{ cursor: "pointer" }}
         onClick={handleCardClick}
       >
         <div
-          className={`${size === "small" ? styles["product-image-container-small"] : styles["product-image-container"]}`}
+          className={
+            size === "small"
+              ? "relative flex shrink-0 overflow-hidden rounded-lg bg-white p-2"
+              : "relative flex shrink-0 overflow-hidden rounded-lg bg-white p-3 max-[1024px]:p-2"
+          }
           onClick={(e) => {
             if (isSelected) {
               e.stopPropagation();
