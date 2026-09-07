@@ -22,16 +22,16 @@ import {
   gTagCollectionProductClick,
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
-import { vtoIconState } from "./redux/actions";
+import { vtoIconState } from "../singleCollection/redux/actions";
 import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import {
   getCollectionFlags,
   getCurrentCollectionForCard,
 } from "../../helper/product/productCardHelpers";
-import ProductCardFooter from "../ProductCard/ProductCardFooter";
-import { ProductCardHeaderTop } from "../ProductCard/ProductCardHeaderTop";
-import ProductCardHeaderBottom from "../ProductCard/ProductCardHeaderBottom";
+import ProductCardFooter from "./ProductCardFooter";
+import { ProductCardHeaderTop } from "./ProductCardHeaderTop";
+import ProductCardHeaderBottom from "./ProductCardHeaderBottom";
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
   DEFAULT: "default",

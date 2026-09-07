@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "antd";
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import { fetchRecommendations, handleRecProductClick } from "./redux/actions";
 import { filterAvailableProductList } from "../../helper/utils";
 import { is_store_instance } from "../../constants/config";

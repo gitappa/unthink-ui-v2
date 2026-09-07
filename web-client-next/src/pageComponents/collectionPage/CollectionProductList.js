@@ -3,7 +3,7 @@ import React from "react";
 import { Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import { handleRecProductClick } from "../recommendations/redux/actions";
 import styles from "../../components/singleCollection/collectionDetails.module.scss";
 
