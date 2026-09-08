@@ -1,20 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { authAPIs, collectionAPIs } from "../../../helper/serverAPIs";
 import { current_store_name } from "../../../constants/config";
-import { collectionQRCodeGenerator, getStoredKioskLoginUserId } from "../../../helper/utils";
-import {
-  buildVerifyUrl,
-  decryptSigninToken,
-  requestSigninWithLink,
-} from "../../../helper/autoLogin";
-import Modal from "../../modal/Modal";
-import CopyToClipboard from "react-copy-to-clipboard";
-
-import {
-	CopyOutlined,
-} from "@ant-design/icons";
+import { getStoredKioskLoginUserId } from "../../../helper/utils";
+import MiniKioskCard from "../MiniKioskCard";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
-import { message } from "antd";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { getWishlistUserCollectionReset } from "../../../pageComponents/Auth/redux/actions";
@@ -26,9 +15,8 @@ const INITIAL_COLLECTION_QR_STATE = {
   isOpen: false,
   isLoading: false,
   title: "",
-  qrUrl: "",
-  shareUrl: "",
   message: "",
+  products: [],
 };
 
 const KIOSK_COLLECTION_ACTIONS = [
@@ -36,20 +24,20 @@ const KIOSK_COLLECTION_ACTIONS = [
     key: "wishlist",
     label: "Wishlist",
     pathPrefix: "my_wishlist",
-    modalTitle: "Wishlist QR",
+    modalTitle: "Wishlist Products",
     emptyMessage: "No wishlist there. Create the Wishlist",
   },
   {
     key: "cart",
     label: "Cart",
     pathPrefix: "my_cart",
-    modalTitle: "My Cart ",
+    modalTitle: "My Cart",
     emptyMessage: "No items in the cart. Please add items to your cart.",
   },
   {
     key: "tryon",
     label: "Try ons",
-    modalTitle: "Try on QR",
+    modalTitle: "Try-on Products",
     emptyMessage: "No try-on there. Please create a try-on using the mobile .",
     getFetchParams: (userId) => ({
       collection_name: "my tryons",
@@ -105,28 +93,6 @@ const getFetchedCollection = (response, collectionPath) => {
     collections[0] ||
     null
   );
-};
-
-const buildCollectionVerifyPageParam = (
-  collection,
-  collectionPath,
-  kioskLogin,
-  fallbackUserName,
-) => {
-  const collectionId = collection?._id 
-  const userName = collection?.user_name || fallbackUserName || kioskLogin?.user_name;
-    if(collection?.collection_name === "my cart"){
-      return `?page=cart`;
-    }
-  if (userName && collectionId) {
-    return `?page=influencer/${userName}/${collectionId}`;
-  }
-
-  if (collection?.user_id && collectionId) {
-    return `?page=influencer/shared/${collection.user_id}/${collectionId}`;
-  }
-
-  return "";
 };
 
 const renderCollectionActionIcon = (actionKey) => {
@@ -210,7 +176,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       setKioskLogin(login);
       onLoginChange?.(login);
     },
-    [onLoginChange,kiosklogin],
+    [onLoginChange],
   );
 
   const clearKioskLogin = useCallback(
@@ -385,8 +351,6 @@ const AuthInput = ({ onLoginChange, styles }) => {
       if (activeCollectionAction) return;
 
       const userId = kioskLogin?.user_id;
-      const kioskEmail = kioskLogin?.email || kioskLogin?.emailId;
-      const kioskPhone = kioskLogin?.phone || kioskLogin?.phoneId;
       if (!userId) {
         setStatus("Login is required");
         return;
@@ -417,10 +381,6 @@ const AuthInput = ({ onLoginChange, styles }) => {
         const hasCollectionData = getCollectionProductCount(collection) > 0;
 
         
-        if ( collection?.product_lists.length > 0  ){
-			  router.push(`/influencer/${kioskLogin?.user_name}/${collection?._id}`)
-			  return
-	  	}
       setQrState({
         ...INITIAL_COLLECTION_QR_STATE,
         isOpen: true,
@@ -436,48 +396,11 @@ const AuthInput = ({ onLoginChange, styles }) => {
           return;
         }
 
-        // if (!kioskEmail && !kioskPhone) {
-        //   setQrState((prev) => ({
-        //     ...prev,
-        //     isLoading: false,
-        //     message: `Email or phone is required to create ${action.label.toLowerCase()} QR.`,
-        //   }));
-        //   return;
-        // }
-
-        // const resp = await requestSigninWithLink({email:kioskEmail, phone:kioskPhone});
-        // const signinToken = resp?.signin_token || resp?.data?.signin_token;
-        // const signinUserName = resp?.data?.user_name || resp?.user_name;
-
-        // if (!signinToken) {
-        //   throw new Error(`Missing ${action.label} signin token`);
-        // }
-
-        // const decrypted = decryptSigninToken(signinToken);
-        // if (!decrypted) {
-        //   throw new Error(`Unable to decode ${action.label} signin token`);
-        // }
-
-        // const pageParam = buildCollectionVerifyPageParam(
-        //   collection,
-        //   collectionPath,
-        //   kioskLogin,
-        //   signinUserName,
-        // );
-
-        // if (!pageParam) {
-        //   throw new Error(`Unable to build ${action.label} page link`);
-        // }
-
-        // const verifyLink = buildVerifyUrl(decrypted, pageParam);
-        // const fullVerifyUrl = `${window.location.origin}${verifyLink}`;
-
-        // setQrState((prev) => ({
-        //   ...prev,
-        //   isLoading: false,
-        //   qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
-        //   shareUrl: fullVerifyUrl,
-        // }));
+        setQrState((prev) => ({
+          ...prev,
+          isLoading: false,
+          products: collection.product_lists.filter(Boolean),
+        }));
       } catch (error) {
         console.error(`${action.label} QR build failed`, error);
         setQrState((prev) => ({
@@ -587,43 +510,14 @@ const AuthInput = ({ onLoginChange, styles }) => {
         </div>
       )}
 
-      <Modal
-        headerText={qrState.title}
+      <MiniKioskCard
+        title={qrState.title}
         isOpen={qrState.isOpen}
+        isLoading={qrState.isLoading}
+        products={qrState.products}
+        message={qrState.message}
         onClose={() => setQrState(INITIAL_COLLECTION_QR_STATE)}
-        size="sm"
-      >
-        <div className="flex flex-col items-center gap-4">
-          {qrState.isLoading ? (
-            <div className="flex h-48 w-48 items-center justify-center bg-gray-100 text-sm text-gray-500">
-              Loading QR...
-            </div>
-          ) : qrState.qrUrl ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrState.qrUrl}
-                alt={`${qrState.title} code`}
-                className="h-48 w-48 object-contain"
-              />
-            </>
-          ) : (
-            <div className="flex min-h-32 w-full items-center justify-center rounded bg-gray-100 px-4 text-center text-sm text-gray-600">
-              {qrState.message || "QR unavailable"}
-            </div>
-          )}
-          {qrState.shareUrl ? (
-           	<div className='border p-1 rounded flex break-all text-base mb-2 md:text-lg '>
-							{qrState.shareUrl}{" "}
-							<CopyToClipboard className='text-lg'
-								text={qrState.shareUrl}
-								onCopy={() => message.success("Copied", 1)}>
-								<CopyOutlined className='text-xl flex ml-auto' />
-							</CopyToClipboard>  
-						</div> 
-          ) : null}
-        </div>
-      </Modal>
+      />
     </div>
   );
 };

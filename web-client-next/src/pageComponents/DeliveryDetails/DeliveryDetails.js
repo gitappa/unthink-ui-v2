@@ -16,14 +16,17 @@ import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
 import { collectionQRCodeGenerator, getStoredKioskLoginUserId, setCookie } from "../../helper/utils";
 import Modal from "../../components/modal/Modal";
+import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 
 const DeliveryDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [authUserId, cart_attributes, storeData] = useSelector((state) => [
+  const [authUserId, cart_attributes, storeData,isUserLogin,authUser] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.store.data.cart_attributes,
-    state.store.data
+    state.store.data,
+     state.auth.user.isUserLogin, 
+state.auth.user.data,
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
   // console.log("collection", storeData?.store_name   );
@@ -56,7 +59,11 @@ const DeliveryDetails = () => {
       tagged_by: item.tagged_by,
     }));
   }, [collection]);
-
+  const hasKioskAccess = useKioskAccess({
+        isUserLogin,
+        storeData,
+        authUser,
+    });
 
   const handleRemove = (products) => {
     const payload = {
@@ -552,12 +559,11 @@ const DeliveryDetails = () => {
                 <img src="" alt="input" className="absolute right-5 top-5" />
               </div> */}
               <div className="p-0">
-                <button 
+                <button
                   onClick={handleContinueClick}
-                  style={{
-                    background: "#7c75ec",
-                  }}
-                  className="text-white mt-5 w-full rounded-xl lg:h-13 h-11"
+                  className={`text-white mt-5 w-full rounded-xl lg:h-13 h-11 ${
+                    hasKioskAccess ? "bg-kiosk-primary" : "bg-brand"
+                  }`}
                 >
                   Continue
                 </button>
@@ -586,11 +592,11 @@ const DeliveryDetails = () => {
         size="sm"
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          {checkoutClaimMessage && (
+          {/* {checkoutClaimMessage && (
             <p className="text-base font-medium text-gray-900">
               {checkoutClaimMessage}
             </p>
-          )}
+          )} */}
           <img
             src={shareQrCodeImage(`/checkout-claim-badge/${authUserId}/${storeData?.store_name}`)}
             alt="Digital cart QR"

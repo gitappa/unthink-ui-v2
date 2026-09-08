@@ -14,6 +14,7 @@ import {
 	ArrowLeftOutlined,
 	PictureOutlined,
 	InfoCircleOutlined,
+	UploadOutlined,
 } from "@ant-design/icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -29,6 +30,7 @@ import {
 	// COLLECTION_COVER_IMG_SIZES,
 	COLLECTION_GENERATED_BY_BLOG_BASED,
 	COLLECTION_GENERATED_BY_DESC_BASED,
+	COLLECTION_GENERATED_BY_VIDEO_BASED,
 	COLLECTION_GENERATED_BY_PLIST_BASED,
 	COLLECTION_PRIVATE,
 	COLLECTION_TYPE_AUTO_PLIST,
@@ -65,6 +67,7 @@ const initialWishlistData = {
 	collection_name: "",
 	description: "",
 	cover_image: "",
+	video_url: "",
 	blog_url: "",
 	tags: [],
 };
@@ -204,6 +207,7 @@ const CreateWishlist = ({
 		description: "",
 	});
 	const [isUploading, setIsUploading] = useState(false);
+	const [isVideoUploading, setIsVideoUploading] = useState(false);
 	const [savedImage, setSavedImage] = useState("");
 	const [enableReRun, setEnableReRun] = useState(false);
 	const [isFetchProductsChecked, setIsFetchProductsChecked] = useState(false);
@@ -243,6 +247,34 @@ const CreateWishlist = ({
 				});
 			}
 			setIsUploading(false);
+		},
+	};
+
+	const uploadVideoProps = {
+		accept: ".mp4",
+		multiple: false,
+		customRequest: async (info) => {
+			try {
+				setIsVideoUploading(true);
+				if (info?.file) {
+					const response = await profileAPIs.uploadVideo({
+						file: info.file,
+						store: currentStore,
+					});
+
+					if (response?.data?.data?.[0]) {
+						setWishlistData((currentData) => ({
+							...currentData,
+							video_url: response.data.data[0].url,
+						}));
+					}
+				}
+			} catch (error) {
+				notification["error"]({
+					message: "Failed to upload video",
+				});
+			}
+			setIsVideoUploading(false);
 		},
 	};
 
@@ -472,6 +504,7 @@ const CreateWishlist = ({
 					collection_name: selectedWishlist.collection_name,
 					description: selectedWishlist.description,
 					cover_image: selectedWishlist.cover_image,
+					video_url: selectedWishlist.video_url,
 					tags: selectedWishlist.tags,
 					blog_url: selectedWishlist.blog_url,
 				};
@@ -480,6 +513,7 @@ const CreateWishlist = ({
 					collection_name: wishlistData.collection_name,
 					description: wishlistData.description,
 					cover_image: wishlistData.cover_image,
+					video_url: wishlistData.video_url,
 					tags: wishlistData.tags,
 					blog_url: wishlistData.blog_url,
 				};
@@ -506,6 +540,8 @@ const CreateWishlist = ({
 
 				if (wishlistData.generated_by) {
 					createPayload.generated_by = wishlistData.generated_by;
+				} else if (wishlistData.video_url) {
+					createPayload.generated_by = COLLECTION_GENERATED_BY_VIDEO_BASED;
 				} else if (wishlistData.blog_url) {
 					createPayload.generated_by = COLLECTION_GENERATED_BY_BLOG_BASED;
 				} else {
@@ -698,6 +734,7 @@ const CreateWishlist = ({
 						/>
 					</div>
 				)}
+
 				{error.blogUrl && <Text className='text-red-500'>{error.blogUrl}</Text>}
 				{/* {existingBlog?.blog_url && isCreateWishlist && (
 					<Text className='text-gray-500'>
@@ -811,6 +848,48 @@ const CreateWishlist = ({
 											Cancel
 										</p>
 									)}
+								</Dragger>
+							)}
+						</div>
+					)}
+				</div>
+				<div className='mt-5'>
+					{wishlistData.video_url ? (
+						<>
+							<video
+								src={getFinalImageUrl(wishlistData.video_url)}
+								controls
+								className='object-cover mx-auto rounded-xl max-w-s-1 w-120 lg:w-200 h-120 lg:h-100'
+							/>
+
+							<div className='text-center text-purple-101 underline text-lg cursor-pointer'>
+								<span
+									onClick={() => {
+										setWishlistData({
+											...wishlistData,
+											video_url: "",
+										});
+									}}>
+									remove or change Video
+								</span>
+							</div>
+						</>
+					) : (
+						<div className='h-40'>
+							{isVideoUploading ? (
+								<Spin className='flex items-center justify-center h-full' />
+							) : (
+								<Dragger
+									className='bg-transparent w-full'
+									{...uploadVideoProps}
+									name='video_url'
+									showUploadList={false}>
+									<p className='ant-upload-drag-icon'>
+										<UploadOutlined />
+									</p>
+									<p className='ant-upload-text'>
+										Click or drag file to this area to upload Videos
+									</p>
 								</Dragger>
 							)}
 						</div>
