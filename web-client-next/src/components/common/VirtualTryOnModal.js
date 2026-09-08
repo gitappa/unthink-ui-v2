@@ -315,22 +315,14 @@ export const VirtualTryOnModal = ({
             <button
               type="button"
               onClick={handleVTOCancel}
-              className={`cursor-pointer rounded-xl border bg-transparent px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-                hasKioskAccess
-                  ? "border-kiosk-primary text-black hover:bg-kiosk-secondary/20"
-                  : "border-brand text-brand hover:bg-tertiary"
-              }`}
+              className="cursor-pointer rounded-xl border border-brand bg-transparent px-[1.125rem] py-2 text-xs font-bold text-brand transition-all duration-300 ease-in-out hover:bg-tertiary md:text-sm"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleVTODownload}
-              className={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-                hasKioskAccess
-                  ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
-                  : "bg-brand text-white hover:bg-secondary"
-              }`}
+              className="cursor-pointer rounded-xl border-0 bg-brand px-[1.125rem] py-2 text-xs font-bold text-white transition-all duration-300 ease-in-out hover:bg-secondary md:text-sm"
             >
               Download
             </button>
@@ -338,11 +330,7 @@ export const VirtualTryOnModal = ({
               <button
                 type="button"
                 onClick={handleVTOSave}
-                className={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-                  hasKioskAccess
-                    ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
-                    : "bg-brand text-white hover:bg-secondary"
-                }`}
+                className="cursor-pointer rounded-xl border-0 bg-brand px-[1.125rem] py-2 text-xs font-bold text-white transition-all duration-300 ease-in-out hover:bg-secondary md:text-sm"
               >
                 {saveText}
               </button>
@@ -352,9 +340,7 @@ export const VirtualTryOnModal = ({
       ) : loading ? (
         <div className="flex flex-col items-center justify-center gap-4 py-12">
           <LoadingOutlined
-            className={`animate-spin text-5xl ${
-              hasKioskAccess ? "text-kiosk-primary" : "text-brand"
-            }`}
+            className="animate-spin text-5xl text-brand"
           />
           <div className="flex flex-col items-center gap-2 text-center">
             <p className="m-0 text-lg font-semibold text-gray-800">
@@ -370,9 +356,7 @@ export const VirtualTryOnModal = ({
           <div className="relative flex flex-col items-center justify-center pb-[25px]">
             {showLoader ? (
               <LoadingOutlined
-                className={`animate-spin text-5xl ${
-                  hasKioskAccess ? "text-kiosk-primary" : "text-brand"
-                }`}
+                className="animate-spin text-5xl text-brand"
               />
             ) : !uploadedImage ? (
               <div className="relative flex flex-col items-center justify-center pb-[25px]">
@@ -381,16 +365,8 @@ export const VirtualTryOnModal = ({
                   panelClassName="relative flex w-full flex-col items-center justify-center pb-[25px]"
                   videoClassName="max-h-80 w-full max-w-sm rounded-xl bg-black object-cover"
                   actionsClassName="mt-4 flex flex-wrap justify-center gap-3"
-                  secondaryButtonClassName={`cursor-pointer rounded-xl border bg-transparent px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-                    hasKioskAccess
-                      ? "border-kiosk-primary text-black hover:bg-kiosk-secondary/20"
-                      : "border-brand text-brand hover:bg-tertiary"
-                  }`}
-                  primaryButtonClassName={`cursor-pointer rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
-                    hasKioskAccess
-                      ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
-                      : "bg-brand text-white hover:bg-secondary"
-                  }`}
+                  secondaryButtonClassName="cursor-pointer rounded-xl border border-brand bg-transparent px-[1.125rem] py-2 text-xs font-bold text-brand transition-all duration-300 ease-in-out hover:bg-tertiary md:text-sm"
+                  primaryButtonClassName="cursor-pointer rounded-xl border-0 bg-brand px-[1.125rem] py-2 text-xs font-bold text-white transition-all duration-300 ease-in-out hover:bg-secondary md:text-sm"
                   renderIdle={({
                     openCamera,
                     isCameraStarting,
@@ -402,20 +378,12 @@ export const VirtualTryOnModal = ({
                         Upload Your Image
                       </h4>
                       <Upload.Dragger
-                        className={`h-56 w-56 bg-transparent ${
-                          hasKioskAccess
-                            ? "[&_.ant-upload-drag:hover]:border-kiosk-primary"
-                            : ""
-                        }`}
+                        className="h-56 w-56 bg-transparent"
                         {...uploadImageDraggerProps}
                         name="upload_image"
                         showUploadList={false}
                       >
-                        <p
-                          className={`text-[2rem] ${
-                            hasKioskAccess ? "text-kiosk-primary" : "text-brand"
-                          }`}
-                        >
+                        <p className="text-[2rem] text-brand">
                           <UploadOutlined />
                         </p>
                         <p className="mx-auto w-2/3">
@@ -426,11 +394,7 @@ export const VirtualTryOnModal = ({
                         type="button"
                         onClick={openCamera}
                         disabled={isCameraStarting}
-                        className={`mt-3 flex cursor-pointer items-center gap-2 rounded-xl border px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:opacity-70 md:text-sm ${
-                          hasKioskAccess
-                            ? "border-kiosk-primary bg-transparent text-black hover:bg-kiosk-secondary/20"
-                            : "border-brand bg-transparent text-brand hover:bg-tertiary"
-                        }`}
+                        className="mt-3 flex cursor-pointer items-center gap-2 rounded-xl border border-brand bg-transparent px-[1.125rem] py-2 text-xs font-bold text-brand transition-all duration-300 ease-in-out hover:bg-tertiary disabled:cursor-not-allowed disabled:opacity-70 md:text-sm"
                       >
                         {isCameraStarting ? <LoadingIcon /> : <CameraIcon />}
                         Camera
@@ -460,11 +424,7 @@ export const VirtualTryOnModal = ({
             Add a prompt for AI (optional)
           </h4>
           <textarea
-            className={`mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:ring-[3px] ${
-              hasKioskAccess
-                ? "focus:border-kiosk-primary focus:ring-kiosk-primary/10"
-                : "focus:border-brand focus:ring-brand/10"
-            }`}
+            className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-3 py-2 font-[inherit] text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:border-brand focus:ring-[3px] focus:ring-brand/10"
             placeholder="Enter description..."
             name="description"
             type="text"
@@ -478,12 +438,8 @@ export const VirtualTryOnModal = ({
               type="submit"
               className={`mt-5 flex cursor-pointer justify-end rounded-xl border-0 px-[1.125rem] py-2 text-xs font-bold transition-all duration-300 ease-in-out md:text-sm ${
                 loading
-                  ? hasKioskAccess
-                    ? "bg-kiosk-secondary text-black hover:opacity-90"
-                    : "bg-secondary text-brand hover:opacity-90"
-                  : hasKioskAccess
-                    ? "bg-gradient-to-r from-kiosk-primary to-kiosk-secondary text-black hover:from-hover-primary hover:to-kiosk-secondary hover:text-white"
-                    : "bg-brand text-white hover:bg-secondary"
+                  ? "bg-secondary text-brand hover:opacity-90"
+                  : "bg-brand text-white hover:bg-secondary"
               }`}
             >
               Submit
