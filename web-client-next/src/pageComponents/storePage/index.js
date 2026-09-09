@@ -90,7 +90,6 @@ import Cookies from "js-cookie";
 import FailureUrl from "../../components/PaymentStatus/FailureUrl.js";
 import SuccessUrl from "../../components/PaymentStatus/SuccessUrl.js";
 import { setShowChatModal } from "../../hooks/chat/redux/actions.js";
-import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo.jsx";
 import { fetchCart } from "../DeliveryDetails/redux/action.js";
 
 const DroppWallet = dynamic(() => import("../../components/DroppWallet.js"), {
@@ -262,7 +261,8 @@ const StorePageWrapper = (props) => {
 		showWishlistModal,
 		authUserCollectionsCount,
 		influencerUserCollectionsCount,
-		singleCollections
+		singleCollections,
+		hasKioskAccess
 	] = useSelector((state) => [
 		state.chatV2.chatProductsData,
 		state.chatV2.showChatModal,
@@ -286,7 +286,8 @@ const StorePageWrapper = (props) => {
 		state.appState.wishlist.showWishlistModal,
 		state.auth.user.collections.count,
 		state.influencer.collections.count,
-		state.auth.user.singleCollections.data
+		state.auth.user.singleCollections.data,
+		state.kiosk.hasAccess
 	]);
 
 	const [selectedSortOption, setSelectedSortOption] = useState();
@@ -376,11 +377,6 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	);
 	
 	
-	  const hasKioskAccess = useKioskAccess({
-		isUserLogin,
-		storeData,
-		authUser,
-	});
 	  const [kioskLogin, setKioskLogin] = useState(getStoredKioskLoginUserId());
 			console.log('kioskLogin',kioskLogin);
 		  useEffect(() => {

@@ -16,17 +16,15 @@ import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
 import { collectionQRCodeGenerator, getStoredKioskLoginUserId, setCookie } from "../../helper/utils";
 import Modal from "../../components/modal/Modal";
-import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 
 const DeliveryDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [authUserId, cart_attributes, storeData,isUserLogin,authUser] = useSelector((state) => [
+  const [authUserId, cart_attributes, storeData, hasKioskAccess] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.store.data.cart_attributes,
     state.store.data,
-     state.auth.user.isUserLogin, 
-state.auth.user.data,
+    state.kiosk.hasAccess,
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
   // console.log("collection", storeData?.store_name   );
@@ -34,11 +32,6 @@ state.auth.user.data,
   const [isGuestPopUpShow] = useSelector((state) => [
     state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
-  const hasKioskAccess = useKioskAccess({
-        isUserLogin,
-        storeData,
-        authUser,
-    });
   const [guestData, setGuestData] = useState({
     email: "",
     phone: "",

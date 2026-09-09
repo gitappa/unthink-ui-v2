@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
+import { useDispatch } from "react-redux";
 import KioskHome from "./KioskHome";
 import { useRouter } from "next/router";
 import CollectionPage from "../../components/kiosk/CollectionPage";
@@ -12,19 +11,9 @@ import { fetchCart, fetchCartReset } from "../DeliveryDetails/redux/action";
 const KioskRoot = (props) => {
   const router = useRouter();
 
-  const [isUserLogin, authUser, storeData] = useSelector((state) => [
-    state.auth.user.isUserLogin,
-    state.auth.user.data,
-    state.store.data,
-  ]);
   const dispatch = useDispatch();
   const { collection_name } = router.query;
   const { isKioskCollectionPage, isRootPage = false } = props;
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
 
   const getKioskLogin = useCallback(() => getStoredKioskLogin(), []);
   const [KioskLoginAuth, setKioskLoginAuth] = useState(() => getKioskLogin());

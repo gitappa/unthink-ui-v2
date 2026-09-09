@@ -1,0 +1,1 @@
+export const SET_KIOSK_ACCESS = "SET_KIOSK_ACCESS";

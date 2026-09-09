@@ -49,7 +49,6 @@ import { addProductToWishlistCollection } from "../../pageComponents/wishlistAct
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../kiosk/useKioskSessionReminder";
-import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import AuthInput from "../kiosk/components/AuthInput";
 import GoBack from "../common/GoBack";
 import ProductGallery from "./ProductGallery";
@@ -74,6 +73,7 @@ const ProductDetails = ({ params, ...props }) => {
     productDetail,
     productToWishlistCollection,
     wishlistCollections,
+    hasKioskAccess
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -84,6 +84,7 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.productDetails.data,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
+    state.kiosk.hasAccess
   ]);
 
   const [store_id, isUserLogin] = useSelector((state) => [
@@ -102,12 +103,6 @@ const ProductDetails = ({ params, ...props }) => {
  
   const imageFromQuery = cleanImage(router.query.image);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
-
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code),
     [productDetail],

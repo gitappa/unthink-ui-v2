@@ -9,7 +9,8 @@ import { getStoreData } from "../pageComponents/store/redux/actions";
 import { fetchCart } from "../pageComponents/DeliveryDetails/redux/action";
 import { getTTid } from "../helper/getTrackerInfo";
 import { getStoredKioskLoginUserId } from "../helper/utils";
-import { useKioskAccess } from "../components/kiosk/components/LoggedInInfo";
+import { getKioskAccess } from "../components/kiosk/components/LoggedInInfo";
+import { setKioskAccess } from "../components/kiosk/redux/actions";
 
 // import trackApi from "../track/api";
 
@@ -22,7 +23,11 @@ const ActionWrapper = ({ children }) => {
 	]);
 	const dispatch = useDispatch();
 
-	const hasKioskAccess = useKioskAccess({ isUserLogin, storeData, authUser });
+	const hasKioskAccess = getKioskAccess({ isUserLogin, storeData, authUser });
+
+	useEffect(() => {
+		dispatch(setKioskAccess(hasKioskAccess));
+	}, [dispatch, hasKioskAccess]);
 
 	useEffect(() => {
 		// showing aura intro only 3 times on reload

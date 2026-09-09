@@ -23,7 +23,6 @@ import {
 } from "../../helper/webTracker/gtag";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { vtoIconState } from "../singleCollection/redux/actions";
-import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import { useRouter } from "next/router";
 import {
   getCollectionFlags,
@@ -90,6 +89,7 @@ const ProductCard = ({
     singleCollections,
     wishlistCollections,
     storeData,
+    hasKioskAccess,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -102,12 +102,8 @@ const ProductCard = ({
     state.auth.user.singleCollections.data,
     state.auth.user.wishlistCollections,
     state.store.data,
+    state.kiosk.hasAccess,
   ]);
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
 
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
