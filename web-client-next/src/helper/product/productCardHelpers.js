@@ -1,26 +1,5 @@
-import { enable_view_similar_products } from "../../constants/config";
-
-const PRODUCT_BUY_BUTTON_CLASS =
-  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-px py-[5px] text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-[var(--color-secondary)] md:px-1.5 md:py-3 md:text-base";
-
-const PRODUCT_BUY_BUTTON_SMALL_CLASS =
-  "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[var(--color-brand)] px-[5px] py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-[var(--color-secondary)]";
-
-const KIOSK_BUTTON_CLASS =
-  "group box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl px-px py-[5px] text-sm button-kiosk-card text-black hover:bg-kiosk-primary  hover:text-white font-medium";
-
 export const KIOSK_CART_ICON_CLASS =
   "h-4 w-4 md:h-5 md:w-5 filter brightness-0 group-hover:invert";
-
-export const getProductBuyButtonClass = (size, hasKioskAccess) =>
-  size === "small"
-    ? PRODUCT_BUY_BUTTON_SMALL_CLASS
-    : hasKioskAccess
-      ? KIOSK_BUTTON_CLASS
-      : PRODUCT_BUY_BUTTON_CLASS;
-
-export const getDisabledProductBuyButtonClass = (size, hasKioskAccess) =>
-  getProductBuyButtonClass(size, hasKioskAccess).replace("cursor-pointer", "");
 
 export const getStaticImageSrc = (image) => image?.src || image;
 
@@ -65,8 +44,7 @@ export const getCollectionFlags = (collection) => {
   };
 };
 
-export const shouldEnableViewSimilar = (hideViewSimilar) =>
-  enable_view_similar_products === "false" ? false : !hideViewSimilar;
+
 
 const normalizeAttributeKey = (value) =>
   String(value || "")

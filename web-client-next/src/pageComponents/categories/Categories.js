@@ -7,7 +7,7 @@ import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import CategoriesList from "./CategoriesList";
 import { fetchCategories, setShowCategories } from "./redux/actions";
 import { categoriesAPIs } from "../../helper/serverAPIs";
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 
 import styles from './categories.module.scss';
 import {

@@ -41,7 +41,7 @@ const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
   ];
 
   return (
-    <div className="lg:flex items-start justify-center gap-3">
+    <div className="min-[1025px]:flex items-start justify-center gap-3">
       {/* Banner Section */}
       <div className="relative max-h-[600px] w-full  rounded-[18px] bg-white p-2 md:p-5">
         <div className="relative z-10 h-full w-full">

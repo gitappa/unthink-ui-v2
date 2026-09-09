@@ -86,8 +86,6 @@ const fetchCategoriesProductsUrl = "/showcase/category_products";
 //reccomendations API url
 const fetchRecommendationsUrl = "/aura/personalized_recommendations/";
 
-//similar_products API url
-const fetchSimilarProductsUrl = "/aura/similar_prod/";
 
 //token API urls
 const createAndTransferNFTUrl = "/transferNFT";
@@ -1317,20 +1315,6 @@ const fetchReccomendationsAPICall = () => {
 
 export const recommendationsAPIs = {
   fetchReccomendationsAPICall,
-};
-
-const fetchSimilarProductsAPICall = (data) => {
-  const url = `${auraYfretUserCollBaseUrl}${fetchSimilarProductsUrl}`;
-
-  return apiInstance({
-    url,
-    method: "post",
-    data: { ...data },
-  });
-};
-
-export const similarProductsAPIs = {
-  fetchSimilarProductsAPICall,
 };
 
 const createAndTransferNFT = (payload) => {

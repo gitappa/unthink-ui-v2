@@ -7,7 +7,6 @@ import {
   KIOSK_CART_ICON_CLASS,
 } from "../../helper/product/productCardHelpers";
 import shopping from "../singleCollection/images/Card/shopping-bag3.svg";
-import productCardStyles from "../singleCollection/ProductCard.module.css";
 
 const BuyNowButton = ({
   product,
@@ -87,7 +86,7 @@ const BuyNowButton = ({
           width={20}
           className={
             showWishlistModal || size === "small"
-              ? productCardStyles["product-cart-icon-small"]
+              ? "h-6 w-6"
               : hasKioskAccess
                 ? KIOSK_CART_ICON_CLASS
                 : "h-4 w-4 md:h-5 md:w-5"

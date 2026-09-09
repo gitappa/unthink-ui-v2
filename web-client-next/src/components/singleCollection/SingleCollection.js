@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Skeleton, Typography, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import ProductCard from "./ProductCard";
+import ProductCard from "../ProductCard";
 import { collectionAPIs } from "../../helper/serverAPIs";
 import { handleRecProductClick } from "../../pageComponents/recommendations/redux/actions";
 import { getIsRootPage, getIsSharedPage } from "../../helper/utils";

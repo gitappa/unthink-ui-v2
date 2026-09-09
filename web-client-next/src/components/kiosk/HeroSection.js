@@ -148,7 +148,9 @@ const HeroSection = ({ storeData, collectiondata }) => {
                 </div>
               </div>
               }
+              
               <div key="collection-info" className="flex-none">
+                {collectiondata?.product_lists?.length > 0 && (
                 <div
                   className="h-44 w-50 rounded-xl shadow-lg flex items-center justify-center p-4"
                   style={{ backgroundColor: "rgba(250,251,252,0.96)" }}
@@ -170,13 +172,16 @@ const HeroSection = ({ storeData, collectiondata }) => {
                     </button>
                   </div>
                 </div>
+                )}
               </div>
-              <HeroProductSwiper
-                products={collectiondata?.product_lists}
-                onProductClick={(product) => {
-                  router.push(`/product/${product.mfr_code}`);
-                }}
-              />
+              
+                <HeroProductSwiper
+                  products={collectiondata?.product_lists}
+                  onProductClick={(product) => {
+                    router.push(`/product/${product.mfr_code}`);
+                  }}
+                />
+              
             </div>
           </div>
         </div>

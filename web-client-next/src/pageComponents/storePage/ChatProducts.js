@@ -8,7 +8,7 @@ import {
   setProductsToAddInWishlist,
 } from "../wishlist/redux/actions";
 import { handleRecProductClick } from "../recommendations/redux/actions";
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import AuraResponseProductsWithTags from "../auraResponseProductsWithTags/AuraResponseProductsWithTags";
 import { filterAvailableProductList, isEmpty } from "../../helper/utils";
 import { is_store_instance } from "../../constants/config";

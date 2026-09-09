@@ -330,8 +330,8 @@ export const CURRENCY_INR = "INR";
 export const CURRENCY_USD = "USD";
 
 export const CURRENCY_SYMBOLS = {
-	[CURRENCY_INR]: "&#8377;",
-	[CURRENCY_USD]: "&#36;",
+	[CURRENCY_INR]: "\u20B9",
+	[CURRENCY_USD]: "$",
 };
 
 // upload products mode for my collection

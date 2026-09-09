@@ -4,8 +4,19 @@ import { getPercentage } from "../utils";
 export const isProductUrlAvailable = (product) =>
   Boolean(product?.url && product.url !== PRODUCT_DUMMY_URL);
 
+export const normalizeCurrencySymbol = (symbol) => {
+  const symbolMap = {
+    "&#8377;": "\u20B9",
+    "&#x20B9;": "\u20B9",
+    "&8377;": "\u20B9",
+    "&#36;": "$",
+  };
+
+  return symbolMap[symbol] || symbol || "$";
+};
+
 export const getProductCurrencySymbol = (product) =>
-  product?.currency_symbol ? product.currency_symbol : "&#36;";
+  normalizeCurrencySymbol(product?.currency_symbol);
 
 export const getProductDiscountPercentage = (product) =>
   product?.price &&

@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "../../helper/useNavigate";
 
 import { AdminCheck, getIsSellerLoggedIn, isEmpty } from "../../helper/utils";
-import ProductCard from "../../components/singleCollection/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import UploadMultiProductsModal from "../uploadMultiProductsModal";
 import { fetchCustomProducts, removeCustomProducts } from "./redux/actions";
 import {

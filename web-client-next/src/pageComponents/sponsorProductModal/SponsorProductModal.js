@@ -12,6 +12,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import Modal from "../../components/modal/Modal";
 import { updateWishlist } from "../wishlistActions/updateWishlist/redux/actions";
 import { generateRoute, getPercentage, isEmpty } from "../../helper/utils";
+import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 import { profileAPIs } from "../../helper/serverAPIs";
 // import { COLLECTION_COVER_IMG_SIZES } from "../../constants/codes";
 
@@ -28,7 +29,7 @@ const defaultProductData = {
 	listprice: "",
 	product_brand: "",
 	currency: "USD",
-	currency_symbol: "&#36;",
+	currency_symbol: "$",
 	// discount: "above 20",
 	avlble: 1,
 	color: "",
@@ -223,7 +224,7 @@ const SponsorProductModal = ({
 						listprice: +productData.listprice,
 						product_brand: productData.product_brand,
 						currency: "USD",
-						currency_symbol: "&#36;",
+						currency_symbol: "$",
 						// discount: "above 20",
 						avlble: 1, // keep it default and fixed YES
 						color: productData.color,
@@ -258,8 +259,7 @@ const SponsorProductModal = ({
 	);
 
 	const currencySymbol = useMemo(
-		() =>
-			productData?.currency_symbol ? productData.currency_symbol : "&#36;",
+		() => normalizeCurrencySymbol(productData?.currency_symbol),
 		[productData?.currency_symbol]
 	);
 
@@ -320,14 +320,11 @@ const SponsorProductModal = ({
 									<div>
 										<div className=''>
 											<span className='font-semibold text-xl'>
-												{productData?.price || productData?.listprice ? (
-													<span
-														dangerouslySetInnerHTML={{
-															__html: `${currencySymbol}${
-																productData.price || productData.listprice
-															}`,
-														}}
-													/>
+												{(productData?.price ?? productData?.listprice) != null ? (
+													<span>
+														{currencySymbol}
+														{productData.price ?? productData.listprice}
+													</span>
 												) : null}
 											</span>
 
@@ -335,12 +332,10 @@ const SponsorProductModal = ({
 											productData.listprice > productData?.price ? (
 												<span className='ml-1'>
 													MRP:
-													<span
-														className='line-through'
-														dangerouslySetInnerHTML={{
-															__html: `${currencySymbol}${productData.listprice}`,
-														}}
-													/>
+													<span className='line-through'>
+														{currencySymbol}
+														{productData.listprice}
+													</span>
 												</span>
 											) : null}
 										</div>

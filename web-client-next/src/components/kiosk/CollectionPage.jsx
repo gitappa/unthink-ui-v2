@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInfluencerCollection } from "../../pageComponents/Influencer/redux/actions";
-import ProductCard from "../singleCollection/ProductCard";
+import ProductCard from "../ProductCard";
 import {
   filterAvailableProductList,
   filterProductListBySelectedTags,

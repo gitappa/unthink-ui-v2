@@ -21,6 +21,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 
 import Modal from "../../components/modal/Modal";
 import { getPercentage, isEmpty } from "../../helper/utils";
+import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 import { collectionPageAPIs, profileAPIs } from "../../helper/serverAPIs";
 import {
 	// COLLECTION_COVER_IMG_SIZES,
@@ -87,7 +88,7 @@ const defaultProductData = {
 	listprice: "",
 	product_brand: "",
 	currency: "USD",
-	currency_symbol: "&#36;",
+	currency_symbol: "$",
 	product_tag: [],
 	tags: "",
 	// discount: "above 20",
@@ -583,9 +584,9 @@ const CustomProductModal = ({
 
 	const currencySymbol = useMemo(
 		() =>
-			productData?.currency_symbol
-				? productData.currency_symbol
-				: CURRENCY_SYMBOLS[currency],
+			normalizeCurrencySymbol(
+				productData?.currency_symbol || CURRENCY_SYMBOLS[currency]
+			),
 		[productData?.currency_symbol, currency]
 	);
 
@@ -863,13 +864,11 @@ const CustomProductModal = ({
 										<div>
 											<div className='flex items-center'>
 												<span className='font-semibold text-xl'>
-													{productData?.price || productData?.listprice ? (
-														<span
-															dangerouslySetInnerHTML={{
-																__html: `${currencySymbol}${productData.price || productData.listprice
-																	}`,
-															}}
-														/>
+													{(productData?.price ?? productData?.listprice) != null ? (
+														<span>
+															{currencySymbol}
+															{productData.price ?? productData.listprice}
+														</span>
 													) : null}
 												</span>
 
@@ -877,12 +876,10 @@ const CustomProductModal = ({
 													+productData.listprice > +productData?.price ? (
 													<span className='ml-1'>
 														MRP:
-														<span
-															className='line-through'
-															dangerouslySetInnerHTML={{
-																__html: `${currencySymbol}${productData.listprice}`,
-															}}
-														/>
+														<span className='line-through'>
+															{currencySymbol}
+															{productData.listprice}
+														</span>
 													</span>
 												) : null}
 												{productData?.additionalAttributes?.availability ? (
@@ -1312,11 +1309,9 @@ const CustomProductModal = ({
 
 								<div className='grid grid-cols-2 gap-4 mt-3'>
 									<div className='col-span-2'>
-										<p
-											dangerouslySetInnerHTML={{
-												__html: `Currency: ${currencySymbol} ${currencyEdit}`,
-											}}
-										/>
+										<p>
+											Currency: {currencySymbol} {currencyEdit}
+										</p>
 									</div>
 									<div>
 										<label className='text-sm'>List price</label>

@@ -1,6 +1,5 @@
 import React from "react";
 import { Popover } from "antd";
-import styles from "./Tooltip.module.css";
 
 import close_bg_icon from "../../images/close_bg_icon.svg";
 
@@ -15,9 +14,9 @@ const Tooltip = ({
 }) => {
 	const content = (
 		<div onClick={(e) => e.stopPropagation()}>
-			<div className={styles.closeIconWrapper}>
+			<div className='float-right rounded-full'>
 				<img
-					className={styles.closeIcon}
+					className='cursor-pointer'
 					src={close_bg_icon}
 					alt=""
 					onClick={(e) => {
@@ -27,14 +26,14 @@ const Tooltip = ({
 				/>
 			</div>
 			{headerText ? (
-				<h1 className={styles.headerText}>{headerText}</h1>
+				<h1 className='m-0 text-[28px] font-bold text-white'>{headerText}</h1>
 			) : null}
 			{messageText ? (
-				<h2 className={styles.messageText}>{messageText}</h2>
+				<h2 className='text-xl font-medium text-white'>{messageText}</h2>
 			) : null}
 		</div>
 	);
-
+console.log('Helo World')
 	return (
 		<Popover
 			placement={placement}

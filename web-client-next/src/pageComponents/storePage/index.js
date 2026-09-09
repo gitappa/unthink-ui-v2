@@ -87,8 +87,8 @@ import styles from './storePage.module.scss';
 import SwiftlyStyledIndex from "../swiftlyStyled/index.js";
 import { fetchCustomProducts } from "../customProducts/redux/actions.js";
 import Cookies from "js-cookie";
-import FailureUrl from "../../components/singleCollection/FailureUrl.js";
-import SuccessUrl from "../../components/singleCollection/SuccessUrl.js";
+import FailureUrl from "../../components/PaymentStatus/FailureUrl.js";
+import SuccessUrl from "../../components/PaymentStatus/SuccessUrl.js";
 import { setShowChatModal } from "../../hooks/chat/redux/actions.js";
 import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo.jsx";
 import { fetchCart } from "../DeliveryDetails/redux/action.js";
@@ -120,7 +120,7 @@ const MyPoints = dynamic(() => import("../DeliveryDetails/MyPoints.jsx"), {
 const ChatContainer = dynamic(() => import("./ChatContainer.js"), {
 	ssr: false,
 });
-const ProductDetails = dynamic(() => import("./ProductDetails.js"), {
+const ProductDetails = dynamic(() => import("../../components/ProductDetails/ProductDetails.js"), {
 	ssr: false,
 	loading: () => (
 		<div className={styles.loadingIndicator}>
@@ -140,9 +140,6 @@ const Recommendations = dynamic(() => import("../recommendations/Recommendations
 	ssr: false,
 });
 const WishListModal = dynamic(() => import("../wishlist/WishListModal.js"), {
-	ssr: false,
-});
-const SimilarProducts = dynamic(() => import("../similarProducts/SimilarProducts.js"), {
 	ssr: false,
 });
 
@@ -1522,14 +1519,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				trackCollectionCampCode={currentSingleCollection.campaign_code}
 				trackCollectionICode={pageUser.influencer_code}
 			/>
-			<SimilarProducts
-				enableClickTracking={isSharedPage || isCollectionPage}
-				pageUser={pageUser}
-				trackCollectionId={currentSingleCollection._id}
-				trackCollectionName={currentSingleCollection.collection_name}
-				trackCollectionCampCode={currentSingleCollection.campaign_code}
-				trackCollectionICode={pageUser.influencer_code}
-			/>
+			
 
 			{/* to create new tailwind classes in build */}
 			<span className={styles.hiddenUtilityClasses} />

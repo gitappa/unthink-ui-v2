@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./blogCollectionProducts.module.scss";
 import { Skeleton, Typography } from "antd";
 
-import ProductCard from "../../../components/singleCollection/ProductCard";
+import ProductCard from "../../../components/ProductCard";
 import { IN_PROGRESS } from "../../../constants/codes";
 import { useDispatch, useSelector } from "react-redux";
 

@@ -4,7 +4,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import Chat from "../../pageComponents/storePage/Chat";
-import ProductCard from "../singleCollection/ProductCard";
+import ProductCard from "../ProductCard";
 import {
 	setChatMessage,
 	setChatSearchType,
