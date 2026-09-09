@@ -145,7 +145,7 @@ function* addToCartSaga(action) {
 
     if (data?._id) {
       localStorage.setItem("mycartcollectionid", data._id);
-      message.success("Cart updated successfully!");
+      // message.success("Cart updated successfully!");
     }
     yield put(addToCartSuccess(data));
   } catch (error) {
