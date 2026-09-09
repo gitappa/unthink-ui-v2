@@ -131,17 +131,17 @@ const ProductOverview = ({
             ) : null}
           </div>
 
-          {productDetails?.availability ? (
+          {productDetails?.avlbl > 0 ? (
             <span
               className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
-                productDetails.availability === "out stock"
+                productDetails.avlbl === 0
                   ? "bg-red text-white"
                   : "bg-green-100 text-green-700"
               }`}
             >
               {productDetails.avlbl === 0 
                 ? "SOLD"
-                : productDetails.availability}
+                : 'IN STOCK'}
             </span>
           ) : null}
         </div>
