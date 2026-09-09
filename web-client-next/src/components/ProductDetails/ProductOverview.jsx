@@ -135,11 +135,11 @@ const ProductOverview = ({
             <span
               className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs sm:text-sm font-semibold uppercase tracking-wide ${
                 productDetails.availability === "out stock"
-                  ? "bg-red-100 text-white"
+                  ? "bg-red text-white"
                   : "bg-green-100 text-green-700"
               }`}
             >
-              {productDetails.avlbl === 0
+              {productDetails.avlbl === 0 
                 ? "SOLD"
                 : productDetails.availability}
             </span>

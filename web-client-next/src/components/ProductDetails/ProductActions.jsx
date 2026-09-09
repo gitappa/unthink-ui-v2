@@ -56,7 +56,7 @@ const ProductActions = ({
 
   return (
     <>
-      {brandsDetails?.paymentMethod ? (
+      {brandsDetails?.paymentMethod && productDetails?.avlble > 0 ? (
         <div className="lg:mt-8 mt-4">
           <div className="grid gap-2">
             {brandsDetails.paymentMethod.split(",").map((item, idx) => {
@@ -79,7 +79,7 @@ const ProductActions = ({
       ) : null}
 
       {(storeData?.pdp_settings?.is_buy_button ||
-        storeData?.pdp_settings?.is_add_to_cart_button) && (
+        storeData?.pdp_settings?.is_add_to_cart_button) && productDetails?.avlble > 0 && (
         <div className="my-8 pb-2">
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             {storeData?.pdp_settings?.is_add_to_cart_button && (

@@ -34,7 +34,11 @@ state.auth.user.data,
   const [isGuestPopUpShow] = useSelector((state) => [
     state.GuestPopUpReducer.isGuestPopUpShow,
   ]);
-
+  const hasKioskAccess = useKioskAccess({
+        isUserLogin,
+        storeData,
+        authUser,
+    });
   const [guestData, setGuestData] = useState({
     email: "",
     phone: "",
@@ -59,11 +63,7 @@ state.auth.user.data,
       tagged_by: item.tagged_by,
     }));
   }, [collection]);
-  const hasKioskAccess = useKioskAccess({
-        isUserLogin,
-        storeData,
-        authUser,
-    });
+
 
   const handleRemove = (products) => {
     const payload = {
@@ -336,7 +336,7 @@ state.auth.user.data,
     if (!authUserId && !isUserLoginCookies) {
       setIsPopupShow(true);
       dispatch(GuestPopUpShow(true));
-    } else if (shouldShowCheckoutClaimQr) {
+    } else if (shouldShowCheckoutClaimQr && ( hasKioskAccess && kioskUser_id || authUserId )) {
       setIsCheckoutClaimQrModalOpen(true);
     } else {
       // navigate("/cart/checkout");
@@ -597,11 +597,13 @@ state.auth.user.data,
               {checkoutClaimMessage}
             </p>
           )} */}
-          <img
-            src={shareQrCodeImage(`/checkout-claim-badge/${authUserId}/${storeData?.store_name}`)}
-            alt="Digital cart QR"
-            className="h-48 w-48 object-contain "
-          />
+  
+            <img
+              src={shareQrCodeImage(`/checkout-claim-badge/${kioskUser_id || authUserId}/${storeData?.store_name}`)}
+              alt="Digital cart QR"
+              className="h-48 w-48 object-contain "
+            />
+      
           <p> {shareUrl}</p>
 
         </div>
