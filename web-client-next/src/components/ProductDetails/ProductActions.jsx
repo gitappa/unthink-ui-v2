@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { getStoredKioskLogin } from "../../helper/utils";
+import { useDispatch, useSelector } from "react-redux";
 import { getTTid } from "../../helper/getTrackerInfo";
 import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
 import AddToCartButton, { addProductToCart } from "../common/AddToCartButton";
@@ -20,6 +19,7 @@ const ProductActions = ({
   storeId,
 }) => {
   const dispatch = useDispatch();
+  const kioskLogin = useSelector((state) => state.kiosk.login);
   const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
   const [pendingCartQty, setPendingCartQty] = useState(null);
   const cardItem = collection?.product_lists?.find(
@@ -36,7 +36,6 @@ const ProductActions = ({
     if (!productDetails?.mfr_code) return;
 
     const normalizedQty = getNormalizedCartQty(qty);
-    const kioskLogin = getStoredKioskLogin();
     const kioskUserId = userIdOverride || kioskLogin?.user_id;
 
     if (hasKioskAccess && !kioskUserId) {
@@ -112,7 +111,7 @@ const ProductActions = ({
                     authUserId={authUserId}
                     kiosk={{
                       hasAccess: hasKioskAccess,
-                      getLogin: getStoredKioskLogin,
+                      getLogin: () => kioskLogin,
                     }}
                     onGuestPopupOpen={({ qty }) => {
                       openCartGuestPopup(qty);

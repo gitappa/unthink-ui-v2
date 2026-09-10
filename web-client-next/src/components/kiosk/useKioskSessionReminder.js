@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 import { clearStoragesKiosk } from "../../helper/utils";
 import { getUserCollectionsReset, getWishlistUserCollectionReset } from "../../pageComponents/Auth/redux/actions";
 import { fetchCategoriesReset } from "../../pageComponents/categories/redux/actions";
@@ -9,8 +8,6 @@ import { clearInfluencerCollections } from "../../pageComponents/Influencer/redu
 import { fetchCartReset } from "../../pageComponents/DeliveryDetails/redux/action";
 import timer_clock from "../../images/kiosk/timer_clock.png";
 import { useRouter } from "next/router";
-
-const KIOSK_LOGIN_CHANGE_EVENT = "kiosk-login-change";
 
 const notifyKioskLoginChange = () => {
   if (typeof window === "undefined") return;
@@ -25,6 +22,7 @@ export default function useKioskSessionReminder({ time } = {}) {
   
   const dispatch = useDispatch();
   const isUserLogin = useSelector((state) => state.auth.user.isUserLogin);
+  const kioskLogin = useSelector((state) => state.kiosk.login);
   const [showSessionPopup, setShowSessionPopup] = useState(false);
 // console.log('showSessionPopup',showSessionPopup);
 
@@ -35,11 +33,10 @@ export default function useKioskSessionReminder({ time } = {}) {
       timerRef.current = null;
     }
 
-    const cookie = sessionStorage.getItem("Kiosk-login");
-    if (!cookie || !isUserLogin) return;
+    if (!kioskLogin || !isUserLogin) return;
 
     timerRef.current = setInterval(() => {
-      if (sessionStorage.getItem("Kiosk-login") && isUserLogin) {
+      if (kioskLogin && isUserLogin) {
         setShowSessionPopup(true);
       } else {
         if (timerRef.current) {
@@ -48,7 +45,7 @@ export default function useKioskSessionReminder({ time } = {}) {
         }
       }
     }, intervalMs);
-  }, [isUserLogin, intervalMs]);
+  }, [isUserLogin, intervalMs, kioskLogin]);
 
   useEffect(() => {
     startSessionTimer();
@@ -61,10 +58,6 @@ export default function useKioskSessionReminder({ time } = {}) {
   }, [startSessionTimer]);
 
   const handleStayLoggedIn = useCallback(() => {
-    const cookieVal = sessionStorage.getItem("Kiosk-login");
-    // if (cookieVal) {
-    //   sessionStorage.setItem('Kiosk-login', cookieVal);
-    // }
     setShowSessionPopup(false);
     startSessionTimer();
   }, [startSessionTimer]);
@@ -105,9 +98,7 @@ export default function useKioskSessionReminder({ time } = {}) {
 
 // Simple presentational popup component exported alongside the hook so consumers can import both from one file
 export function KioskSessionPopup({ onStay, onLogout }) {
-  const kioskLoginMail = JSON.parse(
-    sessionStorage.getItem("Kiosk-login") || "{}",
-  )?.email;
+  const kioskLoginMail = useSelector((state) => state.kiosk.login?.email);
   const maskedEmail = kioskLoginMail?.replace(/^(.{5})[^@]*(@.*)$/, "$1....$2");
 
   useEffect(() => {

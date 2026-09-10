@@ -14,7 +14,6 @@ import {
   cleanImage,
   getCurrentTheme,
 } from "../../helper/utils";
-import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 
 import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import {
@@ -90,6 +89,7 @@ const ProductCard = ({
     wishlistCollections,
     storeData,
     hasKioskAccess,
+    kioskLogin,
   ] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.auth.user.data.user_name,
@@ -103,11 +103,12 @@ const ProductCard = ({
     state.auth.user.wishlistCollections,
     state.store.data,
     state.kiosk.hasAccess,
+    state.kiosk.login,
   ]);
 
   const [Collection_tryonStatement, setCollectionTryonStatement] =
     useState(null);
-  const [KioskLoginAuth, setKioskLoginAuth] = useState(null);
+  const KioskLoginAuth = kioskLogin;
   const currentCollectionForCard = useMemo(
     () =>
       getCurrentCollectionForCard({
@@ -140,30 +141,7 @@ const ProductCard = ({
     };
   }, []);
 
-  const getKioskLogin = useCallback(() => {
-    if (typeof window === "undefined") return null;
-
-    try {
-      return JSON.parse(window.sessionStorage.getItem("Kiosk-login") || "null");
-    } catch (error) {
-      return null;
-    }
-  }, []);
-
-  const syncKioskLogin = useCallback(() => {
-    const login = getKioskLogin();
-    setKioskLoginAuth(login);
-  }, [getKioskLogin]);
-
-  useEffect(() => {
-    syncKioskLogin();
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
-
-    return () => {
-      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
-    };
-  }, [syncKioskLogin]);
-  const kioskLogin = getKioskLogin();
+  const getKioskLogin = useCallback(() => kioskLogin, [kioskLogin]);
 
   const handleProductClick = async ({ open }) => {
     // tracking event happens from here by prop enableClickTracking

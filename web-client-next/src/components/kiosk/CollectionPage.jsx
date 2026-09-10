@@ -56,10 +56,11 @@ const CollectionPage = ({ params }) => {
     singleCollectionKiosk?.path === requestedCollectionPath
       ? singleCollectionKiosk
       : null;
-  const [isUserLogin, storeData, isGuestPopUpShow] = useSelector((state) => [
+  const [isUserLogin, storeData, isGuestPopUpShow, kioskLogin] = useSelector((state) => [
     state.auth.user.isUserLogin,
     state.store.data,
     state.GuestPopUpReducer.isGuestPopUpShow,
+    state.kiosk.login,
   ]);
  
   const handleTagClick = useCallback((value) => {
@@ -224,11 +225,8 @@ useEffect(() => {
         : `${originPrefix}${targetPath}`;
 
       try {
-        const kioskUser = JSON.parse(
-          sessionStorage.getItem("Kiosk-login") || "{}",
-        );
-        const kioskLoginEmail = kioskUser?.email;
-        const kioskLoginPhone = kioskUser?.phone;
+        const kioskLoginEmail = kioskLogin?.email;
+        const kioskLoginPhone = kioskLogin?.phone;
         console.log("kioskLoginEmail", kioskLoginEmail);
         console.log("kioskLoginPhone", kioskLoginPhone);
 
@@ -263,7 +261,7 @@ useEffect(() => {
         qrUrl: fallbackQrUrl || collectionQRCodeGenerator(normalUrl),
       };
     },
-    [],
+    [kioskLogin?.email, kioskLogin?.phone],
   );
 
   const getCollectionAutoLoginUrls = useCallback(
@@ -324,12 +322,7 @@ useEffect(() => {
   }, [getCollectionAutoLoginUrls, shareContext, showShareProductDetails]);
 
   const handleShareClick = useCallback(() => {
-    const isKioskLogin =
-      typeof window !== "undefined"
-        ? sessionStorage.getItem("Kiosk-login")
-        : null;
-
-    if (isUserLogin && !isKioskLogin) {
+    if (isUserLogin && !kioskLogin?.user_id) {
       setShowShareProductDetails(false);
       setPendingGuestAction({ type: "share" });
       setIsPopupShow(true);
@@ -338,7 +331,7 @@ useEffect(() => {
     }
 
     openShareOptions();
-  }, [dispatch, isUserLogin, openShareOptions]);
+  }, [dispatch, isUserLogin, kioskLogin?.user_id, openShareOptions]);
 
   const buildVtoProductAutoLoginUrls = useCallback(
     async (productOrMfrCode) => {
