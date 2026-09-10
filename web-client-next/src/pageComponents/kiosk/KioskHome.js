@@ -151,7 +151,7 @@ const KioskHome = ({ props }) => {
         </div>
       </div>
       <div
-        className={`min-[1025]:flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
+        className={`lg:flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
       >
         {showTags === "Social Media" && (
           <>

@@ -13,6 +13,8 @@ const MiniKioskCard = ({
   isLoading,
   products = [],
   message,
+  qrUrl,
+  qrTargetUrl,
   onClose,
 }) => {
   const router = useRouter();
@@ -86,6 +88,28 @@ const MiniKioskCard = ({
                 </div>
               );
             })}
+            {qrUrl ? (
+              <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+                <div className="flex aspect-square w-full items-center justify-center bg-gray-100 p-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={qrUrl}
+                    alt="Collection QR code"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="space-y-1 p-3">
+                  <div className="text-sm font-semibold text-gray-900">
+                    Scan on mobile
+                  </div>
+                  {qrTargetUrl ? (
+                    <div className="break-all text-xs text-gray-500">
+                      {qrTargetUrl}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
           </div>
         ) : (
           <div className="flex min-h-32 w-full items-center justify-center rounded bg-gray-100 px-4 text-center text-sm text-gray-600">
