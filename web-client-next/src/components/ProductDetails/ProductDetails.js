@@ -15,15 +15,10 @@ import {
   getProductDetailsPagePath,
   cleanImage,
 } from "../../helper/utils";
-import {
-  requestSigninWithLink,
-  decryptSigninToken,
-  buildVerifyUrl,
-} from "../../helper/autoLogin";
+import { buildKioskAutoLoginUrls } from "../../helper/autoLogin";
 import { customProductsAPIs } from "../../helper/serverAPIs";
 
 import {
-  KIOSK_LOGIN_CHANGE_EVENT,
   PATH_ROOT,
   STORE_USER_NAME_SAMSKARA,
 } from "../../constants/codes";
@@ -49,7 +44,6 @@ import { addProductToWishlistCollection } from "../../pageComponents/wishlistAct
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../kiosk/useKioskSessionReminder";
-import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import AuthInput from "../kiosk/components/AuthInput";
 import GoBack from "../common/GoBack";
 import ProductGallery from "./ProductGallery";
@@ -74,6 +68,8 @@ const ProductDetails = ({ params, ...props }) => {
     productDetail,
     productToWishlistCollection,
     wishlistCollections,
+    hasKioskAccess,
+    kioskLogin
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -84,6 +80,8 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.productDetails.data,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
+    state.kiosk.hasAccess,
+    state.kiosk.login
   ]);
 
   const [store_id, isUserLogin] = useSelector((state) => [
@@ -102,12 +100,6 @@ const ProductDetails = ({ params, ...props }) => {
  
   const imageFromQuery = cleanImage(router.query.image);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
-
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code),
     [productDetail],
@@ -120,8 +112,6 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-  const [kioskLogin, setKioskLoginAuth] = useState(null);
-
   const wishlist = Array.isArray(wishlistCollections)
     ? wishlistCollections
     : wishlistCollections?.product_lists || [];
@@ -148,28 +138,6 @@ const ProductDetails = ({ params, ...props }) => {
 
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
-
-  useEffect(() => {
-    const handleKioskLoginChange = () => {
-      const kioskLogin = sessionStorage.getItem("Kiosk-login");
-
-      try {
-        setKioskLoginAuth(kioskLogin ? JSON.parse(kioskLogin) : null);
-      } catch {
-        setKioskLoginAuth(null);
-      }
-    };
-    handleKioskLoginChange();
-
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-
-    return () => {
-      window.removeEventListener(
-        KIOSK_LOGIN_CHANGE_EVENT,
-        handleKioskLoginChange,
-      );
-    };
-  }, []);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -234,106 +202,39 @@ const ProductDetails = ({ params, ...props }) => {
     ],
   );
 
-  const buildShareAutoLoginLink = useCallback(
-    async ({ userId = null, email = null, phone } = {}) => {
-      const kioskLoginUserId = userId || kioskLogin?.user_id;
-      const origin =
-        typeof window !== "undefined" ? window.location.origin : "";
+  const openProductAutoLoginQr = useCallback(
+    async ({
+      mfrCode = productMfrCode,
+      userId = null,
+      email = null,
+      phone = null,
+      context = "product",
+      requireUserId = false,
+      autoLoginOnly = false,
+    } = {}) => {
+      if (!mfrCode) return false;
 
-      try {
-        const currentKiosk =
-          typeof window !== "undefined"
-            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
-            : {};
-        const kioskEmail = email || currentKiosk?.email;
-        const kioksPhone = phone || currentKiosk?.phone;
-        if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
-          const resp = await requestSigninWithLink({
-            email: kioskEmail,
-            phone: kioksPhone,
-          });
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
+      const urls = await buildKioskAutoLoginUrls({
+        targetPath: getProductDetailsPagePath(mfrCode),
+        pageParam: `?page=product/${mfrCode}`,
+        errorLabel: `${context} auto-login`,
+        kioskLogin,
+        userId,
+        email,
+        phone,
+        requireUserId,
+      });
 
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            if (decrypted) {
-              const pageParam = `?page=product/${productMfrCode}`;
-              const verifyLink = buildVerifyUrl(decrypted, pageParam);
+      if (!urls || (autoLoginOnly && !urls.isAutoLogin)) return false;
 
-              const fullVerifyUrl = `${origin}${verifyLink}`;
-
-              setSharePageUrl(fullVerifyUrl);
-              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-              setQrTargetUrl(fullVerifyUrl);
-              setShowShareProductDetails(true);
-              return true;
-            }
-          }
-        }
-      } catch (e) {
-        console.error("Share auto-login build error", e);
-      }
-
-      return false;
-    },
-    [kioskLogin?.user_id, productMfrCode],
-  );
-
-  const buildProductAutoLoginQr = useCallback(
-    async ({ mfrCode = productMfrCode, email = null } = {}) => {
-      if (typeof window === "undefined" || !mfrCode) return false;
-
-      const targetPath = getProductDetailsPagePath(mfrCode);
-      const origin = window.location.origin;
-      const normalUrl = `${origin}${targetPath}`;
-
-      try {
-        const currentKiosk =
-          typeof window !== "undefined"
-            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
-            : {};
-        const kioskEmail = email || currentKiosk?.email;
-        const kioskPhone = currentKiosk?.phone;
-
-        if (kioskEmail || kioskPhone) {
-          const resp = await requestSigninWithLink({
-            email: kioskEmail,
-            phone: kioskPhone,
-          });
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
-
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            if (decrypted) {
-              const verifyLink = buildVerifyUrl(
-                decrypted,
-                `?page=product/${mfrCode}`,
-              );
-              const fullVerifyUrl = verifyLink?.startsWith("http")
-                ? verifyLink
-                : `${origin}${verifyLink}`;
-
-              setSharePageUrl(fullVerifyUrl);
-              setQrImageUrl(collectionQRCodeGenerator(fullVerifyUrl));
-              setQrTargetUrl(fullVerifyUrl);
-              setShareContext("vto");
-              setShowShareProductDetails(true);
-              return true;
-            }
-          }
-        }
-      } catch (e) {
-        console.error("Product auto-login QR build error", e);
-      }
-
-      setSharePageUrl(normalUrl);
-      setQrImageUrl(collectionQRCodeGenerator(normalUrl));
-      setQrTargetUrl(normalUrl);
-      setShareContext("vto");
+      setShareContext(context);
+      setSharePageUrl(urls.shareUrl);
+      setQrImageUrl(urls.qrUrl);
+      setQrTargetUrl(urls.shareUrl);
       setShowShareProductDetails(true);
       return true;
     },
-    [productMfrCode],
+    [kioskLogin, productMfrCode],
   );
 
   const handleShareClick = useCallback(async () => {
@@ -346,15 +247,18 @@ const ProductDetails = ({ params, ...props }) => {
       return;
     }
 
-    const didBuildShareLink = await buildShareAutoLoginLink();
+    const didBuildShareLink = await openProductAutoLoginQr({
+      context: "product",
+      requireUserId: true,
+      autoLoginOnly: true,
+    });
     if (didBuildShareLink) {
-      setShareContext("product");
       return;
     }
 
     setShareContext("product");
     setShowShareProductDetails((show) => !show);
-  }, [buildShareAutoLoginLink, dispatch, kioskLogin?.user_id, hasKioskAccess]);
+  }, [openProductAutoLoginQr, dispatch, kioskLogin?.user_id, hasKioskAccess]);
 
   useEffect(() => {
     if (!mfr_code) return;
@@ -457,7 +361,9 @@ const ProductDetails = ({ params, ...props }) => {
                 storeData={storeData}
                 kioskLogin={kioskLogin}
                 hasKioskAccess={hasKioskAccess}
-                buildProductAutoLoginQr={buildProductAutoLoginQr}
+                buildProductAutoLoginQr={(options) =>
+                  openProductAutoLoginQr({ ...options, context: "vto" })
+                }
                 setIsPopupShow={setIsPopupShow}
                 setGuestPopupAction={setGuestPopupAction}
                 collection={collection}
@@ -521,17 +427,25 @@ const ProductDetails = ({ params, ...props }) => {
         onSuccess={async ({ userId, email, phone }) => {
           try {
             if (guestPopupAction === "share") {
-              const didBuildShareLink = await buildShareAutoLoginLink({
+              const didBuildShareLink = await openProductAutoLoginQr({
+                context: "product",
                 userId,
                 email,
                 phone,
+                requireUserId: true,
+                autoLoginOnly: true,
               });
               setShareContext("product");
               if (!didBuildShareLink) setShowShareProductDetails(true);
             } else if (guestPopupAction === "vto") {
               const mfrCode = productDetails?.mfr_code;
               if (mfrCode) {
-                await buildProductAutoLoginQr({ mfrCode, email });
+                await openProductAutoLoginQr({
+                  mfrCode,
+                  email,
+                  phone,
+                  context: "vto",
+                });
               }
             } else {
               onAddSelectedProductsToCollection(null, {
@@ -547,7 +461,12 @@ const ProductDetails = ({ params, ...props }) => {
             if (guestPopupAction === "vto") {
               const mfrCode = productDetails?.mfr_code;
               if (mfrCode) {
-                await buildProductAutoLoginQr({ mfrCode, email });
+                await openProductAutoLoginQr({
+                  mfrCode,
+                  email,
+                  phone,
+                  context: "vto",
+                });
               }
             }
           } finally {

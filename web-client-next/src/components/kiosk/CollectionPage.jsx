@@ -18,11 +18,7 @@ import {
   getBlogCollectionPagePath,
   getProductDetailsPagePath,
 } from "../../helper/utils";
-import {
-  requestSigninWithLink,
-  decryptSigninToken,
-  buildVerifyUrl,
-} from "../../helper/autoLogin";
+import { buildKioskAutoLoginUrls } from "../../helper/autoLogin";
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "./useKioskSessionReminder";
@@ -56,10 +52,11 @@ const CollectionPage = ({ params }) => {
     singleCollectionKiosk?.path === requestedCollectionPath
       ? singleCollectionKiosk
       : null;
-  const [isUserLogin, storeData, isGuestPopUpShow] = useSelector((state) => [
+  const [isUserLogin, storeData, isGuestPopUpShow, kioskLogin] = useSelector((state) => [
     state.auth.user.isUserLogin,
     state.store.data,
     state.GuestPopUpReducer.isGuestPopUpShow,
+    state.kiosk.login,
   ]);
  
   const handleTagClick = useCallback((value) => {
@@ -214,60 +211,8 @@ useEffect(() => {
   };
   // const DummyImg =
   //   "https://cdn.unthink.ai/img/unthink_ai/DALL%C2%B7E%202024-11-22%2013.19.32%20-%20A%20stylish%20banner%20image%20for%20a%20website%20named%20%27dothelook%2C%27%20designed%20to%20reflect%20themes%20of%20both%20fashion%20and%20home%20products.%20The%20banner%20features%20a%20gradient%20b_giwegha.webp";
-  const buildKioskAutoLoginUrls = useCallback(
-    async ({ targetPath, pageParam, fallbackQrUrl, errorLabel }) => {
-      if (typeof window === "undefined" || !targetPath) return null;
-
-      const originPrefix = `${window.location?.origin}`;
-      const normalUrl = targetPath.startsWith("http")
-        ? targetPath
-        : `${originPrefix}${targetPath}`;
-
-      try {
-        const kioskUser = JSON.parse(
-          sessionStorage.getItem("Kiosk-login") || "{}",
-        );
-        const kioskLoginEmail = kioskUser?.email;
-        const kioskLoginPhone = kioskUser?.phone;
-        console.log("kioskLoginEmail", kioskLoginEmail);
-        console.log("kioskLoginPhone", kioskLoginPhone);
-
-        if ((kioskLoginEmail || kioskLoginPhone) && pageParam) {
-          const resp = await requestSigninWithLink({
-            email: kioskLoginEmail,
-            phone: kioskLoginPhone,
-          });
-          const signin_token = resp?.signin_token || resp?.data?.signin_token;
-
-          if (signin_token) {
-            const decrypted = decryptSigninToken(signin_token);
-            if (decrypted) {
-              const verifyLink = buildVerifyUrl(decrypted, pageParam);
-              const fullVerifyUrl = verifyLink?.startsWith("http")
-                ? verifyLink
-                : `${originPrefix}${verifyLink}`;
-
-              return {
-                shareUrl: fullVerifyUrl,
-                qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
-              };
-            }
-          }
-        }
-      } catch (e) {
-        console.error(`${errorLabel || "auto-login"} build error`, e);
-      }
-
-      return {
-        shareUrl: normalUrl,
-        qrUrl: fallbackQrUrl || collectionQRCodeGenerator(normalUrl),
-      };
-    },
-    [],
-  );
-
   const getCollectionAutoLoginUrls = useCallback(
-    () =>
+    ({ userId = null, email = null, phone = null } = {}) =>
       buildKioskAutoLoginUrls({
         targetPath: collectionPagePath,
         pageParam:
@@ -277,12 +222,16 @@ useEffect(() => {
           ),
         fallbackQrUrl: qrCodeGeneratorURL,
         errorLabel: "collection auto-login",
+        kioskLogin,
+        userId,
+        email,
+        phone,
       }),
     [
-      buildKioskAutoLoginUrls,
       collectionPagePath,
       qrCodeGeneratorURL,
       currentCollection?.path,
+      kioskLogin,
     ],
   );
 
@@ -324,12 +273,7 @@ useEffect(() => {
   }, [getCollectionAutoLoginUrls, shareContext, showShareProductDetails]);
 
   const handleShareClick = useCallback(() => {
-    const isKioskLogin =
-      typeof window !== "undefined"
-        ? sessionStorage.getItem("Kiosk-login")
-        : null;
-
-    if (isUserLogin && !isKioskLogin) {
+    if (isUserLogin && !kioskLogin?.user_id) {
       setShowShareProductDetails(false);
       setPendingGuestAction({ type: "share" });
       setIsPopupShow(true);
@@ -338,10 +282,10 @@ useEffect(() => {
     }
 
     openShareOptions();
-  }, [dispatch, isUserLogin, openShareOptions]);
+  }, [dispatch, isUserLogin, kioskLogin?.user_id, openShareOptions]);
 
   const buildVtoProductAutoLoginUrls = useCallback(
-    async (productOrMfrCode) => {
+    async (productOrMfrCode, { email = null, phone = null } = {}) => {
       const productMfrCode =
         typeof productOrMfrCode === "string"
           ? productOrMfrCode
@@ -358,6 +302,9 @@ useEffect(() => {
         targetPath: productDetailsPagePath,
         pageParam: `?page=product/${productMfrCode}`,
         errorLabel: "product auto-login",
+        kioskLogin,
+        email,
+        phone,
       });
 
       if (urls) {
@@ -367,7 +314,7 @@ useEffect(() => {
         setShowShareProductDetails(true);
       }
     },
-    [buildKioskAutoLoginUrls],
+    [kioskLogin],
   );
 
  
@@ -487,7 +434,7 @@ useEffect(() => {
         setIsOpen={setIsPopupShow}
         storeName={storeData?.store_name || currentCollection?.store_name}
         persistKioskLogin
-        onSuccess={async ({ userId }) => {
+        onSuccess={async ({ userId, email, phone }) => {
           if (pendingGuestAction?.type === "cart" && userId) {
             const cartProduct = pendingGuestAction.product;
 
@@ -518,12 +465,16 @@ useEffect(() => {
               : !pendingGuestAction && onMfrCode;
 
           if (vtoMfrCode) {
-            await buildVtoProductAutoLoginUrls(vtoMfrCode);
+            await buildVtoProductAutoLoginUrls(vtoMfrCode, { email, phone });
           } else if (
             pendingGuestAction?.type === "share" ||
             (!pendingGuestAction && isPopupShow)
           ) {
-            const urls = await getCollectionAutoLoginUrls();
+            const urls = await getCollectionAutoLoginUrls({
+              userId,
+              email,
+              phone,
+            });
 
             if (urls) {
               setSharePageUrl(urls.shareUrl);

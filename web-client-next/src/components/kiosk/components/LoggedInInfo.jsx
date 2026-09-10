@@ -17,7 +17,7 @@ const LoggedInInfo = ({ userInfo }) => {
 
 export default LoggedInInfo;
 
-export const useKioskAccess = ({ isUserLogin, storeData, authUser }) => {
+export const getKioskAccess = ({ isUserLogin, storeData, authUser }) => {
    
 
   if (!authUser?.emailId || !Array.isArray(storeData?.kiosk_list) || !isUserLogin) {

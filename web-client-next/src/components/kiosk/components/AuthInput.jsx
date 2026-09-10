@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { authAPIs, collectionAPIs } from "../../../helper/serverAPIs";
 import { current_store_name } from "../../../constants/config";
-import { getStoredKioskLoginUserId } from "../../../helper/utils";
+import { KIOSK_LOGIN_STORAGE_KEY } from "../../../helper/utils";
 import MiniKioskCard from "../MiniKioskCard";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
+import { buildKioskAutoLoginUrls } from "../../../helper/autoLogin";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getWishlistUserCollectionReset } from "../../../pageComponents/Auth/redux/actions";
 import { fetchCartReset } from "../../../pageComponents/DeliveryDetails/redux/action";
 import { clearInfluencerCollections } from "../../../pageComponents/Influencer/redux/actions";
-const KIOSK_LOGIN_STORAGE_KEY = "Kiosk-login";
+import { setKioskLogin as setKioskLoginRedux } from "../redux/actions";
 
 const INITIAL_COLLECTION_QR_STATE = {
   isOpen: false,
@@ -17,6 +18,8 @@ const INITIAL_COLLECTION_QR_STATE = {
   title: "",
   message: "",
   products: [],
+  qrUrl: "",
+  qrTargetUrl: "",
 };
 
 const KIOSK_COLLECTION_ACTIONS = [
@@ -47,16 +50,6 @@ const KIOSK_COLLECTION_ACTIONS = [
   },
 ];
 
-const getStoredKioskLogin = () => {
-  if (typeof window === "undefined") return null;
-
-  try {
-    return JSON.parse(sessionStorage.getItem(KIOSK_LOGIN_STORAGE_KEY) || "null");
-  } catch {
-    return null;
-  }
-};
-
 const getGuestLoginName = (user) =>
   user?.user_name   || user?.email || user?.emailId || user?.phone;
 
@@ -81,6 +74,31 @@ const getCollectionProductCount = (collection) => {
     collection?.product_lists 
 
   return Array.isArray(productLists) ? productLists.filter(Boolean).length : 0;
+};
+
+const getCollectionAutoLoginRoute = (collection, kioskLogin) => {
+  const userName =
+    collection?.user_name ||
+    kioskLogin?.user_name ||
+    kioskLogin?.email ||
+    kioskLogin?.phone ||
+    "";
+  const collectionId =
+    collection?._id ||
+    collection?.collection_id ||
+    collection?.id ||
+    "";
+
+  if (!userName || !collectionId) return null;
+
+  const encodedUserName = encodeURIComponent(userName);
+  const encodedCollectionId = encodeURIComponent(collectionId);
+  const pagePath = `influencer/${encodedUserName}/${encodedCollectionId}`;
+
+  return {
+    targetPath: `/${pagePath}`,
+    pageParam: `?page=${pagePath}`,
+  };
 };
 
 const getFetchedCollection = (response, collectionPath) => {
@@ -156,10 +174,10 @@ const renderCollectionActionIcon = (actionKey) => {
 
 const AuthInput = ({ onLoginChange, styles }) => {
   const dispatch = useDispatch();
+  const kioskLoginFromStore = useSelector((state) => state.kiosk.login);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [emailPhone, setEmailPhone] = useState("");
   const [kioskLogin, setKioskLogin] = useState(null);
-  const kiosklogin = getStoredKioskLoginUserId();
   // console.log('kioskLogin',kioskLogin);
   const router = useRouter()
   
@@ -174,9 +192,10 @@ const AuthInput = ({ onLoginChange, styles }) => {
   const syncKioskLogin = useCallback(
     (login) => {     
       setKioskLogin(login);
+      dispatch(setKioskLoginRedux(login));
       onLoginChange?.(login);
     },
-    [onLoginChange],
+    [dispatch, onLoginChange],
   );
 
   const clearKioskLogin = useCallback(
@@ -199,45 +218,20 @@ const AuthInput = ({ onLoginChange, styles }) => {
     [dispatch, router, syncKioskLogin],
   );
 
- useEffect(() => {
-    const storedLogin = getStoredKioskLogin();
-    if (!storedLogin){
+  useEffect(() => {
+    if (!kioskLoginFromStore){
       setEmailPhone("");
       setStatus("");
       setIsDropdownOpen(false);
-      syncKioskLogin(null);
+      setKioskLogin(null);
+      onLoginChange?.(null);
       return;
     } 
 
-    setEmailPhone(getGuestLoginName(storedLogin) || "");
-    syncKioskLogin(storedLogin);
-  }, [syncKioskLogin,kiosklogin]);
-
- 
-
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-
-    const handleKioskLoginChange = () => {
-      const storedLogin = getStoredKioskLogin();
-
-      if (!storedLogin) {
-        setEmailPhone("");
-        setStatus("");
-        setIsDropdownOpen(false);
-      } else {
-        setEmailPhone(getGuestLoginName(storedLogin) || "");
-      }
-
-      syncKioskLogin(storedLogin);
-    };
-
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-
-    return () => {
-      window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-    };
-  }, [syncKioskLogin]);
+    setEmailPhone(getGuestLoginName(kioskLoginFromStore) || "");
+    setKioskLogin(kioskLoginFromStore);
+    onLoginChange?.(kioskLoginFromStore);
+  }, [kioskLoginFromStore, onLoginChange]);
 
   useEffect(() => {
     if (!isDropdownOpen) return undefined;
@@ -379,6 +373,17 @@ const AuthInput = ({ onLoginChange, styles }) => {
         // console.log('collection',collection.product_lists);
         
         const hasCollectionData = getCollectionProductCount(collection) > 0;
+        const autoLoginRoute = hasCollectionData
+          ? getCollectionAutoLoginRoute(collection, kioskLogin)
+          : null;
+        const autoLoginUrls = autoLoginRoute
+          ? await buildKioskAutoLoginUrls({
+              ...autoLoginRoute,
+              errorLabel: `${action.label} collection auto-login`,
+              kioskLogin,
+              requireUserId: true,
+            })
+          : null;
 
         
       setQrState({
@@ -400,6 +405,8 @@ const AuthInput = ({ onLoginChange, styles }) => {
           ...prev,
           isLoading: false,
           products: collection.product_lists.filter(Boolean),
+          qrUrl: autoLoginUrls?.qrUrl || "",
+          qrTargetUrl: autoLoginUrls?.shareUrl || "",
         }));
       } catch (error) {
         console.error(`${action.label} QR build failed`, error);
@@ -412,7 +419,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         setActiveCollectionAction("");
       }
     },
-    [activeCollectionAction, kioskLogin],
+    [activeCollectionAction, kioskLogin, router],
   );
 
   const loginName = getGuestLoginName(kioskLogin);
@@ -516,6 +523,8 @@ const AuthInput = ({ onLoginChange, styles }) => {
         isLoading={qrState.isLoading}
         products={qrState.products}
         message={qrState.message}
+        qrUrl={qrState.qrUrl}
+        qrTargetUrl={qrState.qrTargetUrl}
         onClose={() => setQrState(INITIAL_COLLECTION_QR_STATE)}
       />
     </div>

@@ -1,5 +1,6 @@
 import { apiInstance } from './apiCall';
-import { auraYfretUserCollBaseUrl } from '../constants/config';
+import { auraYfretUserCollBaseUrl, secretToken } from '../constants/config';
+import { collectionQRCodeGenerator } from './utils';
 import Fernet from "fernet";
 
 // signin_with_link endpoint (serverAPIs defines this constant internally)
@@ -44,7 +45,7 @@ export const requestSigninWithLink = async ({email,phone}) => {
 // NOTE: client-side Fernet decryption caused dependency issues in the browser build.
 // The server currently returns a signin_token that the verify endpoint accepts.
 // So we return the signin_token as-is. If client-side decryption is required,
-// we can re-introduce 'fernet' and decode using NEXT_PUBLIC_FERNET_SECRET_KEY.
+// we can re-introduce 'fernet' and decode using secretToken.
 export const decryptSigninToken = (signin_token) => {
   if (!signin_token) {
     console.warn("decryptSigninToken: No signin_token provided");
@@ -52,9 +53,9 @@ export const decryptSigninToken = (signin_token) => {
   }
 
   try {
-    const secretKey = process.env.NEXT_PUBLIC_FERNET_SECRET_KEY;
+    const secretKey = secretToken;
     if (!secretKey) {
-      console.warn("decryptSigninToken: NEXT_PUBLIC_FERNET_SECRET_KEY not configured");
+      console.warn("decryptSigninToken: secretToken not configured");
       // Passthrough the token if we can't decrypt
       return signin_token;
     }
@@ -83,7 +84,73 @@ export const buildVerifyUrl = (decryptedToken, pagePath = '') => {
   // Use query param for token to avoid issues with tokens containing
   // characters that can break dynamic path segments (slashes, dots, etc.).
   const base = `/user/verify/${decryptedToken}`;
-    return pagePath ? `${base}${pagePath}` : base;
+  return pagePath ? `${base}${pagePath}` : base;
 };
 
-export default { requestSigninWithLink, decryptSigninToken, buildVerifyUrl };
+export const buildKioskAutoLoginUrls = async ({
+  targetPath,
+  pageParam,
+  fallbackQrUrl,
+  errorLabel,
+  kioskLogin = {},
+  userId = null,
+  email = null,
+  phone = null,
+  requireUserId = false,
+} = {}) => {
+  if (typeof window === "undefined" || !targetPath) return null;
+
+  const originPrefix = `${window.location?.origin || ""}`;
+  const normalUrl = targetPath.startsWith("http")
+    ? targetPath
+    : `${originPrefix}${targetPath}`;
+
+  try {
+    const kioskLoginUserId = userId || kioskLogin?.user_id;
+    const kioskLoginEmail = email || kioskLogin?.email;
+    const kioskLoginPhone = phone || kioskLogin?.phone;
+    const canBuildAutoLogin =
+      (!requireUserId || kioskLoginUserId) &&
+      (kioskLoginEmail || kioskLoginPhone) &&
+      pageParam;
+
+    if (canBuildAutoLogin) {
+      const resp = await requestSigninWithLink({
+        email: kioskLoginEmail,
+        phone: kioskLoginPhone,
+      });
+      const signin_token = resp?.data?.signin_token;
+      
+      if (signin_token) {
+        const decrypted = decryptSigninToken(signin_token);
+        if (decrypted) {
+          const verifyLink = buildVerifyUrl(decrypted, pageParam);
+          const fullVerifyUrl = verifyLink?.startsWith("http")
+            ? verifyLink
+            : `${originPrefix}${verifyLink}`;
+
+          return {
+            shareUrl: fullVerifyUrl,
+            qrUrl: collectionQRCodeGenerator(fullVerifyUrl),
+            isAutoLogin: true,
+          };
+        }
+      }
+    }
+  } catch (e) {
+    console.error(`${errorLabel || "auto-login"} build error`, e);
+  }
+
+  return {
+    shareUrl: normalUrl,
+    qrUrl: fallbackQrUrl || collectionQRCodeGenerator(normalUrl),
+    isAutoLogin: false,
+  };
+};
+
+export default {
+  requestSigninWithLink,
+  decryptSigninToken,
+  buildVerifyUrl,
+  buildKioskAutoLoginUrls,
+};

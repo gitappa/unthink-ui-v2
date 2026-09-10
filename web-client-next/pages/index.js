@@ -9,14 +9,9 @@ import { aura_header_theme, is_store_instance } from "../src/constants/config";
 import Footer from "../src/pageComponents/staticHomePage/Footer";
 import Header from "../src/pageComponents/staticHomePage/Header";
 import RootStatic from "../src/pageComponents/staticHomePage/RootStatic";
-import { KIOSK_LOGIN_CHANGE_EVENT, ROUTES } from "../src/constants/codes";
+import { ROUTES } from "../src/constants/codes";
 import { Spin } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import KioskHome from "../src/pageComponents/kiosk/KioskHome";
-import { useKioskAccess } from "../src/components/kiosk/components/LoggedInInfo";
-import { fetchCart } from "../src/pageComponents/DeliveryDetails/redux/action";
-import { getStoredKioskLoginUserId } from "../src/helper/utils";
-import { getTTid } from "../src/helper/getTrackerInfo";
+import { useSelector } from "react-redux";
 import KioskRoot from "../src/pageComponents/kiosk/KioskRoot";
 import { normalizeStoreAssistantSettings } from "../src/pageComponents/storeAssistant/utils/normalizeStoreAssistantSettings";
 import { hasStoreAssistantAccess } from "../src/pageComponents/storeAssistant/utils/storeAssistantAccess";
@@ -33,25 +28,16 @@ const Index = ({ ...props }) => {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     // Call ALL hooks at the top level
-    const [isUserLogin, authUser, storeData] = useSelector((state) => [
+    const [isUserLogin, authUser, storeData, hasKioskAccess] = useSelector((state) => [
         state.auth.user.isUserLogin,  
         state.auth.user.data,
         state.store.data,
-        
+        state.kiosk.hasAccess,
     ]);
-    const dispatch = useDispatch()
-
     // All useEffect hooks must be at the top level
     useEffect(() => {
         setMounted(true);
     }, []);
-
-    // Show KioskHome if user is logged in and has kiosk_list
-    const hasKioskAccess = useKioskAccess({
-        isUserLogin,
-        storeData,
-        authUser,
-    });
 
     const storeAssistantSettings = useMemo(
         () => normalizeStoreAssistantSettings(storeData?.store_assistant_settings),
