@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import HeroSection from "../../components/kiosk/HeroSection";
@@ -16,7 +16,6 @@ import {
 } from "../../helper/serverAPIs";
 import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
-import { KIOSK_LOGIN_CHANGE_EVENT } from "../../constants/codes";
 import { current_store_name } from "../../constants/config";
 
 const KIOSK_TAGS = ["Social Media", "Look Books", "#Trending"];
@@ -33,10 +32,9 @@ const KioskHome = ({ props }) => {
   const [socialMediaData, setSocialMediaData] = useState([]);
 
   //   console.log("products", products);
-  const dispatch = useDispatch();
-  const [isUserLogin, storeData] = useSelector((state) => [
-    state.auth.user.isUserLogin,
+  const [storeData, kioskLogin] = useSelector((state) => [
     state.store.data,
+    state.kiosk.login,
   ]);
   const [activeIndex, setActiveIndex] = useState(0);
   const rotationDelay = storeData?.kiosk_settings?.video_time_gap;
@@ -49,24 +47,11 @@ const KioskHome = ({ props }) => {
     useKioskSessionReminder();
 
   useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-
-    const handleKioskLoginChange = () => {
-      if (sessionStorage.getItem("Kiosk-login")) return;
-
+      if (!kioskLogin) {
       sessionStorage.removeItem("selectedTag");
       setShowTags(Tags[0]);
-    };
-
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-
-    return () => {
-      window.removeEventListener(
-        KIOSK_LOGIN_CHANGE_EVENT,
-        handleKioskLoginChange,
-      );
-    };
-  }, []);
+    }
+  }, [Tags, kioskLogin]);
 
   useEffect(() => {
     const fetchSocialMedia = async () => {

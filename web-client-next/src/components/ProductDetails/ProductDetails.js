@@ -23,7 +23,6 @@ import {
 import { customProductsAPIs } from "../../helper/serverAPIs";
 
 import {
-  KIOSK_LOGIN_CHANGE_EVENT,
   PATH_ROOT,
   STORE_USER_NAME_SAMSKARA,
 } from "../../constants/codes";
@@ -49,7 +48,6 @@ import { addProductToWishlistCollection } from "../../pageComponents/wishlistAct
 import useKioskSessionReminder, {
   KioskSessionPopup,
 } from "../kiosk/useKioskSessionReminder";
-import { useKioskAccess } from "../kiosk/components/LoggedInInfo";
 import AuthInput from "../kiosk/components/AuthInput";
 import GoBack from "../common/GoBack";
 import ProductGallery from "./ProductGallery";
@@ -74,6 +72,8 @@ const ProductDetails = ({ params, ...props }) => {
     productDetail,
     productToWishlistCollection,
     wishlistCollections,
+    hasKioskAccess,
+    kioskLogin
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -84,6 +84,8 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.productDetails.data,
     state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
+    state.kiosk.hasAccess,
+    state.kiosk.login
   ]);
 
   const [store_id, isUserLogin] = useSelector((state) => [
@@ -102,12 +104,6 @@ const ProductDetails = ({ params, ...props }) => {
  
   const imageFromQuery = cleanImage(router.query.image);
   const [sharePageUrl, setSharePageUrl] = useState("");
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
-
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code),
     [productDetail],
@@ -120,8 +116,6 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-  const [kioskLogin, setKioskLoginAuth] = useState(null);
-
   const wishlist = Array.isArray(wishlistCollections)
     ? wishlistCollections
     : wishlistCollections?.product_lists || [];
@@ -148,28 +142,6 @@ const ProductDetails = ({ params, ...props }) => {
 
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [guestPopupAction, setGuestPopupAction] = useState(null);
-
-  useEffect(() => {
-    const handleKioskLoginChange = () => {
-      const kioskLogin = sessionStorage.getItem("Kiosk-login");
-
-      try {
-        setKioskLoginAuth(kioskLogin ? JSON.parse(kioskLogin) : null);
-      } catch {
-        setKioskLoginAuth(null);
-      }
-    };
-    handleKioskLoginChange();
-
-    window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, handleKioskLoginChange);
-
-    return () => {
-      window.removeEventListener(
-        KIOSK_LOGIN_CHANGE_EVENT,
-        handleKioskLoginChange,
-      );
-    };
-  }, []);
 
   const onAddSelectedProductsToCollection = useCallback(
     (e = null, options = {}) => {
@@ -241,12 +213,8 @@ const ProductDetails = ({ params, ...props }) => {
         typeof window !== "undefined" ? window.location.origin : "";
 
       try {
-        const currentKiosk =
-          typeof window !== "undefined"
-            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
-            : {};
-        const kioskEmail = email || currentKiosk?.email;
-        const kioksPhone = phone || currentKiosk?.phone;
+        const kioskEmail = email || kioskLogin?.email;
+        const kioksPhone = phone || kioskLogin?.phone;
         if (kioskLoginUserId && (kioksPhone || kioskEmail)) {
           const resp = await requestSigninWithLink({
             email: kioskEmail,
@@ -276,7 +244,7 @@ const ProductDetails = ({ params, ...props }) => {
 
       return false;
     },
-    [kioskLogin?.user_id, productMfrCode],
+    [kioskLogin?.email, kioskLogin?.phone, kioskLogin?.user_id, productMfrCode],
   );
 
   const buildProductAutoLoginQr = useCallback(
@@ -288,12 +256,8 @@ const ProductDetails = ({ params, ...props }) => {
       const normalUrl = `${origin}${targetPath}`;
 
       try {
-        const currentKiosk =
-          typeof window !== "undefined"
-            ? JSON.parse(sessionStorage.getItem("Kiosk-login") || "{}")
-            : {};
-        const kioskEmail = email || currentKiosk?.email;
-        const kioskPhone = currentKiosk?.phone;
+        const kioskEmail = email || kioskLogin?.email;
+        const kioskPhone = kioskLogin?.phone;
 
         if (kioskEmail || kioskPhone) {
           const resp = await requestSigninWithLink({
@@ -333,7 +297,7 @@ const ProductDetails = ({ params, ...props }) => {
       setShowShareProductDetails(true);
       return true;
     },
-    [productMfrCode],
+    [kioskLogin?.email, kioskLogin?.phone, productMfrCode],
   );
 
   const handleShareClick = useCallback(async () => {

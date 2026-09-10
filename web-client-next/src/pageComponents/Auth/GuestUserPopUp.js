@@ -6,7 +6,8 @@ import GuestPopUp from "./GuestPopUp";
 import { getUserInfo, GuestPopUpShow } from "./redux/actions";
 import { authAPIs } from "../../helper/serverAPIs";
 import { COOKIE_TT_ID, KIOSK_LOGIN_CHANGE_EVENT, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
-import { setCookie } from "../../helper/utils";
+import { KIOSK_LOGIN_STORAGE_KEY, setCookie } from "../../helper/utils";
+import { setKioskLogin } from "../../components/kiosk/redux/actions";
 
 const DEFAULT_GUEST_COOKIE_EXPIRE_DAYS = 7;
 
@@ -108,16 +109,19 @@ function GuestUserPopUp({
         const registeredEmail =
           res?.data?.data?.email || res?.data?.data?.emailId || email;
         if (res?.data?.status_code === 200 && userId) {
+          const kioskLoginData = {
+            user_id: userId,
+            user_name: registeredUserName || registeredEmail || phone,
+            email: registeredEmail,
+            phone,
+          };
+
           if (persistKioskLogin && typeof window !== "undefined") {
             sessionStorage.setItem(
-              "Kiosk-login",
-              JSON.stringify({
-                user_id: userId,
-                user_name: registeredUserName || registeredEmail || phone,
-                email: registeredEmail,
-                phone,
-              }),
+              KIOSK_LOGIN_STORAGE_KEY,
+              JSON.stringify(kioskLoginData),
             );
+            dispatch(setKioskLogin(kioskLoginData));
             window.dispatchEvent(new Event(KIOSK_LOGIN_CHANGE_EVENT));
           }
           if(isUserLogin){
@@ -152,6 +156,8 @@ function GuestUserPopUp({
       persistKioskLogin,
       storeName,
       validateEmail,
+      dispatch,
+      isUserLogin,
     ],
   );
 

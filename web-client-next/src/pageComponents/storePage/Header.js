@@ -81,7 +81,6 @@ import { connectVenlyWallet } from "../earnedRewardModal/redux/actions";
 import { FaRegHeart } from "react-icons/fa";
 import styles from "./storePage.module.scss";
 import { THEME_ALL } from "../../constants/themeCodes";
-import { useKioskAccess } from "../../components/kiosk/components/LoggedInInfo";
 import { fetchMyTryonsCollection, fetchMyWishlistCollection } from "./redux/action";
 
 const { Text } = Typography;
@@ -132,6 +131,7 @@ const Header = ({
     authUser,
     cartCollection,
     userCollection,
+    hasKioskAccess,
   ] = useSelector((state) => [
     state.chatV2.showChatModal,
     state.appState.wishlist.showWishlistModal,
@@ -146,13 +146,9 @@ const Header = ({
     state.auth.user.data ?? {},
     state.cart?.collection,
     state.auth.user.collections.data,
+    state.kiosk.hasAccess,
   ]);
   const removedata = false;
-  const hasKioskAccess = useKioskAccess({
-    isUserLogin,
-    storeData,
-    authUser,
-  });
   const router = useRouter();
   // console.log('userCollectsssion',showChatModal);
 

@@ -65,6 +65,7 @@ const AddToCartButton = ({
   const isDisabled = disabled ?? (!product?.price && !product?.listprice);
   const normalizedQty = getNormalizedCartQty(qty);
   const { collection: cartData } = useSelector((state) => state.cart);
+  const kioskLoginFromStore = useSelector((state) => state.kiosk.login);
 
   const cartCollection = cartData?.product_lists
     ?.map((arr) => arr?.mfr_code)
@@ -92,7 +93,7 @@ const AddToCartButton = ({
 
     if (!product?.mfr_code) return;
 
-    const kioskLogin = getKioskLogin?.();
+    const kioskLogin = getKioskLogin?.() || kioskLoginFromStore;
     const cartUserId = kioskLogin?.user_id || authUserId || getTTid();
 
     if ((hasKioskAccess || enableKioskGuestPopup) && !kioskLogin?.user_id) {

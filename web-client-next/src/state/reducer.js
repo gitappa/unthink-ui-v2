@@ -22,6 +22,7 @@ import attributePoolReducer from "../pageComponents/createStore/redux/reducer";
 import { cartReducer } from "../pageComponents/DeliveryDetails/redux/reducer";
 import PDP_LoaderReducer from "../pageComponents/storePage/redux/PDPLoaderReducer";
 import { VtoIconReducer } from "../components/singleCollection/redux/reducer";
+import kioskReducer from "../components/kiosk/redux/reducer";
 
 const rootReducer = combineReducers({
 	chat: chatReducer,
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
 	cart:cartReducer,
 	PDP_LoaderReducer:PDP_LoaderReducer,
 	VtoIconReducer:VtoIconReducer,
+	kiosk: kioskReducer,
 	
 });
 
