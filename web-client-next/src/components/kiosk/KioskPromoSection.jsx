@@ -74,7 +74,7 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
           <div className="mt-[20px] rounded-[14px] bg-white px-[16px] pb-[16px] pt-[12px] shadow-[0_5px_9px_rgba(0,0,0,0.2)]">
             <div className="flex items-center gap-[14px]">
               <img
-                src={gift.src}
+                src={fetchedData?.gift ||  gift.src}
                 className="h-[52px] w-[52px] shrink-0 object-contain"
                 alt=""
               />
@@ -111,7 +111,7 @@ const qrImage = shareQrCodeImage(fetchedData?.event_app_list?.[0]) || qr1;
         eventTitle={fetchedData?.event_message || "GIVA AI Assistant"}
         qrSrc={qrImage}
         titleIcon={fetchedData?.title_icon || cart.src}
-        giftIcon={gift.src}
+        giftIcon={fetchedData?.gift || gift.src}
         offerMessage={fetchedData?.offer_message || "Special Offer!"}
         offerImage={fetchedData?.offer_image}
       />
