@@ -1,1 +1,2 @@
 export const SET_KIOSK_ACCESS = "SET_KIOSK_ACCESS";
+export const SET_KIOSK_LOGIN = "SET_KIOSK_LOGIN";

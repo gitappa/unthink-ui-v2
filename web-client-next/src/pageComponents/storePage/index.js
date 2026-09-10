@@ -30,7 +30,6 @@ import {
 	PRODUCT_SORT_OPTIONS_MY_PRODUCTS,
 	STORE_USER_NAME_DOTHELOOK,
 	STORE_USER_NAME_FASHIONDEMO,
-	KIOSK_LOGIN_CHANGE_EVENT,
 
 	// STORE_USER_NAME_TAKEWALKS,
 } from "../../constants/codes.js";
@@ -72,7 +71,6 @@ import {
 	getIsStorePage,
 	AdminCheck,
 	setCookie,
-	getStoredKioskLoginUserId,
 } from "../../helper/utils.js";
 import { gTagCollectionPageView } from "../../helper/webTracker/gtag.js";
 
@@ -262,7 +260,8 @@ const StorePageWrapper = (props) => {
 		authUserCollectionsCount,
 		influencerUserCollectionsCount,
 		singleCollections,
-		hasKioskAccess
+		hasKioskAccess,
+		kioskLogin
 	] = useSelector((state) => [
 		state.chatV2.chatProductsData,
 		state.chatV2.showChatModal,
@@ -287,7 +286,8 @@ const StorePageWrapper = (props) => {
 		state.auth.user.collections.count,
 		state.influencer.collections.count,
 		state.auth.user.singleCollections.data,
-		state.kiosk.hasAccess
+		state.kiosk.hasAccess,
+		state.kiosk.userId
 	]);
 
 	const [selectedSortOption, setSelectedSortOption] = useState();
@@ -377,25 +377,6 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 	);
 	
 	
-	  const [kioskLogin, setKioskLogin] = useState(getStoredKioskLoginUserId());
-			console.log('kioskLogin',kioskLogin);
-		  useEffect(() => {
-	  const handleKioskLoginChange = () => {
-		setKioskLogin(getStoredKioskLoginUserId());
-	  };
-	
-	  window.addEventListener(
-		KIOSK_LOGIN_CHANGE_EVENT,
-		handleKioskLoginChange
-	  );
-	
-	  return () => {
-		window.removeEventListener(
-		  KIOSK_LOGIN_CHANGE_EVENT,
-		  handleKioskLoginChange
-		);
-	  };
-	}, []);
  		const LoginData =  authUser?.user_id || getTTid()
 		useEffect(()=>{
 			// console.log('hasKioskAccess',hasKioskAccess);

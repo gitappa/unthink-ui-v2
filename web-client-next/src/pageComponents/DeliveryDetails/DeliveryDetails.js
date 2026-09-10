@@ -14,17 +14,18 @@ import GuestPopUp from "../Auth/GuestPopUp";
 import { COOKIE_TT_ID, SIGN_IN_EXPIRE_DAYS } from "../../constants/codes";
 import { authAPIs, collectionAPIs } from "../../helper/serverAPIs";
 import { current_store_name } from "../../constants/config";
-import { collectionQRCodeGenerator, getStoredKioskLoginUserId, setCookie } from "../../helper/utils";
+import { collectionQRCodeGenerator, setCookie } from "../../helper/utils";
 import Modal from "../../components/modal/Modal";
 
 const DeliveryDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [authUserId, cart_attributes, storeData, hasKioskAccess] = useSelector((state) => [
+  const [authUserId, cart_attributes, storeData, hasKioskAccess, kioskUser_id] = useSelector((state) => [
     state.auth.user.data.user_id,
     state.store.data.cart_attributes,
     state.store.data,
     state.kiosk.hasAccess,
+    state.kiosk.userId,
   ]);
   const { collection, loading } = useSelector((state) => state.cart);
   // console.log("collection", storeData?.store_name   );
@@ -41,7 +42,6 @@ const DeliveryDetails = () => {
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [isCheckoutClaimQrModalOpen, setIsCheckoutClaimQrModalOpen] =
     useState(false);
-    const  kioskUser_id =getStoredKioskLoginUserId()
   const mycartcollectionpath = `${ kioskUser_id || authUserId || getTTid()}`;
   const shouldShowCheckoutClaimQr =
     authUserId && storeData?.store_name === "giva_indiranagar2_hs";

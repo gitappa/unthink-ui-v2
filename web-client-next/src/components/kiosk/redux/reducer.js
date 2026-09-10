@@ -1,7 +1,9 @@
-import { SET_KIOSK_ACCESS } from "./constants";
+import { SET_KIOSK_ACCESS, SET_KIOSK_LOGIN } from "./constants";
 
 const initialState = {
 	hasAccess: null,
+	login: null,
+	userId: "",
 };
 
 const kioskReducer = (state = initialState, action = {}) => {
@@ -10,6 +12,16 @@ const kioskReducer = (state = initialState, action = {}) => {
 			return {
 				...state,
 				hasAccess: action.payload,
+			};
+
+		case SET_KIOSK_LOGIN:
+			return {
+				...state,
+				login: action.payload,
+				userId:
+					typeof action.payload === "string"
+						? action.payload
+						: action.payload?.user_id || "",
 			};
 
 		default:

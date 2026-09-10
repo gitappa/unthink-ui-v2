@@ -6,11 +6,10 @@ import { enable_venly } from "../constants/config";
 import { setShowAuraIntro } from "../hooks/chat/redux/actions";
 import { connectVenly } from "../helper/venlyUtils";
 import { getStoreData } from "../pageComponents/store/redux/actions";
-import { fetchCart } from "../pageComponents/DeliveryDetails/redux/action";
-import { getTTid } from "../helper/getTrackerInfo";
-import { getStoredKioskLoginUserId } from "../helper/utils";
+import { getStoredKioskLogin } from "../helper/utils";
 import { getKioskAccess } from "../components/kiosk/components/LoggedInInfo";
-import { setKioskAccess } from "../components/kiosk/redux/actions";
+import { setKioskAccess, setKioskLogin } from "../components/kiosk/redux/actions";
+import { KIOSK_LOGIN_CHANGE_EVENT } from "../constants/codes";
 
 // import trackApi from "../track/api";
 
@@ -28,6 +27,21 @@ const ActionWrapper = ({ children }) => {
 	useEffect(() => {
 		dispatch(setKioskAccess(hasKioskAccess));
 	}, [dispatch, hasKioskAccess]);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return undefined;
+
+		const syncKioskLogin = () => {
+			dispatch(setKioskLogin(getStoredKioskLogin()));
+		};
+
+		syncKioskLogin();
+		window.addEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+
+		return () => {
+			window.removeEventListener(KIOSK_LOGIN_CHANGE_EVENT, syncKioskLogin);
+		};
+	}, [dispatch]);
 
 	useEffect(() => {
 		// showing aura intro only 3 times on reload
