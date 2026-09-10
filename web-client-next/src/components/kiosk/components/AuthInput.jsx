@@ -4,6 +4,7 @@ import { current_store_name } from "../../../constants/config";
 import { KIOSK_LOGIN_STORAGE_KEY } from "../../../helper/utils";
 import MiniKioskCard from "../MiniKioskCard";
 import { KIOSK_LOGIN_CHANGE_EVENT } from "../../../constants/codes";
+import { buildKioskAutoLoginUrls } from "../../../helper/autoLogin";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { getWishlistUserCollectionReset } from "../../../pageComponents/Auth/redux/actions";
@@ -17,6 +18,8 @@ const INITIAL_COLLECTION_QR_STATE = {
   title: "",
   message: "",
   products: [],
+  qrUrl: "",
+  qrTargetUrl: "",
 };
 
 const KIOSK_COLLECTION_ACTIONS = [
@@ -71,6 +74,31 @@ const getCollectionProductCount = (collection) => {
     collection?.product_lists 
 
   return Array.isArray(productLists) ? productLists.filter(Boolean).length : 0;
+};
+
+const getCollectionAutoLoginRoute = (collection, kioskLogin) => {
+  const userName =
+    collection?.user_name ||
+    kioskLogin?.user_name ||
+    kioskLogin?.email ||
+    kioskLogin?.phone ||
+    "";
+  const collectionId =
+    collection?._id ||
+    collection?.collection_id ||
+    collection?.id ||
+    "";
+
+  if (!userName || !collectionId) return null;
+
+  const encodedUserName = encodeURIComponent(userName);
+  const encodedCollectionId = encodeURIComponent(collectionId);
+  const pagePath = `influencer/${encodedUserName}/${encodedCollectionId}`;
+
+  return {
+    targetPath: `/${pagePath}`,
+    pageParam: `?page=${pagePath}`,
+  };
 };
 
 const getFetchedCollection = (response, collectionPath) => {
@@ -345,6 +373,17 @@ const AuthInput = ({ onLoginChange, styles }) => {
         // console.log('collection',collection.product_lists);
         
         const hasCollectionData = getCollectionProductCount(collection) > 0;
+        const autoLoginRoute = hasCollectionData
+          ? getCollectionAutoLoginRoute(collection, kioskLogin)
+          : null;
+        const autoLoginUrls = autoLoginRoute
+          ? await buildKioskAutoLoginUrls({
+              ...autoLoginRoute,
+              errorLabel: `${action.label} collection auto-login`,
+              kioskLogin,
+              requireUserId: true,
+            })
+          : null;
 
         
       setQrState({
@@ -366,6 +405,8 @@ const AuthInput = ({ onLoginChange, styles }) => {
           ...prev,
           isLoading: false,
           products: collection.product_lists.filter(Boolean),
+          qrUrl: autoLoginUrls?.qrUrl || "",
+          qrTargetUrl: autoLoginUrls?.shareUrl || "",
         }));
       } catch (error) {
         console.error(`${action.label} QR build failed`, error);
@@ -482,6 +523,8 @@ const AuthInput = ({ onLoginChange, styles }) => {
         isLoading={qrState.isLoading}
         products={qrState.products}
         message={qrState.message}
+        qrUrl={qrState.qrUrl}
+        qrTargetUrl={qrState.qrTargetUrl}
         onClose={() => setQrState(INITIAL_COLLECTION_QR_STATE)}
       />
     </div>

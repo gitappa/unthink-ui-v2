@@ -69,3 +69,5 @@ export const payment_url = process.env.NEXT_PUBLIC_PAYMENT_URL;
 export const event_app_api_base_url =
 	process.env.NEXT_PUBLIC_EVENT_APP_API_BASE_URL;
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+
+export const secretToken = process.env.NEXT_PUBLIC_FERNET_SECRET_KEY
