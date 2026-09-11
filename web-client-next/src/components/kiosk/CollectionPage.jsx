@@ -112,8 +112,7 @@ useEffect(() => {
   // console.log("sharePageUrl", sharePageUrl);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [pendingGuestAction, setPendingGuestAction] = useState(null);
-  const { showSessionPopup, handleStayLoggedIn, handleLogout } =
-    useKioskSessionReminder({ time: 60 * 1000 });
+  
 
   const collectionPagePath = useMemo(() => {
     if (!currentCollection) return "";
@@ -486,12 +485,7 @@ useEffect(() => {
         }}
         onSkip={() => setPendingGuestAction(null)}
       />
-      {showSessionPopup && (
-        <KioskSessionPopup
-          onStay={handleStayLoggedIn}
-          onLogout={handleLogout}
-        />
-      )}
+     
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import CollectionPage from "../../components/kiosk/CollectionPage";
 import { getwishlistUserCollection, getWishlistUserCollectionReset } from "../Auth/redux/actions";
 import { fetchCart, fetchCartReset } from "../DeliveryDetails/redux/action";
+import useKioskSessionReminder, { KioskSessionPopup } from "../../components/kiosk/useKioskSessionReminder";
 
 const KioskRoot = (props) => {
   const router = useRouter();
@@ -13,6 +14,8 @@ const KioskRoot = (props) => {
   const kioskUserId = useSelector((state) => state.kiosk.userId);
   const { collection_name } = router.query;
   const { isKioskCollectionPage, isRootPage = false } = props;
+const { showSessionPopup, handleStayLoggedIn, handleLogout } =
+    useKioskSessionReminder({ time: 60 * 1000 });
 
   useEffect(() => {
     if (!kioskUserId) {
@@ -32,6 +35,13 @@ const KioskRoot = (props) => {
     <div>
       {isRootPage && <KioskHome />}
       {isKioskCollectionPage && <CollectionPage params={{ collection_name }} />}
+       {/* Session reminder popup for kiosk users (floating bottom-right) */}
+       {showSessionPopup && (
+        <KioskSessionPopup
+          onStay={handleStayLoggedIn}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 };
