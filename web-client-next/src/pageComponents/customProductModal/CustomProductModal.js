@@ -130,6 +130,9 @@ const CustomProductModal = ({
 	storeTemplates,
 	catalog_attributes,
 	filter_settings,
+	renderInline = false,
+	onProductSaved,
+	userIdOverride,
 }) => {
 	const { data: product, collectionId } = data;
 	const [productData, setProductData] = useState({
@@ -339,7 +342,8 @@ const CustomProductModal = ({
 			}
 
 
-			dispatch(updateCustomProducts([payload], authUser.user_id));
+			dispatch(updateCustomProducts([payload], userIdOverride || authUser.user_id));
+			onProductSaved?.(payload);
 			//  else {
 			// 	const data = { ...productData };
 			// 	const product_lists = [data];
@@ -598,15 +602,15 @@ const CustomProductModal = ({
 	// identify link from description and make it clickable
 	const linkifyText = (description) => {
 		const urlRegex = /(?<=\s|^)(https?:\/\/[^\s]+)/g;
-		return description.split(urlRegex).map((text) => {
+		return description.split(urlRegex).map((text, index) => {
 			if (urlRegex.test(text)) {
 				return (
-					<a href={text} target='_blank' className='px-0 text-indigo-600'>
+					<a key={`${text}-${index}`} href={text} target='_blank' className='px-0 text-indigo-600'>
 						{text}
 					</a>
 				);
 			} else {
-				return <span>{text}</span>;
+				return <span key={`${text}-${index}`}>{text}</span>;
 			}
 		});
 	};
@@ -770,20 +774,9 @@ const CustomProductModal = ({
 		}
 	};
 
-	return (
-		<div onClick={onModalClose}>
-			<Modal
-				isOpen={isModalOpen}
-				headerText={
-					isView ? productData?.name || "Product Details" : "Update Product"
-				}
-				onClose={onModalClose}
-				maskClosable={false}
-				size='sm'
-				zIndexClassName='z-50'
-				contentWrapperSpacingClassName='p-4'>
-				<div>
-					<form>
+	const modalContent = (
+		<div>
+			<form>
 						{isView ? (
 							<div>
 								{/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
@@ -900,12 +893,12 @@ const CustomProductModal = ({
 												<div className='mt-2'>
 													<p className='text-base '>Payment Link:</p>
 													<div className='grid gap-2'>
-														{brandsDetails.paymentMethod
-															.split(",")
-															.map((item) => {
-																const link = item.trim();
-																return (
-																	<div className='p-2 border-2 border-indigo-600 bg-indigo-200 rounded-xl flex items-center justify-center'>
+																{brandsDetails.paymentMethod
+																	.split(",")
+																	.map((item) => {
+																		const link = item.trim();
+																		return (
+																			<div key={link} className='p-2 border-2 border-indigo-600 bg-indigo-200 rounded-xl flex items-center justify-center'>
 																		<a
 																			className='text-base break-all'
 																			target='_blank'
@@ -1124,7 +1117,7 @@ const CustomProductModal = ({
 								<div className='mb-4 flex flex-col gap-2'>
 									<div className='flex flex-col text-left text-sm md:text-base'>
 										<span>
-											Hello! Let's start creating your product catalog.
+											Hello! Let&apos;s start creating your product catalog.
 										</span>
 										<span>Enter some guidelines for your descriptions.</span>
 									</div>
@@ -1143,7 +1136,7 @@ const CustomProductModal = ({
 											descriptions,
 										</span>
 										<span>
-											"For example, Our products are animal cruelty free."
+											&quot;For example, Our products are animal cruelty free.&quot;
 										</span>
 										<span>We picked up some text from your brand profile.</span>
 										<span>Edit as needed.</span>
@@ -1418,7 +1411,24 @@ const CustomProductModal = ({
 							</div>
 						)}
 					</form>
-				</div>
+		</div>
+	);
+
+	if (renderInline) return modalContent;
+
+	return (
+		<div onClick={onModalClose}>
+			<Modal
+				isOpen={isModalOpen}
+				headerText={
+					isView ? productData?.name || "Product Details" : "Update Product"
+				}
+				onClose={onModalClose}
+				maskClosable={false}
+				size='sm'
+				zIndexClassName='z-50'
+				contentWrapperSpacingClassName='p-4'>
+				{modalContent}
 			</Modal>
 		</div>
 	);
