@@ -10,7 +10,6 @@ import {
 import Cookies from "js-cookie";
 import profilebanner from "../../images/package.jpg";
 import { Spin } from "antd";
-import BannerImage from "./BannerImage";
 import ShareOptions from "../../pageComponents/shared/shareOptions";
 import share_icon from "../../images/profilePage/share_icon.svg";
 import {

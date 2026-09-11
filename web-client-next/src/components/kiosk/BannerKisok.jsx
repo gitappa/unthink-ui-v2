@@ -14,24 +14,16 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   const displayedProducts =
     Tags === "#Trending"
       ? trendingProducts
-      : lookBooksProducts
-   console.log('displayedProducts',trendingProducts.length);
+      : lookBooksProducts;
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
   };
 
-  const desktopProducts = displayedProducts.slice(
-  0,
-  Math.floor(displayedProducts.length / 4) * 4,
-);
+  const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
+    displayedProducts.filter((_, index) => index % 4 === columnIndex),
+  );
 
-const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
-  desktopProducts.filter((_, index) => index % 4 === columnIndex),
-);
-
-  console.log('desktopColumns',desktopColumns);
-  
 
   const tileStyles = [
     ["h-[268px]", "h-[237px]"],
@@ -77,7 +69,7 @@ const desktopColumns = [0, 1, 2, 3].map((columnIndex) =>
                 {columnProducts.map((product, productIndex) => (
                   <button
                     type="button"
-                    className={`group flex cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-kiosk-support text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99] ${tileStyles[columnIndex][productIndex]}`}
+                    className={`group flex cursor-pointer flex-col overflow-hidden rounded-[16px] border-[6px] border-[#eeeeee] bg-kiosk-support text-left shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out active:scale-[0.99] ${tileStyles[columnIndex][productIndex % tileStyles[columnIndex].length]}`}
                     key={product.collection_id}
                     onClick={() => handleNavCollection(product)}
                   >
