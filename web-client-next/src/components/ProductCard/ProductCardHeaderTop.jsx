@@ -152,28 +152,8 @@ export const ProductCardHeaderTop = ({
               userLogin={isUserLogin}
               onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
               source={source}
-            /> </> )}
-    {/* {hideAddToWishlist &&
-      // !isUserLogin &&
-      // size === "medium" &&
-      product?.custom_product !== false &&
-      !isMyWishlistCollection &&
-      !showWishlistModal &&
-      !enableSelect && (
-        // <div className="flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200 ease-in-out max-md:text-sm">
-          <WishlistHeartButton
-            containerClassName="absolute right-4 top-4 z-40 transition-all duration-300 ease-out max-lg:right-2.5 max-lg:top-2.5 max-lg:z-30"
-            product={product}
-            productMfrCode={product?.mfr_code}
-            storeData={storeData}
-            authUserId={authUserId}
-            getKioskLogin={getKioskLogin}
-            onAddSelectedProductsToCollection={onAddSelectedProductsToCollection}
-            source={source}
-            // useGuestWishlistFlow
-          />
-        //  </div>
-      )} */}
+            /> 
+          </> )}
     </>
   );
 };
