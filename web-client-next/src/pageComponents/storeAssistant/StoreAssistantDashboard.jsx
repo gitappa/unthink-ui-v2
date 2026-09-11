@@ -39,6 +39,13 @@ const TAB_META = {
     description: "Control which lookbooks appear in kiosk.",
     icon: FiBookOpen,
   },
+  trending: {
+    key: "trending",
+    label: "Trending",
+    shortLabel: "Trend",
+    description: "Control which trending collections appear in kiosk.",
+    icon: FiTrendingUp,
+  },
   upload_media: {
     key: "upload_media",
     label: "Upload Media",

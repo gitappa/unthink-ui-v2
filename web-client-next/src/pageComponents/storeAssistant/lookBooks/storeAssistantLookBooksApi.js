@@ -3,6 +3,7 @@ import { PUBLISHED } from "../../../constants/codes";
 import { adminUserId } from "../../../constants/config";
 
 const LOOKBOOK_GENERATED_BY = "lookbook_based";
+const TRENDING_COLLECTION_TYPE = "trending";
 const PRODUCT_LIMIT = 12;
 
 const getResponseList = (response) => {
@@ -38,6 +39,17 @@ export const fetchStoreAssistantLookBooks = async () => {
   return normalizeLookBookCollections(getResponseList(response));
 };
 
+export const fetchStoreAssistantTrendingCollections = async () => {
+  const response = await collectionAPIs.fetchCollectionsAPICall({
+    user_id: adminUserId,
+    product_limits: PRODUCT_LIMIT,
+    view: "admin",
+    collection_type: TRENDING_COLLECTION_TYPE,
+  });
+
+  return normalizeLookBookCollections(getResponseList(response));
+};
+
 export const updateLookBookKioskVisibility = async (collection) => {
   const collectionId = getCollectionId(collection);
   if (!collectionId) throw new Error("Missing collection id");
@@ -64,6 +76,62 @@ export const reorderLookBookCollections = async (collections = []) => {
 
   if (response?.data?.status_code && response.data.status_code !== 200) {
     throw new Error(response.data.status_desc || "Failed to reorder lookbooks");
+  }
+
+  return response;
+};
+
+export const removeLookBookProduct = async ({ collectionId, mfrCode }) => {
+  if (!collectionId) throw new Error("Missing collection id");
+  if (!mfrCode) throw new Error("Missing product code");
+
+  const response = await collectionAPIs.removeFromCollectionAPICall({
+    collection_id: collectionId,
+    products: [mfrCode],
+  });
+
+  if (response?.data?.status_code && response.data.status_code !== 200) {
+    throw new Error(response.data.status_desc || "Failed to delete product");
+  }
+
+  return response;
+};
+
+export const updateLookBookProductStar = async ({ collectionId, product, starred }) => {
+  const mfrCode = product?.mfr_code;
+  if (!collectionId) throw new Error("Missing collection id");
+  if (!mfrCode) throw new Error("Missing product code");
+
+  const response = await collectionAPIs.addToCollectionAPICall({
+    collection_id: collectionId,
+    products: [
+      {
+        mfr_code: mfrCode,
+        tagged_by: product?.tagged_by || [],
+        starred,
+      },
+    ],
+    showcase: true,
+  });
+
+  if (response?.data?.status_code && response.data.status_code !== 200) {
+    throw new Error(response.data.status_desc || "Failed to update product");
+  }
+
+  return response;
+};
+
+export const updateLookBookCollectionDetails = async ({ collectionId, collectionName, description }) => {
+  if (!collectionId) throw new Error("Missing collection id");
+
+  const response = await collectionAPIs.updateCollectionAPICall({
+    collection_id: collectionId,
+    collection_name: collectionName,
+    description,
+  });
+
+  if (response?.data?.status_code && response.data.status_code !== 200) {
+    throw new Error(response.data.status_desc || "Failed to update lookbook");
   }
 
   return response;

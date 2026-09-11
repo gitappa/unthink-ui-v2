@@ -42,6 +42,10 @@ const StoreAssistantOutlet = ({ activeTab, settings }) => {
     return <StoreAssistantLookBooks />;
   }
 
+  if (activeTab === "trending") {
+    return <StoreAssistantLookBooks mode="trending" />;
+  }
+
   if (activeTab === "customers") {
     return (
       <PlaceholderPanel

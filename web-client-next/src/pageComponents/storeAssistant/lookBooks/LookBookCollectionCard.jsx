@@ -1,5 +1,5 @@
 import React from "react";
-import { FiEye, FiEyeOff, FiImage, FiMove } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiImage, FiMove, FiShoppingBag } from "react-icons/fi";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -7,7 +7,13 @@ import { getCollectionNameToShow } from "../../../helper/utils";
 import { isAdminLookBook } from "./storeAssistantLookBooksApi";
 import styles from "./StoreAssistantLookBooks.module.scss";
 
-const LookBookCollectionCard = ({ collection, updatingId, onToggleVisibility, disabled }) => {
+const LookBookCollectionCard = ({
+  collection,
+  updatingId,
+  onToggleVisibility,
+  onShowProducts,
+  disabled,
+}) => {
   const lookBook = collection;
   const {
     attributes,
@@ -62,14 +68,23 @@ const LookBookCollectionCard = ({ collection, updatingId, onToggleVisibility, di
           {lookBook.user_name ? <p className={styles.creatorName}>by {lookBook.user_name}</p> : null}
         </div>
 
-        <button
-          type="button"
-          className={isVisible ? styles.secondaryButton : styles.primaryButton}
-          disabled={updating || disabled}
-          onClick={() => onToggleVisibility(lookBook)}
-        >
-          {updating ? "Saving..." : isVisible ? "Unshowcase" : "Showcase"}
-        </button>
+        <div className={styles.cardActions}>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={() => onShowProducts(lookBook)}
+          >
+            <FiShoppingBag /> Show Products
+          </button>
+          <button
+            type="button"
+            className={isVisible ? styles.secondaryButton : styles.primaryButton}
+            disabled={updating || disabled}
+            onClick={() => onToggleVisibility(lookBook)}
+          >
+            {updating ? "Saving..." : isVisible ? "Unshowcase" : "Showcase"}
+          </button>
+        </div>
       </div>
     </article>
   );
