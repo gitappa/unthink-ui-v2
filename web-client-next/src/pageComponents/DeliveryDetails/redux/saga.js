@@ -30,6 +30,7 @@ import {
   addToCartFailure,
   fetchCartSuccess,
   fetchCartFailure,
+  fetchCartReset,
   removeFromCartSuccess,
   removeFromCartFailure,
   createLoyaltyBadgeSuccess,
@@ -351,7 +352,7 @@ function* redeemSessionHCS20PointsSaga(action) {
   }
   };
 
-  if (redeemPayload?.recipientId) {
+  if (redeemPayload) {
     try {
        const claimResponse = yield call(ClaimStorePointsApiCall, finalClaimPayload);
 
@@ -375,6 +376,7 @@ function* redeemSessionHCS20PointsSaga(action) {
     // ) {
     //   yield put(checkoutUpdatePoints(checkoutRefreshPayload));
     notification.success({message:`You have successfully redeemed ${claimPayload?.points_exchanged} points.`})
+    if(redeemPayload?.recipientId){ 
       const redeemResponse = yield call(
         RedeemSessionHCS20PointsApiCall,
         redeemPayload
@@ -389,6 +391,7 @@ function* redeemSessionHCS20PointsSaga(action) {
           response: redeemResponseData,
         })
       );
+    }
     } catch (error) {
       console.error("Error redeeming checkout points:", {
         status: error.response?.status,
@@ -411,9 +414,9 @@ function* redeemSessionHCS20PointsSaga(action) {
         user_id:claimPayload?.user_id ,
          store_name: claimPayload?.store_name,
         event_id: eventId || '',
-       points_smart_contract_transactionId:pointsSmartContractTransactionId || '' //optional if to be be passed with points summary
+       points_smart_contract_transactionId:pointsSmartContractTransactionId || '', //optional if to be be passed with points summary
 
-    }
+    };
     yield call(SmartContractApiCall, contractPayload);
    
     const removeCartPayload = {
@@ -425,6 +428,7 @@ function* redeemSessionHCS20PointsSaga(action) {
     if(ischeckoutPage){
     try {
       yield call(RemoveCartApiCall, removeCartPayload);
+      yield put(fetchCartReset());
     } catch (removeCartError) {
       console.error("Error removing redeemed cart:", {
         status: removeCartError.response?.status,
