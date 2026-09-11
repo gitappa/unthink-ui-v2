@@ -14,6 +14,7 @@ import { current_store_name } from "../../constants/config";
 import styles from "./breadcrumbs.module.scss";
 import { useSelector } from "react-redux";
 import {  useRouter } from "next/router";
+import AuthInput from "../../components/kiosk/components/AuthInput";
 
 const Breadcrumbs = ({
 	isRootPage: isInspirationDisable,
@@ -29,7 +30,9 @@ const Breadcrumbs = ({
 	userName,
 	user_id,
 	isCreateFreeCollectionPage,
-	pdppage
+	pdppage,
+	hasKioskAccess,
+	isCartPage,
 }) => {
 	const router = useRouter();
 	 const [
@@ -125,21 +128,18 @@ const Breadcrumbs = ({
 				className={`${styles.breadcrumbsInner} ${isInspirationDisable ? styles.breadcrumbsInnerInspirationDisable : styles.breadcrumbsInnerDefault
 					}`}>
 				<div className={styles.breadcrumbsFlex}>
-					{/* Back Button for Collection Review Page */}
-					{/* {(isCollectionReviewPage || isCreateFreeCollectionPage || pdppage || router.asPath === `/influencer/${authUserName?.user_name}/`) && ( */}
+					{/* Back Button for Collection Review Page */}				
 					{router.asPath !== `/` && (
 						<>
 							<ArrowLeftOutlined 
 								className={styles.backIcon}
 								onClick={() => window.history.back()}
 							/>
-							{/* {!pdppage &&  */}
 							<div>/</div> 
-							{/* { pdppage && */}
-							 {/* <p className="cursor-pointer" onClick={() => window.history.back()} >Go back</p>  */}
+						
 						</>
 					)}
-					{/* )} */}
+					
 					{/* Home Icon */}
 					{!pdppage && 
 					<HomeOutlined
@@ -171,6 +171,7 @@ const Breadcrumbs = ({
 							</React.Fragment>
 						) : null;
 					})}
+					{hasKioskAccess && isCartPage && <AuthInput styles={"mb-0 w-fit pr-7"} />}
 				</div>
 			</div>
 		</div>

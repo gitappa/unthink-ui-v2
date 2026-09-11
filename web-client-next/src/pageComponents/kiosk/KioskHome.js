@@ -42,9 +42,7 @@ const KioskHome = ({ props }) => {
     () => socialMediaData[activeIndex] || null,
     [socialMediaData, activeIndex],
   );
-  // session reminder popup state and timer ref
-  const { showSessionPopup, handleStayLoggedIn, handleLogout } =
-    useKioskSessionReminder();
+ 
 
   useEffect(() => {
       if (!kioskLogin) {
@@ -175,14 +173,6 @@ const KioskHome = ({ props }) => {
           />
         </div>
       )}
-      {/* Session reminder popup for kiosk users (floating bottom-right) */}
-      {showSessionPopup && (
-        <KioskSessionPopup
-          onStay={handleStayLoggedIn}
-          onLogout={handleLogout}
-        />
-      )}
-
       {/* Logged in info (fixed bottom-right) */}
 
       <LoggedInInfo userInfo={userInfo} />
