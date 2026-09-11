@@ -446,7 +446,7 @@ const DeliveryDetails = () => {
                               </button>
                             </div>
                             <button
-                              className="text-red-600 hover:underline"
+                              className="text-red hover:underline"
                               disabled={loading}
                               onClick={() => handleRemove(item?.mfr_code)}
                             >
