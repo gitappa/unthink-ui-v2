@@ -222,12 +222,12 @@ const [
 
     dispatch(
       redeemSessionHCS20Points({
-        ...(userDID && {
+        // ...(userDID && {
           redeemPayload: {
             recipientId: userDID,
             pointsAmount: validPoints,
           },
-        }),
+        // }),
         claimPayload: {
           user_id: checkoutUserId?.toString(),
           store_name: checkoutStoreName,
