@@ -1271,6 +1271,8 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 					theme={breadcrumbTheme} // Retrieve the theme from params/query to display coll_theme in the breadcrumbs.
 					userName={props.user_name} // Retrieve the user name from params to display influencer name in the breadcrumbs.
 					user_id={pageUser.user_id}
+					hasKioskAccess={hasKioskAccess}
+					isCartPage ={isCartPage}
 				/>
 			) : null}
 
