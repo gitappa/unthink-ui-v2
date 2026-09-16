@@ -675,6 +675,9 @@ const chatReducerV2 = (state = initialState, action) => {
 				...initialState[CHAT_TYPES_KEYS[CHAT_TYPE_CHAT].shopALook],
 			};
 			newState.suggestions = getDefaultSuggestions();
+			newState.recommendations = getDefaultRecommendation();
+			newState.moreProducts = getDefaultmoreProduct();
+			newState.chatHistory = [...initialState.chatHistory];
 			return newState;
 		default:
 			return newState;
