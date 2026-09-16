@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -66,10 +66,10 @@ const ProductDetails = ({ params, ...props }) => {
     fetchProductImage,
     fetchProductLoading,
     productDetail,
-    productToWishlistCollection,
     wishlistCollections,
     hasKioskAccess,
     kioskLogin
+    
   ] = useSelector((state) => [
     state.store.data.sellerDetails || {},
     state.auth.customProducts.data.data || [],
@@ -78,18 +78,17 @@ const ProductDetails = ({ params, ...props }) => {
     state.auth.fetchProduct.image,
     state.auth.fetchProduct.isLoading,
     state.auth.fetchProduct.productDetails.data,
-    state.wishlistActions?.addProductToWishlistCollection?.data || [],
     state.auth.user.wishlistCollections,
     state.kiosk.hasAccess,
     state.kiosk.login
-  ]);
+  ], shallowEqual);
 
   const [store_id, isUserLogin] = useSelector((state) => [
     state.store.data.store_id,
     state.auth.user.isUserLogin,
-  ]);
-  const [storeData] = useSelector((state) => [state.store.data]);
-  const [authUserId] = useSelector((state) => [state.auth.user.data.user_id]);
+  ], shallowEqual);
+  const storeData = useSelector((state) => state.store.data);
+  const authUserId = useSelector((state) => state.auth.user.data.user_id);
   const [fetchedProductDetails, setFetchedProductDetails] = useState();
   const [showShareProductDetails, setShowShareProductDetails] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -102,7 +101,7 @@ const ProductDetails = ({ params, ...props }) => {
   const [sharePageUrl, setSharePageUrl] = useState("");
   const savedProductDetails = useMemo(
     () => productDetail?.find((item) => item.mfr_code === mfr_code),
-    [productDetail],
+    [mfr_code, productDetail],
   );
 
   const productDetails = useMemo(() => {
@@ -112,14 +111,18 @@ const ProductDetails = ({ params, ...props }) => {
       return fetchedProductDetails;
     }
   }, [savedProductDetails, fetchedProductDetails]);
-  const wishlist = Array.isArray(wishlistCollections)
-    ? wishlistCollections
-    : wishlistCollections?.product_lists || [];
-  const heartRedProduct = wishlist?.find((x) => {
-    return (
-      String(x?.mfr_code).trim() === String(productDetails?.mfr_code).trim()
+  const heartRedProduct = useMemo(() => {
+    const wishlist = Array.isArray(wishlistCollections)
+      ? wishlistCollections
+      : wishlistCollections?.product_lists || [];
+    const productMfrCode = String(productDetails?.mfr_code || "").trim();
+
+    if (!productMfrCode) return undefined;
+
+    return wishlist.find(
+      (item) => String(item?.mfr_code || "").trim() === productMfrCode,
     );
-  });
+  }, [productDetails?.mfr_code, wishlistCollections]);
 
   const showHeartWishlist = hasKioskAccess
     ? kioskLogin && isUserLogin
@@ -190,7 +193,6 @@ const ProductDetails = ({ params, ...props }) => {
       }
     },
     [
-      authUser,
       isUserLogin,
       dispatch,
       hasKioskAccess,
@@ -198,7 +200,6 @@ const ProductDetails = ({ params, ...props }) => {
       kioskLogin?.user_id,
       storeData,
       productDetails,
-      productToWishlistCollection,
     ],
   );
 

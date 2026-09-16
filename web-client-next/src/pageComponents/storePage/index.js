@@ -5,7 +5,7 @@ import React, {
 	useCallback,
 	useRef,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "../../helper/useNavigate.js";
 import { useRouter } from "next/router";
 import { Spin } from "antd";
@@ -288,7 +288,7 @@ const StorePageWrapper = (props) => {
 		state.auth.user.singleCollections.data,
 		state.kiosk.hasAccess,
 		state.kiosk.userId
-	]);
+	], shallowEqual);
 
 	const [selectedSortOption, setSelectedSortOption] = useState();
 	const [selectedSortOptionProduct, setSelectedSortOptionProduct] = useState();
@@ -1065,7 +1065,7 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 		state.influencer.collections.isFetching,
 		state.wishlistActions.updateWishlist,
 		state.wishlistActions.addToWishlist,
-	]);
+	], shallowEqual);
 
 	const { isFetching: updateWishlistInProgress } = updateWishlistReducer;
 
