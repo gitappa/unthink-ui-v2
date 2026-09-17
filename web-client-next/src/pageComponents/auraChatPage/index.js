@@ -1,8 +1,6 @@
 // Created for loading chat modal in an iframe as the AURA chat page.
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { setShowChatModal } from "../../hooks/chat/redux/actions";
 import ChatContainer from "../storePage/ChatContainer";
 
 const AuraChatPage = ({ isAuraChatPage, serverData }) => {

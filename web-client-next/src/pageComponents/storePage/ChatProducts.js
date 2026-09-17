@@ -727,6 +727,8 @@ const ChatProducts = ({
             showChatLoader={showChatLoader}
             isMobile={isMobile}
             registerSelectActions={registerSelectActions}
+            handleGoBack={handleGoBack}
+            isProductSearchOptionActive={isProductSearchOptionActive}
           />
         </>
       ) : null}
