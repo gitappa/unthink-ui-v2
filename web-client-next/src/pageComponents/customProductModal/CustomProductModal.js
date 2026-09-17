@@ -130,9 +130,6 @@ const CustomProductModal = ({
 	storeTemplates,
 	catalog_attributes,
 	filter_settings,
-	renderInline = false,
-	onProductSaved,
-	userIdOverride,
 }) => {
 	const { data: product, collectionId } = data;
 	const [productData, setProductData] = useState({
@@ -342,8 +339,7 @@ const CustomProductModal = ({
 			}
 
 
-			dispatch(updateCustomProducts([payload], userIdOverride || authUser.user_id));
-			onProductSaved?.(payload);
+			dispatch(updateCustomProducts([payload], authUser.user_id));
 			//  else {
 			// 	const data = { ...productData };
 			// 	const product_lists = [data];
@@ -774,9 +770,20 @@ const CustomProductModal = ({
 		}
 	};
 
-	const modalContent = (
-		<div>
-			<form>
+	return (
+		<div onClick={onModalClose}>
+			<Modal
+				isOpen={isModalOpen}
+				headerText={
+					isView ? productData?.name || "Product Details" : "Update Product"
+				}
+				onClose={onModalClose}
+				maskClosable={false}
+				size='sm'
+				zIndexClassName='z-50'
+				contentWrapperSpacingClassName='p-4'>
+				<div>
+					<form>
 						{isView ? (
 							<div>
 								{/* {brandsDetails?.brandName && brandsDetails.brandDescription ? (
@@ -1411,24 +1418,7 @@ const CustomProductModal = ({
 							</div>
 						)}
 					</form>
-		</div>
-	);
-
-	if (renderInline) return modalContent;
-
-	return (
-		<div onClick={onModalClose}>
-			<Modal
-				isOpen={isModalOpen}
-				headerText={
-					isView ? productData?.name || "Product Details" : "Update Product"
-				}
-				onClose={onModalClose}
-				maskClosable={false}
-				size='sm'
-				zIndexClassName='z-50'
-				contentWrapperSpacingClassName='p-4'>
-				{modalContent}
+				</div>
 			</Modal>
 		</div>
 	);

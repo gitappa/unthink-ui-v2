@@ -265,7 +265,7 @@ const ContextWrapper = ({ children }) => {
 				// store previous value and persist request history in sessionStorage
 				dispatch(
 					setWidgetHeader(
-						data.current_data_widgetHeader || sessionStorage.getItem("widgetHeader") || "",
+						data.current_data_widgetHeader || "",
 						data.request || {})
 				);
 				dispatch(setWidgetImage(data.image_url || ""));

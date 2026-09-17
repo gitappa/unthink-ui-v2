@@ -583,7 +583,7 @@
 
 .productActions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   padding: 0 10px 12px;
 
@@ -602,6 +602,11 @@
     font-weight: 800;
     cursor: pointer;
 
+    svg {
+      flex: 0 0 auto;
+      font-size: 15px;
+    }
+
     &:disabled {
       cursor: not-allowed;
       opacity: 0.58;
@@ -612,6 +617,12 @@
       color: #b91c1c;
     }
   }
+}
+
+.productActionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .productInfo {
@@ -770,7 +781,16 @@
   }
 
   .productActions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    button {
+      min-height: 40px;
+      padding: 8px;
+    }
+  }
+
+  .productActionLabel {
+    display: none;
   }
 
   .collectionEditActions {

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Drawer, Modal, notification, Spin } from "antd";
-import { useSelector } from "react-redux";
 import { FiEdit2, FiEye, FiImage, FiRefreshCw, FiShoppingBag, FiStar, FiTrash2 } from "react-icons/fi";
 import {
   DndContext,
@@ -16,7 +15,6 @@ import {
 } from "@dnd-kit/sortable";
 
 import LookBookCollectionCard from "./LookBookCollectionCard";
-import CustomProductModal from "../../customProductModal/CustomProductModal";
 import { getCollectionNameToShow } from "../../../helper/utils";
 import {
   fetchStoreAssistantLookBooks,
@@ -148,13 +146,6 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
   const [hasUnsavedOrderChanges, setHasUnsavedOrderChanges] = useState(false);
   const selectedProducts = getLookBookProducts(selectedCollection);
   const selectedCollectionName = selectedCollection ? getCollectionNameToShow(selectedCollection) || config.collectionSingular : config.collectionSingular;
-  const storeData = useSelector((state) => state.store.data || {});
-  const {
-    sellerDetails,
-    templates: storeTemplates,
-    catalog_attributes,
-    filter_settings,
-  } = storeData;
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 8 },
@@ -254,27 +245,6 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
     setDrawerMode("productView");
   };
 
-  const onEditProduct = (product) => {
-    setDrawerProduct(product);
-    setDrawerMode("productEdit");
-  };
-
-  const onProductSaved = (updatedProduct) => {
-    const collectionId = selectedCollection?._id;
-    const mfrCode = getProductMfrCode(updatedProduct);
-    if (!collectionId || !mfrCode) return;
-
-    replaceCollection(collectionId, (collection) =>
-      updateLookBookProducts(collection, (products) =>
-        products.map((item) => (getProductMfrCode(item) === mfrCode ? { ...item, ...updatedProduct } : item))
-      )
-    );
-    setDrawerProduct((currentProduct) =>
-      getProductMfrCode(currentProduct) === mfrCode ? { ...currentProduct, ...updatedProduct } : currentProduct
-    );
-    closeDrawer();
-  };
-
   const onEditCollection = () => {
     if (!selectedCollection?._id) return;
 
@@ -371,7 +341,6 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
 
   const drawerTitle = {
     collectionEdit: "Edit Collection",
-    productEdit: "Edit Product",
     productView: drawerProduct ? getProductName(drawerProduct) : "Product Details",
   }[drawerMode] || "Details";
 
@@ -447,7 +416,7 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
         title={`${selectedCollectionName} products`}
         open={!!selectedCollection}
         footer={null}
-        width={920}
+        width="min(1320px, calc(100vw - 64px))"
         onCancel={() => setSelectedCollection(null)}
       >
         <div className={styles.productsModalHeader}>
@@ -478,16 +447,13 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
                   </div>
                   <div className={styles.productActions}>
                     <button type="button" onClick={() => onShowProduct(product)}>
-                      <FiEye /> Show
-                    </button>
-                    <button type="button" onClick={() => onEditProduct(product)}>
-                      <FiEdit2 /> Edit
+                      <FiEye /> <span className={styles.productActionLabel}>Show</span>
                     </button>
                     <button type="button" onClick={() => onToggleProductStar(product)} disabled={!productMfrCode || !!productActionId}>
-                      <FiStar /> {starring ? "Saving..." : product?.starred ? "Unstar" : "Star"}
+                      <FiStar /> <span className={styles.productActionLabel}>{starring ? "Saving..." : product?.starred ? "Unstar" : "Star"}</span>
                     </button>
                     <button type="button" onClick={() => onDeleteProduct(product)} disabled={!productMfrCode || !!productActionId}>
-                      <FiTrash2 /> {deleting ? "Deleting..." : "Delete"}
+                      <FiTrash2 /> <span className={styles.productActionLabel}>{deleting ? "Deleting..." : "Delete"}</span>
                     </button>
                   </div>
                 </div>
@@ -548,21 +514,6 @@ const StoreAssistantLookBooks = ({ mode = "lookbooks" }) => {
               </button>
             </div>
           </div>
-        ) : null}
-        {drawerMode === "productEdit" && drawerProduct ? (
-          <CustomProductModal
-            isModalOpen={!!drawerProduct}
-            data={{ data: drawerProduct, isView: false, collectionId: selectedCollection?._id }}
-            onModalClose={closeDrawer}
-            sellerDetails={sellerDetails}
-            allowEdit
-            storeTemplates={storeTemplates || {}}
-            catalog_attributes={catalog_attributes || []}
-            filter_settings={filter_settings || { available_filters: [] }}
-            renderInline
-            onProductSaved={onProductSaved}
-            userIdOverride={selectedCollection?.user_id}
-          />
         ) : null}
       </Drawer>
     </section>

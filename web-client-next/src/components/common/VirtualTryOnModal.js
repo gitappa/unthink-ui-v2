@@ -13,7 +13,7 @@ import { vtoIconState } from "../singleCollection/redux/actions";
 import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 import camera from "../singleCollection/images/Card/camera.svg";
 
-export const VirtualTryOnModal = ({
+const VirtualTryOnModal = ({
   size,
   className = "",
   isFloating = false,
@@ -453,4 +453,8 @@ export const VirtualTryOnModal = ({
   );
 };
 
-export default VirtualTryOnModal;
+const MemoizedVirtualTryOnModal = React.memo(VirtualTryOnModal);
+MemoizedVirtualTryOnModal.displayName = "VirtualTryOnModal";
+
+export { MemoizedVirtualTryOnModal as VirtualTryOnModal };
+export default MemoizedVirtualTryOnModal;

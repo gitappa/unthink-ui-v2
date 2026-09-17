@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { FiActivity, FiBarChart2, FiUsers } from "react-icons/fi";
 
 import { aura_header_theme } from "../../../constants/config";
+import { resetAuraSearchResponse } from "../../../hooks/chat/redux/actions";
 import ChatContainer from "../../storePage/ChatContainer";
 import StoreAssistantRealtimeFeed from "../realtimeFeed/StoreAssistantRealtimeFeed";
 import StoreAssistantUploadMedia from "../uploadMedia/StoreAssistantUploadMedia";
@@ -18,6 +20,16 @@ const PlaceholderPanel = ({ icon: Icon, title, description, children }) => (
 );
 
 const StoreAssistantOutlet = ({ activeTab, settings }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (activeTab !== "aura_search") return;
+
+    sessionStorage.removeItem("widgetHeader");
+    sessionStorage.removeItem("widgetHeaderRequestHistory");
+    dispatch(resetAuraSearchResponse());
+  }, [activeTab, dispatch]);
+
   if (activeTab === "aura_search") {
     return (
       <section className={styles.auraOutlet}>

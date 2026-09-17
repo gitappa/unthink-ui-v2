@@ -212,7 +212,7 @@ console.log('userLogin',userLogin)
     ],
   );
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     if (onClick) {
       onClick(event);
       return;
@@ -234,7 +234,16 @@ console.log('userLogin',userLogin)
     }
 
     addToWishlistClick(event);
-  };
+  }, [
+    addToWishlistClick,
+    callHandpickedAPI,
+    handleGuestWishlistClick,
+    isActive,
+    onAdd,
+    onClick,
+    removeFromWishlistClick,
+    userLogin,
+  ]);
 
   const button = (
     <button
