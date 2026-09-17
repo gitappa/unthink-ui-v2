@@ -585,11 +585,11 @@ const DeliveryDetails = () => {
         size="sm"
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          {/* {checkoutClaimMessage && (
+          {checkoutClaimMessage && hasKioskAccess && (
             <p className="text-base font-medium text-gray-900">
               {checkoutClaimMessage}
             </p>
-          )} */}
+          )}
   
             <img
               src={shareQrCodeImage(`/checkout-claim-badge/${kioskUser_id || authUserId}/${storeData?.store_name}`)}
