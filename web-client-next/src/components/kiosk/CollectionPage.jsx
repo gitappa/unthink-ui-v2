@@ -327,13 +327,14 @@ useEffect(() => {
   return (
     <div className="p-8 pt-6 md:p-12 bg-white min-h-screen">
       <div
-        className="sticky top-0 py-2 mx-1 bg-white
+        className="sticky w-full top-0 py-2  bg-white
        z-20 "
       >
         <div className="flex items-start mb-2 ">
          <GoBack />
           <AuthInput styles={"mb-0 w-fit"} />
         </div>
+      </div>
 
         {/* Header */}
         <div className="mb-3  flex justify-between items-start">
@@ -413,7 +414,6 @@ useEffect(() => {
             </button>
           ))}
         </div>
-      </div>
 
       {/* Product Grid Placeholder */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6">

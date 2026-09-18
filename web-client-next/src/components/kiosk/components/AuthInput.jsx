@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authAPIs, collectionAPIs } from "../../../helper/serverAPIs";
 import { current_store_name } from "../../../constants/config";
 import { KIOSK_LOGIN_STORAGE_KEY } from "../../../helper/utils";
@@ -191,6 +191,15 @@ const AuthInput = ({ onLoginChange, styles }) => {
   const [activeCollectionAction, setActiveCollectionAction] = useState("");
   const containerRef = useRef(null);
 
+  const activeMenuKey = useMemo(() => {
+    const currentPath = router.asPath?.split("?")[0] || router.pathname || "";
+    if (currentPath === "/cart" || currentPath.startsWith("/cart/")) {
+      return "cart";
+    }
+
+    return "";
+  }, [router.asPath, router.pathname]);
+
   const syncKioskLogin = useCallback(
     (login) => {     
       setKioskLogin(login);
@@ -352,6 +361,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
         return;
       }
       if(action.key === 'cart'){
+        setIsDropdownOpen(false);
 			  router.push('/cart')
 			  return
 	  	}
@@ -484,19 +494,26 @@ const AuthInput = ({ onLoginChange, styles }) => {
 
       {kioskLogin && isDropdownOpen && (
         <div className="absolute top-14 right-0 bg-white border border-gray-200 shadow-lg rounded-xl py-2 w-48 z-50">
-          {KIOSK_COLLECTION_ACTIONS.map((action) => (
-            <button
-              key={action.key}
-              onClick={() => handleCollectionActionClick(action)}
-              disabled={Boolean(activeCollectionAction)}
-              className={`w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${
-                activeCollectionAction ? "cursor-not-allowed opacity-60" : ""
-              }`}
-            >
-              {renderCollectionActionIcon(action.key)}
-              {activeCollectionAction === action.key ? "Loading..." : action.label}
-            </button>
-          ))}
+          {KIOSK_COLLECTION_ACTIONS.map((action) => {
+            const isActive = activeMenuKey === action.key;
+
+            return (
+              <button
+                key={action.key}
+                onClick={() => handleCollectionActionClick(action)}
+                disabled={Boolean(activeCollectionAction)}
+                aria-current={isActive ? "page" : undefined}
+                className={`w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                  isActive
+                    ? "bg-support text-black font-semibold"
+                    : "text-gray-700 hover:bg-gray-50"
+                } ${activeCollectionAction ? "cursor-not-allowed opacity-60" : ""}`}
+              >
+                {renderCollectionActionIcon(action.key)}
+                {activeCollectionAction === action.key ? "Loading..." : action.label}
+              </button>
+            );
+          })}
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"

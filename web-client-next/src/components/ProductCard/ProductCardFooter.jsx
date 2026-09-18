@@ -149,7 +149,7 @@ const ProductCardFooter = ({
         storeData?.pdp_settings?.is_add_to_cart_button) &&
         !isCustomProductsPage && (
           <>
-            {storeData?.pdp_settings?.is_buy_button ? (
+            {storeData?.pdp_settings?.is_buy_button && product?.custom_product !== false  ? (
               <BuyNowButton
                 product={product}
                 authUserId={authUserId}
@@ -174,7 +174,7 @@ const ProductCardFooter = ({
               >
                 Buy Now
               </BuyNowButton>
-            ) : (
+            ) : product?.custom_product !== false &&  (
               <AddToCartButton
                 product={product}
                 authUserId={authUserId}

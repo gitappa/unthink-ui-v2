@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CloseOutlined } from "@ant-design/icons";
 
 import AuraResponseProducts from "./AuraResponseProducts";
 import {
@@ -30,7 +30,9 @@ const AuraResponseProductsWithTags = ({
 	layoutMode,
 	showChatLoader,
 	isMobile,
-	registerSelectActions
+	registerSelectActions,
+	handleGoBack,
+	isProductSearchOptionActive,
 }) => {
 	const [suggestionsWithProducts,suggestionsTags, recommendationsWithProducts, moreProducts] = useSelector((state) => [
 		state.chatV2.suggestions,
@@ -193,6 +195,14 @@ const AuraResponseProductsWithTags = ({
 			) : null}
 
 			<div className={styles['aura-tags-wrapper']}>
+				{isProductSearchOptionActive ? (
+					<div className="h-[60px] flex w-full shrink-0 text-[#4c5672] hover:text-secondary">
+						<ArrowLeftOutlined
+							className="cursor-pointer text-2xl"
+							onClick={handleGoBack}
+						/>
+					</div>
+				) : null}
 					{!isEmpty(allProductList) && tags.length > 1 ? (
 						<div
 							key='All'
