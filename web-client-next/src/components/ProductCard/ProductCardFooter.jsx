@@ -111,7 +111,7 @@ const ProductCardFooter = ({
       )}
 
       <div className="mt-0 flex min-h-7 items-center justify-between gap-2 md:mt-2 md:min-h-8">
-        <div className={isOutOfStock ? "hidden" : ""}>
+        <div className={isOutOfStock || product?.custom_product === false ? "hidden" : ""}>
           <span
             className={`text-red ${
               size === "small"
