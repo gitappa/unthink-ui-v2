@@ -214,4 +214,4 @@ const ProductCardFooter = ({
   );
 };
 
-export default ProductCardFooter;
+export default React.memo(ProductCardFooter);

@@ -38,7 +38,7 @@ const VirtualTryOnModal = ({
   kioskUserName = null,
   saveText = "Save",
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
   const ButtonClick = useSelector((state) => state.VtoIconReducer.ButtonClick);
   const isMobile = typeof window !== "undefined" && window.innerWidth < 878;
   const isOpen = Boolean(storeData && ButtonClick === product?.mfr_code);
