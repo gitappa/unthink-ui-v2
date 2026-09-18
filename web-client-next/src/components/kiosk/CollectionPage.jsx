@@ -175,6 +175,21 @@ useEffect(() => {
     }
   }, [requestedCollectionPath, singleCollectionKiosk,dispatch]);
   //   console.log('colleztctionData',singleCollectionKiosk);
+  const handleGuestPopupOpen = useCallback((action) => {
+  if (action === "") {
+    setPendingGuestAction(null);
+    setOnMfrCode(null);
+    return;
+  }
+
+  if (action?.product) {
+    setOnMfrCode(action.product);
+  }
+
+  setPendingGuestAction(action || null);
+  setIsPopupShow(true);
+}, []);
+
   const productCardKiosk = (productdata) => {
     // console.log(productdata);
     return (
@@ -182,19 +197,7 @@ useEffect(() => {
         product={productdata}
         bannerImage
         enableKioskGuestPopup
-        onGuestPopupOpen={(action) => {
-          if (action === "") {
-            setPendingGuestAction(null);
-            setOnMfrCode(null);
-            return;
-          }
-
-          if (action?.product) {
-            setOnMfrCode(action.product);
-          }
-          setPendingGuestAction(action || null);
-          setIsPopupShow(true);
-        }}
+        onGuestPopupOpen={handleGuestPopupOpen}
         onKioskTryonClick={buildVtoProductAutoLoginUrls}
         // onKioskCartClick={buildCartAutoLoginUrls}
         setOnMfrCode={setOnMfrCode}

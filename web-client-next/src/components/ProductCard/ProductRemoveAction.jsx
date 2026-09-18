@@ -17,7 +17,6 @@ const ProductRemoveAction = ({
   if (!isVisible) {
     return null;
   }
-
   const sizeClassName =
     hideOnMedium && size !== "small"
       ? "hidden"

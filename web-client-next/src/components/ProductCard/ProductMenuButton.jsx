@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { FiEdit } from "react-icons/fi";
 import { LuCopy } from "react-icons/lu";
@@ -12,9 +12,6 @@ const ProductMenuButton = ({
   collectionId,
   showCustomProductsMenu,
   size,
-  menuIcon,
-  setMenuIcon,
-  menuRef,
   isDefaultWidget,
   showRemoveIcon,
   removeFromWishlistClick,
@@ -23,6 +20,21 @@ const ProductMenuButton = ({
   onEditClick,
 }) => {
   const dispatch = useDispatch();
+  const [menuIcon, setMenuIcon] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuIcon(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
 
   const handleOpenProductModal = useCallback(
     (allowEdit) => {
@@ -63,25 +75,25 @@ const ProductMenuButton = ({
   }
 
   return (
-    <>
+    <div ref={menuRef}>
       <div
         className="absolute right-2.5 lg:right-4 top-10 z-10 mt-1.5 flex h-8 w-8 cursor-pointer
        items-center justify-center rounded-full bg-white p-1 
        text-2xl shadow-md transition-all duration-300 ease-in-out lg:top-12
         lg:hover:bg-hover-light lg:hover:shadow-lg"
-      >
-        <BsThreeDotsVertical
-          className="h-[18px] w-[18px] object-contain"
-          onClick={(e) => {
+        onClick={(e) => {
             e.stopPropagation();
             setMenuIcon((prev) => !prev);
           }}
+      >
+        <BsThreeDotsVertical
+          className="h-[18px] w-[18px] object-contain"
+          
         />
       </div>
 
       {menuIcon && (
         <div
-          ref={menuRef}
           onClick={(e) => e.stopPropagation()}
           className="absolute right-5 top-16 z-50 flex h-fit w-32 flex-col gap-3 rounded-lg bg-white p-3 shadow-md sm:right-6 md:right-10 md:top-16 lg:right-12 lg:top-[72px] lg:w-36"
         >
@@ -122,7 +134,7 @@ const ProductMenuButton = ({
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

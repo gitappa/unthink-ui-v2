@@ -2,7 +2,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +27,7 @@ import {
   getCurrentCollectionForCard,
 } from "../../helper/product/productCardHelpers";
 import ProductCardFooter from "./ProductCardFooter";
-import { ProductCardHeaderTop } from "./ProductCardHeaderTop";
+import  ProductCardHeaderTop  from "./ProductCardHeaderTop";
 import ProductCardHeaderBottom from "./ProductCardHeaderBottom";
 
 export const PRODUCT_CARD_WIDGET_TYPES = {
@@ -66,14 +65,11 @@ const ProductCard = ({
   onAddSelectedProductsToCollection,
   enableKioskGuestPopup = false,
   setOnMfrCode,
-  onGuestPopupOpen = () => {},
+  onGuestPopupOpen ,
   onKioskTryonClick,
   source,
 }) => {
   const dispatch = useDispatch();
-  const [menuIcon, setMenuIcon] = useState(false);
-
-  const menuRef = useRef(null);
   const router = useRouter();
 
   const [
@@ -129,18 +125,6 @@ const ProductCard = ({
   const { isMyWishlistCollection, isMyTryonsCollection } = getCollectionFlags(
     currentCollectionForCard,
   );
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuIcon(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
-
   const getKioskLogin = useCallback(() => kioskLogin, [kioskLogin]);
 
   const handleProductClick = async ({ open }) => {
@@ -235,24 +219,28 @@ const ProductCard = ({
     showStar &&
     (widgetType === PRODUCT_CARD_WIDGET_TYPES.DEFAULT ||
       widgetType === PRODUCT_CARD_WIDGET_TYPES.ACTION_COVER);
-  const cartSourceCollection =
+  const cartSourceCollection =useMemo(()=>
     source === "COLLECTION"
       ? {
           id: collection_id,
           name: collection_name,
           path: collection_path,
         }
-      : undefined;
+      : undefined,
+      [source, collection_id, collection_name, collection_path]
+  )
+    
 
-  const handleVtoClick = (mfrCode) => {
+  const handleVtoClick = useCallback((mfrCode) => {
     if (mfrCode) {
       dispatch(vtoIconState(mfrCode));
       return;
     }
     dispatch(GuestPopUpShow(true));
-  };
+  },[]) 
 
-  const kioskConfig = {
+  const kioskConfig = useMemo(()=>(
+   {
     hasAccess: hasKioskAccess,
     login: kioskLogin,
     loginAuth: KioskLoginAuth,
@@ -260,13 +248,23 @@ const ProductCard = ({
     getLogin: getKioskLogin,
     onGuestPopupOpen,
     onTryonClick: onKioskTryonClick,
-  };
-  const wishlistConfig = {
+  }),[hasKioskAccess,
+  kioskLogin,
+     KioskLoginAuth,
+     enableKioskGuestPopup,
+     getKioskLogin,
+    onGuestPopupOpen,
+     onKioskTryonClick,
+
+  ])
+  const wishlistConfig =useMemo(()=>(
+   {
     showModal: showWishlistModal,
     hideAddButton: hideAddToWishlist,
     collections: wishlistCollections,
-  };
-  const productCardConfig = {
+  }),[showWishlistModal,hideAddToWishlist,wishlistCollections])
+
+  const productCardConfig =useMemo(()=>( {
     product,
     size,
     isCustomProductsPage,
@@ -274,30 +272,56 @@ const ProductCard = ({
     enableSelect,
     tryonConfig: Collection_vto || Collection_tryonStatement,
     saveUserId: KioskLoginAuth?.user_id || authUser?.user_id || null,
-  };
-  const userConfig = {
+  }),[
+     product,
+    size,
+    isCustomProductsPage,
+    storeData,
+    enableSelect,
+     Collection_vto,
+  Collection_tryonStatement,
+  KioskLoginAuth?.user_id,
+  authUser?.user_id
+  ])
+  const userConfig = useMemo(()=>(
+  {
     authUserId,
     authUser,
     storeId: store_id,
     source,
     isLoggedIn: isUserLogin,
-  };
-  const cartConfig = {
+  }),[
+    authUserId,
+    authUser,
+    store_id,
+    source,
+    isUserLogin
+  ])
+  const cartConfig = useMemo(()=>( {
     onGuestPopupOpen,
     sourceCollection: cartSourceCollection,
-  };
-  const headerTopCallbacks = {
+  }),[onGuestPopupOpen,cartSourceCollection])
+
+ const headerTopCallbacks = useMemo(
+  () => ({
     onSetSelectValue: setSelectValue,
-    onSetMenuIcon: setMenuIcon,
     onEditClick,
     onRemoveIconClick,
     onAddSelectedProductsToCollection,
-  };
-  const headerBottomCallbacks = {
+  }),
+  [
+    setSelectValue,
+    onEditClick,
+    onRemoveIconClick,
+    onAddSelectedProductsToCollection,
+  ]
+);
+  const headerBottomCallbacks = useMemo(()=>({
     onSetMfrCode: setOnMfrCode,
     onVtoClick: handleVtoClick,
-    onStarClick,
-  };
+    onStarClick
+  }),[handleVtoClick,onStarClick])
+
   const handleCardClick = (event) => {
     if (enableSelect) return;
 
@@ -360,8 +384,6 @@ const ProductCard = ({
             source={source}
             showRemoveIcon={showRemoveIcon}
             showCustomProductsMenu={showCustomProductsMenu}
-            menuIcon={menuIcon}
-            menuRef={menuRef}
             allowEdit={allowEdit}
             isMyWishlistCollection={isMyWishlistCollection}
             showStar={showStar}
