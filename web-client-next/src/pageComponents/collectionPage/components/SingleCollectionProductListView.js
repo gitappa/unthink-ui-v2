@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button, Collapse, notification, Select, Upload } from "antd";
@@ -130,7 +130,20 @@ const SingleCollectionProductListView = ({
   // console.log('Owner',productsData);
   
   // console.log('hellopw',Owner && (window.location.pathname === '/my-profile/' || window.location.pathname === `/influencer/${user_name}/`) );
-  
+  const handleSetSelectValue = useCallback(
+    (mfrCode) => () => {
+      onSelectProductClick(mfrCode);
+    },
+    [onSelectProductClick],
+  );
+// above and below issue not optimized 
+  const handleStarClick = useCallback(
+    (mfrCode, isStarred) => () => {
+      handleShowcaseCollectionProducts([mfrCode], !isStarred);
+    },
+    [handleShowcaseCollectionProducts],
+  );
+
   const isStoreAdminLoggedIn = useMemo(
     () =>
       is_store_instance &&
@@ -175,16 +188,14 @@ const SingleCollectionProductListView = ({
         collectionCards
         showStar={false}
         enableHoverShowcase={false}
-        onStarClick={() =>
-          handleShowcaseCollectionProducts([product.mfr_code], !product.starred)
-        }
+        onStarClick={handleStarClick(product.mfr_code, product.starred)}
         hideAddToWishlist={
           !!product.sponsored || (is_store_instance && !isUserLogin)
         }
         hideViewSimilar={!!product.sponsored}
         enableSelect={enableSelectProduct}
         isSelected={selectedProducts.includes(product.mfr_code)}
-        setSelectValue={() => onSelectProductClick(product.mfr_code)}
+        setSelectValue={handleSetSelectValue(product.mfr_code)}
         collection_id={blogCollectionPage._id}
         collection_name={blogCollectionPage.collection_name}
         collection_path={blogCollectionPage.path}
@@ -516,19 +527,17 @@ const SingleCollectionProductListView = ({
                   }}
                   showStar={false}
                   enableHoverShowcase={false}
-                  onStarClick={() =>
-                    handleShowcaseCollectionProducts(
-                      [product.mfr_code],
-                      !product.starred,
-                    )
-                  }
+                  onStarClick={handleStarClick(
+                    product.mfr_code,
+                    product.starred,
+                  )}
                   hideAddToWishlist={
                     !!product.sponsored || (is_store_instance && !isUserLogin)
                   }
                   hideViewSimilar={!!product.sponsored}
                   enableSelect={enableSelectProduct}
                   isSelected={selectedProducts.includes(product.mfr_code)}
-                  setSelectValue={() => onSelectProductClick(product.mfr_code)}
+                  setSelectValue={handleSetSelectValue(product.mfr_code)}
                   collection_id={blogCollectionPage._id}
                   collection_name={blogCollectionPage.collection_name}
                   collection_path={blogCollectionPage.path}

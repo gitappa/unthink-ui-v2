@@ -4,7 +4,7 @@ import { getTTid } from "../../helper/getTrackerInfo";
 import ProductMenuButton from "./ProductMenuButton";
 import ProductRemoveAction from "./ProductRemoveAction";
 
-export const ProductCardHeaderTop = ({
+const ProductCardHeaderTop = ({
   productCard = {},
   collectionId,
   isSelected,
@@ -18,8 +18,6 @@ export const ProductCardHeaderTop = ({
   source,
   showRemoveIcon,
   showCustomProductsMenu,
-  menuIcon,
-  menuRef,
   allowEdit,
   isMyWishlistCollection,
 }) => {
@@ -43,7 +41,6 @@ export const ProductCardHeaderTop = ({
   );
   const {
     onSetSelectValue: setSelectValue,
-    onSetMenuIcon: setMenuIcon,
     onEditClick,
     onRemoveIconClick,
     onAddSelectedProductsToCollection,
@@ -113,9 +110,6 @@ export const ProductCardHeaderTop = ({
             collectionId={collectionId}
             showCustomProductsMenu={showCustomProductsMenu}
             size={size}
-            menuIcon={menuIcon}
-            setMenuIcon={setMenuIcon}
-            menuRef={menuRef}
             isDefaultWidget={isDefaultWidget}
             showRemoveIcon={showRemoveIcon}
             removeFromWishlistClick={removeFromWishlistClick}
@@ -157,3 +151,5 @@ export const ProductCardHeaderTop = ({
     </>
   );
 };
+
+export default React.memo(ProductCardHeaderTop);

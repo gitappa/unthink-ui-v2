@@ -435,7 +435,7 @@ const url = window.location.pathname === '/my-profile/'
     ],
   );
 
-  const onAddSelectedProductsToCollection = async (e, product, options = {}) => {
+  const onAddSelectedProductsToCollection =useCallback( async (e, product, options = {}) => {
     e?.stopPropagation();
     const productsToAdd = resolveProductsToAdd(product);
     const isUserLoginCokkies = Cookies.get("isGuestLoggedIn") === "true";
@@ -497,7 +497,23 @@ const url = window.location.pathname === '/my-profile/'
       // dispatch(setIsCreateWishlist(true));
     }
     handleResetSelectProduct();
-  };
+  },[
+ resolveProductsToAdd,
+  isUserLogin,
+  pendingProductsToAdd,
+  dispatch,
+  authUser?.user_id,
+  selectedProducts,
+  blogCollectionPage?._id,
+  blogCollectionPage?.collection_name,
+  blogCollectionPage?.path,
+  storeData?.store_name,
+  current_store_name,
+  singleCollection?._id,
+  dispatchSelectedProductsAction,
+  handleResetSelectProduct,
+  getTTid,
+  ])
 
   // guest email functions
 
