@@ -471,16 +471,6 @@ const Header = ({
         });
       }
 
-      // if (enable_venly ) {
-      //   items.push({
-      //     key: "wallet",
-      //     className: styles.headerMenuItemPy2,
-      //     onClick: onMyWalletClick,
-      //     label: (
-      //       <span className={styles.headerMenuSpanTextBase}>My Wallet</span>
-      //     ),
-      //   });
-      // }
 
       if (
         storeData?.is_droppWallet_connect_enabled &&

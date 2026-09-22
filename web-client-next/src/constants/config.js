@@ -32,12 +32,6 @@ export const instance_logo = process.env.NEXT_PUBLIC_INSTANCE_LOGO;
 export const home_page_url = process.env.NEXT_PUBLIC_HOME_PAGE_URL;
 export const aura_header_theme = process.env.NEXT_PUBLIC_AURA_HEADER_THEME;
 
-
-
-// enabled view similar products if true
-export const enable_view_similar_products =
-	process.env.NEXT_PUBLIC_ENABLE_VIEW_SIMILAR_PRODUCTS;
-
 // show recommendations if true
 export const enable_recommendations =
 	process.env.NEXT_PUBLIC_ENABLE_RECOMMENDATIONS === "true";
@@ -62,7 +56,6 @@ export const availableChatSearchTypes = [
 ];
 export const availableChatSearchTypesTakeWalks = [CHAT_SEARCH_TYPES.SEARCH];
 export const is_kiosk = process.env.NEXT_PUBLIC_IS_KIOSK_ENABLED === "true";
-export const pdp_page_enabled = process.env.NEXT_PUBLIC_PDP_PAGE_ENABLED === "true";
 export const current_store_name = process.env.NEXT_PUBLIC_CURRENT_STORE_NAME;
 export const current_store_id = process.env.NEXT_PUBLIC_CURRENT_STORE_ID;
 export const payment_url = process.env.NEXT_PUBLIC_PAYMENT_URL;

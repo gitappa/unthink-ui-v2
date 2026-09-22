@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { message, Alert } from "antd";
-import CopyToClipboard from "react-copy-to-clipboard";
 import {
 	CopyOutlined,
 	WhatsAppOutlined,
@@ -22,6 +21,7 @@ import { PUBLISHED } from "../constants/codes";
 import { getTTid } from "../helper/getTrackerInfo";
 import Image from "next/image";
 import { useUserData } from "../context/UserDataContext";
+import { copyToClipboard } from "../helper/copyToClipboard";
 
 const CollectionShareModal = ({
 	isOpen,
@@ -203,11 +203,13 @@ const CollectionShareModal = ({
 
 						<div className={styles.urlBox}>
 							{copybaseUrl}{" "}
-							<CopyToClipboard
-								text={copybaseUrl}
-								onCopy={() => message.success("Copied", 1)}>
-								<CopyOutlined className={styles.copyIconLarge} />
-							</CopyToClipboard>
+							<CopyOutlined
+								className={styles.copyIconLarge}
+								onClick={async () => {
+									await copyToClipboard(copybaseUrl);
+									message.success("Copied", 1);
+								}}
+							/>
 						</div>
 					</div>
 				</div>

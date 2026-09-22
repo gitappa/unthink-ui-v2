@@ -125,4 +125,4 @@ const ProductCardHeaderBottom = ({
   );
 };
 
-export default ProductCardHeaderBottom;
+export default React.memo(ProductCardHeaderBottom);

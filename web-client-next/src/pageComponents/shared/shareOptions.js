@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useState } from "react";
 import { Typography, Input, Button, message } from "antd";
 import { useDispatch } from "react-redux";
 import Router, { useRouter } from "next/router";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import Image from "next/image";
 import facebookImg from "../../images/facebook.png";
 import whatsappImg from "../../images/whatsapp.png";
@@ -18,6 +17,7 @@ import styles from "./shareOption.module.scss";
 import { MY_PROFILE, PUBLISHED } from "../../constants/codes";
 import { useEffect } from "react";
 import { getTTid } from "../../helper/getTrackerInfo";
+import { copyToClipboard } from "../../helper/copyToClipboard";
 import Modal from "../../components/modal/Modal";
 import { FaXTwitter } from "react-icons/fa6";
 
@@ -213,13 +213,13 @@ const ShareOptions = (props) => {
           {url && (
             <div className="border p-1 rounded flex break-all text-base mb-2 md:text-lg ">
               {url}{" "}
-              <CopyToClipboard
-                className="text-lg"
-                text={url}
-                onCopy={() => message.success("Copied", 1)}
-              >
-                <CopyOutlined className="text-xl flex ml-auto" />
-              </CopyToClipboard>
+              <CopyOutlined
+                className="text-xl flex ml-auto"
+                onClick={async () => {
+                  await copyToClipboard(url);
+                  message.success("Copied", 1);
+                }}
+              />
             </div>
           )}
         </div>
