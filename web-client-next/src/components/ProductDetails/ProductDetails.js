@@ -56,8 +56,6 @@ const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const mfr_code = params?.mfr_code || router?.query?.mfr_code;
-  const { collection, loading } = useSelector((state) => state.cart);
-  const [isloading, setIsLoading] = useState(true);
   const [
     sellerDetails,
     customProductsData,
@@ -396,7 +394,6 @@ const ProductDetails = ({ params, ...props }) => {
                   brandsDetails={brandsDetails}
                   storeData={storeData}
                   productDetails={productDetails}
-                  collection={collection}
                   authUserId={authUserId}
                   hasKioskAccess={hasKioskAccess}
                   isUserLogin={isUserLogin}
