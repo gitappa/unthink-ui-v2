@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/scrollbar";
@@ -32,24 +32,22 @@ const KioskHome = ({ props }) => {
   const [socialMediaData, setSocialMediaData] = useState([]);
 
   //   console.log("products", products);
-  const [storeData, kioskLogin] = useSelector((state) => [
-    state.store.data,
-    state.kiosk.login,
-  ]);
+  const storeData = useSelector((state) => state.store.data);
   const [activeIndex, setActiveIndex] = useState(0);
   const rotationDelay = storeData?.kiosk_settings?.video_time_gap;
   const collectiondata = useMemo(
     () => socialMediaData[activeIndex] || null,
     [socialMediaData, activeIndex],
   );
- 
+  const handleKioskLoginChange = useCallback(
+    (login) => {
+      if (login) return;
 
-  useEffect(() => {
-      if (!kioskLogin) {
       sessionStorage.removeItem("selectedTag");
       setShowTags(Tags[0]);
-    }
-  }, [Tags, kioskLogin]);
+    },
+    [Tags],
+  );
 
   useEffect(() => {
     const fetchSocialMedia = async () => {
@@ -145,7 +143,10 @@ const KioskHome = ({ props }) => {
               </button>
             ))}
           </div>
-          <AuthInput styles="lg:min-w-[272px] lg:max-w-[272px]" />
+          <AuthInput
+            styles="lg:min-w-[272px] lg:max-w-[272px]"
+            onLoginChange={handleKioskLoginChange}
+          />
         </div>
       </div>
       <div
