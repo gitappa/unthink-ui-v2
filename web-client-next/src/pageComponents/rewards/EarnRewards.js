@@ -7,7 +7,6 @@ import {
 	LoadingOutlined,
 	CopyOutlined,
 } from "@ant-design/icons";
-import CopyToClipboard from "react-copy-to-clipboard";
 
 import { openMenuItem } from "../categories/redux/actions";
 import {

@@ -7,7 +7,6 @@ import React, {
   useContext,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { debounce } from "lodash";
 import { Tooltip, Image, Upload, Spin, Checkbox, notification } from "antd";
 import {
   CloseCircleFilled,
@@ -93,6 +92,21 @@ import upload_icon from "./Images/upload_icon.png";
 import page_info from "./Images/page_info.png";
 
 const { Dragger } = Upload;
+
+const createDebouncedFunction = (callback, wait) => {
+  let timeoutId;
+
+  const debounced = (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => callback(...args), wait);
+  };
+
+  debounced.cancel = () => {
+    window.clearTimeout(timeoutId);
+  };
+
+  return debounced;
+};
 
 const ChatModal = ({
   handleMicrophoneClick,
@@ -675,17 +689,19 @@ const ChatModal = ({
     }
   }
 
+  const debounceDispatch = useMemo(() => createDebouncedFunction((value) => {
+    dispatch(setChatMessage(value, chatTypeKey));
+    setIsSendSocketMessageWithPrefix(true);
+  }, 300), [chatTypeKey, dispatch]);
+
+  useEffect(() => () => debounceDispatch.cancel(), [debounceDispatch]);
+
   const handleInputChange = (e) => {
     const { value } = e.target;
     setLocalChatMessage(value);
 
     debounceDispatch(value);
   };
-
-  const debounceDispatch = debounce((value) => {
-    dispatch(setChatMessage(value, chatTypeKey));
-    setIsSendSocketMessageWithPrefix(true);
-  }, 300);
 
   const handleUploadImageModeChange = () => {
     handleClearChatImage();

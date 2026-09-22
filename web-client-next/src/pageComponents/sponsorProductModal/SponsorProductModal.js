@@ -7,11 +7,11 @@ import {
 	CopyOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import CopyToClipboard from "react-copy-to-clipboard";
 
 import Modal from "../../components/modal/Modal";
 import { updateWishlist } from "../wishlistActions/updateWishlist/redux/actions";
 import { generateRoute, getPercentage, isEmpty } from "../../helper/utils";
+import { copyToClipboard } from "../../helper/copyToClipboard";
 import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 import { profileAPIs } from "../../helper/serverAPIs";
 // import { COLLECTION_COVER_IMG_SIZES } from "../../constants/codes";
@@ -399,17 +399,15 @@ const SponsorProductModal = ({
 																<p className='text-base'>
 																	{brandsDetails.couponCode}
 																</p>{" "}
-																<CopyToClipboard
-																	text={brandsDetails.couponCode}
-																	onCopy={() => message.success("Copied", 1)}>
-																	<CopyOutlined
-																		onClick={(e) => {
-																			e.preventDefault();
-																			e.stopPropagation();
-																		}}
-																		className='text-xl flex ml-2'
-																	/>
-																</CopyToClipboard>
+																<CopyOutlined
+																	onClick={async (e) => {
+																		e.preventDefault();
+																		e.stopPropagation();
+																		await copyToClipboard(brandsDetails.couponCode);
+																		message.success("Copied", 1);
+																	}}
+																	className='text-xl flex ml-2'
+																/>
 															</div>
 														</div>
 													) : null}

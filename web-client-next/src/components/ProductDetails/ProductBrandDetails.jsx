@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { copyToClipboard } from "../../helper/copyToClipboard";
 
 import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
 import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
@@ -56,18 +56,15 @@ const ProductBrandDetails = ({ brandsDetails }) => {
               <p className="text-sm sm:text-base text-[#1f2c3b]">
                 {brandsDetails.couponCode}
               </p>
-              <CopyToClipboard
-                text={brandsDetails.couponCode}
-                onCopy={() => message.success("Copied", 1)}
-              >
-                <CopyOutlined
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  className="text-lg cursor-pointer"
-                />
-              </CopyToClipboard>
+              <CopyOutlined
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  await copyToClipboard(brandsDetails.couponCode);
+                  message.success("Copied", 1);
+                }}
+                className="text-lg cursor-pointer"
+              />
             </div>
           </div>
         </div>
