@@ -105,6 +105,7 @@ const ProductOverview = ({
                 <img
                   className="cursor-pointer lg:h-6 lg:w-6 h-5 w-5"
                   src={share_icon}
+                  alt="Share"
                   preview={false}
                 />
               </button>
@@ -161,4 +162,4 @@ const ProductOverview = ({
   );
 };
 
-export default ProductOverview;
+export default React.memo(ProductOverview);

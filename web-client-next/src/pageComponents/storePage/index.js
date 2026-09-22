@@ -1234,9 +1234,6 @@ const isAdminLog = authUser?.user_name ===  super_admin;
 				showCreate={!is_store_instance || isUserLogin}
 				// showPeople={!isCollectionPage && !is_store_instance} // REMOVE people tab code is not required
 				enableBackToAllCollections={enableBackToAllCollections}
-				createCollectionPathState={{
-					referrerInfluencerCode: pageUser.influencer_code,
-				}}
 				config={config}
 				trackCollectionData={trackCollectionData}
 				pageUser={pageUser}
