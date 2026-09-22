@@ -17,10 +17,10 @@ import {
 } from "@ant-design/icons";
 import facebookIcon from "../../images/staticpageimages/facebookIcon.png";
 import instagramIcon from "../../images/staticpageimages/instagramIcon.png";
-import CopyToClipboard from "react-copy-to-clipboard";
 
 import Modal from "../../components/modal/Modal";
 import { getPercentage, isEmpty } from "../../helper/utils";
+import { copyToClipboard } from "../../helper/copyToClipboard";
 import { normalizeCurrencySymbol } from "../../helper/product/productDisplayHelpers";
 import { collectionPageAPIs, profileAPIs } from "../../helper/serverAPIs";
 import {
@@ -29,7 +29,7 @@ import {
 	CURRENCY_USD,
 	PRODUCT_DUMMY_URL,
 } from "../../constants/codes";
-import { pdp_page_enabled, current_store_name, payment_url } from "../../constants/config";
+import { current_store_name, payment_url } from "../../constants/config";
 import {
 	replaceAndUpdateUserCollectionData,
 	saveUserInfo,
@@ -358,7 +358,7 @@ const CustomProductModal = ({
 			// 			dispatch(replaceAndUpdateUserCollectionData(res.data.data, true));
 			// 	}
 			// }
-			if (storeData?.pdp_settings?.is_buy_popup || pdp_page_enabled) {
+			if (storeData?.pdp_settings?.is_buy_popup) {
 				onModalClose();
 				// router.push(`/product/${product.mfr_code}`)
 			} else {
@@ -997,17 +997,15 @@ const CustomProductModal = ({
 																	<p className='text-base'>
 																		{brandsDetails.couponCode}
 																	</p>{" "}
-																	<CopyToClipboard
-																		text={brandsDetails.couponCode}
-																		onCopy={() => message.success("Copied", 1)}>
-																		<CopyOutlined
-																			onClick={(e) => {
-																				e.preventDefault();
-																				e.stopPropagation();
-																			}}
-																			className='text-xl flex ml-2'
-																		/>
-																	</CopyToClipboard>
+																	<CopyOutlined
+																		onClick={async (e) => {
+																			e.preventDefault();
+																			e.stopPropagation();
+																			await copyToClipboard(brandsDetails.couponCode);
+																			message.success("Copied", 1);
+																		}}
+																		className='text-xl flex ml-2'
+																	/>
 																</div>
 															</div>
 														) : null}

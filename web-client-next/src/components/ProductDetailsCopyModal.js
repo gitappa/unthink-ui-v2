@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { Modal, Row, Col, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
-import CopyToClipboard from "react-copy-to-clipboard";
 import styles from "./ProductDetailsCopyModal.module.css";
 
 import { addSidInProductUrl } from "../helper/utils";
 import { PRODUCT_DUMMY_URL } from "../constants/codes";
+import { copyToClipboard } from "../helper/copyToClipboard";
 
 const ProductDetailsCopyModal = ({
 	isOpen,
@@ -45,17 +45,15 @@ const ProductDetailsCopyModal = ({
 								<a href={productDetails.image} target='_blank'>
 									{productDetails.image}
 								</a>{" "}
-								<CopyToClipboard
-									text={productDetails.image}
-									onCopy={() => message.success("Copied", 1)}>
-									<CopyOutlined
-										onClick={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-										}}
-										className={styles.copyIcon}
-									/>
-								</CopyToClipboard>
+								<CopyOutlined
+									onClick={async (e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										await copyToClipboard(productDetails.image);
+										message.success("Copied", 1);
+									}}
+									className={styles.copyIcon}
+								/>
 							</div>
 						</Row>
 					) : null}
@@ -67,11 +65,13 @@ const ProductDetailsCopyModal = ({
 								<a href={productRedirectionUrl} target='_blank'>
 									{productRedirectionUrl}
 								</a>{" "}
-								<CopyToClipboard
-									text={productRedirectionUrl}
-									onCopy={() => message.success("Copied", 1)}>
-									<CopyOutlined className={styles.copyIcon} />
-								</CopyToClipboard>
+								<CopyOutlined
+									className={styles.copyIcon}
+									onClick={async () => {
+										await copyToClipboard(productRedirectionUrl);
+										message.success("Copied", 1);
+									}}
+								/>
 							</div>
 						</Row>
 					) : null}
