@@ -1,57 +1,19 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getTTid } from "../../helper/getTrackerInfo";
-import { getNormalizedCartQty } from "../../helper/product/productCardHelpers";
-import AddToCartButton, { addProductToCart } from "../common/AddToCartButton";
+import React from "react";
+import { useSelector } from "react-redux";
+import AddToCartButton from "../common/AddToCartButton";
 import BuyNowButton from "../common/BuyNowButton";
-import GuestUserPopUp from "../../pageComponents/Auth/GuestUserPopUp";
-import { GuestPopUpShow } from "../../pageComponents/Auth/redux/actions";
 
 const ProductActions = ({
   brandsDetails,
   storeData,
   productDetails,
-  collection,
   authUserId,
   hasKioskAccess,
   isUserLogin,
   authUser,
   storeId,
 }) => {
-  const dispatch = useDispatch();
   const kioskLogin = useSelector((state) => state.kiosk.login);
-  const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
-  const [pendingCartQty, setPendingCartQty] = useState(null);
-  const cardItem = collection?.product_lists?.find(
-    (item) => item.mfr_code === productDetails?.mfr_code,
-  );
-
-  const openCartGuestPopup = (qty) => {
-    setIsCartPopupOpen(true);
-    setPendingCartQty(qty);
-    dispatch(GuestPopUpShow(true));
-  };
-
-  const handleCartAction = (qty = 1, userIdOverride = null) => {
-    if (!productDetails?.mfr_code) return;
-
-    const normalizedQty = getNormalizedCartQty(qty);
-    const kioskUserId = userIdOverride || kioskLogin?.user_id;
-
-    if (hasKioskAccess && !kioskUserId) {
-      openCartGuestPopup(normalizedQty);
-      return;
-    }
-
-    const cartUserId = kioskUserId || authUserId || getTTid();
-
-    addProductToCart({
-      dispatch,
-      product: productDetails,
-      qty: normalizedQty,
-      userId: cartUserId,
-    });
-  };
 
   return (
     <>
@@ -82,47 +44,20 @@ const ProductActions = ({
         <div className="my-8 pb-2">
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             {storeData?.pdp_settings?.is_add_to_cart_button && (
-              <div className="flex flex-wrap gap-3 sm:gap-4 items-center w-full">
-                <div className="h-12 items-center flex gap-6 sm:gap-8 px-4 border border-support rounded-xl bg-white">
-                  <button
-                    className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                    onClick={() => {
-                      handleCartAction((cardItem?.qty || 0) - 1);
-                    }}
-                  >
-                    -
-                  </button>
-                  <button className="text-base sm:text-lg font-semibold text-[#1f2c3b] cursor-pointer">
-                    {cardItem?.qty || 0}
-                  </button>
-                  <button
-                    className="text-xl font-medium text-[#1f2c3b] cursor-pointer"
-                    onClick={() => {
-                      handleCartAction((cardItem?.qty || 0) + 1);
-                    }}
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="text-white h-12 sm:h-14 w-full sm:w-auto sm:min-w-[210px]">
-                  <AddToCartButton
-                    product={productDetails}
-                    qty={(cardItem?.qty || 0) + 1}
-                    authUserId={authUserId}
-                    kiosk={{
-                      hasAccess: hasKioskAccess,
-                      getLogin: () => kioskLogin,
-                    }}
-                    onGuestPopupOpen={({ qty }) => {
-                      openCartGuestPopup(qty);
-                    }}
-                    disabled={false}
-                    className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
-                  >
-                    Add to Cart
-                  </AddToCartButton>
-                </div>
-              </div>
+              <AddToCartButton
+                product={productDetails}
+                authUserId={authUserId}
+                kiosk={{
+                  hasAccess: hasKioskAccess,
+                  getLogin: () => kioskLogin,
+                }}
+                hasKioskAccess={hasKioskAccess}
+                storeName={storeData?.store_name}
+                isUserLogin={isUserLogin}
+                disabled={false}
+                showQuantityControls
+                className={` h-full px-6 ${hasKioskAccess ? "bg-kiosk-primary  font-medium" : "bg-brand text-white font-semibold"} w-full rounded-xl  text-sm sm:text-base shadow-md hover:shadow-lg transition`}
+              />
             )}
 
             {storeData?.pdp_settings?.is_buy_button &&
@@ -160,18 +95,6 @@ const ProductActions = ({
           </div>
         </div>
       )}
-      <GuestUserPopUp
-        isOpen={isCartPopupOpen}
-        setIsOpen={setIsCartPopupOpen}
-        storeName={storeData?.store_name}
-        isUserLogin={!isUserLogin ? true : false}
-        persistKioskLogin
-        onSuccess={({ userId }) => {
-          handleCartAction(pendingCartQty ?? 1, userId);
-          setPendingCartQty(null);
-        }}
-        onSkip={() => setPendingCartQty(null)}
-      />
     </>
   );
 };

@@ -19,7 +19,6 @@ const ProductGallery = ({
   buildProductAutoLoginQr,
   setIsPopupShow,
   setGuestPopupAction,
-  collection,
   authUser,
   pdploader,
 }) => {
@@ -83,7 +82,6 @@ const ProductGallery = ({
                 setIsPopupShow={setIsPopupShow}
                 setGuestPopupAction={setGuestPopupAction}
                 storeData={storeData}
-                tryonConfig={collection}
                 saveUserId={kioskLogin?.user_id || authUser?.user_id || null}
                 kioskEmail={kioskLogin?.email || null}
                 kioskUserName={kioskLogin?.user_name || null}
@@ -163,4 +161,4 @@ const ProductGallery = ({
   );
 };
 
-export default ProductGallery;
+export default React.memo(ProductGallery);

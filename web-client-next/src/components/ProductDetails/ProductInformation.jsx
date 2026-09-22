@@ -54,4 +54,4 @@ const ProductInformation = ({ productDetails, storeData }) => {
   );
 };
 
-export default ProductInformation;
+export default React.memo(ProductInformation);

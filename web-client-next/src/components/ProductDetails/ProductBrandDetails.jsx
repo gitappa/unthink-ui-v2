@@ -207,4 +207,4 @@ const ProductBrandDetails = ({ brandsDetails }) => {
   );
 };
 
-export default ProductBrandDetails;
+export default React.memo(ProductBrandDetails);
