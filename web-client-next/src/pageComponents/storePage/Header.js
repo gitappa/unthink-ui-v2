@@ -108,7 +108,6 @@ const Header = ({
   showRewards = true,
   showCreate = true,
   enableBackToAllCollections,
-  createCollectionPathState = {},
   config,
   trackCollectionData,
   pageUser,

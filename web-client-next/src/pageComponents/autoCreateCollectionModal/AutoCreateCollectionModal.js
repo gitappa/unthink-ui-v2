@@ -13,45 +13,6 @@ const AutoCreateCollectionModal = ({
 	collectionData,
 	isShareCollectionEnable,
 }) => {
-
-       const [
-			 
-			allCollectionsList,
-			 
-		] = useSelector((state) => [
-		 
-			state.auth.user.collections.data,
-		 
-		]);
-		console.log('collectionData',collectionData);
-		
-		console.log(allCollectionsList.path);
-
-// const [
-// 		authUserCollections,
-// 		authUserCollectionsIsFetching	] = useSelector((state) => [
-// 		state.auth.user.collections.data,
-// 		state.auth.user.collections.isFetching
-// 	]);
-
-// console.log(authUserCollections);
-// console.log(authUserCollectionsIsFetching);
-
-
-// 	// const satasd  = useSelector(state => state.createWishlist.data)
-// 	const {plistId} = this.props
-// 	console.log(satasd);
-	
-// 		const currentCollection = useMemo(
-// 			() => authUserCollections.find((cl) => cl._id === plistId) || {},
-// 			[
-// 				JSON.stringify(authUserCollections),
-// 				plistId,
-// 				authUserCollectionsIsFetching,
-// 			]
-// 		);
-// 		console.log(currentCollection);
-		
 	const [updatedData, setUpdatedData] = useState({
 		collection_name: "",
 		description: "",

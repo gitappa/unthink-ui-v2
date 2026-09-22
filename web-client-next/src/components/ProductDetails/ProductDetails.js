@@ -56,8 +56,6 @@ const ProductDetails = ({ params, ...props }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const mfr_code = params?.mfr_code || router?.query?.mfr_code;
-  const { collection, loading } = useSelector((state) => state.cart);
-  const [isloading, setIsLoading] = useState(true);
   const [
     sellerDetails,
     customProductsData,
@@ -143,20 +141,15 @@ const ProductDetails = ({ params, ...props }) => {
   const [guestPopupAction, setGuestPopupAction] = useState(null);
 
   const onAddSelectedProductsToCollection = useCallback(
-    (e = null, options = {}) => {
+    (options = {}) => {
       const {
-        isSave = false,
-        isShare = false,
-        isSkip = false,
         isGuestSubmit = false,
         userId = null,
-        email = null,
       } = options;
 
       const kioskLoginUserId = kioskLogin?.user_id;
 
       if (
-        isSave &&
         !isGuestSubmit &&
         (!isUserLogin || (hasKioskAccess && !kioskLoginUserId))
       ) {
@@ -166,30 +159,28 @@ const ProductDetails = ({ params, ...props }) => {
         return;
       }
 
-      if (isSave) {
-        if (productDetails?.mfr_code) {
-          const login_userID = userId || kioskLoginUserId || authUserId;
-          dispatch(
-            addProductToWishlistCollection({
-              mfr_code: productDetails?.mfr_code,
-              product_name: productDetails?.name,
-              product_image: productDetails?.image,
-              store: storeData?.store_name || "dothelook",
-              user_id: userId || kioskLoginUserId || authUserId,
-              eventId: storeData?.event_id,
-              successMessage: "Product added to wishlist successfully!",
-              errorMessage:
-                "Failed to add product to wishlist. Please try again.",
-              callback: () => {
-                dispatch(
-                  getwishlistUserCollection({
-                    path: `my_wishlist_${login_userID}`,
-                  }),
-                );
-              },
-            }),
-          );
-        }
+      if (productDetails?.mfr_code) {
+        const login_userID = userId || kioskLoginUserId || authUserId;
+        dispatch(
+          addProductToWishlistCollection({
+            mfr_code: productDetails?.mfr_code,
+            product_name: productDetails?.name,
+            product_image: productDetails?.image,
+            store: storeData?.store_name || "dothelook",
+            user_id: userId || kioskLoginUserId || authUserId,
+            eventId: storeData?.event_id,
+            successMessage: "Product added to wishlist successfully!",
+            errorMessage:
+              "Failed to add product to wishlist. Please try again.",
+            callback: () => {
+              dispatch(
+                getwishlistUserCollection({
+                  path: `my_wishlist_${login_userID}`,
+                }),
+              );
+            },
+          }),
+        );
       }
     },
     [
@@ -261,6 +252,11 @@ const ProductDetails = ({ params, ...props }) => {
     setShowShareProductDetails((show) => !show);
   }, [openProductAutoLoginQr, dispatch, kioskLogin?.user_id, hasKioskAccess]);
 
+  const buildVtoAutoLoginQr = useCallback(
+    (options) => openProductAutoLoginQr({ ...options, context: "vto" }),
+    [openProductAutoLoginQr],
+  );
+
   useEffect(() => {
     if (!mfr_code) return;
     const storedImage = localStorage.getItem("pdp_image") || "";
@@ -303,8 +299,12 @@ const ProductDetails = ({ params, ...props }) => {
         }),
       );
     },
-    [productDetails],
+    [dispatch, productDetails],
   );
+
+  const handleEditProduct = useCallback(() => {
+    handleOpenProductModal(true);
+  }, [handleOpenProductModal]);
 
   const qrCodeGeneratorURL = useMemo(
     () => collectionQRCodeGenerator(productDetailsPagePath),
@@ -362,12 +362,9 @@ const ProductDetails = ({ params, ...props }) => {
                 storeData={storeData}
                 kioskLogin={kioskLogin}
                 hasKioskAccess={hasKioskAccess}
-                buildProductAutoLoginQr={(options) =>
-                  openProductAutoLoginQr({ ...options, context: "vto" })
-                }
+                buildProductAutoLoginQr={buildVtoAutoLoginQr}
                 setIsPopupShow={setIsPopupShow}
                 setGuestPopupAction={setGuestPopupAction}
-                collection={collection}
                 authUser={authUser}
                 pdploader={pdploader}
               />
@@ -378,14 +375,10 @@ const ProductDetails = ({ params, ...props }) => {
                   productDetails={productDetails}
                   authUser={authUser}
                   isUserLogin={isUserLogin}
-                  onEditProduct={() => handleOpenProductModal(true)}
+                  onEditProduct={handleEditProduct}
                   heartRedProduct={heartRedProduct}
                   showHeartWishlist={showHeartWishlist}
-                  onAddToWishlist={() =>
-                    onAddSelectedProductsToCollection(null, {
-                      isSave: true,
-                    })
-                  }
+                  onAddToWishlist={onAddSelectedProductsToCollection}
                   kioskLogin={kioskLogin}
                   authUserId={authUserId}
                   showShareProductDetails={showShareProductDetails}
@@ -401,7 +394,6 @@ const ProductDetails = ({ params, ...props }) => {
                   brandsDetails={brandsDetails}
                   storeData={storeData}
                   productDetails={productDetails}
-                  collection={collection}
                   authUserId={authUserId}
                   hasKioskAccess={hasKioskAccess}
                   isUserLogin={isUserLogin}
@@ -449,11 +441,9 @@ const ProductDetails = ({ params, ...props }) => {
                 });
               }
             } else {
-              onAddSelectedProductsToCollection(null, {
-                isSave: true,
+              onAddSelectedProductsToCollection({
                 isGuestSubmit: true,
                 userId,
-                email,
               });
             }
           } catch (err) {
