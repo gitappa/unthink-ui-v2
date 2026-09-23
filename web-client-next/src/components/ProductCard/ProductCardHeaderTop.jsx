@@ -20,6 +20,7 @@ const ProductCardHeaderTop = ({
   showCustomProductsMenu,
   allowEdit,
   isMyWishlistCollection,
+  isPriority,
 }) => {
   const { authUserId, isLoggedIn: isUserLogin } = user;
   const { product, size, isCustomProductsPage, storeData, enableSelect } =
@@ -78,7 +79,8 @@ const ProductCardHeaderTop = ({
             ? "rounded-2xl bg-gray-light backdrop-blur-md lg:h-44"
             : "rounded-xl shadow-md lg:h-60"
         }`}
-        loading="lazy"
+      loading={isPriority ? "eager" : "lazy"}
+      fetchPriority={isPriority ? "high" : "auto"}
       />
     </div>
 

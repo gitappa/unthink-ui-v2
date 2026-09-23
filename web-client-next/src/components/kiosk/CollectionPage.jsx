@@ -190,11 +190,12 @@ useEffect(() => {
   setIsPopupShow(true);
 }, []);
 
-  const productCardKiosk = (productdata) => {
+  const productCardKiosk = (productdata,i) => {
     // console.log(productdata);
     return (
       <ProductCard
         product={productdata}
+        isPriority={i < 2}
         bannerImage
         enableKioskGuestPopup
         onGuestPopupOpen={handleGuestPopupOpen}
@@ -425,7 +426,7 @@ useEffect(() => {
             key={getProductKey(item, index)}
             className=" rounded-lg  flex items-center justify-center"
           >
-            {productCardKiosk(item)}
+            {productCardKiosk(item,index)}
           </div>
         ))}
       </div>
