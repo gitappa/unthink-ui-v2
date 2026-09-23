@@ -68,6 +68,7 @@ const ProductCard = ({
   onGuestPopupOpen ,
   onKioskTryonClick,
   source,
+  isPriority,
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -387,6 +388,7 @@ const ProductCard = ({
             allowEdit={allowEdit}
             isMyWishlistCollection={isMyWishlistCollection}
             showStar={showStar}
+            isPriority={isPriority}
           />
           <ProductCardHeaderBottom
             productCard={productCardConfig}
