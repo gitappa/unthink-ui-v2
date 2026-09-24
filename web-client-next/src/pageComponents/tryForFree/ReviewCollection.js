@@ -1283,7 +1283,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 
 			const updateTagsAPIPayload = {
 				collection_id: currentCollection._id,
-				added_tags: currentCollection.tags || [],
+				added_tags: selectedTags || [],
 				latest_main_tags: currentCollection.tags || [],
 				latest_addon_tags: [],
 				tag_filters: updatedKeywordTagMap,
