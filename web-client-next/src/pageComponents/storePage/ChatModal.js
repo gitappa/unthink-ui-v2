@@ -109,11 +109,8 @@ const createDebouncedFunction = (callback, wait) => {
 };
 
 const ChatModal = ({
-  handleMicrophoneClick,
-  streaming,
   submitChatInput,
   // submitImageUrl,
-  onStopRecording,
   disabledOutSideClick = false,
   showSettings,
   openSettingModal,
@@ -259,9 +256,6 @@ const ChatModal = ({
   }, []);
 
   const closeChatModal = () => {
-    if (streaming) {
-      onStopRecording();
-    }
     sessionStorage.removeItem("widgetHeader");
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
