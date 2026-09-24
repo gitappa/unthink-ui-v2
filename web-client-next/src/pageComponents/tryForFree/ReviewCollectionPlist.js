@@ -33,7 +33,6 @@ const ReviewCollectionPlist = ({
 	updateWishlistInProgress,
 	addTomWishlistInProgress,
 	handleConfirmRefetchProducts,
-	handleFetchMoreUpdateTags,
 	showFetchMoreButton,
 	fetchMoreLoading,
 	sponsor_details,
@@ -451,12 +450,7 @@ const ReviewCollectionPlist = ({
 											/>
 										))}
 									</div>
-									<p
-										className="mt-6 text-center bg-brand p-2.5 rounded-2xl w-fit text-white cursor-pointer"
-										onClick={handleFetchMoreUpdateTags}
-									>
-										Fetch More
-									</p>
+									
 									</>
 
 								)}

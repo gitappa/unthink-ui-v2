@@ -1292,7 +1292,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 						? updatedData.description_old
 						: "",
 				store: is_store_instance ? current_store_name : undefined,
-				ipp: 20,
+				ipp: 15,
 				current_page: updateTagsCurrentPage,
 				refetch: false,
 			};
@@ -1741,15 +1741,19 @@ const isNewCollection = router.query.isNewCollection === "true";
 	);
 
 	const handleFiltersOptionalChange = useCallback(
-		(name) => {
+		(name, isChecked) => {
 			collectionDetailsSaveRequired = true;
 
 			const selectedOptionalFilters = filters.optional_filters || [];
+			const filtersWithValues = removeEmptyItems(filters);
+			const hasFilterValue = Object.keys(filtersWithValues).includes(name);
 
 			// check and remove optional filters if already exist or add if not exist
-			const optionalFilters = selectedOptionalFilters.includes(name)
+			const optionalFilters = isChecked || !hasFilterValue
 				? selectedOptionalFilters.filter((s) => s !== name)
-				: [...selectedOptionalFilters, name];
+				: selectedOptionalFilters.includes(name)
+					? selectedOptionalFilters
+					: [...selectedOptionalFilters, name];
 
 			const finalFilters = {
 				...filters,
@@ -2598,6 +2602,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 
 
 			});
+			setUpdateTagsCurrentPage(1);
 		} else {
 			Modal.confirm({
 				title: "Confirm",
@@ -3752,6 +3757,15 @@ const isNewCollection = router.query.isNewCollection === "true";
 	const RefetchButton = () => {
 		return !isFetchProductsInProgress ? (
 			<div className={style.refetchButtonContainer}>
+					{selectedTags?.length > 0  && 
+									<button
+										className={style.refetchButton}
+										onClick={handleFetchMoreUpdateTags}
+									>
+										Fetch More
+									</button>
+									}
+									
 				<Tooltip title='Get a new set of products again'>
 					<button
 						onClick={() => handleRefetchProductsClick({ tags: selectedTags })}
@@ -3759,9 +3773,12 @@ const isNewCollection = router.query.isNewCollection === "true";
 						Get Products Again
 					</button>
 				</Tooltip>
+			
 			</div>
 		) : null;
 	};
+	
+	
 
 	return (
 		<div className={style.pageContainer}>
@@ -4730,7 +4747,6 @@ const isNewCollection = router.query.isNewCollection === "true";
 											updateWishlistInProgress={updateWishlistInProgress}
 											addTomWishlistInProgress={addTomWishlistInProgress}
 											handleConfirmRefetchProducts={handleConfirmRefetchProducts}
-											handleFetchMoreUpdateTags={handleFetchMoreUpdateTags}
 											showFetchMoreButton={
 												isFetchMoreEnabled &&
 												currentCollection.hasMoreProducts !== false
@@ -4756,6 +4772,8 @@ const isNewCollection = router.query.isNewCollection === "true";
 								)}
 								<div className={style.mt25TabletMt4}>
 									<RefetchButton />
+									
+
 								</div>
 							</div>
 						</ReviewCollectionContainerWrapper>
