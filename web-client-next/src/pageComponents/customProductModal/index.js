@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import dynamic from "next/dynamic";
 
 import { closeProductModal } from "./redux/actions";
-import CustomProductModal from "./CustomProductModal";
+
+const CustomProductModal = dynamic(() => import("./CustomProductModal"), {
+	ssr: false,
+});
 
 const CustomProductModalComponent = () => {
 	const [loadComponent, setLoadComponent] = useState(false);

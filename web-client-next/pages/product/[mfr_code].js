@@ -1,22 +1,16 @@
-// custom product details page
-import React from "react";
+import dynamic from "next/dynamic";
 
-import StorePage from "../../src/pageComponents/storePage";
-import { aura_header_theme } from "../../src/constants/config";
+import { PDPPageSkeleton } from "../../src/components/ProductDetails/ProductDetailsSkeleton";
 
-const StorePageContainer = (props) => {
-	return (
-		<StorePage
-			isProductDetailPage
-			{...props}
-			serverData={{
-				config: {
-					aura_header_theme: aura_header_theme,
-				},
-			}}
-		/>
-	);
-};
+const ProductDetails = dynamic(
+	() => import("../../src/components/ProductDetails/ProductDetails"),
+	{
+		ssr: false,
+		loading: () => <PDPPageSkeleton />,
+	}
+);
 
-export default StorePageContainer;
+const ProductDetailsPage = (props) => <ProductDetails {...props} />;
+
+export default ProductDetailsPage;
 

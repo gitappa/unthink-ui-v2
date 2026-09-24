@@ -424,6 +424,7 @@ const ReviewCollectionPlist = ({
 									})()
 								) : (
 									// Show products without groupings (your current logic)
+									<>
 									<div className={styles.productsGrid}>
 										{otherProducts.map((product) => (
 											<ProductCard
@@ -449,6 +450,9 @@ const ReviewCollectionPlist = ({
 											/>
 										))}
 									</div>
+									
+									</>
+
 								)}
 							</div>
 						) : null}

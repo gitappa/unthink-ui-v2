@@ -857,7 +857,8 @@ setNotData(newOptionalFilters)
 	};
 
 	const handleFiltersOptionalChange = (name, isChecked) => {
-		const keys = Object.keys(filters).filter(
+		const filtersWithValues = removeEmptyItems(filters);
+		const keys = Object.keys(filtersWithValues).filter(
 			(key) => key !== "optional_filters" && filters[key] !== undefined
 		);
 		// console.log('keys',name);

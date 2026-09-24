@@ -4,10 +4,10 @@ import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 import { isEmpty } from "../../helper/utils";
-import  VirtualTryOnModal  from "../common/VirtualTryOnModal";
-
 import "swiper/css";
 import "swiper/css/free-mode";
+import dynamic from "next/dynamic";
+const   VirtualTryOnModal  = dynamic( () => import ("../common/VirtualTryOnModal"),{ssr:false})
 
 const ProductGallery = ({
   productDetails,
@@ -65,6 +65,8 @@ const ProductGallery = ({
               className="w-full h-full object-contain rounded-2xl lg:max-h-590 max-w-640 max-h-[350px] lg:min-h-[590px]"
               src={additionalimg || productDetails?.image || fetchProductImage}
               alt="Product Image"
+              loading="eager"
+              fetchPriority="high"
             />
             {/* {discountPer ? (
               <span className="text-[12px] font-bold text-white absolute top-[18px] left-[15px] bg-red-500 px-[8px] py-[3px] rounded-[25px]">
