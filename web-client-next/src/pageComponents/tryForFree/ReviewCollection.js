@@ -271,6 +271,7 @@ const ReviewCollection = (props) => {
 		useState(false);
 	const [isFetchProductsInProgress, setFetchProductsInProgress] =
 		useState(false);
+	const [updateTagsCurrentPage, setUpdateTagsCurrentPage] = useState(1);
 	const [isAddAmazonProductsInProgress, setIsAddAmazonProductsInProgress] =
 		useState(false);
 	const [isVideoDataExtractionStarted, setIsVideoDataExtractionStarted] =
@@ -1023,6 +1024,8 @@ const isNewCollection = router.query.isNewCollection === "true";
 		filters,
 		refetchFlag,
 		useUpdateTag = !isGeneratedByMyProducts,
+		ipp,
+		current_page,
 	} = {}) => {
 		// fetch products based on the tags and dave it with add to collection API
 		try {
@@ -1055,6 +1058,8 @@ const isNewCollection = router.query.isNewCollection === "true";
 							: "",
 					store: is_store_instance ? current_store_name : undefined,
 					refetch: refetchFlag || undefined,
+					ipp,
+					current_page
 				};
 
 				updateTagsAPIPayload.tag_filters = isEmpty(selectedTags)
@@ -1265,6 +1270,47 @@ const isNewCollection = router.query.isNewCollection === "true";
 					dispatch(applyWishlistProductsFilterReset()); // because we are resetting filter with update collection API // resetting the filtered data as well if available
 
 				// handleClearFiltersClick(false); // clearing the filters // fixed from BE now
+			}
+		} catch (error) {
+		} finally {
+			setFetchProductsInProgress(false);
+		}
+	};
+
+	const handleFetchMoreUpdateTags = async () => {
+		try {
+			setFetchProductsInProgress(true);
+
+			const updateTagsAPIPayload = {
+				collection_id: currentCollection._id,
+				added_tags: currentCollection.tags || [],
+				latest_main_tags: currentCollection.tags || [],
+				latest_addon_tags: [],
+				tag_filters: updatedKeywordTagMap,
+				user_query:
+					currentCollection.generated_by === COLLECTION_GENERATED_BY_DESC_BASED
+						? updatedData.description_old
+						: "",
+				store: is_store_instance ? current_store_name : undefined,
+				ipp: 20,
+				current_page: updateTagsCurrentPage,
+				refetch: false,
+			};
+
+			let updateTagsResponse = await collectionPageAPIs.updateTagsAPICall(
+				updateTagsAPIPayload
+			);
+
+			if (
+				updateTagsResponse.data &&
+				updateTagsResponse.data.status_code === 200 &&
+				updateTagsResponse.data.data &&
+				updateTagsResponse.data.data._id
+			) {
+				dispatch(
+					replaceAndUpdateUserCollectionData(updateTagsResponse.data.data)
+				);
+				setUpdateTagsCurrentPage((currentPage) => currentPage + 1);
 			}
 		} catch (error) {
 		} finally {
@@ -2547,6 +2593,10 @@ const isNewCollection = router.query.isNewCollection === "true";
 				filters, // selected tag filter
 				refetchFlag: true,
 				useUpdateTag: true,
+				ipp:15,
+				current_page:0
+
+
 			});
 		} else {
 			Modal.confirm({
@@ -4680,6 +4730,7 @@ const isNewCollection = router.query.isNewCollection === "true";
 											updateWishlistInProgress={updateWishlistInProgress}
 											addTomWishlistInProgress={addTomWishlistInProgress}
 											handleConfirmRefetchProducts={handleConfirmRefetchProducts}
+											handleFetchMoreUpdateTags={handleFetchMoreUpdateTags}
 											showFetchMoreButton={
 												isFetchMoreEnabled &&
 												currentCollection.hasMoreProducts !== false

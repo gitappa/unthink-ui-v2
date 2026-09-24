@@ -33,6 +33,7 @@ const ReviewCollectionPlist = ({
 	updateWishlistInProgress,
 	addTomWishlistInProgress,
 	handleConfirmRefetchProducts,
+	handleFetchMoreUpdateTags,
 	showFetchMoreButton,
 	fetchMoreLoading,
 	sponsor_details,
@@ -424,6 +425,7 @@ const ReviewCollectionPlist = ({
 									})()
 								) : (
 									// Show products without groupings (your current logic)
+									<>
 									<div className={styles.productsGrid}>
 										{otherProducts.map((product) => (
 											<ProductCard
@@ -449,6 +451,14 @@ const ReviewCollectionPlist = ({
 											/>
 										))}
 									</div>
+									<p
+										className="mt-6 text-center bg-brand p-2.5 rounded-2xl w-fit text-white cursor-pointer"
+										onClick={handleFetchMoreUpdateTags}
+									>
+										Fetch More
+									</p>
+									</>
+
 								)}
 							</div>
 						) : null}
