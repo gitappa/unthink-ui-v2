@@ -1279,21 +1279,7 @@ const ChatModal = ({
                 className={isSearchPopupOpen ? styles["chatmodal-search-popup-content"] : ""}
                 onClick={(e) => isSearchPopupOpen && e.stopPropagation()}
               >
-                {/* {isSearchPopupOpen && ( */}
-                  {/* <CloseOutlined
-                    className={styles["chatmodal-search-popup-close"]}
-                    onClick={() => setIsSearchPopupOpen(false)}
-                  /> */}
-                {/* )} */}
-                  {/* <button
-                          className="group px-3 mt-7 text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
-                          onClick={closeChatModal}
-                        >
-                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
-                            <ArrowLeftOutlined />
-                          </span>
-                          <span className="capitalize">Go back</span>
-                        </button> */}
+                
                 <div
                   className={`${styles["chatmodal-content-wrapper"]} ${isSearchOptionManuallySelected ? styles["chatmodal-content-wrapper-collapsed"] : styles["chatmodal-content-wrapper-border"]
                     } `}
@@ -2212,119 +2198,7 @@ const ChatModal = ({
           <Recommendations trackCollectionData={trackCollectionData} />
         )}
 
-        {/* {shouldMoveInputBelowResults ? (
-						<div className={styles['chatmodal-bottom-input-wrapper']}>
-							<div className={styles['chatmodal-figma-input-section']}>
-								<div
-									className={`${styles['chatmodal-figma-input-card']} ${styles['chatmodal-figma-input-card-bottom']} ${chatImageUrl
-										? styles['chatmodal-figma-input-card-with-preview']
-										: ""
-										}`}>
-									<input
-										id={`chat_search_input_bottom_${chatTypeKey}`}
-										type='text'
-										ref={inputRef}
-										placeholder={
-											typeof activeSearchOption?.text_placeholder === "string"
-												? activeSearchOption?.text_placeholder
-												: activeSearchOption?.text_placeholder?.[0] ||
-													"Describe your product idea"
-										}
-										name='chat_message'
-										value={localChatMessage}
-										onChange={handleInputChange}
-										onKeyDown={handlePromptKeyDown}
-										className={styles['chatmodal-figma-input']}
-									/>
-									<div className={styles['chatmodal-figma-input-divider']} />
-									<div className={styles['chatmodal-figma-input-actions']}>
-										<div className={styles['chatmodal-figma-input-actions-left']}>
-											<div
-												className={styles['chatmodal-upload-action-wrapper']}>
-												<button
-													type='button'
-													className={`${styles['chatmodal-figma-action-button']} ${styles['chatmodal-figma-image-action-button']} ${isFigmaUploadPanelOpen || chatImageUrl
-														? styles['chatmodal-figma-image-action-button-active']
-														: ""
-														}`}
-													title='Upload image'
-													onClick={handleFigmaUploadButtonClick}>
-													<img src={upload_icon?.src} alt='Upload image' />
-													{(isFigmaUploadPanelOpen || chatImageUrl) && <span>Image</span>}
-												</button>
-											</div>
-											<button
-												type='button'
-												className={styles['chatmodal-figma-action-button']}
-												title='Open assistant settings'
-												onClick={handlePromptUtilityClick}>
-												<img src={page_info?.src} alt='Assistant settings' />
-											</button>
-											{chatImageUrl && !isShowSubmittedChatPreview ? (
-												<div className={styles['chatmodal-figma-upload-pill']}>
-													Image attached
-												</div>
-											) : null}
-										</div>
-										<button
-											type='button'
-											className={`${styles['chatmodal-figma-submit']} ${(isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl)
-												? styles['chatmodal-figma-submit-disabled']
-												: ""
-												}`}
-											onClick={handleSubmitChatInput}
-											disabled={isShopALookOptionActive ? !chatImageUrl : !localChatMessage && !chatImageUrl}>
-											<ArrowUpOutlined />
-										</button>
-									</div>
-								</div>
-
-								{isShowFollowUpSearch || isShowTryAgain ? (
-									<div
-										className={`${styles['chatmodal-followup-controls-mt1']} ${styles['chatmodal-followup-controls-container']}`}>
-										{isShowFollowUpSearch && isSidExpired ? (
-											<div className={styles['chatmodal-followup-checkbox-container']}>
-												<input
-													type='checkbox'
-													id='followUpQuery_bottom'
-													className={styles['chatmodal-followup-checkbox']}
-													checked={isFollowUpQuery}
-													disabled={showChatLoader}
-													onChange={handleFollowUpSearch}
-												/>
-												<label
-													htmlFor='followUpQuery_bottom'
-													className={`${showChatLoader
-														? styles['chatmodal-followup-label-disabled']
-														: styles['chatmodal-followup-label']
-														}`}>
-													Follow-Up search
-												</label>
-											</div>
-										) : null}
-										{isShowFollowUpSearch &&
-											isShowTryAgain &&
-											isSidExpired ? (
-											<div className={styles['chatmodal-divider-vertical']}></div>
-										) : null}
-										{isShowTryAgain ? (
-											<button
-												className={`${styles['chatmodal-try-again-button']} ${showChatLoader
-													? styles['chatmodal-try-again-button-disabled']
-													: ""
-													}`}
-												title='Regenerate the products with AI.'
-												onClick={handleTryAgainClick}
-												disabled={showChatLoader}>
-												<ReloadOutlined className={styles['chatmodal-reload-icon']} />
-												Try again
-											</button>
-										) : null}
-									</div>
-								) : null}
-							</div>
-						</div>
-					) : null} */}
+       
       </div>
     </div>
   );
