@@ -29,8 +29,6 @@ const AuraInputBox = ({
   localChatMessage = "",
   handleInputChange = () => { },
   handlePromptKeyDown = () => { },
-  handlePromptUtilityClick = () => { },
-  page_info = "",
   isShopALookOptionActive = false,
   handleSubmitChatInput = () => { },
   setIsHistoryOpen,
@@ -210,20 +208,6 @@ const AuraInputBox = ({
                     </Upload>
                   </div>
 
-                )}
-                {!(isShopByThemeOptionActive || isCompleteTheLookOptionActive) && (
-                  <button
-                    type="button"
-                    className="bg-transparent border-none p-1 flex items-center justify-center cursor-pointer hover:opacity-80"
-                    title="Open assistant settings"
-                    onClick={handlePromptUtilityClick}
-                  >
-                    <img
-                      src={page_info?.src || page_info}
-                      alt="Assistant settings"
-                      className=" object-contain h-8 w-8 "
-                    />
-                  </button>
                 )}
               </div>
 

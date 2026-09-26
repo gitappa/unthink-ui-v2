@@ -198,7 +198,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
 
   const chatModalLayer = (
     <>
-      <div className=" inset-0 z-40 h-full overflow-auto transition-all duration-300 ease-in-out">
+      <div className="inset-0 z-30 ">
         <ChatModal
           submitChatInput={submitChatInput}
           disabledOutSideClick={disabledOutSideClick}
@@ -222,11 +222,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
       <AuraChatSettingModal isOpen={settingModalOpen} onClose={closeSettingModal} mode={auraChatSettingMode} />
     </>
   );
-// console.log('isNotHomePage',isNotHomePage);
-  // console.log(portalTarget );
-  // console.log( shouldShowChatModal);
-  
-
+ 
   return (
     <>
       {!renderInline && storeData?.is_searchOptions_enabled ? (

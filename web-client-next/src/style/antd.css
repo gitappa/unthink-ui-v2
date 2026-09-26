@@ -1,0 +1,40 @@
+
+.aura-figma-upload-popover .ant-upload {
+  padding: 0 !important;
+}
+
+.aura-figma-upload-popover .aura-image-upload-dragger .ant-upload.ant-upload-drag {
+  border: 1.5px dashed rgba(124, 116, 236, 0.28) !important;
+  border-radius: 1rem !important;
+  background:
+    linear-gradient(
+      135deg,
+      var(--color-accentsub),
+      var(--color-brandsub)
+    ) !important;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.aura-figma-upload-popover .aura-image-upload-dragger .ant-upload.ant-upload-drag:hover {
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 10px 24px rgba(124, 116, 236, 0.1);
+}
+
+.aura-figma-upload-popover .aura-image-upload-dragger .ant-upload-btn {
+  padding: 1rem !important;
+}
+
+.aura-figma-upload-popover .aura-take-photo-button,
+.aura-figma-upload-popover .aura-take-photo-button .anticon {
+  color: var(--color-brand);
+}
+
+.aura-figma-upload-popover .aura-take-photo-button:hover,
+.aura-figma-upload-popover .aura-take-photo-button:hover .anticon {
+  color: var(--color-secondary);
+}
+
+

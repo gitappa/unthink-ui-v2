@@ -40,7 +40,6 @@ const ChatProducts = ({
   isFigmaUploadPanelOpen,
   handleFigmaUploadButtonClick,
   isShowSubmittedChatPreview,
-  handlePromptUtilityClick,
   isShopALookOptionActive,
   handleSubmitChatInput,
   isShowFollowUpSearch,
@@ -51,7 +50,6 @@ const ChatProducts = ({
   showChatLoader,
   handleTryAgainClick,
   upload_icon,
-  page_info,
   uploadImageProps,
   chatImagePreviewUrl,
   isUploadingImage,
@@ -1149,8 +1147,6 @@ const ChatProducts = ({
                                 localChatMessage={localChatMessage}
                                 handleInputChange={handleInputChange}
                                 handlePromptKeyDown={handlePromptKeyDown}
-                                handlePromptUtilityClick={handlePromptUtilityClick}
-                                page_info={page_info}
                                 isShopALookOptionActive={isShopALookOptionActive}
                                 handleSubmitChatInput={handleSubmitChatInput}
                                 setIsHistoryOpen={setIsHistoryOpen}
@@ -1378,8 +1374,6 @@ const ChatProducts = ({
                         localChatMessage={localChatMessage}
                         handleInputChange={handleInputChange}
                         handlePromptKeyDown={handlePromptKeyDown}
-                        handlePromptUtilityClick={handlePromptUtilityClick}
-                        page_info={page_info}
                         isShopALookOptionActive={isShopALookOptionActive}
                         handleSubmitChatInput={() => {
                           handleSubmitChatInput();

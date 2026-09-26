@@ -6,7 +6,14 @@
 
 @theme {
   --color-brand: #7c74ec;
+  --color-brandsub: #f2f1ff;
   --color-secondary: #9690f0;
+  /* added by me #fec3ff  */
+  --color-accent: #e8a2f5;
+  --color-accentsub: #fdf4ff;
+  --color-highlight :#60A5FA;
+  --color-alter: #1A1A1A;
+--color-accent-light: #ccfbf1;
   --color-tertiary: #e9e5fd;
   --color-support: #f2f2f2;
   --color-gray-light-1: #f5f3fa;
@@ -32,7 +39,10 @@
 
 :root {
   --color-brand: #7c74ec;
+  --color-brandsub: #f2f1ff;
   --color-secondary: #9690f0;
+  --color-accent: #e8a2f5;
+  --color-accentsub: #fdf4ff;
   --color-tertiary: #e9e5fd;
   --color-support: #f2f2f2;
   --color-gray-light-1: #f5f3fa;
@@ -58,8 +68,39 @@
   border-color: var(--color-brand);
 }
 
+.gradient {
+  @apply bg-linear-to-tl from-accent to-brand;
+}
+.text-gradient {
+  @apply bg-linear-to-bl from-accent to-brand bg-clip-text text-transparent;
+}
+.border-gradient {
+  @apply border-2 border-solid border-transparent bg-white;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(to left, var(--color-accent), var(--color-brand)) border-box;
+}
+.mild-gradient-button {
+  @apply border-2 border-solid border-transparent;
+  background:
+    linear-gradient(
+      135deg,
+      var(--color-accentsub),
+      var(--color-brandsub)
+    ) padding-box,
+    linear-gradient(to left, var(--color-accent), var(--color-brand)) border-box;
+  color: var(--color-brand);
+}
 
-
+.gradient-bar {
+  /* Uses standard Tailwind colors to match the image */
+  @apply w-12 h-1 rounded-full bg-gradient-to-r from-highlight via-brand to-accent shadow-sm;
+}
+.option-card:hover {
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(to left, var(--color-accent), var(--color-brand)) border-box;
+}
 .bg-lightgray-102 {
   background-color: var(--color-gray-light-2);
 }
@@ -135,17 +176,6 @@
     opacity: 1;
   }
 
-  .chatmodal-figma-change-btn {
-    @apply px-3 py-1.5 border flex justify-center items-center gap-2 w-fit border-[#d4d0eb] bg-transparent rounded-xl !text-slate-500 !text-sm font-medium cursor-pointer transition-all duration-200 mb-2.5;
-  }
-
-  .chatmodal-figma-change-btn:hover {
-    @apply border-[#b9b3db] bg-[#fdfcff] !text-slate-600;
-  }
-
-  .chatmodal-figma-change-btn:active {
-    @apply bg-[#f5f0ff];
-  }
 }
 /* kiosk designs  */
 @layer components {
@@ -190,7 +220,7 @@ button {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px var(--color-support) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
   -webkit-text-fill-color: #000 !important;
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -590,12 +620,8 @@ p {
 .sort_dropdown .ant-select-selector {
   border: none !important;
 }
-.ChatModal_chatmodal-figma-upload-popover__6x2OU .ant-upload  {
-  padding: 0px !important;
-}
- 
-
 button.product-out-of-stock-button,
 button.product-out-of-stock-button * {
   cursor: not-allowed ;
 }
+
