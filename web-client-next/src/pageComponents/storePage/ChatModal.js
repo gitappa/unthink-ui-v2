@@ -94,7 +94,6 @@ const ChatModal = ({
   setShowSubmitImageTooltip,
   isBTNormalUserLoggedIn,
   isAuraChatPage,
-  
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -189,14 +188,15 @@ const ChatModal = ({
     setSelectActions((prev) => {
       if (!actions) return null;
       if (!prev) return actions;
-      
-      const isSame = 
+
+      const isSame =
         prev.enableSelectProduct === actions.enableSelectProduct &&
         prev.selectedProducts?.length === actions.selectedProducts?.length &&
-        prev.chatProductsDataToShow?.length === actions.chatProductsDataToShow?.length &&
+        prev.chatProductsDataToShow?.length ===
+          actions.chatProductsDataToShow?.length &&
         prev.isTagProductSelected === actions.isTagProductSelected &&
         prev.isTagProductsAllSelected === actions.isTagProductsAllSelected;
-        
+
       if (isSame) {
         Object.assign(prev, actions);
         return prev;
@@ -204,7 +204,6 @@ const ChatModal = ({
       return actions;
     });
   }, []);
-
 
   const closeChatModal = () => {
     sessionStorage.removeItem("widgetHeader");
@@ -216,8 +215,7 @@ const ChatModal = ({
     dispatch(setActiveSearchOption({}));
     dispatch(setShowChatModal(false));
     showSubmitImageTooltip && setShowSubmitImageTooltip(false);
-    window.history.back()
-
+    window.history.back();
   };
 
   const handleGoBack = () => {
@@ -228,8 +226,8 @@ const ChatModal = ({
     resetChatImageState();
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
-    setIsFollowUpQuery(false)
-    sessionStorage.removeItem('widgetHeaderRequestHistory')
+    setIsFollowUpQuery(false);
+    sessionStorage.removeItem("widgetHeaderRequestHistory");
   };
 
   const handleHomeClick = () => {
@@ -245,7 +243,7 @@ const ChatModal = ({
     setLocalChatMessage("");
     setSubmittedPromptPreview({ message: "", imageUrl: "" });
     setIsFollowUpQuery(false);
-    sessionStorage.removeItem('widgetHeaderRequestHistory');
+    sessionStorage.removeItem("widgetHeaderRequestHistory");
   };
 
   const {
@@ -382,18 +380,20 @@ const ChatModal = ({
       isFixed={isShowShopLookSplitLayout}
       shouldCenter={shouldCenterModalContent}
     >
-      
       {!isAuraChatPage ? (
         <>
           {isShowAuraResponse && isProductSearchOptionActive && !isMobile ? (
             <div className="sticky top-0 left-0 right-0 z-[1000] bg-white border-b border-tertiary px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 shadow-xs w-full">
-              
               <div className="flex items-center gap-2 md:gap-3 shrink-0">
                 <ArrowLeftOutlined
                   className="text-lg md:text-xl text-gray-900 cursor-pointer hover:opacity-80 transition-opacity pr-1 md:pr-2"
                   onClick={handleGoBack}
                 />
-                <span className={"m-0 inline-block text-lg md:text-[1.4rem] leading-tight font-semibold tracking-[0.02em] uppercase text-neutral-900"}>
+                <span
+                  className={
+                    "m-0 inline-block text-lg md:text-[1.4rem] leading-tight font-semibold tracking-[0.02em] uppercase text-neutral-900"
+                  }
+                >
                   {activeSearchOption?.title?.toUpperCase() || "SEARCH"}
                 </span>
               </div>
@@ -408,7 +408,7 @@ const ChatModal = ({
                       typeof activeSearchOption?.text_placeholder === "string"
                         ? activeSearchOption.text_placeholder
                         : activeSearchOption?.text_placeholder?.[0] ||
-                        "Describe your product idea"
+                          "Describe your product idea"
                     }
                     name="chat_message"
                     value={localChatMessage}
@@ -438,7 +438,6 @@ const ChatModal = ({
                 </div>
               </div>
 
-              
               <div className="shrink-0 flex items-center">
                 <CloseOutlined
                   id="chat_modal_close_icon"
@@ -449,142 +448,186 @@ const ChatModal = ({
             </div>
           ) : (
             <>
-              
-              {!(isShowShopLookSplitLayout && layoutMode !== "left" && !isMobile) && (
-                <div className={`${"w-full flex flex-col gap-2 mx-auto px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"} ${isMobile ? "flex max-lg:hidden" : ""}`}>
-                   <button
-                          className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
-                          onClick={closeChatModal}
-                        >
-                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
-                            <ArrowLeftOutlined />
-                          </span>
-                          <span className="capitalize">Go back</span>
-                        </button>
-                  
+              {!(
+                isShowShopLookSplitLayout &&
+                layoutMode !== "left" &&
+                !isMobile
+              ) && (
+                <div
+                  className={`${"w-full flex flex-col gap-2 mx-auto px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"} ${isMobile ? "flex max-lg:hidden" : ""}`}
+                >
+                  <button
+                    className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
+                    onClick={closeChatModal}
+                  >
+                    <span className=" leading-none flex transition group-hover:-translate-x-0.5">
+                      <ArrowLeftOutlined />
+                    </span>
+                    <span className="capitalize">Go back</span>
+                  </button>
                 </div>
               )}
 
-              
-              {isMobile && isActiveSearchOptionAvailable && isShowAuraResponse && (
-                <div className={"sticky top-0 left-0 right-0 z-[1000] flex w-full max-w-[100vw] flex-col overflow-x-hidden bg-tertiary/40 shadow-[0_2px_10px_rgba(114,104,236,0.08)]"}>
-                  <div className={"flex items-center justify-between border-b border-tertiary px-2.5 py-3"}>
-                    {selectActions && selectActions.enableSelectProduct ? (
-                      <div className="flex items-center justify-between w-full bg-tertiary/60 px-3 py-1.5 rounded-lg transition-all duration-300">
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            indeterminate={
-                              selectActions.isTagProductSelected &&
-                              !selectActions.isTagProductsAllSelected
-                            }
-                            onChange={(e) => {
-                              selectActions.onSelectAllChange();
-                            }}
-                            checked={selectActions.isTagProductsAllSelected}
-                          />
-                          <span className="text-xs font-semibold text-slate-700">
-                            {selectActions.selectedProducts.length} selected
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {selectActions.is_store_instance && (
+              {isMobile &&
+                isActiveSearchOptionAvailable &&
+                isShowAuraResponse && (
+                  <div
+                    className={
+                      "sticky top-0 left-0 right-0 z-[1000] flex w-full max-w-[100vw] flex-col overflow-x-hidden bg-tertiary/40 shadow-[0_2px_10px_rgba(114,104,236,0.08)]"
+                    }
+                  >
+                    <div
+                      className={
+                        "flex items-center justify-between border-b border-tertiary px-2.5 py-3"
+                      }
+                    >
+                      {selectActions && selectActions.enableSelectProduct ? (
+                        <div className="flex items-center justify-between w-full bg-tertiary/60 px-3 py-1.5 rounded-lg transition-all duration-300">
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              indeterminate={
+                                selectActions.isTagProductSelected &&
+                                !selectActions.isTagProductsAllSelected
+                              }
+                              onChange={(e) => {
+                                selectActions.onSelectAllChange();
+                              }}
+                              checked={selectActions.isTagProductsAllSelected}
+                            />
+                            <span className="text-xs font-semibold text-slate-700">
+                              {selectActions.selectedProducts.length} selected
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {selectActions.is_store_instance && (
+                              <button
+                                type="button"
+                                className="rounded-full px-2.5 py-1 text-white font-bold bg-secondary text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                                onClick={(e) =>
+                                  selectActions.onAddSelectedProductsToCollection(
+                                    e,
+                                    { isSave: true },
+                                  )
+                                }
+                                disabled={
+                                  selectActions.selectedProducts.length === 0
+                                }
+                                title="Save to collection"
+                              >
+                                <FolderAddOutlined
+                                  className="text-xs"
+                                  style={{
+                                    stroke: "currentColor",
+                                    strokeWidth: 1.5,
+                                  }}
+                                />
+                                <span>Save</span>
+                              </button>
+                            )}
                             <button
                               type="button"
                               className="rounded-full px-2.5 py-1 text-white font-bold bg-secondary text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
-                              onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isSave: true })}
-                              disabled={selectActions.selectedProducts.length === 0}
-                              title="Save to collection"
+                              onClick={(e) =>
+                                selectActions.onAddSelectedProductsToCollection(
+                                  e,
+                                  { isShare: true },
+                                )
+                              }
+                              disabled={
+                                selectActions.selectedProducts.length === 0
+                              }
+                              title="Share collection"
                             >
-                              <FolderAddOutlined className="text-xs" style={{ stroke: "currentColor", strokeWidth: 1.5 }} />
-                              <span>Save</span>
+                              <ShareAltOutlined
+                                className="text-xs"
+                                style={{
+                                  stroke: "currentColor",
+                                  strokeWidth: 1.5,
+                                }}
+                              />
+                              <span>Share</span>
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            className="rounded-full px-2.5 py-1 text-white font-bold bg-secondary text-xs flex items-center gap-1 shadow-sm border-none cursor-pointer hover:opacity-90 transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
-                            onClick={(e) => selectActions.onAddSelectedProductsToCollection(e, { isShare: true })}
-                            disabled={selectActions.selectedProducts.length === 0}
-                            title="Share collection"
-                          >
-                            <ShareAltOutlined className="text-xs" style={{ stroke: "currentColor", strokeWidth: 1.5 }} />
-                            <span>Share</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="bg-transparent border-none p-0 flex items-center justify-center cursor-pointer text-slate-700 hover:opacity-80 transition-opacity ml-1"
-                            onClick={() => selectActions.handleResetSelectProduct()}
-                            title="Cancel selection"
-                          >
-                            <CloseOutlined className="text-[16px]" />
-                          </button>
+                            <button
+                              type="button"
+                              className="bg-transparent border-none p-0 flex items-center justify-center cursor-pointer text-slate-700 hover:opacity-80 transition-opacity ml-1"
+                              onClick={() =>
+                                selectActions.handleResetSelectProduct()
+                              }
+                              title="Cancel selection"
+                            >
+                              <CloseOutlined className="text-[16px]" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <>
-                        <div className={"flex items-center gap-3"}>
-                          
-                          <button
-                            type="button"
-                            className="flex items-center justify-center w-8 h-8 cursor-pointer bg-transparent border-none p-0 shrink-0"
-                            onClick={() => openMobileSidebarRef.current && openMobileSidebarRef.current()}
-                            title="Menu"
-                            aria-label="Open sidebar menu"
-                          >
-                            <MenuOutlined className="text-gray-900 text-[18px]" />
-                          </button>
-                          { isMobileOnly ? ( 
-                            <span className="text-base  font-semibold text-gray-900 select-none ml-3 truncate max-w-[180px] md:max-w-none">
-                              {activeSearchOption?.title}
-                            </span>
-                           ) : ( 
-                            <div className="flex items-center    gap-1.5 ml-2 text-sm font-medium text-slate-600 select-none">
-                              <span
-                                onClick={handleHomeClick}
-                                className="hover:underline hover:text-secondary cursor-pointer transition-colors"
-                              >
-                                Home
-                              </span>
-                              <span className="text-gray-300">/</span>
-                              <span
-                                onClick={handleBackToSelectedOption}
-                                className="hover:underline hover:text-secondary cursor-pointer transition-colors"
-                              >
-                                Aura Search
-                              </span>
-                              <span className="text-gray-300">/</span>
-                              <span className="text-neutral-900 font-semibold truncate max-w-[110px] md:max-w-none">
+                      ) : (
+                        <>
+                          <div className={"flex items-center gap-3"}>
+                            <button
+                              type="button"
+                              className="flex items-center justify-center w-8 h-8 cursor-pointer bg-transparent border-none p-0 shrink-0"
+                              onClick={() =>
+                                openMobileSidebarRef.current &&
+                                openMobileSidebarRef.current()
+                              }
+                              title="Menu"
+                              aria-label="Open sidebar menu"
+                            >
+                              <MenuOutlined className="text-gray-900 text-[18px]" />
+                            </button>
+                            {isMobileOnly ? (
+                              <span className="text-base  font-semibold text-gray-900 select-none ml-3 truncate max-w-[180px] md:max-w-none">
                                 {activeSearchOption?.title}
                               </span>
-                            </div>
-                           )} 
-                        </div>
-                        <div className="flex items-center gap-2">
-
-                          <CloseOutlined
-                            onClick={closeChatModal}
-                            className={"text-lg text-slate-700 cursor-pointer"}
-                          />
-                        </div>
-                      </>
-                    )}
+                            ) : (
+                              <div className="flex items-center    gap-1.5 ml-2 text-sm font-medium text-slate-600 select-none">
+                                <span
+                                  onClick={handleHomeClick}
+                                  className="hover:underline hover:text-secondary cursor-pointer transition-colors"
+                                >
+                                  Home
+                                </span>
+                                <span className="text-gray-300">/</span>
+                                <span
+                                  onClick={handleBackToSelectedOption}
+                                  className="hover:underline hover:text-secondary cursor-pointer transition-colors"
+                                >
+                                  Aura Search
+                                </span>
+                                <span className="text-gray-300">/</span>
+                                <span className="text-neutral-900 font-semibold truncate max-w-[110px] md:max-w-none">
+                                  {activeSearchOption?.title}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CloseOutlined
+                              onClick={closeChatModal}
+                              className={
+                                "text-lg text-slate-700 cursor-pointer"
+                              }
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              
-              {isMobile && (!isActiveSearchOptionAvailable || !isShowAuraResponse) && (
-                <div className='px-3'>
-                 <button
-                          className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
-                          onClick={handleGoBack}
-                        >
-                          <span className=" leading-none flex transition group-hover:-translate-x-0.5">
-                            <ArrowLeftOutlined />
-                          </span>
-                          <span className="capitalize">Go back</span>
-                        </button>
-                </div>
-              )}
+              {isMobile &&
+                (!isActiveSearchOptionAvailable || !isShowAuraResponse) && (
+                  <div className="px-3">
+                    <button
+                      className="group text-gray-500 flex w-fit items-center gap-2 rounded-full   py-2 button-kiosk font-medium   transition "
+                      onClick={handleGoBack}
+                    >
+                      <span className=" leading-none flex transition group-hover:-translate-x-0.5">
+                        <ArrowLeftOutlined />
+                      </span>
+                      <span className="capitalize">Go back</span>
+                    </button>
+                  </div>
+                )}
             </>
           )}
         </>
@@ -592,99 +635,119 @@ const ChatModal = ({
 
       {!is_kiosk || isActiveSearchOptionAvailable ? (
         <>
-          {(isProductSearchOptionActive ? (isSearchPopupOpen || !isShowAuraResponse) : !isShowShopLookSplitLayout) && (
+          {(isProductSearchOptionActive
+            ? isSearchPopupOpen || !isShowAuraResponse
+            : !isShowShopLookSplitLayout) && (
             <AuraSearchPopup
               isOpen={isSearchPopupOpen}
               onClose={() => setIsSearchPopupOpen(false)}
             >
-                
-                <div
-                  className={`${isSearchOptionManuallySelected ? "pt-0" : "border-b-0"
-                    } `}
-                >
-                  <div className={"flex h-full w-full flex-col items-center"}>
-                    {!isSearchOptionManuallySelected &&
-                      <div className={"w-full  px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"}>
-                        <div className={"flex w-full items-center gap-6 max-lg:gap-4"}>
-                          <img
-                            src={getImageSrc(star_ai_icon)}
-                            width={200}
-                            height={200}
-                            className={"h-auto w-[226px] shrink-0 max-lg:w-[120px] max-[480px]:w-20"}
-                            alt="AURA"
-                          />
-                          <div className={"flex flex-col gap-1"}>
-                            <h1 className={"m-0 text-[38px] max-lg:text-2xl max-[480px]:text-[32px] font-bold leading-[1.1] tracking-normal"}>
-                              <span
-                                className={"text-gradient"}
-                              >
-                                I&apos;m AURA,
-                              </span>
-                              <br />
-                              <span
-                                className={"text-alter font-medium"}
-                              >
-                                How can I help you?
-                              </span>
-                            </h1>
-                          </div>
-                        </div>
-                          
-          <p className={"  text-left text-xl md:text-2xl font-semibold leading-tight text-alter "}>
-            Choose one to get started
-          </p>
-      
-                      </div>
-                    }
-
+              <div
+                className={`${
+                  isSearchOptionManuallySelected ? "pt-0" : "border-b-0"
+                } `}
+              >
+                <div className={"flex h-full w-full flex-col items-center"}>
+                  {!isSearchOptionManuallySelected && (
                     <div
                       className={
-                        "w-full flex flex-col gap-2 mx-auto px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"
+                        "w-full  px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"
                       }
                     >
-                      <AuraSearchOptions
-                        activeSearchOption={activeSearchOption}
-                        cardCollageVariants={cardCollageVariants}
-                        displaySearchOptions={displaySearchOptions}
-                        fallbackImages={[
-                          auraCardOne,
-                          auraCardTwo,
-                          auraCardThree,
-                        ]}
-                        handleSetSearchOption={handleSetSearchOption}
-                        handleTryExampleClick={handleTryExampleClick}
-                        isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
-                        isSearchOptionManuallySelected={
-                          isSearchOptionManuallySelected
+                      <div
+                        className={
+                          "flex w-full items-center gap-6 max-lg:gap-4"
                         }
-                        isSearchOptionsVisible={isSearchOptionsVisible}
-                        searchOptionPreviewImages={searchOptionPreviewImages}
-                        setIsSearchOptionsVisible={setIsSearchOptionsVisible}
-                        shouldHighlightActiveSearchOption={
-                          shouldHighlightActiveSearchOption
-                        }
-                      />
-
-                      {isShowFollowUpQuery ? (
-                        <div className={"flex w-full items-center justify-center rounded-2xl py-2 pr-[1.375rem] md:rounded-full lg:pr-[1.625rem]"}>
-                          <HistoryOutlined
-                            className={"flex items-center justify-center text-sm lg:text-base text-black"}
-                          />
-                          <div className={"flex w-full items-center pl-2 text-sm lg:text-base leading-none text-black"}>
-                            {followUpQuery}
-                          </div>
+                      >
+                        <img
+                          src={getImageSrc(star_ai_icon)}
+                          width={200}
+                          height={200}
+                          className={
+                            "h-auto w-[226px] shrink-0 max-lg:w-[120px] max-[480px]:w-20"
+                          }
+                          alt="AURA"
+                        />
+                        <div className={"flex flex-col gap-1"}>
+                          <h1
+                            className={
+                              "m-0 text-[38px] max-lg:text-2xl max-[480px]:text-[32px] font-bold leading-[1.1] tracking-normal"
+                            }
+                          >
+                            <span className={"text-gradient"}>
+                              I&apos;m AURA,
+                            </span>
+                            <br />
+                            <span className={"text-alter font-medium"}>
+                              How can I help you?
+                            </span>
+                          </h1>
                         </div>
-                      ) : null}
+                      </div>
 
-                      {(isBTNormalUserLoggedIn ||
-                        isActiveSearchOptionAvailable ||
-                        !isShowAuraResponse)
-                        ? (
-                          <div>
-                            <div className={"relative w-full"}>
-                              {activeSearchOption && (
-                                <>
-                                  {/* {auraServerImage &&
+                      <p
+                        className={
+                          "  text-left text-xl md:text-2xl font-semibold leading-tight text-alter "
+                        }
+                      >
+                        Choose one to get started
+                      </p>
+                    </div>
+                  )}
+
+                  <div
+                    className={
+                      "w-full flex flex-col gap-2 mx-auto px-4 md:px-6 lg:max-w-[992px] lg:py-4 xl:max-w-[1192px] 2xl:max-w-[1328px] 2xl:px-0 max-lg:max-w-[550px] max-lg:p-2.5"
+                    }
+                  >
+                    <AuraSearchOptions
+                      activeSearchOption={activeSearchOption}
+                      cardCollageVariants={cardCollageVariants}
+                      displaySearchOptions={displaySearchOptions}
+                      fallbackImages={[auraCardOne, auraCardTwo, auraCardThree]}
+                      handleSetSearchOption={handleSetSearchOption}
+                      handleTryExampleClick={handleTryExampleClick}
+                      isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
+                      isSearchOptionManuallySelected={
+                        isSearchOptionManuallySelected
+                      }
+                      isSearchOptionsVisible={isSearchOptionsVisible}
+                      searchOptionPreviewImages={searchOptionPreviewImages}
+                      setIsSearchOptionsVisible={setIsSearchOptionsVisible}
+                      shouldHighlightActiveSearchOption={
+                        shouldHighlightActiveSearchOption
+                      }
+                    />
+
+                    {isShowFollowUpQuery ? (
+                      <div
+                        className={
+                          "flex w-full items-center justify-center rounded-2xl py-2 pr-[1.375rem] md:rounded-full lg:pr-[1.625rem]"
+                        }
+                      >
+                        <HistoryOutlined
+                          className={
+                            "flex items-center justify-center text-sm lg:text-base text-black"
+                          }
+                        />
+                        <div
+                          className={
+                            "flex w-full items-center pl-2 text-sm lg:text-base leading-none text-black"
+                          }
+                        >
+                          {followUpQuery}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {isBTNormalUserLoggedIn ||
+                    isActiveSearchOptionAvailable ||
+                    !isShowAuraResponse ? (
+                      <div>
+                        <div className={"relative w-full"}>
+                          {activeSearchOption && (
+                            <>
+                              {/* {auraServerImage &&
                                     activeSearchOption.id === "smart_search" && (
                                       <>
                                         {!showChatLoader ? (
@@ -745,105 +808,127 @@ const ChatModal = ({
                                       </>
                                     )} */}
 
-                                  <div className={`${"flex w-full flex-col items-center  justify-start"} `}>
-                                    {isSearchOptionManuallySelected && (
-                                      <div className={isAllowedSplitLayout ? "flex flex-col items-center" : ""}>
-                                        <AuraSearchOptionIntro
-                                          activeSearchOption={activeSearchOption}
-                                          showTryExample={Boolean(activeSearchOption?.text_example)}
-                                          onTryExampleClick={handleTryExampleClick}
-                                          allowImageSearch={activeSearchOption.allow_image_search}
-                                        />
-                                      </div>
-                                    )}
-                                    <AuraImageSearchPanel
-                                      activeSearchOption={activeSearchOption}
-                                      allowImageSearch={activeSearchOption.allow_image_search}
-                                      auraOverlayCoordinates={auraOverlayCoordinates}
-                                      chatImageUrl={chatImageUrl}
-                                      handleChangeImageConfirm={handleChangeImageConfirm}
-                                      handleFigmaImageUrlChange={handleFigmaImageUrlChange}
-                                      handleSuggestionClick={handleSuggestionClick}
-                                      handleUploadChatImage={handleUploadChatImage}
-                                      isUploadingImage={isUploadingImage}
-                                      uploadImageProps={uploadImageProps}
-                                    />
-                                    <AuraLoadingState
-                                      show={
-                                        showChatLoader &&
-                                        (localChatMessage ||
-                                          chatImageUrl ||
-                                          submittedPromptPreview.message ||
-                                          submittedPromptPreview.imageUrl)
-                                      }
-                                    />
-
-                                    <AuraPromptInput
-                                      activeSearchOption={activeSearchOption}
-                                      chatImageUrl={chatImageUrl}
-                                      chatTypeKey={chatTypeKey}
-                                      inputRef={inputRef}
-                                      isFollowUpQuery={isFollowUpQuery}
-                                      isShopALookOptionActive={isShopALookOptionActive}
-                                      localChatMessage={localChatMessage}
-                                      onChange={handleInputChange}
-                                      onKeyDown={handlePromptKeyDown}
-                                      onSubmit={handleSubmitChatInput}
-                                      showChatLoader={showChatLoader}
-                                    />
-
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                            {isShowFollowUpSearch ? (
                               <div
-                                className={`${shouldUseLegacyImageSearchLayout
-                                  ? "mt-4"
-                                  : "mt-5"
-                                  } ${"flex h-5 gap-2"}`}
+                                className={`${"flex w-full flex-col items-center  justify-start"} `}
                               >
-                                {isShowFollowUpSearch && isSidExpired ? (
+                                {isSearchOptionManuallySelected && (
                                   <div
                                     className={
-                                      "ml-5 flex items-center"
+                                      isAllowedSplitLayout
+                                        ? "flex flex-col items-center"
+                                        : ""
                                     }
                                   >
-                                    <input
-                                      type="checkbox"
-                                      id="followUpQuery"
-                                      className={"mr-1 h-3.5 w-3.5 cursor-pointer"}
-                                      checked={isFollowUpQuery}
-                                      disabled={showChatLoader}
-                                      onChange={handleFollowUpSearch}
+                                    <AuraSearchOptionIntro
+                                      activeSearchOption={activeSearchOption}
+                                      showTryExample={Boolean(
+                                        activeSearchOption?.text_example,
+                                      )}
+                                      onTryExampleClick={handleTryExampleClick}
+                                      allowImageSearch={
+                                        activeSearchOption.allow_image_search
+                                      }
                                     />
-                                    <label
-                                      htmlFor="followUpQuery"
-                                      className={`${showChatLoader
-                                        ? "cursor-not-allowed text-neutral-400"
-                                        : "cursor-pointer text-neutral-800"
-                                        }`}
-                                    >
-                                      Follow-Up search
-                                    </label>
                                   </div>
-                                ) : null}
+                                )}
+                                <AuraImageSearchPanel
+                                  activeSearchOption={activeSearchOption}
+                                  allowImageSearch={
+                                    activeSearchOption.allow_image_search
+                                  }
+                                  auraOverlayCoordinates={
+                                    auraOverlayCoordinates
+                                  }
+                                  chatImageUrl={chatImageUrl}
+                                  handleChangeImageConfirm={
+                                    handleChangeImageConfirm
+                                  }
+                                  handleFigmaImageUrlChange={
+                                    handleFigmaImageUrlChange
+                                  }
+                                  handleSuggestionClick={handleSuggestionClick}
+                                  handleUploadChatImage={handleUploadChatImage}
+                                  isUploadingImage={isUploadingImage}
+                                  uploadImageProps={uploadImageProps}
+                                />
+                                <AuraLoadingState
+                                  show={
+                                    showChatLoader &&
+                                    (localChatMessage ||
+                                      chatImageUrl ||
+                                      submittedPromptPreview.message ||
+                                      submittedPromptPreview.imageUrl)
+                                  }
+                                />
 
+                                <AuraPromptInput
+                                  activeSearchOption={activeSearchOption}
+                                  chatImageUrl={chatImageUrl}
+                                  chatTypeKey={chatTypeKey}
+                                  inputRef={inputRef}
+                                  isFollowUpQuery={isFollowUpQuery}
+                                  isShopALookOptionActive={
+                                    isShopALookOptionActive
+                                  }
+                                  localChatMessage={localChatMessage}
+                                  onChange={handleInputChange}
+                                  onKeyDown={handlePromptKeyDown}
+                                  onSubmit={handleSubmitChatInput}
+                                  showChatLoader={showChatLoader}
+                                />
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        {isShowFollowUpSearch ? (
+                          <div
+                            className={`${
+                              shouldUseLegacyImageSearchLayout ? "mt-4" : "mt-5"
+                            } ${"flex h-5 gap-2"}`}
+                          >
+                            {isShowFollowUpSearch && isSidExpired ? (
+                              <div className={"ml-5 flex items-center"}>
+                                <input
+                                  type="checkbox"
+                                  id="followUpQuery"
+                                  className={"mr-1 h-3.5 w-3.5 cursor-pointer"}
+                                  checked={isFollowUpQuery}
+                                  disabled={showChatLoader}
+                                  onChange={handleFollowUpSearch}
+                                />
+                                <label
+                                  htmlFor="followUpQuery"
+                                  className={`${
+                                    showChatLoader
+                                      ? "cursor-not-allowed text-neutral-400"
+                                      : "cursor-pointer text-neutral-800"
+                                  }`}
+                                >
+                                  Follow-Up search
+                                </label>
                               </div>
                             ) : null}
                           </div>
                         ) : null}
-                    </div>
+                      </div>
+                    ) : null}
                   </div>
-                  {showChatLoader && (localChatMessage || chatImageUrl || submittedPromptPreview.message || submittedPromptPreview.imageUrl) && (
+                </div>
+                {showChatLoader &&
+                  (localChatMessage ||
+                    chatImageUrl ||
+                    submittedPromptPreview.message ||
+                    submittedPromptPreview.imageUrl) && (
                     <div className={"h-0.5 w-full rounded-sm bg-gray-100"}>
-                      <div className={"h-full rounded-sm bg-[linear-gradient(90deg,var(--color-secondary),var(--color-brand),rgb(79,70,229))] bg-[length:200%_100%] animate-[loadingBarAnimation_1.6s_ease-in-out_infinite]"}></div>
+                      <div
+                        className={
+                          "h-full rounded-sm bg-[linear-gradient(90deg,var(--color-secondary),var(--color-brand),rgb(79,70,229))] bg-[length:200%_100%] animate-[loadingBarAnimation_1.6s_ease-in-out_infinite]"
+                        }
+                      ></div>
                     </div>
                   )}
-                  {!showChatLoader && (
-                    <div className={"border-b-0"}></div>
-                  )}
-                </div>
+                {!showChatLoader && <div className={"border-b-0"}></div>}
+              </div>
             </AuraSearchPopup>
           )}
         </>
@@ -859,7 +944,11 @@ const ChatModal = ({
           </div>
         )}
         {current_store_name === STORE_USER_NAME_SAMSKARA ? (
-          <div className={"mx-auto flex w-full max-w-[var(--max-w-s-3)] flex-col gap-2 pt-3 sm:max-w-[var(--max-w-lg-1)] lg:max-w-[var(--max-w-3xl-2)] lg:gap-5 lg:pt-4 2xl:max-w-[var(--max-w-6xl-2)]"}>
+          <div
+            className={
+              "mx-auto flex w-full max-w-[var(--max-w-s-3)] flex-col gap-2 pt-3 sm:max-w-[var(--max-w-lg-1)] lg:max-w-[var(--max-w-3xl-2)] lg:gap-5 lg:pt-4 2xl:max-w-[var(--max-w-6xl-2)]"
+            }
+          >
             <a
               href={MAIN_SITE_URL[STORE_USER_NAME_SAMSKARA]}
               className={"mr-auto text-black"}
@@ -939,7 +1028,11 @@ const ChatModal = ({
               onTryExample={handleTryThisClick}
             />
             {isMobile && isProductSearchOptionActive && (
-              <div className={"flex w-full justify-center border-t-0 bg-white px-4 pt-4 pb-[env(safe-area-inset-bottom,1.25rem)] md:px-6"}>
+              <div
+                className={
+                  "flex w-full justify-center border-t-0 bg-white px-4 pt-4 pb-[env(safe-area-inset-bottom,1.25rem)] md:px-6"
+                }
+              >
                 <AuraInputBox
                   isShowTryAgain={false}
                   showChatLoader={showChatLoader}
@@ -967,8 +1060,6 @@ const ChatModal = ({
         {enable_recommendations && (
           <Recommendations trackCollectionData={trackCollectionData} />
         )}
-
-       
       </div>
     </AuraModalShell>
   );
