@@ -148,7 +148,7 @@ const KioskHome = ({ props }) => {
             onLoginChange={handleKioskLoginChange}
           />
         </div>
-      </div>
+      </div>  
       <div
         className={`lg:flex ${showTags === "Social Media" ? "items-start" : "items-center"} gap-3`}
       >
