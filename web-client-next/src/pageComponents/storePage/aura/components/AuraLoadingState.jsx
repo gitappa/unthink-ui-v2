@@ -5,15 +5,15 @@ const AuraLoadingState = ({ show = false }) => {
 
   return (
     <>
-      <p className="mt-4 text-center">
-        Sure! Give me a few moments. Now crafting related products.
-      </p>
-      <p className={`${"font-medium text-slate-700"} text-center`}>
-        Thinking
-        <span className={"inline-flex"} aria-hidden="true">
-          <span className={"animate-pulse"}>.</span>
-          <span className={"animate-pulse"}>.</span>
-          <span className={"animate-pulse"}>.</span>
+      <p className="mt-4 text-center font-medium text-lg lg:text-2xl text-black mb-3 lg:mb-5">
+        Finding the Perfect Accessories for your Look
+        <span
+          className="ml-2 inline-flex items-center gap-1.5 align-middle text-accent"
+          aria-hidden="true"
+        >
+          <span className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.32s]" />
+          <span className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.16s]" />
+          <span className="h-2 w-2 animate-bounce rounded-full bg-current" />
         </span>
       </p>
     </>
@@ -21,6 +21,3 @@ const AuraLoadingState = ({ show = false }) => {
 };
 
 export default AuraLoadingState;
-
-
-

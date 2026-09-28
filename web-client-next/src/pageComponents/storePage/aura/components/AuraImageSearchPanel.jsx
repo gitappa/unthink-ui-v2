@@ -144,9 +144,9 @@ const AuraImageSearchPanel = ({
                   </Dragger>
                 </div>
 
-                <div className="my-2 text-center text-sm font-medium leading-none text-slate-400">
+                <p className="my-2 text-center text-sm font-medium leading-none text-slate-400">
                   or
-                </div>
+                </p>
                 <button
                   type="button"
                   onClick={openCamera}
@@ -160,9 +160,9 @@ const AuraImageSearchPanel = ({
                   )}
                   Take Photo
                 </button>
-                <div className="my-2 text-center text-sm font-medium leading-none text-slate-400">
+                <p className="my-2 text-center text-sm font-medium leading-none text-slate-400">
                   or
-                </div>
+                </p>
                 <div className="w-full">
                   <div className="relative">
                     <LinkOutlined className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[17px] text-slate-500" />

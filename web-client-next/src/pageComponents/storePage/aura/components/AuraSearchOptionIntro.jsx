@@ -23,7 +23,7 @@ const AuraSearchOptionIntro = ({
 
   return (
     <>
-      <h1 className="flex items-center justify-center gap-2 text-2xl font-bold uppercase alter lg:text-3xl">
+      <h1 className="flex items-center justify-center gap-2 text-[22px] whitespace-nowrap font-bold uppercase alter lg:text-3xl">
         <span className="gradient-bar"></span>
         {leadingText}
         {hasGap ? " " : ""}
@@ -33,14 +33,14 @@ const AuraSearchOptionIntro = ({
         <span className="gradient-bar"></span>
       </h1>
       {activeSearchOption?.subTitle ? (
-        <p className="mb-2.5 text-center text-sm font-medium text-slate-500">
+        <p className="mt-2 mb-3.5 lg:mb-5 text-center text-sm lg:text-base font-medium text-slate-500">
           {activeSearchOption.subTitle}
         </p>
       ) : null}
       { !allowImageSearch &&  activeSearchOption?.text_example ? (
         <button
           type="button"
-          className="border-gradient my-4 text-sm md:text-base cursor-pointer rounded-full px-4 md:px-6 py-2  font-medium text-brand"
+          className="border-gradient my-4 text-sm md:text-base cursor-pointer rounded-full px-4 md:px-6 py-2  font-medium "
           onClick={onTryExampleClick}
         >
           Try an Example

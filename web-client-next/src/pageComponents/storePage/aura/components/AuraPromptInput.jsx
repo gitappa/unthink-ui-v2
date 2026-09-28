@@ -13,15 +13,19 @@ const AuraPromptInput = ({
   onKeyDown = () => {},
   onSubmit = () => {},
   showChatLoader = false,
+
+
 }) => {
   const hasPromptText = localChatMessage.trim().length > 0;
   const isSubmitDisabled =
     showChatLoader ||
     (isShopALookOptionActive ? !chatImageUrl : !hasPromptText && !chatImageUrl);
+   
+  
 
   return (
     <div className="w-full  bg-white p-2 rounded-4xl min-h-[40px] lg:min-h-[50px] max-md:min-h-[46px]">
-      <div className="border-gradient w-full rounded-4xl p-2 shadow-md   z-20  max-md:p-1.5">
+      <div className="border-accent border-2 focus-gradient-ring w-full rounded-4xl p-2 shadow-md z-20 max-md:p-1.5">
         <div className="flex  items-center gap-3 rounded-[1.75rem] bg-white px-2  max-md:ps-3">
           <input
             id={`chat_search_input_${chatTypeKey}`}

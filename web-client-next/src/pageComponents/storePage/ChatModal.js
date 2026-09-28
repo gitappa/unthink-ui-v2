@@ -1,29 +1,19 @@
 import React, {
   useMemo,
-  useRef,
   useCallback,
-  useEffect,
   useState,
   useContext,
 } from "react";
 import { useDispatch } from "react-redux";
-import { Tooltip, Spin, Checkbox } from "antd";
+import { Checkbox } from "antd";
 import {
   CloseCircleFilled,
   CloseOutlined,
-  ReloadOutlined,
-  CaretRightOutlined,
   HistoryOutlined,
   ArrowLeftOutlined,
-  UploadOutlined,
   ArrowUpOutlined,
-  SlidersOutlined,
-  CaretDownFilled,
-  SearchOutlined,
   MenuOutlined,
-  SaveOutlined,
   ShareAltOutlined,
-  CheckSquareOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "../../helper/useNavigate";
@@ -44,14 +34,12 @@ import {
   resetAuraSearchResponse,
   setSuggestionsSelectedTag,
 } from "../../hooks/chat/redux/actions";
-import ChatSuggestionsV2 from "./ChatSuggestionsV2";
 import {
   enable_recommendations,
   is_kiosk,
   current_store_name,
 } from "../../constants/config";
 import {
-  CHAT_SEARCH_OPTION_ID,
   CHAT_TYPE_CHAT,
   STORE_USER_NAME_SAMSKARA,
   MAIN_SITE_URL,
@@ -78,14 +66,11 @@ import AuraSearchOptions from "./aura/components/AuraSearchOptions";
 
 const ChatModal = ({
   submitChatInput,
-  disabledOutSideClick = false,
   showSettings,
   openSettingModal,
   chatInputMetadata,
   chatTypeKey,
-  config,
   trackCollectionData,
-  isBTInstance,
   inputRef,
   isFollowUpQuery,
   setIsFollowUpQuery,
@@ -97,7 +82,6 @@ const ChatModal = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const figmaUploadPanelRef = useRef(null);
   const [isSearchOptionManuallySelected, setIsSearchOptionManuallySelected] =
     useState(false);
   const [submittedPromptPreview, setSubmittedPromptPreview] = useState({
@@ -119,7 +103,6 @@ const ChatModal = ({
   } = useAuraResponsiveLayout();
 
   const {
-    showUploadImage,
     isUploadingImage,
     chatImagePreviewUrl,
     setChatImagePreviewUrl,
@@ -132,32 +115,22 @@ const ChatModal = ({
     resetChatImageState,
     handleUploadChatImage,
     uploadImageProps,
-    handleUploadImageModeChange,
     handleFigmaUploadButtonClick,
     handleFigmaImageUrlChange,
   } = useAuraImageUpload({ chatTypeKey });
 
   const {
-    chatMessage,
     chatImageUrl,
-    products,
     showChatLoader,
     activeSearchOption,
-    auraHelperMessage,
-    shopALookData,
     widgetHeader,
     widgetImage,
     suggestionsWithProducts,
     tags,
-    title,
-    isFreshSearch,
     searchOptions,
     authUser,
-    isGuestPopUpShow,
     auraServerImage,
     auraOverlayCoordinates,
-    ButtonClick,
-    chatProductsData,
     chatHistory,
     selectedSearchOptionExamples,
     isSidExpired,
@@ -167,8 +140,6 @@ const ChatModal = ({
     isShowKioskSearchOptions,
     shouldCenterModalContent,
     isShopALookOptionActive,
-    isShopByThemeOptionActive,
-    isCompleteTheLookOptionActive,
     isProductSearchOptionActive,
     isAllowedSplitLayout,
     shouldUseLegacyImageSearchLayout,
@@ -204,47 +175,6 @@ const ChatModal = ({
       return actions;
     });
   }, []);
-
-  const closeChatModal = () => {
-    sessionStorage.removeItem("widgetHeader");
-    setLocalChatMessage("");
-    setSubmittedPromptPreview({ message: "", imageUrl: "" });
-    resetChatImageState();
-    setIsSearchOptionManuallySelected(false);
-    setIsSearchOptionsVisible(true);
-    dispatch(setActiveSearchOption({}));
-    dispatch(setShowChatModal(false));
-    showSubmitImageTooltip && setShowSubmitImageTooltip(false);
-    window.history.back();
-  };
-
-  const handleGoBack = () => {
-    setIsSearchOptionManuallySelected(false);
-    setIsSearchOptionsVisible(true);
-    dispatch(setActiveSearchOption({}));
-    dispatch(resetAuraSearchResponse());
-    resetChatImageState();
-    setLocalChatMessage("");
-    setSubmittedPromptPreview({ message: "", imageUrl: "" });
-    setIsFollowUpQuery(false);
-    sessionStorage.removeItem("widgetHeaderRequestHistory");
-  };
-
-  const handleHomeClick = () => {
-    closeChatModal();
-    navigate("/");
-  };
-
-  const handleBackToSelectedOption = () => {
-    setIsSearchOptionManuallySelected(true);
-    setIsSearchOptionsVisible(false);
-    dispatch(resetAuraSearchResponse());
-    resetChatImageState();
-    setLocalChatMessage("");
-    setSubmittedPromptPreview({ message: "", imageUrl: "" });
-    setIsFollowUpQuery(false);
-    sessionStorage.removeItem("widgetHeaderRequestHistory");
-  };
 
   const {
     text: followUpQuery,
@@ -356,10 +286,6 @@ const ChatModal = ({
   });
 
   const getImageSrc = (image) => image?.src || image;
-  const originalWidth = 1024;
-  const originalHeight = 1027;
-  const newWidth = 404;
-  const newHeight = 400;
 
   const handleSuggestionClick = (tag) => {
     if (tags.includes(tag)) {
@@ -373,6 +299,52 @@ const ChatModal = ({
 
   const handleChangeImageConfirm = () => {
     handlePromptChangeImageConfirm({ resetChatImageState });
+  };
+
+  const resetPromptState = () => {
+    setLocalChatMessage("");
+    setSubmittedPromptPreview({ message: "", imageUrl: "" });
+    resetChatImageState();
+  };
+
+  const resetResponseState = () => {
+    resetPromptState();
+    dispatch(resetAuraSearchResponse());
+    setIsFollowUpQuery(false);
+    sessionStorage.removeItem("widgetHeaderRequestHistory");
+  };
+
+  const resetSearchSelectionState = () => {
+    resetPromptState();
+    setIsSearchOptionManuallySelected(false);
+    setIsSearchOptionsVisible(true);
+    dispatch(setActiveSearchOption({}));
+  };
+
+  const closeChatModal = () => {
+    sessionStorage.removeItem("widgetHeader");
+    resetSearchSelectionState();
+    dispatch(setShowChatModal(false));
+    showSubmitImageTooltip && setShowSubmitImageTooltip(false);
+    window.history.back();
+  };
+
+  const handleGoBack = () => {
+    resetSearchSelectionState();
+    dispatch(resetAuraSearchResponse());
+    setIsFollowUpQuery(false);
+    sessionStorage.removeItem("widgetHeaderRequestHistory");
+  };
+
+  const handleHomeClick = () => {
+    closeChatModal();
+    navigate("/");
+  };
+
+  const handleBackToSelectedOption = () => {
+    resetResponseState();
+    setIsSearchOptionManuallySelected(true);
+    setIsSearchOptionsVisible(false);
   };
 
   return (
@@ -687,7 +659,7 @@ const ChatModal = ({
 
                       <p
                         className={
-                          "  text-left text-xl md:text-2xl font-semibold leading-tight text-alter "
+                          "  text-left text-xl md:text-2xl font-normal leading-tight text-alter "
                         }
                       >
                         Choose one to get started
@@ -706,7 +678,7 @@ const ChatModal = ({
                       displaySearchOptions={displaySearchOptions}
                       fallbackImages={[auraCardOne, auraCardTwo, auraCardThree]}
                       handleSetSearchOption={handleSetSearchOption}
-                      handleTryExampleClick={handleTryExampleClick}
+                      
                       isBTNormalUserLoggedIn={isBTNormalUserLoggedIn}
                       isSearchOptionManuallySelected={
                         isSearchOptionManuallySelected
@@ -718,7 +690,7 @@ const ChatModal = ({
                         shouldHighlightActiveSearchOption
                       }
                     />
-
+                      {/* //move this ocde  */}
                     {isShowFollowUpQuery ? (
                       <div
                         className={
@@ -747,69 +719,10 @@ const ChatModal = ({
                         <div className={"relative w-full"}>
                           {activeSearchOption && (
                             <>
-                              {/* {auraServerImage &&
-                                    activeSearchOption.id === "smart_search" && (
-                                      <>
-                                        {!showChatLoader ? (
-                                          <div
-                                            style={{ width: "fit-content", position: 'relative' }}
-                                            className={
-                                              "aura-figma-upload-popover absolute bottom-[calc(100%+1rem)] left-1/2 z-[200] w-[min(92vw,28rem)] -translate-x-1/2 rounded-[1.75rem] border border-tertiary bg-white p-6 shadow-[0_18px_45px_rgba(80,75,140,0.16)] max-md:w-[94%] max-md:max-w-[400px] max-md:p-5 max-md:rounded-3xl "
-                                            }
-                                          >
-                                            <img
-                                              className={"h-[300px] w-full rounded-[10px] md:h-[400px] md:min-w-[404px]"}
-                                              src={auraServerImage}
-                                              alt="Aura Image"
-                                            />
-                                            {Array.isArray(auraOverlayCoordinates) &&
-                                              auraOverlayCoordinates.map((item, index) => {
-                                                const adjustedX =
-                                                  (item.point[0] / originalWidth) * newWidth;
-                                                const adjustedY =
-                                                  (item.point[1] / originalHeight) *
-                                                  newHeight;
-
-                                                return (
-                                                  <Tooltip
-                                                    key={index}
-                                                    title={item.attributes.label}
-                                                    color="blue"
-                                                  >
-                                                    <div
-                                                      onClick={() =>
-                                                        handleSuggestionClick(
-                                                          item.attributes.label,
-                                                        )
-                                                      }
-                                                      className={
-                                                        "absolute z-20 h-5 w-5 animate-pulse cursor-pointer rounded-full border-2 border-blue-500 bg-blue-500"
-                                                      }
-                                                      style={{
-                                                        left: `${adjustedX}px`,
-                                                        top: `${adjustedY}px`,
-                                                        boxShadow:
-                                                          "0 0 10px rgba(0, 123, 255, 0.8)",
-                                                      }}
-                                                    />
-                                                  </Tooltip>
-                                                );
-                                              })}
-                                          </div>
-                                        ) : (
-                                          <div
-                                            className={
-                                              "h-[300px] w-full rounded-[10px] md:h-[400px] md:min-w-[404px]-spinner-container"
-                                            }
-                                          >
-                                            <Spin size="large" />
-                                          </div>
-                                        )}
-                                      </>
-                                    )} */}
+                            
 
                               <div
-                                className={`${"flex w-full flex-col items-center  justify-start"} `}
+                                className={`${"flex w-full lg:mt-3 flex-col items-center  justify-start"} `}
                               >
                                 {isSearchOptionManuallySelected && (
                                   <div
@@ -860,7 +773,7 @@ const ChatModal = ({
                                       submittedPromptPreview.imageUrl)
                                   }
                                 />
-
+                              {isSearchOptionManuallySelected && 
                                 <AuraPromptInput
                                   activeSearchOption={activeSearchOption}
                                   chatImageUrl={chatImageUrl}
@@ -874,12 +787,15 @@ const ChatModal = ({
                                   onChange={handleInputChange}
                                   onKeyDown={handlePromptKeyDown}
                                   onSubmit={handleSubmitChatInput}
-                                  showChatLoader={showChatLoader}
+                                  showChatLoader={showChatLoader}                                
                                 />
+                              }
                               </div>
                             </>
                           )}
                         </div>
+
+                        {/* //check and move somewhere */}
                         {isShowFollowUpSearch ? (
                           <div
                             className={`${
@@ -914,20 +830,7 @@ const ChatModal = ({
                     ) : null}
                   </div>
                 </div>
-                {showChatLoader &&
-                  (localChatMessage ||
-                    chatImageUrl ||
-                    submittedPromptPreview.message ||
-                    submittedPromptPreview.imageUrl) && (
-                    <div className={"h-0.5 w-full rounded-sm bg-gray-100"}>
-                      <div
-                        className={
-                          "h-full rounded-sm bg-[linear-gradient(90deg,var(--color-secondary),var(--color-brand),rgb(79,70,229))] bg-[length:200%_100%] animate-[loadingBarAnimation_1.6s_ease-in-out_infinite]"
-                        }
-                      ></div>
-                    </div>
-                  )}
-                {!showChatLoader && <div className={"border-b-0"}></div>}
+              
               </div>
             </AuraSearchPopup>
           )}

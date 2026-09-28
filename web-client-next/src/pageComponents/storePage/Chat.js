@@ -112,7 +112,7 @@ const Chat = ({
   }, []);
 
   const activeSearchOption = useMemo(
-    () => (!isEmpty(selectedSearchOption) ? selectedSearchOption : searchOptions.find((option) => option.default) || {}),
+    () => (!isEmpty(selectedSearchOption) ? selectedSearchOption : ''),
     [searchOptions, selectedSearchOption]
   );
 

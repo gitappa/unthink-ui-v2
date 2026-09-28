@@ -92,7 +92,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
   const isBTNormalUserLoggedIn = useMemo(() => isBTInstance === STORE_USER_NAME_BUDGETTRAVEL, [isBTInstance]);
 
   const activeSearchOption = useMemo(
-    () => (!isEmpty(selectedSearchOption) ? selectedSearchOption : (searchOptions || []).find((option) => option.default) || {}),
+    () => (!isEmpty(selectedSearchOption) ? selectedSearchOption : ''),
     [searchOptions, selectedSearchOption]
   );
 

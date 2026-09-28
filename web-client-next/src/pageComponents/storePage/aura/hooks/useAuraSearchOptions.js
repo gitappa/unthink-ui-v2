@@ -30,29 +30,29 @@ export const useAuraSearchOptions = ({
 }) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (is_kiosk || !isEmpty(activeSearchOption) || isEmpty(searchOptions)) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (is_kiosk || !isEmpty(activeSearchOption) || isEmpty(searchOptions)) {
+  //     return;
+  //   }
 
-    const shopByThemeDefault = searchOptions.find(
-      (option) =>
-        option?.id === CHAT_SEARCH_OPTION_ID.smart_search && option?.is_display,
-    );
-    const configuredDefault = searchOptions.find(
-      (option) => option?.default && option?.is_display,
-    );
-    const firstVisibleOption = searchOptions.find(
-      (option) => option?.is_display,
-    );
+  //   const shopByThemeDefault = searchOptions.find(
+  //     (option) =>
+  //       option?.id === CHAT_SEARCH_OPTION_ID.smart_search && option?.is_display,
+  //   );
+  //   // const configuredDefault = searchOptions.find(
+  //   //   (option) => option?.default && option?.is_display,
+  //   // );
+  //   // const firstVisibleOption = searchOptions.find(
+  //   //   (option) => option?.is_display,
+  //   // );
 
-    const defaultSelectedOption =
-      shopByThemeDefault || configuredDefault || firstVisibleOption;
+  //   // const defaultSelectedOption =
+  //   //   shopByThemeDefault || configuredDefault || firstVisibleOption;
 
-    if (defaultSelectedOption) {
-      dispatch(setActiveSearchOption(defaultSelectedOption));
-    }
-  }, [activeSearchOption, dispatch, searchOptions]);
+  //   // if (defaultSelectedOption) {
+  //   //   dispatch(setActiveSearchOption(defaultSelectedOption));
+  //   // }
+  // }, [activeSearchOption, dispatch, searchOptions]);
 
   const handleSetSearchOption = useCallback(
     (option) => {
