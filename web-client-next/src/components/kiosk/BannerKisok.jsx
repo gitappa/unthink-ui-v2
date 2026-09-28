@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import KioskPromoSection from "./KioskPromoSection";
-import { buildKioskAutoLoginUrls } from "../../helper/autoLogin";
 import {
   collectionQRCodeGenerator,
   getBlogCollectionPagePath,
@@ -10,9 +8,7 @@ import {
 
 const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   const router = useRouter();
-  const kioskLogin = useSelector((state) => state.kiosk.login);
   const [collectionQrUrls, setCollectionQrUrls] = useState({});
-  console.log('collectionQrUrls',collectionQrUrls)
   const isNeeladriStore = storeData?.store_name === "giva_neeladri_hs";
   const desktopColumnCount = isNeeladriStore ? 3 : 4;
 
@@ -34,6 +30,12 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   const getCollectionPagePath = (currentCollection) =>
     getBlogCollectionPagePath(
       currentCollection?.path,
+      currentCollection?.path,
+      currentCollection?._id || currentCollection?.collection_id,
+      currentCollection?.user_id,
+      currentCollection?.status,
+      currentCollection?.hosted_stores,
+      currentCollection?.collection_theme,
     ) || `/collections/${currentCollection?.path || ""}`;
 
   const displayedProductPaths = useMemo(
@@ -42,52 +44,25 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   );
 
   useEffect(() => {
-    let isActive = true;
+    const qrEntries = displayedProducts
+      .map((currentCollection) => {
+        if (!currentCollection?.path) return null;
 
-    const buildCollectionQrs = async () => {
-      const qrEntries = await Promise.all(
-        displayedProducts.map(async (currentCollection) => {
-          if (!currentCollection?.path) return null;
+        const collectionPagePath = getCollectionPagePath(currentCollection);
+        const qrUrl = collectionQRCodeGenerator(collectionPagePath);
 
-          const collectionPagePath = getCollectionPagePath(currentCollection);
-          const fallbackQrUrl = collectionQRCodeGenerator(collectionPagePath);
-          const autoLoginUrls = await buildKioskAutoLoginUrls({
-            targetPath: collectionPagePath,
-            pageParam:
-              `?page=collections/${currentCollection?.path || ""}`.replace(
-                /\/+/,
-                "/",
-              ),
-            fallbackQrUrl,
-            errorLabel: "banner collection auto-login",
-            kioskLogin,
-          });
+        return [
+          currentCollection.path,
+          {
+            qrUrl,
+            shareUrl: collectionPagePath,
+          },
+        ];
+      })
+      .filter(Boolean);
 
-          return [
-            currentCollection.path,
-            {
-              qrUrl: autoLoginUrls?.qrUrl || fallbackQrUrl,
-              shareUrl: autoLoginUrls?.shareUrl || collectionPagePath,
-            },
-          ];
-        }),
-      );
-
-      if (!isActive) return;
-
-      setCollectionQrUrls(Object.fromEntries(qrEntries.filter(Boolean)));
-    };
-
-    if (displayedProducts.length) {
-      buildCollectionQrs();
-    } else {
-      setCollectionQrUrls({});
-    }
-
-    return () => {
-      isActive = false;
-    };
-  }, [displayedProductPaths, displayedProducts, kioskLogin]);
+    setCollectionQrUrls(Object.fromEntries(qrEntries));
+  }, [displayedProductPaths, displayedProducts]);
 
   const handleNavCollection = (Singlecollectiondata) => {
     router.push(`/kioskcollections/${Singlecollectiondata.path}`);
@@ -214,7 +189,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                         </div>
                       )}
                     </div>
-                  </button>,
+                  </button>
                   // console.log('dfdf',collectionQrUrls[product.path])
                 ))}
               </div>
