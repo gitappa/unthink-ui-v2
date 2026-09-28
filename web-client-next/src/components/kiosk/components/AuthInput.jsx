@@ -237,7 +237,7 @@ const AuthInput = ({ onLoginChange, styles }) => {
       setStatus("");
       setIsDropdownOpen(false);
       setKioskLogin(null);
-      onLoginChange?.(null);
+      // onLoginChange?.(null);
       return;
     }
 
