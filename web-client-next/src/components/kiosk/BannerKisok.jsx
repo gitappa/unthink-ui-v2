@@ -168,6 +168,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                      <p className="max-w-full  pt-3 px-2 truncate whitespace-nowrap text-[18px] font-semibold leading-tight text-[#1d2345]">
                           {product.collection_name || "Untitled collection"}
                         </p>
+                        {storeData?.store_name === 'giva_neeladri_hs'&&
                     <div className="grid min-h-[98px] shrink-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-2 bg-kiosk-support px-3">
                       <div className="min-w-0">
                        
@@ -189,6 +190,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                         </div>
                       )}
                     </div>
+}
                   </button>
                   // console.log('dfdf',collectionQrUrls[product.path])
                 ))}
