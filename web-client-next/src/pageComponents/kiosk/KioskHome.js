@@ -18,21 +18,28 @@ import LoggedInInfo from "../../components/kiosk/components/LoggedInInfo";
 import AuthInput from "../../components/kiosk/components/AuthInput";
 import { current_store_name } from "../../constants/config";
 
-const KIOSK_TAGS = ["Social Media", "Look Books", "#Trending"];
+// const KIOSK_TAGS = ["Social Media", "Look Books", "#Trending"];
 const GIVA_NEELADRI_TAB_ROTATION_DELAY = 60 * 1000;
 
 const KioskHome = ({ props }) => {
   const userInfo = useSelector((state) => state.auth.user.data);
-  const Tags = KIOSK_TAGS;
-  const [showTags, setShowTags] = useState(
-    sessionStorage.getItem("selectedTag") || Tags[0],
-  );
+ 
   const [products, setProducts] = useState([]);
   const [lookBooks, setLookBooks] = useState([]);
   const [socialMediaData, setSocialMediaData] = useState([]);
 
-  //   console.log("products", products);
   const storeData = useSelector((state) => state.store.data);
+  const Tags = useMemo(() => {
+    const configuredTabs = storeData?.kiosk_settings?.tabs
+      ?.map((tab) => tab?.label)
+      ?.filter(Boolean);
+
+    return configuredTabs?.length ? configuredTabs : null;
+  }, [storeData?.kiosk_settings?.tabs]);
+
+  const [showTags, setShowTags] = useState(
+    () => sessionStorage.getItem("selectedTag") || Tags[0],
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const rotationDelay = storeData?.kiosk_settings?.video_time_gap;
   const collectiondata = useMemo(
