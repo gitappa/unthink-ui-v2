@@ -23,7 +23,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
   );
 
   const displayedProducts = useMemo(
-    () => (Tags === "#Trending" ? trendingProducts : lookBooksProducts),
+    () => (Tags === "#Trending" ?  storeData?.store_name === "giva_neeladri_hs"? trendingProducts.slice(0,6) : trendingProducts  : lookBooksProducts),
     [Tags, lookBooksProducts, trendingProducts],
   );
 
