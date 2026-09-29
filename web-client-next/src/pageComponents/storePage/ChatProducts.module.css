@@ -358,6 +358,7 @@
   .chat-products-shop-look-sidebar {
     padding: 0.5rem !important;
     overflow: visible !important;
+    height: 50vh;
   }
 
   .chat-products-sidebar-body {
