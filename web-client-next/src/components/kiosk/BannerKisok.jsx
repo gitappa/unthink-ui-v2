@@ -118,12 +118,12 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                     <p className="max-w-full truncate whitespace-nowrap text-[15px] font-semibold leading-tight text-[#1d2345]">
                       {product.collection_name || "Untitled collection"}
                     </p>
-                    <div className="mt-3 flex items-center gap-2 text-[#d5548e]">
+                    {/* <div className="mt-3 flex items-center gap-2 text-[#d5548e]">
                       <span className="inline-block h-4 w-2.5 rounded-sm border-2 border-current" />
                       <span className="text-[11px] font-semibold leading-none">
                         Scan to view
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                   {collectionQrUrls[product?.path]?.qrUrl && (
                     <div className="rounded bg-white p-1 shadow-md">
@@ -170,7 +170,7 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                         </p>
                         {storeData?.store_name === 'giva_neeladri_hs'&&
                     <div className="grid min-h-[98px] shrink-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-2 bg-kiosk-support px-3">
-                      <div className="min-w-0">
+                      {/* <div className="min-w-0">
                        
                         <div className="mt-3 flex items-center gap-2 text-kiosk-primary">
                           <span className="inline-block h-5 w-3 rounded-sm border-2 border-current" />
@@ -178,9 +178,9 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                             Scan to view
                           </span>
                         </div>
-                      </div>
+                      </div> */}
                       {collectionQrUrls[product?.path]?.qrUrl && (
-                        <div className="rounded bg-white p-1 shadow-md">
+                        <div className="rounded  m-auto">
                           <img
                             src={collectionQrUrls[product.path].qrUrl}
                             alt={`QR code for ${product?.collection_name || "collection"}`}
