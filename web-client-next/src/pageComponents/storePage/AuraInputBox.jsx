@@ -64,7 +64,7 @@ const AuraInputBox = ({
         el.style.height = "auto";
         el.style.height = `${el.scrollHeight}px`;
       } catch (err) {
-        // element might not support style/scrollHeight; ignore safely
+        // element might not common style/scrollHeight; ignore safely
       }
     }
   }, [localChatMessage, inputRef, chatTypeKey, isDrawer]);

@@ -34,7 +34,7 @@ const WishlistHeartButton = ({
   store = current_store_name,
   containerClassName = "",
   buttonClassName = DEFAULT_BUTTON_CLASS,
-  activeIconClassName = "text-red",
+  activeIconClassName = "text-danger",
   inactiveIconClassName = "",
   title = "Add to wishlist",
   userLogin,

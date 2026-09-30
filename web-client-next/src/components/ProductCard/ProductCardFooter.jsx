@@ -113,7 +113,7 @@ const ProductCardFooter = ({
       <div className="mt-0 flex min-h-7 items-center justify-between gap-2 md:mt-2 md:min-h-8">
         <div className={isOutOfStock || product?.custom_product === false ? "hidden" : ""}>
           <span
-            className={`text-red ${
+            className={`text-danger ${
               size === "small"
                 ? "text-sm font-bold"
                 : "pr-1 text-sm font-extrabold lg:text-xl"
@@ -137,7 +137,7 @@ const ProductCardFooter = ({
                     {product?.listprice}
                   </span>
                 </span>
-                <span className="absolute left-4 top-5 rounded-3xl bg-red px-2 py-1 text-xs font-bold text-white">
+                <span className="absolute left-4 top-5 rounded-3xl bg-danger px-2 py-1 text-xs font-bold text-white">
                   {(discountPer && `${discountPer}% OFF`) || null}
                 </span>
               </>
