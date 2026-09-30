@@ -131,8 +131,8 @@ const ProductCardFooter = ({
             product?.listprice > product?.price &&
             discountPer > 0 && (
               <>
-                <span className="mt-px text-xs text-slate line-through md:text-sm">
-                  <span className="text-slate">
+                <span className="mt-px text-xs text-slate-400 line-through md:text-sm">
+                  <span className="text-[#90a1b9]">
                     {currencySymbol}
                     {product?.listprice}
                   </span>
