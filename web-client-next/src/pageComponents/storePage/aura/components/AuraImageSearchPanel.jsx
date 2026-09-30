@@ -77,7 +77,7 @@ const AuraImageSearchPanel = ({
               <button
                 type="button"
                 onClick={handleChangeImageConfirm}
-                className="border-gradient text-alter my-4 w-fit cursor-pointer rounded-full px-5 py-2 text-sm font-semibold"
+                className="border-gradient text-highlight my-4 w-fit cursor-pointer rounded-full px-5 py-2 text-sm font-semibold"
               >
                 Change Image
               </button>
@@ -132,7 +132,7 @@ const AuraImageSearchPanel = ({
                         </div>
                       </div>
                     </p>
-                    <p className="mb-0 text-center text-[0.95rem] font-medium leading-snug text-alter [&_span]:font-bold">
+                    <p className="mb-0 text-center text-[0.95rem] font-medium leading-snug text-highlight [&_span]:font-bold">
                       <span className="text-brand font-semibold ">
                         Click to upload
                       </span>{" "}

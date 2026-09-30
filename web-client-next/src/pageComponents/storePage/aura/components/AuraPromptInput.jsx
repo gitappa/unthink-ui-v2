@@ -41,7 +41,7 @@ const AuraPromptInput = ({
             value={localChatMessage}
             onChange={onChange}
             onKeyDown={onKeyDown}
-            className="w-full    px-0 py-2 text-base font-medium text-alter outline-none placeholder:text-slate max-md:pr-2 max-md:text-sm"
+            className="w-full    px-0 py-2 text-base font-medium text-highlight outline-none placeholder:text-slate max-md:pr-2 max-md:text-sm"
           />
 
           <button

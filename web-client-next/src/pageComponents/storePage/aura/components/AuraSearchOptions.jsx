@@ -110,7 +110,7 @@ const AuraSearchOptions = ({
                       }`}
                     >
                       <h2
-                        className={`${"m-0 text-base max-lg:text-sm leading-tight font-semibold uppercase text-alter"} ${
+                        className={`${"m-0 text-base max-lg:text-sm leading-tight font-semibold uppercase text-highlight"} ${
                           isOptionActive ? "text-white" : ""
                         }`}
                       >

@@ -6,12 +6,7 @@
 .aura-figma-upload-popover .aura-image-upload-dragger .ant-upload.ant-upload-drag {
   border: 1.5px dashed rgba(124, 116, 236, 0.28) !important;
   border-radius: 1rem !important;
-  background:
-    linear-gradient(
-      135deg,
-      var(--color-accentsub),
-      var(--color-brandsub)
-    ) !important;
+  background:var(--color-common)
 }
 
 .aura-figma-upload-popover .aura-image-upload-dragger .ant-upload-btn {

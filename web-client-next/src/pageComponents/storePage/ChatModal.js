@@ -650,7 +650,7 @@ const ChatModal = ({
                               I&apos;m AURA,
                             </span>
                             <br />
-                            <span className={"text-alter font-medium"}>
+                            <span className={"text-highlight font-medium"}>
                               How can I help you?
                             </span>
                           </h1>
@@ -659,7 +659,7 @@ const ChatModal = ({
 
                       <p
                         className={
-                          "  text-left text-xl md:text-2xl font-normal leading-tight text-alter "
+                          "  text-left text-xl md:text-2xl font-normal leading-tight text-highlight "
                         }
                       >
                         Choose one to get started

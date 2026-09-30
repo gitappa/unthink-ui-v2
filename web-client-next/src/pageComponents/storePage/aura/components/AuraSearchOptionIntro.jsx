@@ -23,7 +23,7 @@ const AuraSearchOptionIntro = ({
 
   return (
     <>
-      <h1 className="flex items-center justify-center gap-2 text-[22px] whitespace-nowrap font-bold uppercase alter lg:text-3xl">
+      <h1 className="flex items-center justify-center gap-2 text-[22px] whitespace-nowrap font-bold uppercase  lg:text-3xl">
         <span className="gradient-bar"></span>
         {leadingText}
         {hasGap ? " " : ""}
