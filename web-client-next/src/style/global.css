@@ -1,32 +1,33 @@
 @import "tailwindcss" important;
 
-@theme {
-  --color-brand: #7c74ec;     /* The global background */
-  --color-secondary: #9690f0;
+@theme inline {
+  --color-brand: var(--color-brand);     /* The global background */
+  --color-secondary: var(--color-secondary);
   /* added by me #fec3ff  */
-  --color-accent: #e8a2f5;    /* The primary body text color */
-  --color-tertiary: #60A5FA;
-  --color-highlight :#1A1A1A;
-  --color-common: #f2f2f2;
-  --color-danger: #ff2525;
-  /* product menu button */
-  --color-gray-dark:#4a5565;   
-  /* gray-200 */
-  --color-gray-light:#e5e7eb;
-  /* price stick color  slate-400 */
-  --color-slate: #90a1b9 ;
-  --shadow-product-card: 0px 8px 32px rgba(0, 0, 0, 0.12);
-  --shadow-product-card-hover: 0px 8px 32px var(--color-secondary);
+  --color-accent: var(--color-accent);    /* The primary body text color */
+  --color-tertiary: var(--color-tertiary);
+  --color-highlight: var(--color-highlight);
+  --color-common: var(--color-common);
+  --color-danger: var(--color-danger);
 }
 
 :root {
   --color-brand: #7c74ec;
   --color-secondary: #9690f0;
   --color-accent: #e8a2f5;
+  --color-tertiary: #60A5FA;
+  --color-highlight :#1A1A1A;
   --color-common: #f2f2f2;
   --color-danger: #ff2525;
+  
 }
-
+[data-theme="giva_neeladri_hs"],
+[data-theme="giva_indiranagar2_hs"] {
+  --color-brand: #B63753;
+  --color-secondary: #DCB4B3;
+  --color-accent: #D1B8A0;
+  --color-tertiary: #D6CEBE;
+}
 @theme {
   --color-kiosk-primary:#B63753;
   --color-kiosk-secondary:#DCB4B3;
@@ -36,25 +37,16 @@
   --color-giva-away-primary:#f8f2f5;
 }
 
+@theme{
+   /* product menu button */
+  --color-gray-dark:#4a5565;   
 
-
-
-.text-brand {
-  color: var(--color-brand);
+  /* price stick color  slate-400 */
+  --color-slate: #90a1b9 ;
+  --shadow-product-card: 0px 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-product-card-hover: 0px 8px 32px var(--color-secondary);
 }
 
-.bg-brand {
-  background-color: var(--color-brand);
-}
-
-.bg-secondary {
-  background-color: var(--color-secondary);
-}
-
-
-.border-brand {
-  border-color: var(--color-brand);
-}
 
 .gradient {
   @apply bg-linear-to-tl from-accent to-brand;
@@ -97,30 +89,11 @@
 .focus-gradient-ring:focus-within::after {
   opacity: 1;
 }
-/* not used right now */
-.mild-gradient-button {
-  @apply border-2 border-solid border-transparent;
-  background:
-    linear-gradient(
-      135deg,
-      var(--color-tertiary),
-      var(--color-brandsub)
-    ) padding-box,
-    linear-gradient(to left, var(--color-accent), var(--color-brand)) border-box;
-  color: var(--color-brand);
-}
 
 .gradient-bar {
   /* Uses standard Tailwind colors to match the image */
   @apply w-12 h-1 rounded-full bg-gradient-to-r from-tertiary via-brand to-accent shadow-sm;
 }
-
-
-
-
-
-
-
 
 
 /* kiosk designs  */
