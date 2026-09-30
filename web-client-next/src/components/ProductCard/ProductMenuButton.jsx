@@ -80,7 +80,7 @@ const ProductMenuButton = ({
         className="absolute right-2.5 lg:right-4 top-10 z-10 mt-1.5 flex h-8 w-8 cursor-pointer
        items-center justify-center rounded-full bg-white p-1 
        text-2xl shadow-md transition-all duration-300 ease-in-out lg:top-12
-        lg:hover:bg-hover-light lg:hover:shadow-lg"
+        lg:hover:bg-gray-100 lg:hover:shadow-lg"
         onClick={(e) => {
             e.stopPropagation();
             setMenuIcon((prev) => !prev);

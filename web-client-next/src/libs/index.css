@@ -120,14 +120,6 @@ body::-webkit-scrollbar-thumb:hover {
     linear-gradient(to left, var(--color-accent), var(--color-brand)) border-box;
 }
 
-.bg-lightgray-102 {
-  background-color: var(--color-gray-light-2);
-}
-
-.bg-lightgray-104 {
-  background-color: var(--color-gray-light-1);
-}
-
 .text-black-103 {
   color: var(--color-black-dark);
 }
