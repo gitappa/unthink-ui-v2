@@ -118,12 +118,12 @@ const BannerKisok = ({ products, Tags, lookBooks, storeData }) => {
                     <p className="max-w-full truncate whitespace-nowrap text-[15px] font-semibold leading-tight text-[#1d2345]">
                       {product.collection_name || "Untitled collection"}
                     </p>
-                    <div className="mt-3 flex items-center gap-2 text-[#d5548e]">
+                    {/* <div className="mt-3 flex items-center gap-2 text-[#d5548e]">
                       <span className="inline-block h-4 w-2.5 rounded-sm border-2 border-current" />
                       <span className="text-[11px] font-semibold leading-none">
                         Scan to view
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                   {collectionQrUrls[product?.path]?.qrUrl && (
                     <div className="rounded bg-white p-1 shadow-md">

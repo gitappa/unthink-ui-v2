@@ -206,12 +206,10 @@ function* removeProductsSaga(action) {
 }
 
 function* createLoyaltyBadgeSaga(action) {
+  // console.log("createLoyaltyBadgeSaga action.payload", action.payload);
   try {
     const response = yield call(CreateBadgeApiCall, {
-      name: action.payload?.name ,
-      points: action.payload?.points ,
-      badge_image_url: action.payload?.badge_image_url,
-      qr_page_url: action.payload?.qr_page_url,
+     data: action.payload
       });
 
     const blob = new Blob([response.data], {

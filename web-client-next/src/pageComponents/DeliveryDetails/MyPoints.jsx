@@ -39,16 +39,23 @@ const MyPoints = () => {
     );
   }, [authUserId, dispatch, earningPoints, storeData?.store_name]);
   useEffect(() => {
-    if (!storeData?.pdp_settings?.badge_url || imageLoyaltyBadge) {
+    if ( !storeData?.badge_settings) {
       return;
     }
-
+// api logic
     dispatch(
       createLoyaltyBadge({
         name: authUser?.first_name || authUser?.last_name || authUser?.user_name,
-        points: earningPoints?.available_balance,
-        badge_image_url: storeData?.pdp_settings?.badge_url,
-        qr_page_url: `${window.location.origin}/claim-points/${authUserId}/${storeData?.store_name}`,
+        points: earningPoints?.available_balance ,
+        qr_page_url: storeData?.badge_settings?.qr_page_url,
+        badge_image_url: storeData?.badge_settings?.badge_image_url,
+        badge_bg_color: storeData?.badge_settings?.badge_bg_color ||  null,
+        badge_card_bg_color: storeData?.badge_settings?.badge_card_bg_color || null,
+        badge_congrats_color: storeData?.badge_settings?.badge_congrats_color || null,
+        badge_primary_color: storeData?.badge_settings?.badge_primary_color || null,
+        badge_qr_bg_color: storeData?.badge_settings?.badge_qr_bg_color || null,
+        badge_redemption_instructions: storeData?.badge_settings?.badge_redemption_instructions || null,
+        badge_text_color: storeData?.badge_settings?.badge_text_color || null
       }),
     );
   }, [dispatch, earningPoints?.available_balance]);

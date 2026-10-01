@@ -106,6 +106,16 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
   }, []);
 
   useEffect(() => {
+    if (!isAuraChatPage) return;
+
+    dispatch(setShowChatModal(true));
+    dispatch(resetAuraSearchResponse());
+    dispatch(setChatMessage(""));
+    dispatch(setServerChatMessage(""));
+    dispatch(setChatProductsData([]));
+  }, [dispatch, isAuraChatPage]);
+
+  useEffect(() => {
     if (widgetHeaderRequest?.metadata?.searchOptionId !== activeSearchOption?.id) setIsFollowUpQuery(false);
   }, [widgetHeaderRequest?.metadata?.searchOptionId, activeSearchOption?.id]);
 
@@ -140,6 +150,8 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
   };
 
   useEffect(() => {
+    if (isAuraChatPage) return;
+
     if (user?.data?.user_id && userDataSent) {
       if (auraSearchText) {
       } else {
@@ -149,7 +161,7 @@ const ChatContainer = ({ disabledOutSideClick, config, trackCollectionData, isBT
         dispatch(setChatProductsData([]));
       }
     }
-  }, [auraSearchText, user?.data?.user_id, userDataSent]);
+  }, [auraSearchText, isAuraChatPage, user?.data?.user_id, userDataSent]);
 
   const chatInputMetadata = useMemo(
     () => ({
