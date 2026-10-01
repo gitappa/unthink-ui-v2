@@ -39,16 +39,16 @@ const MyPoints = () => {
     );
   }, [authUserId, dispatch, earningPoints, storeData?.store_name]);
   useEffect(() => {
-    if (imageLoyaltyBadge) {
+    if ( !storeData?.badge_settings) {
       return;
     }
 // api logic
     dispatch(
       createLoyaltyBadge({
         name: authUser?.first_name || authUser?.last_name || authUser?.user_name,
-        points: earningPoints?.available_balance,
-        badge_image_url: storeData?.badge_settings?.badge_image_url,
+        points: earningPoints?.available_balance ,
         qr_page_url: storeData?.badge_settings?.qr_page_url,
+        badge_image_url: storeData?.badge_settings?.badge_image_url,
         badge_bg_color: storeData?.badge_settings?.badge_bg_color ||  null,
         badge_card_bg_color: storeData?.badge_settings?.badge_card_bg_color || null,
         badge_congrats_color: storeData?.badge_settings?.badge_congrats_color || null,
