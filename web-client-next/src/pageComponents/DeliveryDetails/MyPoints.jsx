@@ -2,6 +2,22 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createLoyaltyBadge, fetchEarningPoints } from "./redux/action";
 
+const buildClaimPointsUrl = (baseUrl, userId, storeName) => {
+  if (!baseUrl || !userId || !storeName) {
+    return baseUrl;
+  }
+
+  const claimPointsBasePattern = /\/claim-points\/?$/;
+
+  if (!claimPointsBasePattern.test(baseUrl)) {
+    return baseUrl;
+  }
+
+  const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
+
+  return `${normalizedBaseUrl}/${encodeURIComponent(userId)}/${encodeURIComponent(storeName)}`;
+};
+
 const MyPoints = () => {
   const [
     authUser,
@@ -39,15 +55,22 @@ const MyPoints = () => {
     );
   }, [authUserId, dispatch, earningPoints, storeData?.store_name]);
   useEffect(() => {
-    if ( !storeData?.badge_settings) {
+    if ( !storeData?.badge_settings && earningPoints?.available_balance === 0) {
       return;
     }
+
+    const qrPageUrl = buildClaimPointsUrl(
+      storeData?.badge_settings?.qr_page_url,
+      authUserId,
+      storeData?.store_name,
+    );
+
 // api logic
     dispatch(
       createLoyaltyBadge({
         name: authUser?.first_name || authUser?.last_name || authUser?.user_name,
-        points: earningPoints?.available_balance ,
-        qr_page_url: storeData?.badge_settings?.qr_page_url,
+        points: earningPoints?.available_balance,
+        qr_page_url: qrPageUrl,
         badge_image_url: storeData?.badge_settings?.badge_image_url,
         badge_bg_color: storeData?.badge_settings?.badge_bg_color ||  null,
         badge_card_bg_color: storeData?.badge_settings?.badge_card_bg_color || null,
@@ -58,7 +81,7 @@ const MyPoints = () => {
         badge_text_color: storeData?.badge_settings?.badge_text_color || null
       }),
     );
-  }, [dispatch, earningPoints?.available_balance]);
+  }, [authUserId, dispatch, earningPoints?.available_balance, storeData?.badge_settings, storeData?.store_name]);
 
   return (
     <div>
