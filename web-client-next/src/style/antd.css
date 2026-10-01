@@ -70,7 +70,7 @@
 
 .collection_page_sort_product_list .ant-select-arrow {
   align-items: center !important;
-  background: #d4ccfc80 !important;
+  background: var(--color-accent)80 !important;
   border-radius: 12px !important;
   display: flex !important;
   justify-content: center !important;
@@ -106,7 +106,7 @@
   }
   .collection_page_sort_product_list .ant-select-arrow {
     align-items: center !important;
-    background: #d4ccfc80 !important;
+    background: var(--color-accent) !important;
     border-radius: 12px !important;
     display: flex !important;
     justify-content: center !important;
@@ -133,7 +133,7 @@
 }
 
 .tryForFree_custom-select-editcollection__u24Q7 .ant-select-arrow {
-  background: #d4ccfc !important;
+  background: var(--color-accent) !important;
   border-radius: 8px !important;
   padding: 12px 8px !important;
   position: absolute !important;
@@ -142,7 +142,7 @@
 }
 
 .tryForFree_edit_collection_sort_product_list__lAKgX .ant-select-arrow {
-  background: #d4ccfc !important;
+  background: var(--color-accent) !important;
   border-radius: 8px !important;
   padding: 12px 8px !important;
   position: absolute !important;
