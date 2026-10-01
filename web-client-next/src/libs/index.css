@@ -167,7 +167,7 @@ body::-webkit-scrollbar-thumb:hover {
   }
 
   .product-card-button-kiosk {
-    @apply box-border flex items-center justify-center gap-2 rounded-xl text-sm font-medium text-black hover:bg-kiosk-primary hover:text-white;
+    @apply box-border flex items-center justify-center gap-2 rounded-xl text-sm font-medium text-black hover:bg-brand hover:text-white;
   }
 
   .product-card-tags-wrapper::after {

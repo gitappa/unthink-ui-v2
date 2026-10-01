@@ -68,7 +68,7 @@ const ProductOverview = ({
             </div>
             <WishlistHeartButton
               isActive={!!(heartRedProduct && showHeartWishlist)}
-              buttonClassName="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-common text-[#1f2c3b] bg-white hover:bg-[#f2eeff]"
+              buttonClassName="h-8 lg:h-10 w-8 lg:w-10 flex justify-center items-center rounded-full border border-common text-[#1f2c3b] bg-white hover:bg-common"
               onAdd={onAddToWishlist}
               productMfrCode={productDetails?.mfr_code}
               userId={kioskLogin?.user_id || authUserId || getTTid()}
@@ -99,7 +99,7 @@ const ProductOverview = ({
                 />
               )}
               <button
-                className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-common bg-white hover:bg-[#f2eeff]"
+                className="flex h-8 lg:h-10 w-8 lg:w-10  items-center justify-center rounded-full border border-common bg-white hover:bg-common"
                 onClick={onShareClick}
               >
                 <img

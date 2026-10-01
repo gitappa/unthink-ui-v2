@@ -634,9 +634,7 @@ const DeliveryDetails = () => {
               <div className="p-0">
                 <button
                   onClick={handleContinueClick}
-                  className={`text-white mt-5 w-full rounded-xl lg:h-13 h-11 ${
-                    hasKioskAccess ? "bg-kiosk-primary" : "bg-brand"
-                  }`}
+                  className="text-white mt-5 w-full rounded-xl lg:h-13 h-11 bg-brand"
                 >
                   Continue
                 </button>
