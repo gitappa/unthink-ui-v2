@@ -124,7 +124,7 @@
 }
 
 .tryForFree_custom-select-editcollection__u24Q7 .ant-select-selector {
-  background-color: #7c74ec !important;
+  background-color: var(--color-brand) !important;
   /* color: whitesmoke; */
 }
 

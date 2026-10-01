@@ -299,7 +299,7 @@ background-size: cover;
 }
 
 .signInButton:hover {
-    background-color: #4f46e5 !important;
+    background-color: var(--color-secondary)!important;
     color: white !important;
 }
 
@@ -325,7 +325,7 @@ background-size: cover;
     color: #ffffff;
 }
 .signInLinkButton:hover{
-    background-color: #4f46e5 !important;
+    background-color: var(--color-secondary)!important;
     color: white !important;
 }
 
