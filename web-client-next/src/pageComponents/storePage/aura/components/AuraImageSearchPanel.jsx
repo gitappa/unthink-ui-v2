@@ -35,7 +35,7 @@ const AuraImageSearchPanel = ({
         className={
           chatImageUrl
             ? ""
-            : "aura-figma-upload-popover mb-5 z-20 min-w-[350px] w-96  rounded-2xl border border-tertiary bg-white p-6 shadow-lg    "
+            : "aura-figma-upload-popover mb-5 z-20 min-w-[350px] w-96  rounded-2xl border border-accent bg-white p-6 shadow-lg  "
         }
       >
         {chatImageUrl ? (
@@ -114,7 +114,7 @@ const AuraImageSearchPanel = ({
               LoadingIcon,
             }) => (
               <>
-                <div className="w-full">
+                <div className="w-full ">
                   <Dragger
                     className="aura-image-upload-dragger"
                     {...uploadImageProps}

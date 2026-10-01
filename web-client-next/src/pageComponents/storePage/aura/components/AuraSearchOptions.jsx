@@ -80,9 +80,9 @@ const AuraSearchOptions = ({
                 <div
                   key={option.id}
                   className={`group relative flex cursor-pointer items-center gap-2.5 xl:gap-4
-    overflow-hidden rounded-2xl border-2 border-transparent bg-white
+    overflow-hidden rounded-2xl  bg-white
     px-3 py-2.5 text-left   max-lg:max-w-[550px]
-    ${isOptionActive ? "gradient" : "hover:border-black shadow-md  transition-all duration-300 hover:-translate-y-1 hover:shadow-md"}`}
+    ${isOptionActive ? "gradient" : "hover:border-black shadow-md hover:border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"}`}
                   onClick={() => handleSetSearchOption(option)}
                   role="button"
                   tabIndex={0}
