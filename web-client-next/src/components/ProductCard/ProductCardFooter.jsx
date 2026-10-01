@@ -57,7 +57,7 @@ const ProductCardFooter = ({
   const addToCartClassName = `box-border flex items-center justify-center gap-2 rounded-xl px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out ${productActionBaseClass} ${
     isOutOfStock
       ? "bg-secondary product-out-of-stock-button"
-      : "cursor-pointer gradient hover:bg-green-600"
+      : "cursor-pointer gradient hover:bg-none hover:bg-brand"
   } ${!hasProductPrice ? "hidden" : ""}`;
 
   useEffect(() => {
