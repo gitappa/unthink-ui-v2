@@ -49,6 +49,16 @@ const ProductCardFooter = ({
   const discountPer = getProductDiscountPercentage(product);
   const isOutOfStock = isProductOutOfStock(product);
   const hasProductPrice = (product?.price ?? product?.listprice) != null;
+  const productActionBaseClass =
+    size === "small"
+      ? ""
+      : " md:px-1.5 md:py-3 md:text-base";
+
+  const addToCartClassName = `box-border flex items-center justify-center gap-2 rounded-xl px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out ${productActionBaseClass} ${
+    isOutOfStock
+      ? "bg-secondary product-out-of-stock-button"
+      : "cursor-pointer gradient hover:bg-green-600"
+  } ${!hasProductPrice ? "hidden" : ""}`;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -182,16 +192,8 @@ const ProductCardFooter = ({
                 collection={cartSourceCollection}
                 eventId={storeData?.event_id}
                 isOutOfStock={isOutOfStock}
-                className={`${
-                  isOutOfStock
-                    ? size === "small"
-                      ? "box-border flex items-center justify-center gap-2 rounded-xl bg-brand px-1.5 py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-secondary"
-                      : "box-border flex items-center justify-center gap-2 rounded-xl bg-brand px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-secondary md:px-1.5 md:py-3 md:text-base"
-                    : size === "small"
-                      ? "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-1.5 py-2 text-xs font-semibold text-white transition-all duration-300 ease-in-out hover:bg-secondary"
-                      : "box-border flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-px py-1.5 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:!bg-secondary md:px-1.5 md:py-3 md:text-base"
-                } ${isOutOfStock ? "bg-secondary product-out-of-stock-button" : ""} ${!hasProductPrice ? "hidden" : ""}`}
-                disabled={!hasProductPrice}
+                className={addToCartClassName}
+                disabled={isOutOfStock || !hasProductPrice}
                 iconClassName={
                   showWishlistModal || size === "small"
                     ? "h-6 w-6"

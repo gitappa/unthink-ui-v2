@@ -324,7 +324,7 @@ useEffect(() => {
   if (!currentCollection) {
     return (
       <div className="min-h-screen flex mt-3 justify-center">
-        <Spin size="large" className="pink-spinner" />
+        <Spin size="large" className="loadingIndicator" />
       </div>
     );
   }
