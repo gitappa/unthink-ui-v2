@@ -351,7 +351,7 @@
 }
 
 .chat-products-sidebar-body::-webkit-scrollbar-thumb:hover {
-  background: #5a4af4;
+  background: var(--color-brand);
 }
 
 @media (max-width: 1024px) {
@@ -664,7 +664,7 @@
 }
 
 .chat-products-read-more-btn:hover {
-  color: #5a4af4;
+  color: var(--color-brand);
   text-decoration: underline;
   transform: translateX(2px);
 }
@@ -918,7 +918,7 @@
   }
 
   .chat-products-shop-look-main::-webkit-scrollbar-thumb:hover {
-    background: #5a4af4;
+    background: var(--color-brand);
   }
 
 
@@ -1045,7 +1045,7 @@
 }
 
 .chat-products-bottom-input-card-shop-theme {
-  border-color: #b8afff;
+  border-color: var(--color-accent);
   /* border-radius: 2.35rem; */
   /* background: #f8f7ff; */
   padding: 8px 10px;
@@ -1257,7 +1257,7 @@
 }
 
 .chat-products-bottom-submit:hover:not(:disabled) {
-  background: #5a4af4;
+  background: var(--color-brand);
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(114, 104, 236, 0.3);
 }
@@ -1275,7 +1275,11 @@
 }
 
 .chat-products-bottom-submit-shop-theme.chat-products-bottom-submit-disabled {
-  background: #cbc6f4;
+ background: linear-gradient(
+    to top left,
+    var(--color-accent),
+    var(--color-brand)
+  );
 }
 
 .chat-products-bottom-followup-controls {
@@ -1688,7 +1692,7 @@
 
 .chat-products-overlay-point:hover {
   transform: scale(1.4);
-  background-color: #5a4af4;
+  background-color: var(--color-brand);
   box-shadow: 0 0 20px rgba(114, 104, 236, 0.8);
 }
 

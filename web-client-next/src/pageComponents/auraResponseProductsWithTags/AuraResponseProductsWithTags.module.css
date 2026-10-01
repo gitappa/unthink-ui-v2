@@ -45,7 +45,7 @@
 
 /* Tag States */
 .aura-tag-selected {
-  background: linear-gradient(90deg, #7268ec 0%, #5a4af4 100%);
+  background: linear-gradient(90deg, #7268ec 0%, var(--color-brand) 100%);
   box-shadow: 0 2px 8px rgba(114, 104, 236, 0.25);
 }
 

@@ -48,7 +48,7 @@ const AuraPromptInput = ({
             type="button"
             className={` h-12 w-12 shrink-0 items-center justify-center rounded-full border-0 text-xl text-white transition max-md:h-10 max-md:w-10 max-md:text-base ${
               isSubmitDisabled
-                ? "cursor-not-allowed bg-[linear-gradient(135deg,#c9c5fb_0%,#efb8f7_100%)] opacity-70 shadow-none"
+                ? "gradient cursor-not-allowed opacity-45 shadow-none"
                 : "gradient cursor-pointer shadow-md hover:-translate-y-px"
             }`}
             onClick={onSubmit}

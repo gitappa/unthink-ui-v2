@@ -51,6 +51,7 @@
 .gradient {
   @apply bg-linear-to-tl from-accent to-brand;
 }
+ 
 
 .text-gradient {
   @apply bg-linear-to-bl from-accent to-brand bg-clip-text text-transparent;
